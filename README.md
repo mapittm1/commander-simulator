@@ -1,7 +1,7 @@
 # Commander Simulator
 
 A new Python project for a Commander simulator. The first component is a local
-SQLite card catalog sourced from Scryfall. No gameplay engine exists yet.
+SQLite card catalog sourced from Scryfall. No gameplay engine exists yet. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
 
 Requires Python 3.10 or newer. No third-party Python packages are required.
 
@@ -57,3 +57,20 @@ Eight offline tests pass, including reprint identity, face queries, repeat impor
 rollback, Unicode, malformed input, and compressed JSON Lines. The first live
 Oracle import on October 25, 2026 loaded 38,997 catalog records and 6,659 faces.
 These are Scryfall catalog records, not a count of Commander-legal cards.
+
+## Deck import
+
+```powershell
+python commander_simulator.py deck-add my-deck.txt --name "My deck" --bracket 3 --commander "Teysa Karlov"
+python commander_simulator.py decks
+```
+
+Text files accept `1 Card Name` lines (or `1x Card Name`). A Commander section
+can replace `--commander`; repeat the flag for a commander pair. Sideboards and
+maybeboards are excluded. Flat lists may include the specified commander; one
+copy is moved to the command zone. Brackets are user declarations, from 1 to 5.
+Basic checks cover card resolution, 100-card count, Commander legality, color
+identity, and ordinary singleton duplicates. These checks do not certify full
+Commander legality or bracket compliance. Commander eligibility, pairing, and
+special copy limits remain pending engine validation. There is no simulation
+command or GUI upload yet.
