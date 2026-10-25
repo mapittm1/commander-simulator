@@ -30,7 +30,7 @@ def main() -> None:
         ["black", *format_options, *source_files],
         ["pylint", *source_files],
         ["bandit", "-c", "pyproject.toml", *source_files],
-        ["unittest", "discover", "-v"],
+        ["pytest", "-q"],
     ]
     for command in commands:
         print(f"Running: {' '.join(command)}", flush=True)

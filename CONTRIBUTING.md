@@ -69,7 +69,7 @@ Apply Black/isort formatting, then run the same gate:
 
 The gate checks all project Python files recursively, excluding `.git`, `.venv`,
 `data`, and bytecode caches. It runs isort with the Black profile, Black, Pylint,
-Bandit, and the offline unit tests. Any failed step returns a nonzero exit code.
+Bandit, and the offline unit tests through pytest. Any failed step returns a nonzero exit code.
 The installed pre-commit hook runs the same gate in an isolated environment;
 GitHub Actions runs it on every push and pull request. The hook must be installed
 in each new checkout. Requiring the CI check for merges additionally requires a
@@ -81,8 +81,7 @@ redirect callback retains its required inherited signature. Two targeted Bandit
 annotations cover the trusted quality runner's fixed subprocess commands.
 No blanket security-check suppression or Pylint score threshold is used.
 
- Add meaningful tests for changed
-behavior: valid inputs, malformed inputs, limits, rollback, and stable identifiers.
+Add meaningful tests for changed behavior: valid inputs, malformed inputs, limits, rollback, and stable identifiers.
 Keep ordinary tests offline; separate live provider and engine checks.
 
 Review diffs for readability, unintended file changes, secrets, input validation,
@@ -95,3 +94,22 @@ is local, and there is no public server or executable game engine yet. Security
 requirements above are gates for those future features, not claims that they
 already exist. Automated formatting, linting, security scanning, and CI are configured;
 static type checking remains a future addition.
+
+## Running unit tests with pytest
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest
+.\.venv\Scripts\python.exe -m pytest -v
+.\.venv\Scripts\python.exe -m pytest test_legality.py
+.\.venv\Scripts\python.exe -m pytest -k stale
+```
+
+Pytest discovers the existing unittest.TestCase suites, including their setup,
+teardown, and cleanup behavior. They do not need to be rewritten to use the new
+runner. New tests can use pytest fixtures or parametrization where useful.
+
+Discovery, ignored data/environment directories, and strict marker/config checks
+are configured in pyproject.toml. Mark future live provider/engine tests with
+`integration` and run them separately; ordinary tests must remain offline.
+The shared quality runner, installed commit hook, and GitHub Actions all use the
+same pinned pytest version from the development dependencies.

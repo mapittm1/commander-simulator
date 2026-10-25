@@ -26,3 +26,12 @@ disable = ["line-too-long"]
 
 [tool.bandit]
 exclude_dirs = [".venv", "data", "__pycache__"]
+
+[tool.pytest.ini_options]
+minversion = "9.1"
+testpaths = ["."]
+python_files = ["test_*.py"]
+pythonpath = ["."]
+norecursedirs = [".git", ".venv", "data", "__pycache__", ".pytest_cache"]
+addopts = ["--strict-config", "--strict-markers", "-ra"]
+markers = ["integration: tests requiring a live provider or external game engine"]

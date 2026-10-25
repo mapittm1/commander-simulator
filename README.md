@@ -3,7 +3,8 @@
 A new Python project for a Commander simulator. The first component is a local
 SQLite card catalog sourced from Scryfall. No gameplay engine exists yet. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
 
-Requires Python 3.10 or newer. No third-party Python packages are required.
+The application requires Python 3.10 or newer and no third-party runtime packages.
+Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Commands
 
@@ -14,7 +15,7 @@ python commander_simulator.py init
 python commander_simulator.py sync
 python commander_simulator.py lookup "Sol Ring"
 python commander_simulator.py stats
-python -m unittest -v
+python -m pytest -v
 ```
 
 If `python` is not available, use an installed interpreter's full path. In
@@ -102,7 +103,7 @@ being exposed. This project has not undergone an independent security audit.
 Use Python 3.12 for development tools. Install them with
 `python -m pip install -r requirements-dev.txt` in a virtual environment.
 Run `python tools/check.py` to check Black formatting, isort imports, Pylint,
-Bandit security rules, and unit tests. `python tools/check.py --fix` applies
+Bandit security rules, and pytest unit tests. `python tools/check.py --fix` applies
 formatting first. Install the commit hook with `python -m pre_commit install`.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for Windows commands and check details.
 GitHub Actions runs the same gate for pushes and pull requests. Server-side merge
@@ -201,3 +202,15 @@ Automatic source collection and the requested 50 real benchmark lists are not
 implemented yet. EDHREC's individual commander pages do expose user-set bracket
 counts, but a complete bracket ranking and stable decklist import interface have
 not been verified. See PROJECT_PLAN.md for the source investigation status.
+
+## Pytest
+
+Install the development dependencies into `.venv`, then run:
+
+```powershell
+.\.venv\Scripts\python.exe -m pytest -q
+.\.venv\Scripts\python.exe -m pytest test_opponents.py -v
+```
+
+The existing unittest-based suites run directly under pytest. The full quality
+runner also uses pytest, including when invoked by pre-commit and GitHub Actions.
