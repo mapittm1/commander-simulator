@@ -38,7 +38,7 @@ apply to every change, including generated code and future engine integrations.
 - Do not fetch arbitrary upload URLs or local filesystem paths on behalf of
   remote users. Use provider-specific adapters with explicit access controls.
 - Keep credentials out of code, Git, logs, deck files, and URLs.
-- Execute the future engine using an argument list with shell=False. Use a
+- Execute the engine using an argument list with shell=False. Use a
   pinned engine version, isolated run directories, resource limits, and a timeout.
 - Never derive executable commands or output paths directly from deck names.
 - Future web uploads must use generated storage identifiers, escaped rendering,
@@ -77,8 +77,10 @@ GitHub branch protection/ruleset setting; this has not been changed.
 
 Keep suppressions narrow and explain them. Black owns line wrapping; test method
 names describe behavior instead of duplicating names in docstrings. The urllib
-redirect callback retains its required inherited signature. Two targeted Bandit
-annotations cover the trusted quality runner's fixed subprocess commands.
+redirect callback retains its required inherited signature. Targeted Bandit
+annotations cover the trusted quality runner and engine adapter's internal
+subprocess arguments. Engine paths are trusted operator configuration;
+deck contents cannot supply commands or output locations.
 No blanket security-check suppression or Pylint score threshold is used.
 
 Add meaningful tests for changed behavior: valid inputs, malformed inputs, limits, rollback, and stable identifiers.
@@ -90,9 +92,11 @@ remains unverified. Do not claim a security audit or full rules compliance from
 passing unit tests.
 
 The CLI currently accepts local text files, not remote HTTP uploads. The database
-is local, and there is no public server or executable game engine yet. Security
-requirements above are gates for those future features, not claims that they
-already exist. Automated formatting, linting, security scanning, and CI are configured;
+is local, and there is no public server yet. The external Forge adapter uses
+bounded logs/time, a minimal environment, and generated run directories.
+It is not an OS sandbox. Server isolation, hard quotas, authentication, and
+remote-upload requirements remain deployment gates.
+Automated formatting, linting, security scanning, and CI are configured;
 static type checking remains a future addition.
 
 ## Running unit tests with pytest

@@ -10,6 +10,7 @@ from bracket_commands import BRACKET_COMMANDS, add_bracket_commands, run_bracket
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
 from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
+from engine_commands import ENGINE_COMMANDS, add_engine_commands, run_engine_command
 from opponent_commands import (
     OPPONENT_COMMANDS,
     add_opponent_commands,
@@ -59,6 +60,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_revision_commands(commands)
     add_bracket_commands(commands)
     add_opponent_commands(commands)
+    add_engine_commands(commands)
     return parser
 
 
@@ -67,9 +69,15 @@ def run_library_command(connection, args) -> bool:
     handlers = dict.fromkeys(BRACKET_COMMANDS, run_bracket_command)
     handlers.update(dict.fromkeys(REVISION_COMMANDS, run_revision_command))
     handlers.update(dict.fromkeys(OPPONENT_COMMANDS, run_opponent_command))
+    handlers.update(dict.fromkeys(ENGINE_COMMANDS, run_engine_command))
     result = handlers[args.command](connection, args)
     print(json.dumps(result, indent=2, ensure_ascii=False))
-    expected = {"bracket-check": "reviewed", "deck-check": "legal"}.get(args.command)
+    expected = {
+        "bracket-check": "reviewed",
+        "deck-check": "legal",
+        "engine-check": "ready",
+        "simulate-game": "completed",
+    }.get(args.command)
     return expected is None or result["status"] == expected
 
 
@@ -79,7 +87,13 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         with closing(connect(args.database)) as connection:
-            if args.command in BRACKET_COMMANDS | REVISION_COMMANDS | OPPONENT_COMMANDS:
+            if (
+                args.command
+                in BRACKET_COMMANDS
+                | REVISION_COMMANDS
+                | OPPONENT_COMMANDS
+                | ENGINE_COMMANDS
+            ):
                 if not run_library_command(connection, args):
                     parser.exit(1)
             elif args.command == "validate":

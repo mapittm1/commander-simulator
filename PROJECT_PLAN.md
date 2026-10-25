@@ -57,9 +57,12 @@ References:
 
 Evaluate Forge as an external process behind a Python adapter. Forge documents
 headless multiplayer Commander simulation, broad card support, and known AI
-weaknesses, especially for combo/control strategies. It is not installed or
-integrated yet. Verify the selected release's command options, Java requirements,
-card coverage, deck validation, logs, and timeout behavior before using it.
+weaknesses, especially for combo/control strategies. Release 2.0.15 is installed
+locally behind a single-game adapter with pinned JAR/script hashes, current
+legality/bracket gates, explicit revisions, script coverage checks, bounded
+execution, raw logs, and conservative result parsing. A real four-player diagnostic
+using simple legal fixtures completed successfully. This does not validate the
+entire card catalog or establish AI proficiency for every strategy.
 
 Do not silently substitute unsupported cards. Report failed games and unsupported
 cards separately from wins/losses. Keep engine version and deck snapshots with
@@ -116,3 +119,27 @@ revisions, deterministic ordering of reported commander counts, and a readiness
 gate requiring ten distinct reviewed representatives and current evidence. Partial
 collections remain inspectable. Network adapters and collection of the actual 50
 benchmark lists remain pending; fixtures are used only in isolated tests.
+
+## Self-hosted product and diagnostics
+
+The intended product is a self-hosted web application with an attractive UI.
+Backend correctness comes first. Users upload a deck, select a bracket and run
+count, and receive actionable optimization findings with supporting game events.
+Support counts such as 100, 1,000, and 10,000, with a hard maximum of 100,000 per
+batch enforced by the backend. The current adapter runs one game; persistent
+batch scheduling is next.
+
+Diagnostics should cover mana/color access, missed land drops, uncastable cards,
+and gameplay bottlenecks with explicit definitions and coverage. Targeting
+analysis should identify observed attacks/removal and preceding events.
+Human dislike and "unfun" are subjective: distinguish attributed card tags,
+observed AI actions, and hypotheses about why a player was focused. Never present
+correlation or AI targeting as proof of human intent.
+
+Before exposing the service: authenticated ownership checks for decks/jobs,
+bounded text uploads, escaped rendering, CSRF protection where cookies are used,
+private generated storage, isolated workers without credentials or network,
+hard CPU/memory/disk quotas, cancellation, retention, rate limits, and atomic job
+admission tied to immutable deck/opponent evidence. Store actual attempted,
+completed, and failed counts, seeds, seat rotation, engine version, and metric
+coverage. Failed games must not silently disappear from reported rates.

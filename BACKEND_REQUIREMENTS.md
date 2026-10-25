@@ -15,8 +15,8 @@ not required to establish the core services.
 7. Persist results, failures, engine settings, deck snapshots, and raw logs.
 
 Steps 4–7 must not run for a deck that has failed or incomplete legality checks.
-No simulation or matchmaking service is implemented yet; future callers must use
-the saved-deck legality gate before proceeding.
+The single-game adapter uses the saved-deck legality and bracket gates.
+Batch jobs and automated matchmaking remain pending.
 
 ## Required services and acceptance criteria
 
@@ -27,9 +27,9 @@ the saved-deck legality gate before proceeding.
 | Deck library | Save validated decks and reload them without trusting stored approval | Implemented; immutable revision snapshots |
 | Bracket review | Separate user declaration from verified bracket findings | Game Changer screening and human-attested reviews implemented |
 | Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Immutable source-sample storage implemented; automated acquisition pending |
-| Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pending Forge evaluation |
+| Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pinned Forge single-game adapter; broad card correctness not yet validated |
 | Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Pending |
-| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Pending |
+| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Single-game outcomes and raw logs; aggregate metrics pending |
 
 ## Legality contract
 
@@ -141,3 +141,26 @@ collection and revision IDs and recheck evidence in its own transaction.
 No production opponents or popularity statistics are fabricated. Source adapters
 must establish collection coverage, bracket provenance, deduplication, and actual
 list retrieval before automated population of 50 representatives can be claimed.
+
+## Engine and batch contracts
+
+The implemented single-game operation requires four explicit legal, reviewed
+revisions in the same bracket and catalog/policy evidence, then checks pinned
+engine assets and card-script presence before launch. Inputs, seeds, reviews,
+engine hashes, deck exports, bounded logs, and final outcomes are preserved in
+generated directories. Profile access is serialized. Engine failures, truncated
+logs, timeouts (including Forge's forced timeout draws), and unrecognized output
+are not completed wins or genuine draws. Script presence does not prove card
+correctness or AI competence. Java and other engine assets remain trusted local
+dependencies; execution is not sandboxed by the Python adapter.
+
+Upcoming batch admission must enforce an integer count from 1 through 100,000
+(reject booleans), supporting presets 100/1,000/10,000 and custom counts. Bind
+immutable deck/opponent snapshots and current evidence atomically, persist job
+state, support cancellation, rotate seats, and account separately for requested,
+attempted, completed, and failed games. No batch command currently exists.
+
+Upcoming diagnostics must define mana issues, gameplay bottlenecks, and targeting
+events with supporting evidence and coverage. Subjective "hate"/"unfun" labels
+require provenance and must not be presented as measured human intent. The
+self-hosted UI will expose these findings after backend contracts are stable.

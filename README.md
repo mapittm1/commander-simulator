@@ -1,7 +1,9 @@
 # Commander Simulator
 
 A new Python project for a Commander simulator. The first component is a local
-SQLite card catalog sourced from Scryfall. No gameplay engine exists yet. See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
+SQLite card catalog sourced from Scryfall, validated deck revisions, bracket
+reviews, opponent collections, and a pinned Forge single-game adapter.
+See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
 
 The application requires Python 3.10 or newer and no third-party runtime packages.
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
@@ -214,3 +216,56 @@ Install the development dependencies into `.venv`, then run:
 
 The existing unittest-based suites run directly under pytest. The full quality
 runner also uses pytest, including when invoked by pre-commit and GitHub Actions.
+
+## Single-game engine adapter
+
+Install the assets referenced by `engine_lock.json` from their official release
+URLs into an operator-controlled directory. Verify archive SHA-256 values before
+extraction. Keep the complete Forge distribution together; the adapter verifies
+its JAR and card-script archive before each game. Install trusted Java 17+.
+Java and the remaining resources are part of the trusted installation and must
+not be writable by upload users. Binaries are excluded from Git.
+
+Copy `engine_config.example.json` to ignored `engine_config.json`, adjusting
+`home` and `java` relative to that file. These are administrator settings;
+the future web API must never accept executable paths from uploads.
+
+```powershell
+python commander_simulator.py engine-check
+python commander_simulator.py simulate-game --seat 1:1 --seat 2:1 --seat 3:1 --seat 4:1 --seed 42 --game-clock 120
+```
+
+Each seat is an explicit `deck_id:version`. All four must pass current Commander
+legality and recorded bracket review in the same bracket. Missing card scripts
+block execution. Script availability does not establish correctness of every
+card interaction or AI strategy. Automated opponent selection and batches are pending.
+
+Runs preserve `inputs.json`, generated decks, `forge.log`, and `result.json`
+under generated identifiers in `data/runs`. Wins/draws, engine errors,
+unrecognized output, log limits, and timeouts have distinct statuses. Failed
+simulations exit nonzero. Game clocks accept 1–300 seconds; an outer timeout
+allows 90 seconds for startup/shutdown. Logs are capped at 8 MiB per game; Java
+heap is capped at 2 GiB. A heap cap is not a total process memory limit.
+The minimal child environment excludes inherited tokens and Java option variables.
+
+Only one game may access the shared engine profile at a time. Its original
+contents are restored on handled failures. A machine/process crash can leave
+`.commander-simulator.lock` and a changed profile: an operator must confirm no
+engine process is active and restore the profile before removing a stale lock.
+These controls are not an OS sandbox. Worker isolation, hard quotas,
+authorization, retention limits, and upload defenses remain deployment gates.
+
+The optional live smoke test requires the installed engine and a fresh catalog:
+
+```powershell
+$env:COMMANDER_ENGINE_INTEGRATION = '1'
+.\.venv\Scripts\python.exe -m pytest test_engine_integration.py -q -s
+Remove-Item Env:COMMANDER_ENGINE_INTEGRATION
+```
+
+It uses disposable fixture decks/reviews, never production attestations or
+benchmark popularity claims. Ordinary tests skip it. Forge AI results do not
+establish how humans will react to a deck.
+
+References: [pinned Forge release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.15)
+and [Forge simulation/AI documentation](https://github.com/Card-Forge/forge/wiki/AI).
