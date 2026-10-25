@@ -2,12 +2,13 @@
 
 import argparse
 import json
+import sqlite3
 from contextlib import closing
 from pathlib import Path
 
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from scryfall import download_bulk, import_bulk
-from decks import BRACKETS, list_decks, prepare_deck, save_deck
+from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
 
 
 def hello_world():
@@ -38,7 +39,7 @@ def main(argv=None):
     try:
         with closing(connect(args.database)) as connection:
             if args.command == "deck-add":
-                prepared = prepare_deck(connection, args.file.read_text(encoding="utf-8-sig"), args.commander)
+                prepared = prepare_deck(connection, read_decklist(args.file), args.commander)
                 deck_id = save_deck(connection, args.name, args.bracket, prepared, args.source_url)
                 print(json.dumps({"deck_id": deck_id, "total": prepared["total"],
                                   "declared_bracket": args.bracket,
@@ -55,7 +56,7 @@ def main(argv=None):
             elif args.command == "lookup":
                 print(json.dumps(find_cards(connection, args.name), indent=2, ensure_ascii=False))
             print(json.dumps(catalog_stats(connection)))
-    except (OSError, ValueError, KeyError, StopIteration) as error:
+    except (OSError, ValueError, KeyError, StopIteration, sqlite3.Error) as error:
         parser.exit(1, f"Error: {error}\n")
 
 

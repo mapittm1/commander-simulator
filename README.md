@@ -74,3 +74,12 @@ identity, and ordinary singleton duplicates. These checks do not certify full
 Commander legality or bracket compliance. Commander eligibility, pairing, and
 special copy limits remain pending engine validation. There is no simulation
 command or GUI upload yet.
+
+## Code quality and security
+
+[CONTRIBUTING.md](CONTRIBUTING.md) defines readability, design, testing, and secure
+coding requirements. Decklists are limited to 1 MiB and 2,000 lines; card names
+and quantities are bounded before resolving or expanding them. Deck names are
+validated, database writes use SQL parameters, and imports run in transactions.
+Future remote uploads and engine execution require additional controls before
+being exposed. This project has not undergone an independent security audit.

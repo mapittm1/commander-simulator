@@ -3,7 +3,7 @@
 import unittest
 
 from database import connect, store_card
-from decks import list_decks, parse_decklist, prepare_deck, save_deck
+from decks import MAX_DECK_BYTES, list_decks, parse_decklist, prepare_deck, save_deck
 
 
 class DeckTests(unittest.TestCase):
@@ -55,6 +55,28 @@ class DeckTests(unittest.TestCase):
         for text in ("Forest", "0 Forest", "-1 Forest"):
             with self.subTest(text=text), self.assertRaises(ValueError):
                 parse_decklist(text)
+
+    def test_excessive_input_is_rejected(self):
+        for text in ("9" * 100 + " Forest", "x" * (MAX_DECK_BYTES + 1),
+                     "1 " + "x" * 301, "1 Forest\n" * 2001):
+            with self.subTest(length=len(text)), self.assertRaises(ValueError):
+                parse_decklist(text)
+
+    def test_excessive_commanders_are_rejected(self):
+        with self.assertRaises(ValueError):
+            prepare_deck(self.db, "Commander\n100 Test Commander\nDeck\n1 Forest")
+
+    def test_sql_text_in_names_is_treated_as_data(self):
+        prepared = prepare_deck(self.db, "99 Forest", ["Test Commander"])
+        title = "Robert'); DROP TABLE cards;--"
+        save_deck(self.db, title, 3, prepared)
+        self.assertEqual(list_decks(self.db)[0]["name"], title)
+        self.assertEqual(self.db.execute("SELECT COUNT(*) FROM cards").fetchone()[0], 4)
+
+    def test_invalid_deck_name_is_rejected(self):
+        prepared = prepare_deck(self.db, "99 Forest", ["Test Commander"])
+        with self.assertRaises(ValueError):
+            save_deck(self.db, "   ", 3, prepared)
 
     def test_arena_export_metadata(self):
         main, _ = parse_decklist("99 Forest (SET) 123")
