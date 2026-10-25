@@ -16,8 +16,8 @@ def hello_world():
     print("Hello, world!")
 
 
-def main(argv=None):
-    """Parse CLI arguments and dispatch a catalog or deck command."""
+def build_parser() -> argparse.ArgumentParser:
+    """Define the available commands without performing database operations."""
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--database", type=Path, default=DEFAULT_DATABASE)
     commands = parser.add_subparsers(dest="command", required=True)
@@ -43,11 +43,29 @@ def main(argv=None):
     deck_import.add_argument("--bracket", type=int, choices=BRACKETS, required=True)
     deck_import.add_argument("--commander", action="append", default=[])
     deck_import.add_argument("--source-url")
+    validate = commands.add_parser(
+        "validate", help="Check Commander legality without saving"
+    )
+    validate.add_argument("file", type=Path)
+    validate.add_argument("--commander", action="append", default=[])
     commands.add_parser("decks", help="List imported decks and declared brackets")
+    return parser
+
+
+def main(argv=None):
+    """Parse CLI arguments and dispatch a catalog or deck command."""
+    parser = build_parser()
     args = parser.parse_args(argv)
     try:
         with closing(connect(args.database)) as connection:
-            if args.command == "deck-add":
+            if args.command == "validate":
+                prepared = prepare_deck(
+                    connection, read_decklist(args.file), args.commander
+                )
+                print(json.dumps(prepared["legality"], indent=2))
+                if prepared["legality"]["status"] != "legal":
+                    parser.exit(1)
+            elif args.command == "deck-add":
                 prepared = prepare_deck(
                     connection, read_decklist(args.file), args.commander
                 )
@@ -61,6 +79,7 @@ def main(argv=None):
                             "total": prepared["total"],
                             "declared_bracket": args.bracket,
                             "warnings": prepared["warnings"],
+                            "legality": prepared["legality"],
                         },
                         indent=2,
                     )

@@ -1,7 +1,4 @@
-"""Plain-text deck import and preliminary catalog checks.
-
-Full Commander legality and gameplay are delegated to the future engine adapter.
-"""
+"""Plain-text deck import, Commander legality checks, and validated storage."""
 
 import json
 import re
@@ -10,6 +7,7 @@ from pathlib import Path
 from sqlite3 import Connection
 
 from database import find_cards
+from legality import require_legal_entries, validate_entries
 
 MAX_DECK_BYTES = 1024 * 1024
 MAX_DECK_LINES = 2000
@@ -126,66 +124,18 @@ def _resolve_entries(
     return list(resolved.values())
 
 
-def _copy_issues(entries: list) -> list[str]:
-    """Find ordinary singleton violations, leaving special copy caps for the engine."""
-    copies = Counter()
-    cards = {}
-    for entry in entries:
-        card = entry["card"]
-        copies[card["card_id"]] += entry["quantity"]
-        cards[card["card_id"]] = card
-    issues = []
-    for card_id, quantity in copies.items():
-        card = cards[card_id]
-        if quantity <= 1 or (card["type_line"] or "").startswith("Basic "):
-            continue
-        oracle_text = card["oracle_text"] or ""
-        any_number = (
-            "a deck can have any number of cards named" in oracle_text.casefold()
-        )
-        limited = re.search(
-            r"a deck can have up to (\w+) cards named", oracle_text, re.I
-        )
-        if not any_number and not limited:
-            issues.append(f"Singleton violation: {quantity} copies of {card['name']}")
-    return issues
-
-
-def _construction_issues(entries: list) -> list[str]:
-    """Check deck size, commander count, legality, and color identity."""
-    total = sum(entry["quantity"] for entry in entries)
-    commanders = [entry for entry in entries if entry["zone"] == "commander"]
-    issues = []
-    if total != 100:
-        issues.append(f"Expected 100 cards including commanders; found {total}")
-    if not 1 <= len(commanders) <= 2 or any(
-        entry["quantity"] != 1 for entry in commanders
-    ):
-        issues.append("Expected one or two distinct commanders, one copy each")
-    identity = set()
-    for entry in commanders:
-        identity.update(json.loads(entry["card"]["color_identity"]))
-    for entry in entries:
-        card = entry["card"]
-        if card["commander_legality"] != "legal":
-            issues.append(f"Not Commander-legal: {card['name']}")
-        if not set(json.loads(card["color_identity"])).issubset(identity):
-            issues.append(f"Outside commander color identity: {card['name']}")
-    return issues
-
-
 def prepare_deck(connection: Connection, text: str, commander_names=()) -> dict:
-    """Resolve cards and report basic issues; never claim full legality."""
+    """Resolve the list, then run the versioned Commander legality validator."""
     main, commanders = _assign_commanders(text, commander_names)
     entries = _resolve_entries(connection, main, commanders)
+    report = validate_entries(connection, entries)
     return {
         "cards": entries,
         "total": sum(entry["quantity"] for entry in entries),
-        "issues": _construction_issues(entries) + _copy_issues(entries),
-        "warnings": [
-            "Preliminary checks only: commander eligibility, pairing, copy-limit "
-            "exceptions, and bracket compliance require engine/review validation."
-        ],
+        "issues": report["errors"],
+        "legality": report,
+        "warnings": report["blockers"]
+        + ["Bracket compliance is evaluated separately."],
     }
 
 
@@ -211,7 +161,7 @@ def ensure_deck_schema(connection):
 
 
 def save_deck(connection, name, bracket, prepared, source_url=None):
-    """Persist a preliminarily checked deck and its declared bracket atomically."""
+    """Persist a legally validated deck and its declared bracket atomically."""
     name = name.strip()
     if not name or len(name) > 200 or any(ord(char) < 32 for char in name):
         raise ValueError(
@@ -219,8 +169,7 @@ def save_deck(connection, name, bracket, prepared, source_url=None):
         )
     if bracket not in BRACKETS:
         raise ValueError("Bracket must be between 1 and 5")
-    if prepared["issues"]:
-        raise ValueError("; ".join(prepared["issues"]))
+    report = require_legal_entries(connection, prepared["cards"])
     ensure_deck_schema(connection)
     with connection:
         cursor = connection.execute(
@@ -229,7 +178,7 @@ def save_deck(connection, name, bracket, prepared, source_url=None):
                 name,
                 bracket,
                 source_url,
-                json.dumps({"status": "preliminary", "warnings": prepared["warnings"]}),
+                json.dumps(report),
             ),
         )
         deck_id = cursor.lastrowid

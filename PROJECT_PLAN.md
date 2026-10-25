@@ -70,9 +70,10 @@ References:
 ## Implementation milestones
 
 1. Card catalog: implemented, populated, tested.
-2. Deck import: local text-file CLI and preliminary checks implemented. GUI/file
-   upload, provider links, commander eligibility/pairing, complete copy limits,
-   and bracket validation remain to be built.
+2. Backend legality and deck import: CLI validation and a mandatory save gate
+   implemented, including commander eligibility/pairing and duplicate limits.
+   See BACKEND_REQUIREMENTS.md for supported scope, freshness policy, and remaining
+   mechanics. Establish backend services before building a UI.
 3. Opponent acquisition: verify source/ranking method, import and audit 50 lists.
 4. Forge integration: install a pinned version, validate deck exports, run a real
    four-player match, and verify result parsing against logs.
@@ -82,3 +83,9 @@ References:
    progress, downloadable results, and replay/log inspection.
 
 Current CLI imports are stored locally in SQLite and are not uploaded to a server.
+
+## Backend-first sequencing
+
+Before opponents or simulation, every starting deck must pass legality validation.
+Only the `legal` state proceeds; `illegal` and `needs_review` stop processing.
+See BACKEND_REQUIREMENTS.md for the backend contracts and acceptance criteria.

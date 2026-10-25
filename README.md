@@ -69,11 +69,24 @@ Text files accept `1 Card Name` lines (or `1x Card Name`). A Commander section
 can replace `--commander`; repeat the flag for a commander pair. Sideboards and
 maybeboards are excluded. Flat lists may include the specified commander; one
 copy is moved to the command zone. Brackets are user declarations, from 1 to 5.
-Basic checks cover card resolution, 100-card count, Commander legality, color
-identity, and ordinary singleton duplicates. These checks do not certify full
-Commander legality or bracket compliance. Commander eligibility, pairing, and
-special copy limits remain pending engine validation. There is no simulation
-command or GUI upload yet.
+The legality gate checks deck size, commander eligibility and pairing, color
+identity, basic land types, ban/format status, and duplicate-card limits. Checks
+use the pinned rules and recorded Scryfall catalog snapshot. Invalid decks and
+unverified conditions cannot be saved as validated decks. Bracket review and
+engine compatibility remain separate requirements.
+
+Check a list without saving it:
+
+```powershell
+python commander_simulator.py validate my-deck.txt --commander "Teysa Karlov"
+```
+
+This prints a structured legality report and exits nonzero for `illegal` or
+`needs_review`. Freshness policy requires a verified Scryfall bulk timestamp no
+more than seven days old. Run `sync` to refresh the catalog. Commander color
+choices, selected companions, and supplementary-deck configuration are not yet
+supported. The future UI follows the backend; see
+[BACKEND_REQUIREMENTS.md](BACKEND_REQUIREMENTS.md) for scope and processing order.
 
 ## Code quality and security
 

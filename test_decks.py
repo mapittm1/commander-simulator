@@ -1,6 +1,7 @@
 """Deck parsing, resolution, and persistence checks."""
 
 import unittest
+from datetime import datetime, timezone
 
 from database import connect, store_card
 from decks import MAX_DECK_BYTES, list_decks, parse_decklist, prepare_deck, save_deck
@@ -33,6 +34,12 @@ class DeckTests(unittest.TestCase):
                     },
                 )
 
+        with self.db:
+            self.db.execute(
+                "INSERT INTO imports(source, source_updated_at, records) VALUES (?, ?, ?)",
+                ("oracle_cards", datetime.now(timezone.utc).isoformat(), 4),
+            )
+
     def tearDown(self):
         self.db.close()
 
@@ -56,7 +63,7 @@ class DeckTests(unittest.TestCase):
         deck = list_decks(self.db)[0]
         self.assertEqual(deck["id"], deck_id)
         self.assertEqual(deck["declared_bracket"], 3)
-        self.assertIn("preliminary", deck["validation_json"])
+        self.assertIn('"status": "legal"', deck["validation_json"])
 
     def test_color_and_singleton_issues(self):
         prepared = prepare_deck(
@@ -70,7 +77,7 @@ class DeckTests(unittest.TestCase):
         prepared = prepare_deck(
             self.db, "97 Forest\n1 Test Spell\n1 test spell", ["Test Commander"]
         )
-        self.assertTrue(any("Singleton" in issue for issue in prepared["issues"]))
+        self.assertTrue(any("Copy limit" in issue for issue in prepared["issues"]))
 
     def test_unknown_card_and_bad_lines(self):
         with self.assertRaises(ValueError):

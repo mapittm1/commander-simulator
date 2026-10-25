@@ -30,6 +30,10 @@ def connect(path=DEFAULT_DATABASE):
             layout TEXT
         );
         CREATE INDEX IF NOT EXISTS cards_name ON cards(name COLLATE NOCASE);
+        CREATE TABLE IF NOT EXISTS card_details (
+            card_id TEXT PRIMARY KEY REFERENCES cards(card_id),
+            raw_json TEXT NOT NULL
+        );
         CREATE TABLE IF NOT EXISTS printings (
             scryfall_id TEXT PRIMARY KEY,
             card_id TEXT NOT NULL REFERENCES cards(card_id),
@@ -94,6 +98,11 @@ def store_card(connection, card):
             card.get("legalities", {}).get("commander"),
             card.get("layout"),
         ),
+    )
+    connection.execute(
+        "INSERT INTO card_details VALUES (?, ?) "
+        "ON CONFLICT(card_id) DO UPDATE SET raw_json=excluded.raw_json",
+        (card_id, json.dumps(card, ensure_ascii=False)),
     )
     connection.execute(
         """
