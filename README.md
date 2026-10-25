@@ -167,3 +167,37 @@ a new revision, policy change, or catalog refresh requires another review. A
 not an automated proof of deck power. Reviewer names are local labels, not
 verified identities or user authentication. No arbitrary deck URL is fetched.
 JSON review files are limited to 32 KiB and have a strict schema.
+
+## Opponent collection snapshots
+
+```powershell
+python commander_simulator.py opponents-import my-opponents.json
+python commander_simulator.py opponents
+python commander_simulator.py opponents-show 1
+python commander_simulator.py opponents-check 1
+```
+
+Start from `opponent_manifest.example.json` and replace every placeholder with
+observed source evidence and existing, reviewed deck IDs/versions. The importer
+accepts local JSON only (maximum 256 KiB); it does not fetch attribution URLs.
+Manifest schema version 1 records source, sample size, observation time/window,
+source bracket provenance, author, list link, and observed commander deck counts.
+The source counts and attribution are operator-supplied claims, not verified by
+this importer. Commander pairs count as one configuration.
+
+Each collection freezes its representative revision IDs, review evidence, and
+hashes. Ranks order only the submitted representatives by reported counts, with
+deterministic ties; they are not certified global or source-wide top-ten ranks.
+Duplicate commander configurations, mismatched brackets, invalid decks, and
+missing/stale bracket reviews are rejected.
+
+Partial collections can be preserved and inspected. The readiness gate requires
+ten distinct representatives, valid current reviews, and source observations no
+more than 30 days old. Thirty days is a product freshness policy. Catalog/policy
+updates require refreshed review evidence and a new collection. Earlier collections
+remain intact when decks get new revisions.
+
+Automatic source collection and the requested 50 real benchmark lists are not
+implemented yet. EDHREC's individual commander pages do expose user-set bracket
+counts, but a complete bracket ranking and stable decklist import interface have
+not been verified. See PROJECT_PLAN.md for the source investigation status.

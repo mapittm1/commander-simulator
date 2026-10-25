@@ -26,7 +26,7 @@ the saved-deck legality gate before proceeding.
 | Legality | Explain failures, record rules/catalog versions, block unverified decks | Implemented for documented scope |
 | Deck library | Save validated decks and reload them without trusting stored approval | Implemented; immutable revision snapshots |
 | Bracket review | Separate user declaration from verified bracket findings | Game Changer screening and human-attested reviews implemented |
-| Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Source verification pending |
+| Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Immutable source-sample storage implemented; automated acquisition pending |
 | Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pending Forge evaluation |
 | Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Pending |
 | Results | Wins, losses, draws, failures, uncertainty, traceable logs | Pending |
@@ -118,3 +118,26 @@ count screening. It rejects stale catalog/policy evidence and never silently
 carries approval to a different revision. The diagnostic bracket-check command
 always requests human review; the saved attestation appears in bracket-history.
 This is a product matchmaking gate, not a Wizards-certified power-level rating.
+
+## Opponent collection contract
+
+Manifests use schema version 1 and explicitly distinguish source-user-declared
+brackets from source estimates. The current import path only supports
+`source_sample`, with operator-supplied counts and source/author attribution.
+It must not be displayed as a verified source-wide or global top-ten ranking.
+Ordering is computed only over submitted representatives. Counts must be positive
+and their sum cannot exceed the claimed deduplicated sample size.
+
+Collections pin immutable deck revision IDs, commander configurations (including
+pairs), snapshot hashes, review IDs, catalog evidence, and policy hash. All members
+must be legal, currently reviewed, and in the declared collection bracket. A
+refresh race during import fails rather than mixing catalog/policy versions.
+
+`require_collection` rejects partial collections, source evidence older than 30
+days, and changed review/catalog/policy evidence. It is a readiness check, not a
+simulation submission transaction. Future job creation must bind those exact
+collection and revision IDs and recheck evidence in its own transaction.
+
+No production opponents or popularity statistics are fabricated. Source adapters
+must establish collection coverage, bracket provenance, deduplication, and actual
+list retrieval before automated population of 50 representatives can be claimed.

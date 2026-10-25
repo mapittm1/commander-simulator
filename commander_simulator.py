@@ -10,6 +10,11 @@ from bracket_commands import BRACKET_COMMANDS, add_bracket_commands, run_bracket
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
 from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
+from opponent_commands import (
+    OPPONENT_COMMANDS,
+    add_opponent_commands,
+    run_opponent_command,
+)
 from scryfall import download_bulk, import_bulk
 
 
@@ -53,6 +58,7 @@ def build_parser() -> argparse.ArgumentParser:
     commands.add_parser("decks", help="List imported decks and declared brackets")
     add_revision_commands(commands)
     add_bracket_commands(commands)
+    add_opponent_commands(commands)
     return parser
 
 
@@ -60,6 +66,7 @@ def run_library_command(connection, args) -> bool:
     """Render one backend response and report whether a diagnostic gate passed."""
     handlers = dict.fromkeys(BRACKET_COMMANDS, run_bracket_command)
     handlers.update(dict.fromkeys(REVISION_COMMANDS, run_revision_command))
+    handlers.update(dict.fromkeys(OPPONENT_COMMANDS, run_opponent_command))
     result = handlers[args.command](connection, args)
     print(json.dumps(result, indent=2, ensure_ascii=False))
     expected = {"bracket-check": "reviewed", "deck-check": "legal"}.get(args.command)
@@ -72,7 +79,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         with closing(connect(args.database)) as connection:
-            if args.command in BRACKET_COMMANDS | REVISION_COMMANDS:
+            if args.command in BRACKET_COMMANDS | REVISION_COMMANDS | OPPONENT_COMMANDS:
                 if not run_library_command(connection, args):
                     parser.exit(1)
             elif args.command == "validate":

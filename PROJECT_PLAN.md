@@ -38,11 +38,16 @@ Validate card resolution and deck construction, then audit its declared bracket.
 Retain author attribution and the original link. Do not substitute an average
 deck without labeling it as a generated composite.
 
-Source investigation is incomplete. EDHREC's public commander ranking exposes
-overall deck counts, but its inspected ranking page did not expose a bracket
-filter. Archidekt exposes bracket labels and deck searches, but a stable import
-interface and bracket-level commander aggregation still need to be verified.
-No benchmark lists have been downloaded or ranked yet.
+Source investigation is incomplete. Verified EDHREC commander pages expose
+bracket-specific counts and say that their filtered data includes user-set
+brackets rather than auto-detected brackets. For example:
+https://edhrec.com/commanders/teysa-karlov/upgraded
+
+A complete per-bracket commander ranking and reliable provider export interface
+still need verification. The current opponent importer accepts operator-supplied
+local manifests referencing already legal, reviewed deck revisions. It does not
+claim global rankings or automatically download lists. No production benchmark
+lists have been downloaded or ranked yet.
 
 References:
 - https://edhrec.com/commanders
@@ -103,3 +108,11 @@ Added a separate bracket-review service: automatic Game Changer cap checks,
 explicit human review of gameplay expectations, immutable review history, and a
 freshness gate bound to the selected revision and current catalog/policy.
 Representative opponent selection remains the next data-source milestone.
+
+## Opponent-library storage milestone
+
+Implemented immutable source-sample collection snapshots, attributed representative
+revisions, deterministic ordering of reported commander counts, and a readiness
+gate requiring ten distinct reviewed representatives and current evidence. Partial
+collections remain inspectable. Network adapters and collection of the actual 50
+benchmark lists remain pending; fixtures are used only in isolated tests.
