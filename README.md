@@ -107,3 +107,34 @@ formatting first. Install the commit hook with `python -m pre_commit install`.
 See [CONTRIBUTING.md](CONTRIBUTING.md) for Windows commands and check details.
 GitHub Actions runs the same gate for pushes and pull requests. Server-side merge
 blocking still requires branch protection to mark the quality check as required.
+
+## Versioned deck library
+
+```powershell
+python commander_simulator.py deck-add my-deck.txt --name "My deck" --bracket 3 --commander "Teysa Karlov"
+python commander_simulator.py deck-revise 1 revised-deck.txt --commander "Teysa Karlov"
+python commander_simulator.py deck-history 1
+python commander_simulator.py deck-show 1 --version 1
+python commander_simulator.py deck-check 1 --version 1
+```
+
+Replace `1` with the deck ID returned by `deck-add`. `deck-revise` returns the new
+revision ID; each deck also has sequential version numbers. `--bracket` on a
+revision is optional and otherwise retains the latest declaration. Source URLs
+are retained as attribution metadata and are not fetched.
+
+Each revision freezes card identities, names, quantities, zones, Oracle data,
+bracket, source URL, and validation evidence. Database triggers reject revision
+updates and deletes. Content hashes verify snapshot integrity on reads. The
+same list may be saved again as a new revision to capture a new catalog snapshot.
+
+`deck-show` displays the saved snapshot and historical validation. `deck-check`
+revalidates that list against the current catalog; it can fail after a ban or
+when card data becomes stale. Backend callers must recheck the selected version
+before matching or running it. These read/validation commands emit a single
+JSON document. There is still no simulation command or UI.
+
+Existing unversioned decks migrate once, retaining their deck IDs. Their first
+Oracle snapshot is captured at migration time; it cannot reconstruct historical
+Oracle text that was never stored. Storage service calls own their transactions
+and reject initialization inside an already-active caller transaction.

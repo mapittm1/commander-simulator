@@ -24,7 +24,7 @@ the saved-deck legality gate before proceeding.
 | --- | --- | --- |
 | Card catalog | Stable identities, faces, current source data, atomic refresh | Implemented; manual refresh |
 | Legality | Explain failures, record rules/catalog versions, block unverified decks | Implemented for documented scope |
-| Deck library | Save validated decks and reload them without trusting stored approval | Implemented; immutable revisions pending |
+| Deck library | Save validated decks and reload them without trusting stored approval | Implemented; immutable revision snapshots |
 | Bracket review | Separate user declaration from verified bracket findings | Declaration stored; review pending |
 | Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Source verification pending |
 | Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pending Forge evaluation |
@@ -40,7 +40,7 @@ construction choice cannot be verified. Only `legal` can pass the gate.
 
 `validate` checks without saving a deck and returns a nonzero exit status if it
 does not pass. `deck-add` repeats validation before writing. The backend function
-`require_legal_deck(connection, deck_id)` reloads authoritative saved cards and
+`require_legal_deck(connection, deck_id, version=None)` reloads authoritative saved cards and
 revalidates before any future downstream operation. An earlier stored approval
 cannot override a later catalog change, ban, or stale-data decision.
 
@@ -80,3 +80,18 @@ data does not automatically update the validator's interpretation of rules.
 References:
 - https://magic.wizards.com/en/rules
 - https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt
+
+## Deck revision contract
+
+A deck ID groups immutable revisions; a revision ID identifies one snapshot and
+`version` is its sequence within that deck. Every successful edit appends a
+revision. Updates and deletes of revision rows are prohibited by SQLite triggers.
+Legacy latest-deck tables remain a compatibility projection and are not the
+source used by revision legality checks.
+
+Snapshots retain the original card data and validation evidence. Current legality
+is reevaluated from the saved card identities and current authoritative catalog,
+so a historical approval never overrides new bans or stale data. Future jobs must
+store the selected revision IDs explicitly rather than referencing a moving
+latest deck. All revision writes are atomic and acquire a write lock before
+validation so a concurrent catalog refresh cannot split the approval/snapshot.

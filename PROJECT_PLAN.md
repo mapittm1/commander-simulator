@@ -89,3 +89,10 @@ Current CLI imports are stored locally in SQLite and are not uploaded to a serve
 Before opponents or simulation, every starting deck must pass legality validation.
 Only the `legal` state proceeds; `illegal` and `needs_review` stop processing.
 See BACKEND_REQUIREMENTS.md for the backend contracts and acceptance criteria.
+
+## Deck library milestone
+
+Validated decks now have immutable numbered revisions, including frozen Oracle
+records, bracket declarations, attribution, hashes, and validation evidence.
+Backend and CLI operations can inspect history and revalidate a selected version.
+Versioned opponent data and simulation jobs remain separate upcoming milestones.

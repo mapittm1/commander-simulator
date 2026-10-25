@@ -11,6 +11,8 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from sqlite3 import Connection
 
+from deck_snapshots import read_revision
+
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt"
 VALIDATOR_VERSION = 1
@@ -320,8 +322,16 @@ def require_legal_entries(connection: Connection, entries: list) -> dict:
     return report
 
 
-def require_legal_deck(connection: Connection, deck_id: int) -> dict:
-    """Load saved deck contents and recheck them; a stored status is not trusted."""
+def require_legal_deck(connection: Connection, deck_id: int, version=None) -> dict:
+    """Revalidate a saved revision; a stored approval is never sufficient."""
+    has_revisions = connection.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'deck_revisions'"
+    ).fetchone()
+    if has_revisions:
+        revision = read_revision(connection, deck_id, version)
+        return require_legal_entries(connection, json.loads(revision["snapshot_json"]))
+    if version is not None:
+        raise ValueError("Legacy deck has no revision; initialize deck storage first")
     if (
         connection.execute("SELECT 1 FROM decks WHERE id = ?", (deck_id,)).fetchone()
         is None

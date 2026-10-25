@@ -1,13 +1,13 @@
 """Plain-text deck import, Commander legality checks, and validated storage."""
 
-import json
 import re
 from collections import Counter
 from pathlib import Path
 from sqlite3 import Connection
 
 from database import find_cards
-from legality import require_legal_entries, validate_entries
+from deck_store import ensure_deck_schema, list_decks, save_deck
+from legality import validate_entries
 
 MAX_DECK_BYTES = 1024 * 1024
 MAX_DECK_LINES = 2000
@@ -139,60 +139,14 @@ def prepare_deck(connection: Connection, text: str, commander_names=()) -> dict:
     }
 
 
-def ensure_deck_schema(connection):
-    """Create local deck storage tables without altering the card catalog."""
-    connection.executescript("""
-        CREATE TABLE IF NOT EXISTS decks (
-            id INTEGER PRIMARY KEY,
-            name TEXT NOT NULL,
-            declared_bracket INTEGER NOT NULL CHECK(declared_bracket BETWEEN 1 AND 5),
-            source_url TEXT,
-            imported_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP,
-            validation_json TEXT NOT NULL
-        );
-        CREATE TABLE IF NOT EXISTS deck_cards (
-            deck_id INTEGER NOT NULL REFERENCES decks(id),
-            card_id TEXT NOT NULL REFERENCES cards(card_id),
-            zone TEXT NOT NULL CHECK(zone IN ('mainboard', 'commander')),
-            quantity INTEGER NOT NULL CHECK(quantity > 0),
-            PRIMARY KEY(deck_id, card_id, zone)
-        );
-    """)
-
-
-def save_deck(connection, name, bracket, prepared, source_url=None):
-    """Persist a legally validated deck and its declared bracket atomically."""
-    name = name.strip()
-    if not name or len(name) > 200 or any(ord(char) < 32 for char in name):
-        raise ValueError(
-            "Deck name must be 1–200 characters without control characters"
-        )
-    if bracket not in BRACKETS:
-        raise ValueError("Bracket must be between 1 and 5")
-    report = require_legal_entries(connection, prepared["cards"])
-    ensure_deck_schema(connection)
-    with connection:
-        cursor = connection.execute(
-            "INSERT INTO decks(name, declared_bracket, source_url, validation_json) VALUES (?, ?, ?, ?)",
-            (
-                name,
-                bracket,
-                source_url,
-                json.dumps(report),
-            ),
-        )
-        deck_id = cursor.lastrowid
-        connection.executemany(
-            "INSERT INTO deck_cards VALUES (?, ?, ?, ?)",
-            [
-                (deck_id, entry["card"]["card_id"], entry["zone"], entry["quantity"])
-                for entry in prepared["cards"]
-            ],
-        )
-    return deck_id
-
-
-def list_decks(connection):
-    """List saved decks with their bracket declarations and validation status."""
-    ensure_deck_schema(connection)
-    return [dict(row) for row in connection.execute("SELECT * FROM decks ORDER BY id")]
+# Retain the original import surface while storage has its own module.
+__all__ = [
+    "BRACKETS",
+    "MAX_DECK_BYTES",
+    "ensure_deck_schema",
+    "list_decks",
+    "save_deck",
+    "parse_decklist",
+    "prepare_deck",
+    "read_decklist",
+]

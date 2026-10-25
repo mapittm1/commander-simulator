@@ -7,6 +7,7 @@ from contextlib import closing
 from pathlib import Path
 
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
+from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
 from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
 from scryfall import download_bulk, import_bulk
 
@@ -49,6 +50,7 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("file", type=Path)
     validate.add_argument("--commander", action="append", default=[])
     commands.add_parser("decks", help="List imported decks and declared brackets")
+    add_revision_commands(commands)
     return parser
 
 
@@ -58,7 +60,12 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         with closing(connect(args.database)) as connection:
-            if args.command == "validate":
+            if args.command in REVISION_COMMANDS:
+                result = run_revision_command(connection, args)
+                print(json.dumps(result, indent=2, ensure_ascii=False))
+                if args.command == "deck-check" and result["status"] != "legal":
+                    parser.exit(1)
+            elif args.command == "validate":
                 prepared = prepare_deck(
                     connection, read_decklist(args.file), args.commander
                 )
@@ -99,7 +106,8 @@ def main(argv=None):
                         find_cards(connection, args.name), indent=2, ensure_ascii=False
                     )
                 )
-            print(json.dumps(catalog_stats(connection)))
+            elif args.command in {"init", "stats"}:
+                print(json.dumps(catalog_stats(connection)))
     except (OSError, ValueError, KeyError, StopIteration, sqlite3.Error) as error:
         parser.exit(1, f"Error: {error}\n")
 
