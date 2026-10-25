@@ -138,3 +138,32 @@ Existing unversioned decks migrate once, retaining their deck IDs. Their first
 Oracle snapshot is captured at migration time; it cannot reconstruct historical
 Oracle text that was never stored. Storage service calls own their transactions
 and reject initialization inside an already-active caller transaction.
+
+## Bracket screening and human review
+
+```powershell
+python commander_simulator.py bracket-check 1 --version 1
+python commander_simulator.py bracket-review 1 my-review.json --version 1
+python commander_simulator.py bracket-history 1 --version 1
+```
+
+`bracket-check` is diagnostic: it rechecks Commander legality first, counts Game
+Changers in every zone using the current Scryfall catalog, and reports conflicts
+or `needs_review`. It intentionally does not approve gameplay intent. Game
+Changer caps are 0 for brackets 1–2, 3 for bracket 3, and unlimited for 4–5, per
+[Wizards' Commander guidance](https://magic.wizards.com/en/formats/commander).
+Policy, checklist, and source links live in `bracket_policy.json`.
+
+Copy `bracket_review.example.json` to a local file, provide a reviewer name and
+rationale, and set a checklist item to true only after reviewing that aspect of
+the specific deck and bracket. Every item must be confirmed; a human claim cannot
+override a count conflict, missing catalog flags, or failed Commander legality.
+The sample deliberately starts with every check false.
+
+Saved reviews are immutable and tied to a deck revision, policy fingerprint, and
+catalog import. The backend gate `require_bracket_review` rechecks current data;
+a new revision, policy change, or catalog refresh requires another review. A
+`reviewed` result means automated screening plus a recorded human attestation,
+not an automated proof of deck power. Reviewer names are local labels, not
+verified identities or user authentication. No arbitrary deck URL is fetched.
+JSON review files are limited to 32 KiB and have a strict schema.

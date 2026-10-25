@@ -11,6 +11,7 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from sqlite3 import Connection
 
+from database import get_card_details
 from deck_snapshots import read_revision
 
 RULES_VERSION = "2026-09-25"
@@ -233,13 +234,7 @@ def _load_cards(connection: Connection, entries: list) -> dict:
     cards = {}
     for entry in entries:
         card_id = entry["card"]["card_id"]
-        row = connection.execute(
-            "SELECT raw_json FROM card_details WHERE card_id = ?",
-            (card_id,),
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Missing catalog record: {card_id}")
-        cards[card_id] = json.loads(row[0])
+        cards[card_id] = get_card_details(connection, card_id)
     return cards
 
 

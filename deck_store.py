@@ -4,6 +4,7 @@ import hashlib
 import json
 from sqlite3 import Connection
 
+from database import get_card_details
 from deck_snapshots import read_revision
 from legality import require_legal_entries, validate_entries
 
@@ -51,12 +52,7 @@ def _snapshot(connection: Connection, entries: list) -> str:
     snapshot = []
     for entry in entries:
         card_id = entry["card"]["card_id"]
-        row = connection.execute(
-            "SELECT raw_json FROM card_details WHERE card_id = ?", (card_id,)
-        ).fetchone()
-        if row is None:
-            raise ValueError(f"Missing card details for snapshot: {card_id}")
-        oracle = json.loads(row["raw_json"])
+        oracle = get_card_details(connection, card_id)
         snapshot.append(
             {
                 "card": {"card_id": card_id, "name": oracle["name"]},

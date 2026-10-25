@@ -25,7 +25,7 @@ the saved-deck legality gate before proceeding.
 | Card catalog | Stable identities, faces, current source data, atomic refresh | Implemented; manual refresh |
 | Legality | Explain failures, record rules/catalog versions, block unverified decks | Implemented for documented scope |
 | Deck library | Save validated decks and reload them without trusting stored approval | Implemented; immutable revision snapshots |
-| Bracket review | Separate user declaration from verified bracket findings | Declaration stored; review pending |
+| Bracket review | Separate user declaration from verified bracket findings | Game Changer screening and human-attested reviews implemented |
 | Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Source verification pending |
 | Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pending Forge evaluation |
 | Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Pending |
@@ -95,3 +95,26 @@ so a historical approval never overrides new bans or stale data. Future jobs mus
 store the selected revision IDs explicitly rather than referencing a moving
 latest deck. All revision writes are atomic and acquire a write lock before
 validation so a concurrent catalog refresh cannot split the approval/snapshot.
+
+## Bracket review contract
+
+A valid Commander deck can still conflict with a declared bracket. Bracket
+screening cannot waive format legality, including for Exhibition/Bracket 1;
+Rule 0 agreements are outside this application's current scope.
+
+The automatic check uses the catalog's current boolean Game Changer flags and
+the versioned caps in bracket_policy.json. Missing flags require review/data
+refresh instead of being treated as false. Passing the cap does not infer deck
+intent, combo timing, extra-turn behavior, land denial, or competitive purpose.
+
+A local reviewer can attest to those dimensions with an identity label, rationale,
+and explicit boolean checklist. Successful reviews are append-only records tied
+to revision ID, snapshot hash, policy hash, and catalog import. The reviewer label
+is not authenticated identity. This backend currently assumes a trusted local
+operator; future remote access needs authorization before review submission.
+
+`require_bracket_review` requires a recorded human review and reruns legality and
+count screening. It rejects stale catalog/policy evidence and never silently
+carries approval to a different revision. The diagnostic bracket-check command
+always requests human review; the saved attestation appears in bracket-history.
+This is a product matchmaking gate, not a Wizards-certified power-level rating.

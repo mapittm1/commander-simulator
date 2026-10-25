@@ -164,3 +164,13 @@ def catalog_stats(connection):
         table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
         for table in ("cards", "printings", "card_faces", "imports")
     }
+
+
+def get_card_details(connection: sqlite3.Connection, card_id: str) -> dict:
+    """Read the latest authoritative card record or report missing catalog data."""
+    row = connection.execute(
+        "SELECT raw_json FROM card_details WHERE card_id = ?", (card_id,)
+    ).fetchone()
+    if row is None:
+        raise ValueError(f"Missing catalog record: {card_id}")
+    return json.loads(row["raw_json"])

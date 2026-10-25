@@ -6,6 +6,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
+from bracket_commands import BRACKET_COMMANDS, add_bracket_commands, run_bracket_command
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
 from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
@@ -51,7 +52,18 @@ def build_parser() -> argparse.ArgumentParser:
     validate.add_argument("--commander", action="append", default=[])
     commands.add_parser("decks", help="List imported decks and declared brackets")
     add_revision_commands(commands)
+    add_bracket_commands(commands)
     return parser
+
+
+def run_library_command(connection, args) -> bool:
+    """Render one backend response and report whether a diagnostic gate passed."""
+    handlers = dict.fromkeys(BRACKET_COMMANDS, run_bracket_command)
+    handlers.update(dict.fromkeys(REVISION_COMMANDS, run_revision_command))
+    result = handlers[args.command](connection, args)
+    print(json.dumps(result, indent=2, ensure_ascii=False))
+    expected = {"bracket-check": "reviewed", "deck-check": "legal"}.get(args.command)
+    return expected is None or result["status"] == expected
 
 
 def main(argv=None):
@@ -60,10 +72,8 @@ def main(argv=None):
     args = parser.parse_args(argv)
     try:
         with closing(connect(args.database)) as connection:
-            if args.command in REVISION_COMMANDS:
-                result = run_revision_command(connection, args)
-                print(json.dumps(result, indent=2, ensure_ascii=False))
-                if args.command == "deck-check" and result["status"] != "legal":
+            if args.command in BRACKET_COMMANDS | REVISION_COMMANDS:
+                if not run_library_command(connection, args):
                     parser.exit(1)
             elif args.command == "validate":
                 prepared = prepare_deck(

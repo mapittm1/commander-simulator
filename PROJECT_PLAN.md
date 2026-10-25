@@ -96,3 +96,10 @@ Validated decks now have immutable numbered revisions, including frozen Oracle
 records, bracket declarations, attribution, hashes, and validation evidence.
 Backend and CLI operations can inspect history and revalidate a selected version.
 Versioned opponent data and simulation jobs remain separate upcoming milestones.
+
+## Bracket review milestone
+
+Added a separate bracket-review service: automatic Game Changer cap checks,
+explicit human review of gameplay expectations, immutable review history, and a
+freshness gate bound to the selected revision and current catalog/policy.
+Representative opponent selection remains the next data-source milestone.
