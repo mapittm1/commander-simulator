@@ -8,6 +8,7 @@ DEFAULT_DATABASE = Path(__file__).resolve().parent / "data" / "cards.sqlite3"
 
 
 def connect(path=DEFAULT_DATABASE):
+    """Open a foreign-key-enforced SQLite catalog and initialize its schema."""
     path = Path(path)
     path.parent.mkdir(parents=True, exist_ok=True)
     connection = sqlite3.connect(path)
@@ -68,7 +69,8 @@ def store_card(connection, card):
     """Upsert one Scryfall record inside the caller's transaction."""
     # Reversible cards have Oracle IDs on their faces rather than at the root.
     card_id = card.get("oracle_id") or card["id"]
-    connection.execute("""
+    connection.execute(
+        """
         INSERT INTO cards VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(card_id) DO UPDATE SET
             name=excluded.name, mana_cost=excluded.mana_cost,
@@ -77,40 +79,79 @@ def store_card(connection, card):
             color_identity=excluded.color_identity, power=excluded.power,
             toughness=excluded.toughness, commander_legality=excluded.commander_legality,
             layout=excluded.layout
-    """, (card_id, card["name"], card.get("mana_cost"), card.get("cmc"),
-          card.get("type_line"), card.get("oracle_text"),
-          json.dumps(card.get("colors", [])), json.dumps(card.get("color_identity", [])),
-          card.get("power"), card.get("toughness"),
-          card.get("legalities", {}).get("commander"), card.get("layout")))
-    connection.execute("""
+    """,
+        (
+            card_id,
+            card["name"],
+            card.get("mana_cost"),
+            card.get("cmc"),
+            card.get("type_line"),
+            card.get("oracle_text"),
+            json.dumps(card.get("colors", [])),
+            json.dumps(card.get("color_identity", [])),
+            card.get("power"),
+            card.get("toughness"),
+            card.get("legalities", {}).get("commander"),
+            card.get("layout"),
+        ),
+    )
+    connection.execute(
+        """
         INSERT INTO printings VALUES (?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(scryfall_id) DO UPDATE SET
             card_id=excluded.card_id, set_code=excluded.set_code,
             collector_number=excluded.collector_number, language=excluded.language,
             image_uris=excluded.image_uris, raw_json=excluded.raw_json
-    """, (card["id"], card_id, card.get("set"), card.get("collector_number"),
-          card.get("lang"), json.dumps(card.get("image_uris", {})),
-          json.dumps(card, ensure_ascii=False)))
+    """,
+        (
+            card["id"],
+            card_id,
+            card.get("set"),
+            card.get("collector_number"),
+            card.get("lang"),
+            json.dumps(card.get("image_uris", {})),
+            json.dumps(card, ensure_ascii=False),
+        ),
+    )
     connection.execute("DELETE FROM card_faces WHERE scryfall_id = ?", (card["id"],))
     for index, face in enumerate(card.get("card_faces", [])):
-        connection.execute("INSERT INTO card_faces VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
-                           (card["id"], index, face["name"], face.get("oracle_id"),
-                            face.get("mana_cost"), face.get("type_line"),
-                            face.get("oracle_text"), face.get("power"), face.get("toughness"),
-                            json.dumps(face.get("image_uris", {}))))
+        connection.execute(
+            "INSERT INTO card_faces VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+            (
+                card["id"],
+                index,
+                face["name"],
+                face.get("oracle_id"),
+                face.get("mana_cost"),
+                face.get("type_line"),
+                face.get("oracle_text"),
+                face.get("power"),
+                face.get("toughness"),
+                json.dumps(face.get("image_uris", {})),
+            ),
+        )
 
 
 def find_cards(connection, name):
     """Return exact case-insensitive matches, including individual face names."""
-    return [dict(row) for row in connection.execute("""
+    return [
+        dict(row)
+        for row in connection.execute(
+            """
         SELECT DISTINCT cards.* FROM cards
         LEFT JOIN printings USING (card_id)
         LEFT JOIN card_faces USING (scryfall_id)
         WHERE cards.name = ? COLLATE NOCASE OR card_faces.name = ? COLLATE NOCASE
         ORDER BY cards.card_id
-    """, (name, name))]
+    """,
+            (name, name),
+        )
+    ]
 
 
 def catalog_stats(connection):
-    return {table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
-            for table in ("cards", "printings", "card_faces", "imports")}
+    """Count catalog records, printings, faces, and completed imports."""
+    return {
+        table: connection.execute(f"SELECT COUNT(*) FROM {table}").fetchone()[0]
+        for table in ("cards", "printings", "card_faces", "imports")
+    }

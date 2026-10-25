@@ -46,7 +46,42 @@ apply to every change, including generated code and future engine integrations.
 
 ## Testing and review
 
-Run `python -m unittest -v` before committing. Add meaningful tests for changed
+Use Python 3.12 for development tooling and CI (the application targets Python
+3.10+). Install the pinned tools and commit hook once per checkout:
+
+```powershell
+python -m venv .venv
+.\.venv\Scripts\python.exe -m pip install -r requirements-dev.txt
+.\.venv\Scripts\python.exe -m pre_commit install
+```
+
+Run the full gate before committing:
+
+```powershell
+.\.venv\Scripts\python.exe tools/check.py
+```
+
+Apply Black/isort formatting, then run the same gate:
+
+```powershell
+.\.venv\Scripts\python.exe tools/check.py --fix
+```
+
+The gate checks all project Python files recursively, excluding `.git`, `.venv`,
+`data`, and bytecode caches. It runs isort with the Black profile, Black, Pylint,
+Bandit, and the offline unit tests. Any failed step returns a nonzero exit code.
+The installed pre-commit hook runs the same gate in an isolated environment;
+GitHub Actions runs it on every push and pull request. The hook must be installed
+in each new checkout. Requiring the CI check for merges additionally requires a
+GitHub branch protection/ruleset setting; this has not been changed.
+
+Keep suppressions narrow and explain them. Black owns line wrapping; test method
+names describe behavior instead of duplicating names in docstrings. The urllib
+redirect callback retains its required inherited signature. Two targeted Bandit
+annotations cover the trusted quality runner's fixed subprocess commands.
+No blanket security-check suppression or Pylint score threshold is used.
+
+ Add meaningful tests for changed
 behavior: valid inputs, malformed inputs, limits, rollback, and stable identifiers.
 Keep ordinary tests offline; separate live provider and engine checks.
 
@@ -58,4 +93,5 @@ passing unit tests.
 The CLI currently accepts local text files, not remote HTTP uploads. The database
 is local, and there is no public server or executable game engine yet. Security
 requirements above are gates for those future features, not claims that they
-already exist. Automated linting/type checking and CI remain to be configured.
+already exist. Automated formatting, linting, security scanning, and CI are configured;
+static type checking remains a future addition.

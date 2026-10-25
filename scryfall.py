@@ -5,12 +5,42 @@ import json
 import shutil
 from pathlib import Path
 from urllib.parse import urlparse
-from urllib.request import Request, urlopen
+from urllib.request import HTTPRedirectHandler, Request, build_opener
 
 from database import store_card
 
 BULK_API = "https://api.scryfall.com/bulk-data"
 HEADERS = {"User-Agent": "CommanderSimulator/0.1", "Accept": "application/json"}
+
+
+def validate_scryfall_url(url: str) -> None:
+    """Restrict downloads and redirects to the two HTTPS Scryfall data hosts."""
+    parsed = urlparse(url)
+    if (
+        parsed.scheme != "https"
+        or parsed.hostname not in {"api.scryfall.com", "data.scryfall.io"}
+        or parsed.port not in (None, 443)
+        or parsed.username
+        or parsed.password
+    ):
+        raise ValueError("Unexpected Scryfall URL")
+
+
+class ScryfallRedirectHandler(HTTPRedirectHandler):
+    """Validate each redirect before urllib follows it."""
+
+    # urllib requires this callback signature; its argument count is not ours to change.
+    # pylint: disable=too-many-arguments,too-many-positional-arguments
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        validate_scryfall_url(newurl)
+        return super().redirect_request(req, fp, code, msg, headers, newurl)
+
+
+def open_scryfall(url: str, timeout: int):
+    """Open only an approved Scryfall HTTPS endpoint, including redirect targets."""
+    validate_scryfall_url(url)
+    opener = build_opener(ScryfallRedirectHandler())
+    return opener.open(Request(url, headers=HEADERS), timeout=timeout)
 
 
 def iter_cards(stream):
@@ -69,7 +99,7 @@ def iter_cards(stream):
 
 def download_bulk(destination, kind="oracle_cards"):
     """Oracle export covers unique cards; all_cards includes all printings/languages."""
-    with urlopen(Request(BULK_API, headers=HEADERS), timeout=60) as response:
+    with open_scryfall(BULK_API, timeout=60) as response:
         metadata = json.load(response)
     selected = next(item for item in metadata["data"] if item["type"] == kind)
     url = selected.get("jsonl_download_uri") or selected["download_uri"]
@@ -82,7 +112,7 @@ def download_bulk(destination, kind="oracle_cards"):
     size = selected.get("compressed_size", selected.get("size", 0))
     print(f"Downloading {kind}: {size / 1024**2:.1f} MB", flush=True)
     try:
-        with urlopen(Request(url, headers=HEADERS), timeout=120) as response:
+        with open_scryfall(url, timeout=120) as response:
             with temporary.open("wb") as output:
                 shutil.copyfileobj(response, output)
         temporary.replace(destination)
@@ -112,7 +142,8 @@ def import_bulk(connection, path, source="local", updated_at=None):
             raise ValueError("Refusing to import an empty card catalog")
         connection.execute(
             "INSERT INTO imports(source, source_updated_at, records) VALUES (?, ?, ?)",
-            (source, updated_at, count))
+            (source, updated_at, count),
+        )
     return count
 
 

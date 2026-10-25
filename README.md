@@ -83,3 +83,14 @@ and quantities are bounded before resolving or expanding them. Deck names are
 validated, database writes use SQL parameters, and imports run in transactions.
 Future remote uploads and engine execution require additional controls before
 being exposed. This project has not undergone an independent security audit.
+
+## Enforced Python standards
+
+Use Python 3.12 for development tools. Install them with
+`python -m pip install -r requirements-dev.txt` in a virtual environment.
+Run `python tools/check.py` to check Black formatting, isort imports, Pylint,
+Bandit security rules, and unit tests. `python tools/check.py --fix` applies
+formatting first. Install the commit hook with `python -m pre_commit install`.
+See [CONTRIBUTING.md](CONTRIBUTING.md) for Windows commands and check details.
+GitHub Actions runs the same gate for pushes and pull requests. Server-side merge
+blocking still requires branch protection to mark the quality check as required.
