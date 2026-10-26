@@ -1,0 +1,1 @@
+"""Commander simulator opponents package."""

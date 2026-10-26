@@ -1,13 +1,33 @@
 # Commander Simulator
 
-A new Python project for a Commander simulator. The first component is a local
-SQLite card catalog sourced from Scryfall, validated deck revisions, bracket
-reviews, opponent collections, and a pinned Forge single-game adapter.
-See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
+A local Commander simulator CLI with a Scryfall card catalog, legality checks,
+reviewed deck revisions, a pinned Forge adapter, and configurable simulation batches.
+See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 
 The application requires Python 3.10 or newer and no third-party runtime packages.
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
+
+## Run it now
+
+From the repository folder in PowerShell:
+
+```powershell
+.\.venv\Scripts\python.exe commander_simulator.py doctor
+.\.venv\Scripts\python.exe commander_simulator.py demo --runs 1
+```
+
+The current local installation has the catalog and engine installed. `doctor`
+reports missing or stale prerequisites on other checkouts. The demo runs real
+Forge games using clearly labeled diagnostic decks in an isolated saved database;
+it does not add fixture decks or reviews to your main library. It prints progress,
+results, and paths to a JSON report and its database. It is not a competitive
+benchmark or a realistic deck recommendation.
+
+Use `play` to import your deck and three supplied opponents, or `simulate` to
+reuse reviewed deck revisions. Start with one game before choosing 100, 1,000,
+10,000, or up to 100,000 attempts. See [the CLI quick start](docs/QUICKSTART.md)
+for deck file format, explicit bracket reviews, resume, cancellation, and reports.
 
 ## Commands
 
@@ -39,10 +59,34 @@ that disappear from a later export. Failed imports roll back their database chan
 
 ## Structure
 
-- `commander_simulator.py`: CLI entry point.
-- `database.py`: schema, storage, and exact card/face-name queries.
-- `scryfall.py`: bulk download, streaming JSON parsing, and transactional import.
-- `test_database.py`: offline database/import tests.
+```text
+commander_simulator.py     Small, stable CLI entry point
+commander/
+  catalog/                Scryfall import and SQLite card catalog
+  decks/                  Parsing, revisions, and four-file pod import
+  rules/                  Commander legality and bracket review
+  engine/                 Pinned Forge execution, coverage, and regressions
+  simulation/             Durable batches and complete-run workflow
+  diagnostics/            Observed events and aggregate metrics
+  opponents/              Attributed representative collections
+  salt/                   EDHREC opinion snapshots and advisory analysis
+  cli/                    Argument parsing and terminal presentation
+  paths.py                Stable configuration/data locations
+config/                   Versioned policy, engine pins, alias reviews
+examples/                 Local input and review templates
+tests/unit/               Offline regression tests
+tests/integration/        Opt-in real-engine tests
+tests/support/            Shared isolated test fixtures
+docs/                     Quick start, product plan, backend contracts
+tools/                    Shared quality gate
+data/                     Ignored local catalog, engines, runs, and reports
+```
+
+Private engine settings now live at `config/engine_config.json`; relative paths
+are resolved from that file. The local configuration was migrated while preserving
+the original engine locations. The database remains `data/cards.sqlite3` and raw
+games remain under `data/runs/`. README, changelog, contributing guide, dependency
+pins, and tool configuration stay at the repository root.
 
 Card identities and printings are separate. Faces belong to printings, preserving
 face-specific artwork and Oracle IDs. Rare reversible records without a root
@@ -90,7 +134,7 @@ This prints a structured legality report and exits nonzero for `illegal` or
 more than seven days old. Run `sync` to refresh the catalog. Commander color
 choices, selected companions, and supplementary-deck configuration are not yet
 supported. The future UI follows the backend; see
-[BACKEND_REQUIREMENTS.md](BACKEND_REQUIREMENTS.md) for scope and processing order.
+[BACKEND_REQUIREMENTS.md](docs/BACKEND_REQUIREMENTS.md) for scope and processing order.
 
 ## Code quality and security
 
@@ -156,9 +200,9 @@ Changers in every zone using the current Scryfall catalog, and reports conflicts
 or `needs_review`. It intentionally does not approve gameplay intent. Game
 Changer caps are 0 for brackets 1–2, 3 for bracket 3, and unlimited for 4–5, per
 [Wizards' Commander guidance](https://magic.wizards.com/en/formats/commander).
-Policy, checklist, and source links live in `bracket_policy.json`.
+Policy, checklist, and source links live in `config/bracket_policy.json`.
 
-Copy `bracket_review.example.json` to a local file, provide a reviewer name and
+Copy `examples/bracket_review.example.json` to a local file, provide a reviewer name and
 rationale, and set a checklist item to true only after reviewing that aspect of
 the specific deck and bracket. Every item must be confirmed; a human claim cannot
 override a count conflict, missing catalog flags, or failed Commander legality.
@@ -181,7 +225,7 @@ python commander_simulator.py opponents-show 1
 python commander_simulator.py opponents-check 1
 ```
 
-Start from `opponent_manifest.example.json` and replace every placeholder with
+Start from `examples/opponent_manifest.example.json` and replace every placeholder with
 observed source evidence and existing, reviewed deck IDs/versions. The importer
 accepts local JSON only (maximum 256 KiB); it does not fetch attribution URLs.
 Manifest schema version 1 records source, sample size, observation time/window,
@@ -204,7 +248,7 @@ remain intact when decks get new revisions.
 Automatic source collection and the requested 50 real benchmark lists are not
 implemented yet. EDHREC's individual commander pages do expose user-set bracket
 counts, but a complete bracket ranking and stable decklist import interface have
-not been verified. See PROJECT_PLAN.md for the source investigation status.
+not been verified. See docs/PROJECT_PLAN.md for the source investigation status.
 
 ## Pytest
 
@@ -212,7 +256,7 @@ Install the development dependencies into `.venv`, then run:
 
 ```powershell
 .\.venv\Scripts\python.exe -m pytest -q
-.\.venv\Scripts\python.exe -m pytest test_opponents.py -v
+.\.venv\Scripts\python.exe -m pytest tests/unit/test_opponents.py -v
 ```
 
 The existing unittest-based suites run directly under pytest. The full quality
@@ -220,14 +264,14 @@ runner also uses pytest, including when invoked by pre-commit and GitHub Actions
 
 ## Single-game engine adapter
 
-Install the assets referenced by `engine_lock.json` from their official release
+Install the assets referenced by `config/engine_lock.json` from their official release
 URLs into an operator-controlled directory. Verify archive SHA-256 values before
 extraction. Keep the complete Forge distribution together; the adapter verifies
 its JAR and card-script archive before each game. Install trusted Java 17+.
 Java and the remaining resources are part of the trusted installation and must
 not be writable by upload users. Binaries are excluded from Git.
 
-Copy `engine_config.example.json` to ignored `engine_config.json`, adjusting
+Copy `config/engine_config.example.json` to ignored `config/engine_config.json`, adjusting
 `home` and `java` relative to that file. These are administrator settings;
 the future web API must never accept executable paths from uploads.
 
@@ -260,7 +304,7 @@ The optional live smoke test requires the installed engine and a fresh catalog:
 
 ```powershell
 $env:COMMANDER_ENGINE_INTEGRATION = '1'
-.\.venv\Scripts\python.exe -m pytest test_engine_integration.py -q -s
+.\.venv\Scripts\python.exe -m pytest tests/integration/test_engine_integration.py -q -s
 Remove-Item Env:COMMANDER_ENGINE_INTEGRATION
 ```
 
@@ -488,7 +532,7 @@ opt-in integration tests run the real engine using the command documented above.
 
 ## Reviewed identity exports
 
-The repository-owned `engine_alias_reviews.json` records explicit identity
+The repository-owned `config/engine_alias_reviews.json` records explicit identity
 reviews separately from gameplay code. Ratonhnhaké꞉ton has a catalog Unicode
 colon, while Forge and the [official release notes](https://magic.wizards.com/en/news/feature/assassins-creed-release-notes)
 use Ratonhnhaké:ton. This mapping requires its exact Oracle ID, reviewed archive
@@ -529,7 +573,7 @@ signal for potential social friction, not evidence that a specific opponent
 will attack or remove a card.
 
 ```powershell
-python commander_simulator.py salt-import salt_manifest.example.json
+python commander_simulator.py salt-import examples/salt_manifest.example.json
 python commander_simulator.py salt-show SNAPSHOT_ID
 python commander_simulator.py deck-salt DECK_ID --version 1 --salt-snapshot SNAPSHOT_ID
 ```

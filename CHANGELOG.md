@@ -8,6 +8,32 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Runnable CLI workflows: `doctor` checks catalog/runtime readiness, `demo` runs
+  an isolated diagnostic pod, `play` imports four explicit reviewed decklists,
+  and `simulate` completes or resumes a saved pod with progress and JSON reports.
+  Existing legality, bracket, frozen-evidence, execution, and 100,000-attempt
+  limits still gate simulation. Reports distinguish failures and interrupted slots.
+- A short CLI quick start and a complete diagnostic deck-format example. Demo
+  databases/reports remain available for inspection and resume without adding
+  fixtures or test reviews to the main deck library. Existing report files are
+  never overwritten; JSON stdout is separated from stderr progress.
+- Validation: 211 offline tests and 90 subtests pass; all four opt-in live
+  integration tests pass. A two-game CLI demo also completed and its saved
+  database was reopened successfully without rerunning completed attempts.
+
+### Repository organization
+
+- Group backend modules under `commander/` by catalog, decks, rules, engine,
+  simulation, diagnostics, opponents, salt, and CLI. Keep the root Python entry
+  point and command names stable. Unit/live tests and shared fixtures now live
+  under `tests/`; detailed docs, examples, and versioned configuration have their
+  own folders. Update imports, mock targets, discovery, and documentation paths.
+- Centralize checkout data/config paths. Preserve the existing catalog, engine
+  assets, game history, and private engine settings while moving the latter into
+  ignored `config/engine_config.json`. No new runtime dependencies are required.
+
+### Earlier unreleased additions
+
 - Repository-owned identity review registry with exact Oracle-ID guards, archive
   and script hashes, bounded input, duplicate/conflict rejection, and preserved
   provenance in audits and game/batch evidence. Ratonhnhaké꞉ton now exports to

@@ -109,7 +109,7 @@ static type checking remains a future addition.
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m pytest -v
-.\.venv\Scripts\python.exe -m pytest test_legality.py
+.\.venv\Scripts\python.exe -m pytest tests/unit/test_legality.py
 .\.venv\Scripts\python.exe -m pytest -k stale
 ```
 
