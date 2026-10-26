@@ -206,3 +206,21 @@ Missing export aliases include in-game-only meld faces and cannot be described
 as an exact count of unsupported playable cards. Audit results must never replace
 current construction, bracket, or launch-time script checks. Script availability
 does not verify Oracle semantics, interactions, or AI behavior.
+
+## Salt evidence contract
+
+EDHREC's top salt page is the configured community-opinion reference. Local
+manifests preserve voting year, observation time, source attribution, rank, and
+0–4 rating, with strict size/count/schema/precision checks. Exact catalog/face
+resolution records IDs or explicit unresolved/ambiguous states. Immutable hashed
+snapshots are admitted atomically against current catalog evidence. Operator
+attribution is not authenticated provider verification; no network client or
+scheduled source synchronization is implemented.
+
+Salt analysis requires a legal explicit deck revision and reads ratings inside
+the same catalog read transaction. Unrated cards remain unknown. Known-score
+subtotals/means report their limited denominator; these are project-defined
+descriptions rather than an official source deck score. The 30-day observation
+freshness label is independent of annual voting year. Historical snapshots remain
+unchanged. Salt opinions must remain distinct from engine attack observations,
+causal explanations, bracket approval, and hypothetical targeting policies.

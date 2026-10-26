@@ -146,6 +146,14 @@ Human dislike and "unfun" are subjective: distinguish attributed card tags,
 observed AI actions, and hypotheses about why a player was focused. Never present
 correlation or AI targeting as proof of human intent.
 
+EDHREC's annual community salt ratings from https://edhrec.com/top/salt are the
+chosen social-opinion reference. Attributed local snapshots and legal-deck salt
+profiles now preserve ratings, voting year, source time/link, and partial coverage.
+These can flag potential social friction alongside gameplay observations.
+They do not establish causal aggression or supply calibrated targeting weights.
+Automatic source synchronization and an optional modeled opponent policy remain
+separate future work requiring a supported access path and explicit assumptions.
+
 The initial observation layer now normalizes supported log events with source
 lines and reports land plays, casts, complete-main-turn land-play observations,
 and attack assignments. Batch aggregation remaps seats and excludes partial or

@@ -18,6 +18,7 @@ from opponent_commands import (
     add_opponent_commands,
     run_opponent_command,
 )
+from salt_commands import SALT_COMMANDS, add_salt_commands, run_salt_command
 from scryfall import download_bulk, import_bulk
 
 
@@ -64,6 +65,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_opponent_commands(commands)
     add_engine_commands(commands)
     add_batch_commands(commands)
+    add_salt_commands(commands)
     return parser
 
 
@@ -74,6 +76,7 @@ def run_library_command(connection, args) -> bool:
     handlers.update(dict.fromkeys(OPPONENT_COMMANDS, run_opponent_command))
     handlers.update(dict.fromkeys(ENGINE_COMMANDS, run_engine_command))
     handlers.update(dict.fromkeys(BATCH_COMMANDS, run_batch_command))
+    handlers.update(dict.fromkeys(SALT_COMMANDS, run_salt_command))
     result = handlers[args.command](connection, args)
     write_json(result)
     if args.command == "batch-run":
@@ -102,6 +105,7 @@ def main(argv=None):
                 | OPPONENT_COMMANDS
                 | ENGINE_COMMANDS
                 | BATCH_COMMANDS
+                | SALT_COMMANDS
             ):
                 if not run_library_command(connection, args):
                     parser.exit(1)

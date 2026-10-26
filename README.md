@@ -433,3 +433,55 @@ eligible under the other Commander construction rules. This follows
 Bracket rechecks now carry current validator/rules versions. Existing deck
 history remains intact and is revalidated; older batch evidence that differs
 from the new validation fields requires creating a fresh batch.
+
+## EDHREC salt reference
+
+[EDHREC's salt page](https://edhrec.com/top/salt) is the reference for community
+salt ratings. EDHREC describes an annual community vote from 0 (least salty)
+to 4 (most salty). The backend preserves those ratings with the voting year,
+observation time, source link, and immutable snapshot hash. This is an opinion
+signal for potential social friction, not evidence that a specific opponent
+will attack or remove a card.
+
+```powershell
+python commander_simulator.py salt-import salt_manifest.example.json
+python commander_simulator.py salt-show SNAPSHOT_ID
+python commander_simulator.py deck-salt DECK_ID --version 1 --salt-snapshot SNAPSHOT_ID
+```
+
+`salt-import` accepts an attributed local JSON sample. The example contains three
+observed 2026 ratings, not a complete dataset. Source URL, year, timezone-aware
+observation time, exact card name, source rank, and rating are required. Input is
+limited to 1 MiB and 100 entries. Ratings must be finite 0–4 values with at most
+two decimal places; internal storage uses integer hundredths. Duplicate JSON
+keys, names, ranks, conflicting identity mappings, and inconsistent rank order
+are rejected. Numeric token lengths and JSON nesting are bounded or rejected.
+
+Exact catalog or face-name lookup binds ratings to Oracle identities. Unknown
+or ambiguous source names remain unresolved; imports never guess a replacement.
+Resolution shares the deck import candidate rules, so art-only/name-display
+records do not mask a game-card match; banned candidates remain identifiable
+and still fail the separate legality gate when used in a deck.
+Snapshots are immutable and retain the catalog used for resolution. Source
+attribution is operator-provided and is not an authenticated EDHREC data feed.
+The current implementation performs no website requests, scheduled scraping,
+or automatic updates. A supported access path needs to be established before
+adding automatic synchronization; see [EDHREC's terms](https://edhrec.com/terms).
+The full local reference sample and database are excluded from Git.
+
+`deck-salt` requires an explicit saved revision and current Commander legality.
+It reports each matched rating and rank, unrated cards as `null`, rated/unrated
+quantities, and a quantity-weighted subtotal/mean over known ratings only.
+Those aggregates are project-defined, not an official EDHREC deck score. Missing
+sample entries are unknown rather than zero-salt, and an all-unrated deck has
+an unknown mean. Commander cards are included in the same coverage accounting.
+
+Observations older than 30 days are labeled stale; this is a product freshness
+policy, separate from the annual voting year. Historical source snapshots remain
+inspectable. Reports retain both current legality evidence and the catalog used
+for the rating resolution. Existing source snapshots and game history are not rewritten.
+
+Salt analysis does not change Forge targeting, game rules, brackets, or measured
+attack statistics. `aggression_probability` remains `null`. A future optional
+salt-informed opponent policy would need explicit modeling assumptions and
+validation; the published rating itself supplies no attack-probability mapping.

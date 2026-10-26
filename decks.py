@@ -5,7 +5,7 @@ from collections import Counter
 from pathlib import Path
 from sqlite3 import Connection
 
-from database import find_cards
+from database import find_deck_candidates
 from deck_store import ensure_deck_schema, list_decks, save_deck
 from legality import validate_entries
 
@@ -78,13 +78,7 @@ def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
 
 
 def _resolve(connection: Connection, name: str) -> dict:
-    matches = [
-        card
-        for card in find_cards(connection, name)
-        if card["commander_legality"] in ("legal", "banned", "restricted")
-    ]
-    exact = [card for card in matches if card["name"].casefold() == name.casefold()]
-    matches = exact or matches
+    matches = find_deck_candidates(connection, name)
     if len(matches) != 1:
         raise ValueError(f"Unknown or ambiguous playable card: {name}")
     return matches[0]

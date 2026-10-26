@@ -158,6 +158,17 @@ def find_cards(connection, name):
     ]
 
 
+def find_deck_candidates(connection, name: str) -> list[dict]:
+    """Keep game-card candidates and exact-name priority; legality still requires validation."""
+    matches = [
+        card
+        for card in find_cards(connection, name)
+        if card["commander_legality"] in ("legal", "banned", "restricted")
+    ]
+    exact = [card for card in matches if card["name"].casefold() == name.casefold()]
+    return exact or matches
+
+
 def catalog_stats(connection):
     """Count catalog records, printings, faces, and completed imports."""
     return {

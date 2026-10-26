@@ -8,6 +8,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- EDHREC salt reference support through bounded local sample import, immutable
+  source snapshots, exact catalog/face matching, and `deck-salt` advisory reports.
+  Ratings retain the 0–4 scale, voting year, observation date, source attribution,
+  resolution catalog, and explicit unknowns. New commands: `salt-import`,
+  `salt-show`, and `deck-salt`; a three-card example manifest is included.
+- Validation for finite/precise scores, rank order, duplicate fields/names/ranks,
+  timestamps, source URL, file/card/numeric limits, and ambiguous identities.
+  Legal-deck checks precede analysis; immutable snapshots keep prior ratings intact.
+- Salt and deck import share the existing game-card candidate rules, avoiding
+  false ambiguity from art-only records while retaining banned-card identification.
+- Rated/unrated quantities, known-rating subtotal and mean, and stale-source
+  labeling. These descriptive aggregates are not an official EDHREC deck score
+  or an aggression probability. Forge behavior and observed targeting are unchanged.
+- A 100-card reference-page sample was imported locally for verification; full
+  source data remains outside Git. Automatic website synchronization is not
+  implemented pending a supported access path.
+
 - Catalog-wide engine script/export audits with immutable per-card snapshots,
   current catalog provenance, pinned engine hashes, bounded historical pages,
   and separate Commander-legal/other/unknown counts. New commands: `engine-audit`,
