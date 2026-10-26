@@ -237,3 +237,37 @@ class EngineBoundaryTests(unittest.TestCase):
             serialize_deck(revision, {}, 1)
         with self.assertRaisesRegex(ValueError, "Unsafe"):
             serialize_deck(revision, {"Fire // Ice": "Fire\n[metadata]"}, 1)
+
+    def test_explicit_universes_within_aliases_preserve_original_script_export(self):
+        archive_path = self.root / "variants.zip"
+        with zipfile.ZipFile(archive_path, "w") as archive:
+            archive.writestr(
+                "one.txt", "Name:Original\nVariant:UniversesWithin:FlavorName:Renamed\n"
+            )
+            archive.writestr(
+                "two.txt",
+                "Name:Old Front\nVariant:UniversesWithin:FlavorName:New Front\n"
+                "AlternateMode:DoubleFaced\nALTERNATE\nName:Old Back\n"
+                "Variant:UniversesWithin:FlavorName:New Back\n",
+            )
+            archive.writestr(
+                "cosmetic.txt",
+                "Name:Base\nVariant:Cosmetic:FlavorName:Unverified Alias\n",
+            )
+        index = card_index(archive_path)
+        self.assertEqual(index["Renamed"], "Original")
+        self.assertEqual(index["New Front // New Back"], "Old Front")
+        self.assertNotIn("New Back", index)
+        self.assertNotIn("Unverified Alias", index)
+
+    def test_conflicting_variant_aliases_fail_closed(self):
+        archive_path = self.root / "conflicting.zip"
+        with zipfile.ZipFile(archive_path, "w") as archive:
+            archive.writestr(
+                "first.txt", "Name:First\nVariant:UniversesWithin:FlavorName:Shared\n"
+            )
+            archive.writestr(
+                "second.txt", "Name:Second\nVariant:UniversesWithin:FlavorName:Shared\n"
+            )
+        with self.assertRaisesRegex(ValueError, "Ambiguous"):
+            card_index(archive_path)

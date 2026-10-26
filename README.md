@@ -367,3 +367,69 @@ does not prove mana screw, flood, or a missed legal opportunity. The parser does
 not establish color access, uncastable cards, targeted removal, why a player was
 focused, or whether a card is "unfun." Those need further instrumentation and
 explicitly attributed subjective data. Historical results are not rewritten.
+
+## Catalog-wide engine coverage
+
+Audit the current local catalog against the pinned engine without starting Java
+or running games:
+
+```powershell
+python commander_simulator.py engine-audit
+python commander_simulator.py engine-audit-show AUDIT_ID
+python commander_simulator.py engine-audit-cards AUDIT_ID --limit 100
+python commander_simulator.py engine-audit-cards AUDIT_ID --status script_present --scope commander_legal
+python commander_simulator.py engine-audit-cards AUDIT_ID --scope all --status all --offset 100 --limit 100
+```
+
+Creation requires current catalog provenance and verified engine files. It freezes
+one row per retained catalog identity, exact export matches, aggregate counts,
+catalog evidence, engine hashes, and content fingerprints in SQLite. The audit
+is atomic: input limits or changed evidence roll back the entire snapshot.
+Sealed audits and their card rows cannot be changed or extended through ordinary
+database writes. Inspection needs no installed engine and never upgrades old
+evidence into a current gameplay approval.
+
+Scopes distinguish `commander_legal`, `other_legality`, and `unknown_legality`.
+These refer to catalog fields, not starting-deck eligibility. Statuses are:
+
+- `script_present`: an exact canonical or explicitly declared engine alias has
+  a safe starting-deck export name. This does not establish rules/AI correctness.
+- `missing_script`: no export alias was found in this index. It can include
+  in-game-only faces, so this is not a count of unsupported playable cards.
+- `unsafe_export`: an alias matched but its export name failed the shared
+  serialization checks; it cannot proceed to gameplay.
+
+The index recognizes explicit `UniversesWithin:FlavorName` variant metadata,
+including paired faces. It exports the corresponding original script name and
+preserves both names in the audit record. No fuzzy name matching or Oracle-text
+substitution is used. Back-face-only names are not promoted to starting cards.
+
+The first full local audit after these aliases matched 31,994 of 32,116 records
+marked Commander-legal, with 122 unmatched records. Those counts describe the
+October 25, 2026 local catalog and Forge 2.0.15, not every published card or every
+game interaction. Unmatched records include seven meld-result faces. Imports
+retain older identities; the audited set is the local catalog, not a guaranteed
+exact inventory of the latest bulk export. Rerun after catalog/engine changes.
+
+Audits accept at most 100,000 catalog identities. Result pages contain 1–1,000
+rows; offsets are bounded. Catalog identifiers, names, layouts, and legality
+labels have bounded lengths. Audit creation briefly serializes catalog writes;
+it is a trusted local operator command. Hard disk quotas and retention remain
+web-deployment requirements.
+
+Library-command and lookup JSON uses native Unicode on compatible terminals and
+lossless JSON escapes on older encodings. Non-ASCII card names remain intact
+when a JSON reader decodes the output, including on Windows redirected streams.
+
+## Meld starting-card validation
+
+Validator version 2 rejects combined meld results in either the main deck or
+command zone. It uses the record's own printing ID and related-card component
+metadata to distinguish `meld_part` from `meld_result`. Unknown roles require
+review rather than being inferred from a name. Ordinary meld fronts remain
+eligible under the other Commander construction rules. This follows
+[CR 712.4 and 712.8a](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+
+Bracket rechecks now carry current validator/rules versions. Existing deck
+history remains intact and is revalidated; older batch evidence that differs
+from the new validation fields requires creating a fresh batch.

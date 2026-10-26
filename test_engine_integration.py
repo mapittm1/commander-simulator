@@ -31,12 +31,12 @@ class LiveEngineTests(unittest.TestCase):
 
     def test_four_player_game(self):
         """Preserve the run logs but keep all fixture decks and reviews disposable."""
-        leaders = [
-            "Ghalta, Primal Hunger",
-            "Goreclaw, Terror of Qal Sisma",
-            "Surrak, the Hunt Caller",
-            "Ruxa, Patient Professor",
-        ]
+        leaders = {
+            "Ghalta, Primal Hunger": "Forest",
+            "Goreclaw, Terror of Qal Sisma": "Forest",
+            "Surrak, the Hunt Caller": "Forest",
+            "Vikya, Scorching Stalwart": "Plains",
+        }
         with (
             tempfile.TemporaryDirectory() as folder,
             closing(
@@ -49,25 +49,29 @@ class LiveEngineTests(unittest.TestCase):
                 "ORDER BY id DESC LIMIT 1"
             ).fetchone()
             with fixture:
-                for name in [*leaders, "Forest"]:
-                    raw = catalog.execute(
-                        "SELECT raw_json FROM card_details JOIN cards "
-                        "USING(card_id) WHERE name = ?",
-                        (name,),
-                    ).fetchone()
-                    store_card(fixture, json.loads(raw[0]))
+                for name in [*leaders, "Forest", "Plains"]:
+                    store_card(
+                        fixture,
+                        json.loads(
+                            catalog.execute(
+                                "SELECT raw_json FROM card_details JOIN cards "
+                                "USING(card_id) WHERE name = ?",
+                                (name,),
+                            ).fetchone()[0]
+                        ),
+                    )
                 fixture.execute(
                     "INSERT INTO imports(source,source_updated_at,records) "
-                    "VALUES (?,?,5)",
+                    "VALUES (?,?,6)",
                     latest,
                 )
             seats = []
-            for leader in leaders:
+            for leader, basic in leaders.items():
                 deck_id = save_deck(
                     fixture,
                     "Disposable engine fixture",
                     2,
-                    prepare_deck(fixture, "99 Forest", [leader]),
+                    prepare_deck(fixture, f"99 {basic}", [leader]),
                 )
                 with self.assertRaisesRegex(ValueError, "No bracket review"):
                     run_game(fixture, read_settings(), [(deck_id, 1)] * 4)
@@ -76,7 +80,7 @@ class LiveEngineTests(unittest.TestCase):
                     deck_id,
                     {
                         "reviewer": "Automated test fixture only",
-                        "rationale": "99 Forest and one creature; not a production attestation.",
+                        "rationale": "99 basic lands and one creature; not a production attestation.",
                         "checks": dict.fromkeys(load_policy()["review_checks"], True),
                     },
                 )
@@ -90,6 +94,9 @@ class LiveEngineTests(unittest.TestCase):
             self.assertEqual(result["diagnostics"]["status"], "observed")
             self.assertTrue((run / "diagnostics.json").is_file())
             self.assertTrue((run / "events.jsonl").is_file())
+            self.assertIn(
+                "1 Ryu, World Warrior", (run / "seat-4.dck").read_text(encoding="utf-8")
+            )
             print(json.dumps(result, indent=2))
             batch = create_batch(
                 fixture, read_settings(), seats, BatchOptions(2, seed=43, game_clock=60)

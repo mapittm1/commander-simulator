@@ -11,12 +11,13 @@ from collections import Counter
 from datetime import datetime, timedelta, timezone
 from sqlite3 import Connection
 
+from card_structure import starting_card_issues
 from database import get_card_details
 from deck_snapshots import read_revision
 
 RULES_VERSION = "2026-09-25"
-RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt"
-VALIDATOR_VERSION = 1
+RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
+VALIDATOR_VERSION = 2
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
@@ -238,6 +239,16 @@ def _load_cards(connection: Connection, entries: list) -> dict:
     return cards
 
 
+def require_current_catalog(connection: Connection, now=None) -> dict:
+    """Require current import provenance for catalog-dependent backend diagnostics."""
+    evidence, blockers = _catalog_evidence(
+        connection, now or datetime.now(timezone.utc)
+    )
+    if blockers:
+        raise ValueError("Catalog is not current: " + "; ".join(blockers))
+    return evidence
+
+
 def _catalog_evidence(connection: Connection, now: datetime) -> tuple[dict, list[str]]:
     row = connection.execute(
         "SELECT * FROM imports ORDER BY id DESC LIMIT 1"
@@ -278,6 +289,9 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
     )
     try:
         cards = _load_cards(connection, entries)
+        layout_errors, layout_blockers = starting_card_issues(cards)
+        errors.extend(layout_errors)
+        blockers.extend(layout_blockers)
         total = sum(entry["quantity"] for entry in entries)
         if total != 100:
             errors.append(f"Expected 100 cards including commanders; found {total}")

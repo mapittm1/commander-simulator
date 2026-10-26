@@ -66,6 +66,12 @@ than an override. Bracket compliance and engine compatibility are separate gates
 The pinned rules are the September 25, 2026 Comprehensive Rules. Updating card
 data does not automatically update the validator's interpretation of rules.
 
+Validator version 2 distinguishes a meld front from the combined meld result
+using the exact printing ID in `all_parts`. A combined result cannot occupy a
+starting slot or the command zone. Missing or conflicting role metadata blocks
+approval. Current validator/rules versions are carried into bracket rechecks;
+immutable prior validation history is preserved.
+
 ## Engineering requirements
 
 - Reusable services stay independent of a future UI and transport framework.
@@ -184,3 +190,19 @@ or missing coverage is explicit, never substituted as zero. Only completed,
 covered games enter batch diagnostic totals; seat mappings use original pod order.
 Diagnostic output failure does not replace a valid game outcome. These counts
 do not provide hidden-state mana diagnoses or human targeting explanations.
+
+## Catalog engine audit contract
+
+Audit creation requires fresh catalog provenance and pinned engine integrity,
+then freezes bounded per-identity export matches and fixed-size scope counts in
+one transaction. A catalog refresh during preparation or engine change during
+creation aborts the snapshot. Sealed headers/cards cannot be updated, deleted,
+or extended. Historical reads verify content digests and require no Java.
+
+Scope is every retained local identity, separated by its Commander legality
+field; this does not infer starting-card eligibility. Exact canonical and
+explicit Universes Within aliases are permitted; ambiguous aliases fail closed.
+Missing export aliases include in-game-only meld faces and cannot be described
+as an exact count of unsupported playable cards. Audit results must never replace
+current construction, bracket, or launch-time script checks. Script availability
+does not verify Oracle semantics, interactions, or AI behavior.

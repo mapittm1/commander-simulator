@@ -71,6 +71,13 @@ draws/timeouts, and report uncertainty and strategy coverage with win rates.
 AI match results measure performance against that engine's pilots; they are not
 a calibrated estimate of performance against human pods.
 
+Catalog-wide immutable coverage audits now quantify exact script/export matches
+and gaps by format-legality scope. Explicit engine-declared Universes Within
+aliases are supported. Missing matches still include in-game-only faces and do
+not establish the count of unsupported playable cards. Oracle conformance and
+AI competence remain unverified; source acquisition and card-interaction testing
+are still needed before comprehensive support can be claimed.
+
 References:
 - https://github.com/Card-Forge/forge/wiki/AI
 - https://github.com/Card-Forge/forge

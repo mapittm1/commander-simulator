@@ -8,6 +8,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Catalog-wide engine script/export audits with immutable per-card snapshots,
+  current catalog provenance, pinned engine hashes, bounded historical pages,
+  and separate Commander-legal/other/unknown counts. New commands: `engine-audit`,
+  `engine-audit-show`, and `engine-audit-cards`. Audits do not run Java or certify
+  gameplay correctness. Missing export matches include non-startable faces.
+- Exact Universes Within aliases declared by engine scripts, including paired
+  faces. These export the original script name and reject ambiguous mappings;
+  no fuzzy matching or inferred card replacements are introduced. The local
+  audit gained 29 matches, leaving 122 unmatched Commander-format records.
+- Audit regression tests cover count/page bounds, provenance, race detection,
+  rollback, immutability, integrity checks, historical retention, unsafe exports,
+  and inspection without an installed engine.
+
 - Bounded parsing of the pinned Forge log dialect into `events.jsonl`, retaining
   original physical log line numbers, card names, seats, and object identifiers.
   Grouped attackers, multiple-defender continuation lines, and targeted-cast
@@ -28,6 +41,16 @@ Historical entries below summarize verified Git milestones, not release versions
   real single-game run plus a two-game pause/resume batch.
 
 ### Changed
+
+- Commander validator version 2 rejects meld results as starting cards or
+  commanders, while unverifiable meld roles block approval. Meld fronts remain
+  supported subject to the other construction rules. Bracket rechecks record
+  current rules and validator versions, so changed frozen batch evidence must
+  be recreated. The verified rules reference now links to the pinned PDF.
+- The live engine smoke fixture includes an explicit variant alias and checks
+  its actual generated export name before validating batch diagnostics.
+- Library and lookup JSON output now falls back to lossless escapes on legacy
+  terminal encodings, preventing valid Unicode card names from breaking pages.
 
 - New engine results include diagnostic coverage; failure to write diagnostics
   does not replace the actual game's win/draw/error outcome.

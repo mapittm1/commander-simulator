@@ -213,5 +213,70 @@ class CharacteristicTests(unittest.TestCase):
         self.assertTrue(eligible_commander(value))
 
 
+class MeldStartingTests(unittest.TestCase):
+    """Meld results are battlefield characteristics, not separately startable cards."""
+
+    def setUp(self):
+        self.connection = connect(":memory:")
+        self.addCleanup(self.connection.close)
+        with self.connection:
+            store_card(self.connection, card("Leader", colors=["G"]))
+            store_card(
+                self.connection, card("Forest", "Basic Land — Forest", colors=["G"])
+            )
+            self.connection.execute(
+                "INSERT INTO imports(source,source_updated_at,records) VALUES (?,?,2)",
+                ("oracle_cards", datetime.now(timezone.utc).isoformat()),
+            )
+
+    def _meld(self, role):
+        value = card("Meld Fixture", colors=["G"])
+        value["layout"] = "meld"
+        value["all_parts"] = [{"id": value["id"], "component": role}]
+        with self.connection:
+            store_card(self.connection, value)
+
+    def test_meld_result_is_illegal_in_main_deck_or_command_zone(self):
+        self._meld("meld_result")
+        for text, commanders in (
+            ("98 Forest\n1 Meld Fixture", ["Leader"]),
+            ("99 Forest", ["Meld Fixture"]),
+        ):
+            result = prepare_deck(self.connection, text, commanders)["legality"]
+            self.assertEqual(result["status"], "illegal")
+            self.assertTrue(any("Meld result" in error for error in result["errors"]))
+
+    def test_meld_front_is_startable_and_unknown_role_blocks(self):
+        self._meld("meld_part")
+        self.assertEqual(
+            prepare_deck(self.connection, "99 Forest", ["Meld Fixture"])["legality"][
+                "status"
+            ],
+            "legal",
+        )
+        self._meld("combo_piece")
+        self.assertEqual(
+            prepare_deck(self.connection, "99 Forest", ["Meld Fixture"])["legality"][
+                "status"
+            ],
+            "needs_review",
+        )
+
+    def test_meld_role_is_not_inferred_from_a_name_or_another_printing(self):
+        value = card("Meld Fixture", colors=["G"])
+        value.update(
+            layout="meld",
+            all_parts=[{"id": "another-printing", "component": "meld_part"}],
+        )
+        with self.connection:
+            store_card(self.connection, value)
+        self.assertEqual(
+            prepare_deck(self.connection, "99 Forest", ["Meld Fixture"])["legality"][
+                "status"
+            ],
+            "needs_review",
+        )
+
+
 if __name__ == "__main__":
     unittest.main()

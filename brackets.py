@@ -139,6 +139,8 @@ def _screen_revision(connection: Connection, revision: dict, review=None) -> dic
         "policy_hash": policy["hash"],
         "sources": policy["sources"],
         "catalog": legality["catalog"],
+        "validator_version": legality["validator_version"],
+        "rules_version": legality["rules_version"],
         "game_changers": found,
         "game_changer_count": count,
         "game_changer_cap": cap,

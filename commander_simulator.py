@@ -12,6 +12,7 @@ from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
 from decks import BRACKETS, list_decks, prepare_deck, read_decklist, save_deck
 from engine_commands import ENGINE_COMMANDS, add_engine_commands, run_engine_command
+from json_output import write_json
 from opponent_commands import (
     OPPONENT_COMMANDS,
     add_opponent_commands,
@@ -74,7 +75,7 @@ def run_library_command(connection, args) -> bool:
     handlers.update(dict.fromkeys(ENGINE_COMMANDS, run_engine_command))
     handlers.update(dict.fromkeys(BATCH_COMMANDS, run_batch_command))
     result = handlers[args.command](connection, args)
-    print(json.dumps(result, indent=2, ensure_ascii=False))
+    write_json(result)
     if args.command == "batch-run":
         return result["status"] in {"paused", "completed"} and not (
             result["failed"] or result["interrupted"]
@@ -140,11 +141,7 @@ def main(argv=None):
             elif args.command == "import":
                 print(f"Imported {import_bulk(connection, args.file)} records.")
             elif args.command == "lookup":
-                print(
-                    json.dumps(
-                        find_cards(connection, args.name), indent=2, ensure_ascii=False
-                    )
-                )
+                write_json(find_cards(connection, args.name))
             elif args.command in {"init", "stats"}:
                 print(json.dumps(catalog_stats(connection)))
     except (OSError, ValueError, KeyError, StopIteration, sqlite3.Error) as error:
