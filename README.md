@@ -404,9 +404,10 @@ including paired faces. It exports the corresponding original script name and
 preserves both names in the audit record. No fuzzy name matching or Oracle-text
 substitution is used. Back-face-only names are not promoted to starting cards.
 
-The latest local audit matches 32,014 of 32,116 records marked Commander-legal,
-with 102 unmatched records. Explicit `CopyFaceFrom` references recover 20 matches
-previously missed by the index. Those counts describe the October 25, 2026 local
+The latest local audit matches 32,015 of 32,116 records marked Commander-legal,
+with 101 unmatched records. Explicit `CopyFaceFrom` references recover 20 matches
+previously missed by the index; a reviewed identity mapping adds one more. Those
+counts describe the October 25, 2026 local
 catalog and Forge 2.0.15, not every published card or every game interaction. Imports
 retain older identities; the audited set is the local catalog, not a guaranteed
 exact inventory of the latest bulk export. Rerun after catalog/engine changes.
@@ -449,8 +450,8 @@ metadata/name/serialization review first, ordinary script investigation next,
 then lexical hints for supplementary mechanics. Priority is not deck popularity
 or proof of support. Spelling candidates remain blocked pending explicit review.
 The local snapshot separates 48 sticker sheets and six confirmed meld results
-from 48 investigation items: one unresolved meld role, one spelling candidate,
-and 46 cards mentioning supplementary mechanics. These are triage categories,
+from 47 investigation items: one unresolved meld role and 46 cards mentioning
+supplementary mechanics. These are triage categories,
 not a count of confirmed unsupported starting cards.
 
 The index reads Forge's explicit `CopyFaceFrom` declarations and requires their
@@ -484,6 +485,39 @@ It does not prove the exact 21-point boundary, stack priority, targeted removal,
 replacement effects, zone-change interactions, or combos. Those need additional
 controlled fixtures. Offline tests mutate witnesses to verify rejection;
 opt-in integration tests run the real engine using the command documented above.
+
+## Reviewed identity exports
+
+The repository-owned `engine_alias_reviews.json` records explicit identity
+reviews separately from gameplay code. Ratonhnhaké꞉ton has a catalog Unicode
+colon, while Forge and the [official release notes](https://magic.wizards.com/en/news/feature/assassins-creed-release-notes)
+use Ratonhnhaké:ton. This mapping requires its exact Oracle ID, reviewed archive
+SHA-256, individual script SHA-256, and an existing exact engine target.
+Other similar names are never normalized or approved automatically.
+
+The registry is bounded to 64 KiB and 64 reviews and rejects duplicate fields,
+names, identities, conflicting aliases, unsafe export names, and invalid hashes.
+An archive mismatch leaves that alias unavailable; a matching archive with
+incorrect script evidence fails closed. Registry source URLs are attribution
+only and are never fetched at runtime. This is trusted repository configuration,
+not an upload or a user-extensible remote mapping service.
+
+Coverage evidence freezes every used review into audit records and game inputs,
+including source references and the review's limited scope. Changing a used
+review invalidates incompatible frozen batch evidence. A name without the
+reviewed Oracle identity cannot be exported through the mapping.
+
+The opt-in integration suite now includes a legal multicolor basic-land pod
+that verifies this export, casting, combat-damage trigger resolution, and later
+Assassin-token participation. It does not test Equipment recursion, hexproof,
+or every interaction of this card; identity approval is not full rules approval.
+
+Gap classifier version 2 adds printing-ID evidence for uncertain meld roles.
+Ragnarok's current representative printing is absent from its own related-card
+list, which identifies a different printing with the same name as the meld
+result. The report exposes both IDs and keeps the role unapproved. Neither a
+matching name nor the diagnostic itself can bypass construction review. Old
+audits retain their original classification and version.
 
 ## EDHREC salt reference
 

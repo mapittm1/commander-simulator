@@ -4,6 +4,8 @@ import re
 import zipfile
 from pathlib import Path
 
+from engine_aliases import ReviewedCardIndex, apply_alias_reviews
+
 
 def card_index(cards_archive: Path) -> dict[str, str]:
     """Map canonical/face names to the pinned script's deck name; do not guess cards."""
@@ -41,7 +43,7 @@ def card_index(cards_archive: Path) -> dict[str, str]:
     for alias, exports in fronts.items():
         if alias not in index and len(exports) == 1:
             index[alias] = next(iter(exports))
-    return index
+    return apply_alias_reviews(cards_archive, index)
 
 
 def _bind_alias(index, alias, exported) -> None:
@@ -90,14 +92,26 @@ def coverage(revision: dict, index: dict) -> dict:
     missing = [
         entry["card"]["name"]
         for entry in revision["cards"]
-        if entry["card"]["name"] not in index
+        if script_match(entry["card"]["name"], index, entry["card"].get("card_id"))[
+            "script_status"
+        ]
+        != "script_present"
     ]
-    return {
+    report = {
         "revision_id": revision["id"],
         "missing": sorted(missing),
         "status": "supported_scripts" if not missing else "unsupported",
         "basis": "pinned_script_presence_only",
     }
+    if isinstance(index, ReviewedCardIndex):
+        used = [
+            index.reviews[entry["card"]["name"]]
+            for entry in revision["cards"]
+            if entry["card"]["name"] in index.reviews
+        ]
+        if used:
+            report["alias_reviews"] = used
+    return report
 
 
 def safe_engine_name(name: str) -> bool:
@@ -110,18 +124,28 @@ def safe_engine_name(name: str) -> bool:
     )
 
 
-def script_match(name: str, index: dict) -> dict:
+def script_match(name: str, index: dict, card_id: str | None = None) -> dict:
     """Classify exact aliases without interpreting Oracle text as executable rules."""
     if name not in index:
+        return {"script_status": "missing_script", "engine_name": None}
+    review = index.reviews.get(name) if isinstance(index, ReviewedCardIndex) else None
+    if review is not None and card_id != review["oracle_id"]:
         return {"script_status": "missing_script", "engine_name": None}
     exported = index[name]
     if not safe_engine_name(exported):
         return {"script_status": "unsafe_export", "engine_name": None}
-    return {"script_status": "script_present", "engine_name": exported}
+    result = {"script_status": "script_present", "engine_name": exported}
+    if review is not None:
+        result["alias_review"] = review
+    return result
 
 
 def serialize_deck(revision: dict, index: dict, seat: int) -> str:
     """Export generated seat metadata and exact indexed cards, never user commands."""
+    for entry in revision["cards"]:
+        name = entry["card"]["name"]
+        if name in index and not safe_engine_name(index[name]):
+            raise ValueError("Unsafe engine card serialization")
     report = coverage(revision, index)
     if report["missing"]:
         raise ValueError("Unsupported engine cards: " + ", ".join(report["missing"]))

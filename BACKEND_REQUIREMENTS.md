@@ -217,6 +217,14 @@ engine declarations and existing targets; ambiguous exports fail closed.
 Validator version 3 excludes sticker sheets from starting decks and preserves
 the review state for uncertain meld roles.
 
+Explicit repository-owned identity reviews may bridge verified spelling
+differences only for their exact Oracle identity and pinned archive/script
+hashes. Review provenance is retained in audit and game coverage evidence;
+incompatible batch evidence must not resume. Missing identities, changed script
+evidence, unsafe names, conflicts, and ambiguity cannot authorize an export.
+Identity/export approval does not certify card rules behavior. Meld diagnostics
+show conflicting printing IDs without inferring an approved role from names.
+
 The built-in regression pod uses a disposable database populated from current
 catalog records and passes normal deck/engine gates. Fixture bracket reviews are
 test-only, never production attestations. Reports preserve hashes, witness lines,

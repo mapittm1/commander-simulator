@@ -12,7 +12,7 @@ from engine_audit_store import (
 )
 from forge_decks import safe_engine_name
 
-CLASSIFIER_VERSION = 1
+CLASSIFIER_VERSION = 2
 PUNCTUATION_REVIEW = str.maketrans({"\ua789": ":", "\u2019": "'"})
 
 
@@ -39,12 +39,35 @@ def _structural_gap(card, role) -> dict | None:
             "Verify through the meld-front interaction; do not export this as a starting card.",
         )
     if role == "unknown":
-        return _category(
-            "metadata_review",
-            1,
-            "Resolve missing/conflicting meld role metadata before any approval.",
-        )
+        return {
+            **_category(
+                "metadata_review",
+                1,
+                "Resolve missing/conflicting meld role metadata before any approval.",
+            ),
+            "metadata_evidence": _meld_evidence(card),
+        }
     return None
+
+
+def _meld_evidence(card) -> dict:
+    parts = card.get("all_parts")
+    entries = parts if isinstance(parts, list) else []
+    return {
+        "own_printing_id": card.get("id"),
+        "oracle_id": card.get("oracle_id"),
+        "exact_self_reference_count": sum(
+            isinstance(part, dict) and part.get("id") == card.get("id")
+            for part in entries
+        ),
+        "related_printings": [
+            {key: part.get(key) for key in ("id", "component", "name")}
+            for part in entries[:10]
+            if isinstance(part, dict)
+        ],
+        "role_approved": False,
+        "reason": "An exact self-printing role could not be established; names are not identity proof.",
+    }
 
 
 def _implementation_gap(card, index, script_status) -> dict:
@@ -118,9 +141,11 @@ def audit_gap_backlog(
     if stored["report"]["auditor_version"] < 2:
         raise ValueError("Audit lacks frozen gap classification; create a fresh audit")
     categories = Counter()
+    versions = set()
     actionable = []
     for card in iter_gap_cards(connection, audit_id):
         context = card["gap"]
+        versions.add(context["classifier_version"])
         categories[context["category"]] += 1
         if context["priority"]:
             actionable.append(card)
@@ -134,7 +159,7 @@ def audit_gap_backlog(
     return {
         "audit_id": audit_id,
         "report_hash": stored["report_hash"],
-        "classifier_version": CLASSIFIER_VERSION,
+        "classifier_version": next(iter(versions)) if len(versions) == 1 else None,
         "historical_snapshot_only": True,
         "categories": dict(categories),
         "total_gap_records": sum(categories.values()),

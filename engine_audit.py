@@ -141,4 +141,8 @@ def _snapshot(card: dict, index: dict) -> dict:
         scope = "commander_legal"
     elif legality in {"not_legal", "banned"}:
         scope = "other_legality"
-    return {**card, "scope": scope, **script_match(card["name"], index)}
+    return {
+        **card,
+        "scope": scope,
+        **script_match(card["name"], index, card["card_id"]),
+    }

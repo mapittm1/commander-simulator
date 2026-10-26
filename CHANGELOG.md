@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Repository-owned identity review registry with exact Oracle-ID guards, archive
+  and script hashes, bounded input, duplicate/conflict rejection, and preserved
+  provenance in audits and game/batch evidence. Ratonhnhaké꞉ton now exports to
+  the reviewed Forge spelling, Ratonhnhaké:ton; no fuzzy substitution is used.
+- Multicolor basic-land fixtures and a live regression for that reviewed export,
+  casting, combat-damage trigger resolution, and later Assassin-token participation.
+  Equipment recursion, hexproof, and full card conformance remain unverified.
+- Meld-gap diagnostics expose the representative and related printing IDs while
+  preserving the review block. Classifier version 2 is frozen into new records;
+  historical backlog reports keep the stored classifier version.
+- Local audit now matches 32,015 of 32,116 Commander-format records, leaving
+  101 gaps: 54 confirmed supplementary/meld-result objects and 47 investigation
+  items, including the still-unresolved Ragnarok printing-role discrepancy.
+- Validation: 199 offline tests and 90 subtests pass, plus all three opt-in
+  live-engine integration tests. Black, isort, Pylint, and Bandit pass.
+
 - `engine-audit-gaps`: bounded, immutable engineering triage for new version-2
   audits, separating supplementary/meld-result records from investigation items.
   Historical classifications do not change with later catalog edits. Spelling

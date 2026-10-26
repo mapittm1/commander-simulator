@@ -2,6 +2,7 @@
 
 import json
 import os
+import re
 import unittest
 from contextlib import closing
 from pathlib import Path
@@ -81,3 +82,48 @@ class LiveEngineTests(unittest.TestCase):
         self.assertEqual(len(report["checks"]), 3)
         self.assertTrue(all(check["status"] == "passed" for check in report["checks"]))
         print(json.dumps(report, indent=2))
+
+    def test_reviewed_identity_exports_and_casts(self):
+        """The reviewed alias reaches the pinned engine with the real Oracle identity."""
+        leaders = {
+            "Ghalta, Primal Hunger": "Forest",
+            "Goreclaw, Terror of Qal Sisma": "Forest",
+            "Surrak, the Hunt Caller": "Forest",
+            "Ratonhnhaké꞉ton": {"Plains": 33, "Island": 33, "Swamp": 33},
+        }
+        with (
+            closing(connect(DEFAULT_DATABASE)) as source,
+            legal_fixture_pod(source, leaders) as (fixture, seats),
+        ):
+            result = run_game(fixture, read_settings(), seats, seed=42, game_clock=60)
+        self.assertEqual(result["status"], "completed", result)
+        run = Path(result["directory"])
+        self.assertIn(
+            "1 Ratonhnhaké:ton", (run / "seat-4.dck").read_text(encoding="utf-8")
+        )
+        inputs = json.loads((run / "inputs.json").read_text(encoding="utf-8"))
+        self.assertEqual(
+            inputs["coverage"][3]["alias_reviews"][0]["oracle_id"],
+            "a37f8381-83a4-4b6b-8176-c90f6a61da74",
+        )
+        log = (run / "forge.log").read_text(encoding="utf-8", errors="replace")
+        self.assertIn("Add To Stack: Ai(4)-seat-4 cast Ratonhnhaké:ton", log)
+        hit = re.search(
+            r"Damage: Ratonhnhaké:ton \([0-9]+\) deals 3 combat damage to Ai", log
+        )
+        self.assertIsNotNone(hit)
+        position = hit.end()
+        for marker in (
+            "Add To Stack: Ai(4)-seat-4 triggered Ratonhnhaké:ton",
+            "Resolve Stack: Whenever Ratonhnhaké:ton deals combat damage",
+            "create a 1/1 black Assassin creature token with menace.",
+            "Assassin Token (",
+        ):
+            position = log.find(marker, position)
+            self.assertGreaterEqual(position, 0, marker)
+            position += len(marker)
+        print(
+            json.dumps(
+                {"identity_smoke_run": result["run_id"], "status": result["status"]}
+            )
+        )

@@ -23,16 +23,19 @@ FOREST_POD = {
 
 @contextmanager
 def legal_fixture_pod(
-    source: Connection, leaders: dict[str, str]
+    source: Connection, leaders: dict[str, str | dict[str, int]]
 ) -> Iterator[tuple[Connection, list[tuple[int, int]]]]:
     """Copy only real fixture records, then run normal legality and bracket gates."""
     if source.in_transaction:
         raise ValueError("Finish the active transaction before preparing a fixture")
+    lands = _basic_land_lists(leaders)
     with (
         tempfile.TemporaryDirectory() as folder,
         closing(connect(Path(folder) / "fixture.sqlite3")) as fixture,
     ):
-        names = list(dict.fromkeys([*leaders, *leaders.values()]))
+        names = list(leaders)
+        for land_list in lands.values():
+            names.extend(name for name in land_list if name not in names)
         with source, fixture:
             source.execute("BEGIN")
             catalog = require_current_catalog(source)
@@ -49,12 +52,16 @@ def legal_fixture_pod(
                 (catalog["source"], catalog["source_updated_at"], len(names)),
             )
         seats = []
-        for leader, basic in leaders.items():
+        for leader, land_list in lands.items():
             deck_id = save_deck(
                 fixture,
                 "Disposable engine fixture",
                 2,
-                prepare_deck(fixture, f"99 {basic}", [leader]),
+                prepare_deck(
+                    fixture,
+                    "\n".join(f"{count} {name}" for name, count in land_list.items()),
+                    [leader],
+                ),
             )
             save_bracket_review(
                 fixture,
@@ -67,3 +74,27 @@ def legal_fixture_pod(
             )
             seats.append((deck_id, 1))
         yield fixture, seats
+
+
+def _basic_land_lists(leaders):
+    lands = {}
+    for leader, value in leaders.items():
+        selected = {value: 99} if isinstance(value, str) else value
+        if (
+            not isinstance(selected, dict)
+            or not selected
+            or any(
+                name
+                not in {"Plains", "Island", "Swamp", "Mountain", "Forest", "Wastes"}
+                or not isinstance(count, int)
+                or isinstance(count, bool)
+                or not 1 <= count <= 99
+                for name, count in selected.items()
+            )
+            or sum(selected.values()) != 99
+        ):
+            raise ValueError(
+                "Engine fixtures require exactly 99 basic lands per commander"
+            )
+        lands[leader] = selected
+    return lands

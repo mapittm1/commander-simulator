@@ -68,6 +68,32 @@ class GapPriorityTests(unittest.TestCase):
             "missing_script",
         )
         self.assertEqual(result["category"], "metadata_review")
+        self.assertFalse(result["metadata_evidence"]["role_approved"])
+
+    def test_a_related_meld_result_name_does_not_prove_own_printing_role(self):
+        result = classify_gap(
+            {
+                "name": "Meld Result",
+                "oracle_id": "oracle",
+                "id": "own-printing",
+                "layout": "meld",
+                "all_parts": [
+                    {
+                        "id": "other-printing",
+                        "name": "Meld Result",
+                        "component": "meld_result",
+                    }
+                ],
+            },
+            {},
+            "missing_script",
+        )
+        evidence = result["metadata_evidence"]
+        self.assertEqual(result["category"], "metadata_review")
+        self.assertEqual(evidence["own_printing_id"], "own-printing")
+        self.assertEqual(evidence["exact_self_reference_count"], 0)
+        self.assertEqual(evidence["related_printings"][0]["id"], "other-printing")
+        self.assertFalse(evidence["role_approved"])
 
 
 class FrozenGapBacklogTests(unittest.TestCase):
@@ -138,6 +164,13 @@ class FrozenGapBacklogTests(unittest.TestCase):
         ):
             with self.assertRaisesRegex(ValueError, "fresh audit"):
                 audit_gap_backlog(self.db, self.stored["audit_id"])
+
+    def test_report_keeps_the_stored_classifier_version(self):
+        baseline = audit_gap_backlog(self.db, self.stored["audit_id"])
+        with patch("engine_gaps.CLASSIFIER_VERSION", 999):
+            self.assertEqual(
+                audit_gap_backlog(self.db, self.stored["audit_id"]), baseline
+            )
 
     def test_pagination_and_immutability(self):
         self.assertEqual(

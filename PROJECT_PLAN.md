@@ -86,12 +86,13 @@ References:
 
 The current rules-testing milestone adds frozen support-gap triage and a limited
 live all-Forest regression pod. Copied-face indexing removes 20 false gaps; the
-latest local audit has 102 unmatched Commander-format records, with 48 requiring
+latest local audit has 101 unmatched Commander-format records, with 47 requiring
 investigation after excluding 54 confirmed supplementary/meld-result objects.
-One meld role remains uncertain and one spelling candidate remains unapproved.
+One meld role remains uncertain; the spelling discrepancy now has an explicit
+Oracle-ID/hash-bound review and a live export/cast/trigger/token regression.
 Three log witnesses cover commander tax, an attack trigger's combat effect, and
 positive-life commander-damage loss. These do not establish full rules correctness.
-Next engine work: resolve the two metadata/name reviews, then build controlled
+Next engine work: resolve the meld printing-role discrepancy, then build controlled
 fixtures for stack priority, targeted removal, replacement effects, zone changes,
 and combos before expanding strategy-level diagnostics or claiming broad support.
 
