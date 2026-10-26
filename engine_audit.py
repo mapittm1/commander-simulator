@@ -3,6 +3,7 @@
 import hashlib
 import uuid
 
+from database import get_card_details
 from engine_audit_store import (
     MAX_AUDIT_CARDS,
     SCOPES,
@@ -11,10 +12,11 @@ from engine_audit_store import (
     ensure_audit_schema,
     read_audit,
 )
+from engine_gaps import classify_gap
 from forge_decks import card_index, script_match
 from legality import require_current_catalog
 
-AUDITOR_VERSION = 1
+AUDITOR_VERSION = 2
 
 
 def create_engine_audit(connection, settings) -> dict:
@@ -73,6 +75,16 @@ def _scan_catalog(connection, audit_id, index) -> dict:
         if total > MAX_AUDIT_CARDS:
             raise ValueError("Catalog exceeds the engine audit identity limit")
         snapshot = _snapshot(dict(row), index)
+        if (
+            snapshot["scope"] == "commander_legal"
+            and snapshot["script_status"] != "script_present"
+        ):
+            details = get_card_details(connection, snapshot["card_id"])
+            if details["name"] != snapshot["name"]:
+                raise ValueError(
+                    "Catalog name/detail mismatch during gap classification"
+                )
+            snapshot["gap"] = classify_gap(details, index, snapshot["script_status"])
         raw, digest = canonical_record(snapshot)
         counts[snapshot["scope"]][snapshot["script_status"]] += 1
         fingerprint.update((digest + "\n").encode("ascii"))

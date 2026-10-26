@@ -404,10 +404,10 @@ including paired faces. It exports the corresponding original script name and
 preserves both names in the audit record. No fuzzy name matching or Oracle-text
 substitution is used. Back-face-only names are not promoted to starting cards.
 
-The first full local audit after these aliases matched 31,994 of 32,116 records
-marked Commander-legal, with 122 unmatched records. Those counts describe the
-October 25, 2026 local catalog and Forge 2.0.15, not every published card or every
-game interaction. Unmatched records include seven meld-result faces. Imports
+The latest local audit matches 32,014 of 32,116 records marked Commander-legal,
+with 102 unmatched records. Explicit `CopyFaceFrom` references recover 20 matches
+previously missed by the index. Those counts describe the October 25, 2026 local
+catalog and Forge 2.0.15, not every published card or every game interaction. Imports
 retain older identities; the audited set is the local catalog, not a guaranteed
 exact inventory of the latest bulk export. Rerun after catalog/engine changes.
 
@@ -433,6 +433,57 @@ eligible under the other Commander construction rules. This follows
 Bracket rechecks now carry current validator/rules versions. Existing deck
 history remains intact and is revalidated; older batch evidence that differs
 from the new validation fields requires creating a fresh batch.
+
+## Prioritized engine gaps and rules regressions
+
+```powershell
+python commander_simulator.py engine-audit
+python commander_simulator.py engine-audit-gaps AUDIT_ID --limit 100
+python commander_simulator.py engine-conformance
+```
+
+New audits freeze gap classifications alongside the per-card evidence. Older
+version-1 audits remain readable but require a fresh audit for this backlog.
+`engine-audit-gaps` pages actionable records in engineering priority order:
+metadata/name/serialization review first, ordinary script investigation next,
+then lexical hints for supplementary mechanics. Priority is not deck popularity
+or proof of support. Spelling candidates remain blocked pending explicit review.
+The local snapshot separates 48 sticker sheets and six confirmed meld results
+from 48 investigation items: one unresolved meld role, one spelling candidate,
+and 46 cards mentioning supplementary mechanics. These are triage categories,
+not a count of confirmed unsupported starting cards.
+
+The index reads Forge's explicit `CopyFaceFrom` declarations and requires their
+referenced names to exist. Canonical standalone names take precedence over
+optional front aliases; specialized/back faces are not independently promoted.
+This follows the pinned engine's [card parser](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-core/src/main/java/forge/card/CardRules.java).
+Index matches still do not validate individual card interactions.
+
+Validator version 3 also rejects sticker sheets as starting cards; their
+supplementary role is described in the [official Unfinity mechanics guide](https://magic.wizards.com/en/news/feature/unfinity-mechanics-2022-09-20).
+Uncertain meld roles continue to require review. Existing revisions are retained
+and revalidated; changed frozen batch evidence requires a new batch.
+
+`engine-conformance` runs a fixed, legal four-player fixture containing one
+commander and 99 Forests per seat, using current catalog metadata in a disposable
+database. It uses normal legality, fixture-only bracket reviews, pinned engine
+checks, and execution limits. It adds no fixture decks or reviews to the main
+library. The preserved run includes inputs, raw log, result, diagnostics, and
+`conformance.json` with input/log hashes and source line evidence.
+
+The limited checks require witnessed commander tax on a Ruxa recast, Goreclaw's
+resolved attack trigger followed by five unblocked combat damage, and a loss
+from one commander's accumulated combat damage while life remains positive.
+Commander tax and the 21-combat-damage rule are described in the
+[official Commander rules](https://magic.wizards.com/en/formats/commander).
+Absent evidence yields `not_exercised` and an overall `inconclusive` result.
+Counterexamples yield `failed`; only `passed` returns CLI exit code zero.
+
+This is a limited log regression, not full rules conformance or AI validation.
+It does not prove the exact 21-point boundary, stack priority, targeted removal,
+replacement effects, zone-change interactions, or combos. Those need additional
+controlled fixtures. Offline tests mutate witnesses to verify rejection;
+opt-in integration tests run the real engine using the command documented above.
 
 ## EDHREC salt reference
 

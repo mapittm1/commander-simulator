@@ -9,22 +9,28 @@ def meld_role(card: dict) -> str | None:
     parts = card.get("all_parts")
     if not isinstance(own_id, str) or not own_id or not isinstance(parts, list):
         return "unknown"
-    roles = {
+    roles = [
         part.get("component")
         for part in parts
         if isinstance(part, dict) and part.get("id") == own_id
-    }
-    if roles == {"meld_result"}:
+    ]
+    if not all(isinstance(role, str) for role in roles):
+        return "unknown"
+    if set(roles) == {"meld_result"}:
         return "meld_result"
-    if roles == {"meld_part"}:
+    if set(roles) == {"meld_part"}:
         return "meld_part"
     return "unknown"
 
 
 def starting_card_issues(cards: dict) -> tuple[list[str], list[str]]:
-    """Exclude combined meld faces and block unverifiable meld roles (CR 712.4, 712.8a)."""
+    """Exclude sticker sheets and meld results; block unverifiable meld roles."""
     errors, blockers = [], []
     for card in cards.values():
+        if card.get("type_line") == "Stickers":
+            errors.append(
+                f"Sticker sheet cannot occupy a starting-deck slot: {card['name']} (CR 123)"
+            )
         role = meld_role(card)
         if role == "meld_result":
             errors.append(

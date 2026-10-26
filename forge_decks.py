@@ -7,7 +7,8 @@ from pathlib import Path
 
 def card_index(cards_archive: Path) -> dict[str, str]:
     """Map canonical/face names to the pinned script's deck name; do not guess cards."""
-    index = {}
+    index, variants, fronts = {}, {}, {}
+    declared_faces, references = set(), set()
     with zipfile.ZipFile(cards_archive) as archive:
         for member in archive.infolist():
             if not member.filename.endswith(".txt"):
@@ -15,17 +16,56 @@ def card_index(cards_archive: Path) -> dict[str, str]:
             if member.file_size > 1024 * 1024:
                 raise ValueError("Unexpected oversized engine card script")
             script = archive.read(member).decode("utf-8-sig")
-            names = re.findall(r"^Name:(.+)$", script, re.MULTILINE)
-            names = [name.strip() for name in names]
+            declared_faces.update(
+                name.strip()
+                for name in re.findall(r"^Name:(.+)$", script, re.MULTILINE)
+            )
+            references.update(
+                name.strip()
+                for name in re.findall(r"^CopyFaceFrom:(.+)$", script, re.MULTILINE)
+            )
+            names = _face_names(script)
             if not names:
                 continue
             combined = " // ".join(names)
             exported = combined if "AlternateMode:Split" in script else names[0]
-            for alias in (combined, names[0], *_variant_aliases(script, len(names))):
-                if alias in index and index[alias] != exported:
-                    raise ValueError(f"Ambiguous engine card name: {alias}")
-                index[alias] = exported
+            _bind_alias(index, combined, exported)
+            for alias in _variant_aliases(script, len(names)):
+                _bind_alias(variants, alias, exported)
+            if names[0] != combined:
+                fronts.setdefault(names[0], set()).add(exported)
+    if references - declared_faces:
+        raise ValueError("Engine has unresolved copied-face references")
+    for alias, exported in variants.items():
+        _bind_alias(index, alias, exported)
+    for alias, exports in fronts.items():
+        if alias not in index and len(exports) == 1:
+            index[alias] = next(iter(exports))
     return index
+
+
+def _bind_alias(index, alias, exported) -> None:
+    if alias in index and index[alias] != exported:
+        raise ValueError(f"Ambiguous engine card name: {alias}")
+    index[alias] = exported
+
+
+def _face_names(script: str) -> list[str]:
+    """Read explicit face names or copied-face references in declared face order."""
+    if "AlternateMode:Specialize" in script:
+        names = re.findall(r"^Name:(.+)$", script, re.MULTILINE)
+        if not names:
+            raise ValueError("Specialize script has no starting face")
+        return [names[0].strip()]
+    names = []
+    for face in re.split(r"^ALTERNATE\r?$", script, flags=re.MULTILINE):
+        declared = re.findall(r"^(?:Name|CopyFaceFrom):(.+)$", face, re.MULTILINE)
+        if len(declared) != 1:
+            raise ValueError(
+                "Engine face requires one unambiguous Name or CopyFaceFrom"
+            )
+        names.append(declared[0].strip())
+    return names
 
 
 def _variant_aliases(script: str, face_count: int) -> list[str]:

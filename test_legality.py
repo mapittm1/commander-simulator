@@ -213,8 +213,8 @@ class CharacteristicTests(unittest.TestCase):
         self.assertTrue(eligible_commander(value))
 
 
-class MeldStartingTests(unittest.TestCase):
-    """Meld results are battlefield characteristics, not separately startable cards."""
+class StartingStructureTests(unittest.TestCase):
+    """Distinguish physical starting cards from combined faces and supplementary pieces."""
 
     def setUp(self):
         self.connection = connect(":memory:")
@@ -276,6 +276,15 @@ class MeldStartingTests(unittest.TestCase):
             ],
             "needs_review",
         )
+
+    def test_sticker_sheet_cannot_fill_a_starting_deck_slot(self):
+        with self.connection:
+            store_card(self.connection, card("Sheet", "Stickers"))
+        report = prepare_deck(self.connection, "98 Forest\n1 Sheet", ["Leader"])[
+            "legality"
+        ]
+        self.assertEqual(report["status"], "illegal")
+        self.assertTrue(any("Sticker sheet" in error for error in report["errors"]))
 
 
 if __name__ == "__main__":

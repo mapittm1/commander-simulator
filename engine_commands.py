@@ -5,6 +5,8 @@ from pathlib import Path
 
 from engine_audit import create_engine_audit
 from engine_audit_store import SCOPES, SCRIPT_STATUSES, audit_cards, show_audit
+from engine_conformance import run_rules_conformance
+from engine_gaps import audit_gap_backlog
 from forge_config import DEFAULT_CONFIG, read_settings
 from forge_engine import engine_health, run_game
 
@@ -14,6 +16,8 @@ ENGINE_COMMANDS = {
     "engine-audit",
     "engine-audit-show",
     "engine-audit-cards",
+    "engine-audit-gaps",
+    "engine-conformance",
 }
 
 
@@ -63,6 +67,17 @@ def add_engine_commands(commands) -> None:
     )
     cards.add_argument("--offset", type=int, default=0)
     cards.add_argument("--limit", type=int, default=100)
+    gaps = commands.add_parser(
+        "engine-audit-gaps", help="Page a frozen engineering support backlog"
+    )
+    gaps.add_argument("audit_id")
+    gaps.add_argument("--offset", type=int, default=0)
+    gaps.add_argument("--limit", type=int, default=100)
+    conformance = commands.add_parser(
+        "engine-conformance",
+        help="Run the built-in legal regression pod; limited witness checks",
+    )
+    conformance.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
 
 
 def run_engine_command(connection, args) -> dict:
@@ -75,9 +90,17 @@ def run_engine_command(connection, args) -> dict:
             args.audit_id,
             {key: getattr(args, key) for key in ("scope", "status", "offset", "limit")},
         )
+    if args.command == "engine-audit-gaps":
+        return audit_gap_backlog(connection, args.audit_id, args.offset, args.limit)
+    return _run_installed_engine(connection, args)
+
+
+def _run_installed_engine(connection, args) -> dict:
     settings = read_settings(args.engine_config)
     if args.command == "engine-check":
         return engine_health(settings)
     if args.command == "engine-audit":
         return create_engine_audit(connection, settings)
+    if args.command == "engine-conformance":
+        return run_rules_conformance(connection, settings)
     return run_game(connection, settings, args.seat, args.seed, args.game_clock)

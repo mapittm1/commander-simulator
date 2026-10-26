@@ -2,6 +2,8 @@
 
 import hashlib
 import json
+from collections.abc import Iterator
+from sqlite3 import Connection
 
 MAX_AUDIT_CARDS = 100000
 SCOPES = ("commander_legal", "other_legality", "unknown_legality")
@@ -144,3 +146,13 @@ def _validate_page(scope, status, offset, limit) -> None:
         raise ValueError(
             "Engine audit page size must be an integer from 1 through 1000"
         )
+
+
+def iter_gap_cards(connection: Connection, audit_id: str) -> Iterator[dict]:
+    """Stream integrity-checked historical Commander-scope gaps for triage."""
+    for row in connection.execute(
+        "SELECT snapshot_json,snapshot_hash FROM engine_audit_cards WHERE audit_id=? "
+        "AND scope='commander_legal' AND script_status!='script_present' ORDER BY card_id",
+        (audit_id,),
+    ):
+        yield _decode(row["snapshot_json"], row["snapshot_hash"])

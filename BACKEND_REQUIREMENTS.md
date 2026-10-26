@@ -207,6 +207,24 @@ as an exact count of unsupported playable cards. Audit results must never replac
 current construction, bracket, or launch-time script checks. Script availability
 does not verify Oracle semantics, interactions, or AI behavior.
 
+## Engine gap and regression contracts
+
+Auditor version 2 freezes gap classifications at audit creation. Backlog reads
+verify stored evidence and page only actionable records, with counts for excluded
+supplementary objects. Version-1 audits require a fresh snapshot for classification.
+Name candidates never authorize export. Copied-face aliases require explicit
+engine declarations and existing targets; ambiguous exports fail closed.
+Validator version 3 excludes sticker sheets from starting decks and preserves
+the review state for uncertain meld roles.
+
+The built-in regression pod uses a disposable database populated from current
+catalog records and passes normal deck/engine gates. Fixture bracket reviews are
+test-only, never production attestations. Reports preserve hashes, witness lines,
+engine version, and seed. A completed game alone is insufficient: every required
+case must be exercised and pass. Absent evidence is inconclusive, never success.
+These limited log witnesses do not certify every card, exact rules boundaries,
+stack priority, replacement effects, targeted removal, or combo behavior.
+
 ## Salt evidence contract
 
 EDHREC's top salt page is the configured community-opinion reference. Local

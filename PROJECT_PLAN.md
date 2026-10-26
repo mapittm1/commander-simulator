@@ -84,6 +84,17 @@ References:
 
 ## Implementation milestones
 
+The current rules-testing milestone adds frozen support-gap triage and a limited
+live all-Forest regression pod. Copied-face indexing removes 20 false gaps; the
+latest local audit has 102 unmatched Commander-format records, with 48 requiring
+investigation after excluding 54 confirmed supplementary/meld-result objects.
+One meld role remains uncertain and one spelling candidate remains unapproved.
+Three log witnesses cover commander tax, an attack trigger's combat effect, and
+positive-life commander-damage loss. These do not establish full rules correctness.
+Next engine work: resolve the two metadata/name reviews, then build controlled
+fixtures for stack priority, targeted removal, replacement effects, zone changes,
+and combos before expanding strategy-level diagnostics or claiming broad support.
+
 1. Card catalog: implemented, populated, tested.
 2. Backend legality and deck import: CLI validation and a mandatory save gate
    implemented, including commander eligibility/pairing and duplicate limits.

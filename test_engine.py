@@ -219,9 +219,12 @@ class EngineBoundaryTests(unittest.TestCase):
     def test_script_aliases_and_fail_closed_serialization(self):
         archive_path = self.root / "cards.zip"
         with zipfile.ZipFile(archive_path, "w") as archive:
-            archive.writestr("fire.txt", "Name:Fire\nAlternateMode:Split\nName:Ice\n")
             archive.writestr(
-                "front.txt", "Name:Front\nAlternateMode:DoubleFaced\nName:Back\n"
+                "fire.txt", "Name:Fire\nAlternateMode:Split\nALTERNATE\nName:Ice\n"
+            )
+            archive.writestr(
+                "front.txt",
+                "Name:Front\nAlternateMode:DoubleFaced\nALTERNATE\nName:Back\n",
             )
         index = card_index(archive_path)
         self.assertEqual(index["Fire // Ice"], "Fire // Ice")

@@ -87,6 +87,7 @@ def run_library_command(connection, args) -> bool:
         "bracket-check": "reviewed",
         "deck-check": "legal",
         "engine-check": "ready",
+        "engine-conformance": "passed",
         "simulate-game": "completed",
     }.get(args.command)
     return expected is None or result["status"] == expected

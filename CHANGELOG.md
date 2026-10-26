@@ -8,6 +8,33 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- `engine-audit-gaps`: bounded, immutable engineering triage for new version-2
+  audits, separating supplementary/meld-result records from investigation items.
+  Historical classifications do not change with later catalog edits. Spelling
+  candidates are diagnostic only and remain blocked from export.
+- `engine-conformance`: a disposable legal all-Forest pod and three limited
+  real-engine log regressions for commander tax, a resolved combat trigger, and
+  commander-damage loss with positive life. Missing exercise is inconclusive;
+  failures and inconclusive results return nonzero. Reports preserve hashes and
+  source lines. Full rules conformance and AI proficiency remain unverified.
+- Counterexample tests for witnesses, bounded backlog pages, frozen history,
+  sticker-sheet construction, and copied/split/specialized face indexing.
+- Validation: 185 offline tests and 78 subtests pass; both opt-in live-engine
+  integration tests pass separately. Black, isort, Pylint, and Bandit pass.
+
+### Fixed
+
+- Index explicit Forge copied-face references, reject missing targets, preserve
+  standalone canonical names over optional face aliases, and avoid promoting
+  specialized faces. The local audit gains 20 matches: 32,014 of 32,116
+  Commander-format records. Of 102 gaps, 54 are confirmed supplementary/meld
+  results and 48 need investigation, including an unresolved meld role.
+- Validator version 3 rejects sticker sheets from starting decks; format legality
+  alone does not make these supplementary objects valid deck slots. Malformed
+  meld component metadata remains blocked for review without crashing.
+
+### Earlier unreleased additions
+
 - EDHREC salt reference support through bounded local sample import, immutable
   source snapshots, exact catalog/face matching, and `deck-salt` advisory reports.
   Ratings retain the 0–4 scale, voting year, observation date, source attribution,

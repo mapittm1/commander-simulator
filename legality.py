@@ -17,7 +17,7 @@ from deck_snapshots import read_revision
 
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
-VALIDATOR_VERSION = 2
+VALIDATOR_VERSION = 3
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
