@@ -16,7 +16,7 @@ not required to establish the core services.
 
 Steps 4–7 must not run for a deck that has failed or incomplete legality checks.
 The single-game adapter uses the saved-deck legality and bracket gates.
-Batch jobs and automated matchmaking remain pending.
+Persistent local batches use those same gates; automated matchmaking remains pending.
 
 ## Required services and acceptance criteria
 
@@ -28,8 +28,8 @@ Batch jobs and automated matchmaking remain pending.
 | Bracket review | Separate user declaration from verified bracket findings | Game Changer screening and human-attested reviews implemented |
 | Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Immutable source-sample storage implemented; automated acquisition pending |
 | Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pinned Forge single-game adapter; broad card correctness not yet validated |
-| Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Pending |
-| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Single-game outcomes and raw logs; aggregate metrics pending |
+| Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Fixed-pod batches, rotating seats, bounded resumable chunks; crash recovery/opponent scheduling pending |
+| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Per-game logs and durable batch counts/rates; uncertainty and gameplay metrics pending |
 
 ## Legality contract
 
@@ -154,11 +154,23 @@ are not completed wins or genuine draws. Script presence does not prove card
 correctness or AI competence. Java and other engine assets remain trusted local
 dependencies; execution is not sandboxed by the Python adapter.
 
-Upcoming batch admission must enforce an integer count from 1 through 100,000
-(reject booleans), supporting presets 100/1,000/10,000 and custom counts. Bind
-immutable deck/opponent snapshots and current evidence atomically, persist job
-state, support cancellation, rotate seats, and account separately for requested,
-attempted, completed, and failed games. No batch command currently exists.
+Batch admission enforces an integer count from 1 through 100,000 (rejecting
+booleans), including 100/1,000/10,000 and custom counts. Four explicit reviewed
+versions and semantic engine/review evidence are frozen with a hash; changing
+recheck timestamps do not change semantic evidence. A write transaction checks
+current catalog, policy, and review identities before admitting the batch.
+The worker repeats evidence checks, full validation, integrity, and script
+coverage before execution, refusing to rebind changed inputs.
+
+Jobs persist state and attempts, rotate seats deterministically, and support
+cooperative cancellation and chunk resume. Attempt reservation and worker claim
+use write transactions; ownership is checked before recording results. Terminal
+attempts and job specifications are immutable. Requested runs cap reserved
+attempts; failed/interrupted slots are not automatically retried. Summaries retain
+failed/interrupted counts separately from completed-game win/draw rates.
+Cancellation may finish the current bounded game. A hard crash leaves ownership
+claimed rather than permitting duplicate execution; recovery tooling is pending.
+The current opponent mode is an explicit fixed pod, not automatic matchmaking.
 
 Upcoming diagnostics must define mana issues, gameplay bottlenecks, and targeting
 events with supporting evidence and coverage. Subjective "hate"/"unfun" labels

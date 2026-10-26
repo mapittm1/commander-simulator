@@ -163,22 +163,29 @@ def _command(settings, lock, run, seed, game_clock):
     ]
 
 
-def _check_current_evidence(connection, prepared) -> None:
+def check_game_evidence(connection, prepared) -> None:
+    """Check catalog, policy, and review identities inside a caller's admission transaction."""
     current = connection.execute(
         "SELECT * FROM imports ORDER BY id DESC LIMIT 1"
     ).fetchone()
     for seat in prepared:
+        review_id = connection.execute(
+            "SELECT id FROM bracket_reviews WHERE revision_id=? ORDER BY id DESC LIMIT 1",
+            (seat["revision"]["id"],),
+        ).fetchone()
         if (
             current is None
             or dict(current) != seat["review"]["catalog"]
             or load_policy()["hash"] != seat["review"]["policy_hash"]
+            or review_id is None
+            or review_id[0] != seat["review"]["review_id"]
         ):
             raise ValueError(
                 "Catalog or bracket policy changed before launch; review again"
             )
 
 
-def _prepare_inputs(connection, settings, seats) -> dict:
+def prepare_game(connection, settings, seats) -> dict:
     """Complete all gates and serialization before creating any engine process."""
     prepared = prepare_seats(connection, seats)
     lock = settings.verify()
@@ -190,7 +197,7 @@ def _prepare_inputs(connection, settings, seats) -> dict:
         serialize_deck(seat["revision"], index, number)
         for number, seat in enumerate(prepared, 1)
     ]
-    _check_current_evidence(connection, prepared)
+    check_game_evidence(connection, prepared)
     return {"engine": lock, "seats": prepared, "coverage": reports, "decks": decks}
 
 
@@ -211,6 +218,13 @@ def run_game(
     game_clock: int = 120,
 ) -> dict:
     """Execute one approved four-player game; return failures separately from draws."""
+    validate_game_options(seed, game_clock)
+    inputs = prepare_game(connection, settings, seats)
+    return _execute_game(settings, inputs, seed, game_clock)
+
+
+def validate_game_options(seed: int, game_clock: int) -> None:
+    """Validate finite, bounded engine parameters before preparing game inputs."""
     if not isinstance(seed, int) or isinstance(seed, bool) or not 0 <= seed < 2**63:
         raise ValueError("Seed must be a nonnegative signed 64-bit integer")
     if (
@@ -219,7 +233,35 @@ def run_game(
         or not 1 <= game_clock <= 300
     ):
         raise ValueError("Game clock must be between 1 and 300 seconds")
-    inputs = _prepare_inputs(connection, settings, seats)
+
+
+def run_frozen_game(connection, settings, game: dict) -> dict:
+    """Revalidate a batch game's exact frozen evidence immediately before execution."""
+    validate_game_options(game["seed"], game["game_clock"])
+    current = prepare_game(connection, settings, game["seats"])
+    if game_evidence(current) != game["inputs"]:
+        raise ValueError("Frozen game evidence changed; create a new batch")
+    return _execute_game(settings, current, game["seed"], game["game_clock"])
+
+
+def game_evidence(inputs: dict) -> dict:
+    """Freeze semantic evidence; recheck timestamps and generated deck text may change."""
+    seats = [
+        {
+            **seat,
+            "review": {
+                key: value
+                for key, value in seat["review"].items()
+                if key != "checked_at"
+            },
+        }
+        for seat in inputs["seats"]
+    ]
+    return {"engine": inputs["engine"], "seats": seats, "coverage": inputs["coverage"]}
+
+
+def _execute_game(settings, inputs, seed, game_clock) -> dict:
+    """Execute only service-prepared inputs and preserve failure diagnostics."""
     run = _new_run()
     _write_inputs(run, inputs, seed, game_clock)
     try:

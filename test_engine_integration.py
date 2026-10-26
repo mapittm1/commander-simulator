@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+from batches import BatchOptions, create_batch, run_batch
 from brackets import load_policy, save_bracket_review
 from database import DEFAULT_DATABASE, connect, store_card
 from deck_store import save_deck
@@ -86,3 +87,21 @@ class LiveEngineTests(unittest.TestCase):
             self.assertTrue((run / "result.json").is_file())
             self.assertGreater((run / "forge.log").stat().st_size, 0)
             print(json.dumps(result, indent=2))
+            batch = create_batch(
+                fixture, read_settings(), seats, BatchOptions(2, seed=43, game_clock=60)
+            )
+            result = run_batch(fixture, read_settings(), batch["job_id"])
+            self.assertEqual(
+                (result["status"], result["completed"]), ("paused", 1), result
+            )
+            final = run_batch(fixture, read_settings(), batch["job_id"])
+            self.assertEqual(
+                (final["status"], final["completed"]), ("completed", 2), final
+            )
+            self.assertEqual(final["failed"], 0)
+            print(
+                json.dumps(
+                    {key: value for key, value in final.items() if key != "spec"},
+                    indent=2,
+                )
+            )

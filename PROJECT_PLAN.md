@@ -103,7 +103,8 @@ See BACKEND_REQUIREMENTS.md for the backend contracts and acceptance criteria.
 Validated decks now have immutable numbered revisions, including frozen Oracle
 records, bracket declarations, attribution, hashes, and validation evidence.
 Backend and CLI operations can inspect history and revalidate a selected version.
-Versioned opponent data and simulation jobs remain separate upcoming milestones.
+Opponent collections and local simulation batches now bind explicit revisions.
+Automatic representative acquisition and web job scheduling remain pending.
 
 ## Bracket review milestone
 
@@ -126,8 +127,10 @@ The intended product is a self-hosted web application with an attractive UI.
 Backend correctness comes first. Users upload a deck, select a bracket and run
 count, and receive actionable optimization findings with supporting game events.
 Support counts such as 100, 1,000, and 10,000, with a hard maximum of 100,000 per
-batch enforced by the backend. The current adapter runs one game; persistent
-batch scheduling is next.
+batch enforced by the backend. Persistent local batches now support explicit
+four-deck pods, frozen evidence, deterministic seeds/seat rotation, bounded
+foreground worker chunks, cooperative cancellation, and durable outcome counts.
+Automatic opponent selection, crash recovery, and web scheduling remain pending.
 
 Diagnostics should cover mana/color access, missed land drops, uncastable cards,
 and gameplay bottlenecks with explicit definitions and coverage. Targeting

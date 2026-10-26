@@ -238,7 +238,7 @@ python commander_simulator.py simulate-game --seat 1:1 --seat 2:1 --seat 3:1 --s
 Each seat is an explicit `deck_id:version`. All four must pass current Commander
 legality and recorded bracket review in the same bracket. Missing card scripts
 block execution. Script availability does not establish correctness of every
-card interaction or AI strategy. Automated opponent selection and batches are pending.
+card interaction or AI strategy. Automated opponent selection remains pending.
 
 Runs preserve `inputs.json`, generated decks, `forge.log`, and `result.json`
 under generated identifiers in `data/runs`. Wins/draws, engine errors,
@@ -269,3 +269,53 @@ establish how humans will react to a deck.
 
 References: [pinned Forge release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.15)
 and [Forge simulation/AI documentation](https://github.com/Card-Forge/forge/wiki/AI).
+
+## Persistent batches
+
+Create a batch from four explicitly selected, reviewed deck versions. Run counts
+are validated by the backend from 1 through **100,000**; 100, 1,000, and 10,000
+are ordinary supported counts. Creation validates legality, bracket, engine
+integrity, and script coverage, then freezes inputs and evidence in SQLite.
+It does not start games or allocate 100,000 attempt records.
+
+```powershell
+python commander_simulator.py batch-create --seat 1:1 --seat 2:1 --seat 3:1 --seat 4:1 --runs 100 --seed 42
+python commander_simulator.py batch-run JOB_ID --max-games 10
+python commander_simulator.py batch-show JOB_ID
+python commander_simulator.py batch-results JOB_ID --offset 0 --limit 100
+python commander_simulator.py batch-cancel JOB_ID
+```
+
+Use the generated `job_id` from creation. A worker defaults to **one game** per
+invocation. Increase `--max-games` explicitly, up to 100,000, to run larger chunks.
+Repeat `batch-run` to resume paused work. Execution is sequential and foreground;
+this is not yet a daemon or web queue. These commands use the same trusted local
+engine configuration as single-game commands.
+
+The pod is fixed. Seats rotate every game, and seeds are the base seed plus the
+zero-based game index. Original pod index 0 is the first supplied deck; summary
+wins map back to the original pod order despite rotation. Counts not divisible
+by four have a seat imbalance of at most one. No opponent popularity selection
+is implied by an explicit pod.
+
+Requested runs count reserved attempts, not guaranteed successful games. Summaries
+separate attempted, completed, failed, interrupted, running, and unattempted
+games. Win rates use completed games (including genuine draws) as the denominator;
+failure counts remain visible. These are descriptive AI results for this pod,
+without calibrated uncertainty or human-play predictions.
+
+A failed game stops the chunk. An operator can resume a blocked batch if the
+underlying problem is resolved; that failed slot is retained, never silently
+retried. Changed catalog, policy, review, or engine evidence requires a new batch.
+Cancellation is cooperative: a game already reserved may finish within its
+configured limits, and no following game is reserved. Read/cancel commands do not require
+an installed engine. A worker command exits nonzero for blocked/cancelled jobs
+or any failed/interrupted attempts, even if all scheduled slots are finished.
+
+Only one worker may claim a batch. Handled interruption releases its claim and
+records the reserved attempt as interrupted. A hard process/machine crash leaves
+the claim reserved; automatic crash recovery is deliberately not implemented.
+Do not edit claims while an engine may still be active. Crash-recovery tooling,
+storage budgets/retention, isolated workers, authentication, and hard host quotas
+remain required before offering this as a web service. Total log storage grows
+with attempts; the per-game log cap is not a batch disk quota.

@@ -6,6 +6,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
+from batch_commands import BATCH_COMMANDS, add_batch_commands, run_batch_command
 from bracket_commands import BRACKET_COMMANDS, add_bracket_commands, run_bracket_command
 from database import DEFAULT_DATABASE, catalog_stats, connect, find_cards
 from deck_commands import REVISION_COMMANDS, add_revision_commands, run_revision_command
@@ -61,6 +62,7 @@ def build_parser() -> argparse.ArgumentParser:
     add_bracket_commands(commands)
     add_opponent_commands(commands)
     add_engine_commands(commands)
+    add_batch_commands(commands)
     return parser
 
 
@@ -70,8 +72,13 @@ def run_library_command(connection, args) -> bool:
     handlers.update(dict.fromkeys(REVISION_COMMANDS, run_revision_command))
     handlers.update(dict.fromkeys(OPPONENT_COMMANDS, run_opponent_command))
     handlers.update(dict.fromkeys(ENGINE_COMMANDS, run_engine_command))
+    handlers.update(dict.fromkeys(BATCH_COMMANDS, run_batch_command))
     result = handlers[args.command](connection, args)
     print(json.dumps(result, indent=2, ensure_ascii=False))
+    if args.command == "batch-run":
+        return result["status"] in {"paused", "completed"} and not (
+            result["failed"] or result["interrupted"]
+        )
     expected = {
         "bracket-check": "reviewed",
         "deck-check": "legal",
@@ -93,6 +100,7 @@ def main(argv=None):
                 | REVISION_COMMANDS
                 | OPPONENT_COMMANDS
                 | ENGINE_COMMANDS
+                | BATCH_COMMANDS
             ):
                 if not run_library_command(connection, args):
                     parser.exit(1)
