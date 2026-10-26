@@ -139,6 +139,12 @@ Human dislike and "unfun" are subjective: distinguish attributed card tags,
 observed AI actions, and hypotheses about why a player was focused. Never present
 correlation or AI targeting as proof of human intent.
 
+The initial observation layer now normalizes supported log events with source
+lines and reports land plays, casts, complete-main-turn land-play observations,
+and attack assignments. Batch aggregation remaps seats and excludes partial or
+missing diagnostic coverage. These descriptive metrics do not yet establish mana
+issues, targeted-removal patterns, causal gameplay bottlenecks, or social reactions.
+
 Before exposing the service: authenticated ownership checks for decks/jobs,
 bounded text uploads, escaped rendering, CSRF protection where cookies are used,
 private generated storage, isolated workers without credentials or network,

@@ -10,6 +10,7 @@ from pathlib import Path
 
 import pytest
 
+from batch_diagnostics import batch_diagnostics
 from batches import BatchOptions, create_batch, run_batch
 from brackets import load_policy, save_bracket_review
 from database import DEFAULT_DATABASE, connect, store_card
@@ -86,6 +87,9 @@ class LiveEngineTests(unittest.TestCase):
             self.assertTrue((run / "inputs.json").is_file())
             self.assertTrue((run / "result.json").is_file())
             self.assertGreater((run / "forge.log").stat().st_size, 0)
+            self.assertEqual(result["diagnostics"]["status"], "observed")
+            self.assertTrue((run / "diagnostics.json").is_file())
+            self.assertTrue((run / "events.jsonl").is_file())
             print(json.dumps(result, indent=2))
             batch = create_batch(
                 fixture, read_settings(), seats, BatchOptions(2, seed=43, game_clock=60)
@@ -99,6 +103,12 @@ class LiveEngineTests(unittest.TestCase):
                 (final["status"], final["completed"]), ("completed", 2), final
             )
             self.assertEqual(final["failed"], 0)
+            self.assertEqual(
+                batch_diagnostics(fixture, batch["job_id"])["coverage"][
+                    "games_included"
+                ],
+                2,
+            )
             print(
                 json.dumps(
                     {key: value for key, value in final.items() if key != "spec"},

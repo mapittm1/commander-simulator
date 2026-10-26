@@ -4,6 +4,7 @@ A new Python project for a Commander simulator. The first component is a local
 SQLite card catalog sourced from Scryfall, validated deck revisions, bracket
 reviews, opponent collections, and a pinned Forge single-game adapter.
 See [PROJECT_PLAN.md](PROJECT_PLAN.md) for the confirmed product direction.
+See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 
 The application requires Python 3.10 or newer and no third-party runtime packages.
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
@@ -319,3 +320,50 @@ Do not edit claims while an engine may still be active. Crash-recovery tooling,
 storage budgets/retention, isolated workers, authentication, and hard host quotas
 remain required before offering this as a web service. Total log storage grows
 with attempts; the per-game log cap is not a batch disk quota.
+
+## Observed gameplay diagnostics
+
+New games save `events.jsonl` and `diagnostics.json` beside `forge.log` and
+`result.json`. The report includes the original log hash, parser version, coverage,
+and physical source line references for supported observations. A diagnostic
+write failure is reported separately and does not change the game's outcome.
+
+```powershell
+python commander_simulator.py batch-diagnostics JOB_ID
+python commander_simulator.py batch-results JOB_ID --offset 0 --limit 10
+```
+
+Per-game reports currently measure:
+
+- Logged land plays and casts, including casts by card name.
+- Turns with observed main phase and cleanup but no logged land play. Incomplete
+  turns and turns without a main phase are excluded from that denominator.
+- Creature attack assignments between player seats, with sampled source lines.
+  These count assignments rather than damage, combat phases, or removal targets.
+
+Batch reports map seat rotation back to the original pod order. They sum only
+completed games with supported diagnostic coverage and explicitly count excluded
+attempts. Missing legacy reports, partial/truncated parsing, failed games, and
+running/interrupted attempts do not become zeros. If no game is eligible, deck
+metrics are `null`; when coverage is mixed the aggregate status is `partial`.
+Zero eligible main turns produces a `null` no-land-observation fraction.
+
+The parser accepts at most 8 MiB of text and 10,000 normalized events. Candidate
+lines are limited to 4,096 characters; card names to 300. Unknown supported-event
+formats, malformed players, and event truncation make coverage partial. Evidence
+samples are bounded; full source context remains in the raw log. Other event kinds
+are outside this parser's scope. Parser version 1 targets the installed Forge
+2.0.15 dialect; script presence and these observations do not prove all rules or
+AI decisions correct.
+
+The parser follows the [pinned Forge log formatter](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-game/src/main/java/forge/game/GameLogFormatter.java).
+It separates targeted-cast descriptions from card names and supports grouped
+attackers and continuation lines for multiple defenders. Each attack line is
+limited to 100 creatures. Non-player defender formats are currently partial
+coverage; target descriptions are retained as text rather than classified as removal.
+
+These are observations, not diagnoses of hidden game state. No logged land play
+does not prove mana screw, flood, or a missed legal opportunity. The parser does
+not establish color access, uncastable cards, targeted removal, why a player was
+focused, or whether a card is "unfun." Those need further instrumentation and
+explicitly attributed subjective data. Historical results are not rewritten.

@@ -2,6 +2,7 @@
 
 from pathlib import Path
 
+from batch_diagnostics import batch_diagnostics
 from batch_store import attempt_results, cancel_job, job_summary
 from batches import BatchOptions, create_batch, run_batch
 from engine_commands import parse_seat
@@ -13,6 +14,7 @@ BATCH_COMMANDS = {
     "batch-show",
     "batch-cancel",
     "batch-results",
+    "batch-diagnostics",
 }
 
 
@@ -32,7 +34,7 @@ def add_batch_commands(commands) -> None:
     run.add_argument("job_id")
     run.add_argument("--max-games", type=int, default=1)
     run.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
-    for command in ("batch-show", "batch-cancel"):
+    for command in ("batch-show", "batch-cancel", "batch-diagnostics"):
         parser = commands.add_parser(command)
         parser.add_argument("job_id")
     results = commands.add_parser("batch-results", help="Page individual game results")
@@ -47,6 +49,8 @@ def run_batch_command(connection, args) -> dict:
         return job_summary(connection, args.job_id)
     if args.command == "batch-cancel":
         return cancel_job(connection, args.job_id)
+    if args.command == "batch-diagnostics":
+        return batch_diagnostics(connection, args.job_id)
     if args.command == "batch-results":
         return attempt_results(connection, args.job_id, args.offset, args.limit)
     settings = read_settings(args.engine_config)

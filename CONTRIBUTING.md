@@ -46,6 +46,11 @@ apply to every change, including generated code and future engine integrations.
 
 ## Testing and review
 
+Keep README.md and CHANGELOG.md current with project changes. Document affected
+commands, behavior, limits, validation, and known gaps in the same change.
+Add changelog notes under Unreleased until a release is explicitly made; do not
+invent release versions or dates. Preserve earlier history.
+
 Use Python 3.12 for development tooling and CI (the application targets Python
 3.10+). Install the pinned tools and commit hook once per checkout:
 

@@ -10,6 +10,7 @@ from sqlite3 import Connection
 
 from brackets import load_policy, require_bracket_review
 from deck_store import get_revision
+from diagnostic_artifacts import record_diagnostics
 from engine_process import ProcessLimits, run_bounded
 from forge_config import EngineSettings
 from forge_decks import card_index, coverage, serialize_deck
@@ -272,8 +273,7 @@ def _execute_game(settings, inputs, seed, game_clock) -> dict:
                 run / "forge.log",
                 ProcessLimits(game_clock + 90, environment=_environment(run)),
             )
-        text = (run / "forge.log").read_text(encoding="utf-8", errors="replace")
-        result = {**parse_game_result(text, process), "process": process}
+        result = _read_game_output(run, process)
     except (OSError, RuntimeError, ValueError) as error:
         result = {"status": "engine_error", "winner_seat": None, "error": str(error)}
     result.update(
@@ -286,4 +286,18 @@ def _execute_game(settings, inputs, seed, game_clock) -> dict:
         }
     )
     (run / "result.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
+    return result
+
+
+def _read_game_output(run, process) -> dict:
+    text = (run / "forge.log").read_text(encoding="utf-8", errors="replace")
+    result = {**parse_game_result(text, process), "process": process}
+    try:
+        result["diagnostics"] = record_diagnostics(run, text, result["status"])
+    except (OSError, ValueError) as error:
+        result["diagnostics"] = {
+            "status": "unavailable",
+            "eligible_for_batch_aggregate": False,
+            "error": str(error),
+        }
     return result

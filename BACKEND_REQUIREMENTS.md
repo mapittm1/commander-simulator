@@ -29,7 +29,7 @@ Persistent local batches use those same gates; automated matchmaking remains pen
 | Opponent library | Ten popular commander configurations per bracket with reviewed lists and source evidence | Immutable source-sample storage implemented; automated acquisition pending |
 | Engine adapter | Real Commander rules execution, card-coverage checks, bounded processes | Pinned Forge single-game adapter; broad card correctness not yet validated |
 | Simulation jobs | Revalidation, seat/opponent balance, cancellation, progress, resumable results | Fixed-pod batches, rotating seats, bounded resumable chunks; crash recovery/opponent scheduling pending |
-| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Per-game logs and durable batch counts/rates; uncertainty and gameplay metrics pending |
+| Results | Wins, losses, draws, failures, uncertainty, traceable logs | Per-game logs, durable batch counts/rates, covered land/cast/attack observations; uncertainty and causal diagnostics pending |
 
 ## Legality contract
 
@@ -176,3 +176,11 @@ Upcoming diagnostics must define mana issues, gameplay bottlenecks, and targetin
 events with supporting evidence and coverage. Subjective "hate"/"unfun" labels
 require provenance and must not be presented as measured human intent. The
 self-hosted UI will expose these findings after backend contracts are stable.
+
+The initial implemented observation contract includes versioned normalized events
+and source line references, raw-log hashes, bounded samples, land/cast counts,
+complete-main-turn no-land observations, and attack-assignment matrices. Partial
+or missing coverage is explicit, never substituted as zero. Only completed,
+covered games enter batch diagnostic totals; seat mappings use original pod order.
+Diagnostic output failure does not replace a valid game outcome. These counts
+do not provide hidden-state mana diagnoses or human targeting explanations.
