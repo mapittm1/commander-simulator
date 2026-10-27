@@ -235,6 +235,14 @@ Its diagnostic fixtures bypass ordinary deck startup only and never enter user
 deck libraries, bracket attestations, benchmark rankings, or batch win rates.
 The regular simulation legality/review gates remain mandatory.
 
+Suite v2 adds prevention/replacement and countered-trigger controls, with eight
+reviewed card identities and loyalty in their Oracle fingerprints. Counterspell
+targets must bind by raw ability ID to the prior checkpoint's pending trigger;
+missing identities are inconclusive and conflicting bindings fail. Counter
+resolution is exercised through the native stack API; mana payment, casting
+windows, AI response selection, and outcome-dependent replacement ordering are
+not certified by these partial-state fixtures.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.

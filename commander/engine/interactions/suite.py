@@ -8,6 +8,7 @@ from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
+SUITE_ID = "raton_equipment_v2"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -17,7 +18,25 @@ CASE_IDS = (
     "source_removed",
     "equipment_creature",
     "noncombat_damage",
+    "combat_prevented",
+    "noncombat_prevented",
+    "combat_unaffected_by_noncombat_prevention",
+    "combat_doubled",
+    "noncombat_doubled",
+    "doubled_damage_prevented",
+    "initial_trigger_countered",
+    "reflexive_trigger_countered",
 )
+CARD_ROLES = {
+    "source",
+    "equipment",
+    "modifier",
+    "basic",
+    "preventer",
+    "noncombat_preventer",
+    "doubler",
+    "counter",
+}
 STAGES = (
     "before",
     "after_damage",
@@ -35,6 +54,7 @@ ORACLE_FIELDS = (
     "oracle_text",
     "power",
     "toughness",
+    "loyalty",
     "color_identity",
 )
 MAX_RECEIPT_BYTES = 131072
@@ -76,10 +96,11 @@ def _unique_fields(pairs):
 def load_suite() -> dict:
     """Accept the built-in suite only; configuration supplies expectations, never code."""
     suite = read_bounded_json(SUITE_PATH)
+    if suite.get("schema_version") != 1 or suite.get("suite_id") != SUITE_ID:
+        raise ValueError("Unknown built-in interaction suite version")
     cases = suite.get("cases")
     if (
-        suite.get("schema_version") != 1
-        or not isinstance(cases, list)
+        not isinstance(cases, list)
         or len(cases) != len(CASE_IDS)
         or not all(isinstance(case, dict) for case in cases)
         or tuple(case.get("id") for case in cases) != CASE_IDS
@@ -96,8 +117,10 @@ def load_suite() -> dict:
             )
         ):
             raise ValueError("Interaction expectations require every state checkpoint")
-    if not isinstance(suite.get("cards"), list) or len(suite["cards"]) != 4:
-        raise ValueError("Interaction suite requires its four reviewed card identities")
+    if not isinstance(suite.get("cards"), list) or len(suite["cards"]) != len(
+        CARD_ROLES
+    ):
+        raise ValueError("Interaction suite requires its reviewed card identities")
     if any(
         not isinstance(card, dict)
         or set(card) != {"role", "name", "oracle_id", "oracle_sha256"}
@@ -108,12 +131,9 @@ def load_suite() -> dict:
         for card in suite["cards"]
     ):
         raise ValueError("Malformed reviewed fixture identity")
-    if {card["role"] for card in suite["cards"]} != {
-        "source",
-        "equipment",
-        "modifier",
-        "basic",
-    } or len({card["oracle_id"] for card in suite["cards"]}) != 4:
+    if {card["role"] for card in suite["cards"]} != CARD_ROLES or len(
+        {card["oracle_id"] for card in suite["cards"]}
+    ) != len(CARD_ROLES):
         raise ValueError("Interaction fixture identities or roles are duplicated")
     return suite
 
@@ -183,6 +203,12 @@ def _evaluate_case(expected, observed) -> dict:
                     }
                 )
     status = "failed" if mismatches else "passed"
+    counter = _counter_evidence(expected["id"], states)
+    if counter is not None:
+        if counter.get("status") == "not_exercised":
+            return {"id": expected["id"], **counter}
+        mismatches.append(counter)
+        status = "failed"
     if any(row["stage"] == "before" for row in mismatches):
         status = "not_exercised"
     return {
@@ -190,4 +216,42 @@ def _evaluate_case(expected, observed) -> dict:
         "status": status,
         "mismatches": mismatches,
         "states": states,
+    }
+
+
+def _counter_evidence(case_id, states) -> dict | None:
+    checkpoints = {
+        "initial_trigger_countered": ("before_first", "after_damage"),
+        "reflexive_trigger_countered": ("after_response", "after_first"),
+    }
+    if case_id not in checkpoints:
+        return None
+    current, previous = checkpoints[case_id]
+    stack = states[current].get("stack_ability_ids")
+    target = states[current].get("spell_target_ids")
+    pending = states[previous].get("stack_ability_ids")
+    if (
+        any(
+            not isinstance(ids, list)
+            or any(
+                not isinstance(identity, int) or isinstance(identity, bool)
+                for identity in ids
+            )
+            for ids in (stack, target, pending)
+        )
+        or len(stack) != 2
+        or len(target) != 1
+        or len(pending) != 1
+    ):
+        return {
+            "status": "not_exercised",
+            "reason": "Missing or malformed raw counter target identities",
+        }
+    if stack[0] != stack[1] and stack[1] == target[0] == pending[0]:
+        return None
+    return {
+        "stage": current,
+        "field": "counter_target_identity",
+        "expected": pending[0],
+        "observed": {"stack_ability_ids": stack, "spell_target_ids": target},
     }

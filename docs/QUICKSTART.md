@@ -114,7 +114,7 @@ batch history inspectable through the database.
 
 ## What the results currently mean
 
-To inspect the eight controlled Ratonhnhaké꞉ton/Equipment interaction cases,
+To inspect the 16 controlled Equipment, damage, and countered-trigger cases,
 install `requirements-interactions.txt` and run `engine-interactions`. This is
 a separate direct-state diagnostic, not a pod simulation or a full card-support
 certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).

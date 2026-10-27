@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled interaction suite from eight to 16 cases in
+  `raton_equipment_v2`. Add full combat prevention, noncombat-only prevention with
+  a combat control, combat/noncombat damage doubling, combined prevention and
+  doubling, and Disallow countering either the initial or reflexive trigger.
+- Counter tests place the actual counterspell ability on Forge's stack and resolve
+  its counter effect. Record raw stack/target ability IDs and independently bind
+  them to the previously observed pending trigger; summary flags alone cannot pass.
+- Pin eight fixture card identities and include loyalty in Oracle fingerprints.
+  Record active prevention/doubling effects, The Wanderer's starting loyalty,
+  and the resolved counterspell's graveyard state. Existing v1 report files remain
+  historical; the current command requires the complete v2 suite.
+- Validation: 235 offline tests and 129 subtests pass, including new damage and
+  counterspell counterexamples and raw-identity failure checks. The native CLI
+  integration test passes all 16 cases. Formatting, lint, and security checks pass;
+  no production Forge script correction was needed for these tested cases.
+
 - `engine-interactions`: controlled partial-state tests using the actual pinned
   Forge damage, trigger, stack, zone-change, and state-based-action APIs. Eight
   initial Ratonhnhaké꞉ton/Equipment cases cover return/attach, separate target

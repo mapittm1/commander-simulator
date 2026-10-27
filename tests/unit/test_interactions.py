@@ -30,12 +30,22 @@ FINISHED = {"status": "finished", "returncode": 0}
 
 def synthetic_receipt(suite: dict) -> dict:
     """Build verifier input only; this is not a native-engine conformance result."""
-    return {
-        "cases": [
-            {"id": case["id"], "states": copy.deepcopy(case["expected"])}
-            for case in suite["cases"]
-        ]
-    }
+    cases = []
+    for index, case in enumerate(suite["cases"]):
+        states = copy.deepcopy(case["expected"])
+        initial, reflexive, counter = 100 + index * 3, 101 + index * 3, 102 + index * 3
+        for stage, state in states.items():
+            pending = (
+                initial if stage in {"after_damage", "before_first"} else reflexive
+            )
+            if state["counter_on_stack"]:
+                state["stack_ability_ids"] = [counter, pending]
+                state["spell_target_ids"] = [pending]
+            else:
+                state["stack_ability_ids"] = [pending] if state["stack"] else []
+                state["spell_target_ids"] = []
+        cases.append({"id": case["id"], "states": states})
+    return {"cases": cases}
 
 
 class StateVerifierTests(unittest.TestCase):
@@ -87,6 +97,105 @@ class StateVerifierTests(unittest.TestCase):
             "inconclusive",
         )
 
+    def test_prevention_replacement_and_countering_counterexamples_fail(self):
+        mutations = (
+            ("combat_prevented", "after_damage", "life", 37),
+            ("combat_prevented", "after_first", "tokens", 1),
+            ("noncombat_prevented", "after_damage", "life", 37),
+            ("combat_unaffected_by_noncombat_prevention", "after_damage", "life", 40),
+            ("combat_doubled", "after_damage", "life", 37),
+            ("combat_doubled", "after_damage", "life", 28),
+            ("combat_doubled", "after_first", "tokens", 2),
+            ("noncombat_doubled", "after_damage", "life", 37),
+            ("noncombat_doubled", "after_damage", "stack", 1),
+            ("doubled_damage_prevented", "after_damage", "life", 34),
+            ("doubled_damage_prevented", "after_first", "tokens", 1),
+            ("initial_trigger_countered", "before_first", "stack", 1),
+            ("initial_trigger_countered", "before_first", "spell_target_count", 0),
+            (
+                "initial_trigger_countered",
+                "before_first",
+                "counter_targets_pending_trigger",
+                False,
+            ),
+            ("initial_trigger_countered", "after_first", "tokens", 1),
+            (
+                "initial_trigger_countered",
+                "after_second",
+                "counter_in_graveyard",
+                False,
+            ),
+            ("reflexive_trigger_countered", "after_response", "stack", 1),
+            (
+                "reflexive_trigger_countered",
+                "after_response",
+                "counter_targets_pending_trigger",
+                False,
+            ),
+            (
+                "reflexive_trigger_countered",
+                "after_second",
+                "equipment_zone",
+                "Battlefield",
+            ),
+            ("reflexive_trigger_countered", "after_second", "tokens", 0),
+        )
+        for case_id, stage, field, value in mutations:
+            with self.subTest(case=case_id, stage=stage, field=field):
+                changed = copy.deepcopy(self.receipt)
+                case = next(case for case in changed["cases"] if case["id"] == case_id)
+                case["states"][stage][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, changed, FINISHED)["status"], "failed"
+                )
+
+    def test_counter_target_identity_is_checked_independently_of_summary_flags(self):
+        for identity, stage, previous in (
+            ("initial_trigger_countered", "before_first", "after_damage"),
+            ("reflexive_trigger_countered", "after_response", "after_first"),
+        ):
+            with self.subTest(case=identity):
+                changed = copy.deepcopy(self.receipt)
+                case = next(case for case in changed["cases"] if case["id"] == identity)
+                self.assertTrue(
+                    case["states"][stage]["counter_targets_pending_trigger"]
+                )
+                case["states"][stage]["spell_target_ids"] = [99999]
+                self.assertEqual(
+                    evaluate_receipt(self.suite, changed, FINISHED)["status"], "failed"
+                )
+                case["states"][stage]["spell_target_ids"] = case["states"][stage][
+                    "stack_ability_ids"
+                ][1:]
+                case["states"][previous]["stack_ability_ids"] = [99999]
+                self.assertEqual(
+                    evaluate_receipt(self.suite, changed, FINISHED)["status"], "failed"
+                )
+
+    def test_missing_counter_target_ids_are_inconclusive(self):
+        case = next(
+            case
+            for case in self.receipt["cases"]
+            if case["id"] == "reflexive_trigger_countered"
+        )
+        del case["states"]["after_response"]["spell_target_ids"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, self.receipt, FINISHED)["status"],
+            "inconclusive",
+        )
+
+    def test_inactive_prevention_fixture_is_not_a_rules_conclusion(self):
+        case = next(
+            case
+            for case in self.receipt["cases"]
+            if case["id"] == "noncombat_prevented"
+        )
+        case["states"]["before"]["noncombat_preventer_loyalty"] = 0
+        self.assertEqual(
+            evaluate_receipt(self.suite, self.receipt, FINISHED)["status"],
+            "inconclusive",
+        )
+
     def test_missing_fields_and_harness_errors_are_not_exercised(self):
         changed = copy.deepcopy(self.receipt)
         changed["cases"][0]["error"] = "Native setup failed"
@@ -121,7 +230,7 @@ class StateVerifierTests(unittest.TestCase):
         for cases in (
             self.receipt["cases"][:-1],
             list(reversed(self.receipt["cases"])),
-            [self.receipt["cases"][0]] * 8,
+            [self.receipt["cases"][0]] * len(self.receipt["cases"]),
         ):
             self.assertEqual(
                 evaluate_receipt(self.suite, {"cases": cases}, FINISHED)["status"],
@@ -129,6 +238,16 @@ class StateVerifierTests(unittest.TestCase):
             )
 
     def test_cannot_replace_builtin_suite_with_other_cases_or_incomplete_states(self):
+        legacy = copy.deepcopy(self.suite)
+        legacy["suite_id"] = "raton_equipment_v1"
+        with (
+            patch(
+                "commander.engine.interactions.suite.read_bounded_json",
+                return_value=legacy,
+            ),
+            self.assertRaisesRegex(ValueError, "version"),
+        ):
+            load_suite()
         changed = [copy.deepcopy(self.suite) for _ in range(3)]
         changed[0]["cases"][0]["id"] = "arbitrary-user-state"
         changed[1]["cases"].append(None)
@@ -167,6 +286,9 @@ class StateVerifierTests(unittest.TestCase):
                     read_bounded_json(path)
 
     def test_oracle_fingerprint_ignores_printing_metadata_but_not_rules(self):
+        self.assertNotEqual(
+            oracle_fingerprint({"loyalty": "5"}), oracle_fingerprint({"loyalty": "4"})
+        )
         card = {"name": "Card", "oracle_id": "oracle", "oracle_text": "Draw a card."}
         self.assertEqual(
             oracle_fingerprint(card),

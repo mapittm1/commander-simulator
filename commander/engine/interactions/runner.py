@@ -70,7 +70,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
         bridge_version=BRIDGE_VERSION,
         rules_sources=suite["rules_sources"],
         limitations=[
-            "Eight fixed scenarios for one card interaction, not comprehensive card/rules or AI validation.",
+            f"{len(suite['cases'])} fixed scenarios, not comprehensive card/rules or AI validation.",
             "Initial states and between-trigger zone changes are controlled; legal casting, complete priority handling, and production deck legality are tested separately.",
             "A 2 GiB JVM heap and wall/log limits do not provide an OS sandbox or total process memory quota.",
         ],

@@ -14,7 +14,7 @@ JPype version. The existing Windows Java runtime exposes its JVM library; standa
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Initial scope: Ratonhnhaké꞉ton and Equipment
+## Current scope: Equipment, damage effects, and countered triggers
 
 The [official Assassin's Creed release notes](https://magic.wizards.com/en/news/feature/assassins-creed-release-notes)
 explain the separate reflexive trigger and its target timing. They also explain
@@ -31,10 +31,26 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Source removed | Removing Ratonhnhaké꞉ton after its trigger is stacked does not stop that ability. |
 | Creature Equipment | March of the Machines makes returned Bonesplitter a creature; it returns unattached. |
 | Noncombat damage | No token-creation trigger is generated. |
+| Full prevention | Solitary Confinement prevents the combat damage, so no damage trigger or token is created. |
+| Noncombat prevention | The Wanderer prevents noncombat damage to its controller. |
+| Combat control | The Wanderer does not prevent the same combat damage; the normal token/Equipment sequence proceeds. |
+| Combat doubled | Furnace of Rath changes three combat damage to six, but creates only one damage trigger and one token. |
+| Noncombat doubled | Six noncombat damage is dealt without creating a combat-damage trigger. |
+| Doubling plus full prevention | All damage remains prevented; there is no damage trigger. |
+| Initial trigger countered | Disallow resolves against the first trigger; no token or reflexive trigger is created. |
+| Reflexive trigger countered | Disallow resolves against the second trigger; the token remains and the Equipment stays in the graveyard. |
 
-All eight cases passed against the unmodified pinned archive. The suite does not
+All 16 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
+
+The [Aether Revolt release notes](https://magic.wizards.com/en/news/feature/aether-revolt-release-notes-2017-01-06)
+document Disallow's ability targeting; the
+[War of the Spark release notes](https://magic.wizards.com/en/news/feature/war-spark-release-notes-2019-04-19)
+document The Wanderer's noncombat prevention. Current local Oracle records for
+Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
+fingerprinted with the other fixture inputs. The suite is versioned as
+`raton_equipment_v2`; previously saved v1 reports remain historical artifacts.
 
 ## Evidence and boundaries
 
@@ -52,6 +68,13 @@ size, target IDs/counts, token identity/properties, equipment ownership/zone,
 source zone, and attachment state. Initial setup mismatches and absent checkpoints
 are inconclusive. A witnessed mismatch fails. CLI exit code zero requires every
 case to pass; a completed process alone is insufficient.
+
+Counterspell checkpoints require two stack entries and a spell-ability target.
+The verifier independently compares the raw target ID, the underlying stack
+entry's ID, and the trigger ID captured at the preceding checkpoint. Missing
+IDs are inconclusive; contradictory bindings fail even if summary flags say
+the counterspell targeted correctly. Initial snapshots also verify that each
+prevention/doubling permanent is active under the intended controller.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
 `observations.json`, `interaction-report.json`, and `interactions.log`. Reports
@@ -72,6 +95,14 @@ tests also do not establish deck-construction legality, full Commander zone rule
 all replacement effects, every targeting condition, or broader combo correctness.
 Normal user simulations retain their existing construction/review/execution gates.
 
+The Wanderer's starting loyalty is initialized through the engine counter API
+from its pinned Oracle value; this does not test its enter-the-battlefield setup.
+Disallow is put on the stack with a chosen legal ability target and resolved
+by the engine. Its mana payment, legal casting window, and AI decision to cast
+it are not tested. The prevention/doubling combination has an order-independent
+zero-damage result; affected-player choice between outcome-changing replacement
+orders remains unverified.
+
 ## Repeatable validation
 
 Offline tests mutate expected observations to ensure early target selection,
@@ -85,7 +116,7 @@ $env:COMMANDER_INTERACTION_INTEGRATION = "1"
 Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
-Next interaction work should add controlled cases for prevention/replacement,
-countering the reflexive trigger, protection/target restrictions, and combos.
+Next interaction work should cover outcome-changing replacement ordering,
+protection/target restrictions, cost/priority handling, and combos.
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.
