@@ -12,12 +12,20 @@ from commander.engine.forge_config import file_hash
 SOURCE = Path(__file__).parent / "native/ReplacementChoiceController.java"
 CLASS_RELATIVE = Path("native/commander/interactions/ReplacementChoiceController.class")
 CLASS_NAME = "commander.interactions.ReplacementChoiceController"
+PRIORITY_SOURCE = SOURCE.with_name("PriorityTestController.java")
+PRIORITY_CLASS_RELATIVE = CLASS_RELATIVE.with_name("PriorityTestController.class")
+PRIORITY_CLASS_NAME = "commander.interactions.PriorityTestController"
 MAX_CLASS_BYTES = 65536
 
 
-def class_hash(run: Path) -> str:
+def priority_class_hash(run: Path) -> str:
+    """Hash only the fixed generated priority controller."""
+    return class_hash(run, relative=PRIORITY_CLASS_RELATIVE)
+
+
+def class_hash(run: Path, *, relative=CLASS_RELATIVE) -> str:
     """Accept only the fixed generated class, with a small independent byte bound."""
-    path = run / CLASS_RELATIVE
+    path = run / relative
     with path.open("rb") as stream:
         raw = stream.read(MAX_CLASS_BYTES + 1)
     if not 0 < len(raw) <= MAX_CLASS_BYTES:
@@ -49,6 +57,7 @@ def build_native_bridge(settings, run: Path, environment: dict) -> dict:
         str(settings.home / settings.verify()["jar_name"]),
         "-d",
         str(output),
+        str(PRIORITY_SOURCE),
         str(SOURCE),
     ]
     process = run_bounded(
@@ -72,6 +81,7 @@ def build_native_bridge(settings, run: Path, environment: dict) -> dict:
         "compiler_sha256": before,
         "compiler_version": version[0],
         "class_sha256": class_hash(run),
+        "priority_class_sha256": priority_class_hash(run),
         "log_sha256": file_hash(log),
         "process": process,
     }
@@ -82,6 +92,7 @@ def bridge_unchanged(run: Path, evidence: dict) -> bool:
     try:
         return (
             class_hash(run) == evidence["class_sha256"]
+            and priority_class_hash(run) == evidence["priority_class_sha256"]
             and file_hash(Path(evidence["compiler"])) == evidence["compiler_sha256"]
         )
     except (KeyError, OSError, ValueError):

@@ -63,7 +63,13 @@ class RunnerBoundaryTests(unittest.TestCase):
             ),
             ("require_current_catalog", {"id": 1}),
             ("_new_run", self.run),
-            ("build_native_bridge", {"class_sha256": "fixture-class"}),
+            (
+                "build_native_bridge",
+                {
+                    "class_sha256": "fixture-class",
+                    "priority_class_sha256": "fixture-priority",
+                },
+            ),
             ("bridge_unchanged", True),
         ):
             stack.enter_context(
@@ -106,6 +112,9 @@ class RunnerBoundaryTests(unittest.TestCase):
                 **header,
                 "partition_id": name,
                 "native_class_sha256": inputs["native_bridge"]["class_sha256"],
+                "priority_class_sha256": inputs["native_bridge"][
+                    "priority_class_sha256"
+                ],
                 "java_version": "17.0.20.1",
             }
             (self.run / f"observations-{name}.json").write_text(
@@ -230,11 +239,12 @@ class RunnerBoundaryTests(unittest.TestCase):
             lambda receipt: receipt.update(partition_id="damage")
         )
         self.assertEqual(report["status"], "inconclusive")
-        self.assertEqual(len(report["partition_results"]), 7)
+        self.assertEqual(len(report["partition_results"]), 8)
         self.assertEqual(
             [part["status"] for part in report["partition_results"]],
             [
                 "inconclusive",
+                "passed",
                 "passed",
                 "passed",
                 "passed",
@@ -251,7 +261,7 @@ class RunnerBoundaryTests(unittest.TestCase):
         report = self._alter_partition(change)
         self.assertEqual(report["status"], "failed")
         self.assertEqual(report["partition_results"][0]["status"], "failed")
-        self.assertEqual(len(report["checks"]), 36)
+        self.assertEqual(len(report["checks"]), 39)
 
     def test_conflicting_native_runtime_versions_invalidate_all_results(self):
         report = self._alter_partition(
@@ -263,7 +273,7 @@ class RunnerBoundaryTests(unittest.TestCase):
     def test_missing_single_partition_retains_other_partition_results(self):
         def execute(*args):
             result = self._execute(*args)
-            (self.run / "observations-casting.json").unlink()
+            (self.run / "observations-priority.json").unlink()
             return result
 
         with patch(

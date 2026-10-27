@@ -10,9 +10,11 @@ from commander.engine.forge_config import EngineSettings
 from commander.engine.interactions.casting import CAST_CASES
 from commander.engine.interactions.casting_fixtures import observe_casting_case
 from commander.engine.interactions.fixtures import observe_case
-from commander.engine.interactions.native_bridge import class_hash
+from commander.engine.interactions.native_bridge import class_hash, priority_class_hash
 from commander.engine.interactions.ordering import ORDER_CASES
 from commander.engine.interactions.ordering_fixtures import observe_ordering_case
+from commander.engine.interactions.priority import PRIORITY_CASES
+from commander.engine.interactions.priority_fixtures import observe_priority_case
 from commander.engine.interactions.suite import (
     PARTITIONS,
     definition_fingerprint,
@@ -37,7 +39,11 @@ def main() -> None:
     ):
         raise ValueError("Interaction definitions changed before worker startup")
     settings = EngineSettings(Path(inputs["home"]), Path(inputs["java"]))
-    if class_hash(path.parent) != inputs["native_bridge"]["class_sha256"]:
+    if (
+        class_hash(path.parent) != inputs["native_bridge"]["class_sha256"]
+        or priority_class_hash(path.parent)
+        != inputs["native_bridge"]["priority_class_sha256"]
+    ):
         raise ValueError("Compiled test controller changed before worker startup")
     lock = settings.verify()
     java = importlib.import_module("jpype")
@@ -62,6 +68,7 @@ def main() -> None:
             "partition_id": name,
             "suite_hash": inputs["suite_hash"],
             "native_class_sha256": inputs["native_bridge"]["class_sha256"],
+            "priority_class_sha256": inputs["native_bridge"]["priority_class_sha256"],
             "engine": lock,
             "java_version": str(
                 java.JClass("java.lang.System").getProperty("java.version")
@@ -90,6 +97,8 @@ def _observe_partition(java, cards, case_ids) -> list:
 
 
 def _observer(case):
+    if case in PRIORITY_CASES:
+        return observe_priority_case
     if case in CAST_CASES:
         return observe_casting_case
     return observe_ordering_case if case in ORDER_CASES else observe_case

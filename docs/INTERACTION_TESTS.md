@@ -12,7 +12,7 @@ action APIs. They are separate from full-game AI smoke tests and user simulation
 The command requires the pinned engine, a fresh catalog, the exact optional
 JPype version, and a trusted installed JDK 17+ compiler. `javac` is discovered on
 PATH; set `COMMANDER_JAVAC` to its executable to select another local compiler.
-The compiler is used only for the fixed test controller; the configured pinned
+The compiler is used only for the fixed test controllers; the configured pinned
 JRE still runs Forge. The existing Windows Java runtime exposes its JVM library; standard
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
@@ -55,7 +55,7 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Double then prevent, noncombat | The same chosen order deals 5, but no combat-damage trigger or token is created. |
 | Prevent then double, noncombat | The same chosen order deals 4, but no combat-damage trigger or token is created. |
 
-All 36 cases passed against the unmodified pinned archive. The suite does not
+All 39 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -65,16 +65,16 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v8`; previously saved v1-v7 reports remain historical artifacts.
+`raton_equipment_v9`; previously saved v1-v8 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
-with the other inputs. Urza's Armor and Plains bring the total to 14 reviewed
-fixture identities, including an off-color mana control.
+with the other inputs. Urza's Armor, Plains and Island bring the total to 15
+reviewed fixture identities, including an off-color mana control.
 
 ## Evidence and boundaries
 
 `config/interaction_suite.json` is a schema-2 manifest holding reviewed card
 identities, fingerprints of rules-relevant Oracle characteristics, source links,
-and the fixed family inventory. Expectations live in seven individually bounded
+and the fixed family inventory. Expectations live in eight individually bounded
 files under `config/interactions/`:
 
 | Family | Definition file | Cases |
@@ -86,18 +86,22 @@ files under `config/interactions/`:
 | Protection | `protection.json` | 4 |
 | Replacement ordering | `replacement_order.json` | 4 |
 | Casting admission/payment | `casting.json` | 8 |
+| Native priority/response loop | `priority.json` | 3 |
 
 The original 28 expectations and 13 pinned identities remain unchanged; the
-casting family adds eight independent cases and Plains. Expectations were specified from the rules, not copied from engine
-output. Changed Oracle characteristics require reviewing the fixture. The command
+casting family adds eight independent cases and Plains, and the priority family
+adds three cases and Island. Expectations were specified from the rules,
+not copied from engine output. Changed Oracle characteristics require reviewing the fixture. The command
 accepts no uploaded state, script, case file, arbitrary file path, or card input.
 Code fixes family paths, order, and exact case IDs. Missing/duplicate/reordered
 families or cases fail admission.
 
-Each case constructs a fresh four-player partial state. It deals damage through
-the engine, inspects the first trigger before resolution, inspects the reflexive
-trigger after token creation/target selection, applies the specified between-trigger
-zone change, and resolves the next ability. Observations include life, stack
+Each case constructs a fresh four-player partial state. The original interaction
+families deal damage through
+the engine, inspect the first trigger before resolution, inspect the reflexive
+trigger after token creation/target selection, apply the specified between-trigger
+zone change, and resolve the next ability. Casting and priority families use the
+distinct checkpoints described below. Observations include life, stack
 size, target IDs/counts, token identity/properties, equipment ownership/zone,
 source zone, and attachment state. Initial setup mismatches and absent checkpoints
 are inconclusive. A witnessed mismatch fails. CLI exit code zero requires every
@@ -152,14 +156,14 @@ shroud's restriction on both players. Probes never enter a zone or resolve.
 They do not prove mana payment, legal cast timing, or AI decisions.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
-seven `observations-<family>.json` receipts, `interaction-report.json`, and
-`interactions.log`. The worker uses one bounded JVM process for all seven families.
+eight `observations-<family>.json` receipts, `interaction-report.json`, and
+`interactions.log`. The worker uses one bounded JVM process for all eight families.
 Each definition, input document, and receipt is limited to 128 KiB and 32 nesting
 levels; duplicate fields are rejected. Generated inputs/receipts are size-checked
 before exclusive creation. Receipts use compact JSON; the combined report
 retains indented state evidence for inspection.
 
-Report schema 2 retains all 36 `checks` and adds `partition_results`, containing
+Report schema 2 retains all 39 `checks` and adds `partition_results`, containing
 family IDs, statuses, Java versions, and receipt `observations_sha256` hashes.
 There is no combined `observations.json` in new runs. Consumers of earlier
 reports must use the named receipts and per-family hashes for new reports.
@@ -169,7 +173,7 @@ Java versions cannot pass. CLI success requires every fixed family to pass.
 
 Reports include Oracle/catalog evidence, source/bootstrap hashes, engine pins,
 bridge versions, process outcome, and artifact hashes. `definition_hashes` binds
-the exact parsed bytes of the manifest and all seven definitions; `suite_hash` is
+the exact parsed bytes of the manifest and all eight definitions; `suite_hash` is
 a fingerprint of that fixed path/hash map. Formatting changes also alter it.
 Definition preflight, worker admission, and post-run checks prevent changed
 definitions from producing a valid conclusion. A source or pinned-engine change
@@ -267,9 +271,9 @@ $env:COMMANDER_INTERACTION_INTEGRATION = "1"
 Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
-Next interaction work should drive the normal priority-pass loop, opponent
-responses, additional/variable costs, simultaneous effects/APNAP choices, and
-representative combos. Future families must retain the existing
+The priority family below exercises selected native passes and opponent
+responses. Additional/variable costs, simultaneous effects/APNAP choices,
+response chains and representative combos remain future work. Future families must retain the existing
 per-document 128 KiB limits and fixed, reviewed admission rules.
 
 For replacement ordering, the pinned engine's
@@ -289,3 +293,41 @@ choices, not evidence that the default AI chooses optimally.
 
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.
+
+
+## Native priority and paid opponent responses
+
+Suite v9 adds three independent cases without changing the original 36 expectations.
+Island is the fifteenth pinned Oracle identity. Rules 117.3b–d, 117.4, 117.7 and
+118.3 govern retained priority, turn-order passes, successive-pass resolution,
+response order and affordability. Forge's pinned
+[PhaseHandler source](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-game/src/main/java/forge/game/phase/PhaseHandler.java)
+provides the native `mainLoopStep()` used here.
+
+| Case | Required behavior |
+| --- | --- |
+| All pass | Seat 0 pays for Bonesplitter with a Forest, retains priority, then seats 0–3 pass. Seat 1 has an affordable Disallow but deliberately passes. Bonesplitter enters the battlefield. |
+| Paid counterspell | Seat 1 pays {1}{U}{U} using three Islands to counter the pending Bonesplitter. Seat 1 retains priority, then seats 1, 2, 3, 0 pass before native resolution. Both spells finish in their owners' graveyards. |
+| Unaffordable response | Seat 1 has Disallow but only two Islands. Native cost checks reject affordability; the scripted controller passes without attempting payment. Disallow remains in hand, Islands remain untapped, and Bonesplitter resolves. |
+
+Each case has `before` and `after_sequence` checkpoints. The latter includes raw
+callbacks and snapshots after each native loop step. The verifier independently
+checks ability IDs, selected spell targets, callback order, retention after casting,
+the restarted pass cycle, stack order, zones, source identities/colors/payment,
+tapping, life totals and stable phase/active player. Missing or malformed evidence
+is inconclusive; a witnessed disagreement fails. Unit counterexamples cover early
+resolution, skipped passes, wrong targets, forged payments and altered resources.
+
+The fixed `PriorityTestController.java` only scripts choices returned to Forge's
+normal controller API. Its inherited casting path performs payment; the Python
+observer never moves priority or directly resolves a pending spell. The fixture
+initializes a partial main phase and calls `onStackResolved()` once to enable the
+priority loop before any cast. This bootstrap does not represent game startup.
+Execution is limited to 16 steps and 32 callbacks per case, within the existing
+90-second worker/128 KiB receipt limits. Both fixed Java classes are separately
+hashed at compilation, before startup, in receipts and after execution.
+
+These cases validate selected priority sequences, not all priority rules or the
+default AI's strategic choices. Counter-counterspell chains, additional/variable
+costs, interrupted casting rollback and broader card combinations remain future
+work. Production deck legality and bracket review gates are unchanged.

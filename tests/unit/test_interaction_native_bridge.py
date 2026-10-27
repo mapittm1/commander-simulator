@@ -8,6 +8,8 @@ from unittest.mock import Mock, patch
 
 from commander.engine.interactions.native_bridge import (
     CLASS_RELATIVE,
+    PRIORITY_CLASS_RELATIVE,
+    PRIORITY_SOURCE,
     SOURCE,
     bridge_unchanged,
     build_native_bridge,
@@ -36,6 +38,7 @@ class NativeBridgeTests(unittest.TestCase):
         path = run / CLASS_RELATIVE
         path.parent.mkdir(parents=True, exist_ok=True)
         path.write_bytes(b"compiled test fixture")
+        (run / PRIORITY_CLASS_RELATIVE).write_bytes(b"priority fixture")
         log.write_text("javac 19.0.1\n", encoding="utf-8")
         return {"status": "finished", "returncode": 0}
 
@@ -48,6 +51,7 @@ class NativeBridgeTests(unittest.TestCase):
         command, run, _log, limits = execute.call_args.args
         self.assertEqual(command[0], str(self.compiler))
         self.assertEqual(command[-1], str(SOURCE))
+        self.assertIn(str(PRIORITY_SOURCE), command)
         self.assertIn("-proc:none", command)
         self.assertEqual(command[command.index("--release") + 1], "17")
         self.assertEqual(limits.timeout, 30)
@@ -126,3 +130,15 @@ class NativeBridgeTests(unittest.TestCase):
             self.assertRaisesRegex(ValueError, "size limit"),
         ):
             build_native_bridge(self.settings, self.root, {})
+
+    def test_changed_or_missing_priority_class_invalidates_evidence(self):
+        with patch(
+            "commander.engine.interactions.native_bridge.run_bounded",
+            side_effect=self._execute,
+        ):
+            evidence = build_native_bridge(self.settings, self.root, {})
+        target = self.root / PRIORITY_CLASS_RELATIVE
+        target.write_bytes(b"tampered priority controller")
+        self.assertFalse(bridge_unchanged(self.root, evidence))
+        target.unlink()
+        self.assertFalse(bridge_unchanged(self.root, evidence))

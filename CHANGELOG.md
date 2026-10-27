@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled suite from 36 to 39 scenarios in `raton_equipment_v9`,
+  adding the eighth priority family and Island as the fifteenth reviewed identity.
+  Preserve all original 36 case expectations. Drive Forge's native four-player
+  priority loop through all-pass resolution, a paid Disallow response, and a
+  response that cannot be afforded with two Islands.
+- Preserve native callback order, stack/target identities, retained priority,
+  restarted pass cycles, mana payment/source colors, tapping and final zones.
+  Add independent negative verifier tests; compile only fixed Java controllers
+  and bind both generated classes to startup, receipts and post-run checks.
+  Initial partial states and choices are controlled; full priority rules,
+  default AI strategy and counter-counterspell chains remain separate work.
+- Validation: Black, isort, Pylint and Bandit pass; 290 offline tests and
+  283 subtests pass (5 opt-in tests skipped). The explicit native integration
+  passes all 39 scenarios and verifies both class hashes, receipt bounds/hashes
+  and engine profile restoration. All previous 36 expectations are unchanged.
+
 - Expand the controlled suite from 28 to 36 cases in `raton_equipment_v8`. Add a
   seventh casting family and Plains as the fourteenth pinned Oracle identity.
   Exercise paid Ranger's Guile/Bonesplitter casts, no-mana/off-color rejection,

@@ -120,17 +120,7 @@ def _snapshot(context) -> dict:
     spell = game.getCardState(context["spell"])
     target = game.getCardState(context["target"])
     entries = [entry.getSpellAbility() for entry in game.getStack()]
-    sources = [
-        {
-            "id": int(card.getId()),
-            "timestamp": int(card.getGameTimestamp()),
-            "controller_id": int(card.getController().getId()),
-            "name": str(card.getName()),
-            "zone": str(card.getZone().getZoneType()),
-            "tapped": bool(card.isTapped()),
-        }
-        for card in context["sources"]
-    ]
+    sources = [_mana_source(card) for card in context["sources"]]
     return {
         "actor_id": int(actor.getId()),
         "priority_id": int(game.getPhaseHandler().getPriorityPlayer().getId()),
@@ -172,4 +162,16 @@ def _snapshot(context) -> dict:
                 "cast_succeeded",
             )
         },
+    }
+
+
+def _mana_source(card) -> dict:
+    """Preserve raw land identity, ownership and tapping consistently across fixtures."""
+    return {
+        "id": int(card.getId()),
+        "timestamp": int(card.getGameTimestamp()),
+        "controller_id": int(card.getController().getId()),
+        "name": str(card.getName()),
+        "zone": str(card.getZone().getZoneType()),
+        "tapped": bool(card.isTapped()),
     }

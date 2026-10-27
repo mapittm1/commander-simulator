@@ -81,7 +81,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
         rules_sources=suite["rules_sources"],
         limitations=[
             f"{len(suite['cases'])} fixed scenarios, not comprehensive card/rules or AI validation.",
-            "Initial states, phases, and priority ownership are controlled; selected casting costs are paid natively. Full priority passing and production deck legality remain separate.",
+            "Initial states and action choices are controlled; the priority family uses native pass cycles and paid responses. Complete priority rules, default AI strategy and production deck legality remain separate.",
             "A 2 GiB JVM heap and wall/log limits do not provide an OS sandbox or total process memory quota.",
         ],
     )
@@ -193,6 +193,9 @@ def _inputs(connection, settings, suite):
                 "ordering.py",
                 "ordering_fixtures.py",
                 "native_bridge.py",
+                "priority.py",
+                "priority_fixtures.py",
+                "native/PriorityTestController.java",
                 "native/ReplacementChoiceController.java",
             )
         },
@@ -240,6 +243,7 @@ def _read_partition(run, suite, inputs, process, name):
         "engine": inputs["engine"],
         "bridge_version": inputs["bridge_version"],
         "native_class_sha256": inputs["native_bridge"]["class_sha256"],
+        "priority_class_sha256": inputs["native_bridge"]["priority_class_sha256"],
     }
     if any(receipt.get(key) != value for key, value in expected.items()):
         return {
