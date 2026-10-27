@@ -11,6 +11,7 @@ import pytest
 
 from commander.cli.app import main
 from commander.engine.forge_config import file_hash, read_settings
+from commander.engine.interactions.suite import MAX_RECEIPT_BYTES, PARTITIONS
 
 pytestmark = pytest.mark.integration
 
@@ -36,7 +37,16 @@ class ControlledInteractionTests(unittest.TestCase):
         self.assertTrue(all(case["status"] == "passed" for case in report["checks"]))
         run = Path(report["directory"])
         self.assertEqual(
-            file_hash(run / "observations.json"), report["observations_sha256"]
+            [part["partition_id"] for part in report["partition_results"]],
+            list(PARTITIONS),
+        )
+        for part in report["partition_results"]:
+            path = run / f"observations-{part['partition_id']}.json"
+            self.assertLessEqual(path.stat().st_size, MAX_RECEIPT_BYTES)
+            self.assertEqual(file_hash(path), part["observations_sha256"])
+            self.assertEqual(part["status"], "passed")
+        self.assertLessEqual(
+            (run / "interaction-inputs.json").stat().st_size, MAX_RECEIPT_BYTES
         )
         self.assertEqual(profile.read_bytes() if profile.exists() else None, original)
         self.assertFalse((settings.home / ".commander-simulator.lock").exists())

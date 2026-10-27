@@ -13,11 +13,14 @@ from commander.engine.forge_decks import card_index, script_match
 from commander.engine.forge_engine import _engine_profile, _environment, _new_run
 from commander.engine.interactions.suite import (
     ORACLE_FIELDS,
-    SUITE_PATH,
+    PARTITIONS,
+    definition_fingerprint,
+    definitions_unchanged,
     evaluate_receipt,
     load_suite,
     oracle_fingerprint,
-    read_bounded_json,
+    read_hashed_json,
+    write_bounded_json,
 )
 from commander.paths import PROJECT_ROOT
 from commander.rules.legality import require_current_catalog
@@ -28,14 +31,13 @@ BRIDGE_VERSION = "1.7.1"
 def run_interaction_suite(connection: Connection, settings: EngineSettings) -> dict:
     """Run only built-in partial-state fixtures; never admit user-supplied game states."""
     require_bridge()
-    suite_hash = file_hash(SUITE_PATH)
     suite = load_suite()
     inputs = _inputs(connection, settings, suite)
-    if inputs["suite_hash"] != suite_hash:
+    if not definitions_unchanged(inputs["definition_hashes"]):
         raise ValueError("Interaction suite changed during preflight; retry")
     run = _new_run()
     path = run / "interaction-inputs.json"
-    path.write_text(json.dumps(inputs, indent=2), encoding="utf-8")
+    write_bounded_json(path, inputs, indent=2)
     worker = PROJECT_ROOT / "tools" / "interaction_worker.py"
     environment = _environment(run)
     environment["PYTHONIOENCODING"] = "utf-8"
@@ -54,7 +56,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
             "reason": "Engine, suite, or harness source changed while running",
         }
     report.update(
-        schema_version=1,
+        schema_version=2,
         suite_id=suite["suite_id"],
         run_id=run.name,
         directory=str(run),
@@ -63,6 +65,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
         engine=inputs["engine"],
         catalog=inputs["catalog"],
         suite_hash=inputs["suite_hash"],
+        definition_hashes=inputs["definition_hashes"],
         inputs_sha256=file_hash(path),
         log_sha256=file_hash(run / "interactions.log"),
         source_hashes=inputs["source_hashes"],
@@ -104,7 +107,7 @@ def _unchanged_inputs(settings, inputs):
         return (
             sources_match
             and settings.verify() == inputs["engine"]
-            and file_hash(SUITE_PATH) == inputs["suite_hash"]
+            and definitions_unchanged(inputs["definition_hashes"])
             and file_hash(PROJECT_ROOT / "tools/interaction_worker.py")
             == inputs["bootstrap_sha256"]
         )
@@ -157,8 +160,11 @@ def _inputs(connection, settings, suite):
             }
     folder = Path(__file__).parent
     return {
-        "schema_version": 1,
-        "suite_hash": file_hash(SUITE_PATH),
+        "schema_version": 2,
+        "suite_id": suite["suite_id"],
+        "partitions": list(PARTITIONS),
+        "definition_hashes": suite["definition_hashes"],
+        "suite_hash": definition_fingerprint(suite["definition_hashes"]),
         "engine": engine,
         "home": str(settings.home),
         "java": str(settings.java),
@@ -175,16 +181,47 @@ def _inputs(connection, settings, suite):
 
 
 def _read_result(run, suite, inputs, process):
+    """Keep every fixed family visible; one missing receipt cannot turn into a pass."""
+    parts = [_read_partition(run, suite, inputs, process, name) for name in PARTITIONS]
+    status = "passed"
+    if any(part["status"] == "failed" for part in parts):
+        status = "failed"
+    elif any(part["status"] != "passed" for part in parts):
+        status = "inconclusive"
+    versions = {part["java_version"] for part in parts if "java_version" in part}
+    if len(versions) > 1:
+        return {
+            "status": "inconclusive",
+            "checks": [],
+            "reason": "Partition Java versions conflict",
+        }
+    return {
+        "status": status,
+        "checks": [check for part in parts for check in part.get("checks", [])],
+        "partition_results": [
+            {
+                "partition_id": name,
+                **{key: value for key, value in part.items() if key != "checks"},
+            }
+            for name, part in zip(PARTITIONS, parts)
+        ],
+    }
+
+
+def _read_partition(run, suite, inputs, process, name):
     try:
-        receipt = read_bounded_json(run / "observations.json")
+        receipt, digest = read_hashed_json(run / f"observations-{name}.json")
     except (OSError, ValueError) as error:
         return {"status": "inconclusive", "checks": [], "reason": str(error)}
-    if (
-        receipt.get("schema_version") != 1
-        or receipt.get("suite_hash") != inputs["suite_hash"]
-        or receipt.get("engine") != inputs["engine"]
-        or receipt.get("bridge_version") != inputs["bridge_version"]
-    ):
+    expected = {
+        "schema_version": 2,
+        "suite_id": inputs["suite_id"],
+        "partition_id": name,
+        "suite_hash": inputs["suite_hash"],
+        "engine": inputs["engine"],
+        "bridge_version": inputs["bridge_version"],
+    }
+    if any(receipt.get(key) != value for key, value in expected.items()):
         return {
             "status": "inconclusive",
             "checks": [],
@@ -202,7 +239,7 @@ def _read_result(run, suite, inputs, process):
             "checks": [],
             "reason": "Missing or unsupported Java runtime evidence",
         }
-    result = evaluate_receipt(suite, receipt, process)
-    result["observations_sha256"] = file_hash(run / "observations.json")
+    result = evaluate_receipt(suite, receipt, process, case_ids=PARTITIONS[name])
+    result["observations_sha256"] = digest
     result["java_version"] = receipt.get("java_version")
     return result

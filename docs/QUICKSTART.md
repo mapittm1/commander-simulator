@@ -116,7 +116,12 @@ batch history inspectable through the database.
 
 To inspect the 24 controlled Equipment, damage, countered-trigger, target-legality,
 and protection/hexproof/shroud cases (including later detachment),
-install `requirements-interactions.txt` and run `engine-interactions`. This is
+install `requirements-interactions.txt` and run `engine-interactions`. The command
+runs all five fixture families and saves `observations-equipment.json`,
+`observations-damage.json`, `observations-countering.json`,
+`observations-targeting.json`, and `observations-protection.json`. The combined
+`interaction-report.json` includes every check and a `partition_results` summary.
+This is
 a separate direct-state diagnostic, not a pod simulation or a full card-support
 certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).
 

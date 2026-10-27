@@ -1,7 +1,6 @@
 """Private child-process entry point for the fixed controlled interaction suite."""
 
 import importlib
-import json
 import sys
 import traceback
 from importlib import metadata
@@ -10,9 +9,11 @@ from pathlib import Path
 from commander.engine.forge_config import EngineSettings
 from commander.engine.interactions.fixtures import observe_case
 from commander.engine.interactions.suite import (
-    CASE_IDS,
-    MAX_RECEIPT_BYTES,
+    PARTITIONS,
+    definition_fingerprint,
+    load_suite,
     read_bounded_json,
+    write_bounded_json,
 )
 
 
@@ -20,6 +21,16 @@ def main() -> None:
     """Load only generated parent inputs and exercise all fixed cases in one bounded JVM."""
     path = Path(sys.argv[1]).resolve()
     inputs = read_bounded_json(path)
+    suite = load_suite()
+    if (
+        inputs.get("schema_version") != 2
+        or inputs.get("suite_id") != suite["suite_id"]
+        or inputs.get("partitions") != list(PARTITIONS)
+        or inputs.get("definition_hashes") != suite["definition_hashes"]
+        or inputs.get("suite_hash")
+        != definition_fingerprint(suite["definition_hashes"])
+    ):
+        raise ValueError("Interaction definitions changed before worker startup")
     settings = EngineSettings(Path(inputs["home"]), Path(inputs["java"]))
     lock = settings.verify()
     java = importlib.import_module("jpype")
@@ -36,10 +47,27 @@ def main() -> None:
     )
     java.JClass("forge.gui.GuiBase").setInterface(java.JClass("forge.GuiDesktop")())
     java.JClass("forge.model.FModel").initialize(None, None)
+    for name, case_ids in PARTITIONS.items():
+        result = {
+            "bridge_version": metadata.version("JPype1"),
+            "schema_version": 2,
+            "suite_id": inputs["suite_id"],
+            "partition_id": name,
+            "suite_hash": inputs["suite_hash"],
+            "engine": lock,
+            "java_version": str(
+                java.JClass("java.lang.System").getProperty("java.version")
+            ),
+            "cases": _observe_partition(java, inputs["cards"], case_ids),
+        }
+        save_observations(path.with_name(f"observations-{name}.json"), result)
+
+
+def _observe_partition(java, cards, case_ids) -> list:
     cases = []
-    for case in CASE_IDS:
+    for case in case_ids:
         try:
-            cases.append(observe_case(java, inputs["cards"], case))
+            cases.append(observe_case(java, cards, case))
         except (
             java.JException,
             RuntimeError,
@@ -49,26 +77,12 @@ def main() -> None:
         ) as error:
             traceback.print_exc()
             cases.append({"id": case, "error": str(error)[:1000]})
-    result = {
-        "bridge_version": metadata.version("JPype1"),
-        "schema_version": 1,
-        "suite_hash": inputs["suite_hash"],
-        "engine": lock,
-        "java_version": str(
-            java.JClass("java.lang.System").getProperty("java.version")
-        ),
-        "cases": cases,
-    }
-    save_observations(path.with_name("observations.json"), result)
+    return cases
 
 
 def save_observations(path: Path, result: dict) -> None:
     """Reject excessive state output before creating an exclusive receipt file."""
-    serialized = json.dumps(result, separators=(",", ":"), ensure_ascii=True)
-    if len(serialized.encode("utf-8")) > MAX_RECEIPT_BYTES:
-        raise ValueError("Interaction observations exceed the receipt size limit")
-    with path.open("x", encoding="utf-8") as stream:
-        stream.write(serialized)
+    write_bounded_json(path, result)
 
 
 if __name__ == "__main__":

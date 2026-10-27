@@ -8,6 +8,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Partition the existing 24 controlled cases into five fixed families in
+  `raton_equipment_v6`: Equipment (8), damage (6), countering (2), targeting (4),
+  and protection (4). Preserve every reviewed expectation and all 12 pinned
+  identities. Keep the CLI command and the single bounded Python/JVM process.
+- Use a schema-2 manifest plus independently bounded files in
+  `config/interactions/`, with code-owned paths, order, and exact case inventory.
+  Hash each document's exact parsed bytes and bind the complete path/hash map
+  into the suite fingerprint; verify definitions before, within, and after execution.
+- Write one bounded `observations-<family>.json` receipt per family. Report
+  schema 2 retains the combined checks and adds `partition_results` with receipt
+  hashes/statuses. New runs no longer emit a combined `observations.json`.
+  Missing/misidentified evidence, failed processes, and conflicting runtime
+  metadata cannot pass; a witnessed mismatch fails the combined result.
+- Retain the 128 KiB/32-level per-document limits. Size-check generated worker
+  inputs before exclusive creation; keep readable combined reports. Organize
+  definition, runner, verifier tests, and synthetic helpers into focused files.
+- Validation: 261 offline tests and 211 subtests pass. Native CLI integration
+  passes all 24 unchanged cases, checks every receipt's hash/size, and verifies
+  profile restoration. Black, isort, Pylint, and Bandit pass. Outcome-changing
+  replacement-order choices remain the next interaction milestone.
+
 - Expand the controlled suite from 23 to 24 cases in `raton_equipment_v5`.
   Witness normal Equipment attachment, then resolve Tel-Jilad Defiance and let
   native state-based actions detach it. The Equipment remains on the battlefield

@@ -53,7 +53,15 @@ without changing the Equipment's zone or object identity.
 Results retain checkpoints, identities and zone timestamps,
 Oracle/engine/source hashes, and raw worker logs. All 24 currently pass on
 the pinned engine. This does not certify every card, legal response casting, or
-complete priority handling. See [controlled interaction tests](docs/INTERACTION_TESTS.md).
+complete priority handling.
+
+The same command runs five bounded fixture families: Equipment, damage,
+countering, targeting, and protection. `config/interaction_suite.json` is the
+manifest; reviewed expectations live in `config/interactions/`. Each family
+writes a separate `observations-<family>.json` receipt. The combined schema-2
+report retains all 24 checks and adds `partition_results` with per-family status
+and receipt hashes. Every family must pass for CLI success. See
+[controlled interaction tests](docs/INTERACTION_TESTS.md).
 
 Run these from the project folder:
 

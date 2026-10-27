@@ -15,7 +15,7 @@ from .responses import (
 )
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v5"
+SUITE_ID = "raton_equipment_v6"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -42,6 +42,13 @@ CASE_IDS = (
     "assassin_shroud",
     DETACHMENT_CASE,
 )
+PARTITIONS = {
+    "equipment": CASE_IDS[:8],
+    "damage": CASE_IDS[8:14],
+    "countering": CASE_IDS[14:16],
+    "targeting": CASE_IDS[16:20],
+    "protection": CASE_IDS[20:],
+}
 CARD_ROLES = {
     "source",
     "equipment",
@@ -93,6 +100,11 @@ def oracle_fingerprint(card: dict) -> str:
 
 def read_bounded_json(path: Path, limit: int = MAX_RECEIPT_BYTES) -> dict:
     """Read a bounded local harness document and reject duplicate object fields."""
+    return read_hashed_json(path, limit)[0]
+
+
+def read_hashed_json(path: Path, limit: int = MAX_RECEIPT_BYTES) -> tuple:
+    """Hash exactly the bounded bytes that were parsed, including formatting."""
     with path.open("rb") as stream:
         raw = stream.read(limit + 1)
     if len(raw) > limit:
@@ -105,7 +117,89 @@ def read_bounded_json(path: Path, limit: int = MAX_RECEIPT_BYTES) -> dict:
         raise ValueError("Malformed interaction harness JSON") from error
     if not isinstance(result, dict):
         raise ValueError("Interaction harness document must be an object")
-    return result
+    return result, hashlib.sha256(raw).hexdigest()
+
+
+def write_bounded_json(path: Path, value: dict, *, indent=None) -> None:
+    """Bound generated documents before writing and never overwrite existing evidence."""
+    options = {"indent": indent} if indent is not None else {"separators": (",", ":")}
+    serialized = json.dumps(value, ensure_ascii=True, **options)
+    if len(serialized.encode("utf-8")) > MAX_RECEIPT_BYTES:
+        raise ValueError("Interaction harness document exceeds its size limit")
+    with path.open("x", encoding="utf-8", newline="\n") as stream:
+        stream.write(serialized)
+
+
+def definition_paths() -> dict:
+    """Return a fixed registry; configuration and receipts never select filesystem paths."""
+    return {
+        "interaction_suite.json": SUITE_PATH,
+        **{
+            f"interactions/{name}.json": CONFIG_ROOT / "interactions" / f"{name}.json"
+            for name in PARTITIONS
+        },
+    }
+
+
+def definition_fingerprint(hashes: dict) -> str:
+    """Bind the suite manifest and every partition definition into one identity."""
+    raw = json.dumps(hashes, sort_keys=True, separators=(",", ":"))
+    return hashlib.sha256(raw.encode("utf-8")).hexdigest()
+
+
+def definitions_unchanged(hashes: dict) -> bool:
+    """Re-read only fixed bounded definition paths, rejecting changed or malformed files."""
+    try:
+        current = {
+            name: read_hashed_json(path)[1] for name, path in definition_paths().items()
+        }
+        return hashes == current
+    except (OSError, ValueError):
+        return False
+
+
+def load_definitions() -> dict:
+    """Assemble the fixed families while retaining each definition's exact-byte hash."""
+    paths = definition_paths()
+    suite, digest = read_hashed_json(SUITE_PATH)
+    if (
+        set(suite)
+        != {
+            "schema_version",
+            "suite_id",
+            "reviewed_on",
+            "rules_sources",
+            "upstream_reference",
+            "cards",
+            "partitions",
+        }
+        or suite.get("schema_version") != 2
+        or suite.get("suite_id") != SUITE_ID
+        or suite.get("partitions") != list(PARTITIONS)
+    ):
+        raise ValueError("Unknown built-in interaction suite manifest or partitions")
+    hashes = {"interaction_suite.json": digest}
+    cases = []
+    for name, case_ids in PARTITIONS.items():
+        relative = f"interactions/{name}.json"
+        document, hashes[relative] = read_hashed_json(paths[relative])
+        rows = document.get("cases")
+        if (
+            set(document) != {"schema_version", "partition_id", "cases"}
+            or document.get("schema_version") != 1
+            or document.get("partition_id") != name
+        ):
+            raise ValueError("Unknown interaction partition header: " + name)
+        if (
+            not isinstance(rows, list)
+            or not all(isinstance(row, dict) for row in rows)
+            or tuple(row.get("id") for row in rows) != case_ids
+        ):
+            raise ValueError(
+                "Unknown, duplicate, or incomplete interaction partition: " + name
+            )
+        cases.extend(rows)
+    return {**suite, "cases": cases, "definition_hashes": hashes}
 
 
 def _unique_fields(pairs):
@@ -119,8 +213,8 @@ def _unique_fields(pairs):
 
 def load_suite() -> dict:
     """Accept the built-in suite only; configuration supplies expectations, never code."""
-    suite = read_bounded_json(SUITE_PATH)
-    if suite.get("schema_version") != 1 or suite.get("suite_id") != SUITE_ID:
+    suite = load_definitions()
+    if suite.get("schema_version") != 2 or suite.get("suite_id") != SUITE_ID:
         raise ValueError("Unknown built-in interaction suite version")
     cases = suite.get("cases")
     if (
@@ -162,21 +256,31 @@ def load_suite() -> dict:
     return suite
 
 
-def evaluate_receipt(suite: dict, receipt: dict, process: dict) -> dict:
+def evaluate_receipt(
+    suite: dict, receipt: dict, process: dict, *, case_ids=CASE_IDS
+) -> dict:
     """Distinguish a rules mismatch from absent evidence or a failed harness process."""
+    if case_ids not in (CASE_IDS, *PARTITIONS.values()):
+        return {
+            "status": "inconclusive",
+            "checks": [],
+            "reason": "Unknown interaction partition",
+        }
     valid_process = (
         process.get("status") == "finished" and process.get("returncode") == 0
     )
     cases = receipt.get("cases", [])
+    expected_cases = [case for case in suite["cases"] if case["id"] in case_ids]
     complete = (
         isinstance(cases, list)
-        and len(cases) == len(CASE_IDS)
+        and len(cases) == len(case_ids)
         and all(isinstance(case, dict) for case in cases)
     )
     if (
         not valid_process
         or not complete
-        or tuple(case.get("id") for case in cases) != CASE_IDS
+        or tuple(case.get("id") for case in cases) != case_ids
+        or tuple(case["id"] for case in expected_cases) != case_ids
     ):
         return {
             "status": "inconclusive",
@@ -185,7 +289,7 @@ def evaluate_receipt(suite: dict, receipt: dict, process: dict) -> dict:
         }
     checks = [
         _evaluate_case(expected, observed)
-        for expected, observed in zip(suite["cases"], cases)
+        for expected, observed in zip(expected_cases, cases)
     ]
     status = "passed"
     if any(check["status"] == "failed" for check in checks):

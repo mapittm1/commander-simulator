@@ -92,11 +92,13 @@ protection/hexproof/shroud attachment and later detachment cases. See
 between-trigger effects; complete legal casting and priority handling remain
 separate work. The suite does not certify the rest of the card catalog.
 
-The next interaction milestone is to partition fixed definitions into individually
-bounded suites, preserving the 128 KiB input/receipt limit as coverage grows.
-Then add outcome-changing replacement-order cases with recorded affected-player
-choices through Forge's controller callback. Both legal orders must be exercised;
-one default AI outcome cannot establish coverage of both branches.
+The 24 interaction cases now run as five fixed families with individually bounded
+definitions and receipts. Manifest/schema-2 reporting preserves the 128 KiB
+per-document input/receipt limit, all existing expectations, and a combined
+all-families result. The next interaction milestone is outcome-changing
+replacement-order cases with recorded affected-player choices through Forge's
+controller callback. Both legal orders must be exercised; one default AI outcome
+cannot establish coverage of both branches.
 
 The CLI is now directly runnable through `doctor`, an isolated real-engine
 `demo`, four-file `play`, and reviewed-pod `simulate` with progress, resume, and

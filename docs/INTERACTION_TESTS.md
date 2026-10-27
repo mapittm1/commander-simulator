@@ -58,17 +58,31 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v5`; previously saved v1/v2/v3/v4 reports remain historical artifacts.
+`raton_equipment_v6`; previously saved v1-v5 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
 with the other inputs, for 12 reviewed fixture identities.
 
 ## Evidence and boundaries
 
-`config/interaction_suite.json` holds reviewed card identities, fingerprints of
-rules-relevant Oracle characteristics, case intentions, expected checkpoints,
-and source links. Expectations were specified from the rules, not copied from
-engine output. Changed Oracle characteristics require reviewing the fixture.
-The command accepts no uploaded state, script, case file, or arbitrary card input.
+`config/interaction_suite.json` is a schema-2 manifest holding reviewed card
+identities, fingerprints of rules-relevant Oracle characteristics, source links,
+and the fixed family inventory. Expectations live in five individually bounded
+files under `config/interactions/`:
+
+| Family | Definition file | Cases |
+| --- | --- | ---: |
+| Equipment | `equipment.json` | 8 |
+| Damage | `damage.json` | 6 |
+| Countering | `countering.json` | 2 |
+| Targeting | `targeting.json` | 4 |
+| Protection | `protection.json` | 4 |
+
+Every original expectation and all 12 pinned identities are unchanged by this
+partitioning. Expectations were specified from the rules, not copied from engine
+output. Changed Oracle characteristics require reviewing the fixture. The command
+accepts no uploaded state, script, case file, arbitrary file path, or card input.
+Code fixes family paths, order, and exact case IDs. Missing/duplicate/reordered
+families or cases fail admission.
 
 Each case constructs a fresh four-player partial state. It deals damage through
 the engine, inspects the first trigger before resolution, inspects the reflexive
@@ -128,13 +142,28 @@ shroud's restriction on both players. Probes never enter a zone or resolve.
 They do not prove mana payment, legal cast timing, or AI decisions.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
-`observations.json`, `interaction-report.json`, and `interactions.log`. Reports
-include Oracle/catalog evidence, suite/source/bootstrap hashes, engine pins,
-bridge/Java versions, process outcome, and artifact hashes. Suite/input/worker
-receipt JSON is limited to 128 KiB and 32 nesting levels; duplicate fields are
-rejected. Worker receipts use compact JSON within the unchanged cap; generated
-reports retain indented state evidence for inspection. A source,
-suite, or pinned-engine change during execution invalidates the conclusion.
+five `observations-<family>.json` receipts, `interaction-report.json`, and
+`interactions.log`. The worker uses one bounded JVM process for all five families.
+Each definition, input document, and receipt is limited to 128 KiB and 32 nesting
+levels; duplicate fields are rejected. Generated inputs/receipts are size-checked
+before exclusive creation. Receipts use compact JSON; the combined report
+retains indented state evidence for inspection.
+
+Report schema 2 retains all 24 `checks` and adds `partition_results`, containing
+family IDs, statuses, Java versions, and receipt `observations_sha256` hashes.
+There is no combined `observations.json` in new runs. Consumers of earlier
+reports must use the named receipts and per-family hashes for new reports.
+A missing/misidentified receipt makes the combined result inconclusive; any
+witnessed rules mismatch fails it. Nonzero/unfinished processes or conflicting
+Java versions cannot pass. CLI success requires every fixed family to pass.
+
+Reports include Oracle/catalog evidence, source/bootstrap hashes, engine pins,
+bridge versions, process outcome, and artifact hashes. `definition_hashes` binds
+the exact parsed bytes of the manifest and all five definitions; `suite_hash` is
+a fingerprint of that fixed path/hash map. Formatting changes also alter it.
+Definition preflight, worker admission, and post-run checks prevent changed
+definitions from producing a valid conclusion. A source or pinned-engine change
+during execution likewise invalidates the conclusion.
 
 The worker uses isolated Python imports and a minimal child environment, the
 existing engine profile lock/restoration, a 90-second outer timeout, an 8 MiB log
@@ -174,8 +203,8 @@ Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
 Next interaction work should cover outcome-changing replacement ordering,
-cost/priority handling, and combos. Split growing fixture definitions into bounded
-suites before adding the next family, retaining the existing 128 KiB limits.
+cost/priority handling, and combos. Future families must retain the existing
+per-document 128 KiB limits and fixed, reviewed admission rules.
 
 For replacement ordering, the pinned engine's
 [ReplacementHandler](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java)

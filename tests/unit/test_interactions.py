@@ -1,19 +1,12 @@
 """Counterexamples and missing evidence must never pass controlled interaction checks."""
 
 import copy
-import io
 import json
 import tempfile
 import unittest
-from contextlib import ExitStack, redirect_stderr, redirect_stdout
-from importlib import metadata
 from pathlib import Path
 from unittest.mock import patch
 
-from commander.catalog.database import connect
-from commander.cli.app import main
-from commander.engine.forge_config import EngineSettings
-from commander.engine.interactions.runner import require_bridge, run_interaction_suite
 from commander.engine.interactions.suite import (
     evaluate_receipt,
     load_suite,
@@ -21,67 +14,12 @@ from commander.engine.interactions.suite import (
     read_bounded_json,
 )
 from commander.engine.interactions.worker import save_observations
+from tests.support.interaction_fixture import synthetic_receipt
 
 # Test names describe behavior.
 # pylint: disable=missing-function-docstring
 
 FINISHED = {"status": "finished", "returncode": 0}
-
-
-def synthetic_receipt(suite: dict) -> dict:
-    """Build verifier input only; this is not a native-engine conformance result."""
-    cases = []
-    for index, case in enumerate(suite["cases"]):
-        states = copy.deepcopy(case["expected"])
-        initial, reflexive, counter = 100 + index * 3, 101 + index * 3, 102 + index * 3
-        for stage, state in states.items():
-            pending = (
-                initial if stage in {"after_damage", "before_first"} else reflexive
-            )
-            if state["counter_on_stack"]:
-                state["stack_ability_ids"] = [counter, pending]
-                state["spell_target_ids"] = [pending]
-            else:
-                state["stack_ability_ids"] = [pending] if state["stack"] else []
-                state["spell_target_ids"] = []
-            state["equipment_id"] = 1000 + index
-            state["equipment_timestamp"] = 10
-            state["targets"] = [1000 + index] if state.get("equipment_targeted") else []
-            state["target_timestamps"] = [10] if state.get("equipment_targeted") else []
-            state["token_ids"] = [2000 + index] if state["tokens"] else []
-            state["token_timestamps"] = [20] if state["tokens"] else []
-            state["equipment_attached_to_id"] = (
-                2000 + index if state["attached"] else None
-            )
-        if case["id"] == "protection_detaches_equipment":
-            states["after_detachment"]["response_spell"] = {
-                "targets": [2000 + index],
-                "target_timestamps": [20],
-                "stack_ability_ids": [counter],
-                "zone": "Graveyard",
-            }
-        if case["id"] in {
-            "assassin_protection_artifacts",
-            "assassin_hexproof",
-            "assassin_shroud",
-        }:
-            states["after_response"]["response_spell"] = {
-                "targets": [2000 + index],
-                "target_timestamps": [20],
-                "stack_ability_ids": [counter, reflexive],
-                "zone": (
-                    "Battlefield" if case["id"] == "assassin_shroud" else "Graveyard"
-                ),
-            }
-        if case["id"] == "target_zone_roundtrip":
-            for stage in ("after_response", "after_second"):
-                states[stage]["equipment_timestamp"] = 12
-            states["after_response"]["equipment_transitions"] = [
-                {"id": 1000 + index, "timestamp": 11, "zone": "Exile"},
-                {"id": 1000 + index, "timestamp": 12, "zone": "Graveyard"},
-            ]
-        cases.append({"id": case["id"], "states": states})
-    return {"cases": cases}
 
 
 class StateVerifierTests(unittest.TestCase):
@@ -601,7 +539,7 @@ class DetachmentVerifierTests(unittest.TestCase):
                 del case["expected"]["after_detachment"]
             with (
                 patch(
-                    "commander.engine.interactions.suite.read_bounded_json",
+                    "commander.engine.interactions.suite.load_definitions",
                     return_value=suite,
                 ),
                 self.assertRaisesRegex(ValueError, "checkpoint"),
@@ -650,7 +588,7 @@ class ReceiptBoundaryTests(unittest.TestCase):
         legacy["suite_id"] = "raton_equipment_v1"
         with (
             patch(
-                "commander.engine.interactions.suite.read_bounded_json",
+                "commander.engine.interactions.suite.load_definitions",
                 return_value=legacy,
             ),
             self.assertRaisesRegex(ValueError, "version"),
@@ -663,7 +601,7 @@ class ReceiptBoundaryTests(unittest.TestCase):
         for candidate in changed:
             with (
                 patch(
-                    "commander.engine.interactions.suite.read_bounded_json",
+                    "commander.engine.interactions.suite.load_definitions",
                     return_value=candidate,
                 ),
                 self.assertRaises(ValueError),
@@ -673,7 +611,7 @@ class ReceiptBoundaryTests(unittest.TestCase):
         del changed["cases"][0]["expected"]["before"]
         with (
             patch(
-                "commander.engine.interactions.suite.read_bounded_json",
+                "commander.engine.interactions.suite.load_definitions",
                 return_value=changed,
             ),
             self.assertRaises(ValueError),
@@ -724,192 +662,3 @@ class ReceiptBoundaryTests(unittest.TestCase):
             with self.assertRaises(FileExistsError):
                 save_observations(path, {"kept": False})
             self.assertEqual(read_bounded_json(path), {"kept": True})
-
-
-class RunnerBoundaryTests(unittest.TestCase):
-    """Use fake native execution to exercise admission, receipt integrity, and failure paths."""
-
-    def setUp(self):
-        stack = ExitStack()
-        self.addCleanup(stack.close)
-        self.root = Path(stack.enter_context(tempfile.TemporaryDirectory()))
-        self.run = self.root / "run"
-        self.run.mkdir()
-        java = self.root / "bin/java.exe"
-        java.parent.mkdir()
-        java.write_bytes(b"fixture")
-        (java.parent / "server").mkdir()
-        (java.parent / "server/jvm.dll").write_bytes(b"fixture")
-        self.settings = EngineSettings(self.root, java)
-        self.db = connect(":memory:")
-        self.addCleanup(self.db.close)
-        self.suite = load_suite()
-        self.cards = {}
-        for expected in self.suite["cards"]:
-            record = {"name": expected["name"], "oracle_id": expected["oracle_id"]}
-            self.cards[expected["oracle_id"]] = record
-            expected["oracle_sha256"] = oracle_fingerprint(record)
-        self.engine = {
-            "jar_name": "test.jar",
-            "forge_version": "test",
-            "jar_sha256": "jar",
-            "cards_sha256": "cards",
-        }
-        for name, value in (
-            ("load_suite", self.suite),
-            (
-                "card_index",
-                {card["name"]: card["name"] for card in self.cards.values()},
-            ),
-            ("require_current_catalog", {"id": 1}),
-            ("_new_run", self.run),
-        ):
-            stack.enter_context(
-                patch(
-                    "commander.engine.interactions.runner." + name, return_value=value
-                )
-            )
-        stack.enter_context(
-            patch.object(EngineSettings, "verify", return_value=self.engine)
-        )
-        stack.enter_context(
-            patch(
-                "commander.engine.interactions.runner.metadata.version",
-                return_value="1.7.1",
-            )
-        )
-        stack.enter_context(
-            patch(
-                "commander.engine.interactions.runner.get_card_details",
-                side_effect=lambda _connection, identity: self.cards[identity],
-            )
-        )
-
-    def _execute(self, command, _cwd, log, _limits):
-        inputs = json.loads(Path(command[-1]).read_text(encoding="utf-8"))
-        receipt = {
-            **synthetic_receipt(self.suite),
-            "schema_version": 1,
-            "suite_hash": inputs["suite_hash"],
-            "engine": inputs["engine"],
-            "bridge_version": "1.7.1",
-            "java_version": "17.0.20.1",
-        }
-        log.write_text("Synthetic worker evidence only\n", encoding="utf-8")
-        (self.run / "observations.json").write_text(
-            json.dumps(receipt), encoding="utf-8"
-        )
-        return FINISHED
-
-    def test_bounded_isolated_process_and_report_preserve_provenance(self):
-        with patch(
-            "commander.engine.interactions.runner.run_bounded",
-            side_effect=self._execute,
-        ) as execute:
-            report = run_interaction_suite(self.db, self.settings)
-        self.assertEqual(report["status"], "passed")
-        command, _cwd, _log, limits = execute.call_args.args
-        self.assertIn("-I", command)
-        self.assertEqual(limits.timeout, 90)
-        self.assertNotIn("JAVA_TOOL_OPTIONS", limits.environment)
-        self.assertTrue((self.run / "interaction-report.json").is_file())
-        self.assertTrue(report["observations_sha256"])
-        self.assertIn("responses.py", report["source_hashes"])
-        self.assertFalse((self.root / ".commander-simulator.lock").exists())
-
-    def test_changed_oracle_cannot_launch_worker(self):
-        next(iter(self.cards.values()))["oracle_text"] = "Changed Oracle text"
-        with (
-            patch("commander.engine.interactions.runner.run_bounded") as execute,
-            self.assertRaisesRegex(ValueError, "Oracle characteristics changed"),
-        ):
-            run_interaction_suite(self.db, self.settings)
-        execute.assert_not_called()
-
-    def test_missing_engine_export_cannot_launch_worker(self):
-        with (
-            patch("commander.engine.interactions.runner.card_index", return_value={}),
-            patch("commander.engine.interactions.runner.run_bounded") as execute,
-            self.assertRaisesRegex(ValueError, "engine export"),
-        ):
-            run_interaction_suite(self.db, self.settings)
-        execute.assert_not_called()
-
-    def test_missing_receipt_never_passes_even_with_zero_exit(self):
-        def no_receipt(_command, _cwd, log, _limits):
-            log.write_text("No state evidence", encoding="utf-8")
-            return FINISHED
-
-        with patch(
-            "commander.engine.interactions.runner.run_bounded", side_effect=no_receipt
-        ):
-            report = run_interaction_suite(self.db, self.settings)
-        self.assertEqual(report["status"], "inconclusive")
-
-    def test_tampered_receipt_is_inconclusive(self):
-        def tamper(*args):
-            result = self._execute(*args)
-            path = self.run / "observations.json"
-            receipt = json.loads(path.read_text(encoding="utf-8"))
-            receipt["suite_hash"] = "changed"
-            path.write_text(json.dumps(receipt), encoding="utf-8")
-            return result
-
-        with patch(
-            "commander.engine.interactions.runner.run_bounded", side_effect=tamper
-        ):
-            report = run_interaction_suite(self.db, self.settings)
-        self.assertEqual(report["status"], "inconclusive")
-
-    def test_changed_engine_during_execution_invalidates_state_results(self):
-        changed = {**self.engine, "jar_sha256": "changed"}
-        with (
-            patch.object(EngineSettings, "verify", side_effect=[self.engine, changed]),
-            patch(
-                "commander.engine.interactions.runner.run_bounded",
-                side_effect=self._execute,
-            ),
-        ):
-            report = run_interaction_suite(self.db, self.settings)
-        self.assertEqual(report["status"], "inconclusive")
-        self.assertIn("changed while running", report["reason"])
-
-    def test_bridge_version_and_absence_give_actionable_errors(self):
-        with (
-            patch(
-                "commander.engine.interactions.runner.metadata.version",
-                side_effect=metadata.PackageNotFoundError,
-            ),
-            self.assertRaisesRegex(ValueError, "requirements-interactions"),
-        ):
-            require_bridge()
-        with (
-            patch(
-                "commander.engine.interactions.runner.metadata.version",
-                return_value="different",
-            ),
-            self.assertRaises(ValueError),
-        ):
-            require_bridge()
-
-    def test_cli_only_returns_success_for_passed_interactions(self):
-        path = self.root / "cli.sqlite3"
-        for status in ("passed", "failed", "inconclusive"):
-            with (
-                patch(
-                    "commander.cli.engine_commands.read_settings",
-                    return_value=self.settings,
-                ),
-                patch(
-                    "commander.cli.engine_commands.run_interaction_suite",
-                    return_value={"status": status},
-                ),
-                redirect_stdout(io.StringIO()),
-                redirect_stderr(io.StringIO()),
-            ):
-                if status == "passed":
-                    main(["--database", str(path), "engine-interactions"])
-                else:
-                    with self.assertRaises(SystemExit) as raised:
-                        main(["--database", str(path), "engine-interactions"])
-                    self.assertEqual(raised.exception.code, 1)

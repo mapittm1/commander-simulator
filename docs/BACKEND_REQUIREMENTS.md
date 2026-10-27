@@ -269,6 +269,22 @@ returns to 1. Raw attachment and response target identities are independently
 checked; pre/post stacks must be empty and the response must be in the graveyard.
 The 12 pinned identities and existing process/JSON limits remain unchanged.
 
+Suite v6 partitions the same 24 cases into Equipment, damage, countering, targeting,
+and protection families. A schema-2 manifest lists exactly those fixed IDs; paths,
+family order, and case inventory come from code. Each definition and worker
+receipt remains limited to 128 KiB/32 levels, with duplicate-field rejection.
+Generated worker inputs use the same bound and exclusive file creation. A single
+bounded Python/JVM child runs every fixed family and writes one receipt per family.
+
+Report schema 2 keeps the combined `checks` list and adds `partition_results`
+with each receipt's status, Java version, and SHA-256. Missing, misidentified,
+wrong-suite, or malformed receipts cannot pass. A witnessed mismatch fails the
+combined result; process failure or conflicting Java versions is inconclusive.
+The suite fingerprint binds hashes of the exact parsed bytes of the manifest
+and all five definitions. Worker admission and parent pre/post checks verify
+that evidence; changed definitions invalidate the whole conclusion. Historical
+v1-v5 reports remain artifacts, not interchangeable current receipts.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.
