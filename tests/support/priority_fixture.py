@@ -90,24 +90,7 @@ def add_priority_states(states, case_id):
     states["after_sequence"] = deepcopy(steps[-1])
     states["after_sequence"].update(
         steps=steps,
-        callbacks=[
-            dict(
-                zip(
-                    (
-                        "player_id",
-                        "stack",
-                        "proposal_id",
-                        "targets",
-                        "can_play",
-                        "can_pay",
-                        "cast",
-                    ),
-                    row,
-                ),
-                priority_id=row[0],
-            )
-            for row in sequence
-        ],
+        callbacks=synthetic_callbacks(sequence),
     )
 
 
@@ -123,15 +106,42 @@ def _steps(before, stacks, seats, response):
                 spell["zone"] = "Stack"
                 if offset == len(stacks) - 1:
                     spell["zone"] = "Graveyard" if response else "Battlefield"
-                for source in state["lands"][index]:
-                    source["tapped"] = True
-                    spell["payment"].append(
-                        {
-                            "source_id": source["id"],
-                            "source_timestamp": 1,
-                            "symbol": "G" if index == 0 else "U",
-                            "color": 16 if index == 0 else 2,
-                        }
-                    )
+                synthetic_payment(state, index)
         steps.append(state)
     return steps
+
+
+def synthetic_callbacks(sequence):
+    """Serialize fixture rows without invoking production verifier code."""
+    return [
+        dict(
+            zip(
+                (
+                    "player_id",
+                    "stack",
+                    "proposal_id",
+                    "targets",
+                    "can_play",
+                    "can_pay",
+                    "cast",
+                ),
+                row,
+            ),
+            priority_id=row[0],
+        )
+        for row in sequence
+    ]
+
+
+def synthetic_payment(state, index):
+    """Model a fully paid fixed basic-land cost for synthetic tests only."""
+    for source in state["lands"][index]:
+        source["tapped"] = True
+        state["spells"][index]["payment"].append(
+            {
+                "source_id": source["id"],
+                "source_timestamp": 1,
+                "symbol": "G" if index == 0 else "U",
+                "color": 16 if index == 0 else 2,
+            }
+        )

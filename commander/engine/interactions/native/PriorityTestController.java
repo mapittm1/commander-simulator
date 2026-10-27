@@ -22,8 +22,10 @@ public final class PriorityTestController extends PlayerControllerAi {
     public PriorityTestController(Game game, Player player, Card proposal,
             Card original, boolean respond, List<Map<String, Object>> journal) {
         super(game, player, player.getLobbyPlayer());
-        if (!original.getName().equals("Bonesplitter") || (proposal != null
-                && !List.of("Bonesplitter", "Disallow").contains(proposal.getName()))) {
+        if (!List.of("Bonesplitter", "Disallow").contains(original.getName())
+                || (proposal != null && !List.of("Bonesplitter", "Disallow").contains(proposal.getName()))
+                || (original.getName().equals("Disallow")
+                    && (proposal == null || !proposal.getName().equals("Disallow") || proposal == original))) {
             throw new IllegalArgumentException("Unknown fixed priority proposal");
         }
         this.proposal = proposal;

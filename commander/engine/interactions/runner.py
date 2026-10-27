@@ -194,6 +194,7 @@ def _inputs(connection, settings, suite):
                 "ordering_fixtures.py",
                 "native_bridge.py",
                 "priority.py",
+                "chains.py",
                 "priority_fixtures.py",
                 "native/PriorityTestController.java",
                 "native/ReplacementChoiceController.java",

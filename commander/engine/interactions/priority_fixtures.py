@@ -1,6 +1,7 @@
 """Observe bounded Forge priority loops with fixed action choices in partial games."""
 
 from .casting_fixtures import _mana_source, _payment
+from .chains import CHAIN_CASES
 from .fixtures import _card, _new_game, _settle
 from .native_bridge import PRIORITY_CLASS_NAME
 
@@ -40,9 +41,9 @@ def observe_priority_case(java, cards: dict, case: str) -> dict:
 
 
 def _snapshot(java, context):
-    game, players, root, counter, lands = context
+    game, players, spells, lands = context
     phase = game.getPhaseHandler()
-    abilities = [root.getFirstSpellAbility(), counter.getFirstSpellAbility()]
+    abilities = [card.getFirstSpellAbility() for card in spells]
     return {
         "player_ids": [int(player.getId()) for player in players],
         "life": [int(player.getLife()) for player in players],
@@ -59,9 +60,10 @@ def _snapshot(java, context):
                 "zone": str(game.getCardState(card).getZone().getZoneType()),
                 "payment": _payment(java, ability),
             }
-            for card, ability in zip((root, counter), abilities)
+            for card, ability in zip(spells, abilities)
         ],
         "lands": [[_mana_source(card) for card in sources] for sources in lands],
+        **(_chain_details(game) if len(spells) == 3 else {}),
     }
 
 
@@ -73,15 +75,7 @@ def _setup(java, cards, case):
     for player in players:
         player.setLife(40, None)
         _card(java, cards["basic"], player, zone.Library)
-    root = _card(java, cards["equipment"], players[0], zone.Hand)
-    counter = _card(java, cards["counter"], players[1], zone.Hand)
-    lands = [
-        [_card(java, cards["basic"], players[0], zone.Battlefield)],
-        [
-            _card(java, cards["blue_basic"], players[1], zone.Battlefield)
-            for _ in range(2 if case == "priority_unaffordable_response" else 3)
-        ],
-    ]
+    spells, lands = _proposals(java, cards, players, zone, case)
     journal = java.JClass("java.util.ArrayList")()
     controller = java.JClass(PRIORITY_CLASS_NAME)
     for index, player in enumerate(players):
@@ -89,8 +83,8 @@ def _setup(java, cards, case):
             controller(
                 game,
                 player,
-                (root if index == 0 else counter if index == 1 else None),
-                root,
+                (spells[index] if index < len(spells) else None),
+                spells[max(index - 1, 0)] if index < len(spells) else spells[0],
                 case != "priority_all_pass",
                 journal,
             )
@@ -100,4 +94,47 @@ def _setup(java, cards, case):
     phase.setPriority(players[0])
     # Partial-state bootstrap only. Never called to progress a pending spell.
     phase.onStackResolved()
-    return (game, players, root, counter, lands), journal
+    return (game, players, spells, lands), journal
+
+
+def _proposals(java, cards, players, zone, case):
+    """Prepare only fixed cards and lands; the engine still pays every cast cost."""
+    spells = [
+        _card(java, cards["equipment"], players[0], zone.Hand),
+        _card(java, cards["counter"], players[1], zone.Hand),
+    ]
+    lands = [
+        [_card(java, cards["basic"], players[0], zone.Battlefield)],
+        [
+            _card(java, cards["blue_basic"], players[1], zone.Battlefield)
+            for _ in range(2 if case == "priority_unaffordable_response" else 3)
+        ],
+    ]
+    if case in CHAIN_CASES:
+        spells.append(_card(java, cards["counter"], players[2], zone.Hand))
+        lands.append(
+            [
+                _card(java, cards["blue_basic"], players[2], zone.Battlefield)
+                for _ in range(3 if case == CHAIN_CASES[0] else 2)
+            ]
+        )
+    return spells, lands
+
+
+def _chain_details(game):
+    """Witness actual post-payment targets on the live stack and unspent mana."""
+    return {
+        "mana_pool": [
+            int(player.getManaPool().totalMana()) for player in game.getPlayers()
+        ],
+        "stack_targets": [
+            {
+                "ability_id": int(entry.getSpellAbility().getId()),
+                "targets": [
+                    int(target.getId())
+                    for target in entry.getSpellAbility().getTargets().getTargetSpells()
+                ],
+            }
+            for entry in game.getStack()
+        ],
+    }

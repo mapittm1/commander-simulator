@@ -8,6 +8,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled suite from 39 to 41 scenarios in `raton_equipment_v10`,
+  adding a ninth fixed counterspell-chain family. Preserve all previous 39
+  expectations and all 15 reviewed card identities. Exercise a paid third-player
+  Disallow targeting a pending Disallow and a two-Island affordability control.
+- Verify native last-in-first-out resolution, distinct counterspell identities,
+  post-payment stack targets, priority returning to the active player, another
+  complete pass cycle before the surviving original spell resolves, and no cost
+  refund for a countered spell. Record remaining mana and intermediate zones.
+  Share setup validation and serialization while keeping scenario expectations
+  independent. Add counterexamples for early resolution, skipped passes, wrong
+  targets, forged/refunded payments and missing or malformed evidence.
+- Validation: Black, isort, Pylint and Bandit pass; 298 offline tests and 298
+  subtests pass (5 opt-in tests skipped). The native integration passes all 41
+  scenarios. Full card/rules coverage, default AI strategy, longer chains and
+  additional/variable costs remain separate work.
+
+
 - Expand the controlled suite from 36 to 39 scenarios in `raton_equipment_v9`,
   adding the eighth priority family and Island as the fifteenth reviewed identity.
   Preserve all original 36 case expectations. Drive Forge's native four-player

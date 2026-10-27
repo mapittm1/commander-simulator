@@ -12,13 +12,18 @@ def priority_evidence(case_id, states) -> dict | None:
     """Reject missing traces; distinguish invalid setup from witnessed rules mismatches."""
     if case_id not in PRIORITY_CASES:
         return None
+    return evaluate_priority_states(states, case_id, _setup, _trace)
+
+
+def evaluate_priority_states(states, case_id, setup, trace):
+    """Classify incomplete setup separately from contradictory observed sequences."""
     try:
         before, after = (states[stage] for stage in PRIORITY_STAGES)
-        _setup(before, case_id)
+        setup(before, case_id)
     except (KeyError, TypeError, ValueError, IndexError):
         return {"status": "not_exercised", "reason": "Invalid priority fixture setup"}
     try:
-        _trace(before, after, case_id)
+        trace(before, after, case_id)
     except (KeyError, TypeError, ValueError, IndexError):
         return {
             "status": "not_exercised",
@@ -41,6 +46,17 @@ def _integer(value):
 
 
 def _setup(state, case_id):
+    validate_setup(
+        state,
+        (
+            ("Bonesplitter", "Forest", 1),
+            ("Disallow", "Island", 2 if case_id == PRIORITY_CASES[2] else 3),
+        ),
+    )
+
+
+def validate_setup(state, specifications):
+    """Bind distinct proposed spells and native mana sources to their controlled seats."""
     _snapshot_shape(state)
     players = state["player_ids"]
     if len(players) != 4 or len(set(players)) != 4:
@@ -56,10 +72,10 @@ def _setup(state, case_id):
     ):
         raise ValueError("Invalid initial priority state")
     spells = state["spells"]
-    if len(spells) != 2 or len(state["lands"]) != 2:
-        raise ValueError("Two spell proposals required")
+    if len(spells) != len(specifications) or len(state["lands"]) != len(specifications):
+        raise ValueError("Every fixed spell proposal and source group is required")
     identities = []
-    for index, name in enumerate(("Bonesplitter", "Disallow")):
+    for index, (name, land_name, count) in enumerate(specifications):
         spell = spells[index]
         identities.append(_integer(spell["id"]))
         _integer(spell["ability_id"])
@@ -71,23 +87,21 @@ def _setup(state, case_id):
         ):
             raise ValueError("Invalid initial spell")
         sources = state["lands"][index]
-        count = 1 if index == 0 else (2 if case_id == PRIORITY_CASES[2] else 3)
         if len(sources) != count:
             raise ValueError("Invalid initial resources")
         for source in sources:
             identities.append(_integer(source["id"]))
             _integer(source["timestamp"])
             if (
-                source["name"] != ("Forest" if index == 0 else "Island")
+                source["name"] != land_name
                 or source["zone"] != "Battlefield"
                 or source["tapped"] is not False
                 or source["controller_id"] != players[index]
             ):
                 raise ValueError("Invalid initial mana source")
-    if (
-        len(set(identities)) != len(identities)
-        or spells[0]["ability_id"] == spells[1]["ability_id"]
-    ):
+    if len(set(identities)) != len(identities) or len(
+        {spell["ability_id"] for spell in spells}
+    ) != len(spells):
         raise ValueError("Duplicated object identity")
 
 
@@ -185,19 +199,7 @@ def _expected_callbacks(before, case_id):
     expected.extend((seat, pending, None, [], False, False, False) for seat in (2, 3))
     if responds:
         expected.append((0, pending, None, [], False, False, False))
-    return [
-        {
-            "player_id": players[seat],
-            "priority_id": players[seat],
-            "stack": stack,
-            "proposal_id": proposal,
-            "targets": targets,
-            "can_play": can_play,
-            "can_pay": can_pay,
-            "cast": cast,
-        }
-        for seat, stack, proposal, targets, can_play, can_pay, cast in expected
-    ]
+    return callback_rows(players, expected)
 
 
 def _check_callbacks(callbacks, expected):
@@ -236,3 +238,20 @@ def _resources_shape(lands):
                 _integer(source[key])
             if not isinstance(source["tapped"], bool):
                 raise ValueError("Boolean land tapping evidence required")
+
+
+def callback_rows(players, sequence):
+    """Serialize fixed expected choices without sharing their rules or ordering."""
+    return [
+        {
+            "player_id": players[seat],
+            "priority_id": players[seat],
+            "stack": stack,
+            "proposal_id": proposal,
+            "targets": targets,
+            "can_play": can_play,
+            "can_pay": can_pay,
+            "cast": cast,
+        }
+        for seat, stack, proposal, targets, can_play, can_pay, cast in sequence
+    ]

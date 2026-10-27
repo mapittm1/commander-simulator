@@ -3,9 +3,11 @@
 import copy
 
 from commander.engine.interactions.casting import CAST_CASES
+from commander.engine.interactions.chains import CHAIN_CASES
 from commander.engine.interactions.ordering import EFFECT_NAMES, ORDER_CASES
 from commander.engine.interactions.priority import PRIORITY_CASES
 from tests.support.casting_fixture import add_casting_states
+from tests.support.chain_fixture import add_chain_states
 from tests.support.priority_fixture import add_priority_states
 
 
@@ -14,6 +16,10 @@ def synthetic_receipt(suite: dict) -> dict:
     cases = []
     for index, case in enumerate(suite["cases"]):
         states = copy.deepcopy(case["expected"])
+        if case["id"] in CHAIN_CASES:
+            add_chain_states(states, case["id"])
+            cases.append({"id": case["id"], "states": states})
+            continue
         if case["id"] in PRIORITY_CASES:
             add_priority_states(states, case["id"])
             cases.append({"id": case["id"], "states": states})

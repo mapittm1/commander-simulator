@@ -40,7 +40,7 @@ For direct-state card interaction checks, install the optional pinned tools and 
 .\.venv\Scripts\python.exe commander_simulator.py engine-interactions
 ```
 
-The current suite checks 39 Ratonhnhaké꞉ton/Equipment scenarios against direct
+The current suite checks 41 Ratonhnhaké꞉ton/Equipment scenarios against direct
 Forge state: separate trigger/target timing, return and attachment, missing or
 opponent-owned Equipment, removed targets, removed tokens/sources, incompatible
 attachments, noncombat damage, damage prevention/doubling, and countering the
@@ -58,18 +58,21 @@ casting cases now exercise Forge's paid-casting entry point with real lands,
 colored/generic costs, unaffordable/off-color rejection, and controlled timing
 and priority admission checks. Three additional cases drive Forge’s native
 four-player priority loop, including a paid counterspell response and an
-unaffordable response.
+unaffordable response. Two counterspell-chain cases now verify a third player
+countering the counterspell, a fresh pass cycle before the original spell resolves,
+and the outcome when that third player cannot afford the response.
 Results retain checkpoints, identities and zone timestamps,
-Oracle/engine/source hashes, and raw worker logs. All 39 currently pass on
+Oracle/engine/source hashes, and raw worker logs. All 41 currently pass on
 the pinned engine. This does not certify every card, complete priority handling,
 or default AI response strategy.
 
-The same command runs eight bounded fixture families: Equipment, damage,
-countering, targeting, protection, replacement ordering, casting, and priority.
+The same command runs nine bounded fixture families: Equipment, damage,
+countering, targeting, protection, replacement ordering, casting, priority, and
+counterspell chains.
 `config/interaction_suite.json` is the
 manifest; reviewed expectations live in `config/interactions/`. Each family
 writes a separate `observations-<family>.json` receipt. The combined schema-2
-report retains all 39 checks and adds `partition_results` with per-family status
+report retains all 41 checks and adds `partition_results` with per-family status
 and receipt hashes. The fixed test controllers are compiled into the generated
 run directory; reports preserve compiler/source/class hashes and compilation logs.
 Production card scripts and AI choices are unchanged. Every family must pass for CLI success. See
@@ -599,7 +602,7 @@ The original live export test includes a legal multicolor basic-land pod
 that verifies this export, casting, combat-damage trigger resolution, and later
 Assassin-token participation. That game test does not verify Equipment recursion,
 hexproof, or every interaction of this card. The separate controlled suite now
-covers 39 specific interaction cases; identity approval remains distinct from
+covers 41 specific interaction cases; identity approval remains distinct from
 rules verification.
 
 Gap classifier version 2 adds printing-ID evidence for uncertain meld roles.

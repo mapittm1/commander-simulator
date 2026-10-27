@@ -9,6 +9,7 @@ from pathlib import Path
 from commander.engine.forge_config import EngineSettings
 from commander.engine.interactions.casting import CAST_CASES
 from commander.engine.interactions.casting_fixtures import observe_casting_case
+from commander.engine.interactions.chains import CHAIN_CASES
 from commander.engine.interactions.fixtures import observe_case
 from commander.engine.interactions.native_bridge import class_hash, priority_class_hash
 from commander.engine.interactions.ordering import ORDER_CASES
@@ -97,7 +98,7 @@ def _observe_partition(java, cards, case_ids) -> list:
 
 
 def _observer(case):
-    if case in PRIORITY_CASES:
+    if case in (*PRIORITY_CASES, *CHAIN_CASES):
         return observe_priority_case
     if case in CAST_CASES:
         return observe_casting_case

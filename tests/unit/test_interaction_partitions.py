@@ -51,10 +51,10 @@ class DefinitionPartitionTests(unittest.TestCase):
     def test_registry_covers_each_case_once_with_bounded_definition_files(self):
         suite = load_suite()
         self.assertEqual(
-            [len(ids) for ids in PARTITIONS.values()], [8, 6, 2, 4, 4, 4, 8, 3]
+            [len(ids) for ids in PARTITIONS.values()], [8, 6, 2, 4, 4, 4, 8, 3, 2]
         )
         self.assertEqual(tuple(case["id"] for case in suite["cases"]), CASE_IDS)
-        self.assertEqual(len(suite["definition_hashes"]), 9)
+        self.assertEqual(len(suite["definition_hashes"]), 10)
         self.assertTrue(definitions_unchanged(suite["definition_hashes"]))
         for path in definition_paths().values():
             self.assertLessEqual(path.stat().st_size, MAX_RECEIPT_BYTES)

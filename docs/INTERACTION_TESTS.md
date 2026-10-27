@@ -55,7 +55,7 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Double then prevent, noncombat | The same chosen order deals 5, but no combat-damage trigger or token is created. |
 | Prevent then double, noncombat | The same chosen order deals 4, but no combat-damage trigger or token is created. |
 
-All 39 cases passed against the unmodified pinned archive. The suite does not
+All 41 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -65,7 +65,7 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v9`; previously saved v1-v8 reports remain historical artifacts.
+`raton_equipment_v10`; previously saved v1-v9 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
 with the other inputs. Urza's Armor, Plains and Island bring the total to 15
 reviewed fixture identities, including an off-color mana control.
@@ -74,7 +74,7 @@ reviewed fixture identities, including an off-color mana control.
 
 `config/interaction_suite.json` is a schema-2 manifest holding reviewed card
 identities, fingerprints of rules-relevant Oracle characteristics, source links,
-and the fixed family inventory. Expectations live in eight individually bounded
+and the fixed family inventory. Expectations live in nine individually bounded
 files under `config/interactions/`:
 
 | Family | Definition file | Cases |
@@ -87,10 +87,12 @@ files under `config/interactions/`:
 | Replacement ordering | `replacement_order.json` | 4 |
 | Casting admission/payment | `casting.json` | 8 |
 | Native priority/response loop | `priority.json` | 3 |
+| Counterspell chains | `counter_chain.json` | 2 |
 
 The original 28 expectations and 13 pinned identities remain unchanged; the
 casting family adds eight independent cases and Plains, and the priority family
-adds three cases and Island. Expectations were specified from the rules,
+adds three cases and Island. The chain family adds two cases using the same
+reviewed card identities. Expectations were specified from the rules,
 not copied from engine output. Changed Oracle characteristics require reviewing the fixture. The command
 accepts no uploaded state, script, case file, arbitrary file path, or card input.
 Code fixes family paths, order, and exact case IDs. Missing/duplicate/reordered
@@ -156,14 +158,14 @@ shroud's restriction on both players. Probes never enter a zone or resolve.
 They do not prove mana payment, legal cast timing, or AI decisions.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
-eight `observations-<family>.json` receipts, `interaction-report.json`, and
-`interactions.log`. The worker uses one bounded JVM process for all eight families.
+nine `observations-<family>.json` receipts, `interaction-report.json`, and
+`interactions.log`. The worker uses one bounded JVM process for all nine families.
 Each definition, input document, and receipt is limited to 128 KiB and 32 nesting
 levels; duplicate fields are rejected. Generated inputs/receipts are size-checked
 before exclusive creation. Receipts use compact JSON; the combined report
 retains indented state evidence for inspection.
 
-Report schema 2 retains all 39 `checks` and adds `partition_results`, containing
+Report schema 2 retains all 41 `checks` and adds `partition_results`, containing
 family IDs, statuses, Java versions, and receipt `observations_sha256` hashes.
 There is no combined `observations.json` in new runs. Consumers of earlier
 reports must use the named receipts and per-family hashes for new reports.
@@ -173,7 +175,7 @@ Java versions cannot pass. CLI success requires every fixed family to pass.
 
 Reports include Oracle/catalog evidence, source/bootstrap hashes, engine pins,
 bridge versions, process outcome, and artifact hashes. `definition_hashes` binds
-the exact parsed bytes of the manifest and all eight definitions; `suite_hash` is
+the exact parsed bytes of the manifest and all nine definitions; `suite_hash` is
 a fingerprint of that fixed path/hash map. Formatting changes also alter it.
 Definition preflight, worker admission, and post-run checks prevent changed
 definitions from producing a valid conclusion. A source or pinned-engine change
@@ -273,7 +275,8 @@ Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 
 The priority family below exercises selected native passes and opponent
 responses. Additional/variable costs, simultaneous effects/APNAP choices,
-response chains and representative combos remain future work. Future families must retain the existing
+longer response chains and representative combos remain future work. Future
+families must retain the existing
 per-document 128 KiB limits and fixed, reviewed admission rules.
 
 For replacement ordering, the pinned engine's
@@ -328,6 +331,41 @@ Execution is limited to 16 steps and 32 callbacks per case, within the existing
 hashed at compilation, before startup, in receipts and after execution.
 
 These cases validate selected priority sequences, not all priority rules or the
-default AI's strategic choices. Counter-counterspell chains, additional/variable
-costs, interrupted casting rollback and broader card combinations remain future
-work. Production deck legality and bracket review gates are unchanged.
+default AI's strategic choices. The chain family below now covers two selected
+counter-counterspell sequences. Additional/variable costs, interrupted casting
+rollback and broader card combinations remain future work. Production deck
+legality and bracket review gates are unchanged.
+
+
+## Counter-counterspell chains
+
+Suite v10 adds a ninth bounded family, preserving all 39 previous expectations and
+all 15 pinned card identities. It uses the same native loop and fixed controller,
+with a third player who may propose a distinct Disallow targeting the first
+Disallow. The controller still returns only fixed action choices; Forge owns mana
+payment, stack changes, pass rotation and resolution.
+
+The pinned [Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf)
+117.3b–d, 117.4 and 117.7 require priority after casting/resolution, consecutive
+passes and response order. Rule 118.3 governs affordability; rules 701.6a–b send
+a countered spell to its owner's graveyard without refunding its paid costs.
+
+| Case | Required behavior |
+| --- | --- |
+| Paid second counterspell | Seat 0 pays for Bonesplitter with one Forest. Seat 1 pays for Disallow using three Islands. Seat 2 pays for a second Disallow using three different Islands, targeting seat 1's pending Disallow. Seats 2, 3, 0, 1 pass. The second Disallow resolves, both counterspells enter their owners' graveyards, and Bonesplitter remains on the stack. The active player receives priority; seats 0–3 must pass again before Bonesplitter enters the battlefield. All seven used lands remain tapped and both counterspells remain paid. |
+| Unaffordable second counterspell | Seat 2 has only two Islands. Native affordability is false, so no second counterspell is cast or paid. Seats 2, 3, 0 finish passing, then seat 1's Disallow counters Bonesplitter. Seat 2's Disallow remains in hand and its Islands remain untapped. |
+
+In addition to the two fixed priority checkpoints, raw native step snapshots bind
+the actual post-payment `stack_targets` to pending ability IDs and record every
+player's remaining mana. The verifier checks all intermediate zones, source
+identities/controllers, tapping, payments, stack order, the second full pass cycle,
+and priority returning to the active player between resolutions. Two different
+Disallow objects cannot be substituted for one another because their card and
+ability IDs are independently bound at setup and every native step.
+
+Negative tests reject a second counterspell targeting Bonesplitter, early original
+spell resolution, skipped passes, wrong priority ownership after resolution,
+refunded costs, use of another player's lands, malformed target IDs, missing
+mana/target evidence and an unaffordable cast. Existing process, heap, JSON and
+callback limits apply unchanged. These selected three-player sequences do not
+certify longer stacks, all cards, additional/variable costs or default AI strategy.
