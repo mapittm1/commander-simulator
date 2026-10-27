@@ -7,6 +7,8 @@ from importlib import metadata
 from pathlib import Path
 
 from commander.engine.forge_config import EngineSettings
+from commander.engine.interactions.casting import CAST_CASES
+from commander.engine.interactions.casting_fixtures import observe_casting_case
 from commander.engine.interactions.fixtures import observe_case
 from commander.engine.interactions.native_bridge import class_hash
 from commander.engine.interactions.ordering import ORDER_CASES
@@ -73,7 +75,7 @@ def _observe_partition(java, cards, case_ids) -> list:
     cases = []
     for case in case_ids:
         try:
-            observer = observe_ordering_case if case in ORDER_CASES else observe_case
+            observer = _observer(case)
             cases.append(observer(java, cards, case))
         except (
             java.JException,
@@ -85,6 +87,12 @@ def _observe_partition(java, cards, case_ids) -> list:
             traceback.print_exc()
             cases.append({"id": case, "error": str(error)[:1000]})
     return cases
+
+
+def _observer(case):
+    if case in CAST_CASES:
+        return observe_casting_case
+    return observe_ordering_case if case in ORDER_CASES else observe_case
 
 
 def save_observations(path: Path, result: dict) -> None:

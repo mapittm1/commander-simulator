@@ -2,7 +2,9 @@
 
 import copy
 
+from commander.engine.interactions.casting import CAST_CASES
 from commander.engine.interactions.ordering import EFFECT_NAMES, ORDER_CASES
+from tests.support.casting_fixture import add_casting_states
 
 
 def synthetic_receipt(suite: dict) -> dict:
@@ -10,6 +12,10 @@ def synthetic_receipt(suite: dict) -> dict:
     cases = []
     for index, case in enumerate(suite["cases"]):
         states = copy.deepcopy(case["expected"])
+        if case["id"] in CAST_CASES:
+            add_casting_states(states, case["id"], index)
+            cases.append({"id": case["id"], "states": states})
+            continue
         if case["id"] in ORDER_CASES:
             _ordering_states(states, case["id"], index)
         initial, reflexive, counter = 100 + index * 3, 101 + index * 3, 102 + index * 3

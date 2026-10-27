@@ -84,24 +84,28 @@ References:
 
 ## Implementation milestones
 
-A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 28
+A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 36
 specific trigger, target, return/attachment, removal, prevention, damage-doubling,
 counterspell, graveyard-target restrictions, target zone-roundtrip, and
 protection/hexproof/shroud attachment, later detachment, and both orders of
-a damage-doubling/prevention pair, with combat/noncombat controls. See
+a damage-doubling/prevention pair, with combat/noncombat controls, plus
+selected paid-casting and admission checks. See
 [INTERACTION_TESTS.md](INTERACTION_TESTS.md). These fixtures model resolved
 between-trigger effects; complete legal casting and priority handling remain
 separate work. The suite does not certify the rest of the card catalog.
 
-The 28 interaction cases now run as six fixed families with individually bounded
+The 36 interaction cases now run as seven fixed families with individually bounded
 definitions and receipts. Manifest/schema-2 reporting preserves the 128 KiB
 per-document input/receipt limit, all existing expectations, and a combined
 all-families result. A fixed test-only Java controller now exercises and records
 both affected-player choices for Furnace of Rath/Urza's Armor, bound to raw
 replacement identities and final damage/trigger observations. This proves those
 controlled branches without certifying AI strategy or general replacement rules.
-Next interaction work should cover cost/priority handling, simultaneous effects
-and APNAP choices, and representative combos.
+The casting family now records native legality/payment predicates and calls the
+paid-casting API for eligible proposals, including native unaffordable/off-color
+rejection. Phase and priority ownership are controlled snapshots. Next work should
+drive the normal priority-pass loop, opponent responses, additional/variable
+costs, simultaneous effects/APNAP choices, and representative combos.
 
 The CLI is now directly runnable through `doctor`, an isolated real-engine
 `demo`, four-file `play`, and reviewed-pod `simulate` with progress, resume, and

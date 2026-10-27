@@ -55,7 +55,7 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Double then prevent, noncombat | The same chosen order deals 5, but no combat-damage trigger or token is created. |
 | Prevent then double, noncombat | The same chosen order deals 4, but no combat-damage trigger or token is created. |
 
-All 28 cases passed against the unmodified pinned archive. The suite does not
+All 36 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -65,15 +65,16 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v7`; previously saved v1-v6 reports remain historical artifacts.
+`raton_equipment_v8`; previously saved v1-v7 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
-with the other inputs. Urza's Armor is the thirteenth reviewed fixture identity.
+with the other inputs. Urza's Armor and Plains bring the total to 14 reviewed
+fixture identities, including an off-color mana control.
 
 ## Evidence and boundaries
 
 `config/interaction_suite.json` is a schema-2 manifest holding reviewed card
 identities, fingerprints of rules-relevant Oracle characteristics, source links,
-and the fixed family inventory. Expectations live in six individually bounded
+and the fixed family inventory. Expectations live in seven individually bounded
 files under `config/interactions/`:
 
 | Family | Definition file | Cases |
@@ -84,9 +85,10 @@ files under `config/interactions/`:
 | Targeting | `targeting.json` | 4 |
 | Protection | `protection.json` | 4 |
 | Replacement ordering | `replacement_order.json` | 4 |
+| Casting admission/payment | `casting.json` | 8 |
 
-The original 24 expectations and 12 pinned identities remain unchanged; the
-replacement family adds four independent cases and Urza's Armor. Expectations were specified from the rules, not copied from engine
+The original 28 expectations and 13 pinned identities remain unchanged; the
+casting family adds eight independent cases and Plains. Expectations were specified from the rules, not copied from engine
 output. Changed Oracle characteristics require reviewing the fixture. The command
 accepts no uploaded state, script, case file, arbitrary file path, or card input.
 Code fixes family paths, order, and exact case IDs. Missing/duplicate/reordered
@@ -150,14 +152,14 @@ shroud's restriction on both players. Probes never enter a zone or resolve.
 They do not prove mana payment, legal cast timing, or AI decisions.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
-six `observations-<family>.json` receipts, `interaction-report.json`, and
-`interactions.log`. The worker uses one bounded JVM process for all six families.
+seven `observations-<family>.json` receipts, `interaction-report.json`, and
+`interactions.log`. The worker uses one bounded JVM process for all seven families.
 Each definition, input document, and receipt is limited to 128 KiB and 32 nesting
 levels; duplicate fields are rejected. Generated inputs/receipts are size-checked
 before exclusive creation. Receipts use compact JSON; the combined report
 retains indented state evidence for inspection.
 
-Report schema 2 retains all 28 `checks` and adds `partition_results`, containing
+Report schema 2 retains all 36 `checks` and adds `partition_results`, containing
 family IDs, statuses, Java versions, and receipt `observations_sha256` hashes.
 There is no combined `observations.json` in new runs. Consumers of earlier
 reports must use the named receipts and per-family hashes for new reports.
@@ -167,7 +169,7 @@ Java versions cannot pass. CLI success requires every fixed family to pass.
 
 Reports include Oracle/catalog evidence, source/bootstrap hashes, engine pins,
 bridge versions, process outcome, and artifact hashes. `definition_hashes` binds
-the exact parsed bytes of the manifest and all six definitions; `suite_hash` is
+the exact parsed bytes of the manifest and all seven definitions; `suite_hash` is
 a fingerprint of that fixed path/hash map. Formatting changes also alter it.
 Definition preflight, worker admission, and post-run checks prevent changed
 definitions from producing a valid conclusion. A source or pinned-engine change
@@ -208,6 +210,50 @@ zero-damage result. The separate replacement-order family now exercises the
 5-versus-4 outcomes for the fixed single-source, single-recipient damage event;
 it does not certify all replacement/prevention effects or simultaneous recipients.
 
+## Paid casting and controlled admission
+
+The casting family has three fixed checkpoints: `before`, `after_attempt`, and
+`after_resolution`. A rejected proposal does not resolve anything, including an
+existing pending spell in the nonempty-stack control. Unknown/extra/missing
+checkpoints cannot pass.
+
+| Case | Required behavior |
+| --- | --- |
+| Paid instant | Ranger's Guile pays G from a real Forest, appears on the stack targeting its controller's creature, then resolves to the graveyard and grants +1/+1. |
+| No mana | Native `playStack` returns false; the card stays in hand with no payment or new stack entry. |
+| Wrong color | A Plains cannot pay G. Native rejection preserves the untapped land, hand, and stack. |
+| Paid permanent | A Forest's G pays Bonesplitter's generic cost; the artifact appears on the stack and then resolves to the battlefield. |
+| Noninstant in combat | Native `canPlay` is false despite affordable mana; the fixture does not invoke the payment entry point. |
+| No priority | Native phase data shows another player has priority. The fixture's priority admission gate declines the proposal without invoking payment. |
+| Nonempty stack | A separate instant is first cast with native payment. Native legality then blocks the noninstant; the pending spell and remaining Forest are preserved. |
+| Instant in combat | With priority and green mana, Ranger's Guile still casts, pays, and resolves during the controlled combat phase. |
+
+Rules 117.1a and 601.2g-h motivate these expectations. The pinned
+[SpellAbilityRestriction](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-game/src/main/java/forge/game/spellability/SpellAbilityRestriction.java)
+checks native timing through `canPlay`;
+[ComputerUtil.playStack](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-ai/src/main/java/forge/ai/ComputerUtil.java)
+checks payment and pays through the native cost machinery. Its low-level payment
+entry point expects eligibility to have been checked first. The fixture calls
+it for eligible proposals even when `canPayCost` predicts failure, to witness
+native unaffordable/off-color rejection.
+
+The eligibility values are frozen pre-cast observations, repeated in subsequent
+checkpoints for auditing. Phase and priority ownership are initialized explicitly.
+The priority gate belongs to this harness; these cases do not exercise native
+priority-pass rotation, opponent responses, or prove that the payment entry point
+rejects calls made without priority. Targets are prepared directly after a native
+`canTarget` check; target choice is not an AI-strategy test.
+
+Accepted casts require a native payment receipt tied to the original untapped
+Forest, its timestamp, green color, and controller. Raw resource/payment/stack
+counts must agree with summaries. Stack ability/card IDs bind the proposed spell,
+and stack target IDs bind the prepared target. Spell timestamps are recorded, but
+are not assumed to advance when entering the stack. Rejected cases must preserve
+tracked resources, pool, card identity/timestamp/zone, target state, and pending
+stack identities. Matching acceptance or payment-count flags alone cannot pass.
+Additional/variable costs and rollback after an already-started partial payment
+remain outside this family.
+
 ## Repeatable validation
 
 Offline tests mutate expected observations to ensure early target selection,
@@ -221,8 +267,9 @@ $env:COMMANDER_INTERACTION_INTEGRATION = "1"
 Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
-Next interaction work should cover cost/priority handling, simultaneous effects
-and APNAP choices, and representative combos. Future families must retain the existing
+Next interaction work should drive the normal priority-pass loop, opponent
+responses, additional/variable costs, simultaneous effects/APNAP choices, and
+representative combos. Future families must retain the existing
 per-document 128 KiB limits and fixed, reviewed admission rules.
 
 For replacement ordering, the pinned engine's

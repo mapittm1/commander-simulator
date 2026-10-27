@@ -303,6 +303,25 @@ and post-run checks reject changed class/tool evidence; every receipt binds the
 class hash. The pinned Forge archive/JRE and production AI/scripts stay unchanged.
 Ordinary simulations and offline unit tests require no Java compiler.
 
+Suite v8 adds eight cases in a seventh bounded casting family and pins Plains
+as the fourteenth identity for an off-color control. Its fixed checkpoints are
+`before`, `after_attempt`, and `after_resolution`. Only accepted spells resolve;
+rejected cases retain their existing stack. Record native `canPlay`/`canPayCost`
+results, actual phase/priority IDs, the fixture's admission decision, payment API
+invocation/result, source tapping, mana color/source identities, and spell/ability
+stack IDs. Payment/resource/stack summary counts must agree with raw evidence.
+
+Ranger's Guile and Bonesplitter pay via `ComputerUtil.playStack`, including native
+land activation. The same API rejects no-mana and off-color proposals. Native
+legality blocks noninstant timing during combat or with a nonempty stack; the
+fixture does not invoke payment for those cases. A separate fixture gate requires
+priority ownership. This gate is explicit harness admission, not proof that a
+low-level payment call enforces priority. Phase/priority are initialized directly;
+full pass rotation, cast proposal rollback after partial payment, variable and
+additional costs, and response chains remain unverified. Preserve source/card/
+stack identities for rejected proposals, and bind each accepted payment to its
+previously untapped source and intended spell/target.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.

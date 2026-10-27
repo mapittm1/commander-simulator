@@ -8,6 +8,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled suite from 28 to 36 cases in `raton_equipment_v8`. Add a
+  seventh casting family and Plains as the fourteenth pinned Oracle identity.
+  Exercise paid Ranger's Guile/Bonesplitter casts, no-mana/off-color rejection,
+  noninstant timing controls, no-priority fixture admission, and a paid instant
+  during combat. Original 28 case expectations remain unchanged.
+- Use Forge's native legality/payment predicates and `ComputerUtil.playStack`
+  cost machinery with real lands; record payment source/color/tapping, proposed
+  spell/target IDs, stack entries, and controlled phase/priority ownership. Bind
+  raw evidence independently and cross-check summary counts. Rejected proposals
+  preserve resources, card/target state, and pending-stack identities.
+- Require three fixed casting checkpoints and document the scope boundary:
+  timing/priority admission is checked before payment; priority ownership is
+  initialized by the fixture and the full native pass loop is not certified.
+  Additional/variable costs, partially started rollback, and response chains remain
+  pending. No production AI or card-script correction was needed for these cases.
+- Validation: 281 offline tests and 265 subtests pass, including forged payments,
+  wrong source colors/controllers, raw identity/count conflicts, rejected-state
+  mutations, missing evidence, and checkpoint controls. Native CLI integration
+  passes all 36 scenarios and verifies receipt/class hashes and profile restoration.
+  Black, isort, Pylint, and Bandit pass; existing execution/JSON limits remain.
+
 - Expand the controlled suite from 24 to 28 cases in `raton_equipment_v7`, adding
   a sixth replacement-order family and Urza's Armor as the thirteenth pinned
   Oracle identity. Exercise Furnace of Rath then prevention (5 damage), and

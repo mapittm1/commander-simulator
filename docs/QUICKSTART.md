@@ -114,18 +114,20 @@ batch history inspectable through the database.
 
 ## What the results currently mean
 
-To inspect the 28 controlled Equipment, damage, countered-trigger, target-legality,
-protection/hexproof/shroud, and replacement-order cases, install
+To inspect the 36 controlled Equipment, damage, countered-trigger, target-legality,
+protection/hexproof/shroud, replacement-order, and paid-casting cases, install
 `requirements-interactions.txt` and provide a trusted local JDK 17+ compiler.
 `javac` is discovered on PATH; set `COMMANDER_JAVAC` to its executable if needed
 (for example, `$env:COMMANDER_JAVAC = 'C:\Path\To\JDK\bin\javac.exe'`).
-Run `engine-interactions`. The command runs all six fixture families and saves `observations-equipment.json`,
+Run `engine-interactions`. The command runs all seven fixture families and saves `observations-equipment.json`,
 `observations-damage.json`, `observations-countering.json`,
 `observations-targeting.json`, `observations-protection.json`, and
-`observations-replacement_order.json`. The combined
+`observations-replacement_order.json`, plus `observations-casting.json`. The combined
 `interaction-report.json` includes every check and a `partition_results` summary.
 This is a separate direct-state diagnostic, not a pod simulation or a full card-support
-certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).
+certificate. Casting checks pay costs natively, but set phase/priority snapshots
+explicitly; they do not certify the full priority-pass loop. See
+[INTERACTION_TESTS.md](INTERACTION_TESTS.md).
 
 Wins and observations measure this fixed pod under Forge's AI pilots. Reported
 land plays, turns without logged land plays, casts, and attack assignments are

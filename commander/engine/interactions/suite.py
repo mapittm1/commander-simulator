@@ -7,6 +7,7 @@ from pathlib import Path
 from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
+from .casting import CAST_CASES, CAST_STAGES, casting_evidence
 from .ordering import ORDER_CASES, ordering_evidence
 from .responses import (
     DETACHMENT_CASE,
@@ -16,7 +17,7 @@ from .responses import (
 )
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v7"
+SUITE_ID = "raton_equipment_v8"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -43,6 +44,7 @@ CASE_IDS = (
     "assassin_shroud",
     DETACHMENT_CASE,
     *ORDER_CASES,
+    *CAST_CASES,
 )
 PARTITIONS = {
     "equipment": CASE_IDS[:8],
@@ -50,7 +52,8 @@ PARTITIONS = {
     "countering": CASE_IDS[14:16],
     "targeting": CASE_IDS[16:20],
     "protection": CASE_IDS[20:24],
-    "replacement_order": CASE_IDS[24:],
+    "replacement_order": CASE_IDS[24:28],
+    "casting": CASE_IDS[28:],
 }
 CARD_ROLES = {
     "source",
@@ -66,6 +69,7 @@ CARD_ROLES = {
     "hexproof",
     "shroud",
     "damage_reducer",
+    "white_basic",
 }
 STAGES = (
     "before",
@@ -92,6 +96,8 @@ MAX_RECEIPT_BYTES = 131072
 
 def case_stages(case_id: str) -> tuple:
     """Require only repository-defined checkpoints, including the late protection response."""
+    if case_id in CAST_CASES:
+        return CAST_STAGES
     return (*STAGES, "after_detachment") if case_id == DETACHMENT_CASE else STAGES
 
 
@@ -341,6 +347,7 @@ def _evaluate_case(expected, observed) -> dict:
         response_evidence(expected["id"], states),
         detachment_evidence(expected["id"], states),
         ordering_evidence(expected["id"], states),
+        casting_evidence(expected["id"], states),
     ):
         if evidence is not None:
             if evidence.get("status") == "not_exercised":

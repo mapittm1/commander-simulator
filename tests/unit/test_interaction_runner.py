@@ -230,10 +230,18 @@ class RunnerBoundaryTests(unittest.TestCase):
             lambda receipt: receipt.update(partition_id="damage")
         )
         self.assertEqual(report["status"], "inconclusive")
-        self.assertEqual(len(report["partition_results"]), 6)
+        self.assertEqual(len(report["partition_results"]), 7)
         self.assertEqual(
             [part["status"] for part in report["partition_results"]],
-            ["inconclusive", "passed", "passed", "passed", "passed", "passed"],
+            [
+                "inconclusive",
+                "passed",
+                "passed",
+                "passed",
+                "passed",
+                "passed",
+                "passed",
+            ],
         )
 
     def test_one_observed_failure_still_fails_the_complete_report(self):
@@ -243,7 +251,7 @@ class RunnerBoundaryTests(unittest.TestCase):
         report = self._alter_partition(change)
         self.assertEqual(report["status"], "failed")
         self.assertEqual(report["partition_results"][0]["status"], "failed")
-        self.assertEqual(len(report["checks"]), 28)
+        self.assertEqual(len(report["checks"]), 36)
 
     def test_conflicting_native_runtime_versions_invalidate_all_results(self):
         report = self._alter_partition(
@@ -255,7 +263,7 @@ class RunnerBoundaryTests(unittest.TestCase):
     def test_missing_single_partition_retains_other_partition_results(self):
         def execute(*args):
             result = self._execute(*args)
-            (self.run / "observations-replacement_order.json").unlink()
+            (self.run / "observations-casting.json").unlink()
             return result
 
         with patch(

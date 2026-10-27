@@ -81,7 +81,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
         rules_sources=suite["rules_sources"],
         limitations=[
             f"{len(suite['cases'])} fixed scenarios, not comprehensive card/rules or AI validation.",
-            "Initial states and between-trigger zone changes are controlled; legal casting, complete priority handling, and production deck legality are tested separately.",
+            "Initial states, phases, and priority ownership are controlled; selected casting costs are paid natively. Full priority passing and production deck legality remain separate.",
             "A 2 GiB JVM heap and wall/log limits do not provide an OS sandbox or total process memory quota.",
         ],
     )
@@ -188,6 +188,8 @@ def _inputs(connection, settings, suite):
                 "fixtures.py",
                 "suite.py",
                 "responses.py",
+                "casting.py",
+                "casting_fixtures.py",
                 "ordering.py",
                 "ordering_fixtures.py",
                 "native_bridge.py",
