@@ -63,6 +63,8 @@ class RunnerBoundaryTests(unittest.TestCase):
             ),
             ("require_current_catalog", {"id": 1}),
             ("_new_run", self.run),
+            ("build_native_bridge", {"class_sha256": "fixture-class"}),
+            ("bridge_unchanged", True),
         ):
             stack.enter_context(
                 patch(
@@ -103,6 +105,7 @@ class RunnerBoundaryTests(unittest.TestCase):
                 "cases": [case for case in cases if case["id"] in case_ids],
                 **header,
                 "partition_id": name,
+                "native_class_sha256": inputs["native_bridge"]["class_sha256"],
                 "java_version": "17.0.20.1",
             }
             (self.run / f"observations-{name}.json").write_text(
@@ -227,10 +230,10 @@ class RunnerBoundaryTests(unittest.TestCase):
             lambda receipt: receipt.update(partition_id="damage")
         )
         self.assertEqual(report["status"], "inconclusive")
-        self.assertEqual(len(report["partition_results"]), 5)
+        self.assertEqual(len(report["partition_results"]), 6)
         self.assertEqual(
             [part["status"] for part in report["partition_results"]],
-            ["inconclusive", "passed", "passed", "passed", "passed"],
+            ["inconclusive", "passed", "passed", "passed", "passed", "passed"],
         )
 
     def test_one_observed_failure_still_fails_the_complete_report(self):
@@ -240,7 +243,7 @@ class RunnerBoundaryTests(unittest.TestCase):
         report = self._alter_partition(change)
         self.assertEqual(report["status"], "failed")
         self.assertEqual(report["partition_results"][0]["status"], "failed")
-        self.assertEqual(len(report["checks"]), 24)
+        self.assertEqual(len(report["checks"]), 28)
 
     def test_conflicting_native_runtime_versions_invalidate_all_results(self):
         report = self._alter_partition(
@@ -252,7 +255,7 @@ class RunnerBoundaryTests(unittest.TestCase):
     def test_missing_single_partition_retains_other_partition_results(self):
         def execute(*args):
             result = self._execute(*args)
-            (self.run / "observations-protection.json").unlink()
+            (self.run / "observations-replacement_order.json").unlink()
             return result
 
         with patch(
@@ -315,6 +318,21 @@ class RunnerBoundaryTests(unittest.TestCase):
             run_interaction_suite(self.db, self.settings)
         execute.assert_not_called()
         self.assertFalse((self.run / "interaction-inputs.json").exists())
+
+    def test_changed_compiled_controller_invalidates_all_partitions(self):
+        with (
+            patch(
+                "commander.engine.interactions.runner.bridge_unchanged",
+                return_value=False,
+            ),
+            patch(
+                "commander.engine.interactions.runner.run_bounded",
+                side_effect=self._execute,
+            ),
+        ):
+            report = run_interaction_suite(self.db, self.settings)
+        self.assertEqual(report["status"], "inconclusive")
+        self.assertEqual(report["checks"], [])
 
     def test_cli_only_returns_success_for_passed_interactions(self):
         path = self.root / "cli.sqlite3"

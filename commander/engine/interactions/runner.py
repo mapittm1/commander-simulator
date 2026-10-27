@@ -12,6 +12,7 @@ from commander.engine.forge_config import EngineSettings, file_hash
 from commander.engine.forge_decks import card_index, script_match
 from commander.engine.forge_engine import _engine_profile, _environment, _new_run
 from commander.engine.interactions.suite import (
+    MAX_RECEIPT_BYTES,
     ORACLE_FIELDS,
     PARTITIONS,
     definition_fingerprint,
@@ -25,6 +26,8 @@ from commander.engine.interactions.suite import (
 from commander.paths import PROJECT_ROOT
 from commander.rules.legality import require_current_catalog
 
+from .native_bridge import bridge_unchanged, build_native_bridge
+
 BRIDGE_VERSION = "1.7.1"
 
 
@@ -36,6 +39,9 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
     if not definitions_unchanged(inputs["definition_hashes"]):
         raise ValueError("Interaction suite changed during preflight; retry")
     run = _new_run()
+    if len(json.dumps(inputs).encode("utf-8")) > MAX_RECEIPT_BYTES:
+        raise ValueError("Interaction harness document exceeds its size limit")
+    inputs["native_bridge"] = build_native_bridge(settings, run, _environment(run))
     path = run / "interaction-inputs.json"
     write_bounded_json(path, inputs, indent=2)
     worker = PROJECT_ROOT / "tools" / "interaction_worker.py"
@@ -49,7 +55,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
             ProcessLimits(90, environment=environment),
         )
     report = _read_result(run, suite, inputs, process)
-    if not _unchanged_inputs(settings, inputs):
+    if not _unchanged_inputs(settings, inputs, run):
         report = {
             "status": "inconclusive",
             "checks": [],
@@ -71,6 +77,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
         source_hashes=inputs["source_hashes"],
         bootstrap_sha256=inputs["bootstrap_sha256"],
         bridge_version=BRIDGE_VERSION,
+        native_bridge=inputs["native_bridge"],
         rules_sources=suite["rules_sources"],
         limitations=[
             f"{len(suite['cases'])} fixed scenarios, not comprehensive card/rules or AI validation.",
@@ -97,7 +104,7 @@ def require_bridge() -> None:
         )
 
 
-def _unchanged_inputs(settings, inputs):
+def _unchanged_inputs(settings, inputs, run):
     try:
         folder = Path(__file__).parent
         sources_match = all(
@@ -108,6 +115,7 @@ def _unchanged_inputs(settings, inputs):
             sources_match
             and settings.verify() == inputs["engine"]
             and definitions_unchanged(inputs["definition_hashes"])
+            and bridge_unchanged(run, inputs["native_bridge"])
             and file_hash(PROJECT_ROOT / "tools/interaction_worker.py")
             == inputs["bootstrap_sha256"]
         )
@@ -175,7 +183,16 @@ def _inputs(connection, settings, suite):
         "bootstrap_sha256": file_hash(PROJECT_ROOT / "tools/interaction_worker.py"),
         "source_hashes": {
             name: file_hash(folder / name)
-            for name in ("worker.py", "fixtures.py", "suite.py", "responses.py")
+            for name in (
+                "worker.py",
+                "fixtures.py",
+                "suite.py",
+                "responses.py",
+                "ordering.py",
+                "ordering_fixtures.py",
+                "native_bridge.py",
+                "native/ReplacementChoiceController.java",
+            )
         },
     }
 
@@ -220,6 +237,7 @@ def _read_partition(run, suite, inputs, process, name):
         "suite_hash": inputs["suite_hash"],
         "engine": inputs["engine"],
         "bridge_version": inputs["bridge_version"],
+        "native_class_sha256": inputs["native_bridge"]["class_sha256"],
     }
     if any(receipt.get(key) != value for key, value in expected.items()):
         return {

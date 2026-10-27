@@ -7,6 +7,7 @@ from pathlib import Path
 from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
+from .ordering import ORDER_CASES, ordering_evidence
 from .responses import (
     DETACHMENT_CASE,
     RESPONSE_CARDS,
@@ -15,7 +16,7 @@ from .responses import (
 )
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v6"
+SUITE_ID = "raton_equipment_v7"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -41,13 +42,15 @@ CASE_IDS = (
     "assassin_hexproof",
     "assassin_shroud",
     DETACHMENT_CASE,
+    *ORDER_CASES,
 )
 PARTITIONS = {
     "equipment": CASE_IDS[:8],
     "damage": CASE_IDS[8:14],
     "countering": CASE_IDS[14:16],
     "targeting": CASE_IDS[16:20],
-    "protection": CASE_IDS[20:],
+    "protection": CASE_IDS[20:24],
+    "replacement_order": CASE_IDS[24:],
 }
 CARD_ROLES = {
     "source",
@@ -62,6 +65,7 @@ CARD_ROLES = {
     "artifact_protection",
     "hexproof",
     "shroud",
+    "damage_reducer",
 }
 STAGES = (
     "before",
@@ -336,6 +340,7 @@ def _evaluate_case(expected, observed) -> dict:
         _target_evidence(expected["id"], states),
         response_evidence(expected["id"], states),
         detachment_evidence(expected["id"], states),
+        ordering_evidence(expected["id"], states),
     ):
         if evidence is not None:
             if evidence.get("status") == "not_exercised":

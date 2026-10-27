@@ -8,6 +8,28 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled suite from 24 to 28 cases in `raton_equipment_v7`, adding
+  a sixth replacement-order family and Urza's Armor as the thirteenth pinned
+  Oracle identity. Exercise Furnace of Rath then prevention (5 damage), and
+  prevention then doubling (4 damage), with combat/noncombat trigger controls.
+- Add a fixed, readable test-only Java controller that returns native replacement
+  effects and records candidate/selected effect IDs, card IDs/timestamps,
+  controller identities, and the affected player. Independently verify both
+  callback inventories and chosen order; matching life totals alone cannot pass.
+- Compile only that repository source using trusted local JDK 17+ `javac` from
+  PATH or `COMMANDER_JAVAC`, targeting Java 17 with processors disabled. Bound
+  compilation to 30 seconds/64 KiB logs and the class to 64 KiB. Preserve compiler,
+  source, class, log, and process evidence; check class/tool integrity before
+  accepting native results. Ordinary simulations/offline tests need no compiler.
+- Keep the original 24 expectations, production Forge scripts/AI, receipt/input
+  limits, profile restoration, and six-family aggregate success requirements.
+- Validation: 273 offline tests and 237 subtests pass, including forged/missing
+  choices, wrong controllers/candidates, trigger/damage counterexamples, compiler
+  failures, and changed/oversized artifacts. Native CLI integration passes all
+  28 cases and verifies receipt/class hashes and profile restoration. Black,
+  isort, Pylint, and Bandit pass. Cost/priority and broader simultaneous effects
+  remain pending; these controlled choices do not certify default AI strategy.
+
 - Partition the existing 24 controlled cases into five fixed families in
   `raton_equipment_v6`: Equipment (8), damage (6), countering (2), targeting (4),
   and protection (4). Preserve every reviewed expectation and all 12 pinned

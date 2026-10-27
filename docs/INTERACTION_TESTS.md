@@ -9,8 +9,11 @@ action APIs. They are separate from full-game AI smoke tests and user simulation
 .\.venv\Scripts\python.exe commander_simulator.py engine-interactions
 ```
 
-The command requires the pinned engine, a fresh catalog, and the exact optional
-JPype version. The existing Windows Java runtime exposes its JVM library; standard
+The command requires the pinned engine, a fresh catalog, the exact optional
+JPype version, and a trusted installed JDK 17+ compiler. `javac` is discovered on
+PATH; set `COMMANDER_JAVAC` to its executable to select another local compiler.
+The compiler is used only for the fixed test controller; the configured pinned
+JRE still runs Forge. The existing Windows Java runtime exposes its JVM library; standard
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
@@ -47,8 +50,12 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Hexproof | Ranger's Guile makes the token 2/2 with hexproof. An opposing nonartifact creature-targeting spell cannot target it, while its controller's can. The Equipment still attaches and the token becomes 4/2. |
 | Shroud | Alexi's Cloak resolves attached to the token, granting shroud. Neither player's creature-targeting spell can target it. The reflexive ability targets only the Equipment, which returns and attaches; the token becomes 3/1. |
 | Later protection detaches Equipment | The normal return/attachment completes first, making the token 3/1. Tel-Jilad Defiance then resolves. Native state-based actions detach the Equipment while both objects remain on the battlefield; the same token becomes 1/1. |
+| Double then prevent, combat | The affected player's native callback chooses Furnace of Rath then Urza's Armor. Three incoming damage becomes 5; life is 35. One initial trigger and token are created, and Equipment returns/attaches. |
+| Prevent then double, combat | The callback chooses Urza's Armor then Furnace of Rath. Three incoming damage becomes 4; life is 36. One initial trigger and token are created, and Equipment returns/attaches. |
+| Double then prevent, noncombat | The same chosen order deals 5, but no combat-damage trigger or token is created. |
+| Prevent then double, noncombat | The same chosen order deals 4, but no combat-damage trigger or token is created. |
 
-All 24 cases passed against the unmodified pinned archive. The suite does not
+All 28 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -58,15 +65,15 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v6`; previously saved v1-v5 reports remain historical artifacts.
+`raton_equipment_v7`; previously saved v1-v6 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
-with the other inputs, for 12 reviewed fixture identities.
+with the other inputs. Urza's Armor is the thirteenth reviewed fixture identity.
 
 ## Evidence and boundaries
 
 `config/interaction_suite.json` is a schema-2 manifest holding reviewed card
 identities, fingerprints of rules-relevant Oracle characteristics, source links,
-and the fixed family inventory. Expectations live in five individually bounded
+and the fixed family inventory. Expectations live in six individually bounded
 files under `config/interactions/`:
 
 | Family | Definition file | Cases |
@@ -76,9 +83,10 @@ files under `config/interactions/`:
 | Countering | `countering.json` | 2 |
 | Targeting | `targeting.json` | 4 |
 | Protection | `protection.json` | 4 |
+| Replacement ordering | `replacement_order.json` | 4 |
 
-Every original expectation and all 12 pinned identities are unchanged by this
-partitioning. Expectations were specified from the rules, not copied from engine
+The original 24 expectations and 12 pinned identities remain unchanged; the
+replacement family adds four independent cases and Urza's Armor. Expectations were specified from the rules, not copied from engine
 output. Changed Oracle characteristics require reviewing the fixture. The command
 accepts no uploaded state, script, case file, arbitrary file path, or card input.
 Code fixes family paths, order, and exact case IDs. Missing/duplicate/reordered
@@ -142,14 +150,14 @@ shroud's restriction on both players. Probes never enter a zone or resolve.
 They do not prove mana payment, legal cast timing, or AI decisions.
 
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
-five `observations-<family>.json` receipts, `interaction-report.json`, and
-`interactions.log`. The worker uses one bounded JVM process for all five families.
+six `observations-<family>.json` receipts, `interaction-report.json`, and
+`interactions.log`. The worker uses one bounded JVM process for all six families.
 Each definition, input document, and receipt is limited to 128 KiB and 32 nesting
 levels; duplicate fields are rejected. Generated inputs/receipts are size-checked
 before exclusive creation. Receipts use compact JSON; the combined report
 retains indented state evidence for inspection.
 
-Report schema 2 retains all 24 `checks` and adds `partition_results`, containing
+Report schema 2 retains all 28 `checks` and adds `partition_results`, containing
 family IDs, statuses, Java versions, and receipt `observations_sha256` hashes.
 There is no combined `observations.json` in new runs. Consumers of earlier
 reports must use the named receipts and per-family hashes for new reports.
@@ -159,7 +167,7 @@ Java versions cannot pass. CLI success requires every fixed family to pass.
 
 Reports include Oracle/catalog evidence, source/bootstrap hashes, engine pins,
 bridge versions, process outcome, and artifact hashes. `definition_hashes` binds
-the exact parsed bytes of the manifest and all five definitions; `suite_hash` is
+the exact parsed bytes of the manifest and all six definitions; `suite_hash` is
 a fingerprint of that fixed path/hash map. Formatting changes also alter it.
 Definition preflight, worker admission, and post-run checks prevent changed
 definitions from producing a valid conclusion. A source or pinned-engine change
@@ -169,6 +177,16 @@ The worker uses isolated Python imports and a minimal child environment, the
 existing engine profile lock/restoration, a 90-second outer timeout, an 8 MiB log
 cap, and a 2 GiB JVM heap cap. This is not an OS sandbox or a total memory quota.
 The optional bridge is trusted local tooling; its use does not expose a server.
+
+`native/ReplacementChoiceController.java` is compiled from the repository's
+fixed source with `--release 17`, UTF-8, and `-proc:none`. No deck-provided code or
+annotation processor is compiled. The compiler has a 30-second timeout and
+64 KiB log cap; the generated class is capped at 64 KiB. Generated class files
+and `compiler.log` remain in the run directory, outside Git. Reports record
+compiler executable hash/version, compilation outcome/log hash, source hashes,
+and class hash. The worker checks the class before loading it, every receipt
+binds its hash, and post-run checks reject changed class/compiler evidence.
+The compiler is trusted local tooling, not a new sandbox or a pinned toolchain.
 
 The fixture deliberately bypasses shuffling/opening hands and injects controlled
 partial states. Ground Seal placement/removal and between-trigger zone changes
@@ -186,8 +204,9 @@ by the engine. Its mana payment, legal casting window, and AI decision to cast
 it are not tested. The same casting/priority boundary applies to the three new
 response spells, including the Aura. Their native effects are resolved rather than
 assigning keywords directly. The prevention/doubling combination has an order-independent
-zero-damage result; affected-player choice between outcome-changing replacement
-orders remains unverified.
+zero-damage result. The separate replacement-order family now exercises the
+5-versus-4 outcomes for the fixed single-source, single-recipient damage event;
+it does not certify all replacement/prevention effects or simultaneous recipients.
 
 ## Repeatable validation
 
@@ -202,8 +221,8 @@ $env:COMMANDER_INTERACTION_INTEGRATION = "1"
 Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
-Next interaction work should cover outcome-changing replacement ordering,
-cost/priority handling, and combos. Future families must retain the existing
+Next interaction work should cover cost/priority handling, simultaneous effects
+and APNAP choices, and representative combos. Future families must retain the existing
 per-document 128 KiB limits and fixed, reviewed admission rules.
 
 For replacement ordering, the pinned engine's
@@ -211,12 +230,15 @@ For replacement ordering, the pinned engine's
 calls the affected player's controller through `chooseSingleReplacementEffect`;
 [PlayerControllerAi](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java)
 delegates that choice to its AI. Rule 616.1 gives the relevant player the choice.
-A future test controller must explicitly exercise and record each legal order,
-including candidate effect identities, chosen order, affected player, and final
-damage/trigger state. A candidate pair is Furnace of Rath and Urza's Armor: with
-three incoming damage, doubling then preventing one yields five, while preventing
-one then doubling yields four. Pin the new Oracle/script evidence before running
-those fixtures. These branches are planned and have not yet been exercised.
+The fixed test controller now overrides only that native choice method for
+Furnace of Rath/Urza's Armor, without assigning damage or editing scripts. It
+records actual candidate effect/card IDs, zone timestamps, controller IDs,
+chosen IDs, and the deciding player. The verifier independently binds them to
+the pre-damage permanents and affected player, requires two candidates then the
+remaining one, and checks both selected orders at every subsequent checkpoint.
+Missing/malformed choice evidence is inconclusive; contradictory evidence fails
+even when summary counts and life totals match. These are controlled player
+choices, not evidence that the default AI chooses optimally.
 
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.

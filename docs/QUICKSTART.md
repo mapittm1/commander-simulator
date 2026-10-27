@@ -114,15 +114,17 @@ batch history inspectable through the database.
 
 ## What the results currently mean
 
-To inspect the 24 controlled Equipment, damage, countered-trigger, target-legality,
-and protection/hexproof/shroud cases (including later detachment),
-install `requirements-interactions.txt` and run `engine-interactions`. The command
-runs all five fixture families and saves `observations-equipment.json`,
+To inspect the 28 controlled Equipment, damage, countered-trigger, target-legality,
+protection/hexproof/shroud, and replacement-order cases, install
+`requirements-interactions.txt` and provide a trusted local JDK 17+ compiler.
+`javac` is discovered on PATH; set `COMMANDER_JAVAC` to its executable if needed
+(for example, `$env:COMMANDER_JAVAC = 'C:\Path\To\JDK\bin\javac.exe'`).
+Run `engine-interactions`. The command runs all six fixture families and saves `observations-equipment.json`,
 `observations-damage.json`, `observations-countering.json`,
-`observations-targeting.json`, and `observations-protection.json`. The combined
+`observations-targeting.json`, `observations-protection.json`, and
+`observations-replacement_order.json`. The combined
 `interaction-report.json` includes every check and a `partition_results` summary.
-This is
-a separate direct-state diagnostic, not a pod simulation or a full card-support
+This is a separate direct-state diagnostic, not a pod simulation or a full card-support
 certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).
 
 Wins and observations measure this fixed pod under Forge's AI pilots. Reported

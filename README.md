@@ -6,7 +6,8 @@ See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 
 The core CLI requires Python 3.10 or newer and no third-party runtime packages.
-Controlled interaction tests have a separate optional native bridge dependency.
+Controlled interaction tests require the optional native bridge and a trusted local
+JDK 17+ compiler (`javac` on PATH, or an executable selected by `COMMANDER_JAVAC`).
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Run it now
@@ -39,7 +40,7 @@ For direct-state card interaction checks, install the optional pinned tools and 
 .\.venv\Scripts\python.exe commander_simulator.py engine-interactions
 ```
 
-The current suite checks 24 Ratonhnhaké꞉ton/Equipment scenarios against direct
+The current suite checks 28 Ratonhnhaké꞉ton/Equipment scenarios against direct
 Forge state: separate trigger/target timing, return and attachment, missing or
 opponent-owned Equipment, removed targets, removed tokens/sources, incompatible
 attachments, noncombat damage, damage prevention/doubling, and countering the
@@ -49,18 +50,23 @@ card is a new object. Native response spells also check protection from artifact
 hexproof, and shroud, including each player's target eligibility and the difference
 between targeting the Equipment and attaching it to the token. A late-protection
 case witnesses attachment first, then verifies native state-based detachment
-without changing the Equipment's zone or object identity.
+without changing the Equipment's zone or object identity. Four replacement-order
+cases record both native choices for Furnace of Rath and Urza's Armor: doubling
+then preventing one deals 5 damage; preventing one then doubling deals 4.
+Combat and noncombat controls check trigger behavior for both orders.
 Results retain checkpoints, identities and zone timestamps,
-Oracle/engine/source hashes, and raw worker logs. All 24 currently pass on
+Oracle/engine/source hashes, and raw worker logs. All 28 currently pass on
 the pinned engine. This does not certify every card, legal response casting, or
 complete priority handling.
 
-The same command runs five bounded fixture families: Equipment, damage,
-countering, targeting, and protection. `config/interaction_suite.json` is the
+The same command runs six bounded fixture families: Equipment, damage,
+countering, targeting, protection, and replacement ordering. `config/interaction_suite.json` is the
 manifest; reviewed expectations live in `config/interactions/`. Each family
 writes a separate `observations-<family>.json` receipt. The combined schema-2
-report retains all 24 checks and adds `partition_results` with per-family status
-and receipt hashes. Every family must pass for CLI success. See
+report retains all 28 checks and adds `partition_results` with per-family status
+and receipt hashes. The fixed test controller is compiled into the generated
+run directory; reports preserve compiler/source/class hashes and compilation logs.
+Production card scripts and AI choices are unchanged. Every family must pass for CLI success. See
 [controlled interaction tests](docs/INTERACTION_TESTS.md).
 
 Run these from the project folder:
@@ -587,7 +593,7 @@ The original live export test includes a legal multicolor basic-land pod
 that verifies this export, casting, combat-damage trigger resolution, and later
 Assassin-token participation. That game test does not verify Equipment recursion,
 hexproof, or every interaction of this card. The separate controlled suite now
-covers 24 specific interaction cases; identity approval remains distinct from
+covers 28 specific interaction cases; identity approval remains distinct from
 rules verification.
 
 Gap classifier version 2 adds printing-ID evidence for uncertain meld roles.

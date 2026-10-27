@@ -84,21 +84,24 @@ References:
 
 ## Implementation milestones
 
-A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 24
+A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 28
 specific trigger, target, return/attachment, removal, prevention, damage-doubling,
 counterspell, graveyard-target restrictions, target zone-roundtrip, and
-protection/hexproof/shroud attachment and later detachment cases. See
+protection/hexproof/shroud attachment, later detachment, and both orders of
+a damage-doubling/prevention pair, with combat/noncombat controls. See
 [INTERACTION_TESTS.md](INTERACTION_TESTS.md). These fixtures model resolved
 between-trigger effects; complete legal casting and priority handling remain
 separate work. The suite does not certify the rest of the card catalog.
 
-The 24 interaction cases now run as five fixed families with individually bounded
+The 28 interaction cases now run as six fixed families with individually bounded
 definitions and receipts. Manifest/schema-2 reporting preserves the 128 KiB
 per-document input/receipt limit, all existing expectations, and a combined
-all-families result. The next interaction milestone is outcome-changing
-replacement-order cases with recorded affected-player choices through Forge's
-controller callback. Both legal orders must be exercised; one default AI outcome
-cannot establish coverage of both branches.
+all-families result. A fixed test-only Java controller now exercises and records
+both affected-player choices for Furnace of Rath/Urza's Armor, bound to raw
+replacement identities and final damage/trigger observations. This proves those
+controlled branches without certifying AI strategy or general replacement rules.
+Next interaction work should cover cost/priority handling, simultaneous effects
+and APNAP choices, and representative combos.
 
 The CLI is now directly runnable through `doctor`, an isolated real-engine
 `demo`, four-file `play`, and reviewed-pod `simulate` with progress, resume, and

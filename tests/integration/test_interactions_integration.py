@@ -11,6 +11,7 @@ import pytest
 
 from commander.cli.app import main
 from commander.engine.forge_config import file_hash, read_settings
+from commander.engine.interactions.native_bridge import CLASS_RELATIVE
 from commander.engine.interactions.suite import MAX_RECEIPT_BYTES, PARTITIONS
 
 pytestmark = pytest.mark.integration
@@ -33,9 +34,13 @@ class ControlledInteractionTests(unittest.TestCase):
             main(["engine-interactions"])
         report = json.loads(output.getvalue())
         self.assertEqual(report["status"], "passed", report)
-        self.assertEqual(len(report["checks"]), 24)
+        self.assertEqual(len(report["checks"]), 28)
         self.assertTrue(all(case["status"] == "passed" for case in report["checks"]))
         run = Path(report["directory"])
+        self.assertEqual(
+            file_hash(run / CLASS_RELATIVE), report["native_bridge"]["class_sha256"]
+        )
+        self.assertEqual(report["native_bridge"]["process"]["returncode"], 0)
         self.assertEqual(
             [part["partition_id"] for part in report["partition_results"]],
             list(PARTITIONS),
@@ -55,7 +60,7 @@ class ControlledInteractionTests(unittest.TestCase):
                 {
                     "controlled_interaction_run": report["run_id"],
                     "directory": report["directory"],
-                    "cases": 24,
+                    "cases": 28,
                     "status": "passed",
                 }
             )

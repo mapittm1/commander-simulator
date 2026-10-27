@@ -2,12 +2,16 @@
 
 import copy
 
+from commander.engine.interactions.ordering import EFFECT_NAMES, ORDER_CASES
+
 
 def synthetic_receipt(suite: dict) -> dict:
     """Build verifier input only; this is not a native-engine conformance result."""
     cases = []
     for index, case in enumerate(suite["cases"]):
         states = copy.deepcopy(case["expected"])
+        if case["id"] in ORDER_CASES:
+            _ordering_states(states, case["id"], index)
         initial, reflexive, counter = 100 + index * 3, 101 + index * 3, 102 + index * 3
         for stage, state in states.items():
             pending = (
@@ -57,3 +61,40 @@ def synthetic_receipt(suite: dict) -> dict:
             ]
         cases.append({"id": case["id"], "states": states})
     return {"cases": cases}
+
+
+def _ordering_states(states, case_id, index):
+    effects = {
+        role: {
+            "effect_id": 10000 + index * 2 + offset,
+            "card_id": 3000 + index * 2 + offset,
+            "timestamp": 10,
+            "controller_id": offset,
+            "name": name,
+            "zone": "Battlefield",
+        }
+        for offset, (role, name) in enumerate(EFFECT_NAMES.items())
+    }
+    choices = []
+    for offset, role in enumerate(ORDER_CASES[case_id]):
+        choices.append(
+            {
+                "decider_id": 1,
+                "chosen_id": effects[role]["effect_id"],
+                "candidates": [
+                    {
+                        key: value
+                        for key, value in effects[candidate].items()
+                        if key != "zone"
+                    }
+                    for candidate in ORDER_CASES[case_id][offset:]
+                ],
+            }
+        )
+    for stage, state in states.items():
+        state["ordering"] = {
+            "actor_id": 0,
+            "affected_player_id": 1,
+            "effects": copy.deepcopy(effects),
+            "choices": [] if stage == "before" else copy.deepcopy(choices),
+        }
