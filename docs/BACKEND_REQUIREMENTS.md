@@ -227,7 +227,7 @@ does not verify Oracle semantics, interactions, or AI behavior.
 The `engine-interactions` service runs only fixed repository-owned partial-state
 fixtures in a bounded isolated Python/JVM child. Fresh catalog identities and
 Oracle-characteristic hashes, pinned engine/script evidence, and reviewed case
-expectations are required. Six direct-state checkpoints per case capture actual
+expectations are required. Six common direct-state checkpoints per case capture actual
 targeting, stack, zone, token, ownership, and attachment outcomes. Missing setup
 or evidence is inconclusive, never a pass. Any witnessed expected-state mismatch
 fails; changed suite/source/engine provenance invalidates the result.
@@ -259,6 +259,15 @@ target-eligibility probes compare both players' permissions using a nonartifact
 creature-targeting spell. They are predicates, not paid or legally timed casts.
 These cases distinguish protection's attachment restriction from hexproof/shroud
 targeting restrictions; full casting and priority validation remain separate.
+
+Suite v5 adds a late-protection detachment case. Only this fixed case accepts an
+additional `after_detachment` checkpoint; missing or unexpected checkpoints are
+inconclusive. The prior state must witness attachment and a 3/1 token. After actual
+Tel-Jilad Defiance resolution and native state-based actions, the same Equipment
+and token must retain their IDs/zone timestamps, while attachment ends and power
+returns to 1. Raw attachment and response target identities are independently
+checked; pre/post stacks must be empty and the response must be in the graveyard.
+The 12 pinned identities and existing process/JSON limits remain unchanged.
 
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded

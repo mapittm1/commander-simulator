@@ -8,6 +8,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled suite from 23 to 24 cases in `raton_equipment_v5`.
+  Witness normal Equipment attachment, then resolve Tel-Jilad Defiance and let
+  native state-based actions detach it. The Equipment remains on the battlefield
+  and the same Assassin token loses the +2/+0 bonus.
+- Require a case-specific `after_detachment` checkpoint. Independently verify raw
+  attachment, target, stack, and stable object ID/zone-timestamp evidence; an
+  unattached final state alone cannot pass. Missing/extra checkpoints or malformed
+  evidence are inconclusive; witnessed contradictions fail. The original 23 cases
+  retain their six-checkpoint contracts and all 12 Oracle identities stay pinned.
+- Document bounded suite partitioning and explicit affected-player choice
+  recording as prerequisites for the next replacement-order test family.
+  Outcome-changing order choices, full casting/priority, and combos remain pending.
+- Validation: 246 offline tests and 195 subtests pass, including detachment
+  counterexamples, raw identity mutations, and checkpoint boundary checks.
+  Native CLI integration passes all 24 cases; Black, isort, Pylint, and Bandit
+  pass. No production Forge script correction was needed for these cases.
+
 - Expand the controlled interaction suite from 20 to 23 cases in
   `raton_equipment_v4`. Resolve Tel-Jilad Defiance, Ranger's Guile, and Alexi's
   Cloak against the Assassin token before the Equipment-return ability. Cover

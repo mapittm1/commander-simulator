@@ -84,13 +84,19 @@ References:
 
 ## Implementation milestones
 
-A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 23
+A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 24
 specific trigger, target, return/attachment, removal, prevention, damage-doubling,
 counterspell, graveyard-target restrictions, target zone-roundtrip, and
-protection/hexproof/shroud attachment cases. See
+protection/hexproof/shroud attachment and later detachment cases. See
 [INTERACTION_TESTS.md](INTERACTION_TESTS.md). These fixtures model resolved
 between-trigger effects; complete legal casting and priority handling remain
 separate work. The suite does not certify the rest of the card catalog.
+
+The next interaction milestone is to partition fixed definitions into individually
+bounded suites, preserving the 128 KiB input/receipt limit as coverage grows.
+Then add outcome-changing replacement-order cases with recorded affected-player
+choices through Forge's controller callback. Both legal orders must be exercised;
+one default AI outcome cannot establish coverage of both branches.
 
 The CLI is now directly runnable through `doctor`, an isolated real-engine
 `demo`, four-file `play`, and reviewed-pod `simulate` with progress, resume, and

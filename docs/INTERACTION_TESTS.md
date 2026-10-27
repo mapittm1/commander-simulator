@@ -46,8 +46,9 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Protection from artifacts | Tel-Jilad Defiance resolves on the token before the reflexive ability. The Equipment returns to the battlefield but cannot attach; the token remains 1/1. |
 | Hexproof | Ranger's Guile makes the token 2/2 with hexproof. An opposing nonartifact creature-targeting spell cannot target it, while its controller's can. The Equipment still attaches and the token becomes 4/2. |
 | Shroud | Alexi's Cloak resolves attached to the token, granting shroud. Neither player's creature-targeting spell can target it. The reflexive ability targets only the Equipment, which returns and attaches; the token becomes 3/1. |
+| Later protection detaches Equipment | The normal return/attachment completes first, making the token 3/1. Tel-Jilad Defiance then resolves. Native state-based actions detach the Equipment while both objects remain on the battlefield; the same token becomes 1/1. |
 
-All 23 cases passed against the unmodified pinned archive. The suite does not
+All 24 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -57,7 +58,7 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v4`; previously saved v1/v2/v3 reports remain historical artifacts.
+`raton_equipment_v5`; previously saved v1/v2/v3/v4 reports remain historical artifacts.
 Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
 with the other inputs, for 12 reviewed fixture identities.
 
@@ -104,7 +105,15 @@ then inspect the granted keyword, token statistics, remaining trigger, and
 Equipment outcome. Rules 702.16d, 702.11b, and 702.18a distinguish protection's
 Equipment restriction from hexproof/shroud target restrictions. The existing
 Assassin's Creed release notes explain returning Equipment even when attachment
-is impossible. This checks attachment refusal, not subsequent detachment.
+is impossible. The early-protection case checks attachment refusal. The new
+late-protection case checks subsequent detachment under rules 702.16d and 704.5n.
+Only that case requires an additional `after_detachment` checkpoint, following
+the witnessed normal attachment in `after_second`. The actual protection spell
+is resolved and Forge performs state-based actions; the fixture never directly
+unattaches the Equipment. Raw attachment IDs, stable Equipment/token IDs and zone
+timestamps, and the response's target/stack/graveyard evidence are required.
+Missing or unexpected checkpoints cannot pass. An unattached final state alone
+is insufficient.
 
 Response evidence independently binds its raw target ID/timestamp to the original
 token, requires the same reflexive trigger below it and still pending afterward,
@@ -165,6 +174,20 @@ Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
 Next interaction work should cover outcome-changing replacement ordering,
-protection-driven detachment, cost/priority handling, and combos.
+cost/priority handling, and combos. Split growing fixture definitions into bounded
+suites before adding the next family, retaining the existing 128 KiB limits.
+
+For replacement ordering, the pinned engine's
+[ReplacementHandler](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java)
+calls the affected player's controller through `chooseSingleReplacementEffect`;
+[PlayerControllerAi](https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java)
+delegates that choice to its AI. Rule 616.1 gives the relevant player the choice.
+A future test controller must explicitly exercise and record each legal order,
+including candidate effect identities, chosen order, affected player, and final
+damage/trigger state. A candidate pair is Furnace of Rath and Urza's Armor: with
+three incoming damage, doubling then preventing one yields five, while preventing
+one then doubling yields four. Pin the new Oracle/script evidence before running
+those fixtures. These branches are planned and have not yet been exercised.
+
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.

@@ -50,6 +50,16 @@ def synthetic_receipt(suite: dict) -> dict:
             state["target_timestamps"] = [10] if state.get("equipment_targeted") else []
             state["token_ids"] = [2000 + index] if state["tokens"] else []
             state["token_timestamps"] = [20] if state["tokens"] else []
+            state["equipment_attached_to_id"] = (
+                2000 + index if state["attached"] else None
+            )
+        if case["id"] == "protection_detaches_equipment":
+            states["after_detachment"]["response_spell"] = {
+                "targets": [2000 + index],
+                "target_timestamps": [20],
+                "stack_ability_ids": [counter],
+                "zone": "Graveyard",
+            }
         if case["id"] in {
             "assassin_protection_artifacts",
             "assassin_hexproof",
@@ -477,6 +487,126 @@ class ProtectionVerifierTests(unittest.TestCase):
         self.assertEqual(
             evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
         )
+
+
+class DetachmentVerifierTests(unittest.TestCase):
+    """Require witnessed attachment, native protection, and stable object identities."""
+
+    def setUp(self):
+        self.suite = load_suite()
+        self.receipt = synthetic_receipt(self.suite)
+
+    def _case(self, receipt):
+        return next(
+            case
+            for case in receipt["cases"]
+            if case["id"] == "protection_detaches_equipment"
+        )
+
+    def test_attachment_and_detachment_counterexamples_fail(self):
+        for stage, field, value in (
+            ("after_second", "attached", False),
+            ("after_second", "token_power", 1),
+            ("after_second", "assassin_protection_artifacts", True),
+            ("after_detachment", "attached", True),
+            ("after_detachment", "token_power", 3),
+            ("after_detachment", "assassin_protection_artifacts", False),
+            ("after_detachment", "equipment_zone", "Graveyard"),
+            ("after_detachment", "tokens", 0),
+        ):
+            with self.subTest(stage=stage, field=field):
+                receipt = copy.deepcopy(self.receipt)
+                self._case(receipt)["states"][stage][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+
+    def test_conflicting_raw_identities_fail_despite_matching_summary_flags(self):
+        for field, value in (
+            ("equipment_id", 999),
+            ("equipment_timestamp", 999),
+            ("token_ids", [999]),
+            ("token_timestamps", [999]),
+            ("equipment_attached_to_id", 999),
+            ("stack_ability_ids", [999]),
+        ):
+            with self.subTest(field=field):
+                receipt = copy.deepcopy(self.receipt)
+                state = self._case(receipt)["states"]["after_detachment"]
+                self.assertFalse(state["attached"])
+                state[field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+        for field, value in (
+            ("targets", [999]),
+            ("target_timestamps", [999]),
+            ("zone", "Exile"),
+        ):
+            receipt = copy.deepcopy(self.receipt)
+            self._case(receipt)["states"]["after_detachment"]["response_spell"][
+                field
+            ] = value
+            self.assertEqual(
+                evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+            )
+        receipt = copy.deepcopy(self.receipt)
+        self._case(receipt)["states"]["after_second"]["equipment_attached_to_id"] = 999
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+        )
+
+    def test_missing_or_malformed_detachment_evidence_is_inconclusive(self):
+        for field, value in (
+            ("targets", []),
+            ("target_timestamps", [True]),
+            ("stack_ability_ids", []),
+            ("zone", None),
+        ):
+            with self.subTest(field=field):
+                receipt = copy.deepcopy(self.receipt)
+                self._case(receipt)["states"]["after_detachment"]["response_spell"][
+                    field
+                ] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"],
+                    "inconclusive",
+                )
+        receipt = copy.deepcopy(self.receipt)
+        del self._case(receipt)["states"]["after_detachment"]["response_spell"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
+        )
+
+    def test_only_the_detachment_case_accepts_its_extra_checkpoint(self):
+        receipt = copy.deepcopy(self.receipt)
+        del self._case(receipt)["states"]["after_detachment"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
+        )
+        receipt = copy.deepcopy(self.receipt)
+        receipt["cases"][0]["states"]["after_detachment"] = {}
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
+        )
+        for identity, extra in (
+            ("protection_detaches_equipment", False),
+            ("baseline", True),
+        ):
+            suite = copy.deepcopy(self.suite)
+            case = next(case for case in suite["cases"] if case["id"] == identity)
+            if extra:
+                case["expected"]["after_detachment"] = {"attached": False}
+            else:
+                del case["expected"]["after_detachment"]
+            with (
+                patch(
+                    "commander.engine.interactions.suite.read_bounded_json",
+                    return_value=suite,
+                ),
+                self.assertRaisesRegex(ValueError, "checkpoint"),
+            ):
+                load_suite()
 
 
 class ReceiptBoundaryTests(unittest.TestCase):

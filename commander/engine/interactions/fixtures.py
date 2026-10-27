@@ -1,6 +1,6 @@
 """Controlled partial states driven through Forge damage, trigger, and resolution APIs."""
 
-from .responses import RESPONSE_CARDS
+from .responses import DETACHMENT_CASE, RESPONSE_CARDS
 from .suite import STAGES
 
 
@@ -55,7 +55,20 @@ def observe_case(java, cards: dict, case: str) -> dict:
         states[STAGES[4]]["response_spell"] = response
     _resolve_one(game)
     states[STAGES[5]] = _snapshot(java, game, tracked_cards, cards, case)
+    if case == DETACHMENT_CASE:
+        states["after_detachment"] = _observe_detachment(
+            java, game, tracked_cards, cards, case
+        )
     return {"id": case, "states": states}
+
+
+def _observe_detachment(java, game, tracked_cards, cards, case) -> dict:
+    response = _response_spell(
+        java, game, cards["artifact_protection"], expected_stack=0
+    )
+    state = _snapshot(java, game, tracked_cards, cards, case)
+    state["response_spell"] = response
+    return state
 
 
 def _deal_damage(java, game, source, opponent, combat) -> None:
@@ -283,13 +296,11 @@ def _zone_identity(card) -> dict:
     }
 
 
-def _response_spell(java, game, record) -> dict:
+def _response_spell(java, game, record, expected_stack=1) -> dict:
     player = game.getPlayers().get(java.JInt(0))
     tokens = _tokens(java, player)
-    if len(tokens) != 1 or game.getStack().size() != 1:
-        raise ValueError(
-            "Response requires one token and one pending reflexive trigger"
-        )
+    if len(tokens) != 1 or game.getStack().size() != expected_stack:
+        raise ValueError("Response requires one token and the expected stack size")
     spell = _card(java, record, player, java.JClass("forge.game.zone.ZoneType").Hand)
     ability = spell.getFirstSpellAbility()
     ability.setActivatingPlayer(player)
@@ -306,7 +317,7 @@ def _response_spell(java, game, record) -> dict:
 
 
 def _token_defenses(java, game, token, cards, case) -> dict:
-    if case not in RESPONSE_CARDS:
+    if case not in {*RESPONSE_CARDS, DETACHMENT_CASE}:
         return {}
     keyword = java.JClass("forge.game.keyword.Keyword")
     state = {
@@ -373,6 +384,11 @@ def _snapshot(java, game, tracked_cards, cards, case) -> dict:
             and current.getAttachedTo() == token
         ),
         "equipment_id": int(current.getId()) if current is not None else None,
+        "equipment_attached_to_id": (
+            int(current.getAttachedTo().getId())
+            if current is not None and current.getAttachedTo() is not None
+            else None
+        ),
         "equipment_timestamp": (
             int(current.getGameTimestamp()) if current is not None else None
         ),

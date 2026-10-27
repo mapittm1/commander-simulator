@@ -32,7 +32,7 @@ class ControlledInteractionTests(unittest.TestCase):
             main(["engine-interactions"])
         report = json.loads(output.getvalue())
         self.assertEqual(report["status"], "passed", report)
-        self.assertEqual(len(report["checks"]), 23)
+        self.assertEqual(len(report["checks"]), 24)
         self.assertTrue(all(case["status"] == "passed" for case in report["checks"]))
         run = Path(report["directory"])
         self.assertEqual(
@@ -45,7 +45,7 @@ class ControlledInteractionTests(unittest.TestCase):
                 {
                     "controlled_interaction_run": report["run_id"],
                     "directory": report["directory"],
-                    "cases": 23,
+                    "cases": 24,
                     "status": "passed",
                 }
             )

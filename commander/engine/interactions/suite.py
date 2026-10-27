@@ -7,10 +7,15 @@ from pathlib import Path
 from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
-from .responses import RESPONSE_CARDS, response_evidence
+from .responses import (
+    DETACHMENT_CASE,
+    RESPONSE_CARDS,
+    detachment_evidence,
+    response_evidence,
+)
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v4"
+SUITE_ID = "raton_equipment_v5"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -35,6 +40,7 @@ CASE_IDS = (
     "assassin_protection_artifacts",
     "assassin_hexproof",
     "assassin_shroud",
+    DETACHMENT_CASE,
 )
 CARD_ROLES = {
     "source",
@@ -71,6 +77,11 @@ ORACLE_FIELDS = (
     "color_identity",
 )
 MAX_RECEIPT_BYTES = 131072
+
+
+def case_stages(case_id: str) -> tuple:
+    """Require only repository-defined checkpoints, including the late protection response."""
+    return (*STAGES, "after_detachment") if case_id == DETACHMENT_CASE else STAGES
 
 
 def oracle_fingerprint(card: dict) -> str:
@@ -123,10 +134,10 @@ def load_suite() -> dict:
         expected = case.get("expected")
         if (
             not isinstance(expected, dict)
-            or set(expected) != set(STAGES)
+            or set(expected) != set(case_stages(case["id"]))
             or any(
                 not isinstance(expected[stage], dict) or not expected[stage]
-                for stage in STAGES
+                for stage in case_stages(case["id"])
             )
         ):
             raise ValueError("Interaction expectations require every state checkpoint")
@@ -189,7 +200,7 @@ def _evaluate_case(expected, observed) -> dict:
     if (
         observed.get("error")
         or not isinstance(states, dict)
-        or set(states) != set(STAGES)
+        or set(states) != set(case_stages(expected["id"]))
     ):
         return {
             "id": expected["id"],
@@ -220,6 +231,7 @@ def _evaluate_case(expected, observed) -> dict:
         _counter_evidence(expected["id"], states),
         _target_evidence(expected["id"], states),
         response_evidence(expected["id"], states),
+        detachment_evidence(expected["id"], states),
     ):
         if evidence is not None:
             if evidence.get("status") == "not_exercised":
