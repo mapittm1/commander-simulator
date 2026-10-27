@@ -243,6 +243,14 @@ resolution is exercised through the native stack API; mana payment, casting
 windows, AI response selection, and outcome-dependent replacement ordering are
 not certified by these partial-state fixtures.
 
+Suite v3 adds four target-legality cases and a ninth pinned identity, Ground Seal.
+Target-card IDs and engine zone timestamps must bind the selected object before
+and after a response. A graveyard roundtrip must show two ordered native zone
+changes and preserve the old target identity while the returned card has a new
+timestamp. Missing/malformed identities are inconclusive; contradictory evidence
+fails. Injected cards receive native game timestamps. Worker receipts remain
+bounded to 128 KiB using compact JSON; reports retain indented state evidence.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.

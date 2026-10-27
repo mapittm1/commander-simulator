@@ -84,9 +84,9 @@ References:
 
 ## Implementation milestones
 
-A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 16
+A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies 20
 specific trigger, target, return/attachment, removal, prevention, damage-doubling,
-and counterspell cases. See
+counterspell, graveyard-target restrictions, and target zone-roundtrip cases. See
 [INTERACTION_TESTS.md](INTERACTION_TESTS.md). These fixtures model resolved
 between-trigger effects; complete legal casting and priority handling remain
 separate work. The suite does not certify the rest of the card catalog.

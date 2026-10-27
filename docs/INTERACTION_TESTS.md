@@ -14,7 +14,7 @@ JPype version. The existing Windows Java runtime exposes its JVM library; standa
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Current scope: Equipment, damage effects, and countered triggers
+## Current scope: Equipment, damage effects, countering, and target legality
 
 The [official Assassin's Creed release notes](https://magic.wizards.com/en/news/feature/assassins-creed-release-notes)
 explain the separate reflexive trigger and its target timing. They also explain
@@ -39,8 +39,12 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Doubling plus full prevention | All damage remains prevented; there is no damage trigger. |
 | Initial trigger countered | Disallow resolves against the first trigger; no token or reflexive trigger is created. |
 | Reflexive trigger countered | Disallow resolves against the second trigger; the token remains and the Equipment stays in the graveyard. |
+| Graveyard targeting blocked | Ground Seal is already active. The untargeted initial trigger still creates a token, but no reflexive ability can remain on the stack with a legal target. |
+| Targeting blocked in response | Ground Seal becomes active after the Equipment was targeted. The reflexive ability does not resolve; the token remains 1/1 and the Equipment stays in the graveyard. |
+| Targeting restored before selection | Ground Seal is removed while the initial trigger is pending. The later reflexive ability can target, return, and attach the Equipment normally. |
+| Target zone roundtrip | The targeted Equipment is exiled and returned to the graveyard. It is a new object, so the pending ability cannot return it to the battlefield. |
 
-All 16 cases passed against the unmodified pinned archive. The suite does not
+All 20 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -50,7 +54,8 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v2`; previously saved v1 reports remain historical artifacts.
+`raton_equipment_v3`; previously saved v1/v2 reports remain historical artifacts.
+Ground Seal's Oracle characteristics are pinned as the ninth fixture identity.
 
 ## Evidence and boundaries
 
@@ -76,11 +81,27 @@ IDs are inconclusive; contradictory bindings fail even if summary flags say
 the counterspell targeted correctly. Initial snapshots also verify that each
 prevention/doubling permanent is active under the intended controller.
 
+The new target-legality cases use rules 603.3d (no legal initial target), 608.2b
+(recheck targets on resolution), and 400.7 (a zone change creates a new object).
+The [Wilds of Eldraine release notes](https://media.wizards.com/2023/downloads/WOE_Release_Notes_9S5bvPQTjRwh/EN_MTGWOE_ReleaseNotes_20230518.pdf)
+confirm Ground Seal's battlefield-only restriction on graveyard targets. Its
+enter-the-battlefield draw trigger is outside these controlled static-effect tests.
+
+Injected cards receive a native game timestamp before placement. The verifier
+binds raw target IDs **and** zone timestamps across selection and response. The
+roundtrip also requires direct Exile/Graveyard transition records, increasing
+timestamps, and the original pending target. Missing data is inconclusive;
+contradictory identities fail. `equipment_targeted` is only a same-card-ID summary,
+not a statement of current target legality; matching IDs alone cannot pass these
+new target-object checks.
+
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
 `observations.json`, `interaction-report.json`, and `interactions.log`. Reports
 include Oracle/catalog evidence, suite/source/bootstrap hashes, engine pins,
-bridge/Java versions, process outcome, and artifact hashes. JSON documents are
-limited to 128 KiB and 32 nesting levels; duplicate fields are rejected. A source,
+bridge/Java versions, process outcome, and artifact hashes. Suite/input/worker
+receipt JSON is limited to 128 KiB and 32 nesting levels; duplicate fields are
+rejected. Worker receipts use compact JSON within the unchanged cap; generated
+reports retain indented state evidence for inspection. A source,
 suite, or pinned-engine change during execution invalidates the conclusion.
 
 The worker uses isolated Python imports and a minimal child environment, the
@@ -89,10 +110,12 @@ cap, and a 2 GiB JVM heap cap. This is not an OS sandbox or a total memory quota
 The optional bridge is trusted local tooling; its use does not expose a server.
 
 The fixture deliberately bypasses shuffling/opening hands and injects controlled
-partial states. Between-trigger removals model resolved effects; they do not
+partial states. Ground Seal placement/removal and between-trigger zone changes
+model resolved effects; they do not
 prove that the AI casts a response legally or passes priority correctly. These
 tests also do not establish deck-construction legality, full Commander zone rules,
-all replacement effects, every targeting condition, or broader combo correctness.
+all replacement effects, protection/hexproof interactions, every targeting
+condition, or broader combo correctness.
 Normal user simulations retain their existing construction/review/execution gates.
 
 The Wanderer's starting loyalty is initialized through the engine counter API
@@ -117,6 +140,6 @@ Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
 Next interaction work should cover outcome-changing replacement ordering,
-protection/target restrictions, cost/priority handling, and combos.
+protection/hexproof restrictions, cost/priority handling, and combos.
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.

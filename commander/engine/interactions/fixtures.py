@@ -38,13 +38,20 @@ def observe_case(java, cards: dict, case: str) -> dict:
         _settle(game)
     if case == "initial_trigger_countered":
         _counter_trigger(java, game, cards["counter"])
+    if case == "targeting_restored_before_selection":
+        _remove_guard(java, game, cards)
     states[STAGES[2]] = _snapshot(java, game, source, equipment, cards)
     _resolve_one(game)
     states[STAGES[3]] = _snapshot(java, game, source, equipment, cards)
-    _respond(java, game, player, equipment, case)
+    transitions = _respond(java, game, player, equipment, case)
+    if case == "targeting_blocked_in_response":
+        _card(java, cards["graveyard_guard"], opponent, zone.Battlefield)
+        _settle(game)
     if case == "reflexive_trigger_countered":
         _counter_trigger(java, game, cards["counter"])
     states[STAGES[4]] = _snapshot(java, game, source, equipment, cards)
+    if case == "target_zone_roundtrip":
+        states[STAGES[4]]["equipment_transitions"] = transitions
     _resolve_one(game)
     states[STAGES[5]] = _snapshot(java, game, source, equipment, cards)
     return {"id": case, "states": states}
@@ -96,6 +103,22 @@ def _modifiers(java, cards, game, case) -> None:
         )
     if case in {"combat_doubled", "noncombat_doubled", "doubled_damage_prevented"}:
         _card(java, cards["doubler"], player, zone.Battlefield)
+    if case in {"graveyard_targeting_blocked", "targeting_restored_before_selection"}:
+        _card(java, cards["graveyard_guard"], opponent, zone.Battlefield)
+
+
+def _remove_guard(java, game, cards) -> None:
+    zone = java.JClass("forge.game.zone.ZoneType")
+    opponent = game.getPlayers().get(java.JInt(1))
+    guards = [
+        card
+        for card in opponent.getCardsIn(zone.Battlefield)
+        if card.getName() == cards["graveyard_guard"]["engine_name"]
+    ]
+    if len(guards) != 1:
+        raise ValueError("Target selection scenario requires exactly one Ground Seal")
+    game.getAction().exile(guards[0], None, java.JClass("java.util.HashMap")())
+    _settle(game)
 
 
 def _counter_trigger(java, game, record) -> None:
@@ -126,6 +149,14 @@ def _stack_state(game) -> dict:
     return {
         "stack": len(entries),
         "targets": targets,
+        "target_timestamps": (
+            []
+            if top is None
+            else [
+                int(card.getGameTimestamp())
+                for card in top.getTargets().getTargetCards()
+            ]
+        ),
         "target_count": len(targets),
         "spell_target_count": len(spells),
         "counter_on_stack": is_counter,
@@ -150,6 +181,8 @@ def _effect_state(java, game, cards) -> dict:
     }
     walker = opponent_cards.get(cards["noncombat_preventer"]["engine_name"])
     return {
+        "graveyard_guard_active": cards["graveyard_guard"]["engine_name"]
+        in opponent_cards,
         "prevention_active": cards["preventer"]["engine_name"] in opponent_cards,
         "noncombat_prevention_active": walker is not None,
         "noncombat_preventer_loyalty": (
@@ -182,6 +215,7 @@ def _card(java, record, owner, zone):
     if paper is None:
         raise ValueError("Pinned engine card is absent: " + record["engine_name"])
     card = java.JClass("forge.game.card.Card").fromPaperCard(paper, owner)
+    card.setGameTimestamp(owner.getGame().getNextTimestamp())
     owner.getZone(zone).add(card)
     return card
 
@@ -202,7 +236,8 @@ def _tokens(java, player):
     return [card for card in player.getCardsIn(zone.Battlefield) if card.isToken()]
 
 
-def _respond(java, game, player, equipment, case) -> None:
+def _respond(java, game, player, equipment, case) -> list:
+    transitions = []
     if case == "target_exiled":
         game.getAction().exile(
             game.getCardState(equipment), None, java.JClass("java.util.HashMap")()
@@ -212,7 +247,26 @@ def _respond(java, game, player, equipment, case) -> None:
         if len(tokens) != 1:
             raise ValueError("Removal scenario did not produce exactly one token")
         game.getAction().exile(tokens[0], None, java.JClass("java.util.HashMap")())
+    elif case == "target_zone_roundtrip":
+        current = game.getCardState(equipment)
+        exiled = game.getAction().exile(
+            current, None, java.JClass("java.util.HashMap")()
+        )
+        _settle(game)
+        transitions.append(_zone_identity(exiled))
+        returned = game.getAction().moveToGraveyard(exiled, None)
+        _settle(game)
+        transitions.append(_zone_identity(returned))
     _settle(game)
+    return transitions
+
+
+def _zone_identity(card) -> dict:
+    return {
+        "id": int(card.getId()),
+        "timestamp": int(card.getGameTimestamp()),
+        "zone": str(card.getZone().getZoneType()),
+    }
 
 
 def _snapshot(java, game, source, equipment, cards) -> dict:
@@ -250,6 +304,9 @@ def _snapshot(java, game, source, equipment, cards) -> dict:
             and current.getAttachedTo() == token
         ),
         "equipment_id": int(current.getId()) if current is not None else None,
+        "equipment_timestamp": (
+            int(current.getGameTimestamp()) if current is not None else None
+        ),
         "equipment_owned_by_actor": (
             bool(current.getOwner() == player) if current is not None else None
         ),

@@ -64,7 +64,7 @@ def main() -> None:
 
 def save_observations(path: Path, result: dict) -> None:
     """Reject excessive state output before creating an exclusive receipt file."""
-    serialized = json.dumps(result, indent=2, ensure_ascii=True)
+    serialized = json.dumps(result, separators=(",", ":"), ensure_ascii=True)
     if len(serialized.encode("utf-8")) > MAX_RECEIPT_BYTES:
         raise ValueError("Interaction observations exceed the receipt size limit")
     with path.open("x", encoding="utf-8") as stream:

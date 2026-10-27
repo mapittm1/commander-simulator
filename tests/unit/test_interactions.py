@@ -44,6 +44,17 @@ def synthetic_receipt(suite: dict) -> dict:
             else:
                 state["stack_ability_ids"] = [pending] if state["stack"] else []
                 state["spell_target_ids"] = []
+            state["equipment_id"] = 1000 + index
+            state["equipment_timestamp"] = 10
+            state["targets"] = [1000 + index] if state.get("equipment_targeted") else []
+            state["target_timestamps"] = [10] if state.get("equipment_targeted") else []
+        if case["id"] == "target_zone_roundtrip":
+            for stage in ("after_response", "after_second"):
+                states[stage]["equipment_timestamp"] = 12
+            states["after_response"]["equipment_transitions"] = [
+                {"id": 1000 + index, "timestamp": 11, "zone": "Exile"},
+                {"id": 1000 + index, "timestamp": 12, "zone": "Graveyard"},
+            ]
         cases.append({"id": case["id"], "states": states})
     return {"cases": cases}
 
@@ -207,6 +218,141 @@ class StateVerifierTests(unittest.TestCase):
             evaluate_receipt(self.suite, self.receipt, FINISHED)["status"],
             "inconclusive",
         )
+
+
+class CardTargetVerifierTests(unittest.TestCase):
+    """Revalidate selected card objects rather than trusting matching card IDs."""
+
+    def setUp(self):
+        self.suite = load_suite()
+        self.receipt = synthetic_receipt(self.suite)
+
+    def test_target_legality_counterexamples_fail(self):
+        mutations = (
+            ("graveyard_targeting_blocked", "after_first", "stack", 1),
+            ("graveyard_targeting_blocked", "after_first", "target_count", 1),
+            ("graveyard_targeting_blocked", "after_first", "tokens", 0),
+            (
+                "graveyard_targeting_blocked",
+                "after_second",
+                "equipment_zone",
+                "Battlefield",
+            ),
+            (
+                "targeting_blocked_in_response",
+                "after_response",
+                "graveyard_guard_active",
+                False,
+            ),
+            (
+                "targeting_blocked_in_response",
+                "after_second",
+                "equipment_zone",
+                "Battlefield",
+            ),
+            (
+                "targeting_restored_before_selection",
+                "before_first",
+                "graveyard_guard_active",
+                True,
+            ),
+            ("targeting_restored_before_selection", "after_first", "stack", 0),
+            ("targeting_restored_before_selection", "after_second", "attached", False),
+            ("target_zone_roundtrip", "after_second", "equipment_zone", "Battlefield"),
+            ("target_zone_roundtrip", "after_second", "token_power", 3),
+        )
+        for identity, stage, field, value in mutations:
+            with self.subTest(case=identity, stage=stage, field=field):
+                receipt = copy.deepcopy(self.receipt)
+                case = next(case for case in receipt["cases"] if case["id"] == identity)
+                case["states"][stage][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+
+    def test_raw_card_identity_mismatches_fail_even_with_matching_summary_flags(self):
+        mutations = (
+            ("target_timestamps", [999]),
+            ("targets", [999]),
+            ("equipment_timestamp", 10),
+            ("equipment_id", 999),
+            (
+                "equipment_transitions",
+                [
+                    {"id": 1019, "timestamp": 10, "zone": "Exile"},
+                    {"id": 1019, "timestamp": 12, "zone": "Graveyard"},
+                ],
+            ),
+            (
+                "equipment_transitions",
+                [
+                    {"id": 1019, "timestamp": 11, "zone": "Hand"},
+                    {"id": 1019, "timestamp": 12, "zone": "Graveyard"},
+                ],
+            ),
+        )
+        for field, value in mutations:
+            with self.subTest(field=field, value=value):
+                receipt = copy.deepcopy(self.receipt)
+                state = receipt["cases"][-1]["states"]["after_response"]
+                self.assertTrue(state["equipment_targeted"])
+                state[field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+        for identity in (
+            "targeting_blocked_in_response",
+            "targeting_restored_before_selection",
+        ):
+            receipt = copy.deepcopy(self.receipt)
+            case = next(case for case in receipt["cases"] if case["id"] == identity)
+            case["states"]["after_first"]["target_timestamps"] = [999]
+            self.assertEqual(
+                evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+            )
+
+    def test_missing_or_malformed_card_identity_is_inconclusive(self):
+        for field, value in (
+            ("target_timestamps", None),
+            ("target_timestamps", [True]),
+            ("targets", []),
+            ("equipment_id", "1019"),
+            ("equipment_timestamp", -1),
+            ("equipment_transitions", []),
+            ("equipment_transitions", [None, None]),
+        ):
+            with self.subTest(field=field, value=value):
+                receipt = copy.deepcopy(self.receipt)
+                receipt["cases"][-1]["states"]["after_response"][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"],
+                    "inconclusive",
+                )
+        receipt = copy.deepcopy(self.receipt)
+        del receipt["cases"][-1]["states"]["after_response"]["equipment_transitions"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
+        )
+
+    def test_missing_initial_target_restriction_is_inconclusive(self):
+        case = next(
+            case
+            for case in self.receipt["cases"]
+            if case["id"] == "graveyard_targeting_blocked"
+        )
+        case["states"]["before"]["graveyard_guard_active"] = False
+        self.assertEqual(
+            evaluate_receipt(self.suite, self.receipt, FINISHED)["status"],
+            "inconclusive",
+        )
+
+
+class ReceiptBoundaryTests(unittest.TestCase):
+    """Reject incomplete, malformed, or incompatible verification evidence."""
+
+    def setUp(self):
+        self.suite = load_suite()
+        self.receipt = synthetic_receipt(self.suite)
 
     def test_bool_is_not_an_integer_observation(self):
         self.receipt["cases"][0]["states"]["after_damage"]["tokens"] = False

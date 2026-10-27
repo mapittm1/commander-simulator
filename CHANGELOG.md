@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled interaction suite from 16 to 20 cases in
+  `raton_equipment_v3`. Add Ground Seal before target selection, activation of
+  its static restriction after selection, removal before selection, and a
+  targeted Equipment leaving and returning to the graveyard as a new object.
+- Pin Ground Seal as a ninth Oracle identity. Record target-card zone timestamps
+  and both native roundtrip transitions; independently bind the original target
+  across the response. Missing evidence is inconclusive and conflicting raw
+  identities fail even with matching summary flags.
+- Initialize injected fixture cards with native game timestamps. Keep the worker
+  receipt cap at 128 KiB by using compact JSON; generated reports retain
+  indented checkpoints. Split verifier tests into focused behavior/boundary groups.
+- Validation: 239 offline tests and 153 subtests pass; the native CLI integration
+  test passes all 20 cases. Black, isort, Pylint, and Bandit pass. No production
+  Forge script correction was needed for these tested cases. Full casting,
+  priority, protection, and outcome-changing replacement ordering remain pending.
+
 - Expand the controlled interaction suite from eight to 16 cases in
   `raton_equipment_v2`. Add full combat prevention, noncombat-only prevention with
   a combat control, combat/noncombat damage doubling, combined prevention and

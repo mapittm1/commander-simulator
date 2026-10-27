@@ -8,7 +8,7 @@ from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v2"
+SUITE_ID = "raton_equipment_v3"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -26,6 +26,10 @@ CASE_IDS = (
     "doubled_damage_prevented",
     "initial_trigger_countered",
     "reflexive_trigger_countered",
+    "graveyard_targeting_blocked",
+    "targeting_blocked_in_response",
+    "targeting_restored_before_selection",
+    "target_zone_roundtrip",
 )
 CARD_ROLES = {
     "source",
@@ -36,6 +40,7 @@ CARD_ROLES = {
     "noncombat_preventer",
     "doubler",
     "counter",
+    "graveyard_guard",
 }
 STAGES = (
     "before",
@@ -203,12 +208,15 @@ def _evaluate_case(expected, observed) -> dict:
                     }
                 )
     status = "failed" if mismatches else "passed"
-    counter = _counter_evidence(expected["id"], states)
-    if counter is not None:
-        if counter.get("status") == "not_exercised":
-            return {"id": expected["id"], **counter}
-        mismatches.append(counter)
-        status = "failed"
+    for evidence in (
+        _counter_evidence(expected["id"], states),
+        _target_evidence(expected["id"], states),
+    ):
+        if evidence is not None:
+            if evidence.get("status") == "not_exercised":
+                return {"id": expected["id"], **evidence}
+            mismatches.append(evidence)
+            status = "failed"
     if any(row["stage"] == "before" for row in mismatches):
         status = "not_exercised"
     return {
@@ -255,3 +263,87 @@ def _counter_evidence(case_id, states) -> dict | None:
         "expected": pending[0],
         "observed": {"stack_ability_ids": stack, "spell_target_ids": target},
     }
+
+
+def _target_evidence(case_id, states) -> dict | None:
+    if case_id not in {
+        "targeting_blocked_in_response",
+        "targeting_restored_before_selection",
+        "target_zone_roundtrip",
+    }:
+        return None
+    first, response = states["after_first"], states["after_response"]
+    try:
+        original = _equipment_identity(first)
+        current = _equipment_identity(response)
+        first_target = _selected_identity(first)
+        response_target = _selected_identity(response)
+        valid = first_target == original == response_target
+        if case_id == "target_zone_roundtrip":
+            valid = _roundtrip_evidence(response, original, current) and valid
+        else:
+            valid = current == original and valid
+    except (KeyError, TypeError, ValueError):
+        return {
+            "status": "not_exercised",
+            "reason": "Missing or malformed raw card target identities",
+        }
+    if valid:
+        return None
+    return {
+        "stage": "after_response",
+        "field": "card_target_identity",
+        "expected": "Original selected object; zone roundtrip creates a distinct object",
+        "observed": {
+            "original": original,
+            "current": current,
+            "selected": first_target,
+            "pending": response_target,
+            "transitions": response.get("equipment_transitions"),
+        },
+    }
+
+
+def _equipment_identity(state) -> tuple:
+    return _identity(state["equipment_id"], state["equipment_timestamp"])
+
+
+def _selected_identity(state) -> tuple:
+    ids, timestamps = state["targets"], state["target_timestamps"]
+    if (
+        not isinstance(ids, list)
+        or not isinstance(timestamps, list)
+        or len(ids) != 1
+        or len(timestamps) != 1
+    ):
+        raise ValueError("A single card target is required")
+    return _identity(ids[0], timestamps[0])
+
+
+def _identity(card_id, timestamp) -> tuple:
+    if any(
+        not isinstance(value, int) or isinstance(value, bool) or value < 0
+        for value in (card_id, timestamp)
+    ):
+        raise ValueError("Card identity requires nonnegative integer ID and timestamp")
+    return card_id, timestamp
+
+
+def _roundtrip_evidence(state, original, current) -> bool:
+    transitions = state["equipment_transitions"]
+    if (
+        not isinstance(transitions, list)
+        or len(transitions) != 2
+        or not all(isinstance(item, dict) for item in transitions)
+    ):
+        raise ValueError("Two zone transitions are required")
+    exiled, returned = transitions
+    exile_identity = _identity(exiled["id"], exiled["timestamp"])
+    returned_identity = _identity(returned["id"], returned["timestamp"])
+    return (
+        exiled["zone"] == "Exile"
+        and returned["zone"] == "Graveyard"
+        and original[0] == exile_identity[0] == current[0]
+        and original[1] < exile_identity[1] < current[1]
+        and returned_identity == current
+    )
