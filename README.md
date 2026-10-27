@@ -39,14 +39,17 @@ For direct-state card interaction checks, install the optional pinned tools and 
 .\.venv\Scripts\python.exe commander_simulator.py engine-interactions
 ```
 
-The current suite checks 20 Ratonhnhaké꞉ton/Equipment scenarios against direct
+The current suite checks 23 Ratonhnhaké꞉ton/Equipment scenarios against direct
 Forge state: separate trigger/target timing, return and attachment, missing or
 opponent-owned Equipment, removed targets, removed tokens/sources, incompatible
 attachments, noncombat damage, damage prevention/doubling, and countering the
 initial or reflexive trigger with Disallow. Ground Seal cases check target legality
 before selection and at resolution; a zone-roundtrip case checks that the returned
-card is a new object. Results retain checkpoints, identities and zone timestamps,
-Oracle/engine/source hashes, and raw worker logs. All 20 currently pass on
+card is a new object. Native response spells also check protection from artifacts,
+hexproof, and shroud, including each player's target eligibility and the difference
+between targeting the Equipment and attaching it to the token.
+Results retain checkpoints, identities and zone timestamps,
+Oracle/engine/source hashes, and raw worker logs. All 23 currently pass on
 the pinned engine. This does not certify every card, legal response casting, or
 complete priority handling. See [controlled interaction tests](docs/INTERACTION_TESTS.md).
 
@@ -574,7 +577,7 @@ The original live export test includes a legal multicolor basic-land pod
 that verifies this export, casting, combat-damage trigger resolution, and later
 Assassin-token participation. That game test does not verify Equipment recursion,
 hexproof, or every interaction of this card. The separate controlled suite now
-covers 20 specific interaction cases; identity approval remains distinct from
+covers 23 specific interaction cases; identity approval remains distinct from
 rules verification.
 
 Gap classifier version 2 adds printing-ID evidence for uncertain meld roles.

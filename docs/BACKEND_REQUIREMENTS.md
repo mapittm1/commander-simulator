@@ -251,6 +251,15 @@ timestamp. Missing/malformed identities are inconclusive; contradictory evidence
 fails. Injected cards receive native game timestamps. Worker receipts remain
 bounded to 128 KiB using compact JSON; reports retain indented state evidence.
 
+Suite v4 adds three defense/attachment cases, with 12 pinned card identities.
+Actual response spell/Aura resolution must grant the expected ability and preserve
+the selected token's ID/timestamp and the pending reflexive trigger's ID. The
+reflexive target must remain the Equipment, distinct from the token. Native
+target-eligibility probes compare both players' permissions using a nonartifact
+creature-targeting spell. They are predicates, not paid or legally timed casts.
+These cases distinguish protection's attachment restriction from hexproof/shroud
+targeting restrictions; full casting and priority validation remain separate.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.

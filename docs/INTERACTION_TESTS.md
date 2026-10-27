@@ -43,8 +43,11 @@ to the project's [September 25, 2026 Comprehensive Rules](https://media.wizards.
 | Targeting blocked in response | Ground Seal becomes active after the Equipment was targeted. The reflexive ability does not resolve; the token remains 1/1 and the Equipment stays in the graveyard. |
 | Targeting restored before selection | Ground Seal is removed while the initial trigger is pending. The later reflexive ability can target, return, and attach the Equipment normally. |
 | Target zone roundtrip | The targeted Equipment is exiled and returned to the graveyard. It is a new object, so the pending ability cannot return it to the battlefield. |
+| Protection from artifacts | Tel-Jilad Defiance resolves on the token before the reflexive ability. The Equipment returns to the battlefield but cannot attach; the token remains 1/1. |
+| Hexproof | Ranger's Guile makes the token 2/2 with hexproof. An opposing nonartifact creature-targeting spell cannot target it, while its controller's can. The Equipment still attaches and the token becomes 4/2. |
+| Shroud | Alexi's Cloak resolves attached to the token, granting shroud. Neither player's creature-targeting spell can target it. The reflexive ability targets only the Equipment, which returns and attaches; the token becomes 3/1. |
 
-All 20 cases passed against the unmodified pinned archive. The suite does not
+All 23 cases passed against the unmodified pinned archive. The suite does not
 turn a successful subset into a claim of complete card support. Existing export
 coverage and identity reviews remain distinct from interaction correctness.
 
@@ -54,8 +57,9 @@ document Disallow's ability targeting; the
 document The Wanderer's noncombat prevention. Current local Oracle records for
 Furnace of Rath, Solitary Confinement, Disallow, and The Wanderer are frozen and
 fingerprinted with the other fixture inputs. The suite is versioned as
-`raton_equipment_v3`; previously saved v1/v2 reports remain historical artifacts.
-Ground Seal's Oracle characteristics are pinned as the ninth fixture identity.
+`raton_equipment_v4`; previously saved v1/v2/v3 reports remain historical artifacts.
+Ground Seal, Tel-Jilad Defiance, Ranger's Guile, and Alexi's Cloak are pinned
+with the other inputs, for 12 reviewed fixture identities.
 
 ## Evidence and boundaries
 
@@ -95,6 +99,25 @@ contradictory identities fail. `equipment_targeted` is only a same-card-ID summa
 not a statement of current target legality; matching IDs alone cannot pass these
 new target-object checks.
 
+The defense cases resolve the actual pinned spell/Aura through Forge's stack,
+then inspect the granted keyword, token statistics, remaining trigger, and
+Equipment outcome. Rules 702.16d, 702.11b, and 702.18a distinguish protection's
+Equipment restriction from hexproof/shroud target restrictions. The existing
+Assassin's Creed release notes explain returning Equipment even when attachment
+is impossible. This checks attachment refusal, not subsequent detachment.
+
+Response evidence independently binds its raw target ID/timestamp to the original
+token, requires the same reflexive trigger below it and still pending afterward,
+and checks the resolved spell's zone. The Equipment target remains separately
+bound by ID/timestamp and distinct from that token. Missing data is inconclusive;
+contradictory evidence fails even if keyword summary flags match.
+
+Target-eligibility probes create unplayed Tel-Jilad Defiance spell abilities for
+each player and call the native targeting predicate. Its nonartifact source and
+unrestricted creature target isolate hexproof's opponent-only restriction and
+shroud's restriction on both players. Probes never enter a zone or resolve.
+They do not prove mana payment, legal cast timing, or AI decisions.
+
 The generated directory under `data/runs/` retains `interaction-inputs.json`,
 `observations.json`, `interaction-report.json`, and `interactions.log`. Reports
 include Oracle/catalog evidence, suite/source/bootstrap hashes, engine pins,
@@ -114,7 +137,7 @@ partial states. Ground Seal placement/removal and between-trigger zone changes
 model resolved effects; they do not
 prove that the AI casts a response legally or passes priority correctly. These
 tests also do not establish deck-construction legality, full Commander zone rules,
-all replacement effects, protection/hexproof interactions, every targeting
+all replacement effects, every protection/hexproof interaction, every targeting
 condition, or broader combo correctness.
 Normal user simulations retain their existing construction/review/execution gates.
 
@@ -122,7 +145,9 @@ The Wanderer's starting loyalty is initialized through the engine counter API
 from its pinned Oracle value; this does not test its enter-the-battlefield setup.
 Disallow is put on the stack with a chosen legal ability target and resolved
 by the engine. Its mana payment, legal casting window, and AI decision to cast
-it are not tested. The prevention/doubling combination has an order-independent
+it are not tested. The same casting/priority boundary applies to the three new
+response spells, including the Aura. Their native effects are resolved rather than
+assigning keywords directly. The prevention/doubling combination has an order-independent
 zero-damage result; affected-player choice between outcome-changing replacement
 orders remains unverified.
 
@@ -140,6 +165,6 @@ Remove-Item Env:COMMANDER_INTERACTION_INTEGRATION
 ```
 
 Next interaction work should cover outcome-changing replacement ordering,
-protection/hexproof restrictions, cost/priority handling, and combos.
+protection-driven detachment, cost/priority handling, and combos.
 Every new case needs an independent rules expectation and a negative test before
 its result contributes to any future card-support claim.

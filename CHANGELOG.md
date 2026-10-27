@@ -8,6 +8,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Expand the controlled interaction suite from 20 to 23 cases in
+  `raton_equipment_v4`. Resolve Tel-Jilad Defiance, Ranger's Guile, and Alexi's
+  Cloak against the Assassin token before the Equipment-return ability. Cover
+  protection from artifacts preventing attachment, and hexproof/shroud allowing
+  an attachment that does not target the creature. Pin all 12 fixture identities.
+- Compare native target eligibility for both players using an unplayed nonartifact
+  creature-targeting spell. Freeze response target IDs/zone timestamps and stack
+  identities, independently binding the original token and remaining reflexive
+  trigger while preserving the separate Equipment target. Missing evidence is
+  inconclusive; contradictory bindings fail even with matching keyword flags.
+- Preserve isolated execution, the unchanged 128 KiB input/receipt cap, source
+  hashes (including the new response verifier), and readable state reports.
+  Add focused response-verifier tests and explicit casting/priority boundaries.
+- Validation: 242 offline tests and 177 subtests pass; the native CLI integration
+  test passes all 23 cases. Black, isort, Pylint, and Bandit pass without new
+  suppressions. No production Forge script correction was needed for these cases.
+  Protection-driven detachment and outcome-changing replacement order remain pending.
+
 - Expand the controlled interaction suite from 16 to 20 cases in
   `raton_equipment_v3`. Add Ground Seal before target selection, activation of
   its static restriction after selection, removal before selection, and a

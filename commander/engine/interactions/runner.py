@@ -169,7 +169,7 @@ def _inputs(connection, settings, suite):
         "bootstrap_sha256": file_hash(PROJECT_ROOT / "tools/interaction_worker.py"),
         "source_hashes": {
             name: file_hash(folder / name)
-            for name in ("worker.py", "fixtures.py", "suite.py")
+            for name in ("worker.py", "fixtures.py", "suite.py", "responses.py")
         },
     }
 

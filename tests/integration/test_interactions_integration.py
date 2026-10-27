@@ -22,7 +22,7 @@ pytestmark = pytest.mark.integration
 class ControlledInteractionTests(unittest.TestCase):
     """Check direct states rather than inferring interaction correctness from a game log."""
 
-    def test_equipment_damage_countering_and_target_legality_scenarios(self):
+    def test_equipment_damage_countering_targeting_and_defense_scenarios(self):
         """Require every controlled case and preserve original engine profile bytes."""
         settings = read_settings()
         profile = settings.home / "forge.profile.properties"
@@ -32,7 +32,7 @@ class ControlledInteractionTests(unittest.TestCase):
             main(["engine-interactions"])
         report = json.loads(output.getvalue())
         self.assertEqual(report["status"], "passed", report)
-        self.assertEqual(len(report["checks"]), 20)
+        self.assertEqual(len(report["checks"]), 23)
         self.assertTrue(all(case["status"] == "passed" for case in report["checks"]))
         run = Path(report["directory"])
         self.assertEqual(
@@ -45,7 +45,7 @@ class ControlledInteractionTests(unittest.TestCase):
                 {
                     "controlled_interaction_run": report["run_id"],
                     "directory": report["directory"],
-                    "cases": 20,
+                    "cases": 23,
                     "status": "passed",
                 }
             )

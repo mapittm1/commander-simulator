@@ -7,8 +7,10 @@ from pathlib import Path
 from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
+from .responses import RESPONSE_CARDS, response_evidence
+
 SUITE_PATH = CONFIG_ROOT / "interaction_suite.json"
-SUITE_ID = "raton_equipment_v3"
+SUITE_ID = "raton_equipment_v4"
 CASE_IDS = (
     "baseline",
     "no_equipment",
@@ -30,6 +32,9 @@ CASE_IDS = (
     "targeting_blocked_in_response",
     "targeting_restored_before_selection",
     "target_zone_roundtrip",
+    "assassin_protection_artifacts",
+    "assassin_hexproof",
+    "assassin_shroud",
 )
 CARD_ROLES = {
     "source",
@@ -41,6 +46,9 @@ CARD_ROLES = {
     "doubler",
     "counter",
     "graveyard_guard",
+    "artifact_protection",
+    "hexproof",
+    "shroud",
 }
 STAGES = (
     "before",
@@ -211,6 +219,7 @@ def _evaluate_case(expected, observed) -> dict:
     for evidence in (
         _counter_evidence(expected["id"], states),
         _target_evidence(expected["id"], states),
+        response_evidence(expected["id"], states),
     ):
         if evidence is not None:
             if evidence.get("status") == "not_exercised":
@@ -270,6 +279,7 @@ def _target_evidence(case_id, states) -> dict | None:
         "targeting_blocked_in_response",
         "targeting_restored_before_selection",
         "target_zone_roundtrip",
+        *RESPONSE_CARDS,
     }:
         return None
     first, response = states["after_first"], states["after_response"]

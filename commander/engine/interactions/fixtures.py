@@ -1,5 +1,6 @@
 """Controlled partial states driven through Forge damage, trigger, and resolution APIs."""
 
+from .responses import RESPONSE_CARDS
 from .suite import STAGES
 
 
@@ -21,18 +22,11 @@ def observe_case(java, cards: dict, case: str) -> dict:
     _settle(game)
     game.getTriggerHandler().resetActiveTriggers()
     game.copyLastState()
-    states = {STAGES[0]: _snapshot(java, game, source, equipment, cards)}
-    damage = java.JClass("forge.game.card.CardDamageTable")()
-    damage.put(source, opponent, java.JInt(3))
-    game.getAction().dealDamage(
-        not case.startswith("noncombat_"),
-        damage,
-        java.JClass("forge.game.card.CardDamageTable")(),
-        java.JClass("forge.game.GameEntityCounterTable")(),
-        None,
-    )
+    tracked_cards = (source, equipment)
+    states = {STAGES[0]: _snapshot(java, game, tracked_cards, cards, case)}
+    _deal_damage(java, game, source, opponent, not case.startswith("noncombat_"))
     _settle(game)
-    states[STAGES[1]] = _snapshot(java, game, source, equipment, cards)
+    states[STAGES[1]] = _snapshot(java, game, tracked_cards, cards, case)
     if case == "source_removed":
         game.getAction().moveToGraveyard(source, None)
         _settle(game)
@@ -40,21 +34,40 @@ def observe_case(java, cards: dict, case: str) -> dict:
         _counter_trigger(java, game, cards["counter"])
     if case == "targeting_restored_before_selection":
         _remove_guard(java, game, cards)
-    states[STAGES[2]] = _snapshot(java, game, source, equipment, cards)
+    states[STAGES[2]] = _snapshot(java, game, tracked_cards, cards, case)
     _resolve_one(game)
-    states[STAGES[3]] = _snapshot(java, game, source, equipment, cards)
+    states[STAGES[3]] = _snapshot(java, game, tracked_cards, cards, case)
     transitions = _respond(java, game, player, equipment, case)
+    response = (
+        _response_spell(java, game, cards[RESPONSE_CARDS[case]])
+        if case in RESPONSE_CARDS
+        else None
+    )
     if case == "targeting_blocked_in_response":
         _card(java, cards["graveyard_guard"], opponent, zone.Battlefield)
         _settle(game)
     if case == "reflexive_trigger_countered":
         _counter_trigger(java, game, cards["counter"])
-    states[STAGES[4]] = _snapshot(java, game, source, equipment, cards)
+    states[STAGES[4]] = _snapshot(java, game, tracked_cards, cards, case)
     if case == "target_zone_roundtrip":
         states[STAGES[4]]["equipment_transitions"] = transitions
+    if response is not None:
+        states[STAGES[4]]["response_spell"] = response
     _resolve_one(game)
-    states[STAGES[5]] = _snapshot(java, game, source, equipment, cards)
+    states[STAGES[5]] = _snapshot(java, game, tracked_cards, cards, case)
     return {"id": case, "states": states}
+
+
+def _deal_damage(java, game, source, opponent, combat) -> None:
+    damage = java.JClass("forge.game.card.CardDamageTable")()
+    damage.put(source, opponent, java.JInt(3))
+    game.getAction().dealDamage(
+        combat,
+        damage,
+        java.JClass("forge.game.card.CardDamageTable")(),
+        java.JClass("forge.game.GameEntityCounterTable")(),
+        None,
+    )
 
 
 def _new_game(java):
@@ -216,7 +229,8 @@ def _card(java, record, owner, zone):
         raise ValueError("Pinned engine card is absent: " + record["engine_name"])
     card = java.JClass("forge.game.card.Card").fromPaperCard(paper, owner)
     card.setGameTimestamp(owner.getGame().getNextTimestamp())
-    owner.getZone(zone).add(card)
+    if zone is not None:
+        owner.getZone(zone).add(card)
     return card
 
 
@@ -269,7 +283,61 @@ def _zone_identity(card) -> dict:
     }
 
 
-def _snapshot(java, game, source, equipment, cards) -> dict:
+def _response_spell(java, game, record) -> dict:
+    player = game.getPlayers().get(java.JInt(0))
+    tokens = _tokens(java, player)
+    if len(tokens) != 1 or game.getStack().size() != 1:
+        raise ValueError(
+            "Response requires one token and one pending reflexive trigger"
+        )
+    spell = _card(java, record, player, java.JClass("forge.game.zone.ZoneType").Hand)
+    ability = spell.getFirstSpellAbility()
+    ability.setActivatingPlayer(player)
+    if not ability.canTarget(tokens[0]):
+        raise ValueError("Response spell cannot legally target the fixture token")
+    ability.getTargets().add(tokens[0])
+    game.getAction().moveToStack(spell, ability)
+    game.getStack().add(ability)
+    _settle(game)
+    evidence = _stack_state(game)
+    _resolve_one(game)
+    evidence["zone"] = str(game.getCardState(spell).getZone().getZoneType())
+    return evidence
+
+
+def _token_defenses(java, game, token, cards, case) -> dict:
+    if case not in RESPONSE_CARDS:
+        return {}
+    keyword = java.JClass("forge.game.keyword.Keyword")
+    state = {
+        "assassin_protection_artifacts": (
+            bool(token.hasKeyword("Protection:Artifact")) if token is not None else None
+        ),
+        "assassin_hexproof": (
+            bool(token.hasKeyword(keyword.HEXPROOF)) if token is not None else None
+        ),
+        "assassin_shroud": (
+            bool(token.hasKeyword(keyword.SHROUD)) if token is not None else None
+        ),
+        "actor_can_target_assassin": None,
+        "opponent_can_target_assassin": None,
+    }
+    if token is not None:
+        for index, field in (
+            (0, "actor_can_target_assassin"),
+            (1, "opponent_can_target_assassin"),
+        ):
+            owner = game.getPlayers().get(java.JInt(index))
+            probe = _card(
+                java, cards["artifact_protection"], owner, None
+            ).getFirstSpellAbility()
+            probe.setActivatingPlayer(owner)
+            state[field] = bool(probe.canTarget(token))
+    return state
+
+
+def _snapshot(java, game, tracked_cards, cards, case) -> dict:
+    source, equipment = tracked_cards
     player = game.getPlayers().get(java.JInt(0))
     opponent = game.getPlayers().get(java.JInt(1))
     tokens = _tokens(java, player)
@@ -283,6 +351,7 @@ def _snapshot(java, game, source, equipment, cards) -> dict:
         and stack_state["targets"] == [int(current.getId())],
         "tokens": len(tokens),
         "token_ids": [int(card.getId()) for card in tokens],
+        "token_timestamps": [int(card.getGameTimestamp()) for card in tokens],
         "token_name": str(token.getName()) if token is not None else None,
         "token_power": int(token.getNetPower()) if token is not None else None,
         "token_toughness": int(token.getNetToughness()) if token is not None else None,
@@ -312,4 +381,5 @@ def _snapshot(java, game, source, equipment, cards) -> dict:
         ),
         "source_zone": str(game.getCardState(source).getZone().getZoneType()),
         **_effect_state(java, game, cards),
+        **_token_defenses(java, game, token, cards, case),
     }

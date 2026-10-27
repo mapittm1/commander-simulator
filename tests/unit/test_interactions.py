@@ -48,6 +48,21 @@ def synthetic_receipt(suite: dict) -> dict:
             state["equipment_timestamp"] = 10
             state["targets"] = [1000 + index] if state.get("equipment_targeted") else []
             state["target_timestamps"] = [10] if state.get("equipment_targeted") else []
+            state["token_ids"] = [2000 + index] if state["tokens"] else []
+            state["token_timestamps"] = [20] if state["tokens"] else []
+        if case["id"] in {
+            "assassin_protection_artifacts",
+            "assassin_hexproof",
+            "assassin_shroud",
+        }:
+            states["after_response"]["response_spell"] = {
+                "targets": [2000 + index],
+                "target_timestamps": [20],
+                "stack_ability_ids": [counter, reflexive],
+                "zone": (
+                    "Battlefield" if case["id"] == "assassin_shroud" else "Graveyard"
+                ),
+            }
         if case["id"] == "target_zone_roundtrip":
             for stage in ("after_response", "after_second"):
                 states[stage]["equipment_timestamp"] = 12
@@ -294,7 +309,11 @@ class CardTargetVerifierTests(unittest.TestCase):
         for field, value in mutations:
             with self.subTest(field=field, value=value):
                 receipt = copy.deepcopy(self.receipt)
-                state = receipt["cases"][-1]["states"]["after_response"]
+                state = next(
+                    case
+                    for case in receipt["cases"]
+                    if case["id"] == "target_zone_roundtrip"
+                )["states"]["after_response"]
                 self.assertTrue(state["equipment_targeted"])
                 state[field] = value
                 self.assertEqual(
@@ -323,13 +342,19 @@ class CardTargetVerifierTests(unittest.TestCase):
         ):
             with self.subTest(field=field, value=value):
                 receipt = copy.deepcopy(self.receipt)
-                receipt["cases"][-1]["states"]["after_response"][field] = value
+                next(
+                    case
+                    for case in receipt["cases"]
+                    if case["id"] == "target_zone_roundtrip"
+                )["states"]["after_response"][field] = value
                 self.assertEqual(
                     evaluate_receipt(self.suite, receipt, FINISHED)["status"],
                     "inconclusive",
                 )
         receipt = copy.deepcopy(self.receipt)
-        del receipt["cases"][-1]["states"]["after_response"]["equipment_transitions"]
+        del next(
+            case for case in receipt["cases"] if case["id"] == "target_zone_roundtrip"
+        )["states"]["after_response"]["equipment_transitions"]
         self.assertEqual(
             evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
         )
@@ -344,6 +369,113 @@ class CardTargetVerifierTests(unittest.TestCase):
         self.assertEqual(
             evaluate_receipt(self.suite, self.receipt, FINISHED)["status"],
             "inconclusive",
+        )
+
+
+class ProtectionVerifierTests(unittest.TestCase):
+    """Reject false defense, targeting, attachment, and native response claims."""
+
+    def setUp(self):
+        self.suite = load_suite()
+        self.receipt = synthetic_receipt(self.suite)
+
+    def test_defense_and_attachment_counterexamples_fail(self):
+        mutations = (
+            (
+                "assassin_protection_artifacts",
+                "after_response",
+                "assassin_protection_artifacts",
+                False,
+            ),
+            ("assassin_protection_artifacts", "after_second", "attached", True),
+            (
+                "assassin_protection_artifacts",
+                "after_second",
+                "equipment_zone",
+                "Graveyard",
+            ),
+            ("assassin_protection_artifacts", "after_second", "token_power", 3),
+            ("assassin_hexproof", "after_response", "assassin_hexproof", False),
+            (
+                "assassin_hexproof",
+                "after_response",
+                "opponent_can_target_assassin",
+                True,
+            ),
+            ("assassin_hexproof", "after_response", "actor_can_target_assassin", False),
+            ("assassin_hexproof", "after_second", "attached", False),
+            ("assassin_hexproof", "after_second", "token_power", 3),
+            ("assassin_hexproof", "after_second", "token_toughness", 1),
+            ("assassin_shroud", "after_response", "assassin_shroud", False),
+            ("assassin_shroud", "after_response", "actor_can_target_assassin", True),
+            ("assassin_shroud", "after_response", "opponent_can_target_assassin", True),
+            ("assassin_shroud", "after_second", "attached", False),
+        )
+        for identity, stage, field, value in mutations:
+            with self.subTest(case=identity, stage=stage, field=field):
+                receipt = copy.deepcopy(self.receipt)
+                case = next(case for case in receipt["cases"] if case["id"] == identity)
+                case["states"][stage][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+
+    def test_response_must_target_original_token_above_the_pending_trigger(self):
+        for field, value in (
+            ("targets", [999]),
+            ("target_timestamps", [99]),
+            ("stack_ability_ids", [300, 999]),
+            ("stack_ability_ids", [300, 300]),
+            ("zone", "Exile"),
+        ):
+            with self.subTest(field=field, value=value):
+                receipt = copy.deepcopy(self.receipt)
+                state = next(
+                    case
+                    for case in receipt["cases"]
+                    if case["id"] == "assassin_hexproof"
+                )["states"]["after_response"]
+                state["response_spell"][field] = value
+                self.assertTrue(state["assassin_hexproof"])
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+                )
+        receipt = copy.deepcopy(self.receipt)
+        state = next(
+            case for case in receipt["cases"] if case["id"] == "assassin_shroud"
+        )["states"]["after_response"]
+        state["targets"] = state["token_ids"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "failed"
+        )
+
+    def test_missing_or_malformed_response_evidence_is_inconclusive(self):
+        for field, value in (
+            ("targets", None),
+            ("targets", [True]),
+            ("target_timestamps", []),
+            ("stack_ability_ids", [1]),
+            ("zone", None),
+        ):
+            with self.subTest(field=field, value=value):
+                receipt = copy.deepcopy(self.receipt)
+                state = next(
+                    case
+                    for case in receipt["cases"]
+                    if case["id"] == "assassin_hexproof"
+                )["states"]["after_response"]
+                state["response_spell"][field] = value
+                self.assertEqual(
+                    evaluate_receipt(self.suite, receipt, FINISHED)["status"],
+                    "inconclusive",
+                )
+        receipt = copy.deepcopy(self.receipt)
+        case = next(
+            case for case in receipt["cases"] if case["id"] == "assassin_shroud"
+        )
+        del case["states"]["after_response"]["response_spell"]
+        self.assertEqual(
+            evaluate_receipt(self.suite, receipt, FINISHED)["status"], "inconclusive"
         )
 
 
@@ -552,6 +684,7 @@ class RunnerBoundaryTests(unittest.TestCase):
         self.assertNotIn("JAVA_TOOL_OPTIONS", limits.environment)
         self.assertTrue((self.run / "interaction-report.json").is_file())
         self.assertTrue(report["observations_sha256"])
+        self.assertIn("responses.py", report["source_hashes"])
         self.assertFalse((self.root / ".commander-simulator.lock").exists())
 
     def test_changed_oracle_cannot_launch_worker(self):

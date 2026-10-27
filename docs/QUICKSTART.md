@@ -114,7 +114,8 @@ batch history inspectable through the database.
 
 ## What the results currently mean
 
-To inspect the 20 controlled Equipment, damage, countered-trigger, and target-legality cases,
+To inspect the 23 controlled Equipment, damage, countered-trigger, target-legality,
+and protection/hexproof/shroud cases,
 install `requirements-interactions.txt` and run `engine-interactions`. This is
 a separate direct-state diagnostic, not a pod simulation or a full card-support
 certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).
