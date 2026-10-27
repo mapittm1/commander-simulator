@@ -224,6 +224,17 @@ does not verify Oracle semantics, interactions, or AI behavior.
 
 ## Engine gap and regression contracts
 
+The `engine-interactions` service runs only fixed repository-owned partial-state
+fixtures in a bounded isolated Python/JVM child. Fresh catalog identities and
+Oracle-characteristic hashes, pinned engine/script evidence, and reviewed case
+expectations are required. Six direct-state checkpoints per case capture actual
+targeting, stack, zone, token, ownership, and attachment outcomes. Missing setup
+or evidence is inconclusive, never a pass. Any witnessed expected-state mismatch
+fails; changed suite/source/engine provenance invalidates the result.
+Its diagnostic fixtures bypass ordinary deck startup only and never enter user
+deck libraries, bracket attestations, benchmark rankings, or batch win rates.
+The regular simulation legality/review gates remain mandatory.
+
 Auditor version 2 freezes gap classifications at audit creation. Backlog reads
 verify stored evidence and page only actionable records, with counts for excluded
 supplementary objects. Version-1 audits require a fresh snapshot for classification.

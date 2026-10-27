@@ -1,0 +1,726 @@
+{
+  "schema_version": 1,
+  "suite_id": "raton_equipment_v1",
+  "reviewed_on": "2026-10-26",
+  "rules_sources": [
+    "https://magic.wizards.com/en/news/feature/assassins-creed-release-notes",
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
+  ],
+  "upstream_reference": "https://github.com/Card-Forge/forge/blob/forge-2.0.15/forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/GameWrapper.java",
+  "cards": [
+    {
+      "role": "source",
+      "name": "Ratonhnhak\u00e9\ua789ton",
+      "oracle_id": "a37f8381-83a4-4b6b-8176-c90f6a61da74",
+      "oracle_sha256": "ea2d3cdf76116bd84c5152da683017a152bb472fd220c7556a63e8731b759788"
+    },
+    {
+      "role": "equipment",
+      "name": "Bonesplitter",
+      "oracle_id": "452e3f5f-ce17-4682-966b-5cc100210aee",
+      "oracle_sha256": "e0db64e8e3e44f596879748410fd412f6ec41a44fc5d91d7bdd339e230ed9218"
+    },
+    {
+      "role": "modifier",
+      "name": "March of the Machines",
+      "oracle_id": "51092634-308e-4779-aa51-182715dbc734",
+      "oracle_sha256": "e99f91266e0d694c10c6371c42f86f520cff11006757611e5e028cddff11dbf9"
+    },
+    {
+      "role": "basic",
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "oracle_sha256": "decd3c42d75343111809e34f2b054ab590eef03ee0b3c3ffb7777c758d756bb6"
+    }
+  ],
+  "cases": [
+    {
+      "id": "baseline",
+      "intent": "Own Equipment returns and attaches after a separate reflexive trigger.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Battlefield",
+          "attached": true,
+          "source_zone": "Battlefield",
+          "token_power": 3,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        }
+      }
+    },
+    {
+      "id": "no_equipment",
+      "intent": "Token creation does not require an Equipment target.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": null
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": null
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": null
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": null
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": null
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": null,
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": null,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": null
+        }
+      }
+    },
+    {
+      "id": "opponent_equipment",
+      "intent": "An opponent graveyard is not a legal Equipment source.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": false
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": false
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": false
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": false
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": false
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": false
+        }
+      }
+    },
+    {
+      "id": "target_exiled",
+      "intent": "Exiling the targeted Equipment makes the reflexive ability unable to return it.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Exile",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Exile",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        }
+      }
+    },
+    {
+      "id": "token_removed",
+      "intent": "Removing the token does not prevent Equipment returning, but leaves it unattached.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": null,
+          "token_toughness": null,
+          "token_black": null,
+          "token_menace": null,
+          "equipment_targeted": true,
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Battlefield",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": null,
+          "token_toughness": null,
+          "token_black": null,
+          "token_menace": null,
+          "equipment_targeted": false,
+          "equipment_is_creature": false,
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        }
+      }
+    },
+    {
+      "id": "source_removed",
+      "intent": "Removing the source does not stop abilities already on the stack.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Graveyard",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Graveyard",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Graveyard",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Battlefield",
+          "attached": true,
+          "source_zone": "Graveyard",
+          "token_power": 3,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": false,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        }
+      }
+    },
+    {
+      "id": "equipment_creature",
+      "intent": "Creature Equipment returns but cannot attach to the token.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 1,
+          "target_count": 1,
+          "tokens": 1,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 1,
+          "equipment_zone": "Battlefield",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_power": 1,
+          "token_toughness": 1,
+          "token_black": true,
+          "token_menace": true,
+          "equipment_targeted": false,
+          "equipment_is_creature": true,
+          "token_name": "Assassin Token",
+          "equipment_owned_by_actor": true
+        }
+      }
+    },
+    {
+      "id": "noncombat_damage",
+      "intent": "Noncombat damage does not trigger token creation.",
+      "expected": {
+        "before": {
+          "life": 40,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_damage": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "before_first": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_first": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_response": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        },
+        "after_second": {
+          "life": 37,
+          "stack": 0,
+          "target_count": 0,
+          "tokens": 0,
+          "equipment_zone": "Graveyard",
+          "attached": false,
+          "source_zone": "Battlefield",
+          "token_name": null,
+          "equipment_owned_by_actor": true
+        }
+      }
+    }
+  ]
+}

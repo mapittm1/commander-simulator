@@ -114,6 +114,11 @@ batch history inspectable through the database.
 
 ## What the results currently mean
 
+To inspect the eight controlled Ratonhnhaké꞉ton/Equipment interaction cases,
+install `requirements-interactions.txt` and run `engine-interactions`. This is
+a separate direct-state diagnostic, not a pod simulation or a full card-support
+certificate. See [INTERACTION_TESTS.md](INTERACTION_TESTS.md).
+
 Wins and observations measure this fixed pod under Forge's AI pilots. Reported
 land plays, turns without logged land plays, casts, and attack assignments are
 observations. They do not yet diagnose hidden mana problems or explain why human

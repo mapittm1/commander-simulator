@@ -5,6 +5,8 @@ from datetime import datetime, timedelta, timezone
 from decimal import Decimal, InvalidOperation
 from pathlib import Path
 
+from commander.json_safety import require_json_depth
+
 SALT_SOURCE = "https://edhrec.com/top/salt"
 MAX_SALT_BYTES = 1024 * 1024
 MAX_SALT_CARDS = 100
@@ -60,24 +62,8 @@ def _json_integer(value: str) -> int:
 
 
 def _check_nesting(text: str) -> None:
-    """Bound JSON structure before decoding, ignoring brackets inside escaped strings."""
-    depth, quoted, escaped = 0, False, False
-    for character in text:
-        if quoted:
-            if escaped:
-                escaped = False
-            elif character == "\\":
-                escaped = True
-            elif character == '"':
-                quoted = False
-        elif character == '"':
-            quoted = True
-        elif character in "[{":
-            depth += 1
-            if depth > MAX_SALT_DEPTH:
-                raise ValueError("Salt JSON nesting exceeds supported limits")
-        elif character in "]}":
-            depth -= 1
+    """Keep the salt-domain nesting limit while sharing the structural scanner."""
+    require_json_depth(text, MAX_SALT_DEPTH)
 
 
 def source_time(value: str) -> datetime:

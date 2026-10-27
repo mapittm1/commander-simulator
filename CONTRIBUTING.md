@@ -106,6 +106,16 @@ static type checking remains a future addition.
 
 ## Running unit tests with pytest
 
+Controlled interaction tests are optional native-engine checks. Install the
+pinned `requirements-interactions.txt` separately, then enable
+`COMMANDER_INTERACTION_INTEGRATION=1` for
+`tests/integration/test_interactions_integration.py`. Ordinary offline tests and
+the normal CLI require no native bridge. See docs/INTERACTION_TESTS.md for limits.
+The isolated worker bootstrap has one line-specific Pylint import-position
+exception: it must add this fixed checkout path before importing its entry point
+because Python `-I` excludes working-directory imports. It accepts no user-selected
+import path or executable case definition.
+
 ```powershell
 .\.venv\Scripts\python.exe -m pytest
 .\.venv\Scripts\python.exe -m pytest -v

@@ -14,6 +14,7 @@ from commander.engine.engine_conformance import run_rules_conformance
 from commander.engine.engine_gaps import audit_gap_backlog
 from commander.engine.forge_config import DEFAULT_CONFIG, read_settings
 from commander.engine.forge_engine import engine_health, run_game
+from commander.engine.interactions.runner import run_interaction_suite
 
 ENGINE_COMMANDS = {
     "engine-check",
@@ -23,6 +24,7 @@ ENGINE_COMMANDS = {
     "engine-audit-cards",
     "engine-audit-gaps",
     "engine-conformance",
+    "engine-interactions",
 }
 
 
@@ -83,6 +85,10 @@ def add_engine_commands(commands) -> None:
         help="Run the built-in legal regression pod; limited witness checks",
     )
     conformance.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
+    interactions = commands.add_parser(
+        "engine-interactions", help="Run controlled built-in card interaction fixtures"
+    )
+    interactions.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
 
 
 def run_engine_command(connection, args) -> dict:
@@ -108,4 +114,6 @@ def _run_installed_engine(connection, args) -> dict:
         return create_engine_audit(connection, settings)
     if args.command == "engine-conformance":
         return run_rules_conformance(connection, settings)
+    if args.command == "engine-interactions":
+        return run_interaction_suite(connection, settings)
     return run_game(connection, settings, args.seat, args.seed, args.game_clock)

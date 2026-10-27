@@ -8,6 +8,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- `engine-interactions`: controlled partial-state tests using the actual pinned
+  Forge damage, trigger, stack, zone-change, and state-based-action APIs. Eight
+  initial Ratonhnhaké꞉ton/Equipment cases cover return/attach, separate target
+  timing, unavailable/opponent-owned Equipment, exiled targets, removed tokens
+  and sources, creature Equipment, and noncombat damage. All eight pass; no
+  production engine-script correction was needed for these tested cases.
+- Independent versioned expectations, current Oracle-characteristic fingerprints,
+  direct state checkpoints, input/receipt/log/source hashes, and explicit failed
+  or inconclusive outcomes. Missing evidence, setup/process failure, and changed
+  provenance cannot pass. JSON is bounded to 128 KiB and 32 nesting levels with
+  duplicate-field rejection.
+- A pinned optional JPype bridge in `requirements-interactions.txt`, invoked in
+  an isolated Python child with the existing engine profile lock/restoration,
+  stripped environment, wall/log limits, and a JVM heap cap. Ordinary simulation
+  commands remain standard-library-only. Partial-state fixtures never become
+  production decks, bracket attestations, benchmark lists, or win-rate samples.
+- Validation: 231 offline tests and 107 subtests pass, including mutation and
+  provenance/failure controls; the new native integration test passes all eight
+  direct-state cases. Black, isort, Pylint, and Bandit pass. Salt and interaction
+  JSON readers share a structural scanner while retaining their separate limits.
+
 - Runnable CLI workflows: `doctor` checks catalog/runtime readiness, `demo` runs
   an isolated diagnostic pod, `play` imports four explicit reviewed decklists,
   and `simulate` completes or resumes a saved pod with progress and JSON reports.

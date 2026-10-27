@@ -84,6 +84,12 @@ References:
 
 ## Implementation milestones
 
+A controlled direct-state Ratonhnhaké꞉ton/Equipment suite now verifies eight
+specific trigger, target, return/attachment, removal, and noncombat cases. See
+[INTERACTION_TESTS.md](INTERACTION_TESTS.md). These fixtures model resolved
+between-trigger effects; complete legal casting and priority handling remain
+separate work. The suite does not certify the rest of the card catalog.
+
 The CLI is now directly runnable through `doctor`, an isolated real-engine
 `demo`, four-file `play`, and reviewed-pod `simulate` with progress, resume, and
 saved reports. See [QUICKSTART.md](QUICKSTART.md). Opponents are explicitly
