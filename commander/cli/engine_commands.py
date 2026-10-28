@@ -3,6 +3,7 @@
 import argparse
 from pathlib import Path
 
+from commander.engine.catalog_probe import run_catalog_probe
 from commander.engine.engine_audit import create_engine_audit
 from commander.engine.engine_audit_store import (
     SCOPES,
@@ -18,6 +19,7 @@ from commander.engine.interactions.runner import run_interaction_suite
 
 ENGINE_COMMANDS = {
     "engine-check",
+    "engine-card-probe",
     "simulate-game",
     "engine-audit",
     "engine-audit-show",
@@ -49,6 +51,11 @@ def add_engine_commands(commands) -> None:
         "engine-check", help="Check the installed pinned engine"
     )
     health.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
+    probe = commands.add_parser(
+        "engine-card-probe",
+        help="Construct every catalog-matched Commander-format card in the native engine",
+    )
+    probe.add_argument("--engine-config", type=Path, default=DEFAULT_CONFIG)
     game = commands.add_parser(
         "simulate-game", help="Run one reviewed four-player game"
     )
@@ -108,6 +115,8 @@ def run_engine_command(connection, args) -> dict:
 
 def _run_installed_engine(connection, args) -> dict:
     settings = read_settings(args.engine_config)
+    if args.command == "engine-card-probe":
+        return run_catalog_probe(connection, settings)
     if args.command == "engine-check":
         return engine_health(settings)
     if args.command == "engine-audit":

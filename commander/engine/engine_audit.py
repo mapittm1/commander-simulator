@@ -16,7 +16,7 @@ from commander.engine.engine_gaps import classify_gap
 from commander.engine.forge_decks import card_index, script_match
 from commander.rules.legality import require_current_catalog
 
-AUDITOR_VERSION = 2
+AUDITOR_VERSION = 3
 
 
 def create_engine_audit(connection, settings) -> dict:

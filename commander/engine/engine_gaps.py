@@ -11,8 +11,9 @@ from commander.engine.engine_audit_store import (
 )
 from commander.engine.forge_decks import safe_engine_name
 from commander.rules.card_structure import meld_role
+from commander.rules.meld_reviews import meld_result_review
 
-CLASSIFIER_VERSION = 2
+CLASSIFIER_VERSION = 3
 PUNCTUATION_REVIEW = str.maketrans({"\ua789": ":", "\u2019": "'"})
 
 
@@ -33,11 +34,23 @@ def _structural_gap(card, role) -> dict | None:
             "Track supplementary sticker support separately from starting-card scripts.",
         )
     if role == "meld_result":
-        return _category(
+        result = _category(
             "non_starting_meld_result",
             0,
             "Verify through the meld-front interaction; do not export this as a starting card.",
         )
+        review = meld_result_review(card)
+        if review is not None:
+            result["role_review"] = {
+                key: review[key]
+                for key in (
+                    "review_id",
+                    "card_sha256",
+                    "related_sha256",
+                    "sources",
+                )
+            }
+        return result
     if role == "unknown":
         return {
             **_category(

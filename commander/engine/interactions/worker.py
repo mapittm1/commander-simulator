@@ -11,7 +11,11 @@ from commander.engine.interactions.casting import CAST_CASES
 from commander.engine.interactions.casting_fixtures import observe_casting_case
 from commander.engine.interactions.chains import CHAIN_CASES
 from commander.engine.interactions.fixtures import observe_case
-from commander.engine.interactions.native_bridge import class_hash, priority_class_hash
+from commander.engine.interactions.native_bridge import (
+    class_hash,
+    fixture_errors,
+    priority_class_hash,
+)
 from commander.engine.interactions.ordering import ORDER_CASES
 from commander.engine.interactions.ordering_fixtures import observe_ordering_case
 from commander.engine.interactions.priority import PRIORITY_CASES
@@ -39,7 +43,11 @@ def main() -> None:
         != definition_fingerprint(suite["definition_hashes"])
     ):
         raise ValueError("Interaction definitions changed before worker startup")
-    settings = EngineSettings(Path(inputs["home"]), Path(inputs["java"]))
+    settings = EngineSettings(
+        Path(inputs["home"]),
+        Path(inputs["java"]),
+        Path(inputs["engine_lock"]) if inputs.get("engine_lock") else None,
+    )
     if (
         class_hash(path.parent) != inputs["native_bridge"]["class_sha256"]
         or priority_class_hash(path.parent)
@@ -85,13 +93,7 @@ def _observe_partition(java, cards, case_ids) -> list:
         try:
             observer = _observer(case)
             cases.append(observer(java, cards, case))
-        except (
-            java.JException,
-            RuntimeError,
-            ValueError,
-            TypeError,
-            AttributeError,
-        ) as error:
+        except fixture_errors(java) as error:
             traceback.print_exc()
             cases.append({"id": case, "error": str(error)[:1000]})
     return cases

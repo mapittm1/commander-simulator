@@ -8,6 +8,32 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Add a separately pinned sticker-capable Forge build from immutable official
+  source, a reviewed upstream Wicker Picker patch and local multiple-kicker fixes.
+  Retain patches, GPL license, regression source, exact source/Maven checksums and
+  a bounded build tool. A fresh build passes all 33 native sticker tests without
+  skips, including 10 local affordability, timing and printed-kicker regressions.
+- Add `engine-card-probe`: freeze every Commander-format audit identity and build
+  each matched native card through Forge's factory. Bound streaming evidence,
+  reject duplicate/reordered identities and invalid receipts, and bind engine,
+  source, catalog, count and observation hashes. The fresh build constructs 32,109
+  identities with zero construction failures; seven non-starting meld-result
+  objects are explicit exclusions. This is constructor coverage, not certification
+  of all rules interactions or AI decisions.
+- Support explicit, separately pinned candidate engine locks. Reject duplicate
+  configuration fields, unsafe JAR names and loose-script overrides. Scope exact
+  alias approvals independently to each card archive. Add a deny-only Ragnarok
+  meld-result review pinned to complete related printing metadata. Advance the
+  legality validator to version 4 and audit/gap classification to version 3;
+  preserve historical catalog and audit evidence.
+- Validation: Black, isort, Pylint and Bandit pass; 326 offline tests and 389
+  subtests pass, with five native opt-in tests skipped in the offline gate.
+  All five live integration tests pass, including CLI games, batch resume, rules
+  witnesses and all 41 controlled interactions. Select the reviewed build as the
+  default and preserve the previous 2.0.15 lock for historical verification. See
+  `docs/CARD_COVERAGE.md` for remaining pregame setup and gameplay coverage work.
+
+
 - Expand the controlled suite from 39 to 41 scenarios in `raton_equipment_v10`,
   adding a ninth fixed counterspell-chain family. Preserve all previous 39
   expectations and all 15 reviewed card identities. Exercise a paid third-player

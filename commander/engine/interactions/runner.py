@@ -8,7 +8,11 @@ from sqlite3 import Connection
 
 from commander.catalog.database import get_card_details
 from commander.engine.engine_process import ProcessLimits, run_bounded
-from commander.engine.forge_config import EngineSettings, file_hash
+from commander.engine.forge_config import (
+    EngineSettings,
+    file_hash,
+    supported_java_version,
+)
 from commander.engine.forge_decks import card_index, script_match
 from commander.engine.forge_engine import _engine_profile, _environment, _new_run
 from commander.engine.interactions.suite import (
@@ -175,6 +179,7 @@ def _inputs(connection, settings, suite):
         "suite_hash": definition_fingerprint(suite["definition_hashes"]),
         "engine": engine,
         "home": str(settings.home),
+        "engine_lock": str(settings.lock_path) if settings.lock_path else None,
         "java": str(settings.java),
         "jvm": _jvm_library(settings.java),
         "catalog": catalog,
@@ -253,12 +258,7 @@ def _read_partition(run, suite, inputs, process, name):
             "reason": "Receipt provenance does not match generated inputs",
         }
     version = receipt.get("java_version")
-    if (
-        not isinstance(version, str)
-        or len(version) > 100
-        or not version.split(".")[0].isdigit()
-        or int(version.split(".")[0]) < 17
-    ):
+    if not supported_java_version(version):
         return {
             "status": "inconclusive",
             "checks": [],

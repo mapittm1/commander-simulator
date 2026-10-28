@@ -124,6 +124,7 @@ def run_library_command(connection, args) -> bool:
         "bracket-check": "reviewed",
         "deck-check": "legal",
         "engine-check": "ready",
+        "engine-card-probe": "passed",
         "engine-conformance": "passed",
         "engine-interactions": "passed",
         "simulate-game": "completed",

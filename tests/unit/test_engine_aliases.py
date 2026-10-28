@@ -148,3 +148,21 @@ class ReviewedAliasTests(unittest.TestCase):
             self.path.write_bytes(raw)
             with self.assertRaises(ValueError):
                 apply_alias_reviews(self.archive, {})
+
+    def test_same_identity_reviews_can_target_distinct_archives_without_cross_applying(
+        self,
+    ):
+        inactive = {
+            **self.review,
+            "review_id": "another-archive",
+            "archive_sha256": "0" * 64,
+            "script_sha256": "0" * 64,
+        }
+        self.manifest["reviews"].append(inactive)
+        index = self._index()
+        self.assertEqual(index.reviews[self.review["name"]], self.review)
+
+    def test_duplicate_identity_within_one_archive_is_still_rejected(self):
+        self.manifest["reviews"].append({**self.review, "review_id": "duplicate"})
+        with self.assertRaisesRegex(ValueError, "Duplicate"):
+            self._index()

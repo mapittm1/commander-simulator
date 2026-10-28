@@ -40,10 +40,11 @@ def apply_alias_reviews(archive_path: Path, entries: dict) -> ReviewedCardIndex:
         for review in reviews:
             _validate_review(review)
             name, identity = review["name"], review["oracle_id"]
-            if name in seen_names or identity in seen_ids:
+            key = review["archive_sha256"]
+            if (key, name) in seen_names or (key, identity) in seen_ids:
                 raise ValueError("Duplicate engine alias review identity or name")
-            seen_names.add(name)
-            seen_ids.add(identity)
+            seen_names.add((key, name))
+            seen_ids.add((key, identity))
             if review["archive_sha256"] != archive_hash:
                 continue
             _apply_review(archive, index, review)

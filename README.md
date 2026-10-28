@@ -10,6 +10,20 @@ Controlled interaction tests require the optional native bridge and a trusted lo
 JDK 17+ compiler (`javac` on PATH, or an executable selected by `COMMANDER_JAVAC`).
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
+## Card coverage
+
+The default reviewed sticker-capable Forge build constructs all **32,109 matched native
+card identities** in the frozen local Commander-format catalog without errors.
+Seven additional records are non-starting meld results. The build passes 33
+native sticker tests, including 10 local Wicker Picker regressions. A new
+`engine-card-probe` command preserves bounded, identity-bound construction evidence.
+See [card support and evidence](docs/CARD_COVERAGE.md) and the
+[reviewed engine build](engine/README.md) for the exact source, patches and limits.
+
+This construction check does not certify all interactions or AI decisions.
+Supplementary deck selection, companions and commander color choices still need
+backend support. The 41 controlled interaction scenarios remain separate checks.
+
 ## Run it now
 
 From the repository folder in PowerShell:
@@ -605,12 +619,12 @@ hexproof, or every interaction of this card. The separate controlled suite now
 covers 41 specific interaction cases; identity approval remains distinct from
 rules verification.
 
-Gap classifier version 2 adds printing-ID evidence for uncertain meld roles.
-Ragnarok's current representative printing is absent from its own related-card
-list, which identifies a different printing with the same name as the meld
-result. The report exposes both IDs and keeps the role unapproved. Neither a
-matching name nor the diagnostic itself can bypass construction review. Old
-audits retain their original classification and version.
+Gap classifier version 3 retains printing-ID evidence for uncertain meld roles.
+An exact, deny-only review now excludes Ragnarok's result printing using both
+authoritative printing records and their shared Oracle identity. Names alone
+cannot approve an unknown meld front. Audits freeze this review and its source
+references; changed metadata requires a new review. Historical audits retain
+their original classification and version.
 
 ## EDHREC salt reference
 

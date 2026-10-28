@@ -1,0 +1,47 @@
+--- a/forge-game/src/main/java/forge/game/GameActionUtil.java
++++ b/forge-game/src/main/java/forge/game/GameActionUtil.java
+@@ -687,8 +687,8 @@
+                 String[] k = o.split(":");
+                 final Cost cost = new Cost(k[1], false);
+                 String str = "Pay for Sticker Kicker? " + cost.toSimpleString();
+-                cost.add(new Cost("AddCounterYou<1/TICKET> PutSticker", false));;
+-                if (pc.addKeywordCost(sa, cost, ki, str)) {
++                cost.add(new Cost("AddCounterYou<1/TICKET> PutSticker", false));
++                if (pc.addKeywordCost(result == null ? sa : result, cost, ki, str)) {
+                     if (result == null) {
+                         result = sa.copy();
+                     }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -7526,7 +7526,7 @@
+     public boolean isOptionalCostPaid(OptionalCost cost) { return getCastSA() == null ? false : getCastSA().isOptionalCostPaid(cost); }
+ 
+     public final int getKickerMagnitude(CardTraitBase ctb) {
+-        if (this.equals(ctb.getHostCard()) && ctb.isIntrinsic()) {
++        if (ctb != null && this.equals(ctb.getHostCard()) && ctb.isIntrinsic()) {
+             for (KeywordInterface ki : this.currentState.getIntrinsicKeywords()) {
+                 switch (ki.getKeyword()) {
+                     case MULTIKICKER:
+@@ -7545,14 +7545,14 @@
+                 }
+             }
+         } else {
+-            if (this.getCastSA() != null && getCastSA().hasOptionalKeywordAmount(Keyword.MULTIKICKER)) {
+-                return getCastSA().getOptionalKeywordAmount(Keyword.MULTIKICKER);
+-            }
+-            if (this.getCastSA() != null && getCastSA().hasOptionalKeywordAmount(Keyword.STICKER_KICKER)) {
+-                return 1;
+-            }
+-            boolean hasK1 = isOptionalCostPaid(OptionalCost.Kicker1);
+-            return hasK1 == isOptionalCostPaid(OptionalCost.Kicker2) ? (hasK1 ? 2 : 0) : 1;
++            int total = 0;
++            if (getCastSA() != null) {
++                total += getCastSA().getOptionalKeywordAmount(Keyword.MULTIKICKER);
++                total += getCastSA().getOptionalKeywordAmount(Keyword.STICKER_KICKER);
++            }
++            total += isOptionalCostPaid(OptionalCost.Kicker1) ? 1 : 0;
++            total += isOptionalCostPaid(OptionalCost.Kicker2) ? 1 : 0;
++            return total;
+         }
+         return 0;
+     }

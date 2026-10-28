@@ -97,3 +97,8 @@ def bridge_unchanged(run: Path, evidence: dict) -> bool:
         )
     except (KeyError, OSError, ValueError):
         return False
+
+
+def fixture_errors(java) -> tuple:
+    """Known native observation errors become explicit failed/incomplete evidence."""
+    return (java.JException, RuntimeError, ValueError, TypeError, AttributeError)

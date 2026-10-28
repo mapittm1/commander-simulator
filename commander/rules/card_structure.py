@@ -1,7 +1,15 @@
 """Starting-deck distinctions that format legality fields alone do not establish."""
 
+from commander.rules.meld_reviews import reviewed_meld_result
+
 
 def meld_role(card: dict) -> str | None:
+    """Resolve exact self-reference first, then only a reviewed result exclusion."""
+    role = _direct_meld_role(card)
+    return reviewed_meld_result(card) if role == "unknown" else role
+
+
+def _direct_meld_role(card: dict) -> str | None:
     """Resolve a meld card's own role from its exact related-card printing identifier."""
     if card.get("layout") != "meld":
         return None
