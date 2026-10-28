@@ -77,10 +77,40 @@ Wicker Picker tests, with no skips. Those ten tests cover paid/declined kicker,
 ticket and sticker timing before resolution, no selected sheets, affordability,
 multiple grantors and interaction with printed kicker.
 
-Complete support also requires exposing supplementary sticker/Attraction decks,
-companion conditions and commander color choices through validated, immutable
-deck revisions. The current CLI does not yet expose these pregame choices.
+The CLI now supports supplementary sticker and Attraction sections through
+validated immutable revisions. Native pregame integration verifies all 48 catalog
+sticker sheets and all 22 Commander-legal Attractions, retaining every selection
+and revealing exactly three distinct selected sheets. Empty selections produce
+no supplementary objects. Attraction light variants currently use Forge's default
+printing selection; an explicit printing-selection interface remains work.
+Companion conditions and commander color choices still require backend support.
 Construction counts must not conceal that limitation. Further work includes
 meld transitions, catalog-wide characteristic comparisons and broader native
 rules regressions. An implementation claim should name its tested behavior;
 script presence and successful games alone do not certify full card coverage.
+
+
+## Supplementary decklist sections
+
+Add `Stickers` (or `Sticker Sheets`) and `Attractions` headings to the same plain
+text import used for starting cards. Each following line uses `1 Exact Name`.
+Neither section is part of the 100 starting cards. If selected, either section
+requires at least ten unique selections, one each. There is no rules-imposed
+maximum; normal upload/line limits still apply. Authoritative catalog types and
+Commander legality are checked before saving or simulation. Attractions and
+sticker sheets cannot replace starting cards.
+
+These rules follow CR 123.2a and 717.2a in the project's pinned
+[Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+Forge performs the random three-sheet selection and Attraction shuffle during
+native pregame setup. Saved revisions hash all supplementary selections and
+retain their Oracle records. Changes require a new revision/review. The latest
+legacy 100-card projection stays separate from the supplementary projection;
+immutable revision snapshots remain authoritative. Validator version 5 adds
+these construction checks.
+
+The legacy two-counter `parse_decklist` API rejects supplementary selections
+instead of silently discarding them. Use `prepare_deck` for resolved, validated
+imports or `parse_deck_sections` when only parsing is needed. Ordinary Sideboard
+and Maybeboard sections retain their existing ignored behavior and do not select
+a companion.

@@ -32,12 +32,16 @@ def _direct_meld_role(card: dict) -> str | None:
 
 
 def starting_card_issues(cards: dict) -> tuple[list[str], list[str]]:
-    """Exclude sticker sheets and meld results; block unverifiable meld roles."""
+    """Exclude supplementary objects and meld results; block unverifiable meld roles."""
     errors, blockers = [], []
     for card in cards.values():
         if card.get("type_line") == "Stickers":
             errors.append(
                 f"Sticker sheet cannot occupy a starting-deck slot: {card['name']} (CR 123)"
+            )
+        if "Attraction" in card.get("type_line", "").partition(" — ")[2].split():
+            errors.append(
+                f"Attraction cannot occupy a starting-deck slot: {card['name']} (CR 717.2)"
             )
         role = meld_role(card)
         if role == "meld_result":

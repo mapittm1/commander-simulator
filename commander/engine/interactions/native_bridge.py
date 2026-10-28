@@ -1,4 +1,4 @@
-"""Compile only the repository's fixed test controller with trusted local JDK tooling."""
+"""Trusted native-engine startup and fixed test-controller compilation."""
 
 import hashlib
 import os
@@ -102,3 +102,18 @@ def bridge_unchanged(run: Path, evidence: dict) -> bool:
 def fixture_errors(java) -> tuple:
     """Known native observation errors become explicit failed/incomplete evidence."""
     return (java.JException, RuntimeError, ValueError, TypeError, AttributeError)
+
+
+def initialize_native_engine(java, jvm: str, classpath: list[str]) -> None:
+    """Start one bounded JVM with a caller-verified classpath and initialize Forge."""
+    java.startJVM(
+        jvm,
+        "-Xmx2048m",
+        "-XX:ActiveProcessorCount=2",
+        "-Djava.awt.headless=true",
+        "-Dfile.encoding=UTF-8",
+        classpath=classpath,
+        convertStrings=True,
+    )
+    java.JClass("forge.gui.GuiBase").setInterface(java.JClass("forge.GuiDesktop")())
+    java.JClass("forge.model.FModel").initialize(None, None)

@@ -14,6 +14,7 @@ from commander.engine.interactions.fixtures import observe_case
 from commander.engine.interactions.native_bridge import (
     class_hash,
     fixture_errors,
+    initialize_native_engine,
     priority_class_hash,
 )
 from commander.engine.interactions.ordering import ORDER_CASES
@@ -58,17 +59,11 @@ def main() -> None:
     java = importlib.import_module("jpype")
     if metadata.version("JPype1") != inputs["bridge_version"]:
         raise ValueError("Interaction bridge changed before worker startup")
-    java.startJVM(
+    initialize_native_engine(
+        java,
         inputs["jvm"],
-        "-Xmx2048m",
-        "-XX:ActiveProcessorCount=2",
-        "-Djava.awt.headless=true",
-        "-Dfile.encoding=UTF-8",
-        classpath=[str(settings.home / lock["jar_name"]), str(path.parent / "native")],
-        convertStrings=True,
+        [str(settings.home / lock["jar_name"]), str(path.parent / "native")],
     )
-    java.JClass("forge.gui.GuiBase").setInterface(java.JClass("forge.GuiDesktop")())
-    java.JClass("forge.model.FModel").initialize(None, None)
     for name, case_ids in PARTITIONS.items():
         result = {
             "bridge_version": metadata.version("JPype1"),

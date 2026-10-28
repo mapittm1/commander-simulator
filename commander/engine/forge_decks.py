@@ -152,7 +152,12 @@ def serialize_deck(revision: dict, index: dict, seat: int) -> str:
     if not isinstance(seat, int) or isinstance(seat, bool) or seat not in range(1, 5):
         raise ValueError("Expected one of four seats")
     lines = ["[metadata]", f"Name=seat-{seat}"]
-    for zone, heading in (("commander", "[Commander]"), ("mainboard", "[Main]")):
+    for zone, heading in (
+        ("commander", "[Commander]"),
+        ("mainboard", "[Main]"),
+        ("stickers", "[Stickers]"),
+        ("attractions", "[Attractions]"),
+    ):
         lines.append(heading)
         for entry in revision["cards"]:
             if entry["zone"] == zone:

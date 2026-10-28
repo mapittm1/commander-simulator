@@ -8,6 +8,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Accept distinct `Stickers`/`Sticker Sheets` and `Attractions` import sections.
+  Enforce authoritative types, current Commander legality, at least ten unique
+  selections and one copy each; keep them outside the 100 starting cards and
+  reject Attractions in mainboard/commander slots. Validator version 5 hashes
+  supplementary choices into immutable revisions and maintains a separate latest
+  projection without changing the legacy starting-card table.
+- Export supplementary sections to Forge. Native pregame loading preserves all
+  48 catalog sticker sheets and all 22 legal Attractions and reveals exactly
+  three distinct selected sheets. Empty controls load neither. Explicit Attraction
+  printing/light selection, companions and commander color choices remain work.
+  Share trusted JVM initialization across fixed native workers.
+- Preserve exact patch, Java regression and recipe bytes in Git attributes so
+  Windows line-ending conversion cannot invalidate reviewed build checksums.
+  Verify staged patch/test blobs against the recipe. Validation: 331 offline
+  tests and 395 subtests pass; all six live integration tests also pass. Black,
+  isort, Pylint and Bandit pass. The final catalog probe again constructs all
+  32,109 matched identities without errors. Native results remain in local run
+  artifacts, separate from assertions of complete gameplay support.
+
+
 - Add a separately pinned sticker-capable Forge build from immutable official
   source, a reviewed upstream Wicker Picker patch and local multiple-kicker fixes.
   Retain patches, GPL license, regression source, exact source/Maven checksums and

@@ -26,15 +26,17 @@ def read_decklist(path: Path) -> str:
     return data.decode("utf-8-sig")
 
 
-def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
-    """Accept quantity/name lists and Commander/Mainboard/Sideboard sections."""
+def parse_deck_sections(text: str) -> dict[str, Counter]:
+    """Keep supplementary selections distinct from the 100 starting cards."""
     if len(text.encode("utf-8")) > MAX_DECK_BYTES:
         raise ValueError("Decklist exceeds the 1 MiB size limit")
     lines = text.splitlines()
     if len(lines) > MAX_DECK_LINES:
         raise ValueError(f"Decklist exceeds the {MAX_DECK_LINES}-line limit")
-    cards = Counter()
-    commanders = Counter()
+    sections = {
+        zone: Counter()
+        for zone in ("mainboard", "commander", "stickers", "attractions")
+    }
     section = "mainboard"
     for number, raw in enumerate(lines, 1):
         line = raw.strip()
@@ -48,8 +50,15 @@ def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
             "deck",
             "sideboard",
             "maybeboard",
+            "stickers",
+            "sticker sheets",
+            "attractions",
         ):
-            section = heading
+            section = {
+                "commanders": "commander",
+                "deck": "mainboard",
+                "sticker sheets": "stickers",
+            }.get(heading, heading)
             continue
         if section in ("sideboard", "maybeboard"):
             continue
@@ -68,13 +77,23 @@ def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
             raise ValueError(f"Line {number}: invalid or excessively long card name")
         # Strip the common set/collector metadata from Arena-style text exports.
         name = re.sub(r"\s+\([A-Za-z0-9]+\)\s+\S+(?:\s+\*F\*)?$", "", name)
-        target = commanders if section in ("commander", "commanders") else cards
+        target = sections[section]
         target[name] += quantity
         if target[name] > MAX_CARD_QUANTITY:
             raise ValueError(
                 f"Line {number}: combined card quantity exceeds {MAX_CARD_QUANTITY}"
             )
-    return cards, commanders
+    return sections
+
+
+def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
+    """Retain the two-zone interface without silently discarding supplementary data."""
+    sections = parse_deck_sections(text)
+    if sections["stickers"] or sections["attractions"]:
+        raise ValueError(
+            "Use prepare_deck or parse_deck_sections for supplementary selections"
+        )
+    return sections["mainboard"], sections["commander"]
 
 
 def _resolve(connection: Connection, name: str) -> dict:
@@ -84,9 +103,9 @@ def _resolve(connection: Connection, name: str) -> dict:
     return matches[0]
 
 
-def _assign_commanders(text: str, commander_names) -> tuple[Counter, Counter]:
+def _assign_commanders(sections: dict, commander_names) -> tuple[Counter, Counter]:
     """Separate the command zone from a sectioned or flat deck export."""
-    main, commanders = parse_decklist(text)
+    main, commanders = sections["mainboard"], sections["commander"]
     if len(commander_names) > 2 or sum(commanders.values()) > 2:
         raise ValueError("At most two commander cards can be specified")
     if commander_names and commanders:
@@ -103,12 +122,10 @@ def _assign_commanders(text: str, commander_names) -> tuple[Counter, Counter]:
     return main, commanders
 
 
-def _resolve_entries(
-    connection: Connection, main: Counter, commanders: Counter
-) -> list:
+def _resolve_entries(connection: Connection, sections: dict) -> list:
     """Merge aliases that resolve to the same identity within a zone."""
     resolved = {}
-    for zone, entries in (("commander", commanders), ("mainboard", main)):
+    for zone, entries in sections.items():
         for name, quantity in entries.items():
             card = _resolve(connection, name)
             key = (card["card_id"], zone)
@@ -120,12 +137,22 @@ def _resolve_entries(
 
 def prepare_deck(connection: Connection, text: str, commander_names=()) -> dict:
     """Resolve the list, then run the versioned Commander legality validator."""
-    main, commanders = _assign_commanders(text, commander_names)
-    entries = _resolve_entries(connection, main, commanders)
+    sections = parse_deck_sections(text)
+    _assign_commanders(sections, commander_names)
+    entries = _resolve_entries(connection, sections)
     report = validate_entries(connection, entries)
     return {
         "cards": entries,
-        "total": sum(entry["quantity"] for entry in entries),
+        "total": sum(
+            entry["quantity"]
+            for entry in entries
+            if entry["zone"] in {"mainboard", "commander"}
+        ),
+        "supplementary_total": sum(
+            entry["quantity"]
+            for entry in entries
+            if entry["zone"] in {"stickers", "attractions"}
+        ),
         "issues": report["errors"],
         "legality": report,
         "warnings": report["blockers"]
@@ -141,6 +168,7 @@ __all__ = [
     "list_decks",
     "save_deck",
     "parse_decklist",
+    "parse_deck_sections",
     "prepare_deck",
     "read_decklist",
 ]

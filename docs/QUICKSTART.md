@@ -138,3 +138,15 @@ through `deck-salt`, with source coverage and unknowns preserved.
 Automatic acquisition/ranking of the requested 50 representative opponents,
 comprehensive card/rules conformance, deeper optimization diagnostics, crash
 recovery, and the self-hosted web UI remain future milestones.
+
+
+## Sticker sheets and Attractions
+
+The same import file can include `Stickers` and `Attractions` sections. List one
+exact catalog name per line, prefixed with `1`. These selections are outside the
+100 starting cards; each selected section requires at least ten unique entries.
+Use only Commander-legal Attractions. The engine randomly selects three of the
+listed sticker sheets each game and shuffles the Attraction deck. Lists are
+frozen into the deck revision and its hash. See [card coverage](CARD_COVERAGE.md)
+for native test evidence, explicit-printing limitations and remaining pregame
+options. A Sideboard heading does not select a companion.

@@ -22,6 +22,13 @@ SCHEMA = """
         quantity INTEGER NOT NULL CHECK(quantity > 0),
         PRIMARY KEY(deck_id, card_id, zone)
     );
+    CREATE TABLE IF NOT EXISTS deck_supplementary_cards (
+        deck_id INTEGER NOT NULL REFERENCES decks(id),
+        card_id TEXT NOT NULL REFERENCES cards(card_id),
+        zone TEXT NOT NULL CHECK(zone IN ('stickers', 'attractions')),
+        quantity INTEGER NOT NULL CHECK(quantity = 1),
+        PRIMARY KEY(deck_id, card_id, zone)
+    );
     CREATE TABLE IF NOT EXISTS deck_revisions (
         id INTEGER PRIMARY KEY,
         deck_id INTEGER NOT NULL REFERENCES decks(id),
@@ -180,6 +187,18 @@ def _update_projection(connection, metadata, entries, report):
         [
             (metadata["id"], entry["card"]["card_id"], entry["zone"], entry["quantity"])
             for entry in entries
+            if entry["zone"] in {"mainboard", "commander"}
+        ],
+    )
+    connection.execute(
+        "DELETE FROM deck_supplementary_cards WHERE deck_id = ?", (metadata["id"],)
+    )
+    connection.executemany(
+        "INSERT INTO deck_supplementary_cards VALUES (?, ?, ?, ?)",
+        [
+            (metadata["id"], entry["card"]["card_id"], entry["zone"], entry["quantity"])
+            for entry in entries
+            if entry["zone"] in {"stickers", "attractions"}
         ],
     )
 

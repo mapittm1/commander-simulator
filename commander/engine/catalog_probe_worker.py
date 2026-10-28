@@ -12,7 +12,10 @@ from commander.engine.catalog_probe_io import (
 )
 from commander.engine.forge_config import EngineSettings, file_hash
 from commander.engine.interactions.fixtures import _new_game
-from commander.engine.interactions.native_bridge import fixture_errors
+from commander.engine.interactions.native_bridge import (
+    fixture_errors,
+    initialize_native_engine,
+)
 from commander.engine.interactions.runner import BRIDGE_VERSION, require_bridge
 from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
 
@@ -36,17 +39,9 @@ def main() -> None:
     if stream_hash(run / "catalog-inputs.jsonl") != plan["inputs_sha256"]:
         raise ValueError("Catalog probe inputs changed before startup")
     java = importlib.import_module("jpype")
-    java.startJVM(
-        plan["jvm"],
-        "-Xmx2048m",
-        "-XX:ActiveProcessorCount=2",
-        "-Djava.awt.headless=true",
-        "-Dfile.encoding=UTF-8",
-        classpath=[str(settings.home / engine["jar_name"])],
-        convertStrings=True,
+    initialize_native_engine(
+        java, plan["jvm"], [str(settings.home / engine["jar_name"])]
     )
-    java.JClass("forge.gui.GuiBase").setInterface(java.JClass("forge.GuiDesktop")())
-    java.JClass("forge.model.FModel").initialize(None, None)
     count, digest = write_rows(
         run / "catalog-observations.jsonl", _observations(java, run)
     )

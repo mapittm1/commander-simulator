@@ -21,8 +21,9 @@ See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
 
 This construction check does not certify all interactions or AI decisions.
-Supplementary deck selection, companions and commander color choices still need
-backend support. The 41 controlled interaction scenarios remain separate checks.
+Sticker and Attraction sections now retain validated supplementary selections
+through saved revisions and native pregame loading. Companions and commander
+color choices still need backend support. The 41 controlled interaction scenarios remain separate checks.
 
 ## Run it now
 
