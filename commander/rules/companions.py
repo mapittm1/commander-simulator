@@ -1,6 +1,7 @@
 """Explicit companion construction checks, with bounded native condition evidence."""
 
 from commander.engine.companion_admission import check_companion_condition
+from commander.rules.commander_colors import commander_identity
 
 
 def companion_issues(entries, cards, allow_native):
@@ -43,11 +44,9 @@ def _selection_errors(entries, cards, selected):
         errors.append(
             "Selected card does not have a companion ability: " + companion["name"]
         )
-    identity = set()
+    identity = commander_identity(entries, cards)
     for entry in entries:
         card = cards[entry["card"]["card_id"]]
-        if entry["zone"] == "commander":
-            identity.update(card.get("color_identity", []))
         if (
             entry["zone"] in {"mainboard", "commander"}
             and card["name"] == companion["name"]

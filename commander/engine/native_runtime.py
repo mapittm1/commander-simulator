@@ -8,6 +8,7 @@ from importlib import metadata
 from pathlib import Path
 
 from commander.engine.forge_config import EngineSettings
+from commander.engine.forge_config import jvm_library as _jvm_library
 from commander.paths import DATA_ROOT
 
 BRIDGE_VERSION = "1.7.1"
@@ -86,13 +87,4 @@ def require_bridge(version_reader=None) -> None:
 
 def jvm_library(java: Path) -> str:
     """Find only a supported JVM library beside the selected trusted runtime."""
-    root = java.parent.parent
-    candidates = (
-        root / "bin/server/jvm.dll",
-        root / "lib/server/libjvm.so",
-        root / "lib/server/libjvm.dylib",
-    )
-    for path in candidates:
-        if path.is_file():
-            return str(path)
-    raise ValueError("Configured Java runtime does not expose a supported JVM library")
+    return _jvm_library(java)

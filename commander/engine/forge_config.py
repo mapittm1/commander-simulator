@@ -35,10 +35,15 @@ class EngineSettings:
         lock = read_engine_lock(self.lock_path or LOCK_PATH)
         if self.java.name not in {"java", "java.exe"} or not self.java.is_file():
             raise ValueError("Configure a trusted Java executable, not a shell script")
-        for path, expected in (
+        checks = [
             (self.home / lock["jar_name"], lock["jar_sha256"]),
             (self.home / "res/cardsfolder/cardsfolder.zip", lock["cards_sha256"]),
-        ):
+        ]
+        if "runtime_executable_sha256" in lock:
+            checks.append((self.java, lock["runtime_executable_sha256"]))
+        if "runtime_jvm_sha256" in lock:
+            checks.append((Path(jvm_library(self.java)), lock["runtime_jvm_sha256"]))
+        for path, expected in checks:
             if not path.is_file() or file_hash(path) != expected:
                 raise ValueError(f"Pinned engine integrity check failed: {path.name}")
         folder = self.home / "res/cardsfolder"
@@ -96,7 +101,14 @@ def read_engine_lock(path: Path) -> dict:
         r"[A-Za-z0-9][A-Za-z0-9._+-]{0,199}\.jar", lock["jar_name"]
     ):
         raise ValueError("Engine lock JAR name must be a plain bounded filename")
-    for key in ("jar_sha256", "cards_sha256"):
+    for key in (
+        "jar_sha256",
+        "cards_sha256",
+        "runtime_executable_sha256",
+        "runtime_jvm_sha256",
+    ):
+        if key not in lock:
+            continue
         if not isinstance(lock[key], str) or not re.fullmatch(
             r"[a-f0-9]{64}", lock[key]
         ):
@@ -121,3 +133,39 @@ def supported_java_version(value) -> bool:
         and value.split(".")[0].isdigit()
         and int(value.split(".")[0]) >= 17
     )
+
+
+def require_engine_capabilities(lock: dict, entries: list) -> None:
+    """Reject unsupported pregame choices before admitting a game or a batch."""
+    if any(entry.get("zone") == "companion" for entry in entries):
+        capabilities = lock.get("capabilities", [])
+        if (
+            not isinstance(capabilities, list)
+            or "native_companion_pregame" not in capabilities
+        ):
+            raise ValueError(
+                "Selected engine does not support reviewed companion pregame behavior; install the reviewed Commander build"
+            )
+    if any("commander_color" in entry for entry in entries):
+        capabilities = lock.get("capabilities", [])
+        if (
+            not isinstance(capabilities, list)
+            or "explicit_commander_colors" not in capabilities
+        ):
+            raise ValueError(
+                "Selected engine does not support explicit commander colors; install the reviewed color-capable build"
+            )
+
+
+def jvm_library(java: Path) -> str:
+    """Locate the JVM library paired with the selected trusted Java executable."""
+    root = java.parent.parent
+    for relative in (
+        "bin/server/jvm.dll",
+        "lib/server/libjvm.so",
+        "lib/server/libjvm.dylib",
+    ):
+        path = root / relative
+        if path.is_file():
+            return str(path)
+    raise ValueError("Configured Java runtime does not expose a supported JVM library")

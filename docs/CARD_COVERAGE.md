@@ -84,8 +84,9 @@ and revealing exactly three distinct selected sheets. Empty selections produce
 no supplementary objects. Attraction light variants currently use Forge's default
 printing selection; an explicit printing-selection interface remains work.
 Explicit companions now have native condition admission and immutable revisions.
-Commander color choices still require backend support.
-Construction counts must not conceal that limitation. Further work includes
+Commander color choices now pass backend and native pregame checks, including
+AI game copies. Explicit Attraction printing/light choices remain unsupported;
+construction counts must not conceal that limitation. Further work includes
 meld transitions, catalog-wide characteristic comparisons and broader native
 rules regressions. An implementation claim should name its tested behavior;
 script presence and successful games alone do not certify full card coverage.
@@ -119,9 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **581 native tests in 57 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 33
-sticker tests; these counts must not be added together. GUI/download tests were
+The reviewed patched source also passes **596 native tests in 59 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 48 focused
+sticker, chosen-color and companion tests; these counts must not be added together.
+A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
 Raw TestNG reports and compiler/test logs remain local under the recorded run ID.
@@ -176,3 +178,33 @@ companion selection and special action. The condition checks do not by themselve
 verify companion AI strategy, special-action payment or every gameplay interaction.
 They implement admission rules from CR 103.2b, 702.139 and 903.11a in the pinned
 [Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+
+
+## Chosen commander colors and native pregame behavior
+
+Validator version 7 accepts one explicit `[color=W/U/B/R/G]` choice on an eligible
+commander line (replace the slash-separated notation with one letter). It requires
+the actual Oracle pregame permission. The chosen color affects deck and companion
+color identity, is hashed into immutable revisions and is exported as generated
+native metadata. Arbitrary uploaded pipes/engine flags remain rejected. Pending
+choices block approval. Engine capability checks run before simulation creation.
+
+The native patches preserve the separate pregame designation through linked
+abilities, partner/background setups, deck artwork selection, logical/LKI copies
+and AI GameCopier snapshots. Later generic color choices cannot rewrite it, and
+ordinary copying of characteristics does not grant the designation. The real
+integration suite verifies four legal mono/multicolor setups and Command Tower's
+mana options in original and AI states.
+
+Companion pregame selection now refreshes static types before testing Umori, so
+Grist counts as a creature outside the battlefield. Five native tests verify this
+and Lurrus's paid three-mana special action, rejection with insufficient mana and
+combat timing admission. Backend admission still supplies the full 100-card
+condition gate. This does not certify companion AI strategy or every interaction.
+
+The final runtime passes all nine live integrations (26 subtests), including all
+41 unchanged controlled interaction cases. A new full factory probe constructs
+all 32,109 matched identities. Source/report hashes bind the actual tested builds.
+The Java executable and JVM library are both checked when pinned by the lock.
+Build recipe bytes are frozen before execution and rechecked after compilation
+and packaging. Previous runtime locks remain available for historical evidence.

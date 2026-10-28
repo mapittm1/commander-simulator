@@ -53,7 +53,13 @@ def observe_admission(java, plan):
     zone = java.JClass("forge.game.zone.ZoneType")
     for entry in plan["starting"]:
         for _ in range(entry["quantity"]):
-            _native_card(java, entry["engine_name"], player, zone.Library)
+            _native_card(
+                java,
+                entry["engine_name"],
+                player,
+                zone.Library,
+                entry.get("commander_color"),
+            )
     companion = _native_card(
         java, plan["companion"]["engine_name"], player, zone.Sideboard
     )
@@ -101,13 +107,20 @@ def _special_condition(player, library, rule):
     raise ValueError("Unknown native companion restriction; no admission issued")
 
 
-def _native_card(java, name, owner, zone):
+def _native_card(java, name, owner, zone, color=None):
     paper = (
         java.JClass("forge.model.FModel").getMagicDb().getCommonCards().getCard(name)
     )
     if paper is None or str(paper.getName()) != name:
         raise ValueError("Companion admission requires an exact native paper identity")
+    if color is not None:
+        mask = java.JClass("forge.card.MagicColor").fromName(color)
+        paper = paper.copyWithMarkedColors(
+            java.JClass("forge.card.ColorSet").fromMask(mask)
+        )
     card = java.JClass("forge.game.card.Card").fromPaperCard(paper, owner)
+    if color is not None:
+        owner.initCommanderColor(card)
     owner.getZone(zone).add(card)
     return card
 

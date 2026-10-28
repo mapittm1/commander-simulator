@@ -7,12 +7,13 @@ from contextlib import closing
 
 import pytest
 
-from commander.catalog.database import DEFAULT_DATABASE, connect, store_card
+from commander.catalog.database import DEFAULT_DATABASE, connect
 from commander.decks.deck_store import get_revision
 from commander.decks.decks import prepare_deck, save_deck
 from commander.engine.forge_config import read_settings
 from commander.engine.forge_decks import card_index, serialize_deck
-from commander.rules.legality import require_current_catalog, require_legal_deck
+from commander.rules.legality import require_legal_deck
+from tests.support.catalog_fixture import copy_catalog_records
 
 pytestmark = pytest.mark.integration
 
@@ -78,22 +79,13 @@ def _deck(commander):
 
 
 def _copy_records(source, fixture):
-    catalog = require_current_catalog(source)
-    with fixture:
-        for name in (
+    return copy_catalog_records(
+        source,
+        fixture,
+        (
             "Elas il-Kor, Sadistic Pilgrim",
             "Queen Marchesa",
             "Plains",
             "Lurrus of the Dream-Den",
-        ):
-            row = source.execute(
-                "SELECT raw_json FROM cards JOIN card_details USING(card_id) WHERE name=?",
-                (name,),
-            ).fetchone()
-            if row is None:
-                raise ValueError("Missing native companion fixture card: " + name)
-            store_card(fixture, json.loads(row[0]))
-        fixture.execute(
-            "INSERT INTO imports(source,source_updated_at,records) VALUES (?,?,4)",
-            (catalog["source"], catalog["source_updated_at"]),
-        )
+        ),
+    )

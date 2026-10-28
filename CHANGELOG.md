@@ -8,6 +8,30 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Add explicit pregame commander color choices with validator version 7,
+  immutable storage, color identity/companion checks and safe native export.
+  Reject missing/invalid/unauthorized choices and incompatible engine capabilities
+  before simulation creation. Preserve the designation across native deck artwork
+  selection, linked abilities, logical/LKI copies and AI simulation copies.
+- Fix native companion pregame type evaluation for Grist/Umori. Verify Lurrus's
+  paid special action, insufficient-mana rejection and combat timing admission.
+  Preserve the backend's independent full 100-card companion condition gate.
+- Promote the reviewed runtime after 48 focused native tests, 596 broader native
+  gameplay tests (including those 48), 256 serialization tests, nine live
+  integrations/26 subtests and 32,109 catalog constructions pass. Retain exact
+  source, recipe, executable, JVM and report hashes plus historical engine locks.
+  Freeze build recipe bytes and recheck inputs after compilation and packaging.
+- Validation: 360 offline tests and 439 subtests pass; the nine native opt-in
+  tests run separately. Black, isort, Pylint and Bandit pass. Local printing
+  enrichment retains 59 verified printings with 32 aliases without changing
+  Oracle rules or freshness.
+- Resolve exact English printed/flavor names and face aliases through retained
+  printing metadata. Backfill an indexed projection, remove stale aliases on
+  updates, retain ambiguity and prioritize canonical names. Original/canonical
+  aliases merge before singleton validation. Printing enrichment leaves current
+  Oracle rules and catalog freshness unchanged. No fuzzy matching is introduced.
+
+
 - Add explicit `Companion` imports outside the 100 starting cards. Require one
   legal companion with a valid ability, permitted color identity and no matching
   starting-card name. Validator version 6 checks its condition against the full

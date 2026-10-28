@@ -4,6 +4,7 @@ import json
 import sqlite3
 from pathlib import Path
 
+from commander.catalog.printed_names import initialize_aliases, store_printing_aliases
 from commander.paths import DATA_ROOT
 
 DEFAULT_DATABASE = DATA_ROOT / "cards.sqlite3"
@@ -68,6 +69,7 @@ def connect(path=DEFAULT_DATABASE):
             records INTEGER NOT NULL
         );
     """)
+    initialize_aliases(connection)
     return connection
 
 
@@ -106,6 +108,24 @@ def store_card(connection, card):
         "ON CONFLICT(card_id) DO UPDATE SET raw_json=excluded.raw_json",
         (card_id, json.dumps(card, ensure_ascii=False)),
     )
+    store_printing(connection, card)
+
+
+def store_printing(connection, card):
+    """Enrich printing metadata without replacing current Oracle data or freshness."""
+    card_id = card.get("oracle_id") or card["id"]
+    current = connection.execute(
+        "SELECT name FROM cards WHERE card_id = ?", (card_id,)
+    ).fetchone()
+    if current is None or current["name"] != card.get("name"):
+        raise ValueError(
+            "Printing must match an existing exact catalog identity and name"
+        )
+    previous = connection.execute(
+        "SELECT card_id FROM printings WHERE scryfall_id = ?", (card["id"],)
+    ).fetchone()
+    if previous is not None and previous["card_id"] != card_id:
+        raise ValueError("An existing printing cannot change Oracle identity")
     connection.execute(
         """
         INSERT INTO printings VALUES (?, ?, ?, ?, ?, ?, ?)
@@ -141,6 +161,7 @@ def store_card(connection, card):
                 json.dumps(face.get("image_uris", {})),
             ),
         )
+    store_printing_aliases(connection, card)
 
 
 def find_cards(connection, name):
@@ -153,9 +174,14 @@ def find_cards(connection, name):
         LEFT JOIN printings USING (card_id)
         LEFT JOIN card_faces USING (scryfall_id)
         WHERE cards.name = ? COLLATE NOCASE OR card_faces.name = ? COLLATE NOCASE
+        OR cards.card_id IN (
+            SELECT printings.card_id FROM printing_aliases
+            JOIN printings USING (scryfall_id)
+            WHERE printing_aliases.name = ? COLLATE NOCASE
+        )
         ORDER BY cards.card_id
     """,
-            (name, name),
+            (name, name, name),
         )
     ]
 

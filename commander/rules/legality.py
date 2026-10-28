@@ -14,12 +14,13 @@ from sqlite3 import Connection
 from commander.catalog.database import get_card_details
 from commander.decks.deck_snapshots import read_revision
 from commander.rules.card_structure import starting_card_issues
+from commander.rules.commander_colors import color_choice_issues, commander_identity
 from commander.rules.companions import companion_issues
 from commander.rules.supplementary import supplementary_issues
 
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
-VALIDATOR_VERSION = 6
+VALIDATOR_VERSION = 7
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
@@ -202,10 +203,7 @@ def _copy_limit(card: dict) -> int | None:
 
 
 def _card_errors(entries: list, cards: dict) -> list[str]:
-    identity = set()
-    for entry in entries:
-        if entry["zone"] == "commander":
-            identity.update(cards[entry["card"]["card_id"]].get("color_identity", []))
+    identity = commander_identity(entries, cards)
     errors = []
     copies = Counter()
     for entry in entries:
@@ -288,6 +286,7 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
         errors.append("Invalid deck zone or card quantity")
     snapshot = sorted(
         (entry["card"]["card_id"], entry["zone"], entry["quantity"])
+        + ((entry["commander_color"],) if "commander_color" in entry else ())
         for entry in entries
     )
     companion = None
@@ -372,15 +371,9 @@ def _construction_issues(connection, entries, allow_native):
         errors.append(f"Expected 100 cards including commanders; found {total}")
     errors.extend(_commander_errors(entries, cards))
     errors.extend(_card_errors(_starting_entries(entries), cards))
-    for entry in entries:
-        card = cards[entry["card"]["card_id"]]
-        if (
-            entry["zone"] == "commander"
-            and "choose a color before the game begins" in _oracle(card).casefold()
-        ):
-            blockers.append(
-                f"Commander color choice is not implemented: {card['name']}"
-            )
+    color_errors, color_blockers = color_choice_issues(entries, cards)
+    errors.extend(color_errors)
+    blockers.extend(color_blockers)
     companion = companion_issues(
         entries, cards, allow_native and not errors and not blockers
     )

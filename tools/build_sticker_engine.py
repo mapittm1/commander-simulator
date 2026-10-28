@@ -1,4 +1,4 @@
-"""Build a separately pinned sticker-capable Forge runtime from verified local archives.
+"""Build a separately pinned Forge Commander runtime from verified local archives.
 
 This administrator tool executes trusted upstream build plugins. It is never a
 deck-upload or web-job entry point. It does not replace the active engine config.
@@ -20,9 +20,9 @@ sys.path.insert(0, str(PROJECT))
 # This fixed checkout bootstrap is required when invoked from tools/.
 # pylint: disable=wrong-import-position
 from commander.engine.engine_process import ProcessLimits, run_bounded
-from commander.engine.forge_config import file_hash
+from commander.engine.forge_config import file_hash, jvm_library
 from commander.engine.forge_engine import _environment
-from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
+from commander.engine.interactions.suite import read_hashed_json, write_bounded_json
 
 
 def main():
@@ -33,22 +33,28 @@ def main():
     parser.add_argument("--jdk", type=Path, required=True)
     parser.add_argument("--runtime", type=Path, required=True)
     args = parser.parse_args()
-    recipe = read_bounded_json(PROJECT / "engine/sticker_recipe.json")
+    recipe, recipe_hash = read_hashed_json(PROJECT / "engine/sticker_recipe.json")
     _verify_inputs(args, recipe)
     build_root = PROJECT / "data/engine-builds"
     build_root.mkdir(parents=True, exist_ok=True)
     # Generated uniqueness; source, build results, and runtime are never overwritten.
     run = build_root / uuid.uuid4().hex
     run.mkdir()
+    shutil.copyfile(PROJECT / "engine/sticker_recipe.json", run / "build-recipe.json")
+    if file_hash(run / "build-recipe.json") != recipe_hash:
+        raise ValueError("Engine build recipe changed before snapshot")
     source, maven = run / "source", run / "maven"
     _extract(args.source_archive, source, "forge-" + recipe["forge_commit"])
     _extract(args.maven_archive, maven, "apache-maven-" + recipe["maven_version"])
     _patch_source(source, run, recipe)
     _compile(args, source, maven, run)
-    tests = _test_evidence(source)
+    tests = _test_evidence(source, recipe["native_test_count"])
+    _verify_unchanged_inputs(args, recipe, recipe_hash)
     runtime = run / "runtime"
     _package(args.source_archive, source, runtime, recipe)
-    lock = _lock(runtime, run, recipe, tests, args)
+    _verify_unchanged_inputs(args, recipe, recipe_hash)
+    evidence = {"native_tests": tests, "recipe_sha256": recipe_hash}
+    lock = _lock(runtime, run, recipe, evidence, args)
     write_bounded_json(run / "engine-lock.json", lock, indent=2)
     write_bounded_json(
         run / "engine-config.json",
@@ -62,7 +68,7 @@ def main():
     print(
         json.dumps(
             {
-                "status": "built_and_sticker_tests_passed",
+                "status": "built_and_native_regressions_passed",
                 "directory": str(run),
                 "config": str(run / "engine-config.json"),
                 "tests": tests,
@@ -87,6 +93,8 @@ def _verify_inputs(args, recipe):
             not in {
                 "engine/patches/wicker-picker-upstream-470d983.patch",
                 "engine/patches/wicker-picker-local-regressions.patch",
+                "engine/patches/commander-color-choice.patch",
+                "engine/patches/companion-pregame-types.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -96,11 +104,34 @@ def _verify_inputs(args, recipe):
         != recipe["test_sha256"]
     ):
         raise ValueError("Sticker regression source changed; review the recipe")
+    if (
+        file_hash(PROJECT / "engine/tests/CommanderColorChoiceTest.java")
+        != recipe["commander_color_test_sha256"]
+    ):
+        raise ValueError("Commander color regression source changed; review the recipe")
+    if (
+        file_hash(PROJECT / "engine/tests/CompanionPregameTest.java")
+        != recipe["companion_pregame_test_sha256"]
+    ):
+        raise ValueError("Companion regression source changed; review the recipe")
+    if recipe["card_overrides"] != [
+        "w/wicker_picker.txt",
+        "t/the_prismatic_piper.txt",
+        "f/faceless_one.txt",
+    ]:
+        raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
         raise ValueError("Expected an immutable source commit")
     executable = "java.exe" if sys.platform == "win32" else "java"
     if not (args.jdk / "bin" / executable).is_file() or not args.runtime.is_file():
         raise ValueError("Select a trusted installed JDK and Java runtime executable")
+
+
+def _verify_unchanged_inputs(args, recipe, recipe_hash):
+    """Do not stamp a build with a recipe or reviewed input edited during compilation."""
+    if file_hash(PROJECT / "engine/sticker_recipe.json") != recipe_hash:
+        raise ValueError("Engine build recipe changed during compilation")
+    _verify_inputs(args, recipe)
 
 
 def _extract(path, destination, prefix):
@@ -169,6 +200,15 @@ def _patch_source(source, run, recipe):
         source
         / "forge-gui-desktop/src/test/java/forge/ai/StickerKickerRegressionTest.java",
     )
+    shutil.copyfile(
+        PROJECT / "engine/tests/CommanderColorChoiceTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/CommanderColorChoiceTest.java",
+    )
+    shutil.copyfile(
+        PROJECT / "engine/tests/CompanionPregameTest.java",
+        source / "forge-gui-desktop/src/test/java/forge/ai/CompanionPregameTest.java",
+    )
 
 
 def _compile(args, source, maven, run):
@@ -210,7 +250,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),
@@ -223,7 +263,7 @@ def _compile(args, source, maven, run):
     _checked(command, source / "forge-gui-desktop", run, "maven-build", 600)
 
 
-def _test_evidence(source):
+def _test_evidence(source, expected_count=33):
     path = source / "forge-gui-desktop/target/surefire-reports/testng-results.xml"
     with path.open("rb") as stream:
         prefix = stream.read(1024).decode("utf-8")
@@ -231,8 +271,13 @@ def _test_evidence(source):
     if header is None:
         raise ValueError("Missing native sticker test result header")
     values = dict(re.findall(r'(total|passed|failed|skipped)="(\d+)"', header[1]))
-    if values != {"total": "33", "passed": "33", "failed": "0", "skipped": "0"}:
-        raise ValueError("All 33 pinned native sticker tests must pass without skips")
+    if values != {
+        "total": str(expected_count),
+        "passed": str(expected_count),
+        "failed": "0",
+        "skipped": "0",
+    }:
+        raise ValueError("All pinned native regression tests must pass without skips")
     return {key: int(value) for key, value in values.items()}
 
 
@@ -254,9 +299,8 @@ def _package(archive_path, source, runtime, recipe):
                 path = runtime / "res" / name
                 path.parent.mkdir(parents=True, exist_ok=True)
                 path.write_bytes(raw)
-    scripts["w/wicker_picker.txt"] = (
-        source / "forge-gui/res/cardsfolder/w/wicker_picker.txt"
-    ).read_bytes()
+    for name in recipe["card_overrides"]:
+        scripts[name] = (source / "forge-gui/res/cardsfolder" / name).read_bytes()
     folder = runtime / "res/cardsfolder"
     folder.mkdir()
     with zipfile.ZipFile(folder / "cardsfolder.zip", "x") as archive:
@@ -274,19 +318,21 @@ def _package(archive_path, source, runtime, recipe):
     )
 
 
-def _lock(runtime, run, recipe, tests, args):
+def _lock(runtime, run, recipe, evidence, args):
     return {
-        "forge_version": "2.0.16-SNAPSHOT-3e6c036-sticker-kicker",
+        "forge_version": recipe["runtime_version"],
+        "capabilities": recipe["capabilities"],
         "jar_name": recipe["jar_name"],
         "jar_sha256": file_hash(runtime / recipe["jar_name"]),
         "cards_sha256": file_hash(runtime / "res/cardsfolder/cardsfolder.zip"),
         "source_commit": recipe["forge_commit"],
         "source_archive_sha256": recipe["source_sha256"],
-        "recipe_sha256": file_hash(PROJECT / "engine/sticker_recipe.json"),
-        "native_tests": tests,
+        "recipe_sha256": evidence["recipe_sha256"],
+        "native_tests": evidence["native_tests"],
         "build_log_sha256": file_hash(run / "maven-build.log"),
         "runtime_executable_sha256": file_hash(args.runtime),
-        "purpose": "Separately built candidate; run catalog and interaction checks before activation",
+        "runtime_jvm_sha256": file_hash(Path(jvm_library(args.runtime))),
+        "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation",
     }
 
 

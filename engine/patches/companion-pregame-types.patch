@@ -1,0 +1,25 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -3141,6 +3141,7 @@
+     }
+ 
+     public void assignCompanion(Game game, PlayerController player) {
++        game.getAction().checkStaticAbilities(false);
+         List<Card> legalCompanions = Lists.newArrayList();
+ 
+         boolean uniqueNames = true;
+@@ -3156,13 +3157,11 @@
+                 }
+             }
+ 
+-            cardTypes.retainAll(c.getPaperCard().getRules().getType().getCoreTypes());
++            cardTypes.retainAll(c.getType().getCoreTypes());
+         }
+ 
+         int deckSize = getCardsIn(ZoneType.Library).size();
+         int minSize = game.getMatch().getRules().getGameType().getDeckFormat().getMainRange().getMinimum();
+-
+-        game.getAction().checkStaticAbilities(false);
+ 
+         for (final Card c : getCardsIn(ZoneType.Sideboard)) {
+             for (KeywordInterface inst : c.getKeywords(Keyword.COMPANION)) {

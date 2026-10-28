@@ -70,9 +70,11 @@ policy, not an official Magic rule. Locally imported files with no verified bulk
 timestamp cannot certify legality. Old catalogs missing current card details
 must be reimported before approval.
 
-Chosen commander colors, selected companions, and supplementary decks are not
-implemented. Companion/supplementary sections cannot be silently treated as an
-approved configuration. Commander color choices block approval. Sideboard and
+Explicit commander color choices, companions and supplementary sticker/Attraction
+sections now have versioned legality checks, immutable storage and native export.
+Missing required colors and unverified companion conditions block approval;
+selected features also require verified native engine capabilities. Explicit
+Attraction printing/light variants remain work. Sideboard and
 maybeboard exports are excluded from the starting deck. This is standard
 multiplayer Commander, not Commander Draft, Brawl, Duel Commander, or Rule 0.
 New construction mechanics or unknown copy caps require validator work rather

@@ -7,6 +7,7 @@ from sqlite3 import Connection
 
 from commander.catalog.database import find_deck_candidates
 from commander.decks.deck_store import ensure_deck_schema, list_decks, save_deck
+from commander.rules.commander_colors import split_color_choice
 from commander.rules.legality import validate_entries
 
 MAX_DECK_BYTES = 1024 * 1024
@@ -114,10 +115,11 @@ def _assign_commanders(sections: dict, commander_names) -> tuple[Counter, Counte
     for name in commander_names:
         commanders[name] += 1
         # A flat 100-card export commonly includes the commander already.
-        if main[name]:
-            main[name] -= 1
-            if not main[name]:
-                del main[name]
+        flat_name = name if main[name] else split_color_choice(name)[0]
+        if main[flat_name]:
+            main[flat_name] -= 1
+            if not main[flat_name]:
+                del main[flat_name]
     if not commanders:
         raise ValueError("A Commander section or --commander is required")
     return main, commanders
@@ -128,10 +130,17 @@ def _resolve_entries(connection: Connection, sections: dict) -> list:
     resolved = {}
     for zone, entries in sections.items():
         for name, quantity in entries.items():
-            card = _resolve(connection, name)
+            resolved_name, color = split_color_choice(name)
+            if color is not None and zone != "commander":
+                raise ValueError("Only commander entries may specify a pregame color")
+            card = _resolve(connection, resolved_name)
             key = (card["card_id"], zone)
             if key not in resolved:
                 resolved[key] = {"card": card, "quantity": 0, "zone": zone}
+            if color is not None:
+                if resolved[key].get("commander_color", color) != color:
+                    raise ValueError("Conflicting colors for the same commander")
+                resolved[key]["commander_color"] = color
             resolved[key]["quantity"] += quantity
     return list(resolved.values())
 

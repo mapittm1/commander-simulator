@@ -1,0 +1,159 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -315,6 +315,7 @@
+     private String chosenType2 = "";
+     private List<String> notedTypes = new ArrayList<>();
+     private List<String> chosenColors;
++    private byte chosenCommanderColor;
+     private ColorSet markedColor;
+     private List<String> chosenName = new ArrayList<>();
+     private Integer chosenNumber;
+@@ -2253,6 +2254,15 @@
+             return 0;
+         }
+         return notedTypes.size();
++    }
++
++    // CR 903.4b: this designation survives zone changes and ordinary color choices.
++    public final byte getChosenCommanderColor() {
++        return chosenCommanderColor;
++    }
++
++    public final void setChosenCommanderColor(final byte color) {
++        chosenCommanderColor = color;
+     }
+ 
+     public final String getChosenColor() {
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -56,6 +56,7 @@
+                     : getCard(copyFrom.getPaperCard(), owner, copyFrom.getId(), toGame);
+         }
+ 
++        out.setChosenCommanderColor(copyFrom.getChosenCommanderColor());
+         out.setZone(copyFrom.getZone());
+         out.setState(copyFrom.getFaceupCardStateName(), true);
+         out.setBackSide(copyFrom.isBackSide());
+@@ -244,6 +245,7 @@
+         newCopy.setOwner(copyFrom.getOwner());
+         newCopy.setController(copyFrom.getController(), 0);
+         newCopy.setCommander(copyFrom.isCommander());
++        newCopy.setChosenCommanderColor(copyFrom.getChosenCommanderColor());
+         newCopy.setCollectible(copyFrom.isCollectible());
+ 
+         // needed to ensure that the LKI object has correct CMC info no matter what state the original card was in
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -2886,6 +2886,7 @@
+         byte ci = 0;
+         for (final Card c : commanders) {
+             ci |= c.getRules().getColorIdentity().getColor();
++            ci |= c.getChosenCommanderColor();
+         }
+         ColorSet identity = ColorSet.fromMask(ci);
+         return identity;
+@@ -3109,7 +3110,11 @@
+             Player p = cmd.getController();
+             String prompt = Localizer.getInstance().getMessage("lblChooseAColorFor", cmd.getName());
+             SpellAbility cmdColorsa = new SpellAbility.EmptySa(ApiType.ChooseColor, cmd, p);
+-            byte chosenColor = p.getController().chooseColor(prompt, cmdColorsa, ColorSet.WUBRG);
++            ColorSet selected = cmd.getMarkedColors();
++            byte chosenColor = selected != null && selected.countColors() == 1
++                    ? selected.getColor()
++                    : p.getController().chooseColor(prompt, cmdColorsa, ColorSet.WUBRG);
++            cmd.setChosenCommanderColor(chosenColor);
+             cmd.setChosenColors(List.of(MagicColor.toLongString(chosenColor)));
+             p.getGame().getAction().notifyOfValue(cmdColorsa, cmd,
+                     Localizer.getInstance().getMessage("lblPlayerPickedChosen", p.getName(), MagicColor.toLongString(chosenColor)), p);
+--- a/forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java
++++ b/forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java
+@@ -973,7 +973,9 @@
+     private static ColorSet getColorsFromParam(StaticAbility stAb, final String colors) {
+         final Card hostCard = stAb.getHostCard();
+         ColorSet addColors = null;
+-        if (colors.equals("ChosenColor")) {
++        if (colors.equals("ChosenCommanderColor")) {
++            addColors = ColorSet.fromMask(hostCard.getChosenCommanderColor());
++        } else if (colors.equals("ChosenColor")) {
+             if (hostCard.hasChosenColor()) {
+                 addColors = ColorSet.fromNames(hostCard.getChosenColors());
+             }
+--- a/forge-gui/res/cardsfolder/t/the_prismatic_piper.txt
++++ b/forge-gui/res/cardsfolder/t/the_prismatic_piper.txt
+@@ -3,7 +3,7 @@
+ Types:Legendary Creature Shapeshifter
+ PT:3/3
+ K:Partner
+-S:Mode$ Continuous | CharacteristicDefining$ True | Affected$ Card.Self | SetColor$ ChosenColor | Description$ If CARDNAME is your commander, choose a color before the game begins. CARDNAME is the chosen color.
++S:Mode$ Continuous | CharacteristicDefining$ True | Affected$ Card.Self | SetColor$ ChosenCommanderColor | Description$ If CARDNAME is your commander, choose a color before the game begins. CARDNAME is the chosen color.
+ AI:RemoveDeck:NonCommander
+ AI:RemoveDeck:All
+ Oracle:If The Prismatic Piper is your commander, choose a color before the game begins. The Prismatic Piper is the chosen color.\nPartner (You can have two commanders if both have partner.)
+--- a/forge-gui/res/cardsfolder/f/faceless_one.txt
++++ b/forge-gui/res/cardsfolder/f/faceless_one.txt
+@@ -2,7 +2,7 @@
+ ManaCost:5
+ Types:Legendary Enchantment Creature Background
+ PT:3/3
+-S:Mode$ Continuous | CharacteristicDefining$ True | Affected$ Card.Self | SetColor$ ChosenColor | Description$ If CARDNAME is your commander, choose a color before the game begins. CARDNAME is the chosen color.
++S:Mode$ Continuous | CharacteristicDefining$ True | Affected$ Card.Self | SetColor$ ChosenCommanderColor | Description$ If CARDNAME is your commander, choose a color before the game begins. CARDNAME is the chosen color.
+ K:Choose a Background
+ AI:RemoveDeck:NonCommander
+ AI:RemoveDeck:All
+--- a/forge-core/src/main/java/forge/card/CardDb.java
++++ b/forge-core/src/main/java/forge/card/CardDb.java
+@@ -272,7 +272,7 @@
+         }
+ 
+         private static boolean isSetCode(String s) {
+-            return !StringUtils.isNumeric(s);
++            return !StringUtils.isNumeric(s) && !isFlagSegment(s) && !isCollectorNumber(s);
+         }
+ 
+         private static CardRequest fromPreferredArtEntry(String preferredArt, boolean isFoil){
+@@ -329,8 +329,10 @@
+                 String preferredArt = artPrefs.get(cardName);
+                 if (preferredArt != null) { //account for preferred art if needed
+                     CardRequest request = fromPreferredArtEntry(preferredArt, isFoil);
+-                    if (request != null)  // otherwise, simply discard it and go on.
++                    if (request != null) { // Preserve explicit per-card flags across art preferences.
++                        request.flags = flags;
+                         return request;
++                    }
+                     System.err.printf("[LOG]: Faulty Entry in Preferred Art for Card %s - Please check!%n", cardName);
+                 }
+             }
+@@ -1021,7 +1023,8 @@
+         // Either No Edition has been specified OR as a fallback in case of any error!
+         // get card using the default card art preference
+         String cardRequest = CardRequest.compose(request.cardName, request.isFoil);
+-        return getCardFromEditions(cardRequest, this.defaultCardArtPreference, request.artIndex);
++        PaperCard fallback = getCardFromEditions(cardRequest, this.defaultCardArtPreference, request.artIndex);
++        return fallback != null && request.flags != null ? fallback.copyWithFlags(request.flags) : fallback;
+     }
+ 
+     /*
+--- a/forge-core/src/main/java/forge/deck/Deck.java
++++ b/forge-core/src/main/java/forge/deck/Deck.java
+@@ -503,6 +503,11 @@
+             for (Entry<PaperCard, Integer> cp : pool) {
+                 PaperCard card = cp.getKey();
+                 int totalToAddToPool = cp.getValue();
++                // Per-card metadata is a pregame choice, not a cosmetic preference.
++                if (!card.getMarkedFlags().toMap().isEmpty()) {
++                    newPool.add(card, totalToAddToPool);
++                    continue;
++                }
+                 // A. Skip cards not requiring any update, because they add the edition specified!
+                 if (!cardNamesWithNoEditionInSection.contains(card.getName())) {
+                     addCardToPool(newPool, card, totalToAddToPool, card.isFoil());
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -430,6 +430,7 @@
+     private void addCard(Game newGame, ZoneType zone, Card c, Player aiPlayer) {
+         final Player owner = playerMap.get(c.getOwner());
+         final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);
++        newCard.setChosenCommanderColor(c.getChosenCommanderColor());
+         cardMap.put(c, newCard);
+ 
+         // TODO ExiledWith

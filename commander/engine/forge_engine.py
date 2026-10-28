@@ -8,7 +8,7 @@ from sqlite3 import Connection
 from commander.decks.deck_store import get_revision
 from commander.diagnostics.diagnostic_artifacts import record_diagnostics
 from commander.engine.engine_process import ProcessLimits, run_bounded
-from commander.engine.forge_config import EngineSettings
+from commander.engine.forge_config import EngineSettings, require_engine_capabilities
 from commander.engine.forge_decks import card_index, coverage, serialize_deck
 from commander.engine.forge_results import parse_game_result
 from commander.engine.native_runtime import _engine_profile, _environment, create_run
@@ -77,6 +77,7 @@ def engine_health(settings: EngineSettings) -> dict:
     return {
         "status": "ready",
         "forge_version": lock["forge_version"],
+        "capabilities": lock.get("capabilities", []),
         "jar_sha256": lock["jar_sha256"],
         "cards_sha256": lock["cards_sha256"],
         "indexed_names": len(index),
@@ -139,6 +140,8 @@ def prepare_game(connection, settings, seats) -> dict:
     prepared = prepare_seats(connection, seats)
     lock = settings.verify()
     index = card_index(settings.home / "res/cardsfolder/cardsfolder.zip")
+    for seat in prepared:
+        require_engine_capabilities(lock, seat["revision"]["cards"])
     reports = [coverage(seat["revision"], index) for seat in prepared]
     if any(report["missing"] for report in reports):
         raise ValueError("Engine card coverage failed: " + json.dumps(reports))

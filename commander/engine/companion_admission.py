@@ -13,6 +13,7 @@ from commander.engine.forge_config import (
     EngineSettings,
     file_hash,
     read_settings,
+    require_engine_capabilities,
     supported_java_version,
 )
 from commander.engine.forge_decks import card_index, script_match
@@ -32,6 +33,7 @@ def check_companion_condition(starting: list, companion: dict, cards: dict) -> d
     require_bridge()
     settings = read_settings()
     engine = settings.verify()
+    require_engine_capabilities(engine, starting)
     index = card_index(settings.home / "res/cardsfolder/cardsfolder.zip")
     plan = {
         "schema_version": 1,
@@ -70,12 +72,15 @@ def _identity(entry, cards, index):
         raise ValueError(
             "Companion admission requires every starting card's exact engine script"
         )
-    return {
+    result = {
         "card_id": card_id,
         "name": card["name"],
         "engine_name": match["engine_name"],
         "quantity": entry["quantity"],
     }
+    if "commander_color" in entry:
+        result["commander_color"] = entry["commander_color"]
+    return result
 
 
 @lru_cache(maxsize=64)

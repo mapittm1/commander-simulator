@@ -5,6 +5,7 @@ import zipfile
 from pathlib import Path
 
 from commander.engine.engine_aliases import ReviewedCardIndex, apply_alias_reviews
+from commander.rules.commander_colors import chooses_commander_color
 
 
 def card_index(cards_archive: Path) -> dict[str, str]:
@@ -165,5 +166,21 @@ def serialize_deck(revision: dict, index: dict, seat: int) -> str:
                 name = index[entry["card"]["name"]]
                 if not safe_engine_name(name):
                     raise ValueError("Unsafe engine card serialization")
+                color = entry.get("commander_color")
+                if color is not None:
+                    if (
+                        zone != "commander"
+                        or not isinstance(color, str)
+                        or color not in "WUBRG"
+                        or len(color) != 1
+                    ):
+                        raise ValueError("Invalid commander color serialization")
+                    if not entry.get("oracle") or not chooses_commander_color(
+                        entry["oracle"]
+                    ):
+                        raise ValueError(
+                            "Commander color export lacks the matching Oracle permission"
+                        )
+                    name += "|#{markedColors=" + color + "}"
                 lines.append(f"{entry['quantity']} {name}")
     return "\n".join(lines) + "\n"

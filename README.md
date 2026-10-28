@@ -14,11 +14,12 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The default reviewed sticker-capable Forge build constructs all **32,109 matched
+The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 33
-native sticker tests, including 10 local Wicker Picker regressions. A broader
-selected native AI/gameplay run passes 581 tests, including those sticker tests.
+Seven additional records are non-starting meld results. The build passes 48
+focused native tests for stickers, chosen commander colors and companion pregame
+behavior. Broader native runs pass 596 AI/gameplay tests (including those 48)
+and 256 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
@@ -26,8 +27,9 @@ See [card support and evidence](docs/CARD_COVERAGE.md) and the
 This construction check does not certify all interactions or AI decisions.
 Sticker and Attraction sections now retain validated supplementary selections
 through saved revisions and native pregame loading. Explicit companion selection
-now includes native condition validation against all 100 starting cards. Commander
-color choices still need backend support. The 41 controlled interaction scenarios
+now includes native condition validation against all 100 starting cards. Explicit
+commander color choices are retained through legality checks, saved revisions,
+native pregame loading and AI game copies. The 41 controlled interaction scenarios
 remain separate checks.
 
 ## Run it now
@@ -198,9 +200,12 @@ python commander_simulator.py validate my-deck.txt --commander "Teysa Karlov"
 
 This prints a structured legality report and exits nonzero for `illegal` or
 `needs_review`. Freshness policy requires a verified Scryfall bulk timestamp no
-more than seven days old. Run `sync` to refresh the catalog. Commander color
-choices, selected companions, and supplementary-deck configuration are not yet
-supported. The future UI follows the backend; see
+more than seven days old. Run `sync` to refresh the catalog. Companion, Stickers
+and Attractions sections retain explicit selections outside the 100 starting
+cards. For The Prismatic Piper or Faceless One, use a commander line such as
+`1 The Prismatic Piper [color=G]`, choosing one of W, U, B, R or G. A missing
+required choice blocks validation. These features require the reviewed engine
+capabilities before any simulation can start. The future UI follows the backend; see
 [BACKEND_REQUIREMENTS.md](docs/BACKEND_REQUIREMENTS.md) for scope and processing order.
 
 ## Code quality and security
@@ -683,3 +688,22 @@ Salt analysis does not change Forge targeting, game rules, brackets, or measured
 attack statistics. `aggression_probability` remains `null`. A future optional
 salt-informed opponent policy would need explicit modeling assumptions and
 validation; the published rating itself supplies no attack-probability mapping.
+
+
+## Original printed card names
+
+Exact English `printed_name` and `flavor_name` fields from retained Scryfall
+printings resolve to their existing canonical Oracle identity, including face
+aliases. For example, Ryu, World Warrior resolves to Vikya, Scorching Stalwart
+when that original printing is present. Original and canonical names share the
+same singleton limit and canonical native export. Ambiguous aliases remain
+unresolved; an exact canonical game-card name takes priority. No fuzzy matching
+or engine installation is needed for this lookup.
+
+The indexed projection is backfilled for existing printings and refreshed on
+printing updates. Oracle bulk data supplies one representative printing per card,
+so it cannot supply every original name. `sync --kind default_cards` imports the
+English printing dataset when a complete printing-name inventory is needed.
+Printing-only enrichment through the backend `store_printing` API preserves
+current Oracle rules and does not refresh catalog freshness evidence. Historical
+deck revisions retain their canonical identities.
