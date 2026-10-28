@@ -73,7 +73,10 @@ def write_rows(path: Path, rows) -> tuple[int, str]:
 def source_hashes() -> dict:
     """Bind all backend Python source, including the fixed isolated bootstrap."""
     paths = sorted((PROJECT_ROOT / "commander").rglob("*.py"))
-    paths.append(PROJECT_ROOT / "tools/catalog_probe_worker.py")
+    paths.extend(
+        PROJECT_ROOT / name
+        for name in ("tools/catalog_probe_worker.py", "tools/companion_worker.py")
+    )
     if len(paths) > 256:
         raise ValueError("Catalog probe source registry exceeds its file limit")
     result = {}

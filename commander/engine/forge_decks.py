@@ -157,6 +157,7 @@ def serialize_deck(revision: dict, index: dict, seat: int) -> str:
         ("mainboard", "[Main]"),
         ("stickers", "[Stickers]"),
         ("attractions", "[Attractions]"),
+        ("companion", "[Sideboard]"),
     ):
         lines.append(heading)
         for entry in revision["cards"]:

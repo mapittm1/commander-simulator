@@ -27,12 +27,12 @@ from commander.engine.interactions.suite import (
     read_hashed_json,
     write_bounded_json,
 )
+from commander.engine.native_runtime import BRIDGE_VERSION, jvm_library
+from commander.engine.native_runtime import require_bridge as _require_native_bridge
 from commander.paths import PROJECT_ROOT
 from commander.rules.legality import require_current_catalog
 
 from .native_bridge import bridge_unchanged, build_native_bridge
-
-BRIDGE_VERSION = "1.7.1"
 
 
 def run_interaction_suite(connection: Connection, settings: EngineSettings) -> dict:
@@ -96,16 +96,7 @@ def run_interaction_suite(connection: Connection, settings: EngineSettings) -> d
 
 def require_bridge() -> None:
     """Keep the native bridge optional and pinned; ordinary simulations need no bridge."""
-    try:
-        version = metadata.version("JPype1")
-    except metadata.PackageNotFoundError as error:
-        raise ValueError(
-            "Install optional interaction tools: python -m pip install -r requirements-interactions.txt"
-        ) from error
-    if version != BRIDGE_VERSION:
-        raise ValueError(
-            "Interaction tests require the pinned JPype1 version; install requirements-interactions.txt"
-        )
+    _require_native_bridge(metadata.version)
 
 
 def _unchanged_inputs(settings, inputs, run):
@@ -128,16 +119,7 @@ def _unchanged_inputs(settings, inputs, run):
 
 
 def _jvm_library(java):
-    root = java.parent.parent
-    candidates = (
-        root / "bin/server/jvm.dll",
-        root / "lib/server/libjvm.so",
-        root / "lib/server/libjvm.dylib",
-    )
-    for path in candidates:
-        if path.is_file():
-            return str(path)
-    raise ValueError("Configured Java runtime does not expose a supported JVM library")
+    return jvm_library(java)
 
 
 def _inputs(connection, settings, suite):
@@ -190,6 +172,7 @@ def _inputs(connection, settings, suite):
             name: file_hash(folder / name)
             for name in (
                 "worker.py",
+                "../native_runtime.py",
                 "fixtures.py",
                 "suite.py",
                 "responses.py",

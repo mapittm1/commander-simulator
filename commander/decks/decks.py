@@ -35,7 +35,7 @@ def parse_deck_sections(text: str) -> dict[str, Counter]:
         raise ValueError(f"Decklist exceeds the {MAX_DECK_LINES}-line limit")
     sections = {
         zone: Counter()
-        for zone in ("mainboard", "commander", "stickers", "attractions")
+        for zone in ("mainboard", "commander", "stickers", "attractions", "companion")
     }
     section = "mainboard"
     for number, raw in enumerate(lines, 1):
@@ -53,6 +53,7 @@ def parse_deck_sections(text: str) -> dict[str, Counter]:
             "stickers",
             "sticker sheets",
             "attractions",
+            "companion",
         ):
             section = {
                 "commanders": "commander",
@@ -89,7 +90,7 @@ def parse_deck_sections(text: str) -> dict[str, Counter]:
 def parse_decklist(text: str) -> tuple[Counter[str], Counter[str]]:
     """Retain the two-zone interface without silently discarding supplementary data."""
     sections = parse_deck_sections(text)
-    if sections["stickers"] or sections["attractions"]:
+    if sections["stickers"] or sections["attractions"] or sections["companion"]:
         raise ValueError(
             "Use prepare_deck or parse_deck_sections for supplementary selections"
         )
@@ -151,7 +152,7 @@ def prepare_deck(connection: Connection, text: str, commander_names=()) -> dict:
         "supplementary_total": sum(
             entry["quantity"]
             for entry in entries
-            if entry["zone"] in {"stickers", "attractions"}
+            if entry["zone"] in {"stickers", "attractions", "companion"}
         ),
         "issues": report["errors"],
         "legality": report,

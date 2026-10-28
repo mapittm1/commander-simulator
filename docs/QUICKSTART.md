@@ -150,3 +150,21 @@ listed sticker sheets each game and shuffles the Attraction deck. Lists are
 frozen into the deck revision and its hash. See [card coverage](CARD_COVERAGE.md)
 for native test evidence, explicit-printing limitations and remaining pregame
 options. A Sideboard heading does not select a companion.
+
+
+## Select a companion
+
+Add a separate section to your import file:
+
+```text
+Companion
+1 Lurrus of the Dream-Den
+```
+
+Keep the 100 starting cards in the Commander/Mainboard sections. The companion
+must satisfy Commander legality, color identity, uniqueness and its condition
+against all 100 cards, including the commander. Install
+`requirements-interactions.txt` and configure the trusted native engine before
+using companions. Failed or missing native condition evidence blocks the deck.
+The CLI retains evidence and exports a validated companion for Forge's native
+pregame handling. A Sideboard heading alone still does not select a companion.

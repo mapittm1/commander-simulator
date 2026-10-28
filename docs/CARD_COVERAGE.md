@@ -83,7 +83,8 @@ sticker sheets and all 22 Commander-legal Attractions, retaining every selection
 and revealing exactly three distinct selected sheets. Empty selections produce
 no supplementary objects. Attraction light variants currently use Forge's default
 printing selection; an explicit printing-selection interface remains work.
-Companion conditions and commander color choices still require backend support.
+Explicit companions now have native condition admission and immutable revisions.
+Commander color choices still require backend support.
 Construction counts must not conceal that limitation. Further work includes
 meld transitions, catalog-wide characteristic comparisons and broader native
 rules regressions. An implementation claim should name its tested behavior;
@@ -126,3 +127,52 @@ hashes are recorded in [native test evidence](../engine/native_test_evidence.jso
 Raw TestNG reports and compiler/test logs remain local under the recorded run ID.
 This is broader regression evidence, not a test for every catalog card or every
 possible interaction.
+
+
+## Explicit companions
+
+Use a `Companion` heading and one `1 Exact Card Name` line. The companion is
+outside the 100 starting cards. It must be Commander-legal, have a companion
+ability, fit the commander's color identity and have a different name from every
+starting card. At most one companion can be selected. Ordinary `Sideboard` and
+`Maybeboard` sections remain ignored and do not select a companion.
+
+Validator version 6 checks the companion's condition against all 100 starting
+cards, including the commander, using the configured default pinned native
+engine. Native characteristics handle changeling, hidden-zone creature types,
+mana symbols, mana values and activated abilities. The admission worker builds
+a controlled partial state and never starts or plays a simulation. All ordinary
+construction checks and catalog freshness must pass before this native analysis
+can run. Optional `requirements-interactions.txt` tools and the configured trusted
+engine are required; missing/failed analysis blocks admission.
+
+Plans, receipts and reports are bounded to 128 KiB. The worker has a 90-second
+deadline, 2 GiB JVM heap, filtered environment and 8 MiB log limit. Engine, source,
+input and native Java evidence are checked. Missing or changed evidence cannot
+approve a deck. A bounded 64-entry process cache keys exact identities/quantities,
+Oracle data, engine and source; results are copied before returning to callers.
+Cold companion validation starts a JVM and can take several seconds. Saved
+revisions are revalidated rather than trusting a prior approval. Alternate
+simulation engines still require their own gameplay/conformance validation.
+
+Exact condition wording is checked against current Oracle text. Two explicit
+[display reviews](../config/companion_condition_reviews.json) cover Gyruda and
+Obosh's singular/plural wording and Gyruda's repeated reminder text. Each review
+pins the Oracle identity, complete native condition and exact script archive;
+used reviews retain the registry hash. Changed predicates or meanings are not
+approximately matched.
+
+The native condition matrix has 22 cases covering all nine legal companion
+identities, including positive/negative controls, Grist's off-battlefield creature
+type, changeling, basic-land mana abilities and Rings of Brighthearth's reminder
+text. Yorion cannot satisfy its larger-deck condition in a 100-card Commander
+deck. Separate integration admits Lurrus with Elas il-Kor, rejects Queen Marchesa
+as a commander-only violation and verifies stable evidence across save/reload.
+Lutri remains excluded by the ordinary current catalog ban gate.
+
+Validated companions are retained in revision snapshots, hashes and a separate
+latest projection, then exported to Forge's native Sideboard section for its
+companion selection and special action. The condition checks do not by themselves
+verify companion AI strategy, special-action payment or every gameplay interaction.
+They implement admission rules from CR 103.2b, 702.139 and 903.11a in the pinned
+[Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).

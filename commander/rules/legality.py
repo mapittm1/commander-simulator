@@ -14,11 +14,12 @@ from sqlite3 import Connection
 from commander.catalog.database import get_card_details
 from commander.decks.deck_snapshots import read_revision
 from commander.rules.card_structure import starting_card_issues
+from commander.rules.companions import companion_issues
 from commander.rules.supplementary import supplementary_issues
 
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
-VALIDATOR_VERSION = 5
+VALIDATOR_VERSION = 6
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
@@ -276,7 +277,8 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
     catalog, blockers = _catalog_evidence(connection, now)
     errors = []
     invalid_entries = any(
-        entry["zone"] not in {"mainboard", "commander", "stickers", "attractions"}
+        entry["zone"]
+        not in {"mainboard", "commander", "stickers", "attractions", "companion"}
         or not isinstance(entry["quantity"], int)
         or isinstance(entry["quantity"], bool)
         or not 1 <= entry["quantity"] <= 100
@@ -288,31 +290,13 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
         (entry["card"]["card_id"], entry["zone"], entry["quantity"])
         for entry in entries
     )
+    companion = None
     try:
-        cards = _load_cards(connection, entries)
-        layout_errors, layout_blockers = starting_card_issues(
-            {
-                entry["card"]["card_id"]: cards[entry["card"]["card_id"]]
-                for entry in _starting_entries(entries)
-            }
+        construction_errors, construction_blockers, companion = _construction_issues(
+            connection, entries, not errors and not blockers
         )
-        errors.extend(supplementary_issues(entries, cards))
-        errors.extend(layout_errors)
-        blockers.extend(layout_blockers)
-        total = sum(entry["quantity"] for entry in _starting_entries(entries))
-        if total != 100:
-            errors.append(f"Expected 100 cards including commanders; found {total}")
-        errors.extend(_commander_errors(entries, cards))
-        errors.extend(_card_errors(_starting_entries(entries), cards))
-        for entry in entries:
-            card = cards[entry["card"]["card_id"]]
-            if (
-                entry["zone"] == "commander"
-                and "choose a color before the game begins" in _oracle(card).casefold()
-            ):
-                blockers.append(
-                    f"Commander color choice is not implemented: {card['name']}"
-                )
+        errors.extend(construction_errors)
+        blockers.extend(construction_blockers)
     except (KeyError, TypeError, ValueError) as error:
         blockers.append(f"Cannot verify deck: {error}")
     return {
@@ -326,6 +310,7 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
         "deck_hash": hashlib.sha256(json.dumps(snapshot).encode()).hexdigest(),
         "checked_at": now.isoformat(),
         "bracket_checked": False,
+        "companion_admission": companion,
     }
 
 
@@ -368,3 +353,37 @@ def require_legal_deck(connection: Connection, deck_id: int, version=None) -> di
 
 def _starting_entries(entries):
     return [entry for entry in entries if entry["zone"] in {"mainboard", "commander"}]
+
+
+def _construction_issues(connection, entries, allow_native):
+    errors, blockers = [], []
+    cards = _load_cards(connection, entries)
+    layout_errors, layout_blockers = starting_card_issues(
+        {
+            entry["card"]["card_id"]: cards[entry["card"]["card_id"]]
+            for entry in _starting_entries(entries)
+        }
+    )
+    errors.extend(supplementary_issues(entries, cards))
+    errors.extend(layout_errors)
+    blockers.extend(layout_blockers)
+    total = sum(entry["quantity"] for entry in _starting_entries(entries))
+    if total != 100:
+        errors.append(f"Expected 100 cards including commanders; found {total}")
+    errors.extend(_commander_errors(entries, cards))
+    errors.extend(_card_errors(_starting_entries(entries), cards))
+    for entry in entries:
+        card = cards[entry["card"]["card_id"]]
+        if (
+            entry["zone"] == "commander"
+            and "choose a color before the game begins" in _oracle(card).casefold()
+        ):
+            blockers.append(
+                f"Commander color choice is not implemented: {card['name']}"
+            )
+    companion = companion_issues(
+        entries, cards, allow_native and not errors and not blockers
+    )
+    errors.extend(companion["errors"])
+    blockers.extend(companion["blockers"])
+    return errors, blockers, companion["evidence"]

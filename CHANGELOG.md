@@ -8,6 +8,30 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Add explicit `Companion` imports outside the 100 starting cards. Require one
+  legal companion with a valid ability, permitted color identity and no matching
+  starting-card name. Validator version 6 checks its condition against the full
+  starting deck, including the commander, through the pinned native engine.
+  Preserve choices and admission evidence in immutable revisions and export to
+  Forge's Sideboard section. Existing Sideboard/Maybeboard imports remain ignored.
+- Bound native admission plans/receipts, process time, heap and logs; verify
+  engine/source/input identity, native Java and exact condition wording. Missing,
+  failed, changed or malformed evidence blocks approval. Use an identity-bound
+  64-entry process cache. Extract shared process-profile/JVM configuration into
+  a runtime module independent of deck/rules services, preserving existing APIs.
+- Add exact Gyruda/Obosh display-wording reviews pinned to Oracle identity,
+  native predicate text and card archive. Bind used registry bytes; changed
+  identities, predicates or Oracle wording do not inherit approval.
+- Validation: 339 offline tests and 418 subtests pass with eight native opt-in
+  tests excluded from the offline gate. Black, isort, Pylint and Bandit pass.
+  The native companion matrix passes 22 cases for all nine legal identities;
+  All eight live integrations pass, including the original 41 controlled cases.
+  Lurrus integration admits Elas il-Kor and rejects a commander-only violation.
+  This verifies condition admission, not companion AI strategy or all special
+  action/payment interactions. Bind the extracted runtime source into controlled
+  interaction evidence as well. Full live regression results remain local.
+
+
 - Verify 581 native regressions in 57 selected Forge AI/gameplay classes without
   failures, errors or skips, including the previously verified 33 sticker tests.
   Record selected classes, process result and raw TestNG/log hashes. Retain raw

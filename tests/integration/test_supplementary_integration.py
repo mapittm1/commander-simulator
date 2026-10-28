@@ -2,7 +2,6 @@
 
 import json
 import os
-import sys
 import unittest
 from contextlib import closing
 
@@ -11,13 +10,13 @@ import pytest
 from commander.catalog.database import DEFAULT_DATABASE, connect, store_card
 from commander.decks.deck_store import get_revision
 from commander.decks.decks import prepare_deck, save_deck
-from commander.engine.engine_process import ProcessLimits, run_bounded
 from commander.engine.forge_config import file_hash, read_settings
 from commander.engine.forge_decks import card_index, serialize_deck
-from commander.engine.forge_engine import _engine_profile, _environment, _new_run
+from commander.engine.forge_engine import _new_run
 from commander.engine.interactions.suite import read_bounded_json
 from commander.paths import PROJECT_ROOT
 from commander.rules.legality import require_current_catalog
+from tests.support.native_worker import run_test_worker
 
 pytestmark = pytest.mark.integration
 
@@ -37,14 +36,9 @@ class NativeSupplementaryTests(unittest.TestCase):
         index = card_index(settings.home / "res/cardsfolder/cardsfolder.zip")
         sheets, attractions = _export_fixture(run, index)
         worker = PROJECT_ROOT / "tests/support/supplementary_worker.py"
-        worker_hash = file_hash(worker)
-        with _engine_profile(settings, run):
-            process = run_bounded(
-                [sys.executable, "-I", str(worker), str(run)],
-                settings.home,
-                run / "supplementary.log",
-                ProcessLimits(90, environment=_environment(run)),
-            )
+        process, worker_hash = run_test_worker(
+            settings, run, worker, "supplementary.log"
+        )
         self.assertEqual(
             (process["status"], process["returncode"]), ("finished", 0), str(run)
         )

@@ -1,10 +1,7 @@
 """Single-game Forge adapter: validated revisions, bounded execution, preserved logs."""
 
 import json
-import os
 import re
-import uuid
-from contextlib import contextmanager
 from pathlib import Path
 from sqlite3 import Connection
 
@@ -14,59 +11,11 @@ from commander.engine.engine_process import ProcessLimits, run_bounded
 from commander.engine.forge_config import EngineSettings
 from commander.engine.forge_decks import card_index, coverage, serialize_deck
 from commander.engine.forge_results import parse_game_result
+from commander.engine.native_runtime import _engine_profile, _environment, create_run
 from commander.paths import DATA_ROOT
 from commander.rules.brackets import load_policy, require_bracket_review
 
 RUNS_ROOT = DATA_ROOT / "runs"
-
-
-def _environment(run: Path) -> dict:
-    """Do not pass account tokens, Java option injection, or other parent secrets."""
-    environment = {
-        name: value
-        for name, value in os.environ.items()
-        if name.upper() in {"SYSTEMROOT", "WINDIR", "LANG", "LC_ALL"}
-    }
-    for variable, folder in (
-        ("TEMP", "temp"),
-        ("TMP", "temp"),
-        ("APPDATA", "appdata"),
-        ("LOCALAPPDATA", "localappdata"),
-    ):
-        path = run / folder
-        path.mkdir(exist_ok=True)
-        environment[variable] = str(path)
-    return environment
-
-
-@contextmanager
-def _engine_profile(settings: EngineSettings, run: Path):
-    """Serialize access to shared engine assets and restore the exact original profile."""
-    profile = settings.home / "forge.profile.properties"
-    if profile.is_symlink():
-        raise ValueError("Engine profile must not be a symbolic link")
-    lock = settings.home / ".commander-simulator.lock"
-    with lock.open("x", encoding="utf-8") as handle:
-        handle.write(json.dumps({"pid": os.getpid(), "run": run.name}))
-    original = None
-    captured = False
-    try:
-        original = profile.read_bytes() if profile.exists() else None
-        captured = True
-        profile.write_text(
-            f"userDir={(run / 'user').as_posix()}\ncacheDir={(run / 'cache').as_posix()}\n",
-            encoding="utf-8",
-        )
-        yield
-    finally:
-        try:
-            if captured:
-                if original is None:
-                    profile.unlink(missing_ok=True)
-                else:
-                    profile.write_bytes(original)
-        finally:
-            lock.unlink(missing_ok=True)
 
 
 def prepare_seats(connection: Connection, seats: list) -> list[dict]:
@@ -102,9 +51,7 @@ def prepare_seats(connection: Connection, seats: list) -> list[dict]:
 
 
 def _new_run() -> Path:
-    run = RUNS_ROOT / uuid.uuid4().hex
-    run.mkdir(parents=True, exist_ok=False)
-    return run
+    return create_run(RUNS_ROOT)
 
 
 def engine_health(settings: EngineSettings) -> dict:

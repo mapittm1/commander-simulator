@@ -6,25 +6,29 @@ See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 
 The core CLI requires Python 3.10 or newer and no third-party runtime packages.
-Controlled interaction tests require the optional native bridge and a trusted local
-JDK 17+ compiler (`javac` on PATH, or an executable selected by `COMMANDER_JAVAC`).
+Companion condition validation and controlled interaction tests require the
+optional native bridge and a trusted Java 17+ runtime. Controlled interaction
+tests also require a JDK 17+ compiler (`javac` on PATH, or an executable selected
+by `COMMANDER_JAVAC`).
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The default reviewed sticker-capable Forge build constructs all **32,109 matched native
-card identities** in the frozen local Commander-format catalog without errors.
+The default reviewed sticker-capable Forge build constructs all **32,109 matched
+native card identities** in the frozen local Commander-format catalog without errors.
 Seven additional records are non-starting meld results. The build passes 33
 native sticker tests, including 10 local Wicker Picker regressions. A broader
-selected native AI/gameplay run passes 581 tests, including those sticker tests. A new
-`engine-card-probe` command preserves bounded, identity-bound construction evidence.
+selected native AI/gameplay run passes 581 tests, including those sticker tests.
+The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
 
 This construction check does not certify all interactions or AI decisions.
 Sticker and Attraction sections now retain validated supplementary selections
-through saved revisions and native pregame loading. Companions and commander
-color choices still need backend support. The 41 controlled interaction scenarios remain separate checks.
+through saved revisions and native pregame loading. Explicit companion selection
+now includes native condition validation against all 100 starting cards. Commander
+color choices still need backend support. The 41 controlled interaction scenarios
+remain separate checks.
 
 ## Run it now
 
