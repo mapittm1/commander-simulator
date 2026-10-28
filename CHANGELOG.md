@@ -8,6 +8,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Verify 581 native regressions in 57 selected Forge AI/gameplay classes without
+  failures, errors or skips, including the previously verified 33 sticker tests.
+  Record selected classes, process result and raw TestNG/log hashes. Retain raw
+  reports locally; exclude GUI/download tests from this headless run. This does
+  not certify every catalog card or interaction. Preserve native CRLF bytes while
+  identifying them as line terminators for Git whitespace checks.
+
+
 - Accept distinct `Stickers`/`Sticker Sheets` and `Attractions` import sections.
   Enforce authoritative types, current Commander legality, at least ten unique
   selections and one copy each; keep them outside the 100 starting cards and

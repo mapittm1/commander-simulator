@@ -15,7 +15,8 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 The default reviewed sticker-capable Forge build constructs all **32,109 matched native
 card identities** in the frozen local Commander-format catalog without errors.
 Seven additional records are non-starting meld results. The build passes 33
-native sticker tests, including 10 local Wicker Picker regressions. A new
+native sticker tests, including 10 local Wicker Picker regressions. A broader
+selected native AI/gameplay run passes 581 tests, including those sticker tests. A new
 `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.

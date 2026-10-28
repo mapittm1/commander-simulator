@@ -114,3 +114,15 @@ instead of silently discarding them. Use `prepare_deck` for resolved, validated
 imports or `parse_deck_sections` when only parsing is needed. Ordinary Sideboard
 and Maybeboard sections retain their existing ignored behavior and do not select
 a companion.
+
+
+## Broader native regressions
+
+The reviewed patched source also passes **581 native tests in 57 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 33
+sticker tests; these counts must not be added together. GUI/download tests were
+outside this run. The selected class inventory, process result and raw-report
+hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
+Raw TestNG reports and compiler/test logs remain local under the recorded run ID.
+This is broader regression evidence, not a test for every catalog card or every
+possible interaction.
