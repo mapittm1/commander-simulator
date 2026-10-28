@@ -365,3 +365,10 @@ descriptions rather than an official source deck score. The 30-day observation
 freshness label is independent of annual voting year. Historical snapshots remain
 unchanged. Salt opinions must remain distinct from engine attack observations,
 causal explanations, bracket approval, and hypothetical targeting policies.
+
+
+Validator version 8 supports exact reviewed self-printing links for meld fronts;
+used source proofs are retained in the legality report and audit version 4.
+This establishes the starting-card role only. Native formation/separation tests
+cover all seven catalog meld results; trigger scheduling, payment, timing and
+commander replacement choices require separate rules fixtures.

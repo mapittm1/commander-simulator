@@ -16,11 +16,12 @@ from commander.decks.deck_snapshots import read_revision
 from commander.rules.card_structure import starting_card_issues
 from commander.rules.commander_colors import color_choice_issues, commander_identity
 from commander.rules.companions import companion_issues
+from commander.rules.meld_part_reviews import meld_part_review
 from commander.rules.supplementary import supplementary_issues
 
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
-VALIDATOR_VERSION = 7
+VALIDATOR_VERSION = 8
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
@@ -289,10 +290,10 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
         + ((entry["commander_color"],) if "commander_color" in entry else ())
         for entry in entries
     )
-    companion = None
+    companion, role_reviews = None, {}
     try:
-        construction_errors, construction_blockers, companion = _construction_issues(
-            connection, entries, not errors and not blockers
+        construction_errors, construction_blockers, companion, role_reviews = (
+            _construction_issues(connection, entries, not errors and not blockers)
         )
         errors.extend(construction_errors)
         blockers.extend(construction_blockers)
@@ -310,6 +311,7 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
         "checked_at": now.isoformat(),
         "bracket_checked": False,
         "companion_admission": companion,
+        "meld_part_reviews": role_reviews,
     }
 
 
@@ -379,4 +381,9 @@ def _construction_issues(connection, entries, allow_native):
     )
     errors.extend(companion["errors"])
     blockers.extend(companion["blockers"])
-    return errors, blockers, companion["evidence"]
+    role_reviews = {
+        card_id: review
+        for card_id, card in cards.items()
+        if (review := meld_part_review(card)) is not None
+    }
+    return errors, blockers, companion["evidence"], role_reviews

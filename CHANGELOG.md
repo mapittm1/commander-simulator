@@ -8,6 +8,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Verify all seven current Commander meld results with 49 native partial-state
+  cases: formation, graveyard/exile separation, missing/wrong-zone parts,
+  ownership/control rejection and a physical Clone reverting to its printed
+  identity in exile. Use real native Meld effects, bounded workers and receipts,
+  exact engine/input/source hashes and an independently checked catalog inventory.
+  Trigger admission, payment, timing and result abilities remain separate work.
+- Resolve Fang/Vanille's ambiguous self-printing references through exact source
+  proofs pinned to both printing/Oracle identities and complete relationship
+  graphs. Reject malformed, conflicting, duplicate or changed evidence. Keep the
+  existing result registry deny-only. Validator version 8 and audit version 4
+  freeze used front proofs without bypassing ordinary deck checks or changing
+  historical evidence.
+- Validation: 367 offline tests and 458 subtests pass; Black, isort, Pylint and
+  Bandit pass. All ten live integrations pass with 75 subtests. Keep native patch
+  context spaces intact while excluding their expected end-of-line spaces from
+  Git's patch-file whitespace check; reviewed patch bytes remain unchanged.
+
+
 - Add explicit pregame commander color choices with validator version 7,
   immutable storage, color identity/companion checks and safe native export.
   Reject missing/invalid/unauthorized choices and incompatible engine capabilities

@@ -15,8 +15,9 @@ from commander.engine.engine_audit_store import (
 from commander.engine.engine_gaps import classify_gap
 from commander.engine.forge_decks import card_index, script_match
 from commander.rules.legality import require_current_catalog
+from commander.rules.meld_part_reviews import meld_part_review
 
-AUDITOR_VERSION = 3
+AUDITOR_VERSION = 4
 
 
 def create_engine_audit(connection, settings) -> dict:
@@ -85,6 +86,10 @@ def _scan_catalog(connection, audit_id, index) -> dict:
                     "Catalog name/detail mismatch during gap classification"
                 )
             snapshot["gap"] = classify_gap(details, index, snapshot["script_status"])
+        if snapshot["layout"] == "meld":
+            review = meld_part_review(get_card_details(connection, snapshot["card_id"]))
+            if review is not None:
+                snapshot["starting_role_review"] = review
         raw, digest = canonical_record(snapshot)
         counts[snapshot["scope"]][snapshot["script_status"]] += 1
         fingerprint.update((digest + "\n").encode("ascii"))

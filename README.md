@@ -30,7 +30,10 @@ through saved revisions and native pregame loading. Explicit companion selection
 now includes native condition validation against all 100 starting cards. Explicit
 commander color choices are retained through legality checks, saved revisions,
 native pregame loading and AI game copies. The 41 controlled interaction scenarios
-remain separate checks.
+remain separate checks. A further 49 native meld cases verify all seven catalog
+results forming, separating after graveyard/exile moves and rejecting invalid
+parts. These meld fixtures directly resolve native effects; they do not certify
+trigger admission, payment or timing.
 
 ## Run it now
 
@@ -707,3 +710,13 @@ English printing dataset when a complete printing-name inventory is needed.
 Printing-only enrichment through the backend `store_printing` API preserves
 current Oracle rules and does not refresh catalog freshness evidence. Historical
 deck revisions retain their canonical identities.
+
+
+Exact source-printing proofs now establish Fang and Vanille as meld starting
+parts when their retained catalog records reference another printing of the same
+Oracle identity. Validator version 8 freezes used proofs into legality reports;
+audit version 4 freezes them into catalog evidence. Both complete relationship
+graphs and both printing/Oracle identities must match. Changed metadata requires
+review. These proofs establish card structure; ordinary Commander legality and
+native engine gates still apply. The separate meld-result registry remains
+deny-only. See [card support and evidence](docs/CARD_COVERAGE.md).

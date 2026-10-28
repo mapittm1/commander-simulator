@@ -1,12 +1,17 @@
 """Starting-deck distinctions that format legality fields alone do not establish."""
 
+from commander.rules.meld_part_reviews import meld_part_review
 from commander.rules.meld_reviews import reviewed_meld_result
 
 
 def meld_role(card: dict) -> str | None:
     """Resolve exact self-reference first, then only a reviewed result exclusion."""
     role = _direct_meld_role(card)
-    return reviewed_meld_result(card) if role == "unknown" else role
+    if role != "unknown":
+        return role
+    if meld_part_review(card) is not None:
+        return "meld_part"
+    return reviewed_meld_result(card)
 
 
 def _direct_meld_role(card: dict) -> str | None:

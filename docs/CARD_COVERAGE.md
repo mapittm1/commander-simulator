@@ -87,8 +87,8 @@ Explicit companions now have native condition admission and immutable revisions.
 Commander color choices now pass backend and native pregame checks, including
 AI game copies. Explicit Attraction printing/light choices remain unsupported;
 construction counts must not conceal that limitation. Further work includes
-meld transitions, catalog-wide characteristic comparisons and broader native
-rules regressions. An implementation claim should name its tested behavior;
+meld trigger admission/payment/timing, catalog-wide characteristic comparisons
+and broader native rules regressions. An implementation claim should name its tested behavior;
 script presence and successful games alone do not certify full card coverage.
 
 
@@ -208,3 +208,40 @@ all 32,109 matched identities. Source/report hashes bind the actual tested build
 The Java executable and JVM library are both checked when pinned by the lock.
 Build recipe bytes are frozen before execution and rechecked after compilation
 and packaging. Previous runtime locks remain available for historical evidence.
+
+
+## Meld formation and separation
+
+A separate bounded native fixture runs **49 cases across all seven meld results**
+currently retained in the Commander-legal catalog. Each pair forms the expected
+linked result and separates into both original fronts on graveyard and exile
+moves. Negative controls cover a missing part, a part in the graveyard, wrong
+ownership, wrong control and a physical Clone copying a part. The latter must
+revert to its true printed identity in exile and cannot form the result.
+
+The fixture resolves actual printed native Meld effects in controlled partial
+states. It does not pay activation costs, schedule the original triggers, prove
+their intervening conditions, test commander replacement choices or certify all
+meld-result abilities. Those remain separate work. Input/worker/engine/source
+hashes and bounded receipts are retained in local run artifacts. The test also
+asserts that its seven-result inventory matches the current catalog.
+
+This test exposed ambiguous self-printing links on Fang and Vanille. The separate
+`config/meld_part_reviews.json` stores exact source-backed proofs linking each
+retained printing to a meld-front printing with the same Oracle identity, name
+and complete three-object relationship graph. Duplicate fields, malformed UUIDs,
+changed fingerprints, wrong roles, mismatched sources and changed graphs are
+rejected. The 64 KiB/32-entry manifest is trusted repository data; its source URLs
+are attribution and are never fetched during validation. The existing result
+review registry cannot approve fronts and remains deny-only.
+
+Validator version 8 freezes used front proofs into legality reports. A proof
+only establishes starting-card structure; size, eligibility, color identity,
+singleton, current format legality and engine checks still run. Audit version 4
+also freezes the used proof. Historical reports are not rewritten.
+
+Verification: **367 offline tests / 458 subtests** pass, with ten native opt-in
+tests excluded from the offline gate. Black, isort, Pylint and Bandit pass. All
+ten live integrations pass with 75 subtests, including the 49 meld cases and the
+original 41 controlled interaction cases. Native gameplay/serialization evidence
+for the unchanged engine binary remains recorded separately.
