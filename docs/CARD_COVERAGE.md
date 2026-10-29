@@ -120,10 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **718 native tests in 66 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 170 focused
+The reviewed patched source also passes **734 native tests in 67 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 186 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life and paid-stack tests; these counts must not be added together.
+starting-life, paid-stack and cast-form tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -536,7 +536,7 @@ broader native regressions and packaged integration evidence in
 
 These are snapshots at settled action points, not suspended Java continuations
 during an effect's execution. Arbitrary event container graphs, delayed callbacks,
-alternate card faces on the stack, all once-per-turn ability identities and all
+unlisted casting forms, all once-per-turn ability identities and all
 mana-spending restrictions still require separate validation. No claim of complete
 card or AI correctness follows from these tests or the catalog construction count.
 
@@ -544,3 +544,53 @@ Paid-stack build verification: **399 offline tests / 508 subtests**, all Python
 quality tools, **170 focused native tests**, **718 broader gameplay tests**
 including those 170, **256 serialization tests**, and **17 live integrations /
 355 subtests** pass. The live/native suites have no failures or skips.
+
+## Cast-form snapshots
+
+Snapshots preserve the form actually being cast, its clone frames and timestamps,
+and mapped clone/exile/effect provenance. Card views reflect the restored name
+and characteristics. Ordinary printed-face reconstruction previously lost these
+forms even when the paid ability itself survived.
+
+Sixteen native cases cover:
+
+| Form or action | Paid witnesses and observations |
+| --- | --- |
+| Adventure | Petty Theft resolves into exile; repeated copies retain permission for a later paid Brazen Borrower cast |
+| Modal double-faced | The Prismatic Bridge remains an enchantment and enters on its back face; Esika's normal front face remains usable |
+| Split | Ice taps and draws; Fire deals its declared divided damage |
+| Morph/disguise | Face-down 2/2 characteristics remain intact, including Dog Walker's ward |
+| Prototype | Phyrexian Fleshgorger retains its three-mana black 3/3 form through resolution and later snapshots; clone state is independent |
+| Bestow | Boon Satyr remains an Aura, attaches and grants its bonus; an invalidated target makes it resolve as a creature instead |
+| Disguise turn-up | A real paid turn-up clears only the copied temporary face-down state |
+| Ward response | A paid Lightning Strike consumes remaining mana before copied ward counters the earlier Lightning Bolt |
+
+The source disguise keyword cache is refreshed when its temporary intrinsic
+keywords change. The face-down reset is represented by scheduling metadata and
+a new callback bound to the copied card, rather than sharing a callback that
+captures the original. Exile provenance retains historical Adventure
+characteristics and permission source references in the copied world.
+
+Six Python/native witnesses additionally compare pending and resolved forms,
+paid mana, colors, target outcomes, source independence and unique live-zone
+instances in the packaged runtime. A retained before-fix receipt shows reverted
+faces, a seven-mana colorless prototype body and unresolved stack-zone objects.
+
+Expectations were checked against retained Scryfall Oracle identities and the
+[Wizards rules text linked from the official rules page](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt),
+effective September 25, 2026: 702.21a, 702.103e, 702.168b/d, 709.3b,
+712.8f/11b/13, 715.3b/d and 718.3b. The exact downloaded bytes and Oracle record
+hashes are recorded in [cast-form evidence](../engine/cast_form_evidence.json).
+This is a check of these rules and witnesses, not a complete current-rules audit.
+
+Other callback kinds, merged/mutated object groups, specialized or perpetual
+states, every alternate-cost mechanic, all hidden-view identifiers and AI policy
+choices still require separate validation. These tests do not certify every
+card or interaction.
+
+Cast-form build verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **186 focused native tests**, **734 broader gameplay tests**
+including those 186, **256 serialization tests**, **18 live integrations / 361
+subtests**, and **32,109 matched constructions** pass. Native/live runs have no
+failures or skips; the seven non-starting meld results remain excluded from
+standalone construction and retain their separate interaction checks.

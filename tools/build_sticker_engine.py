@@ -103,6 +103,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/participant-snapshot-state.patch",
                 "engine/patches/starting-life-snapshot.patch",
                 "engine/patches/paid-stack-state.patch",
+                "engine/patches/cast-form-snapshot.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -118,6 +119,7 @@ def _verify_inputs(args, recipe):
         "ParticipantGameCopyTest.java": "participant_copy_test_sha256",
         "StartingLifeGameCopyTest.java": "starting_life_test_sha256",
         "StackGameCopyTest.java": "stack_snapshot_test_sha256",
+        "FaceGameCopyTest.java": "cast_form_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -258,6 +260,11 @@ def _patch_source(source, run, recipe):
         source / "forge-gui-desktop/src/test/java/forge/ai/StackGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/FaceGameCopyTest.java",
+        source / "forge-gui-desktop/src/test/java/forge/ai/FaceGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -298,7 +305,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

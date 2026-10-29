@@ -19,11 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 170
+Seven additional records are non-starting meld results. The build passes 186
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
-participant state, starting-life baselines and paid stack state.
-Broader native runs pass 718 AI/gameplay tests (including those 170) and 256
+participant state, starting-life baselines, paid stack state and cast forms.
+Broader native runs pass 734 AI/gameplay tests (including those 186) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
@@ -71,6 +71,12 @@ divided targets, activated abilities, admitted triggers, cast history and floati
 mana through snapshots. It checks resolution in the copied game without changing
 the source game or replaying cast events. See the
 [paid-stack validation scope](docs/CARD_COVERAGE.md#paid-stack-snapshots).
+
+Cast-form validation additionally covers paid Adventure, split, modal back-face,
+morph/disguise, prototype and bestow casts, repeated Adventure snapshots followed
+by casting from exile, and real disguise turn-up/ward outcomes. Copied card views
+agree with the restored form. See the
+[cast-form validation scope](docs/CARD_COVERAGE.md#cast-form-snapshots).
 
 ## Run it now
 

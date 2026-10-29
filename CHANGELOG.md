@@ -8,6 +8,29 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve active cast faces and clone frames through snapshots: Adventure, split,
+  modal back-face, morph/disguise, prototype and bestow forms retain their actual
+  characteristics. Keep clone provenance, bestow/prototype timestamps and copied
+  card views independent and consistent with the paid form.
+- Map exile/effect provenance so a resolved Adventure remains playable after
+  repeated snapshots. Refresh disguise's keyword cache and reconstruct only its
+  marked face-down reset using a fresh callback bound to the copied card.
+- Add sixteen native paid-action cases, including normal front-face controls,
+  invalidated bestow targets, repeated Adventure copies and later casting, paid
+  disguise turn-up, independent clone state, and ward countering a Bolt after a
+  paid response consumes the opponent's remaining mana. Add six packaged-runtime
+  witnesses that retain every live-zone instance and compare resolved outcomes.
+- Preserve before-fix receipts; check witness costs/text against retained Scryfall
+  identities and selected versioned Wizards rules. Document unverified callback,
+  hidden-view, merged/perpetual-state and alternate-cost behavior.
+
+
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  186 focused native tests; 734 broader gameplay tests including those 186;
+  256 serialization tests; all 18 live integrations / 361 subtests; and all
+  32,109 matched native constructions pass. Pin cast-form evidence and activate
+  the reviewed runtime while retaining earlier builds and locks.
+
 - Restore existing paid spells, activated abilities and admitted triggers in AI
   snapshots instead of recasting printed spell definitions. Preserve mana/X,
   kicker/buyback, modal graphs, target incarnations/divided allocations, historical

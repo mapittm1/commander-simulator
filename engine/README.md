@@ -16,7 +16,9 @@ receipt histories. A ninth preserves registered participant mappings and active/
 lists without replaying elimination, restoring life before loss outcomes.
 A tenth patch preserves registered and live starting-life baselines. An eleventh
 restores paid spell/ability graphs, stack entries, cast history and mapped mana
-without replaying cast events. All eleven patches are pinned. No remote branch is used at build time.
+without replaying cast events. A twelfth preserves active card forms, prototype clone frames, bestow timestamps,
+exile/effect provenance and the scheduled face-down-state reset. It also refreshes
+disguise keyword caches. All twelve patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -32,8 +34,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-170 native sticker, chosen-color, companion, supplementary-copy, history,
-damage, participant, starting-life and paid-stack tests.
+186 native sticker, chosen-color, companion, supplementary-copy, history,
+damage, participant, starting-life, paid-stack and cast-form tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -63,15 +65,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins ten regression source files and exactly three card-script
+The recipe pins eleven regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 718 gameplay and 256
+686 files verified against immutable source. The broader 734 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 170 focused tests are included in the 718.
+in `native_test_evidence.json`; the 186 focused tests are included in the 734.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -143,3 +145,11 @@ The 30 StackGameCopyTest cases distinguish paid ability snapshots from ordinary
 in-game spell-copy effects and verify source independence. The runtime is checked
 through five fixed Python/native witnesses as well as the broader native suites.
 See the coverage document for unvalidated stack/AI behavior.
+
+Cast-form validation is retained in [cast_form_evidence.json](cast_form_evidence.json).
+FaceGameCopyTest adds sixteen paid-action scenarios. Six packaged-runtime cases
+record all live-zone instances of each resolved card, so a leftover stack object
+cannot be hidden by selecting a convenient match. Oracle witnesses and the
+versioned Wizards rules reference are recorded separately from engine behavior.
+Only the marked face-down-state reset callback is reconstructed; this is not
+general Java callback/continuation copying or complete alternate-cost coverage.
