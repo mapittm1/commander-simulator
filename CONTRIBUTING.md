@@ -3,6 +3,29 @@
 Readable, maintainable, secure code is a project requirement. These standards
 apply to every change, including generated code and future engine integrations.
 
+## Workspace and file placement
+
+Use one active checkout for source, tests and documentation. Check the working
+folder before editing; project files and temporary scripts must not be written
+in Downloads. Commands in this guide run from the repository root.
+
+| Folder | Contents |
+| --- | --- |
+| commander/ | Application modules grouped by backend responsibility |
+| config/ | Versioned configuration, policies and engine locks |
+| tests/unit/, tests/integration/, tests/support/ | Offline tests, opt-in live tests and fixed fixtures |
+| tools/ | Trusted maintenance and verification commands |
+| engine/ | Reviewed native patches, regression sources and evidence |
+| data/development/ | Ignored temporary development work |
+| data/local-archive/ | Ignored preserved old workspaces and migration receipts |
+
+Preserve older copies under the local archive instead of overwriting current
+modules. A migration must check destination collisions and verify moved file
+contents. Neither archives nor generated engine binaries belong in Git.
+For hashed build/evidence files, preserve exact bytes or require portable LF with
+Git attributes; verify staged bytes match the files that produced the evidence.
+Changing frozen inputs requires regenerating their bound validation.
+
 ## Readability and design
 
 - Use descriptive names and conventional Python formatting. Prefer explicit

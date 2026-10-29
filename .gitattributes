@@ -2,3 +2,8 @@
 engine/patches/*.patch -text whitespace=-blank-at-eol,cr-at-eol
 engine/tests/*.java -text whitespace=cr-at-eol
 engine/sticker_recipe.json -text whitespace=cr-at-eol
+# Evidence hashes bind exact bytes; fixed native witness source uses portable LF.
+engine/native_test_evidence.json -text whitespace=cr-at-eol
+engine/history_state_evidence.json -text whitespace=cr-at-eol
+tests/support/history_worker.py text eol=lf
+tests/integration/test_history_integration.py text eol=lf

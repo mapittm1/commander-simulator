@@ -1,0 +1,524 @@
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -7,6 +7,10 @@
+ import forge.card.CardType;
+ import forge.game.Game;
+ import forge.game.GameEntity;
++import forge.game.GameObject;
++import forge.game.IEntityMap;
++import forge.game.zone.Zone;
++import forge.game.zone.ZoneType;
+ import forge.game.ability.ApiType;
+ import forge.game.ability.effects.DetachedCardEffect;
+ import forge.game.player.Player;
+@@ -26,13 +30,99 @@
+ 
+     private final Card copyFrom;
+     private final Game toGame;
++    private final IEntityMap historyMap;
++    private final Map<Card, Card> historicalObjects;
+     public CardCopyService(Card copyFrom) {
+         this(copyFrom, copyFrom == null ? null : copyFrom.getGame());
+     }
+ 
+     public CardCopyService(Card copyFrom, Game toGame) {
++        this(copyFrom, toGame, null);
++    }
++
++    private CardCopyService(Card copyFrom, Game toGame, IEntityMap historyMap) {
++        this(copyFrom, toGame, historyMap, new java.util.IdentityHashMap<>());
++    }
++
++    private CardCopyService(Card copyFrom, Game toGame, IEntityMap historyMap, Map<Card, Card> historicalObjects) {
++        this.historicalObjects = historicalObjects;
+         this.copyFrom = copyFrom;
+         this.toGame = toGame;
++        this.historyMap = historyMap;
++    }
++
++    /** Copy historical characteristics, not the live incarnation with the same card ID. */
++    public static Card getLKICopyForGame(Card source, IEntityMap map) {
++        return new CardCopyService(source, map.getGame(), map).getLKICopy();
++    }
++
++    private IEntityMap historyGraph(Map<Integer, Card> cache) {
++        return new IEntityMap() {
++            @Override
++            public Game getGame() { return toGame; }
++
++            @Override
++            public forge.game.combat.AttackingBand mapCombatBand(forge.game.combat.AttackingBand band) {
++                return historyMap == null ? band : historyMap.mapCombatBand(band);
++            }
++
++            @Override
++            public GameObject map(GameObject object) {
++                return historyMap == null ? object : (GameObject) historyObject(object, cache);
++            }
++        };
++    }
++
++    private Player historyPlayer(Player player) {
++        return historyMap == null || player == null ? player : historyMap.map(player);
++    }
++
++    private Card historyCard(Card card, Map<Integer, Card> cache) {
++        return historyMap == null ? getLKICopy(card, cache)
++                : new CardCopyService(card, toGame, historyMap, historicalObjects).getLKICopy(cache);
++    }
++
++    private GameEntity historyEntity(GameEntity entity, Map<Integer, Card> cache) {
++        return entity instanceof Card ? historyCard((Card) entity, cache) : historyPlayer((Player) entity);
++    }
++
++    private List<Card> historyCards(Iterable<Card> cards, Map<Integer, Card> cache) {
++        List<Card> result = Lists.newArrayList();
++        if (cards != null) {
++            for (Card card : cards) result.add(historyCard(card, cache));
++        }
++        return result;
++    }
++
++    private Zone historyZone(Zone zone) {
++        if (historyMap == null || zone == null) return zone;
++        if (zone.getZoneType() == ZoneType.Stack) return toGame.getStackZone();
++        Player player = historyPlayer(zone.getPlayer());
++        if (player == null) throw new IllegalStateException("Historical zone has no mapped player");
++        return player.getZone(zone.getZoneType());
++    }
++
++    private SpellAbility historyAbility(SpellAbility ability, Map<Integer, Card> cache) {
++        if (historyMap == null || ability == null) return ability;
++        SpellAbility copy = ability.copy(historyCard(ability.getHostCard(), cache), true);
++        copy.setActivatingPlayer(historyPlayer(ability.getActivatingPlayer()));
++        return copy;
++    }
++
++    private Object historyObject(Object object, Map<Integer, Card> cache) {
++        if (object instanceof Card) return historyCard((Card) object, cache);
++        if (object instanceof Player) return historyPlayer((Player) object);
++        if (object instanceof SpellAbility) return historyAbility((SpellAbility) object, cache);
++        if (historyMap != null && object instanceof GameObject) {
++            throw new IllegalStateException("Unsupported historical game-object reference");
++        }
++        return object;
++    }
++
++    private List<Object> historyObjects(Iterable<?> objects, Map<Integer, Card> cache) {
++        List<Object> result = Lists.newArrayList();
++        for (Object object : objects) result.add(historyObject(object, cache));
++        return result;
+     }
+ 
+     public final Card copyCard(boolean assignNewId) {
+@@ -223,7 +313,7 @@
+         if (copyFrom == null) {
+             return null;
+         }
+-        Card cachedCard = cachedMap.get(copyFrom.getId());
++        Card cachedCard = historyMap == null ? cachedMap.get(copyFrom.getId()) : historicalObjects.get(copyFrom);
+         if (cachedCard != null) {
+             return cachedCard;
+         }
+@@ -237,13 +327,14 @@
+ 
+         final Card newCopy;
+         if(copyFrom instanceof DetachedCardEffect)
+-            newCopy = new DetachedCardEffect((DetachedCardEffect) copyFrom, false);
++            newCopy = new DetachedCardEffect((DetachedCardEffect) copyFrom, toGame, false);
+         else
+-            newCopy = new Card(copyFrom.getId(), copyFrom.getPaperCard(), copyFrom.getGame(), null, true);
+-        cachedMap.put(copyFrom.getId(), newCopy);
++            newCopy = new Card(copyFrom.getId(), copyFrom.getPaperCard(), toGame, null, true);
++        if (historyMap == null) cachedMap.put(copyFrom.getId(), newCopy);
++        else historicalObjects.put(copyFrom, newCopy);
+         newCopy.setSetCode(copyFrom.getSetCode());
+-        newCopy.setOwner(copyFrom.getOwner());
+-        newCopy.setController(copyFrom.getController(), 0);
++        newCopy.setOwner(historyPlayer(copyFrom.getOwner()));
++        newCopy.setController(historyPlayer(copyFrom.getController()), 0);
+         newCopy.setCommander(copyFrom.isCommander());
+         newCopy.setChosenCommanderColor(copyFrom.getChosenCommanderColor());
+         newCopy.setCollectible(copyFrom.isCollectible());
+@@ -252,9 +343,9 @@
+         // (e.g. Scrap Trawler + transformed Harvest Hand)
+         newCopy.setLKICMC(copyFrom.getCMC());
+         // used for the purpose of cards that care about the zone the card was known to be in last
+-        newCopy.setLastKnownZone(copyFrom.getLastKnownZone());
++        newCopy.setLastKnownZone(historyZone(copyFrom.getLastKnownZone()));
+         // copy EffectSource for description
+-        newCopy.setEffectSource(getLKICopy(copyFrom.getEffectSource(), cachedMap));
++        newCopy.setEffectSource(historyCard(copyFrom.getEffectSource(), cachedMap));
+ 
+         if (copyFrom.isFlipCard()) {
+             newCopy.getState(CardStateName.Original).copyFrom(copyFrom.getState(CardStateName.Original), true);
+@@ -313,7 +404,7 @@
+         newCopy.setPTBoost(copyFrom.getPTBoostTable());
+ 
+         newCopy.copyFrom(copyFrom);
+-        newCopy.copyStickerRecordsForLKI(copyFrom);
++        newCopy.copyStickerRecordsForLKI(copyFrom, historyMap);
+         newCopy.setCounters(HashMultiset.create(copyFrom.getCounters()));
+ 
+         newCopy.setColor(copyFrom.getColor());
+@@ -326,27 +417,27 @@
+         newCopy.setSolved(copyFrom.isSolved());
+         newCopy.setPromisedGift(copyFrom.getPromisedGift());
+         newCopy.setSaddled(copyFrom.isSaddled());
+-        if (newCopy.isSaddled()) newCopy.setSaddledByThisTurn(copyFrom.getSaddledByThisTurn());
++        if (newCopy.isSaddled()) newCopy.setSaddledByThisTurn(historyMap == null ? copyFrom.getSaddledByThisTurn() : new CardCollection(historyCards(copyFrom.getSaddledByThisTurn(), cachedMap)));
+         if (copyFrom.isSuspected()) {
+             newCopy.setSuspectedStatic(copyFrom.getSuspectedStatic().copy(newCopy, true));
+         }
+ 
+-        newCopy.setDamageHistory(copyFrom.getDamageHistory());
++        newCopy.setDamageHistory(copyFrom.getDamageHistory().copy(historyGraph(cachedMap)));
+         newCopy.setDamageReceivedThisTurn(copyFrom.getDamageReceivedThisTurn());
+         newCopy.setExcessDamageReceivedThisTurn(copyFrom.getExcessDamageThisTurn());
+ 
+         // these are LKI already
+-        newCopy.getBlockedThisTurn().addAll(copyFrom.getBlockedThisTurn());
+-        newCopy.getBlockedByThisTurn().addAll(copyFrom.getBlockedByThisTurn());
+-
+-        newCopy.setAttachedCards(getLKICopyList(copyFrom.getAttachedCards(), cachedMap));
+-        newCopy.setEntityAttachedTo(getLKICopy(copyFrom.getEntityAttachedTo(), cachedMap));
+-
+-        newCopy.setCopiedPermanent(copyFrom.getCopiedPermanent());
+-
+-        newCopy.setHaunting(copyFrom.getHaunting());
++        newCopy.getBlockedThisTurn().addAll(historyMap == null ? copyFrom.getBlockedThisTurn() : historyCards(copyFrom.getBlockedThisTurn(), cachedMap));
++        newCopy.getBlockedByThisTurn().addAll(historyMap == null ? copyFrom.getBlockedByThisTurn() : historyCards(copyFrom.getBlockedByThisTurn(), cachedMap));
++
++        newCopy.setAttachedCards(historyCards(copyFrom.getAttachedCards(), cachedMap));
++        newCopy.setEntityAttachedTo(historyEntity(copyFrom.getEntityAttachedTo(), cachedMap));
++
++        newCopy.setCopiedPermanent(historyMap == null ? copyFrom.getCopiedPermanent() : historyCard(copyFrom.getCopiedPermanent(), cachedMap));
++
++        newCopy.setHaunting(historyMap == null ? copyFrom.getHaunting() : historyCard(copyFrom.getHaunting(), cachedMap));
+         for (final Card haunter : copyFrom.getHauntedBy()) {
+-            newCopy.addHauntedBy(haunter, false);
++            newCopy.addHauntedBy(historyMap == null ? haunter : historyCard(haunter, cachedMap), false);
+         }
+ 
+         newCopy.setIntensity(copyFrom.getIntensity(false));
+@@ -355,9 +446,9 @@
+         // infinite recursion in getReplacementList for "enters tapped" effects.
+         newCopy.setPerpetual(copyFrom, false);
+ 
+-        newCopy.addRemembered(copyFrom.getRemembered());
+-        newCopy.addImprintedCards(copyFrom.getImprintedCards());
+-        newCopy.setChosenCards(copyFrom.getChosenCards());
++        newCopy.addRemembered(historyMap == null ? copyFrom.getRemembered() : historyObjects(copyFrom.getRemembered(), cachedMap));
++        newCopy.addImprintedCards(historyMap == null ? copyFrom.getImprintedCards() : historyCards(copyFrom.getImprintedCards(), cachedMap));
++        newCopy.setChosenCards(historyMap == null ? copyFrom.getChosenCards() : historyCards(copyFrom.getChosenCards(), cachedMap));
+ 
+         newCopy.setChosenType(copyFrom.getChosenType());
+         newCopy.setChosenType2(copyFrom.getChosenType2());
+@@ -389,7 +480,7 @@
+ 
+         newCopy.setPrepared(copyFrom.getPrepared());
+ 
+-        newCopy.setMeldedWith(getLKICopy(copyFrom.getMeldedWith(), cachedMap));
++        newCopy.setMeldedWith(historyCard(copyFrom.getMeldedWith(), cachedMap));
+ 
+         // update keyword cache on all states
+         for (CardStateName s : newCopy.getStates()) {
+@@ -398,16 +489,22 @@
+ 
+         if (copyFrom.getCastSA() != null) {
+             SpellAbility castSA = copyFrom.getCastSA().copy(newCopy, true);
++            castSA.setActivatingPlayer(historyPlayer(castSA.getActivatingPlayer()));
+             castSA.setLastStateBattlefield(CardCollection.EMPTY);
+             castSA.setLastStateGraveyard(CardCollection.EMPTY);
+             newCopy.setCastSA(castSA);
+         }
++        if (historyMap != null) {
++            for (SpellAbility ability : newCopy.getSpellAbilities()) {
++                ability.setActivatingPlayer(historyPlayer(ability.getActivatingPlayer()));
++            }
++        }
+         newCopy.setCastFrom(copyFrom.getCastFrom());
+ 
+-        newCopy.setExiledBy(copyFrom.getExiledBy());
+-        newCopy.setExiledWith(getLKICopy(copyFrom.getExiledWith(), cachedMap));
+-        newCopy.setExiledSA(copyFrom.getExiledSA());
+-        newCopy.addExiledCards(copyFrom.getExiledCards());
++        newCopy.setExiledBy(historyPlayer(copyFrom.getExiledBy()));
++        newCopy.setExiledWith(historyCard(copyFrom.getExiledWith(), cachedMap));
++        newCopy.setExiledSA(historyAbility(copyFrom.getExiledSA(), cachedMap));
++        newCopy.addExiledCards(historyMap == null ? copyFrom.getExiledCards() : historyCards(copyFrom.getExiledCards(), cachedMap));
+ 
+         newCopy.setDiscarded(copyFrom.wasDiscarded());
+         newCopy.setMilled(copyFrom.wasMilled());
+@@ -417,13 +514,28 @@
+         newCopy.getAbilityActivatedThisGame().putAll(copyFrom.getAbilityActivatedThisGame());
+         newCopy.getAbilityResolvedThisTurn().putAll(copyFrom.getAbilityResolvedThisTurn());
+ 
+-        if (copyFrom.getGame().getCombat() != null && copyFrom.isPermanent()) {
++        if (historyMap != null && copyFrom.getCombatLKI() != null) {
++            newCopy.setCombatLKI(copyFrom.getCombatLKI().copy(historyGraph(cachedMap)));
++        } else if (historyMap == null && copyFrom.getGame().getCombat() != null && copyFrom.isPermanent()) {
+             newCopy.setCombatLKI(copyFrom.getGame().getCombat().saveLKI(newCopy));
+         }
+ 
+-        newCopy.getGoadMap().putAll(copyFrom.getGoadMap());
+-
+-        newCopy.setMayPlay(copyFrom.getMayPlay());
++        for (Map.Entry<Long, Player> entry : copyFrom.getGoadMap().entrySet()) {
++            newCopy.getGoadMap().put(entry.getKey(), historyPlayer(entry.getValue()));
++        }
++
++        if (historyMap == null) {
++            newCopy.setMayPlay(copyFrom.getMayPlay());
++        } else {
++            for (CardPlayOption option : copyFrom.getMayPlay().values()) {
++                forge.game.staticability.StaticAbility ability = option.getAbility().copy(historyCard(option.getHost(), cachedMap), true);
++                forge.game.player.PlayerCollection players = new forge.game.player.PlayerCollection();
++                for (Player player : option.getPlayers()) players.add(historyPlayer(player));
++                newCopy.setMayPlay(players, option.getPayManaCost() == CardPlayOption.PayManaCost.NO,
++                        option.getAltManaCost() == null ? null : option.getAltManaCost().copy(),
++                        option.isWithFlash(), option.grantsZonePermissions(), ability);
++            }
++        }
+ 
+         return newCopy;
+     }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -4668,7 +4668,19 @@
+     }
+     /** LKI already holds effective characteristics; retain records without applying them twice. */
+     public final void copyStickerRecordsForLKI(final Card source) {
+-        stickers = new ArrayList<>(source.getStickers());
++        copyStickerRecordsForLKI(source, null);
++    }
++
++    public final void copyStickerRecordsForLKI(final Card source, final forge.game.IEntityMap map) {
++        stickers = new ArrayList<>();
++        for (AppliedSticker applied : source.getStickers()) {
++            if (map == null) {
++                stickers.add(applied);
++            } else {
++                forge.game.card.sticker.Sticker sticker = applied.getSticker().copyForSheet(map.map(applied.getSticker().getSheet()));
++                stickers.add(new AppliedSticker(sticker, applied.getTimestamp(), applied.getNamePosition()));
++            }
++        }
+         view.updateStickers(this);
+     }
+ 
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -55,6 +55,7 @@
+         ZoneType.StickerSheets,
+     };
+ 
++    private final Map<forge.game.combat.AttackingBand, forge.game.combat.AttackingBand> combatBands = new java.util.IdentityHashMap<>();
+     private Game origGame;
+     private BiMap<Player, Player> playerMap = HashBiMap.create();
+     private BiMap<Card, Card> cardMap = HashBiMap.create();
+@@ -94,6 +95,10 @@
+             return snapshot.makeCopy();
+         }
+ 
++        combatBands.clear();
++        cardMap.clear();
++        playerMap.clear();
++        stackMap.clear();
+         List<RegisteredPlayer> origPlayers = origGame.getMatch().getPlayers();
+         List<RegisteredPlayer> newPlayers = new ArrayList<>();
+         for (RegisteredPlayer p : origPlayers) {
+@@ -338,7 +343,14 @@
+         }
+ 
+         copyStickerState();
+-        copyLeftThisTurn(newGame, aiPlayer);
++        for (Player original : origGame.getPlayers()) {
++            Player copied = playerMap.get(original);
++            for (ZoneType zone : ZONES) {
++                if (zone != ZoneType.Stack) copied.getZone(zone).copyTurnHistoryFrom(original.getZone(zone), gameObjectMap);
++            }
++        }
++        newGame.getStackZone().copyTurnHistoryFrom(origGame.getStackZone(), gameObjectMap);
++        copyLeftThisTurn(newGame);
+     }
+ 
+     private void copyStickerState() {
+@@ -359,35 +371,12 @@
+      * What left the battlefield and the graveyard this turn: revolt (Fatal Push, Narnam Renegade), morbid and the like
+      * read it. Without it a play that depends on it is judged in a game where nothing has happened this turn.
+      */
+-    private void copyLeftThisTurn(Game newGame, Player aiPlayer) {
+-        for (int pass = 0; pass < 2; pass++) {
+-            final List<Card> origList = pass == 0 ? origGame.getLeftBattlefieldThisTurn() : origGame.getLeftGraveyardThisTurn();
+-            for (Card lki : new ArrayList<>(origList)) {
+-                try {
+-                    final Card now = origGame.findById(lki.getId());
+-                    Card base = now == null ? null : cardMap.get(now);
+-                    if (base == null) {
+-                        // a token (it ceased to exist): rebuild it from the last known information
+-                        final Player owner = playerMap.get(lki.getOwner());
+-                        if (owner == null) {
+-                            continue;
+-                        }
+-                        base = createCardCopy(newGame, owner, lki, aiPlayer);
+-                    }
+-                    final Card copy = CardCopyService.getLKICopy(base);
+-                    final Player controller = lki.getController() == null ? null : playerMap.get(lki.getController());
+-                    if (controller != null && !controller.equals(copy.getController())) {
+-                        copy.setController(controller, copy.getGameTimestamp());
+-                    }
+-                    if (pass == 0) {
+-                        newGame.addLeftBattlefieldThisTurn(copy);
+-                    } else {
+-                        newGame.addLeftGraveyardThisTurn(copy);
+-                    }
+-                } catch (final RuntimeException e) {
+-                    // history is a refinement: a card that cannot be rebuilt is left out
+-                }
+-            }
++    private void copyLeftThisTurn(Game newGame) {
++        for (Card historical : origGame.getLeftBattlefieldThisTurn()) {
++            newGame.addLeftBattlefieldThisTurn(CardCopyService.getLKICopyForGame(historical, gameObjectMap));
++        }
++        for (Card historical : origGame.getLeftGraveyardThisTurn()) {
++            newGame.addLeftGraveyardThisTurn(CardCopyService.getLKICopyForGame(historical, gameObjectMap));
+         }
+     }
+ 
+@@ -601,6 +590,15 @@
+         public GameObject map(GameObject o) {
+             return find(o);
+         }
++
++        @Override
++        public forge.game.combat.AttackingBand mapCombatBand(forge.game.combat.AttackingBand original) {
++            return combatBands.computeIfAbsent(original, band -> {
++                forge.game.combat.AttackingBand copy = new forge.game.combat.AttackingBand(mapList(new ArrayList<>(band.getAttackers())));
++                if (band.isBlocked() != null) copy.setBlocked(band.isBlocked());
++                return copy;
++            });
++        }
+     }
+ 
+     public <T extends GameObject> T find(T o) {
+--- a/forge-game/src/main/java/forge/game/card/CardDamageHistory.java
++++ b/forge-game/src/main/java/forge/game/card/CardDamageHistory.java
+@@ -4,6 +4,7 @@
+ import com.google.common.collect.Sets;
+ import forge.game.CardTraitBase;
+ import forge.game.GameEntity;
++import forge.game.IEntityMap;
+ import forge.game.player.Player;
+ import forge.game.zone.ZoneType;
+ import forge.util.collect.FCollection;
+@@ -40,6 +41,26 @@
+     // only needed for The Fallen
+     private final FCollection<GameEntity> damagedThisGame = new FCollection<>();
+     Set<Boolean> hasdealtDamagetoAny = Sets.newHashSet();
++
++    /** Freeze mutable history containers and map game objects into a snapshot. */
++    public CardDamageHistory copy(IEntityMap map) {
++        CardDamageHistory copy = new CardDamageHistory();
++        copy.attacksThisGame = attacksThisGame;
++        copy.creatureAttackedThisCombat = creatureAttackedThisCombat;
++        copy.creatureBlockedThisCombat = creatureBlockedThisCombat;
++        copy.creatureGotBlockedThisCombat = creatureGotBlockedThisCombat;
++        copy.attackedThisTurn.addAll(map.mapList(attackedThisTurn));
++        copy.attackedBattleThisTurn = attackedBattleThisTurn;
++        copy.creatureAttackedLastTurnOf.addAll(map.mapList(creatureAttackedLastTurnOf));
++        copy.NotAttackedSinceLastUpkeepOf.addAll(map.mapList(NotAttackedSinceLastUpkeepOf));
++        copy.NotBlockedSinceLastUpkeepOf.addAll(map.mapList(NotBlockedSinceLastUpkeepOf));
++        copy.NotBeenBlockedSinceLastUpkeepOf.addAll(map.mapList(NotBeenBlockedSinceLastUpkeepOf));
++        copy.damageDoneThisTurn.addAll(damageDoneThisTurn);
++        copy.damagedThisCombat.addAll(map.mapList(damagedThisCombat));
++        for (GameEntity entity : damagedThisGame) copy.damagedThisGame.add(map.map(entity));
++        copy.hasdealtDamagetoAny.addAll(hasdealtDamagetoAny);
++        return copy;
++    }
+ 
+     public final boolean getHasdealtDamagetoAny() {
+         return !hasdealtDamagetoAny.isEmpty();
+--- a/forge-game/src/main/java/forge/game/zone/Zone.java
++++ b/forge-game/src/main/java/forge/game/zone/Zone.java
+@@ -246,6 +246,22 @@
+         return Lists.newArrayList(cardsAdded.values());
+     }
+ 
++    /** Restore observed entries after snapshot construction, without inventing zone moves. */
++    public final void copyTurnHistoryFrom(Zone original, forge.game.IEntityMap map) {
++        cardsAddedThisTurn.clear();
++        cardsAddedLastTurn.clear();
++        enteredFromThisTurn.clear();
++        for (Map.Entry<ZoneType, Card> entry : original.cardsAddedThisTurn.entries()) {
++            cardsAddedThisTurn.put(entry.getKey(), CardCopyService.getLKICopyForGame(entry.getValue(), map));
++        }
++        for (Map.Entry<ZoneType, Card> entry : original.cardsAddedLastTurn.entries()) {
++            cardsAddedLastTurn.put(entry.getKey(), CardCopyService.getLKICopyForGame(entry.getValue(), map));
++        }
++        for (Map.Entry<Card, ZoneType> entry : original.enteredFromThisTurn.entrySet()) {
++            enteredFromThisTurn.put(CardCopyService.getLKICopyForGame(entry.getKey(), map), entry.getValue());
++        }
++    }
++
+     public final void resetCardsAddedThisTurn() {
+         cardsAddedLastTurn.clear();
+         cardsAddedLastTurn.putAll(cardsAddedThisTurn);
+--- a/forge-game/src/main/java/forge/game/combat/CombatLki.java
++++ b/forge-game/src/main/java/forge/game/combat/CombatLki.java
+@@ -1,5 +1,6 @@
+ package forge.game.combat;
+ 
++import forge.game.IEntityMap;
+ import forge.util.collect.FCollection;
+ import forge.util.collect.FCollectionView;
+ 
+@@ -17,6 +18,15 @@
+         this.relatedBands = new FCollection<>(relatedBands);
+     }
+ 
++    /** Preserve the historical band without sharing its mutable attacker list. */
++    public CombatLki copy(IEntityMap map) {
++        FCollection<AttackingBand> bands = new FCollection<>();
++        for (AttackingBand original : relatedBands) {
++            bands.add(map.mapCombatBand(original));
++        }
++        return new CombatLki(isAttacker, bands);
++    }
++
+     public AttackingBand getFirstBand() {
+         return relatedBands.isEmpty() ? null : relatedBands.get(0);
+     }
+--- a/forge-game/src/main/java/forge/game/IEntityMap.java
++++ b/forge-game/src/main/java/forge/game/IEntityMap.java
+@@ -12,6 +12,12 @@
+     Game getGame();
+ 
+     GameObject map(GameObject o);
++
++    default forge.game.combat.AttackingBand mapCombatBand(forge.game.combat.AttackingBand original) {
++        forge.game.combat.AttackingBand copy = new forge.game.combat.AttackingBand(mapList(new ArrayList<>(original.getAttackers())));
++        if (original.isBlocked() != null) copy.setBlocked(original.isBlocked());
++        return copy;
++    }
+ 
+     default Player map(final Player p) {
+         return (Player) map((GameObject) p);
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -88,15 +88,7 @@
+         HashMap<AttackingBand, AttackingBand> bandsMap = new HashMap<>();
+         for (Entry<GameEntity, AttackingBand> entry : combat.attackedByBands.get().entries()) {
+             AttackingBand origBand = entry.getValue();
+-            ArrayList<Card> attackers = new ArrayList<>();
+-            for (Card c : origBand.getAttackers()) {
+-                attackers.add(map.map(c));
+-            }
+-            AttackingBand newBand = new AttackingBand(attackers);
+-            Boolean blocked = entry.getValue().isBlocked();
+-            if (blocked != null) {
+-                newBand.setBlocked(blocked);
+-            }
++            AttackingBand newBand = map.mapCombatBand(origBand);
+             bandsMap.put(origBand, newBand);
+             final GameEntity defender = entry.getKey();
+             if (defender instanceof Card && ((Card) defender).getId() == -1) {

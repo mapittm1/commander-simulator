@@ -9,8 +9,10 @@ patch, applied after the upstream patch. Two further patches preserve chosen
 commander colors through native/AI state and refresh companion pregame types.
 A fifth patch preserves supplementary zones in AI game copies. A sixth preserves
 applied sticker state in AI and last-known-information copies, maps sheets to
-the copied game and tracks used slots across control changes. All six patches
-are pinned. No remote branch is used at build time.
+the copied game and tracks used slots across control changes. A seventh patch
+preserves historical LKI and zone-entry records, independent damage history and
+shared mapped combat bands. All seven patches are pinned. No remote branch is
+used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -26,9 +28,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-77 native sticker, chosen-color, companion and supplementary-copy tests and
-packages a standalone runtime only when all pass
-without skips. It disables only the optional Windows GUI launcher packaging;
+91 native sticker, chosen-color, companion, supplementary-copy and history tests.
+It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
 dependency artifacts are not independently locked by this Python recipe.
@@ -57,15 +58,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins five regression source files and exactly three card-script
+The recipe pins six regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 625 gameplay and 256
+686 files verified against immutable source. The broader 639 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 77 focused tests are included in the 625.
+in `native_test_evidence.json`; the 91 focused tests are included in the 639.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -87,3 +88,13 @@ The packaged runtime also passes state-fidelity checks for all 480 stickers on
 receipts, physical-record hashes and exact Java object identity. The aggregate
 [`sticker_state_evidence.json`](sticker_state_evidence.json) records these checks
 and the corrected fixture rerun without treating state fidelity as ability proof.
+
+The history patch additionally passes fourteen native cases and packaged-runtime
+witnesses for four historical zone transitions and two actual paid Tragic Slip
+outcomes. It copies recorded old characteristics and turn-zone entry records,
+retains distinct incarnations, isolates mutable damage history, preserves mapped
+combat-band identity and resets caches before reusing a copier. Copy failures
+propagate rather than dropping history silently. See
+[`history_state_evidence.json`](history_state_evidence.json) for the bound evidence
+and explicit limits; other historical registries, arbitrary linked abilities,
+damage triggers and post-elimination states still require further validation.

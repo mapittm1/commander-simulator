@@ -8,6 +8,31 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Consolidate the old Downloads checkout, backups and scratch scripts under the
+  active repository's ignored data/local-archive/. Verify all 1,359 moved files
+  by SHA-256 and preserve the migration manifest; leave the old Downloads
+  workspace empty. Document one active source tree and consistent file placement
+  in AGENTS.md and CONTRIBUTING.md. Keep future scratch work under data/development/.
+- Add a seventh native patch for historical card state in AI copies. Copy the
+  recorded departed object instead of its current zone incarnation; preserve
+  current/previous-turn zone-entry records rather than inventing entries during
+  snapshot construction. Map owners, controllers, zones, sticker sheets, linked
+  memories and permissions into the copied game. Keep distinct remembered
+  incarnations and independent mutable damage-history containers. Preserve shared
+  combat-band identity within a snapshot and reset copier caches between copies.
+  Propagate history-copy failures instead of silently dropping records.
+- Add 14 native history regressions, including actual mana-paid Tragic Slip
+  resolution and state-based actions with positive creature-death and negative
+  noncreature-death controls. Add bounded packaged-runtime witnesses for four
+  zone-history cases and both spell outcomes. Full rules coverage remains open.
+- Verification: 399 offline tests / 508 subtests; all Python quality tools;
+  91 focused native tests; 639 broader gameplay tests including those 91;
+  256 serialization tests; all 13 live integrations / 312 subtests; and all
+  32,109 matched catalog constructions pass. Pin the aggregate history, paid-spell,
+  sticker and catalog receipts in engine/history_state_evidence.json. Preserve
+  raw evidence bytes and portable LF witness source with Git attributes. Activate
+  the reviewed history runtime while retaining previous runtimes and locks.
+
 - Preserve applied sticker records and sheet/slot identities in native AI
   snapshots; rebind source sheets to the independent copied game. Retain LKI
   records without reapplying effective characteristics. Check used stickers

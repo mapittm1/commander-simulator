@@ -29,7 +29,7 @@ These checks answer different questions:
 | Controlled interactions | Named, independently checked native state transitions pass | Untested combinations or general AI decisions |
 | CLI/game integration | Import, review, four-player games, diagnostics and resumable batches work together | Competitive realism or statistical accuracy |
 
-On the frozen local catalog tested on October 28, 2026, the new runtime constructs
+On the frozen local catalog tested on October 29, 2026, the new runtime constructs
 **32,109 identities out of 32,116 Commander-format records**, with zero native
 construction failures. The remaining seven are meld-result objects that cannot
 occupy starting-deck slots. This is not seven unsupported starting cards. Their
@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **625 native tests in 61 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 77 focused
+The reviewed patched source also passes **639 native tests in 62 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 91 focused
 sticker, chosen-color, companion and supplementary-copy tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
@@ -336,3 +336,39 @@ continuous-effect fixture; a targeted rerun of the corrected sticker fixture and
 the separately enabled controlled interaction suite passed. Unique passing live
 coverage totals 12 integration tests and 306 subtests. All 399 offline tests and
 508 subtests pass with Black, isort, Pylint and Bandit.
+
+## Historical state validation
+
+The seventh source patch preserves recorded battlefield/graveyard departures and
+current/previous-turn zone-entry records in independent AI snapshots. Historical
+objects keep their old characteristics even after a hidden-zone move or face
+change. Distinct remembered incarnations sharing a physical card ID remain
+separate. Mutable damage-history containers are copied; combat-band references
+retain the shared identity required by the copied combat. History-copy exceptions
+are surfaced instead of treating missing records as harmless refinements.
+
+Fourteen isolated native cases check counter-modified power, transformed faces,
+name and power/toughness stickers, mapped owner/controller/zone/memory references,
+repeated departures, remembered incarnations, vanished tokens, damage-history
+independence, combat-band identity and copier reuse. Two cases actually pay for
+Tragic Slip, copy the stack, resolve the spell and process state-based actions.
+A departed Reflection of Kiki-Jiki enables the -13/-13 morbid effect; a departed
+noncreature Fable does not, leaving a Colossal Dreadmaw at 5/5 after -1/-1.
+
+The fixtures distinguish historical state from a card's current incarnation under
+CR 608.2h/i in the
+[pinned September 25, 2026 Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+They do not certify every historical registry, linked ability, damage trigger,
+combat interaction or post-elimination game state. Those require further tests.
+The current reviewed runtime passed fresh-build and packaged-runtime checks;
+previous reviewed runtimes and their locks remain separate.
+
+Current verification: **399 offline tests / 508 subtests**, all Python quality
+checks, **91 focused native tests**, **639 broader gameplay tests** including
+those 91, **256 serialization tests**, and **13 live integrations / 312 subtests**
+pass. All **32,109 matched native identities** construct; the seven non-starting
+meld results remain excluded. The aggregate
+[`history_state_evidence.json`](../engine/history_state_evidence.json) binds the
+history witnesses, paid spell controls, all-sticker regression receipts, complete
+live suite, native evidence and catalog probe to the exact runtime and sources.
+Exact raw evidence bytes and LF witness source are preserved by Git attributes.

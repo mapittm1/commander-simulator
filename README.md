@@ -4,6 +4,8 @@ A local Commander simulator CLI with a Scryfall card catalog, legality checks,
 reviewed deck revisions, a pinned Forge adapter, and configurable simulation batches.
 See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
+Use one active repository checkout; local development scratch work and preserved
+older copies belong under ignored `data/`, following [CONTRIBUTING.md](CONTRIBUTING.md#workspace-and-file-placement).
 
 The core CLI requires Python 3.10 or newer and no third-party runtime packages.
 Companion condition validation, explicit Attraction printing checks and controlled
@@ -17,10 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 77
+Seven additional records are non-starting meld results. The build passes 91
 focused native tests for stickers, chosen commander colors, companion pregame
-behavior and supplementary AI zones. Broader native runs pass 625 AI/gameplay
-tests (including those 77) and 256 card/deck serialization tests, with no failures or skips.
+behavior, supplementary AI zones and historical card state. Broader native runs
+pass 639 AI/gameplay
+tests (including those 91) and 256 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
@@ -43,6 +46,10 @@ The 41 controlled interaction scenarios remain separate checks. A further 49 nat
 results forming, separating after graveyard/exile moves and rejecting invalid
 parts. These meld fixtures directly resolve native effects; they do not certify
 trigger admission, payment or timing.
+
+Historical-state work additionally checks departed objects, distinct incarnations,
+zone-entry records and paid morbid spell outcomes. See the
+[history validation scope](docs/CARD_COVERAGE.md#historical-state-validation).
 
 ## Run it now
 
