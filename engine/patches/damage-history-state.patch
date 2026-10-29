@@ -1,0 +1,163 @@
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -126,6 +126,8 @@
+ 
+     private FCollection<CardDamageHistory> globalDamageHistory = new FCollection<>();
+     private IdentityHashMap<Pair<Integer, Boolean>, Pair<Card, GameEntity>> damageThisTurnLKI = new IdentityHashMap<>();
++
++    private IdentityHashMap<Pair<Integer, Boolean>, Pair<Card, GameEntity>> damageLastTurnLKI = new IdentityHashMap<>();
+ 
+     private Map<Player, Card> topLibsCast = Maps.newHashMap();
+     private Map<Card, Integer> facedownWhileCasting = Maps.newHashMap();
+@@ -1458,11 +1460,42 @@
+     }
+     public void clearGlobalDamageHistory() {
+         globalDamageHistory.clear();
++        damageLastTurnLKI.clear();
++        damageLastTurnLKI.putAll(damageThisTurnLKI);
+         damageThisTurnLKI.clear();
+     }
+ 
+     public Pair<Card, GameEntity> getDamageLKI(Pair<Integer, Boolean> dmg) {
+         return damageThisTurnLKI.get(dmg);
++    }
++
++    public Pair<Card, GameEntity> getDamageLKI(Pair<Integer, Boolean> dmg, boolean lastTurn) {
++        return (lastTurn ? damageLastTurnLKI : damageThisTurnLKI).get(dmg);
++    }
++
++    /** Keep immutable packet identity while replacing all mutable game references. */
++    public void copyDamageHistoryFrom(Game original, IEntityMap map,
++            java.util.function.Function<CardDamageHistory, CardDamageHistory> historyCopy) {
++        globalDamageHistory.clear();
++        damageThisTurnLKI.clear();
++        damageLastTurnLKI.clear();
++        for (CardDamageHistory history : original.globalDamageHistory) {
++            globalDamageHistory.add(historyCopy.apply(history));
++        }
++        for (Map.Entry<Pair<Integer, Boolean>, Pair<Card, GameEntity>> entry : original.damageThisTurnLKI.entrySet()) {
++            damageThisTurnLKI.put(entry.getKey(), copyDamageRecord(entry.getValue(), map));
++        }
++        for (Map.Entry<Pair<Integer, Boolean>, Pair<Card, GameEntity>> entry : original.damageLastTurnLKI.entrySet()) {
++            damageLastTurnLKI.put(entry.getKey(), copyDamageRecord(entry.getValue(), map));
++        }
++    }
++
++    private Pair<Card, GameEntity> copyDamageRecord(Pair<Card, GameEntity> record, IEntityMap map) {
++        Card source = CardCopyService.getLKICopyForGame(record.getLeft(), map);
++        GameEntity target = record.getRight() instanceof Card
++                ? CardCopyService.getLKICopyForGame((Card) record.getRight(), map)
++                : map.map(record.getRight());
++        return Pair.of(source, target);
+     }
+ 
+     public Card getTopLibForPlayer(Player P) {
+--- a/forge-game/src/main/java/forge/game/GameEntity.java
++++ b/forge-game/src/main/java/forge/game/GameEntity.java
+@@ -364,6 +364,12 @@
+         return damageReceivedLastTurn;
+     }
+ 
++    /** Receipt lists are mutable; only their immutable packet values may be shared. */
++    public final void copyDamageReceivedFrom(GameEntity original) {
++        damageReceivedThisTurn = Lists.newArrayList(original.damageReceivedThisTurn);
++        damageReceivedLastTurn = Lists.newArrayList(original.damageReceivedLastTurn);
++    }
++
+     public void receiveDamage(Pair<Integer, Boolean> dmg) {
+         damageReceivedThisTurn.add(dmg);
+     }
+@@ -383,8 +389,12 @@
+             if (isCombat != null && dmg.getRight() != isCombat) {
+                 continue;
+             }
+-            if (source != null && !getGame().getDamageLKI(dmg).getLeft().equalsWithGameTimestamp(source)) {
+-                continue;
++            if (source != null) {
++                Pair<Card, GameEntity> provenance = getGame().getDamageLKI(dmg, lastTurn);
++                if (provenance == null) {
++                    throw new IllegalStateException("Missing provenance for source-filtered damage receipt");
++                }
++                if (!provenance.getLeft().equalsWithGameTimestamp(source)) continue;
+             }
+             num += dmg.getLeft();
+         }
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -423,7 +423,7 @@
+         }
+ 
+         newCopy.setDamageHistory(copyFrom.getDamageHistory().copy(historyGraph(cachedMap)));
+-        newCopy.setDamageReceivedThisTurn(copyFrom.getDamageReceivedThisTurn());
++        newCopy.copyDamageReceivedFrom(copyFrom);
+         newCopy.setExcessDamageReceivedThisTurn(copyFrom.getExcessDamageThisTurn());
+ 
+         // these are LKI already
+--- a/forge-game/src/main/java/forge/game/card/CardDamageHistory.java
++++ b/forge-game/src/main/java/forge/game/card/CardDamageHistory.java
+@@ -285,6 +285,9 @@
+             if (isCombat != null && damage.getRight() != isCombat) {
+                 continue;
+             }
++            if (sourceToTarget == null && (validSourceCard != null || validTargetEntity != null)) {
++                throw new IllegalStateException("Missing provenance for filtered damage history");
++            }
+             if (sourceToTarget != null) {
+                 if (validSourceCard != null && !sourceToTarget.getLeft().isValid(validSourceCard.split(","), sourceController, source == null ? sourceToTarget.getLeft() : source, ctb)) {
+                     continue;
+@@ -315,7 +318,7 @@
+         CardCollection toRemove = new CardCollection();
+         for (GameEntity e : damagedThisGame) {
+             if (e instanceof Card) {
+-                if (((Card) e).getZone().getZoneType() != ZoneType.Battlefield) {
++                if (((Card) e).getLastKnownZone() == null || !((Card) e).getLastKnownZone().is(ZoneType.Battlefield)) {
+                     toRemove.add((Card)e);
+                 }
+             }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -351,6 +351,7 @@
+         }
+         newGame.getStackZone().copyTurnHistoryFrom(origGame.getStackZone(), gameObjectMap);
+         copyLeftThisTurn(newGame);
++        copyDamageState(newGame);
+     }
+ 
+     private void copyStickerState() {
+@@ -365,6 +366,36 @@
+                 entry.getValue().addSticker(new AppliedSticker(sticker, original.getTimestamp(), original.getNamePosition()));
+             }
+         }
++    }
++
++    private void copyDamageState(Game newGame) {
++        IEntityMap damageMap = new IEntityMap() {
++            @Override
++            public Game getGame() { return newGame; }
++
++            @Override
++            public GameObject map(GameObject object) {
++                if (object instanceof Card original) {
++                    Card copied = cardMap.get(original);
++                    if (!original.isLKI() && copied != null && copied.equalsWithGameTimestamp(original)) {
++                        return copied;
++                    }
++                    return CardCopyService.getLKICopyForGame(original, gameObjectMap);
++                }
++                return gameObjectMap.map(object);
++            }
++        };
++        Map<forge.game.card.CardDamageHistory, forge.game.card.CardDamageHistory> histories = new java.util.IdentityHashMap<>();
++        java.util.function.Function<forge.game.card.CardDamageHistory, forge.game.card.CardDamageHistory> historyCopy =
++                original -> histories.computeIfAbsent(original, history -> history.copy(damageMap));
++        for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
++            entry.getValue().setDamageHistory(historyCopy.apply(entry.getKey().getDamageHistory()));
++            entry.getValue().copyDamageReceivedFrom(entry.getKey());
++        }
++        for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
++            entry.getValue().copyDamageReceivedFrom(entry.getKey());
++        }
++        newGame.copyDamageHistoryFrom(origGame, damageMap, historyCopy);
+     }
+ 
+     /**

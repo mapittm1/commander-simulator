@@ -8,6 +8,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve global and per-card damage histories, historical source/target records,
+  equal-valued packet identities and independent current/previous-turn receipt
+  lists in AI snapshots. Reuse each copied live-source history in the global
+  ledger so later damage is counted once. Keep one previous-turn provenance
+  ledger for explicit prior-turn source queries and expire it at the next cleanup.
+  Surface missing provenance in filtered queries; safely clean up vanished targets.
+- Add 19 native damage regressions, including seven normal-admission, mana-paid
+  Eagle Vision freerunning controls. Verify source types and control at damage
+  time, noncombat and creature-target exclusions, independent copies, vanished
+  tokens and cleanup. Keep paid Lightning Bolt/Gorehorn Minotaurs bloodthirst
+  controls for opponent damage versus self-damage. Independently check the witness
+  facts against retained Scryfall Oracle identities/text hashes. Record a packaged
+  before-fix freerunning failure rather than inferring it from script presence.
+- Verification: 399 offline tests / 508 subtests; all Python quality tools;
+  110 focused native tests; 658 broader gameplay tests including those 110;
+  256 serialization tests; all 14 live integrations / 323 subtests; and all
+  32,109 matched native constructions pass. Freeze the bound before/after evidence
+  in engine/damage_state_evidence.json, preserve exact receipt/source bytes and
+  activate the reviewed damage runtime with earlier builds and locks retained.
+  Align the versioned engine-config example with the selected reviewed runtime.
+
 - Consolidate the old Downloads checkout, backups and scratch scripts under the
   active repository's ignored data/local-archive/. Verify all 1,359 moved files
   by SHA-256 and preserve the migration manifest; leave the old Downloads

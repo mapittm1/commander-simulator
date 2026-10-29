@@ -1,0 +1,225 @@
+{
+  "scope": "Damage provenance, current/previous-turn receipts and seven paid freerunning controls; includes paid bloodthirst regression controls, not complete rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-damage",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "32e2070387d0240dd55a8f3549f94a9653b4924a39947ff1c5f36aa10a11170b",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "e3dac964cf6328b088ddf81cb4c5deb623fbeb0751e34477d3fc4e6963663dbe",
+    "native_tests": {
+      "total": 110,
+      "passed": 110,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "740ec10ddd1afb02c91272b785c1ba1fbc901c3dc3e2ddfaa270e3bcb69de1a5",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "before": {
+    "before_run": "6f9e03e13ea74209ac6e1db0126efc51",
+    "engine_jar_sha256": "a6e9ba4fb18acd49a8e1b73f7cdf951c37dc10801878271a1ee52ed4952ce64a",
+    "receipt_sha256": "f8a35e66393b1553490f4e14967182273c997d6df6ac035a63366fe62331ff5a",
+    "original_window": true,
+    "copied_window": false,
+    "copied_cast_allowed": false
+  },
+  "before_worker_sha256": "2370b8d9d4f55290a66d03dccaedd183ec5b9e13bc0dc1cd376c6ab0fddd558a",
+  "local_run_id": "0b648fc799804d43ad97975f9642bf1f",
+  "observed": {
+    "freerunning": [
+      {
+        "scenario": "assassin",
+        "original_window": true,
+        "copied_window": true,
+        "allowed": true,
+        "mana_paid": 2,
+        "copied_hand": 3,
+        "spell_in_graveyard": true,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "commander",
+        "original_window": true,
+        "copied_window": true,
+        "allowed": true,
+        "mana_paid": 2,
+        "copied_hand": 3,
+        "spell_in_graveyard": true,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "ordinary",
+        "original_window": false,
+        "copied_window": false,
+        "allowed": false,
+        "mana_paid": 0,
+        "copied_hand": 1,
+        "spell_in_graveyard": false,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "noncombat",
+        "original_window": false,
+        "copied_window": false,
+        "allowed": false,
+        "mana_paid": 0,
+        "copied_hand": 1,
+        "spell_in_graveyard": false,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "creatureTarget",
+        "original_window": false,
+        "copied_window": false,
+        "allowed": false,
+        "mana_paid": 0,
+        "copied_hand": 1,
+        "spell_in_graveyard": false,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "stolenAfter",
+        "original_window": true,
+        "copied_window": true,
+        "allowed": true,
+        "mana_paid": 2,
+        "copied_hand": 3,
+        "spell_in_graveyard": true,
+        "source_hand": 1,
+        "source_library": 3
+      },
+      {
+        "scenario": "stolenBefore",
+        "original_window": false,
+        "copied_window": false,
+        "allowed": false,
+        "mana_paid": 0,
+        "copied_hand": 1,
+        "spell_in_graveyard": false,
+        "source_hand": 1,
+        "source_library": 3
+      }
+    ],
+    "queries": {
+      "opponent": 3,
+      "self": 3,
+      "invalid_source": 0,
+      "invalid_target": 0,
+      "received_from_source": 3,
+      "maximum": 3,
+      "distinct_targets": 2,
+      "mapped_records": true,
+      "after_copy_damage": 5,
+      "source_unchanged": 3,
+      "after_source_damage": 7,
+      "copy_unchanged": 5
+    },
+    "previous_turn": {
+      "previous": 3,
+      "current": 0,
+      "maximum": 0,
+      "expired": 0,
+      "source_previous": 3
+    },
+    "bloodthirst": [
+      {
+        "opponent_damaged": true,
+        "bolt_mana": 1,
+        "creature_mana": 4,
+        "power": 5,
+        "counters": 2,
+        "source_stack": 1
+      },
+      {
+        "opponent_damaged": false,
+        "bolt_mana": 1,
+        "creature_mana": 4,
+        "power": 3,
+        "counters": 0,
+        "source_stack": 1
+      }
+    ]
+  },
+  "receipt_sha256": "634a4178c68c6cf636a7786cdc7fa904698a4400201e1d49652d9e08cae05375",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "7545744cc2e9ddd143a82502dc3c6a278166a9dec924bf3dad92b16abef160e9",
+  "test_sha256": "f8e680b438ad7e82bec06bb3bb9fa1a50597ae1622facca12cde262e7f96c356",
+  "oracle_witnesses": [
+    {
+      "name": "Changeling Outcast",
+      "oracle_id": "a61ef0cc-1da9-49f9-b0dc-01cf9f6205be",
+      "oracle_text_sha256": "6bde739f2c41f8520575592dcf0148bea84afe0f628d271778ede5e606e312e7",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/otc/128/changeling-outcast?utm_source=api",
+      "checked_facts": [
+        "Changeling"
+      ]
+    },
+    {
+      "name": "Eagle Vision",
+      "oracle_id": "f96f1b4c-f06a-4374-8d8f-aaa06c6108c3",
+      "oracle_text_sha256": "37cfc887cea89ed0d30bd032560c23ce36211a5dbca292c9ac497f8f765cbaed",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/acr/17/eagle-vision?utm_source=api",
+      "checked_facts": [
+        "Freerunning {1}{U}",
+        "Draw three cards."
+      ]
+    },
+    {
+      "name": "Gorehorn Minotaurs",
+      "oracle_id": "be8ad29c-2232-426d-bda9-a289dcc6c265",
+      "oracle_text_sha256": "9aa2102bf607ab09c50479a85b163b194885e3d9bf9d6a10d0b272bc69d7e85a",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/e01/49/gorehorn-minotaurs?utm_source=api",
+      "checked_facts": [
+        "Bloodthirst 2"
+      ]
+    }
+  ],
+  "full_live_suite": {
+    "tests": 14,
+    "subtests": 323,
+    "log_sha256": "456027dcc5381ceb29fbc393552f11662b3fc9a531850987e5b9f74ddb1b54ca"
+  },
+  "native_evidence_sha256": "993f91158ebc21bc42b2b041f8b0dfc5434e8e8efa007c6e748770b32d45f3eb",
+  "catalog_probe": {
+    "report_sha256": "413e5754a90976a07685166da15e8e7d1f5b2b0f94ebeea12e3f389b1d6c17bb",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Controlled damage events do not prove every attack declaration or damage assignment.",
+    "Freerunning is cast after making the snapshot; copying every already-cast paid spell remains separate work.",
+    "Does not certify every damage prevention/replacement, delayed history query or post-elimination state.",
+    "Bloodthirst controls passed before the patch; they are regression coverage."
+  ]
+}

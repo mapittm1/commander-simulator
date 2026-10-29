@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **639 native tests in 62 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 91 focused
+The reviewed patched source also passes **658 native tests in 63 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 110 focused
 sticker, chosen-color, companion and supplementary-copy tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
@@ -363,7 +363,7 @@ combat interaction or post-elimination game state. Those require further tests.
 The current reviewed runtime passed fresh-build and packaged-runtime checks;
 previous reviewed runtimes and their locks remain separate.
 
-Current verification: **399 offline tests / 508 subtests**, all Python quality
+Historical-state milestone verification: **399 offline tests / 508 subtests**, all Python quality
 checks, **91 focused native tests**, **639 broader gameplay tests** including
 those 91, **256 serialization tests**, and **13 live integrations / 312 subtests**
 pass. All **32,109 matched native identities** construct; the seven non-starting
@@ -372,3 +372,53 @@ meld results remain excluded. The aggregate
 history witnesses, paid spell controls, all-sticker regression receipts, complete
 live suite, native evidence and catalog probe to the exact runtime and sources.
 Exact raw evidence bytes and LF witness source are preserved by Git attributes.
+
+## Damage provenance and alternative costs
+
+The eighth source patch preserves global damage histories and immutable packet
+identity while mapping historical source/target objects into an independent AI
+snapshot. Equal-valued damage packets must still refer to distinct targets.
+Live per-card histories and their global ledger share the same copied history
+object so subsequent damage is counted once. Current and previous-turn receipt
+lists remain independent; the previous-turn provenance ledger expires on the
+next cleanup. Filtered queries fail explicitly if provenance is unavailable.
+Vanished token references retain historical metadata and permit safe cleanup.
+
+Nineteen focused native cases cover filters, amounts, maximum damage, matching
+sources, equal packets, later damage in both worlds, previous-turn receipts,
+vanished sources/targets, missing provenance and paid cast controls. Seven
+freerunning cases use native damage processing, normal cast admission and actual
+payment for Eagle Vision: eligible Assassin/commander hits pay two mana and draw
+three cards; noncombat hits, creature targets, ordinary creatures and control
+at the wrong time do not authorize that alternative cost. Static effects are
+settled before recording characteristic-defining creature types. These are
+controlled damage-event fixtures, not proof of attack declaration or damage
+assignment legality for every board.
+
+Two regression controls actually pay for Lightning Bolt and Gorehorn Minotaurs.
+Opponent damage enables bloodthirst 2, giving a 5/5; self-damage leaves a 3/3.
+These already passed before this patch and are retained as controls, not claimed
+as newly fixed behavior. The independent local Scryfall Oracle records agree
+on bloodthirst 2, Eagle Vision's freerunning cost and its three-card draw.
+Mechanic expectations follow CR 702.54 and 702.173 in the
+[pinned rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+
+A separate worker on the previous packaged runtime observed a valid original
+freerunning window become unavailable in its AI copy. The reviewed damage build
+passes the nineteen isolated cases and the packaged-runtime witnesses;
+this does not certify every damage replacement, prevention interaction, delayed
+history query or post-elimination state.
+
+The freerunning fixtures make the AI snapshot before casting Eagle Vision.
+They do not certify copying every already-cast alternative-cost spell or its
+paid choices on the stack. Player elimination and other damage prevention,
+replacement and delayed-history cases remain separate validation work.
+
+Current damage-build verification: **399 offline tests / 508 subtests**, all
+Python quality tools, **110 focused native tests**, **658 broader gameplay tests**
+including those 110, **256 serialization tests**, **14 live integrations / 323
+subtests**, and all **32,109 matched native constructions** pass. The seven
+non-starting meld results remain excluded. See
+[`damage_state_evidence.json`](../engine/damage_state_evidence.json) for exact
+runtime/source hashes, before-fix observations, Oracle witness facts, raw receipt
+hashes and the native/live/catalog checks. Earlier reviewed runtimes are retained.

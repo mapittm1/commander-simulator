@@ -99,6 +99,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/supplementary-ai-zones.patch",
                 "engine/patches/sticker-snapshot-state.patch",
                 "engine/patches/historical-lki-state.patch",
+                "engine/patches/damage-history-state.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -110,6 +111,7 @@ def _verify_inputs(args, recipe):
         "SupplementaryGameCopyTest.java": "supplementary_copy_test_sha256",
         "StickerGameCopyTest.java": "sticker_copy_test_sha256",
         "HistoricalGameCopyTest.java": "historical_lki_test_sha256",
+        "DamageGameCopyTest.java": "damage_history_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -228,6 +230,11 @@ def _patch_source(source, run, recipe):
         source / "forge-gui-desktop/src/test/java/forge/ai/HistoricalGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/DamageGameCopyTest.java",
+        source / "forge-gui-desktop/src/test/java/forge/ai/DamageGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -268,7 +275,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),
