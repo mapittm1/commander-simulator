@@ -120,9 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **688 native tests in 65 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 140 focused
-sticker, chosen-color, companion, supplementary-copy, history, damage, participant and starting-life tests; these counts must not be added together.
+The reviewed patched source also passes **718 native tests in 66 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 170 focused
+sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
+starting-life and paid-stack tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -507,3 +508,39 @@ including those 140, **256 serialization tests**, **16 live integrations / 350
 subtests**, and all **32,109 matched constructions** pass. Native and live runs
 have no failures or skips. The seven non-starting meld results retain their
 separate construction exclusion and existing meld-interaction checks.
+
+## Paid stack snapshots
+
+The reviewed paid-stack patch restores existing entries instead of casting their
+printed abilities again. It preserves paid mana and its mapped sources, declared
+X, optional costs, selected modal/subability graphs, target incarnations and
+divided allocations. Activated and admitted triggered abilities remain pending.
+Cast histories remain available even when a caller intentionally omits visible
+stack entries. Floating mana, payment records and lazy cost metadata are isolated
+from the original game. Unknown mutable event payload types fail explicitly.
+
+Thirty native cases exercise paid Lightning Bolt, Fireball, kicked Burst Lightning,
+Counterspell targeting another pending spell, Prodigal Pyromancer, Soul Warden,
+Boros Charm, buyback Capsize, Pentad Prism sunburst, Fling with sacrificed last-known
+power, invalidated targets, departed sources, Young Pyromancer, Weather the Storm,
+Omnath's floating mana, Stonecoil Serpent and Arc Lightning. Boros Charm's printed
+mode is selected explicitly before normal admission/payment; this does not test
+the AI's mode-selection policy. Five additional packaged-runtime witnesses use
+normal casting/payment, a tap activation and an admitted enter trigger.
+
+A retained before-fix receipt demonstrates missing paid mana/X/kicker, zero
+Fireball damage, incorrect kicked damage and dropped activated/triggered entries.
+The patch is independently bound to its source/test hashes, a fresh runtime build,
+broader native regressions and packaged integration evidence in
+[stack_state_evidence.json](../engine/stack_state_evidence.json).
+
+These are snapshots at settled action points, not suspended Java continuations
+during an effect's execution. Arbitrary event container graphs, delayed callbacks,
+alternate card faces on the stack, all once-per-turn ability identities and all
+mana-spending restrictions still require separate validation. No claim of complete
+card or AI correctness follows from these tests or the catalog construction count.
+
+Paid-stack build verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **170 focused native tests**, **718 broader gameplay tests**
+including those 170, **256 serialization tests**, and **17 live integrations /
+355 subtests** pass. The live/native suites have no failures or skips.

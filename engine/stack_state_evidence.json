@@ -1,0 +1,447 @@
+{
+  "scope": "Paid ability/stack snapshots, independent payment metadata and selected resolved outcomes; not all cards or full rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-stack",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "4f7829293bbcf132898bb8087b6bc2c4bfb5131ea5e96ca23e6d6a602db9ce84",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "c80a7428192a7a58a973701a60b146251c4b7c595750e6e7ac89831d701db8b8",
+    "native_tests": {
+      "total": 170,
+      "passed": 170,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "cd9fb2a017bf4d86d3a0f5ee9a7b124e1be8b27b283265264272748a93e40257",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: paid stack, ability graphs, cast history and mana snapshot fidelity; native regressions, catalog construction and live suite; not complete rules certification"
+  },
+  "build_id": "491aadb31431460dbd1da4987e6205e6",
+  "activation": {
+    "home": "data/engines/forge-3e6c036-stack-reviewed",
+    "lock_sha256": "d91472ad271f74424ed7fbfdfcc6690072705b3fc8a0d07819a514d13ca17c7c",
+    "engine_check_sha256": "4f9fa2a40e47900e6fea8741e61266e1037193e0fa38af048953e288c963dfe8",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-starting-life-reviewed"
+  },
+  "compiled_source_audit": {
+    "build_id": "491aadb31431460dbd1da4987e6205e6",
+    "recipe_sha256": "c80a7428192a7a58a973701a60b146251c4b7c595750e6e7ac89831d701db8b8",
+    "stack_source_files": 18,
+    "native_source_sha256": "5e9aec9135f83f5a3af99863af2710c28b41ccca5b4dce3a53a1fea8ee04e063",
+    "jar_sha256": "4f7829293bbcf132898bb8087b6bc2c4bfb5131ea5e96ca23e6d6a602db9ce84",
+    "status": "normalized_sources_match",
+    "normalization": "Universal newlines only; Git applies CRLF in extracted sources on this checkout",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/spellability/SpellAbility.java": "44d2eb661ca76be7c3f8fc897acc0109387fe5ccb5e5ef31fc9cc2e8ec6d5158",
+      "forge-game/src/main/java/forge/game/CardTraitBase.java": "f06fa3efd976c26bcd82f5912bd85df9f7c815637711669b56719e07e0cc7a98",
+      "forge-game/src/main/java/forge/game/trigger/WrappedAbility.java": "a27aeb24745f33499bc57dfe2f6823c3d1810d200b3227ce29d4731efa9c6670",
+      "forge-game/src/main/java/forge/game/trigger/Trigger.java": "9988b1d9b6355614eb9764f8cea47c0ee9a0d6f8329fd4311c529726b8b20b2d",
+      "forge-game/src/main/java/forge/game/spellability/TargetChoices.java": "af310de13403eb1b9efc5fba8a72cd461df4a0a81f5731b7982bdffffc1e10d4",
+      "forge-game/src/main/java/forge/game/spellability/SpellAbilityStackInstance.java": "7874df17ed20fb2f9dc0ceaaf91f0d01e832976c07f8d075237c0def6297afaa",
+      "forge-game/src/main/java/forge/game/zone/MagicStack.java": "99ef5153f835f754f77726005e4f772772a6e104e4358770fddcd6090f25a715",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "a154e6c5a042ff6875846cebcc48df0629d812b259e0427309addf0144cc8ada",
+      "forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java": "23ca10ea8cdad9a38ca00b1c888d344af8a180fa4dd422ef1a29a6886dd5f3d1",
+      "forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java": "0b4986101ea4b070ae6a0abbaee47467003774d3346b9e75649dbac818fc62f4",
+      "forge-game/src/main/java/forge/game/mana/ManaPool.java": "601a84fbbdc64ac233573306626862a07a46d796f2962e27766853cb14b5714a",
+      "forge-game/src/main/java/forge/game/cost/Cost.java": "7e00708628edb8e8727b491e3b0de716706a40cfdb66c04dfdf0d68e63174e0d",
+      "forge-game/src/main/java/forge/game/cost/CostPart.java": "825ef4ef20289e91d6f9f50a4f075e471be42eb12d336b75505a5188346c0486",
+      "forge-game/src/main/java/forge/game/cost/CostPartWithList.java": "6a0147bbab8a913a3289ba3eae7e161799a5a70b94d022c97f4b73b9b73a0357",
+      "forge-game/src/main/java/forge/game/cost/CostDiscard.java": "9ba7c431286bff7befbc168bbbb487e192272d2eb9acf131fe9b263258dafb9a",
+      "forge-game/src/main/java/forge/game/cost/CostReveal.java": "8201cd884506b7fd91f0d1d6c60af687d619b0d38673cd54ca1c29519afdf813",
+      "forge-game/src/main/java/forge/game/card/CardZoneTable.java": "a331fbbbe2900802829db0fd1f25b52bf4af03baa651b1c3374c76763a9d353f",
+      "forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java": "c944e607b4e645c515f62035bf0bf8bd7277cc4eb30cf21a1521ff3cc432b8b3"
+    }
+  },
+  "before": {
+    "run_id": "b3867351891647b4870e294680c78c55",
+    "receipt_sha256": "75b48429332e4aa82fa90d4b22c89822bee8ad6d2fba6c28c86954bd956afc96",
+    "worker_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-starting-life",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "887f475d2db4b065bf8d751c2b145a08b051f6dee6348da2ecd48a1b7b458f9f",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "372fdc603e2647e049f23f4b646459c2f7af0feed11cca799cda16cc4dcd8854",
+        "native_tests": {
+          "total": 140,
+          "passed": 140,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "b7ea5a17099c1768066163c5905d1bc14cd8bd793fc957b80703075ab36f968b",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: starting-life baseline fidelity, Righteous Valkyrie thresholds and paid life-gain casts, native regressions, catalog construction and live suite; not complete rules certification"
+      },
+      "cases": {
+        "bolt": {
+          "entries": 1,
+          "paid": 0,
+          "x": null,
+          "kicked": false,
+          "caster_world": true,
+          "mana_world": true,
+          "owner_life": 40,
+          "target_life": 37,
+          "source_owner_life": 40,
+          "source_target_life": 40,
+          "source_entries": 1
+        },
+        "x": {
+          "entries": 1,
+          "paid": 0,
+          "x": null,
+          "kicked": false,
+          "caster_world": true,
+          "mana_world": true,
+          "owner_life": 40,
+          "target_life": 40,
+          "source_owner_life": 40,
+          "source_target_life": 40,
+          "source_entries": 1
+        },
+        "kicker": {
+          "entries": 1,
+          "paid": 0,
+          "x": null,
+          "kicked": false,
+          "caster_world": true,
+          "mana_world": true,
+          "owner_life": 40,
+          "target_life": 38,
+          "source_owner_life": 40,
+          "source_target_life": 40,
+          "source_entries": 1
+        },
+        "activated": {
+          "entries": 0,
+          "paid": null,
+          "x": null,
+          "kicked": null,
+          "caster_world": null,
+          "mana_world": null,
+          "owner_life": 40,
+          "target_life": 40,
+          "source_owner_life": 40,
+          "source_target_life": 40,
+          "source_entries": 1,
+          "tap_paid": true
+        },
+        "trigger": {
+          "entries": 0,
+          "paid": null,
+          "x": null,
+          "kicked": null,
+          "caster_world": null,
+          "mana_world": null,
+          "owner_life": 40,
+          "target_life": 40,
+          "source_owner_life": 40,
+          "source_target_life": 40,
+          "source_entries": 1
+        }
+      }
+    }
+  },
+  "local_run_id": "f05322838807439e959ad56c9b66b2d3",
+  "observed": {
+    "bolt": {
+      "entries": 1,
+      "paid": 1,
+      "x": null,
+      "kicked": false,
+      "caster_world": true,
+      "mana_world": true,
+      "owner_life": 40,
+      "target_life": 37,
+      "source_owner_life": 40,
+      "source_target_life": 40,
+      "source_entries": 1
+    },
+    "x": {
+      "entries": 1,
+      "paid": 4,
+      "x": 3,
+      "kicked": false,
+      "caster_world": true,
+      "mana_world": true,
+      "owner_life": 40,
+      "target_life": 37,
+      "source_owner_life": 40,
+      "source_target_life": 40,
+      "source_entries": 1
+    },
+    "kicker": {
+      "entries": 1,
+      "paid": 5,
+      "x": null,
+      "kicked": true,
+      "caster_world": true,
+      "mana_world": true,
+      "owner_life": 40,
+      "target_life": 36,
+      "source_owner_life": 40,
+      "source_target_life": 40,
+      "source_entries": 1
+    },
+    "activated": {
+      "entries": 1,
+      "paid": 0,
+      "x": null,
+      "kicked": false,
+      "caster_world": true,
+      "mana_world": true,
+      "owner_life": 40,
+      "target_life": 39,
+      "source_owner_life": 40,
+      "source_target_life": 40,
+      "source_entries": 1,
+      "tap_paid": true
+    },
+    "trigger": {
+      "entries": 1,
+      "paid": 0,
+      "x": null,
+      "kicked": false,
+      "caster_world": true,
+      "mana_world": true,
+      "owner_life": 41,
+      "target_life": 40,
+      "source_owner_life": 40,
+      "source_target_life": 40,
+      "source_entries": 1
+    }
+  },
+  "receipt_sha256": "fa80d5d9712b36ed973d194a2605196b2fee7daed77762da17ef543c35463d09",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+  "test_sha256": "ecc63541ebc6de8893970a05f3b2a8bcc039e3f7cb6adca3f26cdbc98a8373e9",
+  "native_source_sha256": "5e9aec9135f83f5a3af99863af2710c28b41ccca5b4dce3a53a1fea8ee04e063",
+  "patch_sha256": "67a5c8b458f0103ac50f569398abba00a1c10ffcc6f902aeca7fae66905e6382",
+  "oracle_witnesses": [
+    {
+      "name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "mana_cost": "{R}",
+      "oracle_text_sha256": "1c8ec5180252d4d2258eec2c0312b6f3c86b101696246288422c2d46aaa5ff8b",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
+      "retained_facts": "Lightning Bolt deals 3 damage to any target."
+    },
+    {
+      "name": "Fireball",
+      "oracle_id": "aa7714b0-2bfb-458a-8ebf-37ec2c53383e",
+      "mana_cost": "{X}{R}",
+      "oracle_text_sha256": "2f19fa75606f52a9de16a44dfa62255b6b75f94b95afadd7bf5b88b9f4081795",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/clb/175/fireball?utm_source=api",
+      "retained_facts": "This spell costs {1} more to cast for each target beyond the first.\nFireball deals X damage divided evenly, rounded down, among any number of targets."
+    },
+    {
+      "name": "Burst Lightning",
+      "oracle_id": "ac2086fe-98ee-4280-9c7c-c5c2d6548a8b",
+      "mana_cost": "{R}",
+      "oracle_text_sha256": "17dac5bb4f99555906182912ad5a200bbe1a0d2f3cd6523564c4871f88e2a54a",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/fdn/192/burst-lightning?utm_source=api",
+      "retained_facts": "Kicker {4} (You may pay an additional {4} as you cast this spell.)\nBurst Lightning deals 2 damage to any target. If this spell was kicked, it deals 4 damage instead."
+    },
+    {
+      "name": "Prodigal Pyromancer",
+      "oracle_id": "29b3cb3e-aeb1-43eb-8095-9f7881aa34bd",
+      "mana_cost": "{2}{R}",
+      "oracle_text_sha256": "c748ae1d32f1d9b397452e3a6adfe2ace17cca136e6d7660c05ce48d98298ad9",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/tsr/180/prodigal-pyromancer?utm_source=api",
+      "retained_facts": "{T}: This creature deals 1 damage to any target."
+    },
+    {
+      "name": "Soul Warden",
+      "oracle_id": "f3fad295-1af2-4ecc-8546-b121ad6be27b",
+      "mana_cost": "{W}",
+      "oracle_text_sha256": "d3938d0dcd6ceea3318c5d87220a4842f86a1b30fc1aff0908e41caaeabf828d",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/mm3/24/soul-warden?utm_source=api",
+      "retained_facts": "Whenever another creature enters, you gain 1 life."
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "mana_cost": "{1}{G}",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "retained_facts": ""
+    },
+    {
+      "name": "Boros Charm",
+      "oracle_id": "2679d0dd-ba30-4a1c-b6a0-b3ac6c790496",
+      "mana_cost": "{R}{W}",
+      "oracle_text_sha256": "b6175be5d1c01998d57979b0aca1fd9836d5428512e2f63e5a812b7f9d552aa0",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/fdn/721/boros-charm?utm_source=api",
+      "retained_facts": "Choose one \u2014\n\u2022 Boros Charm deals 4 damage to target player or planeswalker.\n\u2022 Permanents you control gain indestructible until end of turn.\n\u2022 Target creature gains double strike until end of turn."
+    },
+    {
+      "name": "Capsize",
+      "oracle_id": "77637eff-2963-4402-88f3-ca346f762fc8",
+      "mana_cost": "{1}{U}{U}",
+      "oracle_text_sha256": "47554abdf2e507f5b686f54bef84e46e0d10f29ca9d3c3342695c65f1d20f906",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/tpr/42/capsize?utm_source=api",
+      "retained_facts": "Buyback {3} (You may pay an additional {3} as you cast this spell. If you do, put this card into your hand as it resolves.)\nReturn target permanent to its owner's hand."
+    },
+    {
+      "name": "Pentad Prism",
+      "oracle_id": "72e8d67a-41e6-4074-bcbd-b54ead995237",
+      "mana_cost": "{2}",
+      "oracle_text_sha256": "f7ad4701d5a588f1bc8d9c6368e1bdcfc9b6d5d435ce78b71f336650717466ce",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/eoc/56/pentad-prism?utm_source=api",
+      "retained_facts": "Sunburst (This artifact enters with a charge counter on it for each color of mana spent to cast it.)\nRemove a charge counter from this artifact: Add one mana of any color."
+    },
+    {
+      "name": "Fling",
+      "oracle_id": "24227761-b50e-4b9e-93a2-e82d053b3e3d",
+      "mana_cost": "{1}{R}",
+      "oracle_text_sha256": "5e55318e018ef19234e6798319c5b8155cd153411b60e0c02b1a8963d34ca56e",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/jmp/320/fling?utm_source=api",
+      "retained_facts": "As an additional cost to cast this spell, sacrifice a creature.\nFling deals damage equal to the sacrificed creature's power to any target."
+    },
+    {
+      "name": "Colossal Dreadmaw",
+      "oracle_id": "08c7db90-c0cf-4482-b7ee-bb033e5996d2",
+      "mana_cost": "{4}{G}{G}",
+      "oracle_text_sha256": "25612a13b0af23dc726fb197810b666ef5c64cf679cc04ef481891c37c25171f",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/m21/176/colossal-dreadmaw?utm_source=api",
+      "retained_facts": "Trample (This creature can deal excess combat damage to the player or planeswalker it's attacking.)"
+    },
+    {
+      "name": "Young Pyromancer",
+      "oracle_id": "5fac139a-07d3-4e6c-98e3-d98b199f7a6f",
+      "mana_cost": "{1}{R}",
+      "oracle_text_sha256": "0044a6efe4928e7e82d494394b79df18da2ac2a510894769d7fa327d97a63821",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/tdc/95/young-pyromancer?utm_source=api",
+      "retained_facts": "Whenever you cast an instant or sorcery spell, create a 1/1 red Elemental creature token."
+    },
+    {
+      "name": "Weather the Storm",
+      "oracle_id": "3a091f7b-efc9-4aaa-9da8-157ef8099a36",
+      "mana_cost": "{1}{G}",
+      "oracle_text_sha256": "e71e33d70dcdb6897806fbf6c5dcdec97bd36855bd7e10d5cfa42d7612729d64",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/mh1/191/weather-the-storm?utm_source=api",
+      "retained_facts": "You gain 3 life.\nStorm (When you cast this spell, copy it for each spell cast before it this turn.)"
+    },
+    {
+      "name": "Omnath, Locus of Mana",
+      "oracle_id": "9da896e1-2256-425b-b801-1ae6f0470559",
+      "mana_cost": "{2}{G}",
+      "oracle_text_sha256": "59fd7e695c8b9f0123c3ab09e4e5f7daaa8a728a1d0801bd5e78d2bb7fff4c96",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/cmm/310/omnath-locus-of-mana?utm_source=api",
+      "retained_facts": "You don't lose unspent green mana as steps and phases end.\nOmnath gets +1/+1 for each unspent green mana you have."
+    },
+    {
+      "name": "Stonecoil Serpent",
+      "oracle_id": "78124cd1-2658-43f3-a339-0755d84154d2",
+      "mana_cost": "{X}",
+      "oracle_text_sha256": "d30dbb598156569ba9387cc95c33a40f144a300599496d31723ab546b247f532",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/soc/356/stonecoil-serpent?utm_source=api",
+      "retained_facts": "Reach, trample, protection from multicolored\nThis creature enters with X +1/+1 counters on it."
+    },
+    {
+      "name": "Arc Lightning",
+      "oracle_id": "5acc8b39-3c3e-4012-8cfd-ac3c2c4ca982",
+      "mana_cost": "{2}{R}",
+      "oracle_text_sha256": "592b2b5fe3e671cca60dc801f9cc89d642a8b4eea86b24ef015b16e9737810f8",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/ktk/97/arc-lightning?utm_source=api",
+      "retained_facts": "Arc Lightning deals 3 damage divided as you choose among one, two, or three targets."
+    },
+    {
+      "name": "Counterspell",
+      "oracle_id": "cc187110-1148-4090-bbb8-e205694a39f5",
+      "mana_cost": "{U}{U}",
+      "oracle_text_sha256": "6e7e3fa9bb231a1c1910cd956dc7e5c91bb22e9705b39ed61a2ebd23201950e4",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/dsc/114/counterspell?utm_source=api",
+      "retained_facts": "Counter target spell."
+    }
+  ],
+  "full_live_suite": {
+    "passed": 17,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 355,
+    "log_sha256": "1d35e2083525ccc3e68edfd96410fc932dcf0f5c8b0556168bd7b4c8b3c187ff"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "b1563ee63dfd2a3fe3ad628e6409d2c9658b318f1e9c685e9fd098605244db01"
+  },
+  "native_evidence_sha256": "7118606202956a0eac526ed7e6daf19f15b21e4c937a992a6c87d1648c922f0a",
+  "catalog_probe": {
+    "report_sha256": "19f22019feb1456bd65c8ffcae7bc783dfe85f1dc41ad2fe47f227b45d302c50",
+    "run_id": "f6330bc8941f4da1bc0de1d162835f24",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Controlled states explicitly use Commander registrations, not complete deck/pregame fixtures.",
+    "Tests use real admission/payment and pending resolution; Boros Charm mode selection is explicit and does not certify AI policy.",
+    "Settled action-point snapshots do not suspend a running Java effect or copy arbitrary delayed callbacks.",
+    "Arbitrary event container alias/cycle graphs and unrecognized mutable payload classes remain unvalidated.",
+    "Alternate card faces on the stack, all once-per-turn ability identities and all mana-spending restrictions require separate validation.",
+    "Native construction and these interaction witnesses do not certify every card, combination or AI decision."
+  ]
+}

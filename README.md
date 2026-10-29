@@ -19,11 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 140
+Seven additional records are non-starting meld results. The build passes 170
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
-participant state and starting-life baselines.
-Broader native runs pass 688 AI/gameplay tests (including those 140) and 256
+participant state, starting-life baselines and paid stack state.
+Broader native runs pass 718 AI/gameplay tests (including those 170) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
@@ -65,6 +65,12 @@ Starting-life validation checks that Commander snapshots retain the 40-life
 baseline separately from current life. Righteous Valkyrie's bonus requires 47
 life, including after actual paid life-gain spells. See the
 [starting-life validation scope](docs/CARD_COVERAGE.md#starting-life-baselines).
+
+Paid-stack validation preserves actual mana/X/kicker payments, selected modes,
+divided targets, activated abilities, admitted triggers, cast history and floating
+mana through snapshots. It checks resolution in the copied game without changing
+the source game or replaying cast events. See the
+[paid-stack validation scope](docs/CARD_COVERAGE.md#paid-stack-snapshots).
 
 ## Run it now
 

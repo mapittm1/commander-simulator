@@ -8,6 +8,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Restore existing paid spells, activated abilities and admitted triggers in AI
+  snapshots instead of recasting printed spell definitions. Preserve mana/X,
+  kicker/buyback, modal graphs, target incarnations/divided allocations, historical
+  costs, cast history and floating mana without replaying cast events.
+- Add 30 native stack regressions and five packaged-runtime witnesses with actual
+  payment and copied resolution. Retain a before-fix receipt showing lost X/kicker
+  and dropped activated/triggered entries. Reject unknown mutable event payload
+  types rather than sharing them across simulation worlds.
+- Document remaining stack limits, including alternate faces, arbitrary payload
+  graphs and mid-resolution continuations. Full card/AI certification remains
+  unfinished. Bind stack evidence to the fresh runtime, source and test hashes.
+
+
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  170 focused native tests; 718 broader gameplay tests including those 170;
+  256 serialization tests; and all 17 live integrations / 355 subtests pass.
+  Pin the reviewed stack build and retain earlier runtimes and locks.
+
 - Preserve both registered starting life and each live player's starting-life
   baseline in AI copies. Restore the baseline before current life so their
   different values remain intact. This fixes Righteous Valkyrie granting +2/+2
