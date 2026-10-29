@@ -74,7 +74,8 @@ Explicit commander color choices, companions and supplementary sticker/Attractio
 sections now have versioned legality checks, immutable storage and native export.
 Missing required colors and unverified companion conditions block approval;
 selected features also require verified native engine capabilities. Explicit
-Attraction printing/light variants remain work. Sideboard and
+Attraction set/collector choices now have retained printing facts, version 9
+validation and exact native preflight. Sideboard and
 maybeboard exports are excluded from the starting deck. This is standard
 multiplayer Commander, not Commander Draft, Brawl, Duel Commander, or Rule 0.
 New construction mechanics or unknown copy caps require validator work rather
@@ -372,3 +373,11 @@ used source proofs are retained in the legality report and audit version 4.
 This establishes the starting-card role only. Native formation/separation tests
 cover all seven catalog meld results; trigger scheduling, payment, timing and
 commander replacement choices require separate rules fixtures.
+
+
+Explicit Attraction printings retain their functional light combination through
+imports, revisions, native exports, AI copies and frozen batch rotation/resume.
+Current source and native coverage includes all 87 retained English legal
+printings across 22 identities. `sync-attractions` enriches printing metadata
+without replacing Oracle rules or renewing legality freshness. Old engines that
+drop supplementary AI zones cannot admit sticker/Attraction simulations.

@@ -7,7 +7,8 @@ engine. The unmodified source is pinned by commit and archive SHA-256 in
 to an immutable upstream pull-request head. Local regression fixes are a second
 patch, applied after the upstream patch. Two further patches preserve chosen
 commander colors through native/AI state and refresh companion pregame types.
-All four patches are pinned. No remote branch is used at build time.
+A fifth patch preserves supplementary zones in AI game copies. All five patches
+are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -23,7 +24,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-48 native sticker, chosen-color and companion pregame tests and packages a standalone runtime only when all pass
+55 native sticker, chosen-color, companion and supplementary-copy tests and
+packages a standalone runtime only when all pass
 without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -53,9 +55,20 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins three regression source files and exactly three card-script
+The recipe pins four regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
-and card ZIP. The broader 596 gameplay and 256 serialization checks are recorded
-in `native_test_evidence.json`; the 48 focused tests are included in the 596.
+and card ZIP, plus the bounded complete edition metadata inventory. Edition
+filenames and bytes use a portable ordered fingerprint; the default lock pins
+686 files verified against immutable source. The broader 603 gameplay and 256
+serialization checks are recorded
+in `native_test_evidence.json`; the 55 focused tests are included in the 603.
+
+
+The supplementary-zone regression checks real independent AI copies rather than
+infer support from loaded card names. Explicit Attraction preflight and all 87
+printing/export/AI-copy integration cases also pass. Runtime promotion preserves
+historical locks. The current build's edition pin was independently verified
+against the immutable source archive, retaining the original generated lock and
+review receipt locally; new builds include this pin directly in their lock.

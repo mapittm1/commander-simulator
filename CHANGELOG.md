@@ -8,6 +8,33 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Add exact `(SET) collector` Attraction selection with validator version 9.
+  Preserve printing IDs and functional lights in immutable revisions and the
+  latest projection; hash explicit choices and reject ambiguous, conflicting,
+  changed, incorrectly typed or nonlegal source printings. Keep name-only and
+  unselected legacy behavior. Generate native selectors from validated fields.
+- Add `sync-attractions`: bounded, attributed, atomic printing-only Scryfall
+  enrichment that preserves Oracle records and bulk freshness. Require the
+  complete fixed-query inventory, safe pagination, unique identities, bounded
+  strict JSON and legal English source printings. Retain all 87 current variants.
+- Add fail-closed native collector/light preflight with bounded workers/receipts
+  and a 64-entry engine/source/edition-bound cache. Recheck printing facts during
+  admission and native resource/source identity under the launch profile lock.
+  Preserve semantic printing evidence through batch seat rotations and resume.
+- Fix native AI copies omitting Attraction decks, junkyards, sticker sheets and
+  other real supplementary zones. Pin the fifth source patch and seven native
+  copy regressions. Block incompatible older engines for supplementary games.
+  Pin all 686 edition metadata files alongside executable/card/runtime hashes,
+  with portable filename ordering and byte bounds. Preserve historical locks.
+- Verification: 398 offline tests and 508 subtests; Black, isort, Pylint and
+  Bandit; 55 focused native tests; 603 broader gameplay tests (including those
+  55); 256 serialization tests; all 11 live integrations/162 subtests; and all
+  32,109 matched catalog constructions pass. All 87 Attraction printings retain
+  their lights through native registration and AI copies. The CLI plays and
+  resumes an isolated pod with a selected printing. These checks do not certify
+  every Visit ability, sticker effect or AI decision.
+
+
 - Verify all seven current Commander meld results with 49 native partial-state
   cases: formation, graveyard/exile separation, missing/wrong-zone parts,
   ownership/control rejection and a physical Clone reverting to its printed

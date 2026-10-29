@@ -6,7 +6,8 @@ See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 
 The core CLI requires Python 3.10 or newer and no third-party runtime packages.
-Companion condition validation and controlled interaction tests require the
+Companion condition validation, explicit Attraction printing checks and controlled
+interaction tests require the
 optional native bridge and a trusted Java 17+ runtime. Controlled interaction
 tests also require a JDK 17+ compiler (`javac` on PATH, or an executable selected
 by `COMMANDER_JAVAC`).
@@ -16,10 +17,10 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 48
-focused native tests for stickers, chosen commander colors and companion pregame
-behavior. Broader native runs pass 596 AI/gameplay tests (including those 48)
-and 256 card/deck serialization tests, with no failures or skips.
+Seven additional records are non-starting meld results. The build passes 55
+focused native tests for stickers, chosen commander colors, companion pregame
+behavior and supplementary AI zones. Broader native runs pass 603 AI/gameplay
+tests (including those 55) and 256 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
@@ -29,7 +30,9 @@ Sticker and Attraction sections now retain validated supplementary selections
 through saved revisions and native pregame loading. Explicit companion selection
 now includes native condition validation against all 100 starting cards. Explicit
 commander color choices are retained through legality checks, saved revisions,
-native pregame loading and AI game copies. The 41 controlled interaction scenarios
+native pregame loading and AI game copies. All 87 retained legal Attraction
+printings across 22 identities preserve their selected light combinations through
+import, snapshots, native registration and AI copies. The 41 controlled interaction scenarios
 remain separate checks. A further 49 native meld cases verify all seven catalog
 results forming, separating after graveyard/exile moves and rejecting invalid
 parts. These meld fixtures directly resolve native effects; they do not certify
@@ -714,9 +717,60 @@ deck revisions retain their canonical identities.
 
 Exact source-printing proofs now establish Fang and Vanille as meld starting
 parts when their retained catalog records reference another printing of the same
-Oracle identity. Validator version 8 freezes used proofs into legality reports;
-audit version 4 freezes them into catalog evidence. Both complete relationship
+Oracle identity. Legality reports freeze the used proofs; audit version 4
+retains them in catalog evidence. Both complete relationship
 graphs and both printing/Oracle identities must match. Changed metadata requires
 review. These proofs establish card structure; ordinary Commander legality and
 native engine gates still apply. The separate meld-result registry remains
 deny-only. See [card support and evidence](docs/CARD_COVERAGE.md).
+
+
+## Exact Attraction printing choices
+
+After refreshing the Oracle catalog when needed, fetch the English Attraction
+printing metadata separately:
+
+```powershell
+python commander_simulator.py sync-attractions
+```
+
+This updates printing records and records the observed source/hash separately.
+It does not replace Oracle rules or refresh the catalog's legality timestamp.
+The local run retained all 87 legal printings across 22 Oracle identities.
+
+Append a section such as this to an otherwise legal 100-card decklist:
+
+```text
+Attractions
+1 Bumper Cars (UNF) 202c
+1 Balloon Stand (UNF) 200a
+1 Bounce Chamber (UNF) 201a
+1 Clown Extruder (UNF) 204a
+1 Concession Stand (UNF) 205a
+1 Costume Shop (UNF) 206a
+1 Drop Tower (UNF) 209a
+1 Ferris Wheel (UNF) 210
+1 Foam Weapons Kiosk (UNF) 211a
+1 Fortune Teller (UNF) 212a
+```
+
+The `(SET) collector` suffix selects an exact retained English printing. Bumper
+Cars `202c`, for example, has lights 2, 5 and 6. The normal import, review, play
+and resume commands preserve that choice. Different printings of one Attraction
+still share its singleton limit; they cannot fill multiple supplementary slots.
+At least ten distinct Attractions are required when selecting an Attraction deck.
+Name-only selections continue to use the native default printing.
+
+Missing, ambiguous, changed or nonlegal source printings block approval. At game
+admission a bounded native preflight verifies the actual collector identity and
+light set; a native fallback is rejected. The selected facts are frozen into deck
+revisions and batch evidence, including seat rotations. Printing/source/edition
+changes invalidate incompatible checks and frozen jobs. Direct engine syntax in
+uploaded card names remains rejected; only validated selectors are generated.
+
+The reviewed runtime fixes AI snapshots that omitted supplementary zones.
+Attraction decks, junkyards and sticker sheets now survive those copies. Older
+engines lacking that capability cannot start simulations containing these
+selections. The lock also pins the complete 686-file edition inventory alongside
+the JAR, card ZIP, Java executable and JVM library. See the detailed coverage
+document for tested behavior and remaining interaction work.

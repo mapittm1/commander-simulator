@@ -88,3 +88,24 @@ def require_bridge(version_reader=None) -> None:
 def jvm_library(java: Path) -> str:
     """Find only a supported JVM library beside the selected trusted runtime."""
     return _jvm_library(java)
+
+
+def settings_from_plan(plan):
+    """Reconstruct only the administrator-owned executable paths in a generated plan."""
+    return EngineSettings(
+        Path(plan["home"]),
+        Path(plan["java"]),
+        Path(plan["lock"]) if plan["lock"] else None,
+    )
+
+
+def native_plan_identity(settings, engine=None):
+    """Freeze runtime identities without accepting executable paths from deck text."""
+    return {
+        "schema_version": 1,
+        "home": str(settings.home),
+        "java": str(settings.java),
+        "lock": str(settings.lock_path) if settings.lock_path else None,
+        "engine": settings.verify() if engine is None else engine,
+        "jvm": jvm_library(settings.java),
+    }

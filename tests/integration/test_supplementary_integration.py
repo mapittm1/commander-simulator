@@ -58,6 +58,13 @@ class NativeSupplementaryTests(unittest.TestCase):
         self.assertEqual(len(chosen), 3)
         self.assertTrue(set(chosen).issubset(sheets))
         for name in ("selected", "empty"):
+            self.assertIs(observed[name]["independent_copy"], True)
+            self.assertEqual(
+                observed[name]["copied_sheets"], observed[name]["chosen_sheets"]
+            )
+            self.assertEqual(
+                observed[name]["copied_attractions"], observed[name]["attraction_deck"]
+            )
             self.assertEqual(observed[name]["main_count"], 99)
             self.assertEqual(observed[name]["library"], 0)
             self.assertEqual(observed[name]["battlefield"], 0)

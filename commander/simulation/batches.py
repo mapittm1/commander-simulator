@@ -94,7 +94,7 @@ def plan_game(spec: dict, index: int) -> dict:
         "seat_order": order,
         "seats": [spec["seats"][seat] for seat in order],
         "inputs": {
-            "engine": spec["inputs"]["engine"],
+            **spec["inputs"],
             "seats": [spec["inputs"]["seats"][seat] for seat in order],
             "coverage": [spec["inputs"]["coverage"][seat] for seat in order],
         },

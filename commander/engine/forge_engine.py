@@ -5,6 +5,7 @@ import re
 from pathlib import Path
 from sqlite3 import Connection
 
+from commander.catalog.printing_choices import printing_choice_errors
 from commander.decks.deck_store import get_revision
 from commander.diagnostics.diagnostic_artifacts import record_diagnostics
 from commander.engine.engine_process import ProcessLimits, run_bounded
@@ -12,6 +13,11 @@ from commander.engine.forge_config import EngineSettings, require_engine_capabil
 from commander.engine.forge_decks import card_index, coverage, serialize_deck
 from commander.engine.forge_results import parse_game_result
 from commander.engine.native_runtime import _engine_profile, _environment, create_run
+from commander.engine.printing_admission import (
+    EVIDENCE_FIELDS,
+    check_printing_choices,
+    verify_printing_evidence,
+)
 from commander.paths import DATA_ROOT
 from commander.rules.brackets import load_policy, require_bracket_review
 
@@ -115,6 +121,14 @@ def _command(settings, lock, run, seed, game_clock):
 
 def check_game_evidence(connection, prepared) -> None:
     """Check catalog, policy, and review identities inside a caller's admission transaction."""
+    for seat in prepared:
+        entries = seat["revision"]["cards"]
+        if any("printing" in entry for entry in entries):
+            cards = {entry["card"]["card_id"]: entry["oracle"] for entry in entries}
+            if printing_choice_errors(connection, entries, cards):
+                raise ValueError(
+                    "Attraction printing facts changed during game admission"
+                )
     current = connection.execute(
         "SELECT * FROM imports ORDER BY id DESC LIMIT 1"
     ).fetchone()
@@ -149,8 +163,14 @@ def prepare_game(connection, settings, seats) -> dict:
         serialize_deck(seat["revision"], index, number)
         for number, seat in enumerate(prepared, 1)
     ]
+    printing = check_printing_choices(
+        settings, [seat["revision"] for seat in prepared], index
+    )
     check_game_evidence(connection, prepared)
-    return {"engine": lock, "seats": prepared, "coverage": reports, "decks": decks}
+    result = {"engine": lock, "seats": prepared, "coverage": reports, "decks": decks}
+    if printing is not None:
+        result["printing_admission"] = printing
+    return result
 
 
 def _write_inputs(run, inputs, seed, game_clock) -> None:
@@ -209,7 +229,16 @@ def game_evidence(inputs: dict) -> dict:
         }
         for seat in inputs["seats"]
     ]
-    return {"engine": inputs["engine"], "seats": seats, "coverage": inputs["coverage"]}
+    result = {
+        "engine": inputs["engine"],
+        "seats": seats,
+        "coverage": inputs["coverage"],
+    }
+    if "printing_admission" in inputs:
+        result["printing_admission"] = {
+            key: inputs["printing_admission"][key] for key in EVIDENCE_FIELDS
+        }
+    return result
 
 
 def _execute_game(settings, inputs, seed, game_clock) -> dict:
@@ -218,6 +247,8 @@ def _execute_game(settings, inputs, seed, game_clock) -> dict:
     _write_inputs(run, inputs, seed, game_clock)
     try:
         with _engine_profile(settings, run):
+            if "printing_admission" in inputs:
+                verify_printing_evidence(settings, inputs["printing_admission"])
             process = run_bounded(
                 _command(settings, inputs["engine"], run, seed, game_clock),
                 settings.home,

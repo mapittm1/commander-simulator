@@ -22,7 +22,7 @@ from commander.engine.native_runtime import (
     _engine_profile,
     _environment,
     create_run,
-    jvm_library,
+    native_plan_identity,
     require_bridge,
 )
 from commander.paths import PROJECT_ROOT
@@ -36,12 +36,7 @@ def check_companion_condition(starting: list, companion: dict, cards: dict) -> d
     require_engine_capabilities(engine, starting)
     index = card_index(settings.home / "res/cardsfolder/cardsfolder.zip")
     plan = {
-        "schema_version": 1,
-        "home": str(settings.home),
-        "java": str(settings.java),
-        "lock": str(settings.lock_path) if settings.lock_path else None,
-        "engine": engine,
-        "jvm": jvm_library(settings.java),
+        **native_plan_identity(settings, engine),
         "source_hashes": source_hashes(),
         "starting": sorted(
             (_identity(entry, cards, index) for entry in starting),

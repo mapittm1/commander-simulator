@@ -75,7 +75,11 @@ def source_hashes() -> dict:
     paths = sorted((PROJECT_ROOT / "commander").rglob("*.py"))
     paths.extend(
         PROJECT_ROOT / name
-        for name in ("tools/catalog_probe_worker.py", "tools/companion_worker.py")
+        for name in (
+            "tools/catalog_probe_worker.py",
+            "tools/companion_worker.py",
+            "tools/printing_worker.py",
+        )
     )
     if len(paths) > 256:
         raise ValueError("Catalog probe source registry exceeds its file limit")

@@ -12,6 +12,10 @@ from datetime import datetime, timedelta, timezone
 from sqlite3 import Connection
 
 from commander.catalog.database import get_card_details
+from commander.catalog.printing_choices import (
+    printing_choice_errors,
+    printing_hash_suffix,
+)
 from commander.decks.deck_snapshots import read_revision
 from commander.rules.card_structure import starting_card_issues
 from commander.rules.commander_colors import color_choice_issues, commander_identity
@@ -21,7 +25,7 @@ from commander.rules.supplementary import supplementary_issues
 
 RULES_VERSION = "2026-09-25"
 RULES_SOURCE = "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf"
-VALIDATOR_VERSION = 8
+VALIDATOR_VERSION = 9
 MAX_CATALOG_AGE = timedelta(days=7)
 LAND_COLORS = {
     "Plains": "W",
@@ -288,6 +292,7 @@ def validate_entries(connection: Connection, entries: list, now=None) -> dict:
     snapshot = sorted(
         (entry["card"]["card_id"], entry["zone"], entry["quantity"])
         + ((entry["commander_color"],) if "commander_color" in entry else ())
+        + printing_hash_suffix(entry)
         for entry in entries
     )
     companion, role_reviews = None, {}
@@ -366,6 +371,7 @@ def _construction_issues(connection, entries, allow_native):
         }
     )
     errors.extend(supplementary_issues(entries, cards))
+    errors.extend(printing_choice_errors(connection, entries, cards))
     errors.extend(layout_errors)
     blockers.extend(layout_blockers)
     total = sum(entry["quantity"] for entry in _starting_entries(entries))

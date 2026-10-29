@@ -39,6 +39,12 @@ SCHEMA = """
         color TEXT NOT NULL CHECK(color IN ('W','U','B','R','G')),
         PRIMARY KEY(deck_id, card_id)
     );
+    CREATE TABLE IF NOT EXISTS deck_printing_choices (
+        deck_id INTEGER NOT NULL REFERENCES decks(id),
+        card_id TEXT NOT NULL REFERENCES cards(card_id),
+        scryfall_id TEXT NOT NULL REFERENCES printings(scryfall_id),
+        PRIMARY KEY(deck_id, card_id)
+    );
     CREATE TABLE IF NOT EXISTS deck_revisions (
         id INTEGER PRIMARY KEY,
         deck_id INTEGER NOT NULL REFERENCES decks(id),
@@ -78,8 +84,9 @@ def _snapshot(connection: Connection, entries: list) -> str:
                 "oracle": oracle,
             }
         )
-        if "commander_color" in entry:
-            snapshot[-1]["commander_color"] = entry["commander_color"]
+        for field in ("commander_color", "printing"):
+            if field in entry:
+                snapshot[-1][field] = entry[field]
     snapshot.sort(key=lambda entry: (entry["zone"], entry["card"]["card_id"]))
     return json.dumps(snapshot, ensure_ascii=False, sort_keys=True)
 
@@ -233,6 +240,18 @@ def _update_projection(connection, metadata, entries, report):
             (metadata["id"], entry["card"]["card_id"], entry["commander_color"])
             for entry in entries
             if "commander_color" in entry
+        ],
+    )
+
+    connection.execute(
+        "DELETE FROM deck_printing_choices WHERE deck_id = ?", (metadata["id"],)
+    )
+    connection.executemany(
+        "INSERT INTO deck_printing_choices VALUES (?, ?, ?)",
+        [
+            (metadata["id"], entry["card"]["card_id"], entry["printing"]["id"])
+            for entry in entries
+            if "printing" in entry
         ],
     )
 

@@ -6,6 +6,10 @@ import re
 from dataclasses import dataclass
 from pathlib import Path
 
+from commander.engine.printing_resources import (
+    edition_fingerprint,
+    validate_edition_pin,
+)
 from commander.json_safety import require_json_depth
 from commander.paths import CONFIG_ROOT
 
@@ -46,6 +50,11 @@ class EngineSettings:
         for path, expected in checks:
             if not path.is_file() or file_hash(path) != expected:
                 raise ValueError(f"Pinned engine integrity check failed: {path.name}")
+        if (
+            "edition_resources" in lock
+            and edition_fingerprint(self.home) != lock["edition_resources"]
+        ):
+            raise ValueError("Pinned native edition resource integrity check failed")
         folder = self.home / "res/cardsfolder"
         if any(entry.name != "cardsfolder.zip" for entry in folder.iterdir()):
             raise ValueError(
@@ -113,6 +122,8 @@ def read_engine_lock(path: Path) -> dict:
             r"[a-f0-9]{64}", lock[key]
         ):
             raise ValueError("Engine lock requires lowercase SHA-256 hashes")
+    if "edition_resources" in lock:
+        validate_edition_pin(lock["edition_resources"])
     return lock
 
 
@@ -137,6 +148,15 @@ def supported_java_version(value) -> bool:
 
 def require_engine_capabilities(lock: dict, entries: list) -> None:
     """Reject unsupported pregame choices before admitting a game or a batch."""
+    if any(entry.get("zone") in {"attractions", "stickers"} for entry in entries):
+        capabilities = lock.get("capabilities", [])
+        if (
+            not isinstance(capabilities, list)
+            or "supplementary_ai_zones" not in capabilities
+        ):
+            raise ValueError(
+                "Selected engine drops supplementary zones from AI snapshots; install the reviewed supplementary build"
+            )
     if any(entry.get("zone") == "companion" for entry in entries):
         capabilities = lock.get("capabilities", [])
         if (

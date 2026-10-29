@@ -9,6 +9,7 @@ from pathlib import Path
 from unittest.mock import patch
 
 from commander.engine.forge_config import EngineSettings, file_hash, read_engine_lock
+from commander.engine.printing_resources import edition_fingerprint
 from tools.build_sticker_engine import _verify_unchanged_inputs
 
 # Test names describe behavior.
@@ -79,3 +80,33 @@ class RuntimeIntegrityTests(unittest.TestCase):
             with self.assertRaisesRegex(ValueError, "recipe changed"):
                 _verify_unchanged_inputs(None, {}, digest)
             verify.assert_called_once()
+
+    def test_changed_or_added_edition_resources_cannot_pass_a_pinned_engine(self):
+        folder = self.root / "res/editions"
+        folder.mkdir()
+        edition = folder / "unfinity.txt"
+        edition.write_text("reviewed edition metadata", encoding="utf-8")
+        self.metadata["edition_resources"] = edition_fingerprint(self.root)
+        self.lock.write_text(json.dumps(self.metadata), encoding="utf-8")
+        self.settings.verify()
+        edition.write_text("changed metadata", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "edition resource integrity"):
+            self.settings.verify()
+        edition.write_text("reviewed edition metadata", encoding="utf-8")
+        (folder / "unexpected.txt").write_text("extra edition", encoding="utf-8")
+        with self.assertRaisesRegex(ValueError, "edition resource integrity"):
+            self.settings.verify()
+
+    def test_malformed_edition_inventory_pins_fail_closed(self):
+        for value in (
+            {},
+            {"files": True, "sha256": "a" * 64},
+            {"files": 4097, "sha256": "a" * 64},
+            {"files": 1, "sha256": "wrong"},
+        ):
+            self.lock.write_text(
+                json.dumps({**self.metadata, "edition_resources": value}),
+                encoding="utf-8",
+            )
+            with self.subTest(pin=value), self.assertRaises(ValueError):
+                read_engine_lock(self.lock)

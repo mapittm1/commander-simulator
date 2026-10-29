@@ -11,10 +11,11 @@ from pathlib import Path
 
 import pytest
 
-from commander.catalog.database import DEFAULT_DATABASE, connect
+from commander.catalog.database import DEFAULT_DATABASE, connect, store_printing
 from commander.cli.app import main
 from commander.engine.engine_fixtures import FOREST_POD, legal_fixture_pod
 from commander.rules.brackets import load_policy
+from tests.support.catalog_fixture import copy_catalog_records
 
 pytestmark = pytest.mark.integration
 
@@ -34,6 +35,7 @@ class LiveCliTests(unittest.TestCase):
             tempfile.TemporaryDirectory() as directory,
         ):
             directory = Path(directory)
+            selected_attractions = _selected_attractions(source, fixture)
             database = directory / "cli.sqlite3"
             with closing(sqlite3.connect(database)) as destination:
                 fixture.backup(destination)
@@ -42,19 +44,13 @@ class LiveCliTests(unittest.TestCase):
                 json.dumps(
                     {
                         "reviewer": "Automated isolated CLI integration fixture",
-                        "rationale": "99 basics and one commander; software regression only, not a production human attestation.",
+                        "rationale": "99 basics, one commander and an optional selected Attraction deck; software regression only, not a production human attestation.",
                         "checks": dict.fromkeys(load_policy()["review_checks"], True),
                     }
                 ),
                 encoding="utf-8",
             )
-            decks = []
-            for number, leader in enumerate(FOREST_POD):
-                path = directory / f"diagnostic-{number}.txt"
-                path.write_text(
-                    f"Commander\n1 {leader}\nMainboard\n99 Forest\n", encoding="utf-8"
-                )
-                decks.extend(("--deck", str(path)))
+            decks = _write_cli_decks(directory, selected_attractions)
             output, progress = io.StringIO(), io.StringIO()
             with redirect_stdout(output), redirect_stderr(progress):
                 main(
@@ -86,6 +82,9 @@ class LiveCliTests(unittest.TestCase):
                 json.loads((directory / "report.json").read_text())["status"],
                 "completed",
             )
+            evidence = _frozen_printing(database, report["batch"]["job_id"])
+            self.assertEqual(evidence["printings"][0]["collector_number"], "202c")
+            self.assertEqual(evidence["printings"][0]["attraction_lights"], [2, 5, 6])
             output = io.StringIO()
             with redirect_stdout(output), redirect_stderr(io.StringIO()):
                 main(
@@ -112,3 +111,51 @@ class LiveCliTests(unittest.TestCase):
                     }
                 )
             )
+
+
+def _selected_attractions(source, fixture):
+    """Enrich only the disposable CLI catalog with current attributed source records."""
+    names = [
+        row[0]
+        for row in source.execute(
+            "SELECT name FROM cards WHERE commander_legality='legal' AND type_line LIKE '%Attraction%' AND name != 'Bumper Cars' ORDER BY name LIMIT 9"
+        )
+    ]
+    if len(names) != 9:
+        raise ValueError("CLI fixture requires ten legal Attraction identities")
+    copy_catalog_records(source, fixture, ["Bumper Cars", *names])
+    row = source.execute(
+        "SELECT raw_json FROM printings WHERE set_code='unf' AND collector_number='202c' AND language='en'"
+    ).fetchone()
+    if row is None:
+        raise ValueError(
+            "CLI fixture requires Bumper Cars printing 202c; run sync-attractions"
+        )
+    with fixture:
+        store_printing(fixture, json.loads(row[0]))
+    return "Attractions\n1 Bumper Cars (UNF) 202c\n" + "".join(
+        f"1 {name}\n" for name in names
+    )
+
+
+def _write_cli_decks(directory, selected_attractions):
+    """Write four real imports with an explicit Attraction printing in the first seat."""
+    arguments = []
+    for number, leader in enumerate(FOREST_POD):
+        path = directory / f"diagnostic-{number}.txt"
+        path.write_text(
+            f"Commander\n1 {leader}\nMainboard\n99 Forest\n"
+            + (selected_attractions if number == 0 else ""),
+            encoding="utf-8",
+        )
+        arguments.extend(("--deck", str(path)))
+    return arguments
+
+
+def _frozen_printing(database, job_id):
+    """Inspect the persisted batch contract rather than infer success from deck text."""
+    with closing(connect(database)) as retained:
+        raw = retained.execute(
+            "SELECT spec_json FROM simulation_jobs WHERE id=?", (job_id,)
+        ).fetchone()[0]
+    return json.loads(raw)["inputs"]["printing_admission"]

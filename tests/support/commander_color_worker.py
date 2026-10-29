@@ -10,7 +10,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from commander.engine.forge_config import file_hash
 from commander.engine.interactions.fixtures import _new_game
 from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
-from tests.support.native_worker import initialize_test_engine
+from tests.support.native_worker import initialize_test_engine, load_registered_deck
 
 
 def main():
@@ -36,11 +36,7 @@ def main():
 
 def _observe(java, run, case_id, number):
     path = run / f"color-{number}.dck"
-    deck = java.JClass("forge.deck.io.DeckSerializer").fromFile(
-        java.JClass("java.io.File")(str(path))
-    )
-    registered = java.JClass("forge.game.player.RegisteredPlayer")(deck)
-    registered.assignCommander()
+    registered = load_registered_deck(java, path)
     game = _new_game(java)
     owner = game.getPlayers().get(java.JInt(0))
     owner.initVariantsZones(registered)
@@ -66,7 +62,7 @@ def _observe(java, run, case_id, number):
         },
         "id": case_id,
         "deck_sha256": file_hash(path),
-        "main_count": deck.getMain().countAll(),
+        "main_count": registered.getDeck().getMain().countAll(),
         "identity_mask": int(owner.getCommanderColorID().getColor()),
         "tower_colors": str(ability.getManaPart().getComboColors(ability)),
         "commanders": [

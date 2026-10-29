@@ -6,6 +6,10 @@ from pathlib import Path
 from sqlite3 import Connection
 
 from commander.catalog.database import find_deck_candidates
+from commander.catalog.printing_choices import (
+    resolve_printing_choice,
+    split_printing_choice,
+)
 from commander.decks.deck_store import ensure_deck_schema, list_decks, save_deck
 from commander.rules.commander_colors import split_color_choice
 from commander.rules.legality import validate_entries
@@ -78,7 +82,8 @@ def parse_deck_sections(text: str) -> dict[str, Counter]:
         if len(name) > MAX_CARD_NAME_LENGTH or any(ord(char) < 32 for char in name):
             raise ValueError(f"Line {number}: invalid or excessively long card name")
         # Strip the common set/collector metadata from Arena-style text exports.
-        name = re.sub(r"\s+\([A-Za-z0-9]+\)\s+\S+(?:\s+\*F\*)?$", "", name)
+        if section != "attractions":
+            name = re.sub(r"\s+\([A-Za-z0-9]+\)\s+\S+(?:\s+\*F\*)?$", "", name)
         target = sections[section]
         target[name] += quantity
         if target[name] > MAX_CARD_QUANTITY:
@@ -130,7 +135,10 @@ def _resolve_entries(connection: Connection, sections: dict) -> list:
     resolved = {}
     for zone, entries in sections.items():
         for name, quantity in entries.items():
-            resolved_name, color = split_color_choice(name)
+            selected_name, selector = (
+                split_printing_choice(name) if zone == "attractions" else (name, None)
+            )
+            resolved_name, color = split_color_choice(selected_name)
             if color is not None and zone != "commander":
                 raise ValueError("Only commander entries may specify a pregame color")
             card = _resolve(connection, resolved_name)
@@ -141,6 +149,14 @@ def _resolve_entries(connection: Connection, sections: dict) -> list:
                 if resolved[key].get("commander_color", color) != color:
                     raise ValueError("Conflicting colors for the same commander")
                 resolved[key]["commander_color"] = color
+            if selector is not None:
+                printing = resolve_printing_choice(connection, card, selector)
+                if (
+                    "printing" in resolved[key]
+                    and resolved[key]["printing"] != printing
+                ):
+                    raise ValueError("Conflicting printings of the same Attraction")
+                resolved[key]["printing"] = printing
             resolved[key]["quantity"] += quantity
     return list(resolved.values())
 

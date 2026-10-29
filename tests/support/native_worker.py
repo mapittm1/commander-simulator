@@ -39,3 +39,13 @@ def initialize_test_engine():
         java, jvm_library(settings.java), [str(settings.home / engine["jar_name"])]
     )
     return java, engine
+
+
+def load_registered_deck(java, path):
+    """Read a generated native export and assign its declared commanders."""
+    deck = java.JClass("forge.deck.io.DeckSerializer").fromFile(
+        java.JClass("java.io.File")(str(path))
+    )
+    registered = java.JClass("forge.game.player.RegisteredPlayer")(deck)
+    registered.assignCommander()
+    return registered

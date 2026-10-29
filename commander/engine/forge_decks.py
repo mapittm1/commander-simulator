@@ -4,6 +4,7 @@ import re
 import zipfile
 from pathlib import Path
 
+from commander.catalog.printing_choices import require_printing_choice
 from commander.engine.engine_aliases import ReviewedCardIndex, apply_alias_reviews
 from commander.rules.commander_colors import chooses_commander_color
 
@@ -166,6 +167,7 @@ def serialize_deck(revision: dict, index: dict, seat: int) -> str:
                 name = index[entry["card"]["name"]]
                 if not safe_engine_name(name):
                     raise ValueError("Unsafe engine card serialization")
+                name = _printing_name(entry, name)
                 color = entry.get("commander_color")
                 if color is not None:
                     if (
@@ -184,3 +186,21 @@ def serialize_deck(revision: dict, index: dict, seat: int) -> str:
                     name += "|#{markedColors=" + color + "}"
                 lines.append(f"{entry['quantity']} {name}")
     return "\n".join(lines) + "\n"
+
+
+def _printing_name(entry, name):
+    """Generate only a validated native set/collector selector."""
+    if "printing" in entry:
+        choice = entry["printing"]
+        require_printing_choice(choice, entry["card"]["card_id"], entry["card"]["name"])
+        if (
+            entry["zone"] != "attractions"
+            or not entry.get("oracle")
+            or "Attraction"
+            not in entry["oracle"].get("type_line", "").partition(" — ")[2].split()
+        ):
+            raise ValueError(
+                "Printing export requires an authoritative Attraction selection"
+            )
+        name += "|" + choice["set"].upper() + "|[" + choice["collector_number"] + "]"
+    return name

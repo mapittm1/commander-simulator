@@ -81,12 +81,12 @@ The CLI now supports supplementary sticker and Attraction sections through
 validated immutable revisions. Native pregame integration verifies all 48 catalog
 sticker sheets and all 22 Commander-legal Attractions, retaining every selection
 and revealing exactly three distinct selected sheets. Empty selections produce
-no supplementary objects. Attraction light variants currently use Forge's default
-printing selection; an explicit printing-selection interface remains work.
+no supplementary objects. Name-only Attraction selections use the native default printing. Explicit
+set/collector choices now preserve their exact source-backed light variants.
 Explicit companions now have native condition admission and immutable revisions.
 Commander color choices now pass backend and native pregame checks, including
-AI game copies. Explicit Attraction printing/light choices remain unsupported;
-construction counts must not conceal that limitation. Further work includes
+AI game copies. Explicit Attraction printing/light choices now have source and native identity
+checks. Construction counts remain separate from interaction correctness. Further work includes
 meld trigger admission/payment/timing, catalog-wide characteristic comparisons
 and broader native rules regressions. An implementation claim should name its tested behavior;
 script presence and successful games alone do not certify full card coverage.
@@ -120,9 +120,9 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **596 native tests in 59 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 48 focused
-sticker, chosen-color and companion tests; these counts must not be added together.
+The reviewed patched source also passes **603 native tests in 60 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 55 focused
+sticker, chosen-color, companion and supplementary-copy tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -202,8 +202,8 @@ and Lurrus's paid three-mana special action, rejection with insufficient mana an
 combat timing admission. Backend admission still supplies the full 100-card
 condition gate. This does not certify companion AI strategy or every interaction.
 
-The final runtime passes all nine live integrations (26 subtests), including all
-41 unchanged controlled interaction cases. A new full factory probe constructs
+The reviewed runtime passes the current live integration suite, including all
+41 unchanged controlled interaction cases; current totals are recorded below. A new full factory probe constructs
 all 32,109 matched identities. Source/report hashes bind the actual tested builds.
 The Java executable and JVM library are both checked when pinned by the lock.
 Build recipe bytes are frozen before execution and rechecked after compilation
@@ -240,8 +240,67 @@ only establishes starting-card structure; size, eligibility, color identity,
 singleton, current format legality and engine checks still run. Audit version 4
 also freezes the used proof. Historical reports are not rewritten.
 
-Verification: **367 offline tests / 458 subtests** pass, with ten native opt-in
-tests excluded from the offline gate. Black, isort, Pylint and Bandit pass. All
-ten live integrations pass with 75 subtests, including the 49 meld cases and the
-original 41 controlled interaction cases. Native gameplay/serialization evidence
-for the unchanged engine binary remains recorded separately.
+The meld matrix remains part of the current live integration suite, alongside
+the original 41 controlled cases. Current aggregate counts are recorded below;
+the source and raw-report evidence for each milestone remain available.
+
+
+## Exact Attraction printings and supplementary AI state
+
+Validator version 9 accepts Arena-style `(SET) collector` suffixes in the
+Attractions section. Each choice must resolve to one retained English printing
+of the canonical Oracle identity, with valid ordered integer die lights, a legal
+Commander printing and the correct object type. Names without this suffix keep
+their previous native-default behavior. A printing choice cannot make an
+Attraction a starting card or bypass the ten-unique-name supplementary rule.
+
+Immutable revisions preserve printing/Oracle IDs, set, collector, language and
+light facts. Explicit choices affect semantic hashes; unselected legacy hashes
+remain unchanged. The separate latest projection points to the retained printing.
+Changing source metadata invalidates incompatible approval without rewriting
+historical snapshots. Missing or conflicting identities are never guessed.
+
+`sync-attractions` uses one fixed HTTPS Scryfall search, bounded to four pages,
+175 records per page and 2 MiB per response. It verifies pagination host/path/query,
+complete inventory, unique printing IDs, source types/legality, JSON depth, unique
+keys and finite numbers. Printings and the source receipt commit atomically only
+when all canonical identities already exist. It never updates Oracle records or
+the bulk-import freshness receipt. Current source facts comprise 87 printings of
+22 legal Attraction identities. This is metadata synchronization, not deck approval.
+
+The private native preflight uses the actual variant-card database and rejects
+collector fallbacks, changed light sets, missing/reordered rows and malformed
+receipt facts. Its plans bind engine, Java/JVM, backend/worker source and edition
+inventory. The worker is bounded to 90 seconds, a 2 GiB JVM heap, existing log and
+128 KiB document limits, and 256 distinct selections per process. These are
+resource bounds, not additional Commander deck-construction rules.
+
+A 64-entry in-process cache binds the complete frozen plan and returns fresh
+decoded results. Edition files are bounded individually and in aggregate; their
+portable filename/content fingerprint detects additions, removals and edits.
+The reviewed engine lock pins all 686 edition files against immutable source.
+Printing facts are rechecked after native preflight and in transactional job
+admission; native resources/source are checked under the profile lock immediately
+before game launch. Frozen batch evidence retains printing facts through seat
+rotation and resume, excluding volatile run IDs and process timings.
+
+Native GameCopier previously omitted supplementary zones. The patch retains
+AttractionDeck, Junkyard, StickerSheets, Sideboard, PlanarDeck, SchemeDeck and
+ContraptionDeck, with seven new regressions for object identity, order, functional
+lights and independent copies. This does not enable additional application game
+formats; the backend remains standard multiplayer Commander. Missing capability
+metadata blocks simulations containing sticker or Attraction selections.
+
+The end-to-end printing test passes all 87 variants through legal import, saved
+revisions, generated exports, actual native registration and independent AI
+copies. Supplementary pregame tests also retain their randomly chosen three
+sheets and Attraction deck in AI copies. The real CLI test plays and resumes a
+completed pod containing Bumper Cars `202c`, retaining its exact light facts in
+the persisted batch contract. These tests do not certify every Visit ability,
+dice outcome, sticker effect or AI decision.
+
+Final verification: **398 offline tests / 508 subtests**, all quality tools, all
+**11 live integrations / 162 subtests**, and the fresh catalog factory probe pass.
+The probe constructs all 32,109 matched identities; seven separate meld results
+remain correctly excluded from starting-card construction. The unchanged-card
+archive and newly reviewed engine/edition hashes are retained in their locks.

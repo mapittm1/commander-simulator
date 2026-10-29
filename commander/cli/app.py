@@ -6,6 +6,7 @@ import sqlite3
 from contextlib import closing
 from pathlib import Path
 
+from commander.catalog.attraction_sync import sync_attraction_printings
 from commander.catalog.database import (
     DEFAULT_DATABASE,
     catalog_stats,
@@ -74,6 +75,10 @@ def build_parser() -> argparse.ArgumentParser:
         "--kind",
         choices=("oracle_cards", "default_cards", "all_cards"),
         default="oracle_cards",
+    )
+    commands.add_parser(
+        "sync-attractions",
+        help="Enrich legal Attraction printings without replacing Oracle data",
     )
     local = commands.add_parser(
         "import", help="Import an existing Scryfall JSON export"
@@ -163,6 +168,8 @@ def _run_catalog_command(connection, args, parser) -> None:
         metadata = download_bulk(path, args.kind)
         count = import_bulk(connection, path, args.kind, metadata["updated_at"])
         print(f"Imported {count} records.")
+    elif args.command == "sync-attractions":
+        write_json(sync_attraction_printings(connection))
     elif args.command == "import":
         print(f"Imported {import_bulk(connection, args.file)} records.")
     elif args.command == "lookup":

@@ -254,3 +254,19 @@ class BatchTests(BatchFixture):
         for offset, limit in ((-1, 1), (True, 1), (0, True), (0, 1001)):
             with self.assertRaises(ValueError):
                 attempt_results(self.db, job["job_id"], offset, limit)
+
+    def test_seat_rotation_preserves_global_printing_admission_evidence(self):
+        job = self._create()
+        spec = read_job(self.db, job["job_id"])["spec"]
+        selected = {
+            "printings": [{"id": "frozen-print", "attraction_lights": [2, 5, 6]}],
+            "editions": {"sha256": "reviewed"},
+        }
+        spec["inputs"]["printing_admission"] = selected
+        for index in range(4):
+            with self.subTest(index=index):
+                planned = plan_game(spec, index)
+                self.assertEqual(planned["inputs"]["printing_admission"], selected)
+                self.assertEqual(
+                    planned["inputs"]["seats"][0], spec["inputs"]["seats"][index]
+                )

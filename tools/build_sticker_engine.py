@@ -23,6 +23,7 @@ from commander.engine.engine_process import ProcessLimits, run_bounded
 from commander.engine.forge_config import file_hash, jvm_library
 from commander.engine.forge_engine import _environment
 from commander.engine.interactions.suite import read_hashed_json, write_bounded_json
+from commander.engine.printing_resources import edition_fingerprint
 
 
 def main():
@@ -95,6 +96,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/wicker-picker-local-regressions.patch",
                 "engine/patches/commander-color-choice.patch",
                 "engine/patches/companion-pregame-types.patch",
+                "engine/patches/supplementary-ai-zones.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -114,6 +116,13 @@ def _verify_inputs(args, recipe):
         != recipe["companion_pregame_test_sha256"]
     ):
         raise ValueError("Companion regression source changed; review the recipe")
+    if (
+        file_hash(PROJECT / "engine/tests/SupplementaryGameCopyTest.java")
+        != recipe["supplementary_copy_test_sha256"]
+    ):
+        raise ValueError(
+            "Supplementary snapshot regression source changed; review the recipe"
+        )
     if recipe["card_overrides"] != [
         "w/wicker_picker.txt",
         "t/the_prismatic_piper.txt",
@@ -210,6 +219,12 @@ def _patch_source(source, run, recipe):
         source / "forge-gui-desktop/src/test/java/forge/ai/CompanionPregameTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/SupplementaryGameCopyTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/SupplementaryGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -250,7 +265,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),
@@ -330,6 +345,7 @@ def _lock(runtime, run, recipe, evidence, args):
         "recipe_sha256": evidence["recipe_sha256"],
         "native_tests": evidence["native_tests"],
         "build_log_sha256": file_hash(run / "maven-build.log"),
+        "edition_resources": edition_fingerprint(runtime),
         "runtime_executable_sha256": file_hash(args.runtime),
         "runtime_jvm_sha256": file_hash(Path(jvm_library(args.runtime))),
         "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation",

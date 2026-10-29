@@ -50,7 +50,17 @@ def _observe(java, path):
     player = game.getPlayers().get(java.JInt(0))
     player.initVariantsZones(registered)
     zone = java.JClass("forge.game.zone.ZoneType")
+    snapshot = java.JClass("forge.ai.simulation.GameCopier")(game).makeCopy()
+    copied_player = snapshot.getPlayers().get(java.JInt(0))
     return {
+        "independent_copy": bool(snapshot != game),
+        "copied_sheets": sorted(
+            str(card.getName()) for card in copied_player.getCardsIn(zone.StickerSheets)
+        ),
+        "copied_attractions": sorted(
+            str(card.getName())
+            for card in copied_player.getCardsIn(zone.AttractionDeck)
+        ),
         "registered_sheets": sorted(
             str(card.getName()) for card in registered.getStickerSheets()
         ),
