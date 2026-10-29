@@ -157,6 +157,15 @@ def require_engine_capabilities(lock: dict, entries: list) -> None:
             raise ValueError(
                 "Selected engine drops supplementary zones from AI snapshots; install the reviewed supplementary build"
             )
+    if any(entry.get("zone") == "stickers" for entry in entries):
+        capabilities = lock.get("capabilities", [])
+        if (
+            not isinstance(capabilities, list)
+            or "sticker_snapshot_state" not in capabilities
+        ):
+            raise ValueError(
+                "Selected engine loses applied sticker state in AI/LKI copies; install the reviewed sticker-state build"
+            )
     if any(entry.get("zone") == "companion" for entry in entries):
         capabilities = lock.get("capabilities", [])
         if (

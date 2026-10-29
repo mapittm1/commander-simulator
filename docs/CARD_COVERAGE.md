@@ -29,7 +29,7 @@ These checks answer different questions:
 | Controlled interactions | Named, independently checked native state transitions pass | Untested combinations or general AI decisions |
 | CLI/game integration | Import, review, four-player games, diagnostics and resumable batches work together | Competitive realism or statistical accuracy |
 
-On the frozen local catalog tested on October 27, 2026, the new runtime constructs
+On the frozen local catalog tested on October 28, 2026, the new runtime constructs
 **32,109 identities out of 32,116 Commander-format records**, with zero native
 construction failures. The remaining seven are meld-result objects that cannot
 occupy starting-deck slots. This is not seven unsupported starting cards. Their
@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **603 native tests in 60 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 55 focused
+The reviewed patched source also passes **625 native tests in 61 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 77 focused
 sticker, chosen-color, companion and supplementary-copy tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
@@ -304,3 +304,35 @@ Final verification: **398 offline tests / 508 subtests**, all quality tools, all
 The probe constructs all 32,109 matched identities; seven separate meld results
 remain correctly excluded from starting-card construction. The unchanged-card
 archive and newly reviewed engine/edition hashes are retained in their locks.
+
+## Applied sticker snapshot state
+
+The sixth reviewed patch preserves applied sticker records, timestamps, name
+positions and physical sheet/slot identities in AI game copies. Source-sheet
+references are mapped to the independent copied game. LKI copies retain records
+without reapplying characteristics; ordinary Clone copies retain their separate
+copy rules. Used-slot discovery scans all public zones so a controller change
+cannot free a sticker still attached to an owned object.
+
+Twenty-two focused native regressions check four sticker kinds in battlefield,
+graveyard and exile, independent LKI lists, ticket counters, public/hidden zone
+transitions, control changes, Clone behavior and an actually paid spell copied
+on the stack and resolved. Sticker games require `sticker_snapshot_state` in
+addition to supplementary-zone support. Attraction-only games retain their
+existing capability requirements.
+
+These fixtures place stickers directly to isolate preservation of state. They
+do not certify placement admission, every granted ability, historical zone-change
+LKI or strategic AI decisions. Those remain separate rules-validation work.
+
+Packaged-runtime validation additionally covers all **480 physical stickers on
+48 Commander-legal sheets**, applied in 144 battlefield/graveyard/exile fixtures.
+It compares effective characteristics, record hashes, physical-slot availability,
+LKI state and Java object identity after settling continuous effects. Eight-sheet
+workers retain bounded, engine-bound receipts. See
+[`sticker_state_evidence.json`](../engine/sticker_state_evidence.json) for source,
+input, runtime and raw receipt hashes. The original broad run exposed a stale
+continuous-effect fixture; a targeted rerun of the corrected sticker fixture and
+the separately enabled controlled interaction suite passed. Unique passing live
+coverage totals 12 integration tests and 306 subtests. All 399 offline tests and
+508 subtests pass with Black, isort, Pylint and Bandit.

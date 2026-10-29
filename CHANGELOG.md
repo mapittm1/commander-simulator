@@ -8,6 +8,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve applied sticker records and sheet/slot identities in native AI
+  snapshots; rebind source sheets to the independent copied game. Retain LKI
+  records without reapplying effective characteristics. Check used stickers
+  across all public zones so changing a card's controller cannot free a slot.
+  Preserve ordinary Clone behavior and hidden-zone sticker removal. Require
+  the `sticker_snapshot_state` capability for games with sticker selections.
+- Add 22 native regressions for four sticker kinds in three public zones,
+  independent LKI lists, ticket counters, control changes, zone transitions,
+  ordinary copies and a paid spell copied on the stack and resolved.
+- Verify all 480 physical stickers across 48 Commander-legal sheets and 144
+  public-zone fixtures in the packaged runtime. Compare physical record hashes,
+  effective characteristics, LKI records and exact independent sheet identity.
+  Settle continuous effects before observations. Preserve hashed raw evidence in
+  `engine/sticker_state_evidence.json`; direct placement does not certify every
+  ability's resolution, historical LKI or strategic AI decisions.
+- Validation: 399 offline tests / 508 subtests; all quality tools; 77 focused
+  native tests; 625 broader gameplay tests including those 77; 256 serialization
+  tests; all 12 live integrations / 306 distinct subtests across the suite and
+  targeted fixture rerun; and all 32,109 matched catalog constructions pass.
+  Retain the earlier reviewed runtime and its historical lock.
+
 - Add exact `(SET) collector` Attraction selection with validator version 9.
   Preserve printing IDs and functional lights in immutable revisions and the
   latest projection; hash explicit choices and reject ambiguous, conflicting,

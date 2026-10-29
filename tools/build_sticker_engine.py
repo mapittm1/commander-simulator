@@ -97,32 +97,23 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-color-choice.patch",
                 "engine/patches/companion-pregame-types.patch",
                 "engine/patches/supplementary-ai-zones.patch",
+                "engine/patches/sticker-snapshot-state.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
             raise ValueError("Engine patch registry or content changed")
-    if (
-        file_hash(PROJECT / "engine/tests/StickerKickerRegressionTest.java")
-        != recipe["test_sha256"]
-    ):
-        raise ValueError("Sticker regression source changed; review the recipe")
-    if (
-        file_hash(PROJECT / "engine/tests/CommanderColorChoiceTest.java")
-        != recipe["commander_color_test_sha256"]
-    ):
-        raise ValueError("Commander color regression source changed; review the recipe")
-    if (
-        file_hash(PROJECT / "engine/tests/CompanionPregameTest.java")
-        != recipe["companion_pregame_test_sha256"]
-    ):
-        raise ValueError("Companion regression source changed; review the recipe")
-    if (
-        file_hash(PROJECT / "engine/tests/SupplementaryGameCopyTest.java")
-        != recipe["supplementary_copy_test_sha256"]
-    ):
-        raise ValueError(
-            "Supplementary snapshot regression source changed; review the recipe"
-        )
+    regression_sources = {
+        "StickerKickerRegressionTest.java": "test_sha256",
+        "CommanderColorChoiceTest.java": "commander_color_test_sha256",
+        "CompanionPregameTest.java": "companion_pregame_test_sha256",
+        "SupplementaryGameCopyTest.java": "supplementary_copy_test_sha256",
+        "StickerGameCopyTest.java": "sticker_copy_test_sha256",
+    }
+    for filename, hash_key in regression_sources.items():
+        if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
+            raise ValueError(
+                f"Native regression source {filename} changed; review the recipe"
+            )
     if recipe["card_overrides"] != [
         "w/wicker_picker.txt",
         "t/the_prismatic_piper.txt",
@@ -225,6 +216,11 @@ def _patch_source(source, run, recipe):
         / "forge-gui-desktop/src/test/java/forge/ai/SupplementaryGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/StickerGameCopyTest.java",
+        source / "forge-gui-desktop/src/test/java/forge/ai/StickerGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -265,7 +261,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

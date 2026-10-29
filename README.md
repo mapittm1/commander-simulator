@@ -17,10 +17,10 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 55
+Seven additional records are non-starting meld results. The build passes 77
 focused native tests for stickers, chosen commander colors, companion pregame
-behavior and supplementary AI zones. Broader native runs pass 603 AI/gameplay
-tests (including those 55) and 256 card/deck serialization tests, with no failures or skips.
+behavior and supplementary AI zones. Broader native runs pass 625 AI/gameplay
+tests (including those 77) and 256 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
@@ -32,8 +32,14 @@ now includes native condition validation against all 100 starting cards. Explici
 commander color choices are retained through legality checks, saved revisions,
 native pregame loading and AI game copies. All 87 retained legal Attraction
 printings across 22 identities preserve their selected light combinations through
-import, snapshots, native registration and AI copies. The 41 controlled interaction scenarios
-remain separate checks. A further 49 native meld cases verify all seven catalog
+import, snapshots, native registration and AI copies. Applied stickers now retain
+physical records and independent sheet references
+through AI copies, with LKI records retained separately from ordinary Clone effects.
+Control changes cannot make an already applied sticker available for reuse.
+Packaged-runtime checks cover all 480 stickers across 48 legal sheets in three
+public zones, comparing live, AI-copy and LKI state. These are state-preservation
+checks, separate from individual ability resolution.
+The 41 controlled interaction scenarios remain separate checks. A further 49 native meld cases verify all seven catalog
 results forming, separating after graveyard/exile moves and rejecting invalid
 parts. These meld fixtures directly resolve native effects; they do not certify
 trigger admission, payment or timing.

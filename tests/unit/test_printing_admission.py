@@ -245,8 +245,21 @@ class PrintingAdmissionTests(unittest.TestCase):
                 with self.assertRaisesRegex(ValueError, "drops supplementary zones"):
                     require_engine_capabilities({}, [{"zone": zone}])
                 require_engine_capabilities(
-                    {"capabilities": ["supplementary_ai_zones"]}, [{"zone": zone}]
+                    {
+                        "capabilities": [
+                            "supplementary_ai_zones",
+                            "sticker_snapshot_state",
+                        ]
+                    },
+                    [{"zone": zone}],
                 )
+
+    def test_sticker_state_capability_is_required_only_for_sticker_games(self):
+        lock = {"capabilities": ["supplementary_ai_zones"]}
+        require_engine_capabilities(lock, [{"zone": "attractions"}])
+        require_engine_capabilities(lock, [{"zone": "main"}])
+        with self.assertRaisesRegex(ValueError, "loses applied sticker state"):
+            require_engine_capabilities(lock, [{"zone": "stickers"}])
 
     def test_resource_changes_are_rechecked_immediately_before_native_launch(self):
         report = {
