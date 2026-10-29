@@ -19,11 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 124
+Seven additional records are non-starting meld results. The build passes 140
 focused native tests for stickers, chosen commander colors, companion pregame
-behavior, supplementary AI zones, historical card state, damage provenance and
-participant state.
-Broader native runs pass 672 AI/gameplay tests (including those 124) and 256
+behavior, supplementary AI zones, historical card state, damage provenance,
+participant state and starting-life baselines.
+Broader native runs pass 688 AI/gameplay tests (including those 140) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
@@ -60,6 +60,11 @@ Participant-state validation covers eliminated seats, loss outcomes, turn order,
 historical player references and independent later eliminations. A resolved Blood
 Tyrant loss trigger retains its five counters without firing again during copying.
 See the [participant validation scope](docs/CARD_COVERAGE.md#eliminated-participants).
+
+Starting-life validation checks that Commander snapshots retain the 40-life
+baseline separately from current life. Righteous Valkyrie's bonus requires 47
+life, including after actual paid life-gain spells. See the
+[starting-life validation scope](docs/CARD_COVERAGE.md#starting-life-baselines).
 
 ## Run it now
 

@@ -13,9 +13,9 @@ the copied game and tracks used slots across control changes. A seventh patch
 preserves historical LKI and zone-entry records, independent damage history and
 shared mapped combat bands. An eighth patch preserves damage provenance and
 receipt histories. A ninth preserves registered participant mappings and active/lost
-lists without replaying elimination, restoring life before loss outcomes. All
-nine patches are pinned. No remote branch is used at
-build time.
+lists without replaying elimination, restoring life before loss outcomes.
+A tenth patch preserves registered and live starting-life baselines. All ten
+patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -31,8 +31,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-124 native sticker, chosen-color, companion, supplementary-copy, history,
-damage and participant tests.
+140 native sticker, chosen-color, companion, supplementary-copy, history,
+damage, participant and starting-life tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -62,15 +62,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins eight regression source files and exactly three card-script
+The recipe pins nine regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 672 gameplay and 256
+686 files verified against immutable source. The broader 688 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 124 focused tests are included in the 672.
+in `native_test_evidence.json`; the 140 focused tests are included in the 688.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -127,3 +127,12 @@ the corrected state. See
 [participant_state_evidence.json](participant_state_evidence.json) for exact
 hashes and limits; active-turn departures and pending loss triggers are outside
 these fixtures.
+
+The starting-life patch preserves registration and live player baselines
+separately, before restoring current life. Sixteen native regressions include
+Righteous Valkyrie boundary cases and real paid Angel's Mercy/Chaplain's Blessing
+casts, plus configured baselines, eliminated players and a live override.
+[starting_life_evidence.json](starting_life_evidence.json) binds the before-fix
+incorrect bonus, exact build, source hashes and packaged-runtime witnesses.
+It does not certify every starting-life-dependent card or every registration
+field.

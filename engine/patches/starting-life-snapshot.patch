@@ -1,0 +1,19 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -114,6 +114,8 @@
+         for (Player origPlayer : origGame.getRegisteredPlayers()) {
+             Player newPlayer = newGame.getPlayer(origPlayer.getId());
+             newPlayer.setTeam(origPlayer.getTeam());
++            // Restore the rules baseline before current life; these values can differ.
++            newPlayer.setStartingLife(origPlayer.getStartingLife());
+             newPlayer.setLife(origPlayer.getLife(), null);
+             newPlayer.setLifeLostLastTurn(origPlayer.getLifeLostLastTurn());
+             newPlayer.setLifeLostThisTurn(origPlayer.getLifeLostThisTurn());
+@@ -262,6 +264,7 @@
+ 
+     private RegisteredPlayer clonePlayer(RegisteredPlayer p) {
+         RegisteredPlayer clone = new RegisteredPlayer(p.getDeck());
++        clone.setStartingLife(p.getStartingLife());
+         LobbyPlayer lp = p.getPlayer();
+         if (!(lp instanceof LobbyPlayerAi)) {
+             // TODO should probably also override them if they're normal AI

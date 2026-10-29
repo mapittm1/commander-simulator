@@ -120,9 +120,9 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **672 native tests in 64 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 124 focused
-sticker, chosen-color, companion, supplementary-copy, history, damage and participant tests; these counts must not be added together.
+The reviewed patched source also passes **688 native tests in 65 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 140 focused
+sticker, chosen-color, companion, supplementary-copy, history, damage, participant and starting-life tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -468,3 +468,42 @@ passing results in the final complete run, with both engine and controlled
 interaction opt-ins enabled. Earlier debug receipts are retained locally. The
 seven non-starting meld results remain excluded from construction.
 Previous reviewed runtimes and locks remain available.
+
+## Starting-life baselines
+
+A copied Commander game must preserve its starting-life baseline separately
+from its current life total. Native registrations default to 20 life; recreating
+them without the original baseline made a 40-life Commander player count as
+having started at 20. The packaged before-fix witness records Righteous Valkyrie
+and Grizzly Bears changing from 2 power to 4 merely because the game was copied.
+
+The tenth patch copies registered starting life when constructing new player
+registrations, then restores each live player's baseline before current life.
+These two baselines can differ for a game override and remain distinct.
+Eliminated players retain their baseline and zero current life across repeated
+copies.
+
+Sixteen native regressions and matching packaged witnesses check five configured
+baselines, seven threshold controls and two actual paid spells. For a 40-life
+baseline, Righteous Valkyrie's bonus remains off at 27, 40 and 46 life and turns
+on at 47. With a 20-life baseline, it turns on at 27. In the copied game, paying
+four mana for Angel's Mercy raises life from 40 to 47 and enables the bonus;
+paying one mana for Chaplain's Blessing raises life to 45 and leaves it off.
+Both spells use normal native cast admission and payment, resolve through the
+stack, move to the graveyard and leave the original game unchanged. Independent
+local Scryfall Oracle facts verify the threshold, bonus, mana costs and life gain.
+
+[starting_life_evidence.json](../engine/starting_life_evidence.json) records the
+exact runtime, source, before/after receipts, Oracle identities and test results.
+The new fixtures initialize Commander registrations explicitly rather than
+substituting current life for starting life. They verify this baseline invariant
+and these static-effect/paid-spell outcomes; Righteous Valkyrie's entry trigger,
+other starting-life-dependent cards, other registration metadata and arbitrary
+paid spell state already on the stack remain separate validation work.
+
+Starting-life build verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **140 focused native tests**, **688 broader gameplay tests**
+including those 140, **256 serialization tests**, **16 live integrations / 350
+subtests**, and all **32,109 matched constructions** pass. Native and live runs
+have no failures or skips. The seven non-starting meld results retain their
+separate construction exclusion and existing meld-interaction checks.

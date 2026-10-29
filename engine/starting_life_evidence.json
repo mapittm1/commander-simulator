@@ -1,0 +1,596 @@
+{
+  "scope": "Starting-life baseline preservation, Righteous Valkyrie thresholds and two paid life-gain spells; not every starting-life card or full rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-starting-life",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "887f475d2db4b065bf8d751c2b145a08b051f6dee6348da2ecd48a1b7b458f9f",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "372fdc603e2647e049f23f4b646459c2f7af0feed11cca799cda16cc4dcd8854",
+    "native_tests": {
+      "total": 140,
+      "passed": 140,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "b7ea5a17099c1768066163c5905d1bc14cd8bd793fc957b80703075ab36f968b",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "6828303ef93d4267909102809dfd3e1b",
+  "before": {
+    "run_id": "49ea473f03fc49c996daae451199b9ca",
+    "receipt_sha256": "a15aed0867e075ee73daad01f93b913e636813d287d3621653c54c60ab81e631",
+    "worker_sha256": "c97dff3a1ef646e180cacdbc8fe145a060cc6e376ad31ae17b778a5c33c14d9c",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-participants-life",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "0ce4ef10b80efae94d97d54bbb5b17f46161235fd8d024dd35c7c6c3c4438eb3",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "8dd1f9179416ca0a3648c87c7e3ab2f7d0af7b1496421007cdcf1e0c8b70e4a0",
+        "native_tests": {
+          "total": 124,
+          "passed": 124,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "8ae6bfe86a65d92ef203ca4d11752666af21a63c8633debd955255aa749ef3ce",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: settled non-active-player elimination with life/counter fidelity, damage/history, native regressions, construction and complete live suite; not full rules certification"
+      },
+      "observed": {
+        "baseline": 40,
+        "life": 40,
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          4,
+          4
+        ],
+        "copied_life": {
+          "starting": 20,
+          "registered": 20,
+          "current": 40
+        }
+      }
+    }
+  },
+  "local_run_id": "5e2bb14b442c4f82a1385e0ed4d55c48",
+  "observed": {
+    "baselines": [
+      {
+        "baseline": 20,
+        "before": [
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 17
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          }
+        ],
+        "after": [
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 17
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          },
+          {
+            "starting": 20,
+            "registered": 20,
+            "current": 20
+          }
+        ]
+      },
+      {
+        "baseline": 25,
+        "before": [
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 22
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          }
+        ],
+        "after": [
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 22
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          },
+          {
+            "starting": 25,
+            "registered": 25,
+            "current": 25
+          }
+        ]
+      },
+      {
+        "baseline": 30,
+        "before": [
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 27
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          }
+        ],
+        "after": [
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 27
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          },
+          {
+            "starting": 30,
+            "registered": 30,
+            "current": 30
+          }
+        ]
+      },
+      {
+        "baseline": 40,
+        "before": [
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 37
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          }
+        ],
+        "after": [
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 37
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          },
+          {
+            "starting": 40,
+            "registered": 40,
+            "current": 40
+          }
+        ]
+      },
+      {
+        "baseline": 50,
+        "before": [
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 47
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          }
+        ],
+        "after": [
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 47
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          },
+          {
+            "starting": 50,
+            "registered": 50,
+            "current": 50
+          }
+        ]
+      }
+    ],
+    "thresholds": [
+      {
+        "baseline": 20,
+        "life": 26,
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ],
+        "copied_life": {
+          "starting": 20,
+          "registered": 20,
+          "current": 26
+        }
+      },
+      {
+        "baseline": 20,
+        "life": 27,
+        "before": [
+          4,
+          4
+        ],
+        "after": [
+          4,
+          4
+        ],
+        "copied_life": {
+          "starting": 20,
+          "registered": 20,
+          "current": 27
+        }
+      },
+      {
+        "baseline": 40,
+        "life": 27,
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ],
+        "copied_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 27
+        }
+      },
+      {
+        "baseline": 40,
+        "life": 40,
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ],
+        "copied_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 40
+        }
+      },
+      {
+        "baseline": 40,
+        "life": 46,
+        "before": [
+          2,
+          2
+        ],
+        "after": [
+          2,
+          2
+        ],
+        "copied_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 46
+        }
+      },
+      {
+        "baseline": 40,
+        "life": 47,
+        "before": [
+          4,
+          4
+        ],
+        "after": [
+          4,
+          4
+        ],
+        "copied_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 47
+        }
+      },
+      {
+        "baseline": 40,
+        "life": 48,
+        "before": [
+          4,
+          4
+        ],
+        "after": [
+          4,
+          4
+        ],
+        "copied_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 48
+        }
+      }
+    ],
+    "paid": [
+      {
+        "spell": "Angel's Mercy",
+        "mana_paid": 4,
+        "before_power": 2,
+        "after_power": 4,
+        "bear_power": 4,
+        "life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 47
+        },
+        "in_graveyard": true,
+        "source_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 40
+        },
+        "source_bear_power": 2
+      },
+      {
+        "spell": "Chaplain's Blessing",
+        "mana_paid": 1,
+        "before_power": 2,
+        "after_power": 2,
+        "bear_power": 2,
+        "life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 45
+        },
+        "in_graveyard": true,
+        "source_life": {
+          "starting": 40,
+          "registered": 40,
+          "current": 40
+        },
+        "source_bear_power": 2
+      }
+    ],
+    "eliminated": {
+      "life": {
+        "starting": 40,
+        "registered": 40,
+        "current": 0
+      },
+      "lost": true,
+      "active": 3
+    },
+    "override": {
+      "before": {
+        "starting": 30,
+        "registered": 40,
+        "current": 35
+      },
+      "after": {
+        "starting": 30,
+        "registered": 40,
+        "current": 35
+      }
+    }
+  },
+  "receipt_sha256": "64275c5221e5741f624c7fd584d4354dab3193b34fc80e6638609ac2521c454b",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "7ed69af9d576440692989723b4844d6d422d65aa0adb7aea81f2f4c155611bfe",
+  "test_sha256": "7e4cdf84712a43d8cfd0f5eff0289c1a274afde494919f8962b267c9060df766",
+  "native_source_sha256": "6fd69b8d5c6544aeb4ff9442e014e8e187f76e191ad1b4a170ca9065e1873211",
+  "oracle_witnesses": [
+    {
+      "name": "Righteous Valkyrie",
+      "oracle_id": "891d2690-7144-4f87-b6ef-96f2469780a9",
+      "oracle_text_sha256": "4c495aa9771e8a0523796010f8c8935a43557c815dec40365bbedf51ddd28f27",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/khm/24/righteous-valkyrie?utm_source=api",
+      "checked_facts": {
+        "starting_life_delta": 7,
+        "power_bonus": 2,
+        "toughness_bonus": 2,
+        "base_power": 2,
+        "base_toughness": 4
+      }
+    },
+    {
+      "name": "Angel's Mercy",
+      "oracle_id": "6b232bb7-d372-4174-a049-5f8d620810e6",
+      "oracle_text_sha256": "7071a58a811b2be9eb1fab8d15c88539d71314958e0aef2f336417f85c5a4a33",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/m13/3/angels-mercy?utm_source=api",
+      "checked_facts": {
+        "life_gain": 7,
+        "mana_cost": "{2}{W}{W}"
+      }
+    },
+    {
+      "name": "Chaplain's Blessing",
+      "oracle_id": "195837b4-e5e4-479d-8dab-6ac77f9fcd83",
+      "oracle_text_sha256": "1eb27605d1116ab4c696bf1c5afbfbc09b0130b53bb842c9cb0cca9a2319402f",
+      "commander_legality": "legal",
+      "source": "https://scryfall.com/card/soi/10/chaplains-blessing?utm_source=api",
+      "checked_facts": {
+        "life_gain": 5,
+        "mana_cost": "{W}"
+      }
+    }
+  ],
+  "full_live_suite": {
+    "passed": 16,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 350,
+    "log_sha256": "c037a7fa45409952aa495cc7236b6663cb0835696f3b6cd20467671a17ba0ad5"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "337edb0f22576eb5ee328ccfe49e162502b03b9e38b8f05be3e4290f6a1d95dd"
+  },
+  "native_evidence_sha256": "a58ebb5559a64fe79fc0b490a94af92235ce6c9c0df79ee11eb7a26c882effe2",
+  "catalog_probe": {
+    "report_sha256": "e1829cc490efb657c27bea970a07e806d602725a75bfaf7289ff00a0c807c132",
+    "run_id": "7e77e7a4f3804057809580da501c97fa",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Controlled fixtures explicitly create Commander registrations, not complete deck/pregame games.",
+    "Valkyrie's static effect and two real mana-paid casts are tested; its entry trigger is not tested by these fixtures.",
+    "Other baseline-dependent cards, other registration fields and already-paid spell state on the stack require separate validation.",
+    "Native construction does not certify every card ability or AI decision."
+  ],
+  "activation": {
+    "home": "data/engines/forge-3e6c036-starting-life-reviewed",
+    "engine_check_sha256": "d23091e75866510982ac6b8b598672997d278407bc359b655fac63e559306db0",
+    "reviewed_lock_sha256": "19a31bbbedcb56fb3b802ccd13bf4f58e4667611bdd01d76125e29a72cca310f"
+  }
+}

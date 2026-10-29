@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve both registered starting life and each live player's starting-life
+  baseline in AI copies. Restore the baseline before current life so their
+  different values remain intact. This fixes Righteous Valkyrie granting +2/+2
+  at 40 life in a copied Commander game instead of requiring 47 life.
+- Add sixteen native starting-life regressions: five configured baselines;
+  seven Righteous Valkyrie threshold controls; actual mana-paid Angel's Mercy
+  and Chaplain's Blessing casts that cross or miss the threshold; eliminated
+  players across repeated copies; and a live baseline override that leaves
+  registration unchanged. Check the three witness cards against independent
+  retained Scryfall Oracle facts and preserve a before-fix packaged receipt.
+- Verification: 399 offline tests / 508 subtests and all Python quality tools;
+  140 focused native tests; 688 broader gameplay tests including those 140;
+  256 serialization tests; all 16 live integrations / 350 subtests without skips;
+  and all 32,109 matched native constructions pass. Pin aggregate evidence in
+  engine/starting_life_evidence.json and activate the reviewed starting-life
+  runtime while preserving earlier builds and locks.
 - Fix eliminated-player state in AI snapshots. Map all registered participants,
   restore life and counters before immutable loss outcomes, restore active/lost
   lists without replaying player-loss actions, and preserve eliminated-player references in damage and zone history.
