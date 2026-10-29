@@ -12,7 +12,9 @@ applied sticker state in AI and last-known-information copies, maps sheets to
 the copied game and tracks used slots across control changes. A seventh patch
 preserves historical LKI and zone-entry records, independent damage history and
 shared mapped combat bands. An eighth patch preserves damage provenance and
-receipt histories. All eight patches are pinned. No remote branch is used at
+receipt histories. A ninth preserves registered participant mappings and active/lost
+lists without replaying elimination, restoring life before loss outcomes. All
+nine patches are pinned. No remote branch is used at
 build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
@@ -29,8 +31,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-110 native sticker, chosen-color, companion, supplementary-copy, history and
-damage tests.
+124 native sticker, chosen-color, companion, supplementary-copy, history,
+damage and participant tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -60,15 +62,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins seven regression source files and exactly three card-script
+The recipe pins eight regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 658 gameplay and 256
+686 files verified against immutable source. The broader 672 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 110 focused tests are included in the 658.
+in `native_test_evidence.json`; the 124 focused tests are included in the 672.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -114,3 +116,14 @@ source, before/after, Oracle and receipt hashes. The before probe demonstrates a
 real lost freerunning window in the previous runtime; the new paid witnesses
 verify normal admission, two-mana payment and drawing three cards. They cast
 after the copy and do not certify arbitrary paid spell state already on the stack.
+
+The participant patch preserves eliminated players as canonical historical
+references while excluding them from active players and turn order. Fourteen
+native cases include three loss reasons at every non-active Commander seat,
+target rejection, damage/memory references, independent subsequent losses,
+removed owned cards and a resolved Blood Tyrant trigger without replay. The
+packaged witness records both the original resurrection/history failures and
+the corrected state. See
+[participant_state_evidence.json](participant_state_evidence.json) for exact
+hashes and limits; active-turn departures and pending loss triggers are outside
+these fixtures.

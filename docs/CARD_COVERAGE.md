@@ -120,9 +120,9 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **658 native tests in 63 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 110 focused
-sticker, chosen-color, companion and supplementary-copy tests; these counts must not be added together.
+The reviewed patched source also passes **672 native tests in 64 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 124 focused
+sticker, chosen-color, companion, supplementary-copy, history, damage and participant tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -411,8 +411,9 @@ history query or post-elimination state.
 
 The freerunning fixtures make the AI snapshot before casting Eagle Vision.
 They do not certify copying every already-cast alternative-cost spell or its
-paid choices on the stack. Player elimination and other damage prevention,
-replacement and delayed-history cases remain separate validation work.
+paid choices on the stack. Active-turn elimination, pending loss triggers and
+other damage prevention, replacement and delayed-history cases remain separate
+validation work; settled non-active-player snapshots are covered below.
 
 Current damage-build verification: **399 offline tests / 508 subtests**, all
 Python quality tools, **110 focused native tests**, **658 broader gameplay tests**
@@ -422,3 +423,48 @@ non-starting meld results remain excluded. See
 [`damage_state_evidence.json`](../engine/damage_state_evidence.json) for exact
 runtime/source hashes, before-fix observations, Oracle witness facts, raw receipt
 hashes and the native/live/catalog checks. Earlier reviewed runtimes are retained.
+
+## Eliminated participants
+
+The participant patch maps all four registered Commander participants, including
+those who have lost. It copies active and lost lists in their recorded order,
+along with independent life/counter state and each immutable outcome. It restores
+life before setting the outcome, because an eliminated player cannot gain or
+lose life through the engine's ordinary setters. Restoring a snapshot does not
+call the player-loss action again. Surviving commanders and
+effect cards remain wired to the copied game; departed owned cards stay out of
+play. Historical damage targets, remembered players and zone records resolve to
+the copied registered participant, rather than a player from the source game.
+
+Fourteen native regressions cover concession, zero life and ten poison counters
+at each of the three non-active seats in a four-player pod. They compare life,
+counters, turn order and outcomes, reject targeting an eliminated player,
+preserve historical damage and remembered-player references, and check that another elimination in
+the copy cannot change the original. A second copy preserves loss order. A
+resolved Blood Tyrant loss trigger grants five counters before the snapshot;
+copying retains those counters and does not add another trigger. The expected
+five-counter effect is checked against the independent local Scryfall Oracle
+record, rather than inferred from the native script alone.
+
+The packaged-runtime witness repeats nine seat/loss combinations and historical
+reference/independence checks. Its before-fix receipt records three active players
+becoming four, losing the original loss outcome, and a separate history-copy
+exception for the eliminated damage target. A second before-fix witness records
+a zero-life eliminated player incorrectly retaining the copied game's starting
+life; the corrected snapshot retains zero. The aggregate
+[participant_state_evidence.json](../engine/participant_state_evidence.json)
+binds source/runtime identities, retained receipts and regression results.
+
+This verifies snapshots after settled non-active-player elimination. It does
+not certify every leave-game control transfer, pending loss trigger, departure
+during the active player's turn, completed-game outcome, or arbitrary paid spell
+state already on the stack. Those require further interaction tests.
+
+Participant-build verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **124 focused native tests**, **672 broader gameplay tests**
+including those 124, **256 serialization tests**, and all **32,109 matched native
+constructions** pass. All **15 distinct live integrations / 334 subtests** have
+passing results in the final complete run, with both engine and controlled
+interaction opt-ins enabled. Earlier debug receipts are retained locally. The
+seven non-starting meld results remain excluded from construction.
+Previous reviewed runtimes and locks remain available.

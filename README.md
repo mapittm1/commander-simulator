@@ -19,10 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 110
+Seven additional records are non-starting meld results. The build passes 124
 focused native tests for stickers, chosen commander colors, companion pregame
-behavior, supplementary AI zones, historical card state and damage provenance.
-Broader native runs pass 658 AI/gameplay tests (including those 110) and 256
+behavior, supplementary AI zones, historical card state, damage provenance and
+participant state.
+Broader native runs pass 672 AI/gameplay tests (including those 124) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
@@ -54,6 +55,11 @@ zone-entry records and paid morbid spell outcomes. See the
 Damage-state validation additionally covers filtered provenance, prior-turn
 receipts and paid freerunning/bloodthirst controls. See the
 [damage validation scope](docs/CARD_COVERAGE.md#damage-provenance-and-alternative-costs).
+
+Participant-state validation covers eliminated seats, loss outcomes, turn order,
+historical player references and independent later eliminations. A resolved Blood
+Tyrant loss trigger retains its five counters without firing again during copying.
+See the [participant validation scope](docs/CARD_COVERAGE.md#eliminated-participants).
 
 ## Run it now
 

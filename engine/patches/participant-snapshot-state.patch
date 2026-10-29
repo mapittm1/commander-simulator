@@ -1,0 +1,74 @@
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -413,6 +413,25 @@
+      */
+     public final PlayerCollection getPlayers() {
+         return ingamePlayers;
++    }
++
++    /**
++     * Restore participation for a snapshot without replaying loss actions or triggers.
++     * All registered players must already have canonical counterparts in the map.
++     */
++    public void copyParticipationFrom(Game original, java.util.function.Function<Player, Player> mapper) {
++        PlayerCollection active = new PlayerCollection();
++        PlayerCollection lost = new PlayerCollection();
++        for (Player player : original.getPlayers()) {
++            active.add(java.util.Objects.requireNonNull(mapper.apply(player), "Unmapped active player"));
++        }
++        for (Player player : original.getLostPlayers()) {
++            lost.add(java.util.Objects.requireNonNull(mapper.apply(player), "Unmapped lost player"));
++        }
++        ingamePlayers.clear();
++        ingamePlayers.addAll(active);
++        lostPlayers.clear();
++        lostPlayers.addAll(lost);
+     }
+ 
+     public final PlayerCollection getLostPlayers() {
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -111,8 +111,7 @@
+         newGame.setNoGUIUser();
+         newGame.dangerouslySetTimestamp(origGame.getTimestamp());
+ 
+-        for (int i = 0; i < origGame.getPlayers().size(); i++) {
+-            Player origPlayer = origGame.getPlayers().get(i);
++        for (Player origPlayer : origGame.getRegisteredPlayers()) {
+             Player newPlayer = newGame.getPlayer(origPlayer.getId());
+             newPlayer.setTeam(origPlayer.getTeam());
+             newPlayer.setLife(origPlayer.getLife(), null);
+@@ -142,8 +141,15 @@
+             for (Mana m : origPlayer.getManaPool()) {
+                 newPlayer.getManaPool().addManaNoEvent(m);
+             }
++            // Restore life before the outcome: lost players cannot gain or lose life.
++            // PlayerOutcome is immutable; the statistics object remains per game.
++            newPlayer.getStats().setOutcome(origPlayer.getOutcome());
++            newPlayer.setHasLost(origPlayer.hasLost());
+             playerMap.put(origPlayer, newPlayer);
+         }
++
++        // Removing participants here is state restoration, not a new loss event.
++        newGame.copyParticipationFrom(origGame, playerMap::get);
+ 
+         PhaseHandler origPhaseHandler = origGame.getPhaseHandler();
+         Player newPlayerTurn = playerMap.get(origPhaseHandler.getPlayerTurn());
+@@ -155,7 +161,7 @@
+ 
+         copyGameState(newGame, aiPlayer);
+ 
+-        for (Player origPlayer : playerMap.keySet()) {
++        for (Player origPlayer : origGame.getPlayers()) {
+             Player newPlayer = playerMap.get(origPlayer);
+             origPlayer.copyCommandersToSnapshot(newPlayer, gameObjectMap::map);
+             origPlayer.copyEffectCardsToSnapshot(newPlayer, gameObjectMap::map);
+@@ -343,7 +349,7 @@
+         }
+ 
+         copyStickerState();
+-        for (Player original : origGame.getPlayers()) {
++        for (Player original : origGame.getRegisteredPlayers()) {
+             Player copied = playerMap.get(original);
+             for (ZoneType zone : ZONES) {
+                 if (zone != ZoneType.Stack) copied.getZone(zone).copyTurnHistoryFrom(original.getZone(zone), gameObjectMap);

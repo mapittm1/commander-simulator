@@ -8,6 +8,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Fix eliminated-player state in AI snapshots. Map all registered participants,
+  restore life and counters before immutable loss outcomes, restore active/lost
+  lists without replaying player-loss actions, and preserve eliminated-player references in damage and zone history.
+  Copy commanders/effects only for surviving players so departed owned cards are
+  not restored to play.
+- Add fourteen native participant regressions: concession, life and poison losses
+  at all three non-active seats; target rejection and turn order; historical
+  damage and remembered players; independent later losses and preserved loss
+  order; removed owned cards; and Blood Tyrant's resolved loss trigger without
+  duplicate counters. Check the trigger expectation against the separate retained
+  Scryfall Oracle record. Add bounded packaged-runtime participation witnesses and
+  retain a before-fix receipt showing both the resurrected seat and history error.
+- Verification: 399 offline tests / 508 subtests and all Python quality tools;
+  124 focused native tests; 672 broader gameplay tests including those 124;
+  256 serialization tests; all 15 distinct live integrations / 334 subtests
+  in the final complete run; and all 32,109 matched native constructions pass.
+  Preserve before-fix receipts for resurrected players, unmapped historical targets
+  and incorrectly restored life totals. Activate the
+  reviewed participant runtime and pin engine/participant_state_evidence.json;
+  preserve prior builds/locks and keep all scratch work in the Desktop checkout.
 - Preserve global and per-card damage histories, historical source/target records,
   equal-valued packet identities and independent current/previous-turn receipt
   lists in AI snapshots. Reuse each copied live-source history in the global

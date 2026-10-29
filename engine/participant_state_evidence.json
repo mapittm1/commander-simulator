@@ -1,0 +1,689 @@
+{
+  "scope": "Settled non-active-player elimination in four-player Commander AI snapshots; not all leave-game rules or full card/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-participants-life",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "0ce4ef10b80efae94d97d54bbb5b17f46161235fd8d024dd35c7c6c3c4438eb3",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "8dd1f9179416ca0a3648c87c7e3ab2f7d0af7b1496421007cdcf1e0c8b70e4a0",
+    "native_tests": {
+      "total": 124,
+      "passed": 124,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "8ae6bfe86a65d92ef203ca4d11752666af21a63c8633debd955255aa749ef3ce",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "d15b30df7b784e49b6e6b469c31eedca",
+  "before": {
+    "run_id": "1326bcc910ff472495914ce2dddc45fc",
+    "receipt_sha256": "001d5094eeb7488a84d6b36d68b335a0f050c1a83b8c8460c49a123b1c078792",
+    "probe_worker_sha256": "356085326c845228759009a514d4f92f103ff7c32a7bcd766d2943018eba14d9",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-damage",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "32e2070387d0240dd55a8f3549f94a9653b4924a39947ff1c5f36aa10a11170b",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "e3dac964cf6328b088ddf81cb4c5deb623fbeb0751e34477d3fc4e6963663dbe",
+        "native_tests": {
+          "total": 110,
+          "passed": 110,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "740ec10ddd1afb02c91272b785c1ba1fbc901c3dc3e2ddfaa270e3bcb69de1a5",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: damage provenance, paid freerunning/bloodthirst controls, native regressions, construction and live integrations; not complete rules certification"
+      },
+      "seat": {
+        "seat": 1,
+        "reason": "concession",
+        "before": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "lost": [],
+          "registered": 4,
+          "lost_outcomes": []
+        },
+        "mapped_lost": false,
+        "mapped_game": true,
+        "not_active": false
+      },
+      "historical_error": "java.lang.RuntimeException: Couldn't map InteractionFixture1/1475886210"
+    }
+  },
+  "life_before": {
+    "run_id": "6f51f2fe63ef4d84942b81feb6d46b4d",
+    "receipt_sha256": "520db126934dec423385b7fb29c2fa19e7f557a19927053b15e2b4acc46892e6",
+    "probe_worker_sha256": "3e0cb319a1fccc65942a9554fd1c878384257825eeac6cd592b9c08b31349710",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-participants",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "e54ae65f71ece761269cbdb1d1c05927dae71cc0962b40575e0dfb0b2d73501b",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "ef3e8542d222e94305be43aa2250f6b34e29d4b6a63ce94fa1d9cd4cd448a336",
+        "native_tests": {
+          "total": 124,
+          "passed": 124,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "cddebe8778ce40988e0fa9a203ff892620106afbd11b234373ac967ce9588614",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: settled non-active-player elimination, damage/history fidelity, native regressions, construction and live integrations; not complete rules certification"
+      },
+      "observed": {
+        "seat": 1,
+        "reason": "life",
+        "before": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            20
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      }
+    }
+  },
+  "local_run_id": "79aae529cd774d12a74cd1cdc8594a43",
+  "observed": {
+    "seats": [
+      {
+        "seat": 1,
+        "reason": "concession",
+        "before": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 2,
+        "reason": "concession",
+        "before": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 3,
+        "reason": "concession",
+        "before": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "Conceded"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 1,
+        "reason": "life",
+        "before": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 2,
+        "reason": "life",
+        "before": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 3,
+        "reason": "life",
+        "before": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            0
+          ],
+          "lost_poison": [
+            0
+          ],
+          "lost_outcomes": [
+            "LifeReachedZero"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 1,
+        "reason": "poison",
+        "before": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            2,
+            3
+          ],
+          "lost": [
+            1
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 2,
+        "reason": "poison",
+        "before": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            3
+          ],
+          "lost": [
+            2
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      },
+      {
+        "seat": 3,
+        "reason": "poison",
+        "before": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "after": {
+          "active": [
+            0,
+            1,
+            2
+          ],
+          "lost": [
+            3
+          ],
+          "registered": 4,
+          "lost_life": [
+            40
+          ],
+          "lost_poison": [
+            10
+          ],
+          "lost_outcomes": [
+            "Poisoned"
+          ]
+        },
+        "mapped_lost": true,
+        "mapped_game": true,
+        "not_active": true
+      }
+    ],
+    "history": {
+      "received": 3,
+      "remembered_canonical": true,
+      "mapped_game": true,
+      "active": 3
+    },
+    "independent": {
+      "original_active": 3,
+      "original_lost": 1,
+      "original_second_lost": false,
+      "copy_active": 2,
+      "copy_lost": 2,
+      "recopy_equal": true,
+      "lost_order": true
+    }
+  },
+  "receipt_sha256": "1b07dafd2fe4a6e40e2611fc28e33dda3488a9a29b00ea8905558b8380fe7bda",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "f9d0006d36d5507f85c01b3fc354e72147e5d62898ca6b4605961eb31d12f741",
+  "test_sha256": "d2bf0a5faefe99ad71461885336dc736e34f30f9adca23890d25ce5976ada4ca",
+  "native_source_sha256": "d95f71415c43bb869e35d30ceb2683b632fcf4d43ddb6ed540c4e983b04236d0",
+  "oracle_witness": {
+    "name": "Blood Tyrant",
+    "oracle_id": "ac74bd52-a450-486f-8161-816fd8d966d0",
+    "oracle_text_sha256": "abf046781f26489eeaf50d6227efdf7d9801e2ad83fc7220f31a1ead18fad8e0",
+    "commander_legality": "legal",
+    "source": "https://scryfall.com/card/e01/81/blood-tyrant?utm_source=api",
+    "checked_fact": "Whenever a player loses the game, put five +1/+1 counters on this creature."
+  },
+  "full_live_suite": {
+    "passed": 15,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 334,
+    "log_sha256": "fc68060c166cf0cad1a1da30e2ec38302ca8515183346f578fdeac28b948ed8e",
+    "controlled_cases": 41
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "4d319d36416928b6ecce4af36d94c6bd79b586a23810db2f063be1ae135c4efe"
+  },
+  "native_evidence_sha256": "ed339e11882b0ad4d0becd72e09682873fb5e0a9f967bea75d55c76613fc11a2",
+  "catalog_probe": {
+    "report_sha256": "88658cf6d79bef44cdebee61e90a34bc13d544e9f215a9068f04a105463b8f49",
+    "run_id": "526c5807188e435ab9eb769446c0ef0b",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Nine seat/loss combinations cover settled elimination at non-active seats only.",
+    "Does not certify active-turn departure, every control transfer, pending loss triggers or final game outcomes.",
+    "Blood Tyrant trigger is resolved before copying; pending ability-stack fidelity remains separate work.",
+    "Construction coverage does not execute every card ability or interaction."
+  ],
+  "activation": {
+    "home": "data/engines/forge-3e6c036-participants-life-reviewed",
+    "engine_check_sha256": "651239eef211f15f298205bc3dfce7af123ab734d92262571823edfd41de0068",
+    "reviewed_lock_sha256": "f4d1420df8db916aa8525a463db64158bc1fec3378a202dd858bb5befdb7fb1d"
+  }
+}
