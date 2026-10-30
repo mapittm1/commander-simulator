@@ -1,0 +1,543 @@
+{
+  "scope": "Selected conditional-control arrays, explicit EffectEffect expiration, two-turn registration and state-based cleanup mapping; not full card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-conditions",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "229aae01569d56e3eca992300aa34681d7450b953ab8b3cbaf96a7397764c1c7",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "443430e48a873fad53bf9b3b12c2094c5d45e3054c030847405fb189532bb9df",
+    "native_tests": {
+      "total": 266,
+      "passed": 266,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "715c49093c1e5b92089444e7758e9135e090c87e96eb1e8fa9bef406a4e5681a",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: conditional control checks, explicit effect expiration, two-turn wrappers and mapped state-based cleanup; native and packaged witnesses; not complete rules certification"
+  },
+  "build_id": "518ca542b13846faba37cfb27ac2f508",
+  "compiled_source_audit": {
+    "build_id": "518ca542b13846faba37cfb27ac2f508",
+    "normalization": "Universal newlines only",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/card/Card.java": "9a918893f91abfac542307091f833fee1622ab3f05a44ae48d2a8bd8897a3abb",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "6863ab4774bb9bc3a9152454a4db1dd9b7888d561c9e442ea6ca7cb381c48459",
+      "forge-game/src/main/java/forge/game/ability/effects/EffectEffect.java": "acd900d29a48f5c7b982372522ea41d1e8ae8f7de63777b3d1022f1b9a1881cb",
+      "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java": "9784d1b15e4c2954dfd05e004fab25cf0e98044b7e72e03f36fdbc14af045500"
+    }
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-conditions-reviewed",
+    "lock_sha256": "0446657ddfd6177905c54866d1b9223f9d1e5f137fd2c5da1b23b01c89122633",
+    "engine_check_sha256": "bbb71d99d8662f9df14021c3da51d1ebbbdc79143f4d3b689b8c18ed1f448fec",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-schedules-reviewed"
+  },
+  "before": {
+    "run_id": "4b3540b0e6bc4de0912341afb5c6b1d8",
+    "receipt_sha256": "9bd9a4f7c0800e26b7e095e5ad9b6bb2950221ec0415621ba4fef41d7593c0ec",
+    "worker_sha256": "5eb346cd9552f8916a7af203a5a69cda0df48df11a4e9fd248db54480ec96dc0",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-schedules",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "faebc61e758f8d8da462e3766bb28df747d636db647c63940a8a26475d207217",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "cb661f9c3b4dd91ba4e5305f70c044f04bbdf2edcecd3f2e45dacd503c59f355",
+        "native_tests": {
+          "total": 251,
+          "passed": 251,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "b216783585762ac967f00b3de6b6698df30cb797f01be6c649f993c20f455f05",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: explicit extra-turn and extra-phase schedules, attached obligations and phase counters; native and packaged witnesses; not complete rules certification"
+      },
+      "cases": [
+        {
+          "case": "old_man_grow",
+          "paid": [
+            3,
+            1
+          ],
+          "copied_watchers": 0,
+          "after_controller": 0,
+          "zone_player": 0,
+          "target_power": 5,
+          "source_power": 2,
+          "source_controller": 0,
+          "source_tapped": true,
+          "unmapped": []
+        },
+        {
+          "case": "old_man_shrink",
+          "paid": [
+            3,
+            1
+          ],
+          "copied_watchers": 0,
+          "after_controller": 0,
+          "zone_player": 0,
+          "target_power": 2,
+          "source_power": 0,
+          "source_controller": 0,
+          "source_tapped": true,
+          "unmapped": []
+        },
+        {
+          "case": "old_man_untap",
+          "paid": [
+            3,
+            0
+          ],
+          "copied_watchers": 0,
+          "after_controller": 1,
+          "zone_player": 1,
+          "target_power": 2,
+          "source_power": 2,
+          "source_controller": 0,
+          "source_tapped": true,
+          "unmapped": []
+        },
+        {
+          "case": "matriarch_disenchant",
+          "paid": [
+            4,
+            1,
+            2
+          ],
+          "after_controller": 0,
+          "after_enchanted": false,
+          "source_controller": 0,
+          "source_enchanted": true,
+          "unmapped": []
+        },
+        {
+          "case": "matriarch_ephemerate",
+          "paid": [
+            4,
+            1,
+            1
+          ],
+          "after_controller": 1,
+          "after_enchanted": false,
+          "source_controller": 0,
+          "source_enchanted": true,
+          "unmapped": []
+        },
+        {
+          "case": "matriarch_cloudshift",
+          "paid": [
+            4,
+            1,
+            1
+          ],
+          "after_controller": 0,
+          "after_enchanted": false,
+          "source_controller": 0,
+          "source_enchanted": true,
+          "unmapped": []
+        },
+        {
+          "case": "peace_deferred",
+          "paid": 2,
+          "can_target_before": false,
+          "can_target_middle": false,
+          "can_target_after": false,
+          "source_can_target": false,
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.SpellAbilityEffect$$Lambda$569/0x000002009028d540"
+          ]
+        },
+        {
+          "case": "peace_registered",
+          "paid": 2,
+          "can_target_before": false,
+          "can_target_middle": false,
+          "can_target_after": false,
+          "source_can_target": false,
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.EffectEffect$$Lambda$568/0x000002009028d310"
+          ]
+        },
+        {
+          "case": "silence",
+          "paid": [
+            1,
+            0
+          ],
+          "before_restricted": true,
+          "before_denied": true,
+          "after_allowed": false,
+          "copied_life": 40,
+          "source_life": 40,
+          "source_restricted": true,
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.EffectEffect$$Lambda$568/0x000002009028d310"
+          ]
+        }
+      ]
+    }
+  },
+  "baseline_primary_outcome_controls": [
+    "old_man_untap",
+    "matriarch_ephemerate",
+    "matriarch_cloudshift"
+  ],
+  "baseline_control_note": "These primary control outcomes already passed. Old Man untap still lacked its independent conditional record in the earlier snapshot.",
+  "stable_native_before": {
+    "counts": {
+      "total": 15,
+      "passed": 3,
+      "failed": 12,
+      "skipped": 0
+    },
+    "testng_results_sha256": "da23262786795d8d067b4a5eab0989ec26614a9a4fe3a2165d21c718e6eb5426",
+    "log_sha256": "533a50e20958193cec60adb2fd34fb8a4bcb32a956af5f55d28029796f260b10",
+    "source_baseline_audit": {
+      "immutable_build": "5a672721b986487fab4cbfc9a8991578",
+      "mutable_debug_build": "ccc4e91ab62540c4831da2aa59c6a8ba",
+      "normalized_matching_java_files": 1029
+    }
+  },
+  "packaged_run_ids": [
+    "68c23d8bc6e34df9abf2157d57e7e47a",
+    "d6dab8639d434cb9b146be42b3a38a23"
+  ],
+  "local_run_id": "d6dab8639d434cb9b146be42b3a38a23",
+  "observed": [
+    {
+      "case": "old_man_grow",
+      "paid": [
+        3,
+        1
+      ],
+      "copied_watchers": 1,
+      "after_controller": 1,
+      "zone_player": 1,
+      "target_power": 5,
+      "source_power": 2,
+      "source_controller": 0,
+      "source_tapped": true,
+      "unmapped": []
+    },
+    {
+      "case": "old_man_shrink",
+      "paid": [
+        3,
+        1
+      ],
+      "copied_watchers": 1,
+      "after_controller": 1,
+      "zone_player": 1,
+      "target_power": 2,
+      "source_power": 0,
+      "source_controller": 0,
+      "source_tapped": true,
+      "unmapped": []
+    },
+    {
+      "case": "old_man_untap",
+      "paid": [
+        3,
+        0
+      ],
+      "copied_watchers": 1,
+      "after_controller": 1,
+      "zone_player": 1,
+      "target_power": 2,
+      "source_power": 2,
+      "source_controller": 0,
+      "source_tapped": true,
+      "unmapped": []
+    },
+    {
+      "case": "matriarch_disenchant",
+      "paid": [
+        4,
+        1,
+        2
+      ],
+      "after_controller": 1,
+      "after_enchanted": false,
+      "source_controller": 0,
+      "source_enchanted": true,
+      "unmapped": []
+    },
+    {
+      "case": "matriarch_ephemerate",
+      "paid": [
+        4,
+        1,
+        1
+      ],
+      "after_controller": 1,
+      "after_enchanted": false,
+      "source_controller": 0,
+      "source_enchanted": true,
+      "unmapped": []
+    },
+    {
+      "case": "matriarch_cloudshift",
+      "paid": [
+        4,
+        1,
+        1
+      ],
+      "after_controller": 0,
+      "after_enchanted": false,
+      "source_controller": 0,
+      "source_enchanted": true,
+      "unmapped": []
+    },
+    {
+      "case": "peace_deferred",
+      "paid": 2,
+      "can_target_before": false,
+      "can_target_middle": false,
+      "can_target_after": true,
+      "source_can_target": false,
+      "unmapped": []
+    },
+    {
+      "case": "peace_registered",
+      "paid": 2,
+      "can_target_before": false,
+      "can_target_middle": false,
+      "can_target_after": true,
+      "source_can_target": false,
+      "unmapped": []
+    },
+    {
+      "case": "silence",
+      "paid": [
+        1,
+        1
+      ],
+      "before_restricted": true,
+      "before_denied": true,
+      "after_allowed": true,
+      "copied_life": 37,
+      "source_life": 40,
+      "source_restricted": true,
+      "unmapped": []
+    }
+  ],
+  "receipt_sha256": "fb85a91abdff3b89bb1cdc02ac88156e1c089be2e71dc16192cc3f29d1ee9f8c",
+  "worker_log_sha256": "ab48eb5b0cbb674ea11f67e4adaebb5b9b7b7d31cbb1b9c8ccac1d4430e03c13",
+  "worker_sha256": "5eb346cd9552f8916a7af203a5a69cda0df48df11a4e9fd248db54480ec96dc0",
+  "test_sha256": "e21e0331b62623a603eaac1d2b7320a87e0ee068fae7a4ebb56e15983c289793",
+  "native_source_sha256": "ee2c0e5ab13a9ed2b4e307d6a2825ac71ee62a3b403a5d52a0594f4769d58bb1",
+  "patch_sha256": "3875359751c5e05c889b8c01257b351fcb2cad0768c7b36779515be8413a7fb4",
+  "oracle_witnesses": [
+    {
+      "name": "Old Man of the Sea",
+      "oracle_id": "cce84cf1-5574-43b0-9d75-72e6451403a7",
+      "mana_cost": "{1}{U}{U}",
+      "source": "https://scryfall.com/card/me3/45/old-man-of-the-sea?utm_source=api",
+      "oracle_text_sha256": "f33f250df421e360e7b515fe154df3f41a1a38b0eb31a140cc67ca02b9b8d0c4",
+      "raw_record_sha256": "2bca315092c212f02c2e66dd049d803fc894cc399213b430bd8af6de24e874b9"
+    },
+    {
+      "name": "Rootwater Matriarch",
+      "oracle_id": "1d260526-db57-486d-b0bc-d523139a0148",
+      "mana_cost": "{2}{U}{U}",
+      "source": "https://scryfall.com/card/10e/103/rootwater-matriarch?utm_source=api",
+      "oracle_text_sha256": "0c262d4067796debd9469fc63159e23e8433fb06fff9c1458818c8f8538188cd",
+      "raw_record_sha256": "19801a09c8184675b1b7b951e6e2b4c8ae07cde8accbde84a19737b1d68cc865"
+    },
+    {
+      "name": "Giant Growth",
+      "oracle_id": "5748ebf1-24e3-499d-ab7c-c2cebd462a24",
+      "mana_cost": "{G}",
+      "source": "https://scryfall.com/card/msh/167/giant-growth?utm_source=api",
+      "oracle_text_sha256": "94ca5acb80503f883be9d13a1c72ea46980bce37ce99356d6274743f85465925",
+      "raw_record_sha256": "cc26365e1e50f9d7289de9980c81fb4cd124477cc511936b8171ef1f1f164d68"
+    },
+    {
+      "name": "Disfigure",
+      "oracle_id": "77eafe49-b9c5-461d-89c5-cec217dd2974",
+      "mana_cost": "{B}",
+      "source": "https://scryfall.com/card/bro/91/disfigure?utm_source=api",
+      "oracle_text_sha256": "163493e09fa755597a2009884cbbc58212823ef479ff493c8b2f6c6daf6d4544",
+      "raw_record_sha256": "0ab107ff20e19d394144cb17f8104c92aa80f91c7c41447c9099e7ea65baa9ca"
+    },
+    {
+      "name": "Rancor",
+      "oracle_id": "9d2d6479-531c-4ce1-b52b-00e36fa63b64",
+      "mana_cost": "{G}",
+      "source": "https://scryfall.com/card/2x2/156/rancor?utm_source=api",
+      "oracle_text_sha256": "1fc4464b4ff53a872674008149e59b2809d304757be2cbb65d5893f7ce419dbc",
+      "raw_record_sha256": "eaad563483479e66427882c6f44bc3f668e62c23a8425d62b80094984f3b0186"
+    },
+    {
+      "name": "Disenchant",
+      "oracle_id": "a7e97fa9-4b72-4548-b854-5be5f18a6f1a",
+      "mana_cost": "{1}{W}",
+      "source": "https://scryfall.com/card/fdn/572/disenchant?utm_source=api",
+      "oracle_text_sha256": "1c50bfdd31a28155b4cab0e9b74980c1307c66df9ec65f7c88afa3f9f87a8317",
+      "raw_record_sha256": "f1e982243955b01650ad49c9665e1e69272e7b61990158c8465167f5d131b895"
+    },
+    {
+      "name": "Cloudshift",
+      "oracle_id": "6879f5ce-7a1b-4606-bad1-885779b0d456",
+      "mana_cost": "{W}",
+      "source": "https://scryfall.com/card/tle/152/cloudshift?utm_source=api",
+      "oracle_text_sha256": "ee5a66500a755dd86039a417fe325ffe44f9e019979bb1647ff170bc40cbe6de",
+      "raw_record_sha256": "8c6232b75fca90211cd0d8742512da05a61e608a194ac2b61889752c2092ab30"
+    },
+    {
+      "name": "Ephemerate",
+      "oracle_id": "0fd57894-b917-41c8-a394-360d1d31b236",
+      "mana_cost": "{W}",
+      "source": "https://scryfall.com/card/mh1/7/ephemerate?utm_source=api",
+      "oracle_text_sha256": "1c66b525722298357b8a576198db5abc24173215466dd8d3b4867fd763e48d4b",
+      "raw_record_sha256": "126f7e28a10b7b72574a91b30859a45649f56eddb749f796f5d76444e1dbeade"
+    },
+    {
+      "name": "Peace Talks",
+      "oracle_id": "b0f87e25-6604-4723-9467-1e4fedc1157a",
+      "mana_cost": "{1}{W}",
+      "source": "https://scryfall.com/card/vis/15/peace-talks?utm_source=api",
+      "oracle_text_sha256": "0b0cca991de3220d2e02e0f1e63dc319ff32d95380fc5730859b3fd5dd74b659",
+      "raw_record_sha256": "0243c74f61b0f7ee83ee446ec0abbb155b77862936a36a4263e6bcac836c439c"
+    },
+    {
+      "name": "Silence",
+      "oracle_id": "8aed54cb-d1bb-45ad-adbe-38e55d84ff31",
+      "mana_cost": "{W}",
+      "source": "https://scryfall.com/card/m14/35/silence?utm_source=api",
+      "oracle_text_sha256": "cd9d1f522791042b2d0f475b8753158ac8d6dc70219119c65f3263182ad1954e",
+      "raw_record_sha256": "3649ae47610b7f4dcef51d3fbc39bc54c1e282561d70d0da1ce28e9cfa3def86"
+    },
+    {
+      "name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "mana_cost": "{R}",
+      "source": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
+      "oracle_text_sha256": "1c8ec5180252d4d2258eec2c0312b6f3c86b101696246288422c2d46aaa5ff8b",
+      "raw_record_sha256": "911e1064fe897943920d0d2a5aa27ec473448d8001e258585a4310a392f0dd7c"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "mana_cost": "{1}{G}",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_record_sha256": "bdf0ca990d04d698f5988082356c94f78f101eeb1682c1b473c88a3fd419dd1e"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "mana_cost": "{1}{G}",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_record_sha256": "4a6eeb0b0e8cc544689789a05f0f745961ad7e1029e34d812365adf0d0957c31"
+    }
+  ],
+  "rules_reference": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "bytes": 977752,
+    "checked_rules": [
+      "400.7",
+      "611.2a",
+      "611.2b",
+      "611.2c",
+      "613.1b",
+      "704.3"
+    ],
+    "scope": "Selected continuous-effect duration, control layers, new objects and state-based checks; not full or current rules certification"
+  },
+  "full_live_suite": {
+    "passed": 23,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 402,
+    "log_sha256": "ee350bdae9534b74e2f1f57f84b8736d699114b760ffb04dda7fbd67e78562ea"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "4514c0282c3ae4b812b6a5962947067f473d04bfd7358580c89302d8dac7569d"
+  },
+  "native_evidence_sha256": "e60a875941d15323f1738fb4d3c41c84d20f014a11d2d434e44c6765f2a21d18",
+  "catalog_probe": {
+    "report_sha256": "2c275caad7f5f7d12891e8ace43fe5c8eb8966a48bdd7c0312e85148fff4dce6",
+    "run_id": "bbd09775e3c8483eb5b4ae4f42405e77",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Fixed partial games use Commander registrations, not complete legal decks or pregame fixtures.",
+    "Nine paid card cases and six synthetic contracts are distinct. Numeric markers check queue/mapping behavior, not printed cards.",
+    "Native phase advancement offers no response priority. Opposing creatures are created after a full turn cycle to avoid automatic fixture combat changing the initial state.",
+    "The Old Man untap transition directly invokes the native untap event. Its source cast and control activation use ordinary admission/payment.",
+    "The stable baseline excludes earlier invalid Cloudshift and canPlay assumptions and combat-sensitive setup runs. Cloudshift creates caster control; Ephemerate returns under owner control.",
+    "Silence uses checkRestrictions and ComputerUtil.playStack; canPlay alone is not the native cast restriction test.",
+    "Conditional records support the observed four-field native schema. Unknown schemas fail, unknown callback kinds are omitted/reported, and original closures are never shared.",
+    "Mapped state-based cleanup may execute during the existing final native state-based check in copy construction, not by replaying original-game commands.",
+    "The two-turn wrapper is retained only if its nested cleanup maps. The diagnostic now also scans conditional cards and game state-based cleanup, but normal CLI reports do not aggregate it.",
+    "Not all EffectEffect variants, durations, source/target transitions, overlapping control layers, state-based-action rules, hidden views, multiplayer loss interactions or AI choices are certified.",
+    "Other callbacks, arbitrary mid-resolution continuations, merged/perpetual states and unexamined native fields remain open.",
+    "Selected versioned rules and local catalog records do not certify every current rule or card."
+  ]
+}

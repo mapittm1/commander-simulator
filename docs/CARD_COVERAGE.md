@@ -120,10 +120,12 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **799 native tests in 71 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 251 focused
+The reviewed patched source also passes **814 native tests in 72 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 266 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger and turn/phase-schedule tests; these counts must not be added together.
+starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
+turn/phase-schedule and conditional-cleanup tests; these counts must not be added
+together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -677,8 +679,8 @@ Unconverted callbacks in these queues are deliberately never shared with the sou
 They remain omitted, as in the earlier copier, and are listed by
 GameCopier.getUnmappedSnapshotCommands(). The normal simulation report does
 not yet aggregate this API. Empty diagnostics in these fixed witnesses do not
-certify all callbacks. Other effect implementations, two-turn wrapper callbacks,
-state-based-action command queues, conditional static-command arrays,
+certify all callbacks. Other effect implementations and unconverted wrappers,
+unconverted callbacks in state-based and conditional queues,
 unvalidated turn/phase variants, merged/perpetual objects and arbitrary
 mid-resolution continuations require separate implementation and validation.
 The gameplay AI's choice quality and complete hidden-information views also
@@ -728,10 +730,11 @@ These are selected delayed-trigger checks. Unknown mutable event payload types
 remain rejected by the mapper. This does not certify all trigger conditions,
 APNAP ordering, replacement/doubling effects, hidden views, multiplayer loss
 interactions, countering delayed triggers, all cost subclasses or payment
-continuations. Other callback kinds, state-based command queues, conditional
-static-command arrays, unvalidated turn/phase variants and merged/perpetual state remain open.
-The native unmapped-command diagnostic still scans only the queues described
-above and is not aggregated into normal CLI simulation reports.
+continuations. Other callback kinds, unvalidated conditional/state-based payloads,
+unvalidated turn/phase variants and merged/perpetual state remain open.
+The later conditional-cleanup work also scans conditional card checks and the
+game state-based cleanup queue. Normal CLI reports still do not aggregate these
+diagnostics.
 
 
 Delayed-trigger verification: **399 offline tests / 508 subtests**, all Python
@@ -766,8 +769,8 @@ These fixtures advance real phase hooks without response priority. They do not
 certify every extra turn/step/phase effect, simultaneous APNAP grants, eliminated
 queued recipients, nested turn-ending effects, phase reversal, skip replacements,
 scheme variants, all counter boundaries, priority restoration or repeated cleanup.
-Other unmapped callbacks, state-based command queues, conditional static-command
-arrays, merged/perpetual state and arbitrary continuations remain open.
+Other unmapped callbacks, unvalidated conditional/state-based payloads,
+merged/perpetual state and arbitrary continuations remain open.
 
 Verification: **399 offline tests / 508 subtests**, all Python quality tools,
 **251 focused native tests**, **799 broader gameplay tests** including those 251,
@@ -776,3 +779,55 @@ Verification: **399 offline tests / 508 subtests**, all Python quality tools,
 identities remain separate. [Turn-schedule evidence](../engine/turn_schedule_evidence.json)
 binds the exact runtime, source, worker and test hashes, before/after receipts and
 selected versioned rules/catalog references.
+
+
+## Conditional control and cleanup
+
+Snapshots retain each native conditional-control record in an independent array:
+its two immutable expressions, mapped target and mapped expiration command.
+Recognized records use the native four-field schema. Unsupported schemas fail
+rather than sharing an unknown mutable payload. The same cleanup command keeps
+its mapped identity when both an event queue and a condition refer to it.
+
+EffectEffect expiration is an explicit mapped command, and the ThisTurnAndNextTurn
+wrapper re-registers its mapped cleanup in the copied game's following end-of-turn
+queue. An unsupported nested callback causes the wrapper to be omitted and the
+nested kind to be reported. The game state-based cleanup queue also retains order
+and duplicate command entries through the shared identity map. Copy construction's
+existing native state-based check can execute those mapped commands; the copy
+operation itself never executes original-game closures.
+
+Nine paid card cases check Old Man of the Sea after target growth, source shrink
+or untapping; Rootwater Matriarch after Disenchant, Ephemerate or Cloudshift;
+Peace Talks copied before/after the first end-of-turn deadline; and Silence
+expiring before an admitted, paid Lightning Bolt. Three existing primary outcomes
+remain controls: Old Man untapping, Ephemerate's owner-controlled return and
+Cloudshift's newly granted caster control. Control-condition targets are created
+after a real turn cycle so automatic fixture combat cannot remove them first.
+The untap transition directly invokes the native untap event.
+Silence uses the native cast-restriction check and casting path, rather than
+inferring admission from canPlay alone.
+
+Six synthetic native contracts separately test state-based cleanup transfer,
+queue order/duplicates, independent conditional arrays and shared mapped callback
+identity, and omission/reporting of unknown state-based, conditional and nested
+callbacks. Their numeric markers are test contracts, not printed card behavior.
+Nine packaged witnesses retain exact before/after receipts. The stable native
+baseline has 12 failures and three passing controls; these are separate from the
+earlier corrected fixture assumptions and unstable setup runs.
+
+These are selected conditions and cleanup implementations. Other callback classes
+remain omitted and reported where scanned. The normal CLI simulation report does
+not yet aggregate the diagnostic. The fixtures do not certify every EffectEffect
+variant, every duration, source/target transition, overlapping control layer,
+state-based-action rule, arbitrary conditional schema, hidden view, multiplayer
+loss interaction, mid-resolution continuation or AI choice. Merged/perpetual state
+and other unexplored native fields remain open.
+
+Verification: **399 offline tests / 508 subtests**, all Python quality tools,
+**266 focused native tests**, **814 broader gameplay tests** including those 266,
+**256 serialization tests**, **23 live integrations / 402 subtests**, and
+**32,109 matched native constructions** pass. Seven non-starting meld-result
+identities remain separate. [Conditional-state evidence](../engine/conditional_state_evidence.json)
+binds the exact runtime, source, stable baseline, worker/test hashes, outcomes and
+selected versioned rule/catalog references.

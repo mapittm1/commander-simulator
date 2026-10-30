@@ -108,6 +108,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/scheduled-effect-snapshots.patch",
                 "engine/patches/delayed-trigger-snapshots.patch",
                 "engine/patches/turn-schedule-snapshots.patch",
+                "engine/patches/conditional-cleanup-snapshots.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -128,6 +129,7 @@ def _verify_inputs(args, recipe):
         "TurnUsageGameCopyTest.java": "turn_usage_test_sha256",
         "DelayedGameCopyTest.java": "delayed_trigger_test_sha256",
         "TurnScheduleGameCopyTest.java": "turn_schedule_test_sha256",
+        "ConditionalGameCopyTest.java": "conditional_cleanup_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -294,6 +296,12 @@ def _patch_source(source, run, recipe):
         / "forge-gui-desktop/src/test/java/forge/ai/TurnScheduleGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/ConditionalGameCopyTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/ConditionalGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -334,7 +342,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

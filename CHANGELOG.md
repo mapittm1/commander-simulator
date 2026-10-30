@@ -8,6 +8,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve conditional-control arrays with mapped targets and shared cleanup
+  identities; reject unknown internal schemas. Map EffectEffect expiration,
+  two-turn re-registration wrappers and the state-based cleanup queue without
+  retaining original-game closures. Report unsupported nested callbacks as well
+  as unsupported conditional/state-based commands.
+- Add fifteen native cases and nine paid runtime witnesses for Old Man of the Sea,
+  Rootwater Matriarch, Peace Talks and Silence, with real growth/shrink, aura/blink,
+  expiry, cast-denial and paid Bolt outcomes. Six native contracts separately
+  check queue ordering, aliases, independent arrays and unknown-callback handling.
+  Preserve three already-correct primary outcomes as controls.
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  266 focused native tests; 814 broader gameplay tests including those 266;
+  256 serialization tests; all 23 live integrations / 402 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned conditional-cleanup
+  runtime and retain previous builds, locks and exact before/after evidence.
+
 - Preserve extra-turn and extra-phase stacks, their order and normal-turn
   continuation through snapshots. Map attached triggers and skip-untap/scheme
   references without replaying their registration; retain current extra-turn

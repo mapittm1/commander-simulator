@@ -24,7 +24,9 @@ saddle counts. A fourteenth maps explicit scheduled-effect callbacks and preserv
 player-keyword and numeric-choice state. A fifteenth preserves delayed/waiting
 trigger queues, deferred registrations and mapped cost-payment receipts.
 A sixteenth preserves extra-turn/phase stacks, attached obligations and scheduler
-state. All sixteen patches are pinned. No remote branch is used at build time.
+state. A seventeenth preserves conditional control checks, explicit effect
+expiration, two-turn cleanup wrappers and the state-based cleanup queue.
+All seventeen patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -40,9 +42,9 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-251 native sticker, chosen-color, companion, supplementary-copy, history,
+266 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
-temporal-state, delayed-trigger and turn/phase-schedule tests.
+temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -72,15 +74,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins fifteen regression source files and exactly three card-script
+The recipe pins sixteen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 799 gameplay and 256
+686 files verified against immutable source. The broader 814 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 251 focused tests are included in the 799.
+in `native_test_evidence.json`; the 266 focused tests are included in the 814.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -197,3 +199,15 @@ phase-entry untap. Scheduler entries and attached abilities/triggers use the sha
 identity map without replaying registration. Current extra-turn flags, counts and
 selected phase counters survive snapshots. Variant rules and priority/cleanup
 continuations still need separate validation.
+
+
+Conditional-control/cleanup evidence is retained in
+[conditional_state_evidence.json](conditional_state_evidence.json). Fifteen native
+cases include nine paid card witnesses and six synthetic queue/mapping contracts;
+nine packaged witnesses compare the exact previous and new runtimes. Tests retain
+existing Old Man untap and blink outcomes as controls, including the distinction
+between Cloudshift's new control and Ephemerate's return under the owner's control.
+EffectEffect expiration and the two-turn registration wrapper now implement the
+explicit command protocol. Conditional card arrays and the game state-based cleanup
+queue are scanned for unconverted callbacks; normal CLI reports still do not
+aggregate these diagnostics. Other effect callbacks and continuations remain open.

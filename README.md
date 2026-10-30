@@ -25,15 +25,18 @@ for expiration, control-layer and player-keyword validation.
 future sacrifices, returns, upkeep debts, registrations and held events.
 [Turn and phase schedules](docs/CARD_COVERAGE.md#turn-and-phase-schedules) cover
 selected extra turns, extra combats, attached obligations and phase counters.
+[Conditional control and cleanup](docs/CARD_COVERAGE.md#conditional-control-and-cleanup)
+cover selected power/enchantment conditions, two-turn deadlines and cleanup queues.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 251
+Seven additional records are non-starting meld results. The build passes 266
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
-histories, scheduled effects, delayed triggers and turn/phase schedules.
-Broader native runs pass 799 AI/gameplay tests (including those 251) and 256
+histories, scheduled effects, delayed triggers, turn/phase schedules and
+conditional control/cleanup.
+Broader native runs pass 814 AI/gameplay tests (including those 266) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

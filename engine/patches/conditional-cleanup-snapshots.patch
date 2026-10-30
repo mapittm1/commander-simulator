@@ -1,0 +1,104 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8524,6 +8524,21 @@
+                 "card.controller");
+         context.copyCommands(original.phaseOutCommandList, phaseOutCommandList, "card.phaseOut");
+         context.copyCommands(original.leavePlayCommandList, leavePlayCommandList, "card.leave");
++        staticCommandList.clear();
++        for (Object[] condition : original.staticCommandList) {
++            // Native ControlGain conditions have two expressions, a target and an expiration command.
++            if (condition.length != 4 || !(condition[0] instanceof String)
++                    || !(condition[1] instanceof String) || !(condition[2] instanceof Card)
++                    || !(condition[3] instanceof forge.GameCommand)) {
++                throw new IllegalArgumentException("Unsupported static snapshot command schema");
++            }
++            forge.GameCommand command = context.command((forge.GameCommand) condition[3], "card.static");
++            if (command != null) {
++                staticCommandList.add(new Object[] {condition[0], condition[1],
++                        context.map((Card) condition[2]), command});
++            }
++        }
++
+     }
+ 
+     /** Keep baseline and temporary control layers separate; copying is not a control-change event. */
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -277,6 +277,7 @@
+         newGame.costPaymentStack.copySnapshotStateFrom(origGame.costPaymentStack, context);
+         newGame.getTriggerHandler().copySnapshotStateFrom(origGame.getTriggerHandler(), context);
+         newGame.getPhaseHandler().copySnapshotStateFrom(origGame.getPhaseHandler(), context);
++        context.copyCommands(origGame.sbaCheckedCommandList, newGame.sbaCheckedCommandList, "game.sba");
+         stackMap.putAll(context.getAbilityCopies());
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/EffectEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/EffectEffect.java
+@@ -316,7 +316,7 @@
+             }
+ 
+             if (duration == null || !duration.equals("Permanent")) {
+-                addUntilCommand(sa, () -> game.getAction().exileEffect(eff), controller);
++                addUntilCommand(sa, new EffectExpiration(eff), controller);
+             }
+ 
+             if (sa.hasParam("ImprintOnHost")) {
+@@ -327,4 +327,21 @@
+         }
+     }
+ 
++
++    /** The copied effect expires in its own world, without retaining an original-game closure. */
++    private static final class EffectExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card effect;
++        private EffectExpiration(Card effect) { this.effect = effect; }
++        @Override
++        public void run() {
++            effect.getGame().getAction().exileEffect(effect);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new EffectExpiration(context.map(effect));
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -993,7 +993,7 @@
+                 game.getEndOfTurn().addUntilEnd(targeted, until);
+             }
+         } else if ("ThisTurnAndNextTurn".equals(duration)) {
+-            game.getEndOfTurn().addUntil(() -> game.getEndOfTurn().addUntil(until));
++            game.getEndOfTurn().addUntil(new FollowingEndStepCommand(game, until));
+         } else if ("UntilStateBasedActionChecked".equals(duration)) {
+             game.addSBACheckedCommand(until);
+         } else if ("UntilHostLeavesPlay".equals(duration)) {
+@@ -1115,4 +1115,25 @@
+         movedCard.setExiledBy(exiler);
+         movedCard.setExiledSA(cause);
+     }
++
++    /** Two-turn effects defer the same mapped cleanup until the following end-of-turn queue. */
++    private static final class FollowingEndStepCommand implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Game game;
++        private final GameCommand command;
++        private FollowingEndStepCommand(Game game, GameCommand command) {
++            this.game = game;
++            this.command = command;
++        }
++        @Override
++        public void run() { game.getEndOfTurn().addUntil(command); }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            GameCommand mapped = context.command(command, "scheduled.followingEndStep");
++            // An unconverted nested callback is reported and omitted, never retained in a wrapper.
++            return mapped == null ? null : new FollowingEndStepCommand(context.getGame(), mapped);
++        }
++    }
++
+ }
