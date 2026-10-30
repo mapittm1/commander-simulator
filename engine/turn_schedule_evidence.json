@@ -1,0 +1,569 @@
+{
+  "scope": "Selected extra-turn/phase scheduling, attached obligations and phase-counter validation; not full card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-schedules",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "faebc61e758f8d8da462e3766bb28df747d636db647c63940a8a26475d207217",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "cb661f9c3b4dd91ba4e5305f70c044f04bbdf2edcecd3f2e45dacd503c59f355",
+    "native_tests": {
+      "total": 251,
+      "passed": 251,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "b216783585762ac967f00b3de6b6698df30cb797f01be6c649f993c20f455f05",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: explicit extra-turn and extra-phase schedules, attached obligations and phase counters; native and packaged witnesses; not complete rules certification"
+  },
+  "build_id": "5a672721b986487fab4cbfc9a8991578",
+  "compiled_source_audit": {
+    "build_id": "5a672721b986487fab4cbfc9a8991578",
+    "normalization": "Universal newlines only",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/phase/ExtraTurn.java": "3e3f369af7b20c40a9deac02e8b15b7f955ffef2d2a140d7b90480f1939f5ab1",
+      "forge-game/src/main/java/forge/game/phase/ExtraPhase.java": "3a4f8041b49707f89fca68987c8487fc978ba0cb58a56eb3c58bae0d42d4e961",
+      "forge-game/src/main/java/forge/game/phase/PhaseHandler.java": "15e8cb272c8ee588d555fb8110b124d35d62a42febeb04d74170c6c51b568dd1",
+      "forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java": "2225f1cf1befb8a0c2aa3a0a95ffeba1f50954da2bd835908bacdc1addf1586a",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "4438a048899814a25d7c9827c042e26ce9c74789aaae545763ad9bfb45a23e0b"
+    }
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-schedules-reviewed",
+    "lock_sha256": "c6f6f869c4f4008f0d954023d12c86d458ad5b0cfe7d1941ff5c6467140b2123",
+    "engine_check_sha256": "8f4c6ed338c657a5698f91f9e7b2f809349a3c6e04218a30b0191fb7db43d337",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-triggers-reviewed"
+  },
+  "before": {
+    "run_id": "c6f22422e4f94407898f950058620338",
+    "receipt_sha256": "1b27d03781954bf79c94af402337d77a8d9f8a7dd659d5264c2cb27c339f6169",
+    "worker_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-triggers",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "57058ce74178e59e99b18694228766b8e16aa0a8c00c442e92697c17585e83a6",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "0dbae70a92d314679db325e478cd6545658880632dc90dd094be249df8cff805",
+        "native_tests": {
+          "total": 241,
+          "passed": 241,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "08bf0dbf77ea44640b816e2d865a62742d46afe3bd1692a2b879cdc5f00b5ea9",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: delayed/waiting trigger obligations, deferred registrations and mapped payment receipts; native and packaged witnesses; not complete rules certification"
+      },
+      "cases": [
+        {
+          "case": "warp",
+          "paid": [
+            5
+          ],
+          "before_remaining": 0,
+          "turns": [
+            {
+              "seat": 1,
+              "extra": false,
+              "remaining": 0
+            },
+            {
+              "seat": 2,
+              "extra": false,
+              "remaining": 0
+            }
+          ],
+          "source_next": 2,
+          "source_turn": 1,
+          "source_remaining": 0,
+          "unmapped": []
+        },
+        {
+          "case": "stretch",
+          "paid": [
+            10
+          ],
+          "before_remaining": 0,
+          "turns": [
+            {
+              "seat": 1,
+              "extra": false,
+              "remaining": 0
+            },
+            {
+              "seat": 2,
+              "extra": false,
+              "remaining": 0
+            },
+            {
+              "seat": 3,
+              "extra": false,
+              "remaining": 0
+            }
+          ],
+          "source_next": 0,
+          "source_turn": 1,
+          "source_remaining": 2,
+          "unmapped": []
+        },
+        {
+          "case": "ordered",
+          "paid": [
+            5,
+            5
+          ],
+          "before_remaining": 0,
+          "turns": [
+            {
+              "seat": 1,
+              "extra": false,
+              "remaining": 0
+            },
+            {
+              "seat": 2,
+              "extra": false,
+              "remaining": 0
+            },
+            {
+              "seat": 3,
+              "extra": false,
+              "remaining": 0
+            }
+          ],
+          "source_next": 2,
+          "source_turn": 1,
+          "source_remaining": 0,
+          "unmapped": []
+        },
+        {
+          "case": "savor",
+          "paid": 3,
+          "first": {
+            "seat": 1,
+            "extra": false,
+            "remaining": 0
+          },
+          "tapped_extra": 3,
+          "later": {
+            "seat": 1,
+            "extra": false,
+            "remaining": 0
+          },
+          "tapped_later": 0,
+          "source_tapped": 3,
+          "unmapped": []
+        },
+        {
+          "case": "fortune",
+          "paid": 2,
+          "first": {
+            "seat": 1,
+            "extra": false,
+            "remaining": 0
+          },
+          "owner_lost": false,
+          "active_seats": 4,
+          "source_lost": false,
+          "unmapped": []
+        },
+        {
+          "case": "assault",
+          "paid": [
+            4
+          ],
+          "scheduled": false,
+          "combats": 1,
+          "mains": 1,
+          "source_combats": 0,
+          "source_scheduled": true,
+          "unmapped": []
+        },
+        {
+          "case": "multiple_assaults",
+          "paid": [
+            4,
+            4
+          ],
+          "scheduled": false,
+          "combats": 1,
+          "mains": 1,
+          "source_combats": 0,
+          "source_scheduled": true,
+          "unmapped": []
+        },
+        {
+          "case": "mid_extra_turn",
+          "paid": 3,
+          "source": {
+            "seat": 0,
+            "extra": true,
+            "remaining": 0
+          },
+          "copied": {
+            "seat": 0,
+            "extra": false,
+            "remaining": 0
+          },
+          "source_upkeeps": 1,
+          "copied_upkeeps": 0,
+          "source_previous": 0,
+          "copied_previous": null,
+          "unmapped": []
+        },
+        {
+          "case": "moraug",
+          "paid": 6,
+          "untapped": false,
+          "source_tapped": true,
+          "combats": 1,
+          "unmapped": []
+        }
+      ]
+    }
+  },
+  "initial_native_before": {
+    "counts": {
+      "total": 6,
+      "passed": 0,
+      "failed": 6,
+      "skipped": 0
+    },
+    "testng_results_sha256": "e7c44d152c1064e0327e7b471d058908b919639412126709d4c451b75834cc3f",
+    "log_sha256": "bf0ee0f63c30cacf11f43fefdb665aebdcd3ff9fa79347c3f24b64793a0ef969",
+    "source_baseline_audit": {
+      "immutable_build": "dc86d2e412dd441b9535867670cfc37f",
+      "mutable_debug_build": "ccc4e91ab62540c4831da2aa59c6a8ba",
+      "normalized_matching_java_files": 1029
+    }
+  },
+  "packaged_run_ids": [
+    "cde0221f86de4ea69c53c7438f9449c3",
+    "00d9cef41685483dad110e66f1da7cfc"
+  ],
+  "local_run_id": "00d9cef41685483dad110e66f1da7cfc",
+  "observed": [
+    {
+      "case": "warp",
+      "paid": [
+        5
+      ],
+      "before_remaining": 0,
+      "turns": [
+        {
+          "seat": 2,
+          "extra": true,
+          "remaining": 0
+        },
+        {
+          "seat": 1,
+          "extra": false,
+          "remaining": 0
+        }
+      ],
+      "source_next": 2,
+      "source_turn": 1,
+      "source_remaining": 0,
+      "unmapped": []
+    },
+    {
+      "case": "stretch",
+      "paid": [
+        10
+      ],
+      "before_remaining": 2,
+      "turns": [
+        {
+          "seat": 0,
+          "extra": true,
+          "remaining": 1
+        },
+        {
+          "seat": 0,
+          "extra": true,
+          "remaining": 0
+        },
+        {
+          "seat": 1,
+          "extra": false,
+          "remaining": 0
+        }
+      ],
+      "source_next": 0,
+      "source_turn": 1,
+      "source_remaining": 2,
+      "unmapped": []
+    },
+    {
+      "case": "ordered",
+      "paid": [
+        5,
+        5
+      ],
+      "before_remaining": 0,
+      "turns": [
+        {
+          "seat": 2,
+          "extra": true,
+          "remaining": 0
+        },
+        {
+          "seat": 1,
+          "extra": true,
+          "remaining": 0
+        },
+        {
+          "seat": 1,
+          "extra": false,
+          "remaining": 0
+        }
+      ],
+      "source_next": 2,
+      "source_turn": 1,
+      "source_remaining": 0,
+      "unmapped": []
+    },
+    {
+      "case": "savor",
+      "paid": 3,
+      "first": {
+        "seat": 0,
+        "extra": true,
+        "remaining": 0
+      },
+      "tapped_extra": 3,
+      "later": {
+        "seat": 0,
+        "extra": false,
+        "remaining": 0
+      },
+      "tapped_later": 0,
+      "source_tapped": 3,
+      "unmapped": []
+    },
+    {
+      "case": "fortune",
+      "paid": 2,
+      "first": {
+        "seat": 0,
+        "extra": true,
+        "remaining": 0
+      },
+      "owner_lost": true,
+      "active_seats": 3,
+      "source_lost": false,
+      "unmapped": []
+    },
+    {
+      "case": "assault",
+      "paid": [
+        4
+      ],
+      "scheduled": true,
+      "combats": 2,
+      "mains": 2,
+      "source_combats": 0,
+      "source_scheduled": true,
+      "unmapped": []
+    },
+    {
+      "case": "multiple_assaults",
+      "paid": [
+        4,
+        4
+      ],
+      "scheduled": true,
+      "combats": 3,
+      "mains": 3,
+      "source_combats": 0,
+      "source_scheduled": true,
+      "unmapped": []
+    },
+    {
+      "case": "mid_extra_turn",
+      "paid": 3,
+      "source": {
+        "seat": 0,
+        "extra": true,
+        "remaining": 0
+      },
+      "copied": {
+        "seat": 0,
+        "extra": true,
+        "remaining": 0
+      },
+      "source_upkeeps": 1,
+      "copied_upkeeps": 1,
+      "source_previous": 0,
+      "copied_previous": 0,
+      "unmapped": []
+    },
+    {
+      "case": "moraug",
+      "paid": 6,
+      "untapped": true,
+      "source_tapped": true,
+      "combats": 2,
+      "unmapped": []
+    }
+  ],
+  "receipt_sha256": "8e5a8c8e0640d19ea529609b7e1fa5fcfa18b0b195c0cdd6e6af116b150642f5",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+  "test_sha256": "b1ae8ca7f8855d8647297d46339f78168a11e6d4edf1629d2931a204ef126914",
+  "native_source_sha256": "51c2b5f6665c1795efd0dc38aa00db4870ba26a4f6fabb190f3565781f3334fb",
+  "patch_sha256": "5527dd6e1151d7f3baa4d45e8874fb98b3eed41ee6b67938f46d9d86f9fedc7f",
+  "oracle_witnesses": [
+    {
+      "name": "Time Warp",
+      "oracle_id": "dbd6a94b-62ff-4a10-9d52-bdd90b26e425",
+      "mana_cost": "{3}{U}{U}",
+      "source": "https://scryfall.com/card/msc/788/time-warp?utm_source=api",
+      "oracle_text_sha256": "44bae33403bf935cf178e94a21cb234dcf7252607e5ecf8d26cb0d844df5094d",
+      "raw_record_sha256": "9229fc7a4f67c26fd6977b1ab2e4ec714e3cff41cd4d1c14430ff93b6e061bb0"
+    },
+    {
+      "name": "Time Stretch",
+      "oracle_id": "72e56963-a9dd-44dc-a4d3-992b4d89dd28",
+      "mana_cost": "{8}{U}{U}",
+      "source": "https://scryfall.com/card/dmr/69/time-stretch?utm_source=api",
+      "oracle_text_sha256": "b022b5f5592f42e8658736ebe982a05ef824fc4b6110726accacc79fe7116dec",
+      "raw_record_sha256": "98e3c83c0de5c022bca645532488d1031cd126fd08f9850527a8b5e1d6ce61fa"
+    },
+    {
+      "name": "Savor the Moment",
+      "oracle_id": "d5b9b75d-4bf0-4328-9bb3-7b260a0c46af",
+      "mana_cost": "{1}{U}{U}",
+      "source": "https://scryfall.com/card/shm/50/savor-the-moment?utm_source=api",
+      "oracle_text_sha256": "2675f97b47921498911bb2de55f294bf8d6a0a16ae1bfa26e7e339216e258839",
+      "raw_record_sha256": "1784a0fc2c65356be2972974f78a6fb322a8da5a112dae1bb3edc2de4da4cca8"
+    },
+    {
+      "name": "Final Fortune",
+      "oracle_id": "8d0adc5c-3fdd-4e22-b783-5651f8e57b65",
+      "mana_cost": "{R}{R}",
+      "source": "https://scryfall.com/card/7ed/182/final-fortune?utm_source=api",
+      "oracle_text_sha256": "4ff2666e8799fe2ff0d0c5fe40a6fc247549b760143d847b68a7e1a020f91c10",
+      "raw_record_sha256": "ffea4ca6fd459b4c61578fc32cb77f59044a0133cf5eba16f5c6fdaaf0737c43"
+    },
+    {
+      "name": "Relentless Assault",
+      "oracle_id": "dc1c0e8c-d0c1-445c-968f-7dec91e5d5fc",
+      "mana_cost": "{2}{R}{R}",
+      "source": "https://scryfall.com/card/cmr/416/relentless-assault?utm_source=api",
+      "oracle_text_sha256": "5c6e45f84773785b59a1d5a2aefd44858f42f1d74c38ed3a4dbf68e2223052f9",
+      "raw_record_sha256": "9331afe12285d98960f0b4bfd4b10272f4005594686ddcafca28ea246f99034d"
+    },
+    {
+      "name": "Moraug, Fury of Akoum",
+      "oracle_id": "6288c0cb-cf32-4ae9-abf0-104ec71654fa",
+      "mana_cost": "{4}{R}{R}",
+      "source": "https://scryfall.com/card/eoc/89/moraug-fury-of-akoum?utm_source=api",
+      "oracle_text_sha256": "7485ee09eeb3f0a1e77c52fe0cb5f0a7df8c444d5f48ef9583affd897b3b9502",
+      "raw_record_sha256": "6ec6c9e98f4f7ea7ac215100119eb243b41e57f68d14971eec81d8ab7a92af62"
+    }
+  ],
+  "rules_reference": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "bytes": 977752,
+    "checked_rules": [
+      "500.7",
+      "500.8",
+      "500.9",
+      "603.7a",
+      "603.7b",
+      "603.7d",
+      "614.10",
+      "614.10a"
+    ],
+    "scope": "Selected extra-turn/phase ordering, delayed-trigger and skipped-step rules; not full or current rules certification"
+  },
+  "full_live_suite": {
+    "passed": 22,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 393,
+    "log_sha256": "25d8f228cfe6da798daa0cf12b938f7cca3ee91e59674132a938760b767884ec"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "1a992c1a09468698849aca81c0ae4a50ac4d6390f259b97fff80c956dc0e47d5"
+  },
+  "native_evidence_sha256": "e606e52012b9b844ff2ad5ae5430a541a1e74e528b5825dad7830d8a79d9a04f",
+  "catalog_probe": {
+    "report_sha256": "071f58648267856bbb0f2fb7b5e567e4d9b700ed554f02e7902d136903d5ff91",
+    "run_id": "e90da5166f224fae88d736d75cdb2d1c",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Fixed partial games use Commander registrations, not complete legal decks or full pregame fixtures.",
+    "Ten native cases use paid card actions. Moraug uses admitted native land play; the tapped Bear is a controlled starting state.",
+    "Nine packaged witnesses compare future outcomes and source independence; native tests additionally consume two independent copies.",
+    "The six initial native failures are behavioral assertions after compilation, separate from earlier test getter-name compilation failures.",
+    "Phase advancement runs native hooks with bounded fixture resolution and no response priority.",
+    "Current extra-turn flags/counts, previous player and selected upkeep/combat/main counters are tested. Other copied scheduler flags and counters need wider boundary validation.",
+    "Simultaneous APNAP grants, eliminated queued recipients, nested turn-ending effects, phase reversal, skip replacements, scheme variants, priority restoration and repeated cleanup are not certified.",
+    "Mapped scheme ability references are retained but scheme gameplay is outside these Commander fixtures.",
+    "Only explicit SnapshotCommand implementations are copied. Other callbacks in scanned queues remain omitted and reported by the native API, not aggregated into normal CLI reports.",
+    "State-based command queues, conditional static-command arrays, hidden views, merged/perpetual states and arbitrary continuations remain open.",
+    "Selected versioned rules and local catalog records do not certify every current rule, card or gameplay AI choice."
+  ]
+}

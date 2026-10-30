@@ -22,9 +22,9 @@ disguise keyword caches. A thirteenth preserves canonical trait graphs,
 activation/resolution and mode histories, mapped crew/saddle members and exact
 saddle counts. A fourteenth maps explicit scheduled-effect callbacks and preserves control,
 player-keyword and numeric-choice state. A fifteenth preserves delayed/waiting
-trigger queues, deferred registrations and
-mapped cost-payment receipts. All fifteen patches are pinned. No remote branch
-is used at build time.
+trigger queues, deferred registrations and mapped cost-payment receipts.
+A sixteenth preserves extra-turn/phase stacks, attached obligations and scheduler
+state. All sixteen patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -40,9 +40,9 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-241 native sticker, chosen-color, companion, supplementary-copy, history,
+251 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
-temporal-state and delayed-trigger tests.
+temporal-state, delayed-trigger and turn/phase-schedule tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -72,15 +72,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins fourteen regression source files and exactly three card-script
+The recipe pins fifteen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 789 gameplay and 256
+686 files verified against immutable source. The broader 799 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 241 focused tests are included in the 789.
+in `native_test_evidence.json`; the 251 focused tests are included in the 799.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -186,4 +186,14 @@ adds 21 cases, including synthetic queue/receipt contracts; nine packaged witnes
 check paid actions and future outcomes. Trigger registration callbacks use the
 explicit command protocol. Cost objects are historical receipts, not resumed
 payment decisions. See the coverage document for unvalidated conditions,
-APNAP/replacement behavior, callback kinds and extra turn/phase schedules.
+APNAP/replacement behavior, callback kinds and unvalidated turn/phase variants.
+
+
+Turn/phase-schedule validation is retained in
+[turn_schedule_evidence.json](turn_schedule_evidence.json). Ten native cases and
+nine paid packaged witnesses check extra-turn recipients, LIFO order, normal-turn
+resumption, Savor's skipped untap, Final Fortune's loss, extra combats and Moraug's
+phase-entry untap. Scheduler entries and attached abilities/triggers use the shared
+identity map without replaying registration. Current extra-turn flags, counts and
+selected phase counters survive snapshots. Variant rules and priority/cleanup
+continuations still need separate validation.

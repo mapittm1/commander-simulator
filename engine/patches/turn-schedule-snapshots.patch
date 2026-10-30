@@ -1,0 +1,129 @@
+--- a/forge-game/src/main/java/forge/game/phase/ExtraTurn.java
++++ b/forge-game/src/main/java/forge/game/phase/ExtraTurn.java
+@@ -109,4 +109,16 @@
+         this.cantSetSchemesInMotionSA = cantSetSchemesInMotionSA;
+     }
+ 
++
++    /** Restore a future turn's obligations without registering or executing them. */
++    public void copySnapshotStateFrom(ExtraTurn original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        delTrig.clear();
++        for (Trigger trigger : original.delTrig) {
++            delTrig.add(context.trigger(trigger));
++        }
++        skipUntapSA = context.copy(original.skipUntapSA);
++        cantSetSchemesInMotionSA = context.copy(original.cantSetSchemesInMotionSA);
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/phase/ExtraPhase.java
++++ b/forge-game/src/main/java/forge/game/phase/ExtraPhase.java
+@@ -26,4 +26,14 @@
+         return delTrig;
+     }
+ 
++
++    /** Restore the phase-entry obligations without admitting their triggers. */
++    public void copySnapshotStateFrom(ExtraPhase original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        delTrig.clear();
++        for (Trigger trigger : original.delTrig) {
++            delTrig.add(context.trigger(trigger));
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/phase/PhaseHandler.java
++++ b/forge-game/src/main/java/forge/game/phase/PhaseHandler.java
+@@ -1384,4 +1384,39 @@
+             }
+         }
+     }
++
++    /** Retain scheduler state and stack order without adding turns or replaying phase hooks. */
++    public void copySnapshotStateFrom(PhaseHandler original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        extraTurns.clear();
++        for (ExtraTurn extra : original.extraTurns) {
++            extraTurns.add(context.extraTurn(extra));
++        }
++        extraPhases.clear();
++        for (Map.Entry<PhaseType, Stack<ExtraPhase>> entry : original.extraPhases.entrySet()) {
++            Stack<ExtraPhase> copied = new Stack<>();
++            for (ExtraPhase extra : entry.getValue()) {
++                copied.add(context.extraPhase(extra));
++            }
++            extraPhases.put(entry.getKey(), copied);
++        }
++        nUpkeepsThisTurn = original.nUpkeepsThisTurn;
++        nUpkeepsThisGame = original.nUpkeepsThisGame;
++        nCombatsThisTurn = original.nCombatsThisTurn;
++        nMainsThisTurn = original.nMainsThisTurn;
++        nEndOfTurnsThisTurn = original.nEndOfTurnsThisTurn;
++        planarDiceSpecialActionThisTurn = original.planarDiceSpecialActionThisTurn;
++        playerPreviousTurn = context.map(original.playerPreviousTurn);
++        pPlayerPriority = context.map(original.pPlayerPriority);
++        pFirstPriority = context.map(original.pFirstPriority);
++        skipDamageSteps = original.skipDamageSteps;
++        bRepeatCleanup = original.bRepeatCleanup;
++        givePriorityToPlayer = original.givePriorityToPlayer;
++        for (Player player : original.game.getRegisteredPlayers()) {
++            Player copied = context.map(player);
++            copied.setExtraTurn(player.isExtraTurn());
++            copied.setExtraTurnCount(player.getExtraTurnCount());
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
+@@ -273,6 +273,12 @@
+         if (source instanceof forge.game.cost.Cost cost) {
+             return cost.copyForSnapshot(this);
+         }
++        if (source instanceof forge.game.phase.ExtraTurn turn) {
++            return extraTurn(turn);
++        }
++        if (source instanceof forge.game.phase.ExtraPhase phase) {
++            return extraPhase(phase);
++        }
+         if (source instanceof forge.game.zone.CostPaymentStack.Entry entry) {
+             return costEntry(entry);
+         }
+@@ -538,4 +544,25 @@
+         result.copySnapshotStateFrom(source, this);
+         return result;
+     }
++
++    public forge.game.phase.ExtraTurn extraTurn(forge.game.phase.ExtraTurn source) {
++        if (source == null) return null;
++        forge.game.phase.ExtraTurn saved = (forge.game.phase.ExtraTurn) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.phase.ExtraTurn result = new forge.game.phase.ExtraTurn(map(source.getPlayer()));
++        objects.put(source, result);
++        result.copySnapshotStateFrom(source, this);
++        return result;
++    }
++
++    public forge.game.phase.ExtraPhase extraPhase(forge.game.phase.ExtraPhase source) {
++        if (source == null) return null;
++        forge.game.phase.ExtraPhase saved = (forge.game.phase.ExtraPhase) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.phase.ExtraPhase result = new forge.game.phase.ExtraPhase(source.getPhase());
++        objects.put(source, result);
++        result.copySnapshotStateFrom(source, this);
++        return result;
++    }
++
+ }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -276,6 +276,7 @@
+         newGame.getStack().restoreSnapshotFrom(origGame.getStack(), context, copyStack);
+         newGame.costPaymentStack.copySnapshotStateFrom(origGame.costPaymentStack, context);
+         newGame.getTriggerHandler().copySnapshotStateFrom(origGame.getTriggerHandler(), context);
++        newGame.getPhaseHandler().copySnapshotStateFrom(origGame.getPhaseHandler(), context);
+         stackMap.putAll(context.getAbilityCopies());
+     }
+ 

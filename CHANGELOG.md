@@ -8,6 +8,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve extra-turn and extra-phase stacks, their order and normal-turn
+  continuation through snapshots. Map attached triggers and skip-untap/scheme
+  references without replaying their registration; retain current extra-turn
+  flags/counts, previous-turn player and scheduler counters/control state.
+- Add ten native cases and nine paid runtime witnesses for Time Warp, Time Stretch,
+  Savor the Moment, Final Fortune, Relentless Assault and Moraug. Verify LIFO
+  scheduling, repeated combats, native landfall, phase-entry untapping, end-step
+  loss and independent schedule consumption. Six initial native cases reproduce
+  the previous build's missing behavior.
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  251 focused native tests; 799 broader gameplay tests including those 251;
+  256 serialization tests; all 22 live integrations / 393 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned turn-schedule
+  runtime while retaining previous builds, locks and exact before/after receipts.
+
 - Preserve delayed, turn-limited, player-defined and waiting trigger queues through
   snapshots without replaying source events. Map remembered incarnations, spawned
   abilities, captured controllers, extra-trigger counts and suppression flags.

@@ -120,10 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **789 native tests in 70 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 241 focused
+The reviewed patched source also passes **799 native tests in 71 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 251 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life, paid-stack, cast-form, usage-history, scheduled-state and delayed-trigger tests; these counts must not be added together.
+starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger and turn/phase-schedule tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -679,7 +679,7 @@ GameCopier.getUnmappedSnapshotCommands(). The normal simulation report does
 not yet aggregate this API. Empty diagnostics in these fixed witnesses do not
 certify all callbacks. Other effect implementations, two-turn wrapper callbacks,
 state-based-action command queues, conditional static-command arrays,
-extra-turn/phase scheduling, merged/perpetual objects and arbitrary
+unvalidated turn/phase variants, merged/perpetual objects and arbitrary
 mid-resolution continuations require separate implementation and validation.
 The gameplay AI's choice quality and complete hidden-information views also
 remain outside this milestone.
@@ -729,7 +729,7 @@ remain rejected by the mapper. This does not certify all trigger conditions,
 APNAP ordering, replacement/doubling effects, hidden views, multiplayer loss
 interactions, countering delayed triggers, all cost subclasses or payment
 continuations. Other callback kinds, state-based command queues, conditional
-static-command arrays, extra turns/phases and merged/perpetual state remain open.
+static-command arrays, unvalidated turn/phase variants and merged/perpetual state remain open.
 The native unmapped-command diagnostic still scans only the queues described
 above and is not aggregated into normal CLI simulation reports.
 
@@ -742,3 +742,37 @@ including those 241, **256 serialization tests**, **21 live integrations /
 runtime, source, corrected bounded trigger-drain helper, before/after witnesses,
 test hashes and selected rule/catalog references. Generic payload map/list copies
 do not establish arbitrary container alias or cycle preservation.
+
+
+## Turn and phase schedules
+
+Snapshots retain the native extra-turn stack, its normal-turn continuation and
+each per-phase stack in their original order. Scheduler entries map their players,
+delayed triggers and skip-untap/scheme ability references through the shared
+identity map. Copying neither schedules a new turn nor admits its future triggers.
+Current player extra-turn flags/counts, previous-turn player, phase counters and
+scheduler control flags are restored separately from combat state.
+
+Ten native cases use paid Time Warp, Time Stretch, Savor the Moment, Final Fortune,
+Relentless Assault and Moraug casts; Moraug also uses admitted native land play.
+They check targeted seats, multiple queued turns, most-recent-first ordering,
+normal-turn resumption, skipping only the scheduled untap, the attached end-step
+loss, inserted combat/main chains and Moraug's combat-entry untap. Separate copies
+consume independent schedules. A mid-extra-turn copy retains the current turn flag,
+upkeep count and previous player. Six initial native cases fail on the previous
+build. Nine packaged witnesses retain exact before/after outcomes.
+
+These fixtures advance real phase hooks without response priority. They do not
+certify every extra turn/step/phase effect, simultaneous APNAP grants, eliminated
+queued recipients, nested turn-ending effects, phase reversal, skip replacements,
+scheme variants, all counter boundaries, priority restoration or repeated cleanup.
+Other unmapped callbacks, state-based command queues, conditional static-command
+arrays, merged/perpetual state and arbitrary continuations remain open.
+
+Verification: **399 offline tests / 508 subtests**, all Python quality tools,
+**251 focused native tests**, **799 broader gameplay tests** including those 251,
+**256 serialization tests**, **22 live integrations / 393 subtests**, and
+**32,109 matched native constructions** pass. Seven non-starting meld-result
+identities remain separate. [Turn-schedule evidence](../engine/turn_schedule_evidence.json)
+binds the exact runtime, source, worker and test hashes, before/after receipts and
+selected versioned rules/catalog references.
