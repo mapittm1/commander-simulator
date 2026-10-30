@@ -105,6 +105,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/paid-stack-state.patch",
                 "engine/patches/cast-form-snapshot.patch",
                 "engine/patches/usage-snapshot-state.patch",
+                "engine/patches/scheduled-effect-snapshots.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -122,6 +123,7 @@ def _verify_inputs(args, recipe):
         "StackGameCopyTest.java": "stack_snapshot_test_sha256",
         "FaceGameCopyTest.java": "cast_form_test_sha256",
         "UsageGameCopyTest.java": "usage_snapshot_test_sha256",
+        "TurnUsageGameCopyTest.java": "turn_usage_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -272,6 +274,11 @@ def _patch_source(source, run, recipe):
         source / "forge-gui-desktop/src/test/java/forge/ai/UsageGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/TurnUsageGameCopyTest.java",
+        source / "forge-gui-desktop/src/test/java/forge/ai/TurnUsageGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -312,7 +319,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

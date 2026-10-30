@@ -1,0 +1,795 @@
+{
+  "scope": "Selected resolved effect expiration, control-layer, player-keyword, chosen-number and temporal-state validation; not full card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-durations",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "7dd4349e057584bdb6ad7b0f5a9503d597febfbb25e0fb0d7c5a539b1ef28fe6",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "8f9a18f80046302d0fbc77ee943f20ab20c9e12379ba438eb2d156442a235de3",
+    "native_tests": {
+      "total": 220,
+      "passed": 220,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "64857d0227327b7ff3c11b1fb2b39cb7b016b69dd9134e0fd1b8c8b38ed79e34",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: explicitly rebound expiration callbacks, temporary control layers, player keywords and chosen numbers; native and paid runtime validation; not complete rules certification"
+  },
+  "build_id": "aceaceb07dff4ff1a2aeffd316e66426",
+  "compiled_source_audit": {
+    "build_id": "aceaceb07dff4ff1a2aeffd316e66426",
+    "normalization": "Universal newlines only",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/SnapshotCommand.java": "56ea95f3ed5d0108b6ecce61e5b6a7335f065ed6df4bf21685c87b31e0b21428",
+      "forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java": "8fa44bad7a0b34e966dc859e7c446ad566ccbaa64314f6afcfb9fe9bd8e3ba07",
+      "forge-game/src/main/java/forge/game/phase/Phase.java": "221b537d10b73f7041efbf525bc19a338eb09be030d5432f40a612138f651615",
+      "forge-game/src/main/java/forge/game/card/Card.java": "c3e7893cd933ae2b0428091ba31c5f13d26154cfe6071e1c923dba7bf9e9539e",
+      "forge-game/src/main/java/forge/game/ability/effects/PumpEffect.java": "e40cea5f4eb0d7dd4f757c491ed3678a040689e25f3a8fa9a709cded426e1504",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "51fd1b145bfd12c86a846ba30d34c1cc872ad1d460c553e443265e24755e93cb",
+      "forge-game/src/main/java/forge/game/ability/effects/PumpAllEffect.java": "770c244f98b51507786a8a55822d4f85a3c8bf1f7f956fef26f0d4e22d7cabe4",
+      "forge-game/src/main/java/forge/game/ability/effects/ControlGainEffect.java": "ddb5ffe202128e185e5e68c4a24d30df4b5575fe5a16ff3a1e4454f8c15e8512",
+      "forge-game/src/main/java/forge/game/keyword/KeywordsChange.java": "f18092ef2eac85af76d79db56d6b48de93cbdd010aa37d1357114566bc14f2d1",
+      "forge-game/src/main/java/forge/game/player/Player.java": "af5107a72dd3b870d905a0934eb36a04394838b2522664b2890dd92a984d9fdf"
+    }
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-durations-reviewed",
+    "lock_sha256": "470192528204039cd48d76e17cf700e63c822763296f8e002fe105cfd6b67347",
+    "engine_check_sha256": "33bf845906fcc8f3633fe03e85eb583b40be9da6f69dc80b64333081d0979102",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-usage-reviewed"
+  },
+  "before": {
+    "run_id": "164b2e008dcd467db05edd5a4297acfb",
+    "receipt_sha256": "04b122b3a165329ad5c81f48adce5c704d000e04dd6347bbca7efa7f90375aa0",
+    "worker_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-usage",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "8e0e31b49bef47542f43ddb7b3e9b8957cbcde42c33410d79fa90198cba814c6",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "808d9538dc3b44e228ea0880afdb9d188719c4ee80a955023f07ff543392f188",
+        "native_tests": {
+          "total": 202,
+          "passed": 202,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "cc9ce98d769417c0f77485c3ca137a28d7132ab95969cbee4b7bdeb171176665",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: canonical trait graphs, paid usage limits, mode histories and crew/saddle provenance; native regressions and packaged witnesses; not complete rules certification"
+      },
+      "cases": [
+        {
+          "case": "rootwalla",
+          "paid": 3,
+          "before": {
+            "power": 3,
+            "toughness": 3,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "copied": {
+            "power": 3,
+            "toughness": 3,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "after": {
+            "power": 3,
+            "toughness": 3,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "source": {
+            "power": 3,
+            "toughness": 3,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "unmapped": null
+        },
+        {
+          "case": "overrun",
+          "paid": 5,
+          "before": {
+            "power": 5,
+            "toughness": 5,
+            "haste": false,
+            "trample": true,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "copied": {
+            "power": 5,
+            "toughness": 5,
+            "haste": false,
+            "trample": true,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "after": {
+            "power": 5,
+            "toughness": 5,
+            "haste": false,
+            "trample": true,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "source": {
+            "power": 5,
+            "toughness": 5,
+            "haste": false,
+            "trample": true,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "unmapped": null
+        },
+        {
+          "case": "theft",
+          "paid": 3,
+          "before": {
+            "power": 2,
+            "toughness": 2,
+            "haste": true,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "copied": {
+            "power": 2,
+            "toughness": 2,
+            "haste": true,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "after": {
+            "power": 2,
+            "toughness": 2,
+            "haste": true,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "source": {
+            "power": 2,
+            "toughness": 2,
+            "haste": true,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "original_controller": 1,
+          "unmapped": null
+        },
+        {
+          "case": "sower",
+          "paid": [
+            4,
+            1
+          ],
+          "before": {
+            "power": 2,
+            "toughness": 2,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "after": {
+            "power": 2,
+            "toughness": 2,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "source": {
+            "power": 2,
+            "toughness": 2,
+            "haste": false,
+            "trample": false,
+            "controller": 0,
+            "zone_player": 0,
+            "controller_world": true,
+            "zone_world": true
+          },
+          "original_controller": 1,
+          "copied_sower_zone": "Graveyard",
+          "source_sower_zone": "Battlefield",
+          "unmapped": null
+        },
+        {
+          "case": "shroud",
+          "paid": 2,
+          "before": true,
+          "copied": false,
+          "after": false,
+          "source": true,
+          "unmapped": null
+        },
+        {
+          "case": "untap",
+          "paid": [
+            2,
+            2,
+            2
+          ],
+          "before": 5,
+          "after": 5,
+          "source": 5,
+          "copied_tapped": false,
+          "source_tapped": true,
+          "unmapped": null
+        },
+        {
+          "case": "number",
+          "paid": 3,
+          "before": {
+            "number": 99,
+            "visible": "99"
+          },
+          "copied": {
+            "number": null,
+            "visible": ""
+          },
+          "source": {
+            "number": 99,
+            "visible": "99"
+          },
+          "unmapped": null
+        },
+        {
+          "case": "round",
+          "paid": 3,
+          "before_reuse": {
+            "turn": 0,
+            "game": 1,
+            "resolved": 0,
+            "playable": true
+          },
+          "after_reuse": {
+            "turn": 1,
+            "game": 2,
+            "resolved": 1,
+            "playable": false
+          },
+          "source": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 1,
+            "playable": false
+          },
+          "active_seat": 0,
+          "owner": 0,
+          "drawn_hand": 1,
+          "unmapped": null
+        }
+      ]
+    }
+  },
+  "baseline_positive_controls": [
+    "round"
+  ],
+  "packaged_run_ids": [
+    "f29a15db62c541368f01f48c8e862f9c",
+    "d54db4469c734bf29d28351ec693610a"
+  ],
+  "local_run_id": "d54db4469c734bf29d28351ec693610a",
+  "observed": [
+    {
+      "case": "rootwalla",
+      "paid": 3,
+      "before": {
+        "power": 3,
+        "toughness": 3,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "copied": {
+        "power": 3,
+        "toughness": 3,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "after": {
+        "power": 1,
+        "toughness": 1,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "source": {
+        "power": 3,
+        "toughness": 3,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "unmapped": []
+    },
+    {
+      "case": "overrun",
+      "paid": 5,
+      "before": {
+        "power": 5,
+        "toughness": 5,
+        "haste": false,
+        "trample": true,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "copied": {
+        "power": 5,
+        "toughness": 5,
+        "haste": false,
+        "trample": true,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "after": {
+        "power": 2,
+        "toughness": 2,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "source": {
+        "power": 5,
+        "toughness": 5,
+        "haste": false,
+        "trample": true,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "unmapped": []
+    },
+    {
+      "case": "theft",
+      "paid": 3,
+      "before": {
+        "power": 2,
+        "toughness": 2,
+        "haste": true,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "copied": {
+        "power": 2,
+        "toughness": 2,
+        "haste": true,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "after": {
+        "power": 2,
+        "toughness": 2,
+        "haste": false,
+        "trample": false,
+        "controller": 1,
+        "zone_player": 1,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "source": {
+        "power": 2,
+        "toughness": 2,
+        "haste": true,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "original_controller": 1,
+      "unmapped": []
+    },
+    {
+      "case": "sower",
+      "paid": [
+        4,
+        1
+      ],
+      "before": {
+        "power": 2,
+        "toughness": 2,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "after": {
+        "power": 2,
+        "toughness": 2,
+        "haste": false,
+        "trample": false,
+        "controller": 1,
+        "zone_player": 1,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "source": {
+        "power": 2,
+        "toughness": 2,
+        "haste": false,
+        "trample": false,
+        "controller": 0,
+        "zone_player": 0,
+        "controller_world": true,
+        "zone_world": true
+      },
+      "original_controller": 1,
+      "copied_sower_zone": "Graveyard",
+      "source_sower_zone": "Battlefield",
+      "unmapped": []
+    },
+    {
+      "case": "shroud",
+      "paid": 2,
+      "before": true,
+      "copied": true,
+      "after": false,
+      "source": true,
+      "unmapped": []
+    },
+    {
+      "case": "untap",
+      "paid": [
+        2,
+        2,
+        2
+      ],
+      "before": 5,
+      "after": 2,
+      "source": 5,
+      "copied_tapped": false,
+      "source_tapped": true,
+      "unmapped": []
+    },
+    {
+      "case": "number",
+      "paid": 3,
+      "before": {
+        "number": 99,
+        "visible": "99"
+      },
+      "copied": {
+        "number": 99,
+        "visible": "99"
+      },
+      "source": {
+        "number": 99,
+        "visible": "99"
+      },
+      "unmapped": []
+    },
+    {
+      "case": "round",
+      "paid": 3,
+      "before_reuse": {
+        "turn": 0,
+        "game": 1,
+        "resolved": 0,
+        "playable": true
+      },
+      "after_reuse": {
+        "turn": 1,
+        "game": 2,
+        "resolved": 1,
+        "playable": false
+      },
+      "source": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "active_seat": 0,
+      "owner": 0,
+      "drawn_hand": 1,
+      "unmapped": []
+    }
+  ],
+  "receipt_sha256": "bafc6d3d246332516fb6e1a7dc5a624a6c03e793dc1a66d2fd1c66ad9695c27a",
+  "worker_log_sha256": "8a834903b4c99984cffe075841043d7c70fac6fa5ca481a5d36bbada9dc86278",
+  "worker_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+  "test_sha256": "61be69aaab32a02d2e3908016abec2bc85021a73f7f26588dfda238eaa54a927",
+  "native_source_sha256": "abf1a98f056bf9d75828c71dc041e85834e34d5092a7f8076ae0cc123c804be1",
+  "patch_sha256": "6d3d8de4f449ccf1a9aa1f413f75bfd8cad7412e471bf043e34490a8857de4b8",
+  "oracle_witnesses": [
+    {
+      "name": "Basking Rootwalla",
+      "oracle_id": "b2ec080f-ad5d-4274-91e3-bc6ac89fc3e4",
+      "mana_cost": "{G}",
+      "source": "https://scryfall.com/card/uma/156/basking-rootwalla?utm_source=api",
+      "oracle_text_sha256": "0f37cae90cd1131d4e1ea39481cf12e2e9068ed76ae26b66b2a17cb9083e7859",
+      "raw_record_sha256": "d3cb994373441afbc9ab3bb3a2aae10a05cc93b294688f63f03b061bf3158c12"
+    },
+    {
+      "name": "Rootwalla",
+      "oracle_id": "4dda5f21-11d6-40ce-be24-7c9529272c25",
+      "mana_cost": "{2}{G}",
+      "source": "https://scryfall.com/card/w17/27/rootwalla?utm_source=api",
+      "oracle_text_sha256": "8da6fd77d3afd42a75186e971d94d9447cab61b874f81e0e1bf4f79586a30707",
+      "raw_record_sha256": "66dcbab52dcd0dbd3fb5bbd1f5bbddff0a887675209fa0863bb49c415c401b27"
+    },
+    {
+      "name": "Overrun",
+      "oracle_id": "204f9afe-c20b-4933-b5cd-aa572784762a",
+      "mana_cost": "{2}{G}{G}{G}",
+      "source": "https://scryfall.com/card/fdn/230/overrun?utm_source=api",
+      "oracle_text_sha256": "03f3a727dbdc5ad541efb098320ee9d93a6e1fa952ded4b1c163c5a5f424148e",
+      "raw_record_sha256": "2c50e6518abc391e96366d0c38b97c45c8efe343d15c0d03528d025e6c8358dd"
+    },
+    {
+      "name": "Act of Treason",
+      "oracle_id": "9d08af23-9f4a-4097-9abc-3b17475ab744",
+      "mana_cost": "{2}{R}",
+      "source": "https://scryfall.com/card/rvr/99/act-of-treason?utm_source=api",
+      "oracle_text_sha256": "0ade38d4cd197e84a4331daaeb1044d2b69911e116669c63be1d22e4b3606617",
+      "raw_record_sha256": "e26de928c3c0d513a97b3348eb013952b741baa9de9fafcbf596232821653bef"
+    },
+    {
+      "name": "Sower of Temptation",
+      "oracle_id": "5881aac2-4f31-45cb-bdb5-64a29ec23316",
+      "mana_cost": "{2}{U}{U}",
+      "source": "https://scryfall.com/card/bbd/131/sower-of-temptation?utm_source=api",
+      "oracle_text_sha256": "82bbd7b33311317a0e96acca51ddaf394327f9d574beff6cc1484395fb6afd5c",
+      "raw_record_sha256": "58cc413c4922f1e51ba703a968fbb3fac35b684471daabd672f120c5c81b13e6"
+    },
+    {
+      "name": "Gilded Light",
+      "oracle_id": "f7e7b2aa-9fd2-41dd-b11e-3a233530dc83",
+      "mana_cost": "{1}{W}",
+      "source": "https://scryfall.com/card/mh1/12/gilded-light?utm_source=api",
+      "oracle_text_sha256": "54105a85d30755b56d5f19cb72ca26536054ecea2f82f7d8a6010fa86d66e2b7",
+      "raw_record_sha256": "650afeb18e765ecff0d25d0b1805c7c46c2fcc228a16a77c0cbe8bc40715167d"
+    },
+    {
+      "name": "Endoskeleton",
+      "oracle_id": "e9ef7f8c-21ef-45f0-af64-8ffa9f0089d1",
+      "mana_cost": "{2}",
+      "source": "https://scryfall.com/card/usg/294/endoskeleton?utm_source=api",
+      "oracle_text_sha256": "64f391158de4f5868c2056ec170c3aed4380418dd2f30e85537a54cadbf3e2fe",
+      "raw_record_sha256": "1e3d6d43144acebc76e382e47afc96be1436b9c391faf71747368502926468ac"
+    },
+    {
+      "name": "Dramatic Reversal",
+      "oracle_id": "da46904c-8fb8-44c2-b2ab-775a1cc12ec3",
+      "mana_cost": "{1}{U}",
+      "source": "https://scryfall.com/card/tle/158/dramatic-reversal?utm_source=api",
+      "oracle_text_sha256": "bce28cc3be9b0b24dcf4d29928564c905cdcf371ac1ab8a0afa42c0eec97e054",
+      "raw_record_sha256": "5f52ed1b311fbda1633ca20872bf598e1b6ed7f4ad52499d72da0ae25c0a13eb"
+    },
+    {
+      "name": "Sanctum Prelate",
+      "oracle_id": "7e0cdba8-45e0-4fe5-b440-2d8fcf4d6b2b",
+      "mana_cost": "{1}{W}{W}",
+      "source": "https://scryfall.com/card/cn2/23/sanctum-prelate?utm_source=api",
+      "oracle_text_sha256": "ca16faaa37b261c0d6c5d331c9c9253ec0e16972f2e74caacef3e57b76814a69",
+      "raw_record_sha256": "12c25c1ec3d04c4e80d6ac399c8a2a72eaebf53ee1e2d4c43ffa62d11ef8b8e2"
+    },
+    {
+      "name": "Invigorating Hot Spring",
+      "oracle_id": "a972630e-651e-439d-9412-5be50da9b934",
+      "mana_cost": "{1}{R}{G}",
+      "source": "https://scryfall.com/card/neo/223/invigorating-hot-spring?utm_source=api",
+      "oracle_text_sha256": "b9b522ca22c43cf92622ac903fd50b024e5395092976d4bf4633de2522213f3c",
+      "raw_record_sha256": "831c6ae1208855037922512ad06128433e70168256f2731441b205ba53707d00"
+    },
+    {
+      "name": "Experiment Kraj",
+      "oracle_id": "93cfa771-067f-44ed-9e29-6caf698ee9aa",
+      "mana_cost": "{2}{G}{G}{U}{U}",
+      "source": "https://scryfall.com/card/cmm/337/experiment-kraj?utm_source=api",
+      "oracle_text_sha256": "795280d843475397151a3c76ccc62d4064961e2daab46cee94778ebfb31c3f6a",
+      "raw_record_sha256": "4f7e068a7cd82120b9648b79645b8af8e25dbd482961e803f03759ff9853df2a"
+    },
+    {
+      "name": "Common Bond",
+      "oracle_id": "d52e9255-62e7-479f-8def-e92b96efdb89",
+      "mana_cost": "{1}{G}{W}",
+      "source": "https://scryfall.com/card/rtr/151/common-bond?utm_source=api",
+      "oracle_text_sha256": "537b69d9565deb4897a02f7a7bf363835a3c730c722edb4d4ba272d01cf515bb",
+      "raw_record_sha256": "2e39d34ffe1619dc433e7b09640795000bfa272fb6ae993abe4e4a537e6282d2"
+    },
+    {
+      "name": "Jump",
+      "oracle_id": "f7518456-45ed-41d4-bd3c-5aacea28eb35",
+      "mana_cost": "{U}",
+      "source": "https://scryfall.com/card/m10/59/jump?utm_source=api",
+      "oracle_text_sha256": "c48522980e2af999adbc793d489037e75d3d4527d516fd661a2fe171dbdcb6ba",
+      "raw_record_sha256": "2caa73008421a27f58df8e5441e92a2ee4caad34d7f1af4c155580051bd3c4ad"
+    },
+    {
+      "name": "Giant Growth",
+      "oracle_id": "5748ebf1-24e3-499d-ab7c-c2cebd462a24",
+      "mana_cost": "{G}",
+      "source": "https://scryfall.com/card/msh/167/giant-growth?utm_source=api",
+      "oracle_text_sha256": "94ca5acb80503f883be9d13a1c72ea46980bce37ce99356d6274743f85465925",
+      "raw_record_sha256": "cc26365e1e50f9d7289de9980c81fb4cd124477cc511936b8171ef1f1f164d68"
+    },
+    {
+      "name": "Take Up the Shield",
+      "oracle_id": "e8d0eafe-540a-4b2e-a989-e98ff3c31105",
+      "mana_cost": "{1}{W}",
+      "source": "https://scryfall.com/card/msh/39/take-up-the-shield?utm_source=api",
+      "oracle_text_sha256": "7106f5289a8acfc4a9bfc808311f53d01000c4d4e223bda8c8624bd7513e12fd",
+      "raw_record_sha256": "8ce4f684290df92019885d05ef316a69fa2eb9d35032fb23466f6685a5fda2eb"
+    },
+    {
+      "name": "Battering Ram",
+      "oracle_id": "e7b91fba-8d96-4040-95e8-f0023b65c497",
+      "mana_cost": "{2}",
+      "source": "https://scryfall.com/card/5ed/353/battering-ram?utm_source=api",
+      "oracle_text_sha256": "3566dff9e7f28fb8be20ad31adedd029cee12943d8da7cf17b00e886d56da464",
+      "raw_record_sha256": "0ff74c862defd9697cd7c58ddbd039267b051d5bcc1c4374074ef183b4ce3f1a"
+    }
+  ],
+  "rules_reference": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "bytes": 977752,
+    "checked_rules": [
+      "602.5b",
+      "602.5c",
+      "611.2a",
+      "611.2b",
+      "613.1b",
+      "614.12",
+      "514.2"
+    ],
+    "scope": "Selected cleanup, duration, control-layer and activation-limit rules; not full current-rules conformance"
+  },
+  "full_live_suite": {
+    "passed": 20,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 375,
+    "log_sha256": "a5da66e99f292571969e1866454937eb04a7c2dcc69a0cbd53fbaea6f9caf3cd"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "7330286ce74bf1c7d336fc9ddfefcc64c9787384ec7b38302252b075c9f2d273"
+  },
+  "native_evidence_sha256": "e352b5d90fad30484b235dba1af1aacc7927f36b3fe86a5f96117bff5e27d133",
+  "catalog_probe": {
+    "report_sha256": "f7b3c1c831837d8455594246300bbdda03fe8693a56a3b74f4d2587544a9923b",
+    "run_id": "ad3684be8170416e93927b76ad8e744a",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Fixed partial states use Commander registrations; these are not complete legal decks or pregame fixtures.",
+    "Turn advancement invokes real phase and cleanup hooks with a bounded resolver, without response priority.",
+    "Only explicitly implemented SnapshotCommand types and the immutable blank command are transferred.",
+    "Unconverted callbacks in scanned queues remain omitted and are reported by the native copier API; normal simulation reports do not aggregate this diagnostic yet.",
+    "The API scans phase and seven card-event queues; state-based-action queues, conditional static-command arrays, delayed triggers and extra turn/phase schedules need separate coverage.",
+    "Eight runtime witnesses do not establish all variants of Pump, ControlGain, player keywords, hidden views, source/target zone transitions or all restrictions.",
+    "Synthetic contracts check queue ordering, aliases, unmapped callbacks and secret numeric views; the paid Prelate Java fixture makes a legal controlled choice of two and checks actual cast rejection and allowed controls.",
+    "Other effect callbacks, arbitrary continuations, merged/perpetual states and gameplay AI choices remain open.",
+    "Selected versioned rules and local catalog records do not certify all current rules or every card."
+  ]
+}

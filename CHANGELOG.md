@@ -8,6 +8,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Rebind explicitly supported native expiration callbacks through the snapshot
+  identity map. Preserve ordered phase queues, player-bound deadlines, deferred
+  registrations and shared callback identity without sharing original closures.
+- Preserve temporary controller layers separately from baseline control; map
+  source/target links so theft and Sower effects can return control correctly.
+  Restore independent player keyword layers and chosen-number rules values while
+  keeping each card's existing public/secret number presentation.
+- Add eighteen native cases and eight fixed paid runtime witnesses for phase
+  progression, pumps, keywords, theft, leave-play effects, untapping, combat
+  boundaries, separate Kraj grants, Prelate cast restrictions and scheduler
+  contracts. Unconverted callback kinds remain omitted and are exposed by the
+  native copier's diagnostic API; this is not complete callback/card coverage.
+
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  220 focused native tests; 768 broader gameplay tests including those 220;
+  256 serialization tests; all 20 live integrations / 375 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned temporal-state
+  runtime, retaining previous builds and locks and exact before/after evidence.
+
+
 - Preserve canonical printed, keyword and granted ability identities in game
   snapshots, including independent costs, static references and optional
   replacement overrides. Retain activation/resolution counts, selected mode

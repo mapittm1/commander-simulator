@@ -20,7 +20,8 @@ without replaying cast events. A twelfth preserves active card forms, prototype 
 exile/effect provenance and the scheduled face-down-state reset. It also refreshes
 disguise keyword caches. A thirteenth preserves canonical trait graphs,
 activation/resolution and mode histories, mapped crew/saddle members and exact
-saddle counts. All thirteen patches are pinned. No remote branch is used at build time.
+saddle counts. A fourteenth maps explicit scheduled-effect callbacks and preserves control,
+player-keyword and numeric-choice state. All fourteen patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -36,8 +37,8 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-202 native sticker, chosen-color, companion, supplementary-copy, history,
-damage, participant, starting-life, paid-stack, cast-form and usage-history tests.
+220 native sticker, chosen-color, companion, supplementary-copy, history,
+damage, participant, starting-life, paid-stack, cast-form, usage-history and temporal-state tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -67,15 +68,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twelve regression source files and exactly three card-script
+The recipe pins thirteen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 750 gameplay and 256
+686 files verified against immutable source. The broader 768 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 202 focused tests are included in the 750.
+in `native_test_evidence.json`; the 220 focused tests are included in the 768.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -153,8 +154,9 @@ FaceGameCopyTest adds sixteen paid-action scenarios. Six packaged-runtime cases
 record all live-zone instances of each resolved card, so a leftover stack object
 cannot be hidden by selecting a convenient match. Oracle witnesses and the
 versioned Wizards rules reference are recorded separately from engine behavior.
-Only the marked face-down-state reset callback is reconstructed; this is not
-general Java callback/continuation copying or complete alternate-cost coverage.
+The cast-form patch initially reconstructed the marked face-down reset.
+The scheduled-effect patch below now maps it through the explicit command
+protocol. Arbitrary callbacks and complete alternate-cost coverage remain open.
 
 
 Usage-history validation is retained in [usage_state_evidence.json](usage_state_evidence.json).
@@ -162,4 +164,13 @@ UsageGameCopyTest adds sixteen cases; the packaged runtime has six paid
 witnesses with before-fix receipts. Printed, keyword and generated grant traits
 retain canonical keys while mutable history/cost collections remain independent.
 The synthetic null-override case checks a native replacement contract only.
-See the coverage document for unvalidated full-turn transitions and grant changes.
+The scheduled-effect cases below extend turn-transition and grant checks; see the coverage document for remaining gaps.
+
+
+Temporal-state validation is retained in [duration_state_evidence.json](duration_state_evidence.json).
+TurnUsageGameCopyTest adds eighteen cases and the packaged runtime has eight
+paid witnesses. Explicit callback implementations cover single/mass Pump,
+player-keyword expiration, ControlGain return/keyword removal and the face-down
+reset. Unconverted commands in scanned queues remain omitted and reported by
+the native copier API. This diagnostic is not yet aggregated into CLI simulation
+reports. See the coverage document for the exact queue and phase-advancement limits.

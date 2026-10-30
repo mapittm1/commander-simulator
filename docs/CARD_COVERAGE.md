@@ -120,10 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **750 native tests in 68 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 202 focused
+The reviewed patched source also passes **768 native tests in 69 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 220 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life, paid-stack, cast-form and usage-history tests; these counts must not be added together.
+starting-life, paid-stack, cast-form, usage-history and scheduled-state tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -535,9 +535,10 @@ broader native regressions and packaged integration evidence in
 [stack_state_evidence.json](../engine/stack_state_evidence.json).
 
 These are snapshots at settled action points, not suspended Java continuations
-during an effect's execution. Arbitrary event container graphs, delayed callbacks,
-unlisted casting forms, all once-per-turn ability identities and all
-mana-spending restrictions still require separate validation. No claim of complete
+during an effect's execution. Subsequent sections cover selected cast forms,
+usage identities and scheduled effects. Arbitrary event graphs, unconverted
+callbacks, remaining forms/identities and all mana-spending restrictions still
+require separate validation. No claim of complete
 card or AI correctness follows from these tests or the catalog construction count.
 
 Paid-stack build verification: **399 offline tests / 508 subtests**, all Python
@@ -583,9 +584,10 @@ effective September 25, 2026: 702.21a, 702.103e, 702.168b/d, 709.3b,
 hashes are recorded in [cast-form evidence](../engine/cast_form_evidence.json).
 This is a check of these rules and witnesses, not a complete current-rules audit.
 
-Other callback kinds, merged/mutated object groups, specialized or perpetual
-states, every alternate-cost mechanic, all hidden-view identifiers and AI policy
-choices still require separate validation. These tests do not certify every
+The scheduled-effect work below additionally maps selected expiration callbacks.
+Remaining callback kinds, merged/mutated groups, specialized/perpetual states,
+every alternate-cost mechanic, all hidden-view identifiers and AI policy choices
+still require separate validation. These tests do not certify every
 card or interaction.
 
 Cast-form build verification: **399 offline tests / 508 subtests**, all Python
@@ -620,10 +622,10 @@ repeated Galadriel modes and lost saddle count/member provenance. Source and
 copied worlds are observed independently. Fixture names, costs and restrictions
 are checked against the retained local Scryfall catalog.
 
-This does not certify every restriction or generated grant. The counter/mode
-reset tests call native reset primitives; they do not exercise a full turn
-transition. Cross-controller limits, multiple identical grants from different
-sources, grant removal/reacquisition, combat-mode rollover, every keyword cost
+This does not certify every restriction or generated grant. These initial reset
+cases use native primitives. The scheduled-effect cases below add actual phase
+transitions, one same-turn controller change and separate Rootwalla grants.
+Grant removal/reacquisition, combat-mode history rollover, every keyword cost
 subclass and arbitrary suspended continuations remain unvalidated. Crew/saddle
 member provenance is distinct from proving every attack-trigger outcome.
 
@@ -635,3 +637,58 @@ including those 202, **256 serialization tests**, and **19 live integrations /
 identities**, with seven non-starting meld-result exclusions. Exact source,
 before/after witnesses, rule/catalog references and runtime hashes are retained
 in [usage-history evidence](../engine/usage_state_evidence.json).
+
+## Scheduled effects and temporal state
+
+Resolved effects have future obligations as well as visible current state. The
+scheduled-effect snapshot patch uses an explicit SnapshotCommand protocol:
+supported callbacks create new objects with references rebound through the same
+identity map used for cards, players and abilities. It uses no reflective cloning,
+deserialization or execution of original callbacks while copying.
+
+Single and mass Pump expirations, player-keyword expirations, ControlGain return
+and keyword-removal callbacks, and the marked face-down reset implement this
+protocol. Phase queues preserve order, aliases, player deadlines and deferred
+registration. Card event queues preserve the supported untap, unattach,
+face-up/down, controller-change, phase-out and leave-play callbacks. Existing
+baseline controller/timestamp and temporary control layers stay separate.
+Player keyword layers and their effect-card traits are independent. Chosen-number
+rules state and its existing card-view string are restored separately.
+
+Eighteen native cases include real mana payment and actual turn/cleanup,
+untap, leave-play and combat boundaries. They cover Rootwalla, Overrun, Jump,
+Giant Growth, Take Up the Shield, Act of Treason, Sower of Temptation, Gilded
+Light, Endoskeleton/Dramatic Reversal, Battering Ram, Galadriel and separate
+Rootwalla abilities gained by Experiment Kraj. A paid Sanctum Prelate uses a
+fixed legal player choice of two, rejects Rampant Growth through actual casting,
+and admits and resolves Ponder and Grizzly Bears. Synthetic contracts separately
+check scheduler ordering/aliases, unsupported-callback reporting and secret
+number-view preservation; they are not printed-card behavior claims.
+
+Eight packaged witnesses use ordinary native payment. The four-turn activation
+case already passed on the previous build and remains a positive control.
+Phase advancement runs
+native cleanup/untap/upkeep/draw/turn-order hooks, with a bounded resolver; it does
+not offer response priority. The packaged Prelate case observes the native AI's
+legal numeric choice, while the native Java case controls choice two and checks
+the resulting cast restrictions.
+
+Unconverted callbacks in these queues are deliberately never shared with the source.
+They remain omitted, as in the earlier copier, and are listed by
+GameCopier.getUnmappedSnapshotCommands(). The normal simulation report does
+not yet aggregate this API. Empty diagnostics in these fixed witnesses do not
+certify all callbacks. Other effect implementations, two-turn wrapper callbacks,
+state-based-action command queues, conditional static-command arrays, delayed
+triggers, extra-turn/phase scheduling, merged/perpetual objects and arbitrary
+mid-resolution continuations require separate implementation and validation.
+The gameplay AI's choice quality and complete hidden-information views also
+remain outside this milestone.
+
+
+Scheduled-state verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **220 focused native tests**, **768 broader gameplay tests**
+including those 220, **256 serialization tests**, **20 live integrations /
+375 subtests**, and **32,109 matched native constructions** pass. Seven
+non-starting meld-result identities retain their separate interaction checks.
+[Temporal-state evidence](../engine/duration_state_evidence.json) binds the exact
+runtime, source, before/after witnesses, test hashes and rule/catalog references.

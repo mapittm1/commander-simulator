@@ -1,0 +1,535 @@
+--- /dev/null
++++ b/forge-game/src/main/java/forge/game/SnapshotCommand.java
+@@ -0,0 +1,9 @@
++package forge.game;
++
++import forge.GameCommand;
++import forge.game.spellability.SpellAbilitySnapshot;
++
++/** A trusted native callback that explicitly declares how its references are rebound. */
++public interface SnapshotCommand extends GameCommand {
++    SnapshotCommand copyForSnapshot(SpellAbilitySnapshot context);
++}
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
+@@ -440,4 +440,40 @@
+                     columnMapper.apply(cell.getColumnKey()), valueMapper.apply(cell.getValue()));
+         }
+     }
++
++    private final java.util.Set<String> unmappedCommands = new java.util.LinkedHashSet<>();
++
++    /** Unsupported callback kinds are reported rather than shared across worlds. */
++    public List<String> getUnmappedCommands() {
++        return List.copyOf(unmappedCommands);
++    }
++
++    public forge.GameCommand command(forge.GameCommand source, String location) {
++        if (source == forge.GameCommand.BLANK) {
++            return source;
++        }
++        forge.GameCommand saved = (forge.GameCommand) objects.get(source);
++        if (saved != null) {
++            return saved;
++        }
++        if (source instanceof forge.game.SnapshotCommand command) {
++            forge.GameCommand result = command.copyForSnapshot(this);
++            objects.put(source, result);
++            return result;
++        }
++        unmappedCommands.add(location + ": " + source.getClass().getName());
++        return null;
++    }
++
++    /** Retain queue order and aliases; never execute source closures while copying. */
++    public void copyCommands(Iterable<forge.GameCommand> source,
++            java.util.Collection<forge.GameCommand> target, String location) {
++        target.clear();
++        for (forge.GameCommand original : source) {
++            forge.GameCommand mapped = command(original, location);
++            if (mapped != null) {
++                target.add(mapped);
++            }
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/phase/Phase.java
++++ b/forge-game/src/main/java/forge/game/phase/Phase.java
+@@ -144,4 +144,23 @@
+         events.forEach(GameCommand::run);
+         list.removeAll(events);
+     }
++
++    /** Copy the exact due queues, including player-bound and deferred registration queues. */
++    public void copySnapshotCommandsFrom(Phase original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        clearCommands();
++        context.copyCommands(original.at, at, type + ".at");
++        context.copyCommands(original.until, until, type + ".until");
++        copySnapshotPlayerCommands(original.untilMap, untilMap, context, type + ".untilPlayer");
++        copySnapshotPlayerCommands(original.untilEndMap, untilEndMap, context, type + ".untilEnd");
++        copySnapshotPlayerCommands(original.registerMap, registerMap, context, type + ".registerEnd");
++    }
++
++    private static void copySnapshotPlayerCommands(Multimap<Player, GameCommand> original,
++            Multimap<Player, GameCommand> target,
++            forge.game.spellability.SpellAbilitySnapshot context, String location) {
++        for (Player player : original.keySet()) {
++            context.copyCommands(original.get(player), target.get(context.map(player)), location);
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8359,9 +8359,7 @@
+             applyBestowForm(original.bestowTimestamp, false);
+         }
+         updateKeywordsCache();
+-        if (original.faceDownStateResetPending) {
+-            scheduleFaceDownStateReset();
+-        }
++        faceDownStateResetPending = original.faceDownStateResetPending;
+         updateStateForView();
+     }
+ 
+@@ -8371,15 +8369,7 @@
+             return;
+         }
+         faceDownStateResetPending = true;
+-        addFaceupCommand(new GameCommand() {
+-            private static final long serialVersionUID = 1L;
+-
+-            @Override
+-            public void run() {
+-                clearStates(CardStateName.FaceDown, true);
+-                faceDownStateResetPending = false;
+-            }
+-        });
++        addFaceupCommand(new FaceDownResetCommand(this));
+     }
+ 
+     /** Remap clone, exile and effect provenance after structural forms exist. */
+@@ -8502,4 +8492,60 @@
+             counterTypeKeywordStatic.put(entry.getKey(), context.staticAbility(entry.getValue()));
+         }
+     }
++
++    private static final class FaceDownResetCommand implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++
++        private FaceDownResetCommand(Card card) {
++            this.card = card;
++        }
++
++        @Override
++        public void run() {
++            card.clearStates(CardStateName.FaceDown, true);
++            card.faceDownStateResetPending = false;
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new FaceDownResetCommand(context.map(card));
++        }
++    }
++
++    public void copySnapshotCommandsFrom(Card original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        context.copyCommands(original.untapCommandList, untapCommandList, "card.untap");
++        context.copyCommands(original.unattachCommandList, unattachCommandList, "card.unattach");
++        context.copyCommands(original.faceupCommandList, faceupCommandList, "card.faceup");
++        context.copyCommands(original.facedownCommandList, facedownCommandList, "card.facedown");
++        context.copyCommands(original.changeControllerCommandList, changeControllerCommandList,
++                "card.controller");
++        context.copyCommands(original.phaseOutCommandList, phaseOutCommandList, "card.phaseOut");
++        context.copyCommands(original.leavePlayCommandList, leavePlayCommandList, "card.leave");
++    }
++
++    /** Keep baseline and temporary control layers separate; copying is not a control-change event. */
++    public void copySnapshotControlFrom(Card original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        controller = context.map(original.controller);
++        controllerTimestamp = original.controllerTimestamp;
++        tempControllers = Maps.newTreeMap();
++        for (Map.Entry<Long, Player> entry : original.tempControllers.entrySet()) {
++            tempControllers.put(entry.getKey(), context.map(entry.getValue()));
++        }
++        gainControlTargets = null;
++        view.set(TrackableProperty.GainControlTargets, null);
++        for (Card target : context.cards(original.getGainControlTargets())) {
++            addGainControlTarget(target);
++        }
++        view.updateController(this);
++    }
++
++    /** Preserve the rules value and its existing public/secret presentation independently. */
++    public void copySnapshotNumberFrom(Card original) {
++        chosenNumber = original.chosenNumber;
++        view.set(TrackableProperty.ChosenNumber, original.view.getChosenNumber());
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/PumpEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PumpEffect.java
+@@ -93,29 +93,8 @@
+ 
+         if (!"Permanent".equals(duration) && !perpetual) {
+             // If not Permanent, remove Pumped at EOT
+-            final GameCommand untilEOT = new GameCommand() {
+-                private static final long serialVersionUID = -42244224L;
+-
+-                @Override
+-                public void run() {
+-                    host.removeGainControlTargets(gameCard);
+-
+-                    gameCard.removePTBoost(timestamp, 0);
+-                    boolean updateText = gameCard.removeCanBlockAny(timestamp);
+-                    updateText |= gameCard.removeCanBlockAdditional(timestamp);
+-
+-                    if (keywords.size() > 0) {
+-                        gameCard.removeHiddenExtrinsicKeywords(timestamp, 0);
+-                        gameCard.removeChangedCardKeywords(timestamp, 0);
+-                    }
+-                    gameCard.updatePTforView();
+-                    if (updateText) {
+-                        gameCard.updateAbilityTextForView();
+-                    }
+-
+-                    game.fireEvent(new GameEventCardStatsChanged(gameCard));
+-                }
+-            };
++            final GameCommand untilEOT =
++                    new CardPumpRemoval(host, gameCard, timestamp, !keywords.isEmpty());
+             if ("UntilUntaps".equals(duration)) {
+                 host.addGainControlTarget(gameCard);
+             }
+@@ -134,14 +113,7 @@
+ 
+         if (!"Permanent".equals(duration)) {
+             // If not Permanent, remove Pumped at EOT
+-            final GameCommand untilEOT = new GameCommand() {
+-                private static final long serialVersionUID = -32453460L;
+-
+-                @Override
+-                public void run() {
+-                    p.removeChangedKeywords(timestamp, 0);
+-                }
+-            };
++            final GameCommand untilEOT = new PlayerPumpRemoval(p, timestamp);
+             addUntilCommand(sa, untilEOT);
+         }
+     }
+@@ -505,4 +477,65 @@
+ 
+         replaceDying(sa);
+     }
++
++    /** Expiration data stays explicit so a snapshot never retains an original-game closure. */
++    private static final class CardPumpRemoval implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card host;
++        private final Card target;
++        private final long timestamp;
++        private final boolean removeKeywords;
++
++        private CardPumpRemoval(Card host, Card target, long timestamp, boolean removeKeywords) {
++            this.host = host;
++            this.target = target;
++            this.timestamp = timestamp;
++            this.removeKeywords = removeKeywords;
++        }
++
++        @Override
++        public void run() {
++            host.removeGainControlTargets(target);
++            target.removePTBoost(timestamp, 0);
++            boolean updateText = target.removeCanBlockAny(timestamp);
++            updateText |= target.removeCanBlockAdditional(timestamp);
++            if (removeKeywords) {
++                target.removeHiddenExtrinsicKeywords(timestamp, 0);
++                target.removeChangedCardKeywords(timestamp, 0);
++            }
++            target.updatePTforView();
++            if (updateText) {
++                target.updateAbilityTextForView();
++            }
++            target.getGame().fireEvent(new GameEventCardStatsChanged(target));
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new CardPumpRemoval(context.map(host), context.map(target), timestamp, removeKeywords);
++        }
++    }
++
++    private static final class PlayerPumpRemoval implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Player target;
++        private final long timestamp;
++
++        private PlayerPumpRemoval(Player target, long timestamp) {
++            this.target = target;
++            this.timestamp = timestamp;
++        }
++
++        @Override
++        public void run() {
++            target.removeChangedKeywords(timestamp, 0);
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new PlayerPumpRemoval(context.map(target), timestamp);
++        }
++    }
+ }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -257,8 +257,21 @@
+             entry.getValue().copySnapshotUsageFrom(entry.getKey(), context);
+         }
+         abilitySnapshot = context;
+-        for (Map.Entry<Player, Player> entry : playerMap.entrySet())
++        for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
++            entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
++        }
++        for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
++            entry.getValue().copySnapshotNumberFrom(entry.getKey());
++            entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotCommandsFrom(entry.getKey(), context);
++        }
++        newGame.getUntap().copySnapshotCommandsFrom(origGame.getUntap(), context);
++        newGame.getUpkeep().copySnapshotCommandsFrom(origGame.getUpkeep(), context);
++        newGame.getBeginOfCombat().copySnapshotCommandsFrom(origGame.getBeginOfCombat(), context);
++        newGame.getEndOfCombat().copySnapshotCommandsFrom(origGame.getEndOfCombat(), context);
++        newGame.getEndOfTurn().copySnapshotCommandsFrom(origGame.getEndOfTurn(), context);
++        newGame.getCleanup().copySnapshotCommandsFrom(origGame.getCleanup(), context);
+         newGame.getStack().restoreSnapshotFrom(origGame.getStack(), context, copyStack);
+         stackMap.putAll(context.getAbilityCopies());
+     }
+@@ -662,4 +675,9 @@
+         // TODO: Have only one GameObject map?
+         return playerMap.inverse().get(o);
+     }
++
++    /** Callback kinds still needing explicit implementations; never treated as proof of coverage. */
++    public List<String> getUnmappedSnapshotCommands() {
++        return abilitySnapshot == null ? List.of() : abilitySnapshot.getUnmappedCommands();
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/PumpAllEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PumpAllEffect.java
+@@ -75,20 +75,7 @@
+ 
+             if (!"Permanent".equals(sa.getParam("Duration")) && !perpetual) {
+                 // If not Permanent, remove Pumped at EOT
+-                final GameCommand untilEOT = new GameCommand() {
+-                    private static final long serialVersionUID = 5415795460189457660L;
+-
+-                    @Override
+-                    public void run() {
+-                        tgtC.removePTBoost(timestamp, 0);
+-                        tgtC.removeChangedCardKeywords(timestamp, 0);
+-                        tgtC.removeHiddenExtrinsicKeywords(timestamp, 0);
+-
+-                        tgtC.updatePTforView();
+-
+-                        game.fireEvent(new GameEventCardStatsChanged(tgtC));
+-                    }
+-                };
++                final GameCommand untilEOT = new PumpAllRemoval(tgtC, timestamp);
+                 addUntilCommand(sa, untilEOT);
+             }
+ 
+@@ -160,4 +147,30 @@
+         replaceDying(sa);
+     }
+ 
++
++    private static final class PumpAllRemoval implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card target;
++        private final long timestamp;
++
++        private PumpAllRemoval(Card target, long timestamp) {
++            this.target = target;
++            this.timestamp = timestamp;
++        }
++
++        @Override
++        public void run() {
++            target.removePTBoost(timestamp, 0);
++            target.removeChangedCardKeywords(timestamp, 0);
++            target.removeHiddenExtrinsicKeywords(timestamp, 0);
++            target.updatePTforView();
++            target.getGame().fireEvent(new GameEventCardStatsChanged(target));
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new PumpAllRemoval(context.map(target), timestamp);
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/ControlGainEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ControlGainEffect.java
+@@ -210,14 +210,7 @@
+ 
+             if (keywords != null) {
+                 // Add keywords only until end of turn
+-                final GameCommand untilKeywordEOT = new GameCommand() {
+-                    private static final long serialVersionUID = -42244224L;
+-
+-                    @Override
+-                    public void run() {
+-                        tgtC.removeChangedCardKeywords(tStamp, 0);
+-                    }
+-                };
++                final GameCommand untilKeywordEOT = new ControlKeywordRemoval(tgtC, tStamp);
+                 game.getEndOfTurn().addUntil(untilKeywordEOT);
+             }
+ 
+@@ -245,24 +238,7 @@
+      * @return a {@link forge.GameCommand} object.
+      */
+     private static GameCommand getLoseControlCommand(final Card c, final long tStamp, final Card host) {
+-        final GameCommand loseControl = new GameCommand() {
+-            private static final long serialVersionUID = 878543373519872418L;
+-
+-            @Override
+-            public void run() {
+-                if (StaticAbilityCantGainControl.cantGainControl(c)) {
+-                    return;
+-                }
+-                if (c.isInPlay()) {
+-                    c.removeTempController(tStamp);
+-                    c.getGame().getAction().controllerChangeZoneCorrection(c);
+-                }
+-                host.removeGainControlTargets(c);
+-                c.removeChangedSVars(tStamp, 0);
+-            }
+-        };
+-
+-        return loseControl;
++        return new ControlRemoval(c, tStamp, host);
+     }
+ 
+     private CardCollectionView getDefinedCards(final SpellAbility sa) {
+@@ -272,4 +248,58 @@
+         }
+         return getDefinedCardsOrTargeted(sa);
+     }
++
++    private static final class ControlRemoval implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card target;
++        private final long timestamp;
++        private final Card host;
++
++        private ControlRemoval(Card target, long timestamp, Card host) {
++            this.target = target;
++            this.timestamp = timestamp;
++            this.host = host;
++        }
++
++        @Override
++        public void run() {
++            if (StaticAbilityCantGainControl.cantGainControl(target)) {
++                return;
++            }
++            if (target.isInPlay()) {
++                target.removeTempController(timestamp);
++                target.getGame().getAction().controllerChangeZoneCorrection(target);
++            }
++            host.removeGainControlTargets(target);
++            target.removeChangedSVars(timestamp, 0);
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new ControlRemoval(context.map(target), timestamp, context.map(host));
++        }
++    }
++
++    private static final class ControlKeywordRemoval implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card target;
++        private final long timestamp;
++
++        private ControlKeywordRemoval(Card target, long timestamp) {
++            this.target = target;
++            this.timestamp = timestamp;
++        }
++
++        @Override
++        public void run() {
++            target.removeChangedCardKeywords(timestamp, 0);
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new ControlKeywordRemoval(context.map(target), timestamp);
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/keyword/KeywordsChange.java
++++ b/forge-game/src/main/java/forge/game/keyword/KeywordsChange.java
+@@ -194,4 +194,19 @@
+         sb.append(">");
+         return sb.toString();
+     }
++
++    /** Copy keyword instances through the same identity map as their effect-card traits. */
++    public KeywordsChange copyForSnapshot(Card host,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        KeywordsChange result = new KeywordsChange(
++                (Iterable<forge.game.keyword.KeywordInterface>) null,
++                new java.util.ArrayList<>(removeKeywords), removeAllKeywords);
++        for (KeywordInterface keyword : keywords) {
++            result.keywords.insert(context.keyword(keyword, host));
++        }
++        for (KeywordInterface keyword : removeKeywordInterfaces) {
++            result.removeKeywordInterfaces.insert(context.keyword(keyword, host));
++        }
++        return result;
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -4140,4 +4140,29 @@
+     public boolean hasAllElementBend() {
+         return elementalBendThisTurn.size() >= 4;
+     }
++
++    /** Restore existing keyword layers without firing gain events or allocating effect cards. */
++    public void copySnapshotKeywordsFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        changedKeywords = TreeBasedTable.create();
++        for (Table.Cell<Long, Long, IKeywordsChange> cell : original.changedKeywords.cellSet()) {
++            if (!(cell.getValue() instanceof KeywordsChange change)) {
++                throw new IllegalStateException("Unmapped player keyword change: "
++                        + cell.getValue().getClass().getName());
++            }
++            changedKeywords.put(cell.getRowKey(), cell.getColumnKey(),
++                    change.copyForSnapshot(keywordEffect, context));
++        }
++        storedKeywords.clear();
++        for (Table.Cell<Long, String, KeywordInterface> cell : original.storedKeywords.cellSet()) {
++            storedKeywords.put(cell.getRowKey(), cell.getColumnKey(),
++                    context.keyword(cell.getValue(), keywordEffect));
++        }
++        keywords = new KeywordCollection();
++        keywords.applyChanges(changedKeywords.values());
++        view.updateKeywords(this);
++        if (keywordEffect != null) {
++            updateKeywordCardAbilityText();
++        }
++    }
+ }
