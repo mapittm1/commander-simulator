@@ -1,0 +1,261 @@
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerWaiting.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerWaiting.java
+@@ -79,4 +79,26 @@
+     public String toString() {
+         return TextUtil.concatWithSpace("Waiting trigger:", mode.toString(),"with", params.toString());
+     }
++
++    /** Keep collection-time controllers and multipliers, not their later recomputed values. */
++    @SuppressWarnings("unchecked")
++    public TriggerWaiting copyForSnapshot(
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        // The source is an AbilityKey map; the shared mapper rebinds nested payload references.
++        Map<AbilityKey, Object> copiedParams = (Map<AbilityKey, Object>) context.data(params);
++        TriggerWaiting result = new TriggerWaiting(mode, copiedParams);
++        if (triggers != null) {
++            result.triggers = Maps.newLinkedHashMap();
++            for (Map.Entry<Trigger, Player> entry : triggers.entrySet()) {
++                result.triggers.put(context.trigger(entry.getKey()), context.map(entry.getValue()));
++            }
++        }
++        if (additionalTriggers != null) {
++            result.additionalTriggers = Maps.newHashMap();
++            for (Map.Entry<Trigger, Integer> entry : additionalTriggers.entrySet()) {
++                result.additionalTriggers.put(context.trigger(entry.getKey()), entry.getValue());
++            }
++        }
++        return result;
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -611,4 +611,28 @@
+         // run all ChangesZone
+         runWaitingTriggers();
+     }
++
++    /** Restore future and not-yet-stacked events without replaying their original actions. */
++    public void copySnapshotStateFrom(TriggerHandler original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        delayedTriggers.clear();
++        for (Trigger trigger : original.delayedTriggers) {
++            delayedTriggers.add(context.trigger(trigger));
++        }
++        thisTurnDelayedTriggers.clear();
++        for (Trigger trigger : original.thisTurnDelayedTriggers) {
++            thisTurnDelayedTriggers.add(context.trigger(trigger));
++        }
++        playerDefinedDelayedTriggers.clear();
++        for (Map.Entry<Player, Trigger> entry : original.playerDefinedDelayedTriggers.entries()) {
++            playerDefinedDelayedTriggers.put(context.map(entry.getKey()), context.trigger(entry.getValue()));
++        }
++        waitingTriggers.clear();
++        for (TriggerWaiting waiting : original.waitingTriggers) {
++            waitingTriggers.add(waiting.copyForSnapshot(context));
++        }
++        suppressedModes.clear();
++        suppressedModes.addAll(original.suppressedModes);
++        allSuppressed = original.allSuppressed;
++    }
+ }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -238,6 +238,7 @@
+             }
+         };
+         forge.game.spellability.SpellAbilitySnapshot context = new forge.game.spellability.SpellAbilitySnapshot(objects, combatBands);
++        context.bindCostStack(origGame.costPaymentStack, newGame.costPaymentStack);
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+             entry.getValue().bindSnapshotStatesFrom(entry.getKey(), context);
+         }
+@@ -273,6 +274,8 @@
+         newGame.getEndOfTurn().copySnapshotCommandsFrom(origGame.getEndOfTurn(), context);
+         newGame.getCleanup().copySnapshotCommandsFrom(origGame.getCleanup(), context);
+         newGame.getStack().restoreSnapshotFrom(origGame.getStack(), context, copyStack);
++        newGame.costPaymentStack.copySnapshotStateFrom(origGame.costPaymentStack, context);
++        newGame.getTriggerHandler().copySnapshotStateFrom(origGame.getTriggerHandler(), context);
+         stackMap.putAll(context.getAbilityCopies());
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/DelayedTriggerEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DelayedTriggerEffect.java
+@@ -87,11 +87,40 @@
+         } else if (mapParams.containsKey("ThisTurn")) {
+             trigHandler.registerThisTurnDelayedTrigger(delTrig);
+         } else if (mapParams.containsKey("NextTurn")) {
+-            game.getCleanup().addUntil(() -> trigHandler.registerThisTurnDelayedTrigger(delTrig));
++            game.getCleanup().addUntil(new RegisterDelayedCommand(game, delTrig, true));
+         }  else if (mapParams.containsKey("UpcomingTurn")) {
+-            game.getCleanup().addUntil(() -> trigHandler.registerDelayedTrigger(delTrig));
++            game.getCleanup().addUntil(new RegisterDelayedCommand(game, delTrig, false));
+         } else {
+             trigHandler.registerDelayedTrigger(delTrig);
+         }
+     }
++
++    /** Registration itself is a future obligation, not an original-game closure. */
++    private static final class RegisterDelayedCommand implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Game game;
++        private final Trigger trigger;
++        private final boolean thisTurnOnly;
++
++        private RegisterDelayedCommand(Game game, Trigger trigger, boolean thisTurnOnly) {
++            this.game = game;
++            this.trigger = trigger;
++            this.thisTurnOnly = thisTurnOnly;
++        }
++
++        @Override
++        public void run() {
++            if (thisTurnOnly) {
++                game.getTriggerHandler().registerThisTurnDelayedTrigger(trigger);
++            } else {
++                game.getTriggerHandler().registerDelayedTrigger(trigger);
++            }
++        }
++
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new RegisterDelayedCommand(context.getGame(), context.trigger(trigger), thisTurnOnly);
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -44,9 +44,10 @@
+  * @version $Id$
+  */
+ public class CostPayment extends ManaConversionMatrix {
+-    private final Cost cost;
++    // Snapshot receipts are populated in two stages so cyclic ability references can be rebound.
++    private Cost cost;
+     private Cost adjustedCost;
+-    private final SpellAbility ability;
++    private SpellAbility ability;
+     private final List<CostPart> paidCostParts = Lists.newArrayList();
+ 
+     /**
+@@ -364,4 +365,19 @@
+         }
+         return true;
+     }
++
++    /** Restore a receipt, not an executable continuation of a payment decision process. */
++    public void copySnapshotStateFrom(CostPayment original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        cost = context.cost(original.cost);
++        adjustedCost = context.cost(original.adjustedCost);
++        ability = context.copy(original.ability);
++        paidCostParts.clear();
++        for (CostPart part : original.paidCostParts) {
++            paidCostParts.add(context.costPart(part));
++        }
++        colorConversionMatrix = original.colorConversionMatrix.clone();
++        colorRestrictionMatrix = original.colorRestrictionMatrix.clone();
++        snowForColor = original.snowForColor;
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/cost/Cost.java
++++ b/forge-game/src/main/java/forge/game/cost/Cost.java
+@@ -1141,7 +1141,7 @@
+ 
+     public void copySnapshotStateFrom(Cost original, forge.game.spellability.SpellAbilitySnapshot context) {
+         for (int index = 0; index < original.costParts.size(); index++) {
+-            costParts.get(index).copySnapshotStateFrom(original.costParts.get(index), context);
++            costParts.set(index, context.costPart(original.costParts.get(index)));
+         }
+     }
+ }
+--- a/forge-game/src/main/java/forge/game/zone/CostPaymentStack.java
++++ b/forge-game/src/main/java/forge/game/zone/CostPaymentStack.java
+@@ -50,4 +50,12 @@
+     public record Entry(CostPart cost, CostPayment payment) {
+ 
+     }
++
++    public void copySnapshotStateFrom(CostPaymentStack original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        stack.clear();
++        for (Entry entry : original.stack) {
++            stack.add(context.costEntry(entry));
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
+@@ -273,6 +273,18 @@
+         if (source instanceof forge.game.cost.Cost cost) {
+             return cost.copyForSnapshot(this);
+         }
++        if (source instanceof forge.game.zone.CostPaymentStack.Entry entry) {
++            return costEntry(entry);
++        }
++        if (source instanceof forge.game.zone.CostPaymentStack stack) {
++            return costStack(stack);
++        }
++        if (source instanceof forge.game.cost.CostPayment payment) {
++            return payment(payment);
++        }
++        if (source instanceof forge.game.cost.CostPart part) {
++            return costPart(part);
++        }
+         if (source instanceof GameObject object) {
+             return map(object);
+         }
+@@ -476,4 +488,54 @@
+             }
+         }
+     }
++
++    public forge.game.cost.CostPart costPart(forge.game.cost.CostPart source) {
++        if (source == null) return null;
++        forge.game.cost.CostPart saved = (forge.game.cost.CostPart) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.cost.CostPart result = source.copy();
++        objects.put(source, result);
++        result.copySnapshotStateFrom(source, this);
++        return result;
++    }
++
++    public forge.game.cost.CostPayment payment(forge.game.cost.CostPayment source) {
++        if (source == null) return null;
++        forge.game.cost.CostPayment saved = (forge.game.cost.CostPayment) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.cost.CostPayment result = new forge.game.cost.CostPayment(null, null);
++        objects.put(source, result);
++        result.copySnapshotStateFrom(source, this);
++        return result;
++    }
++
++    public forge.game.zone.CostPaymentStack.Entry costEntry(
++            forge.game.zone.CostPaymentStack.Entry source) {
++        forge.game.zone.CostPaymentStack.Entry saved =
++                (forge.game.zone.CostPaymentStack.Entry) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.cost.CostPart part = costPart(source.cost());
++        forge.game.cost.CostPayment payment = payment(source.payment());
++        // A nested ability can have reached this immutable wrapper while its components were restored.
++        saved = (forge.game.zone.CostPaymentStack.Entry) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.zone.CostPaymentStack.Entry result =
++                new forge.game.zone.CostPaymentStack.Entry(part, payment);
++        objects.put(source, result);
++        return result;
++    }
++
++    public void bindCostStack(forge.game.zone.CostPaymentStack source,
++            forge.game.zone.CostPaymentStack target) {
++        objects.put(source, target);
++    }
++
++    public forge.game.zone.CostPaymentStack costStack(forge.game.zone.CostPaymentStack source) {
++        forge.game.zone.CostPaymentStack saved = (forge.game.zone.CostPaymentStack) objects.get(source);
++        if (saved != null) return saved;
++        forge.game.zone.CostPaymentStack result = new forge.game.zone.CostPaymentStack();
++        objects.put(source, result);
++        result.copySnapshotStateFrom(source, this);
++        return result;
++    }
+ }

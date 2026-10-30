@@ -120,10 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **768 native tests in 69 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 220 focused
+The reviewed patched source also passes **789 native tests in 70 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 241 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life, paid-stack, cast-form, usage-history and scheduled-state tests; these counts must not be added together.
+starting-life, paid-stack, cast-form, usage-history, scheduled-state and delayed-trigger tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -678,8 +678,8 @@ They remain omitted, as in the earlier copier, and are listed by
 GameCopier.getUnmappedSnapshotCommands(). The normal simulation report does
 not yet aggregate this API. Empty diagnostics in these fixed witnesses do not
 certify all callbacks. Other effect implementations, two-turn wrapper callbacks,
-state-based-action command queues, conditional static-command arrays, delayed
-triggers, extra-turn/phase scheduling, merged/perpetual objects and arbitrary
+state-based-action command queues, conditional static-command arrays,
+extra-turn/phase scheduling, merged/perpetual objects and arbitrary
 mid-resolution continuations require separate implementation and validation.
 The gameplay AI's choice quality and complete hidden-information views also
 remain outside this milestone.
@@ -692,3 +692,53 @@ including those 220, **256 serialization tests**, **20 live integrations /
 non-starting meld-result identities retain their separate interaction checks.
 [Temporal-state evidence](../engine/duration_state_evidence.json) binds the exact
 runtime, source, before/after witnesses, test hashes and rule/catalog references.
+
+
+## Delayed-trigger snapshots
+
+Future triggers are restored through the same identity map as paid abilities and
+scheduled commands. The handler retains ordinary delayed triggers, turn-limited
+aliases, player-defined registrations, waiting events and suppression flags.
+Waiting events preserve their collection-time controller and extra-trigger count;
+later control changes or removal of Panharmonicon do not rewrite those facts.
+Active printed-card triggers are still rebuilt from the copied board.
+
+Deferred registration at cleanup uses an explicit mapped command, so a next-turn
+slowtrip registers in the copied game. Ordinary future registration and next-turn
+windows retain their different lifetimes. Payment receipts in held events are
+copied with canonical cost/ability/part references, historical paid-card state,
+matrix flags and independent conversion/restriction arrays. The copied global
+cost stack is bound to event references; receipts are not resumed payment dialogs.
+
+Twenty-one native cases cover real paid Kiki-Jiki token creation with the source
+alive or dead, Ghostway returns, payable/unpayable Pact debt and one-shot payment,
+Sneak Attack with blink and late-end-step controls, Infuse, Ephemerate and
+Visionary, and Suppress before/after its player's registration turn. Synthetic
+contracts separately check held-event controllers/multipliers, nested payload
+independence, suppression, registration lifetimes and cost-receipt aliases/matrices.
+These contracts do not represent custom printed cards or suspended payment execution.
+
+Nine packaged witnesses compare resolved future behavior and source independence.
+Before-fix receipts retain tokens, strand exiled cards, lose debts/draws and omit
+deferred registration. Rebound is checked through a real second blink/draw,
+graveyard destination and untapped lands after the free cast. Phase advancement
+runs native hooks with a bounded resolver and no response priority.
+
+These are selected delayed-trigger checks. Unknown mutable event payload types
+remain rejected by the mapper. This does not certify all trigger conditions,
+APNAP ordering, replacement/doubling effects, hidden views, multiplayer loss
+interactions, countering delayed triggers, all cost subclasses or payment
+continuations. Other callback kinds, state-based command queues, conditional
+static-command arrays, extra turns/phases and merged/perpetual state remain open.
+The native unmapped-command diagnostic still scans only the queues described
+above and is not aggregated into normal CLI simulation reports.
+
+
+Delayed-trigger verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **241 focused native tests**, **789 broader gameplay tests**
+including those 241, **256 serialization tests**, **21 live integrations /
+384 subtests**, and **32,109 matched native constructions** pass.
+[Delayed-trigger evidence](../engine/delayed_state_evidence.json) binds the exact
+runtime, source, corrected bounded trigger-drain helper, before/after witnesses,
+test hashes and selected rule/catalog references. Generic payload map/list copies
+do not establish arbitrary container alias or cycle preservation.

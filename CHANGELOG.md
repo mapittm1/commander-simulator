@@ -8,6 +8,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve delayed, turn-limited, player-defined and waiting trigger queues through
+  snapshots without replaying source events. Map remembered incarnations, spawned
+  abilities, captured controllers, extra-trigger counts and suppression flags.
+- Replace deferred delayed-trigger registration closures with explicitly mapped
+  callbacks. Retain cost-payment receipts, individual parts and global stack
+  aliases, including independent conversion/restriction matrices and paid history.
+- Add 21 native cases and nine paid runtime witnesses for Kiki-Jiki, Ghostway,
+  Pact debt, Sneak Attack, rebound, slowtrips and Suppress. Separate synthetic
+  contracts cover held-event metadata, registration lifetimes, suppression and
+  receipt graphs. Unknown event payload types still fail rather than being shared.
+- Fix the delayed-trigger fixture resolver to admit triggers after each resolution,
+  with a fixed safety bound; rebound now checks the resulting Visionary draw.
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  241 focused native tests; 789 broader gameplay tests including those 241;
+  256 serialization tests; all 21 live integrations / 384 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned delayed-trigger
+  runtime and retain the previous runtime, locks and exact before/after receipts.
+
 - Rebind explicitly supported native expiration callbacks through the snapshot
   identity map. Preserve ordered phase queues, player-bound deadlines, deferred
   registrations and shared callback identity without sharing original closures.

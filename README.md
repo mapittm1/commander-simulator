@@ -21,16 +21,17 @@ Usage-history work and its remaining validation limits are described in
 [usage histories and trait identities](docs/CARD_COVERAGE.md#usage-histories-and-trait-identities).
 See also [scheduled effects and temporal state](docs/CARD_COVERAGE.md#scheduled-effects-and-temporal-state)
 for expiration, control-layer and player-keyword validation.
-
-
+[Delayed-trigger snapshots](docs/CARD_COVERAGE.md#delayed-trigger-snapshots) cover
+future sacrifices, returns, upkeep debts, registrations and held events.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 220
+Seven additional records are non-starting meld results. The build passes 241
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
-participant state, starting-life baselines, paid stack state, cast forms, usage histories and scheduled effects.
-Broader native runs pass 768 AI/gameplay tests (including those 220) and 256
+participant state, starting-life baselines, paid stack state, cast forms, usage
+histories, scheduled effects and delayed triggers.
+Broader native runs pass 789 AI/gameplay tests (including those 241) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

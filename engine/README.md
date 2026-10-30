@@ -21,7 +21,10 @@ exile/effect provenance and the scheduled face-down-state reset. It also refresh
 disguise keyword caches. A thirteenth preserves canonical trait graphs,
 activation/resolution and mode histories, mapped crew/saddle members and exact
 saddle counts. A fourteenth maps explicit scheduled-effect callbacks and preserves control,
-player-keyword and numeric-choice state. All fourteen patches are pinned. No remote branch is used at build time.
+player-keyword and numeric-choice state. A fifteenth preserves delayed/waiting
+trigger queues, deferred registrations and
+mapped cost-payment receipts. All fifteen patches are pinned. No remote branch
+is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -37,8 +40,9 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-220 native sticker, chosen-color, companion, supplementary-copy, history,
-damage, participant, starting-life, paid-stack, cast-form, usage-history and temporal-state tests.
+241 native sticker, chosen-color, companion, supplementary-copy, history,
+damage, participant, starting-life, paid-stack, cast-form, usage-history,
+temporal-state and delayed-trigger tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -68,15 +72,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins thirteen regression source files and exactly three card-script
+The recipe pins fourteen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 768 gameplay and 256
+686 files verified against immutable source. The broader 789 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 220 focused tests are included in the 768.
+in `native_test_evidence.json`; the 241 focused tests are included in the 789.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -174,3 +178,12 @@ player-keyword expiration, ControlGain return/keyword removal and the face-down
 reset. Unconverted commands in scanned queues remain omitted and reported by
 the native copier API. This diagnostic is not yet aggregated into CLI simulation
 reports. See the coverage document for the exact queue and phase-advancement limits.
+
+
+Delayed-trigger validation is retained in
+[delayed_state_evidence.json](delayed_state_evidence.json). DelayedGameCopyTest
+adds 21 cases, including synthetic queue/receipt contracts; nine packaged witnesses
+check paid actions and future outcomes. Trigger registration callbacks use the
+explicit command protocol. Cost objects are historical receipts, not resumed
+payment decisions. See the coverage document for unvalidated conditions,
+APNAP/replacement behavior, callback kinds and extra turn/phase schedules.
