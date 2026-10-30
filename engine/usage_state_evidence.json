@@ -1,0 +1,560 @@
+{
+  "scope": "Selected paid usage-limit, resolution-ordinal, mode-history and trait-identity preservation; not full card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-usage",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "8e0e31b49bef47542f43ddb7b3e9b8957cbcde42c33410d79fa90198cba814c6",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "808d9538dc3b44e228ea0880afdb9d188719c4ee80a955023f07ff543392f188",
+    "native_tests": {
+      "total": 202,
+      "passed": 202,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "cc9ce98d769417c0f77485c3ca137a28d7132ab95969cbee4b7bdeb171176665",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: canonical trait graphs, paid usage limits, mode histories and crew/saddle provenance; native regressions and packaged witnesses; not complete rules certification"
+  },
+  "build_id": "7d946eb6b51043ad81e857718369ad1d",
+  "compiled_source_audit": {
+    "build_id": "7d946eb6b51043ad81e857718369ad1d",
+    "normalization": "Universal newlines only",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java": "fadf0ef0bb2b249fe67f5f72fd3e5dae3283b54ba4ea881642f7807ac8c071f6",
+      "forge-game/src/main/java/forge/game/staticability/StaticAbility.java": "5cc978404ff03d016df55a02b778f6617a1d99d63facdc4fcb4d21574908f52c",
+      "forge-game/src/main/java/forge/game/TriggerReplacementBase.java": "4da251750ec8f79e3a7c05b094dda4cf705223d7d55b3822496977fb2e1a40e5",
+      "forge-game/src/main/java/forge/game/trigger/Trigger.java": "eef845e3eeba55ba0270bdcd0b3a0e58044e10eaeaec27c0402d0b3940a330f0",
+      "forge-game/src/main/java/forge/game/CardTraitBase.java": "baab18b9dff133f2ec008aa2f6e8fb11e364aa172ed81e63a0d14b31ed371b3d",
+      "forge-game/src/main/java/forge/game/spellability/SpellAbility.java": "51a98c666141bc4d899bd474276a49888b350bd071fc47312ef091cb0199e277",
+      "forge-game/src/main/java/forge/game/cost/Cost.java": "94be771d4dc07e6eec2faba9c467a5c69bf006d2c9072aea95ff1e0689235863",
+      "forge-game/src/main/java/forge/game/keyword/KeywordInterface.java": "9660203e710a65fe818ff96ef6135d8cc1709488cdbad8301909c4a04ef574fd",
+      "forge-game/src/main/java/forge/game/keyword/KeywordInstance.java": "d94162a3c6f7627d85a2617d67080b44647863792ff275657c34db65b38829d7",
+      "forge-game/src/main/java/forge/game/keyword/KeywordWithCost.java": "182620515934ba8be8d0236ced4fa42db736b25736ceed59776923b4e34d43f3",
+      "forge-game/src/main/java/forge/game/keyword/KeywordWithCostAndAmount.java": "10cdb8f7794af9b27e677f1e769a47ea60811b8186ab9bb1ab2e7da90bee4b3a",
+      "forge-game/src/main/java/forge/game/keyword/KeywordWithCostAndType.java": "3c5e5c38854fb4ba6d76b7c7a451bbe1891ea94b9545e22c10cdfebca6872208",
+      "forge-game/src/main/java/forge/game/keyword/Kicker.java": "8138e4dc097dc6681c946ae1eda01d972f3a35b78a7ae86e43362fc9d91c7724",
+      "forge-game/src/main/java/forge/game/keyword/Ward.java": "b0df2f267718802c82780c3abbcc348d08cfa529436ab40e108811bcd20cf878",
+      "forge-game/src/main/java/forge/game/card/ActivationTable.java": "309368477e528277edf1590b2c35b6a7e7fb6071b31f5866d52eeef748c7d004",
+      "forge-game/src/main/java/forge/game/card/CardState.java": "e9b5106cafd7f5b8dcef10b2da98005bf5eb50434184ab5b38e2074604aa437c",
+      "forge-game/src/main/java/forge/game/card/Card.java": "695fd8d76c0d7f69e7c59378ad7da6e8b037f929e7d8b526bb54f2ae5cc7112e",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "6855eecb097c186151a55744c0643d17000372ac324dcf3a9688d1383dd5a948"
+    }
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-usage-reviewed",
+    "lock_sha256": "ddf71e42317f45fd57f194bc75c47dc7d80845e9c9954042c6e8cdc3cb93bc8b",
+    "engine_check_sha256": "2281cb5684dba0bf721b06d2934135e2e33311958627fee05aa64bf3ab6e9acd",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-forms-reviewed"
+  },
+  "before": {
+    "run_id": "be25e7ea751a44cd92dc615f704c1264",
+    "receipt_sha256": "858373fcde7620ee2f85e3ad72bb684e868565a092509c32132696a45315e56d",
+    "worker_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-forms",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "2f632a9488f9a3460b918ae1b01f83fff00cb4144dba4e93a99d5a9f51be7110",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "11fdf79893e5c1f43bd5daf7734a570fe8f1d4400074af9751c00e9e811fad95",
+        "native_tests": {
+          "total": 186,
+          "passed": 186,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "06295b9d11300867f04d1f06eba01d11905c2f89d5a3f2f047ebb225b5b63bd2",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: cast forms, prototype/bestow state, Adventure provenance and disguise ward/reset fidelity; native regressions, catalog construction and live suite; not complete rules certification"
+      },
+      "cases": [
+        {
+          "cast_paid": 3,
+          "activation_paid": 0,
+          "case": "once_per_turn",
+          "before": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 1,
+            "playable": false
+          },
+          "after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": true
+          },
+          "entries": 0,
+          "resolved_after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": true
+          },
+          "source": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 1,
+            "playable": false
+          },
+          "source_entries": 0,
+          "actor_world": true,
+          "host_world": true
+        },
+        {
+          "cast_paid": 3,
+          "activation_paid": 0,
+          "case": "pending",
+          "before": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 0,
+            "playable": false
+          },
+          "after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": false
+          },
+          "entries": 1,
+          "resolved_after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": true
+          },
+          "source": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 0,
+            "playable": false
+          },
+          "source_entries": 1,
+          "actor_world": true,
+          "host_world": true
+        },
+        {
+          "cast_paid": 3,
+          "activation_paid": 6,
+          "case": "only_once",
+          "before": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 1,
+            "playable": false
+          },
+          "after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": true
+          },
+          "entries": 0,
+          "resolved_after": {
+            "turn": 0,
+            "game": 0,
+            "resolved": 0,
+            "playable": true
+          },
+          "source": {
+            "turn": 1,
+            "game": 1,
+            "resolved": 1,
+            "playable": false
+          },
+          "source_entries": 0,
+          "actor_world": true,
+          "host_world": true
+        },
+        {
+          "case": "vampire",
+          "paid": [
+            2,
+            2
+          ],
+          "before": 1,
+          "after": 2,
+          "source": 1,
+          "host_world": true
+        },
+        {
+          "case": "modes",
+          "paid": [
+            5,
+            2,
+            2,
+            2
+          ],
+          "first": [
+            "Put a +1/+1 counter on each creature you control."
+          ],
+          "retained": [],
+          "second": [
+            "Put a +1/+1 counter on each creature you control."
+          ],
+          "third": [
+            "Put a +1/+1 counter on each creature you control."
+          ],
+          "source": [
+            "Put a +1/+1 counter on each creature you control."
+          ],
+          "middle_source": [
+            "Put a +1/+1 counter on each creature you control."
+          ]
+        },
+        {
+          "case": "saddle",
+          "cast_paid": 3,
+          "before": 2,
+          "after": 1,
+          "source": 2,
+          "members": 2,
+          "source_members": 2,
+          "member_worlds": false
+        }
+      ]
+    }
+  },
+  "packaged_run_ids": [
+    "77af15b1c19d4c579740e891122c130d",
+    "dd4f8d4cfe7f45d98fea309cb72e1ca6"
+  ],
+  "local_run_id": "dd4f8d4cfe7f45d98fea309cb72e1ca6",
+  "observed": [
+    {
+      "cast_paid": 3,
+      "activation_paid": 0,
+      "case": "once_per_turn",
+      "before": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "entries": 0,
+      "resolved_after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "source": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "source_entries": 0,
+      "actor_world": true,
+      "host_world": true
+    },
+    {
+      "cast_paid": 3,
+      "activation_paid": 0,
+      "case": "pending",
+      "before": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 0,
+        "playable": false
+      },
+      "after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 0,
+        "playable": false
+      },
+      "entries": 1,
+      "resolved_after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "source": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 0,
+        "playable": false
+      },
+      "source_entries": 1,
+      "actor_world": true,
+      "host_world": true
+    },
+    {
+      "cast_paid": 3,
+      "activation_paid": 6,
+      "case": "only_once",
+      "before": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "entries": 0,
+      "resolved_after": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "source": {
+        "turn": 1,
+        "game": 1,
+        "resolved": 1,
+        "playable": false
+      },
+      "source_entries": 0,
+      "actor_world": true,
+      "host_world": true
+    },
+    {
+      "case": "vampire",
+      "paid": [
+        2,
+        2
+      ],
+      "before": 1,
+      "after": 1,
+      "source": 1,
+      "host_world": true
+    },
+    {
+      "case": "modes",
+      "paid": [
+        5,
+        2,
+        2,
+        2
+      ],
+      "first": [
+        "Put a +1/+1 counter on each creature you control."
+      ],
+      "retained": [
+        "Put a +1/+1 counter on each creature you control."
+      ],
+      "second": [
+        "Put a +1/+1 counter on each creature you control.",
+        "Scry 2, then draw a card."
+      ],
+      "third": [
+        "Put a +1/+1 counter on each creature you control.",
+        "Scry 2, then draw a card.",
+        "Add {G}{G}{G}."
+      ],
+      "source": [
+        "Put a +1/+1 counter on each creature you control."
+      ],
+      "middle_source": [
+        "Put a +1/+1 counter on each creature you control.",
+        "Scry 2, then draw a card."
+      ]
+    },
+    {
+      "case": "saddle",
+      "cast_paid": 3,
+      "before": 2,
+      "after": 2,
+      "source": 2,
+      "members": 2,
+      "source_members": 2,
+      "member_worlds": true
+    }
+  ],
+  "receipt_sha256": "7c1c03f3b7be22aa8cd10ced844fe507cff087b8b73c54aa4647b8558eacb921",
+  "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+  "worker_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+  "test_sha256": "3817a5f72d71c018db2311827b98e48d328c83713ce4f0771c89da678b077dca",
+  "native_source_sha256": "8d05eed3c4c222aa87d7d82bd5be9f64ac13b39bee7cb6ee7ea2b11d735908f0",
+  "patch_sha256": "86627e1d2a6f79c5766dc5764823420b6283f569a5fbe124e300549a3bf95a0e",
+  "oracle_witnesses": [
+    {
+      "name": "Invigorating Hot Spring",
+      "oracle_id": "a972630e-651e-439d-9412-5be50da9b934",
+      "source": "https://scryfall.com/card/neo/223/invigorating-hot-spring?utm_source=api",
+      "mana_cost": "{1}{R}{G}",
+      "oracle_text_sha256": "b9b522ca22c43cf92622ac903fd50b024e5395092976d4bf4633de2522213f3c",
+      "raw_record_sha256": "831c6ae1208855037922512ad06128433e70168256f2731441b205ba53707d00"
+    },
+    {
+      "name": "In the Trenches",
+      "oracle_id": "1612a08f-fc1f-45cf-ae03-5f021a46869d",
+      "source": "https://scryfall.com/card/bro/8/in-the-trenches?utm_source=api",
+      "mana_cost": "{1}{W}{W}",
+      "oracle_text_sha256": "47da1f8df83a516e35ebaa3a548bbcb57fdb17aaabc4c7eee3983c04dcc1dd5d",
+      "raw_record_sha256": "10e11487180addddfa3f53e92259eca51523b669d690c2dae625582ac02c556d"
+    },
+    {
+      "name": "Welcoming Vampire",
+      "oracle_id": "605c1ee0-5e8a-4e0a-a99b-42a38873f822",
+      "source": "https://scryfall.com/card/tdc/140/welcoming-vampire?utm_source=api",
+      "mana_cost": "{2}{W}",
+      "oracle_text_sha256": "61fd9ea1c41fe160290672aa04bf5ad87557ab85bc4153662dd1ab151c210aac",
+      "raw_record_sha256": "53894327b8cf422756610fec63af347ca953b8defa02aa15c39c34f793410c19"
+    },
+    {
+      "name": "Galadriel, Light of Valinor",
+      "oracle_id": "faf44683-339d-4fc0-8029-1e867c69de0e",
+      "source": "https://scryfall.com/card/ltc/498/galadriel-light-of-valinor?utm_source=api",
+      "mana_cost": "{2}{G}{W}{U}",
+      "oracle_text_sha256": "bd5501bedccee874bf0aea9c964f4ca920fad1289df059c16b6ee8b300ed64d6",
+      "raw_record_sha256": "2ade7a40ce9a7b14d5fb71127e594a39080c332c387b7a8b8ae940d13d3bbee3"
+    },
+    {
+      "name": "Ornery Tumblewagg",
+      "oracle_id": "f8d7bcbd-9a1d-4fc6-abdd-88a7e01b9411",
+      "source": "https://scryfall.com/card/otj/171/ornery-tumblewagg?utm_source=api",
+      "mana_cost": "{2}{G}",
+      "oracle_text_sha256": "3d14422c14f6fca9af2007a0d61ff8822e613a94534a7f18d114ab34dbf206a6",
+      "raw_record_sha256": "297a39f0f42c5f6e4ed66d3f9a1990e9c63d57afacd58777490b3e3bc2ea4daf"
+    },
+    {
+      "name": "Viridian Longbow",
+      "oracle_id": "8b9119b0-9948-497f-aa92-2879d07bed1c",
+      "source": "https://scryfall.com/card/afc/221/viridian-longbow?utm_source=api",
+      "mana_cost": "{1}",
+      "oracle_text_sha256": "a802b110086a9087eac2452064ca9094602353a6eeb36d7a9390b130d355291a",
+      "raw_record_sha256": "e1c37edf0273a877232aaa4ea033d92dc0dd1235d4076c2a0255adbf8adbcd06"
+    },
+    {
+      "name": "Luxurious Locomotive",
+      "oracle_id": "c68c2a98-9a6d-4199-af3a-78eb92beda48",
+      "source": "https://scryfall.com/card/otj/244/luxurious-locomotive?utm_source=api",
+      "mana_cost": "{5}",
+      "oracle_text_sha256": "26ef6ecb7231eba621f11f5135746c4aaf37f797b328f0fcf999e86327a4c22b",
+      "raw_record_sha256": "28c8b712ad70f73f264244e370f0e27d9991c18aa14433874a32b97a9e11fa30"
+    },
+    {
+      "name": "Omnath, Locus of Creation",
+      "oracle_id": "cd133d30-51ff-4114-a7d7-029345f0f0d7",
+      "source": "https://scryfall.com/card/znr/232/omnath-locus-of-creation?utm_source=api",
+      "mana_cost": "{R}{G}{W}{U}",
+      "oracle_text_sha256": "2b7071f220d4e5e4d2d20098f20d6e952366708a8e032da4ceab68581fa9e0e0",
+      "raw_record_sha256": "e835dbe4a14494c24b5df5200b3e9c775c214f0498099dca2935883439e555ae"
+    },
+    {
+      "name": "Stifle",
+      "oracle_id": "b3b00911-ece7-4484-bc36-f211ce72b6cc",
+      "source": "https://scryfall.com/card/cns/108/stifle?utm_source=api",
+      "mana_cost": "{U}",
+      "oracle_text_sha256": "c8071a48b4d0954ee1b6188fdcb68c4b5c2b1fc2051146cd675cbc9347d67c6e",
+      "raw_record_sha256": "eeb5e98335b2784ad8e7e306c2f2e544c4ac076721ea194f06296e2f860bdac9"
+    },
+    {
+      "name": "Zhur-Taa Goblin",
+      "oracle_id": "1003304f-af01-4235-af82-6ef901bd00bf",
+      "source": "https://scryfall.com/card/rna/215/zhur-taa-goblin?utm_source=api",
+      "mana_cost": "{R}{G}",
+      "oracle_text_sha256": "c51bd7e19057367c45f0e7deb2ebea707ccf11e80d03b39e66ca1aa9d86f4318",
+      "raw_record_sha256": "5dfd353f57176f011685baabf60b7d47d002083938e5a5614375deb7dd095d63"
+    }
+  ],
+  "rules_reference": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "bytes": 977752,
+    "checked_rules": [
+      "602.5",
+      "602.5b",
+      "602.5c",
+      "603.3c",
+      "700.2b",
+      "702.171a",
+      "702.171b",
+      "702.171c"
+    ],
+    "scope": "Selected activation, modal-trigger and saddle rules only; catalog card text supplies card-specific restrictions; not a complete current-rules audit"
+  },
+  "full_live_suite": {
+    "passed": 19,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 367,
+    "log_sha256": "051a8c81db4419e40c3e47e2b52cc97ae086e98afc578dc797523978481b0d59"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "291fc6f329f9e8d0517226469c977558a1e84017ecb55172cb0fc6376f66ab58"
+  },
+  "native_evidence_sha256": "4f10e2025eb668a41316320d0efbd5bda2c961ca6cd6fedbbc31760adf452423",
+  "catalog_probe": {
+    "report_sha256": "6ed7b78ae76f7267b6942160a59243e19e9bf6e14021ac964c310df690cd1343",
+    "run_id": "afcfeb097c654130b30224b5bf23c237",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Fixed native partial states use Commander registrations; these are not complete deck/pregame fixtures.",
+    "Counter and mode reset witnesses call native reset primitives, not complete turn transitions.",
+    "Different-controller limits, multiple identical grants, removal/reacquisition and combat-mode rollover remain unvalidated.",
+    "Generated trait/cost graphs are preserved, but every keyword/cost subclass and specialized mutable field is not certified.",
+    "Crew/saddle members and counts are checked separately from all possible attack-trigger outcomes.",
+    "One null-override fixture is a synthetic native prevention replacement; it makes no printed-card behavior claim.",
+    "Arbitrary callbacks, suspended continuations, merged/perpetual state, hidden views and AI policy correctness remain open.",
+    "Selected versioned rules and local catalog witnesses do not constitute a complete current-rules or all-card audit."
+  ]
+}

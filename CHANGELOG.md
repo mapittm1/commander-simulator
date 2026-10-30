@@ -8,6 +8,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Preserve canonical printed, keyword and granted ability identities in game
+  snapshots, including independent costs, static references and optional
+  replacement overrides. Retain activation/resolution counts, selected mode
+  histories and exact saddle counts; map crew/saddle members to the copied world.
+- Add sixteen native usage-history cases and six fixed packaged-runtime witnesses
+  with real payment. Cover once-per-turn/lifetime restrictions, countered and
+  pending activations, Vampire draw limits, Longbow grants, Omnath resolution
+  ordinals, Galadriel modes, repeated saddle and independent reset primitives.
+  Document unvalidated full-turn transitions, combat rollover and grant changes.
+
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  202 focused native tests; 750 broader gameplay tests including those 202;
+  256 serialization tests; all 19 live integrations / 367 subtests; and all
+  32,109 matched native constructions pass. Activate the separately pinned
+  usage-history runtime, preserve previous locks/builds and bind before/after
+  receipts to exact compiled sources and test hashes.
+
+
 - Preserve active cast faces and clone frames through snapshots: Adventure, split,
   modal back-face, morph/disguise, prototype and bestow forms retain their actual
   characteristics. Keep clone provenance, bestow/prototype timestamps and copied

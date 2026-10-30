@@ -120,10 +120,10 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **734 native tests in 67 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 186 focused
+The reviewed patched source also passes **750 native tests in 68 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 202 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
-starting-life, paid-stack and cast-form tests; these counts must not be added together.
+starting-life, paid-stack, cast-form and usage-history tests; these counts must not be added together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
 hashes are recorded in [native test evidence](../engine/native_test_evidence.json).
@@ -594,3 +594,44 @@ including those 186, **256 serialization tests**, **18 live integrations / 361
 subtests**, and **32,109 matched constructions** pass. Native/live runs have no
 failures or skips; the seven non-starting meld results remain excluded from
 standalone construction and retain their separate interaction checks.
+
+## Usage histories and trait identities
+
+The usage snapshot patch preserves the actual printed, keyword-generated and
+statically granted trait graphs through one identity map. Activation counts,
+resolution counts and mode histories use those canonical ability/grantor keys.
+Mutable costs, mode lists, static references and keyword trait collections are
+copied independently. Optional replacement overrides may remain null without
+invoking normal setters that alter intrinsic flags.
+
+Sixteen native cases cover paid once-per-turn activation, actual Stifle
+countering without refunding usage, an only-once activation with mana still
+available, Welcoming Vampire's one-draw limit, pending activations with the
+visible stack included or omitted, independent native counter reset, repeated
+snapshots, crew members that remain or leave the battlefield, an equipped
+Viridian Longbow grant, successive Omnath landfall resolutions, Galadriel's
+three distinct alliance choices, two paid saddle costs and normal riot resolution.
+One case is an explicitly synthetic native contract fixture for a replacement
+with no child ability; it is not a printed-card interaction claim.
+
+Six packaged-runtime witnesses use ordinary native admission and payment.
+Before-fix receipts reproduce lost usage limits, a duplicate Vampire draw,
+repeated Galadriel modes and lost saddle count/member provenance. Source and
+copied worlds are observed independently. Fixture names, costs and restrictions
+are checked against the retained local Scryfall catalog.
+
+This does not certify every restriction or generated grant. The counter/mode
+reset tests call native reset primitives; they do not exercise a full turn
+transition. Cross-controller limits, multiple identical grants from different
+sources, grant removal/reacquisition, combat-mode rollover, every keyword cost
+subclass and arbitrary suspended continuations remain unvalidated. Crew/saddle
+member provenance is distinct from proving every attack-trigger outcome.
+
+
+Usage-history verification: **399 offline tests / 508 subtests**, all Python
+quality tools, **202 focused native tests**, **750 broader gameplay tests**
+including those 202, **256 serialization tests**, and **19 live integrations /
+367 subtests** pass. Construction passes for all **32,109 matched native
+identities**, with seven non-starting meld-result exclusions. Exact source,
+before/after witnesses, rule/catalog references and runtime hashes are retained
+in [usage-history evidence](../engine/usage_state_evidence.json).
