@@ -29,16 +29,18 @@ selected extra turns, extra combats, attached obligations and phase counters.
 cover selected power/enchantment conditions, two-turn deadlines and cleanup queues.
 [Animation snapshots](docs/CARD_COVERAGE.md#animation-snapshots) cover timed/mass
 animation and copied reversal paths for all 13 retained Licids.
+[Temporary-copy expiry](docs/CARD_COVERAGE.md#temporary-copy-expiry) covers selected
+copy frames, restored references and temporary token keywords.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 299
+Seven additional records are non-starting meld results. The build passes 312
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
-conditional control/cleanup and selected animation reversal.
-Broader native runs pass 847 AI/gameplay tests (including those 299) and 256
+conditional control/cleanup, animation reversal and temporary-copy expiry.
+Broader native runs pass 860 AI/gameplay tests (including those 312) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

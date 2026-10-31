@@ -1,0 +1,122 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/CloneEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/CloneEffect.java
+@@ -175,24 +175,8 @@
+                 final Iterable<Card> clonedImprinted = new CardCollection(tgtCard.getImprintedCards());
+                 final Iterable<Object> clonedRemembered = new FCollection<>(tgtCard.getRemembered());
+ 
+-                final GameCommand unclone = new GameCommand() {
+-                    private static final long serialVersionUID = -78375985476256279L;
+-
+-                    @Override
+-                    public void run() {
+-                        if (cloneCard.removeCloneState(ts)) {
+-                            // remove values gained while being cloned
+-                            cloneCard.clearImprintedCards();
+-                            cloneCard.clearRemembered();
+-                            // restore original Remembered and Imprinted, ignore cards from players who lost
+-                            cloneCard.addImprintedCards(IterableUtil.filter(clonedImprinted, CardPredicates.ownerLives()));
+-                            cloneCard.addRemembered(IterableUtil.filter(clonedRemembered, Player.class));
+-                            cloneCard.addRemembered(IterableUtil.filter(IterableUtil.filter(clonedRemembered, Card.class), CardPredicates.ownerLives()));
+-                            cloneCard.updateStateForView();
+-                            game.fireEvent(new GameEventCardStatsChanged(cloneCard));
+-                        }
+-                    }
+-                };
++                final GameCommand unclone = new CloneExpiration(cloneCard, ts,
++                        clonedImprinted, clonedRemembered);
+ 
+                 addUntilCommand(sa, unclone);
+             }
+@@ -210,4 +194,44 @@
+             game.fireEvent(new GameEventCardStatsChanged(tgtCard));
+         }
+     }
++
++    /** A copy's deadline retains mapped pre-copy references rather than an original-game closure. */
++    private static final class CloneExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        private final CardCollection imprinted;
++        private final List<Object> remembered;
++        private CloneExpiration(Card card, long timestamp, Iterable<Card> imprinted,
++                Iterable<Object> remembered) {
++            this.card = card;
++            this.timestamp = timestamp;
++            this.imprinted = new CardCollection(imprinted);
++            this.remembered = Lists.newArrayList(remembered);
++        }
++        @Override
++        public void run() {
++            if (!card.removeCloneState(timestamp)) return;
++            card.clearImprintedCards();
++            card.clearRemembered();
++            card.addImprintedCards(IterableUtil.filter(imprinted, CardPredicates.ownerLives()));
++            card.addRemembered(IterableUtil.filter(remembered, Player.class));
++            card.addRemembered(IterableUtil.filter(IterableUtil.filter(remembered, Card.class),
++                    CardPredicates.ownerLives()));
++            card.updateStateForView();
++            card.getGame().fireEvent(new GameEventCardStatsChanged(card));
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            List<Object> restored = Lists.newArrayList();
++            // The native restoration intentionally retains only Card and Player remembered values.
++            for (Object value : remembered) {
++                if (value instanceof Card saved) restored.add(context.map(saved));
++                else if (value instanceof Player saved) restored.add(context.map(saved));
++            }
++            return new CloneExpiration(context.map(card), timestamp, context.cards(imprinted), restored);
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/TokenEffectBase.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/TokenEffectBase.java
+@@ -273,17 +273,8 @@
+             return;
+         }
+         final String duration = sa.getParam("PumpDuration");
+-        final Card host = sa.getHostCard();
+-        final Game game = host.getGame();
+-        final GameCommand untilEOT = new GameCommand() {
+-            private static final long serialVersionUID = -42244224L;
+-
+-            @Override
+-            public void run() {
+-                c.removeChangedCardKeywords(timestamp, 0);
+-                game.fireEvent(new GameEventCardStatsChanged(c));
+-            }
+-        };
++        final Game game = sa.getHostCard().getGame();
++        final GameCommand untilEOT = new TokenKeywordExpiration(c, timestamp);
+ 
+         if ("UntilYourNextTurn".equals(duration)) {
+             game.getCleanup().addUntil(sa.getActivatingPlayer(), untilEOT);
+@@ -291,4 +282,25 @@
+             game.getEndOfTurn().addUntil(untilEOT);
+         }
+     }
++
++    private static final class TokenKeywordExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        private TokenKeywordExpiration(Card card, long timestamp) {
++            this.card = card;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            card.removeChangedCardKeywords(timestamp, 0);
++            card.getGame().fireEvent(new GameEventCardStatsChanged(card));
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new TokenKeywordExpiration(context.map(card), timestamp);
++        }
++    }
++
+ }

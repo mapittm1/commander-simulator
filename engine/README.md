@@ -27,7 +27,9 @@ A sixteenth preserves extra-turn/phase stacks, attached obligations and schedule
 state. A seventeenth preserves conditional control checks, explicit effect
 expiration, two-turn cleanup wrappers and the state-based cleanup queue.
 An eighteenth maps animation expiration, Licid reversal payloads and changed-trait
-collections. All eighteen patches are pinned. No remote branch is used at build time.
+collections. A nineteenth maps temporary-copy expiration and token-keyword
+cleanup payloads.
+All nineteen patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -43,9 +45,9 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-299 native sticker, chosen-color, companion, supplementary-copy, history,
+312 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
-temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup and animation tests.
+temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation and temporary-copy tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -75,15 +77,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins seventeen regression source files and exactly three card-script
+The recipe pins eighteen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 847 gameplay and 256
+686 files verified against immutable source. The broader 860 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 299 focused tests are included in the 847.
+in `native_test_evidence.json`; the 312 focused tests are included in the 860.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -223,3 +225,13 @@ a copy. Explicit expiration/reversal classes, a native subclass-payload hook and
 canonical changed-trait collections remove that source-world reference for these
 paths. A supported animation removal predicate also maps its ability reference.
 Other subclasses and predicates require separate conversion/validation.
+
+
+Temporary-copy evidence is retained in [clone_state_evidence.json](clone_state_evidence.json).
+Thirteen native cases and eleven packaged witnesses check four Mirage Mirror
+copy categories, mass and overlapping frames, player-bound and face-down deadlines,
+Cursed Mirror's haste, restored reference contracts and Eiganjo token keywords.
+The blinked artifact's new-incarnation memory already passed on the previous build
+and remains a control. The copy-expiration command explicitly maps saved Card and
+Player references; non-restored scalar values retain the existing native policy.
+Other copy/keyword variants, priority choices and hidden views remain unverified.

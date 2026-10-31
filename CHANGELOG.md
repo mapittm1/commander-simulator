@@ -8,6 +8,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Map temporary-copy expiration targets/timestamps and saved card/player references
+  into snapshots. Restore saved memory using copied-world owner membership and
+  preserve the native non-restored-payload policy. Map temporary token-keyword
+  cleanup without removing intrinsic keywords or retaining original closures.
+- Add 13 native cases and 11 packaged witnesses for Mirage Mirror's four target
+  types, Mirrorweave, Shapesharer, Vesuvan's controlled face-down event, Cursed
+  Mirror, Eiganjo keywords, overlapping frames, incarnation guards and synthetic
+  reference restoration. Preserve the already-correct blink outcome as a control.
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  312 focused native tests; 860 broader gameplay tests including those 312;
+  256 serialization tests; all 25 live integrations / 431 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned copy-expiration
+  runtime while retaining previous builds, locks and exact before/after evidence.
+
 - Map animation expiration cards/timestamps and explicit Licid end-effect payloads
   into snapshots. Reverting a copy no longer executes the original game's closure.
   Add a trusted native subclass-field hook and map changed-trait collections and

@@ -120,11 +120,11 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **847 native tests in 73 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 299 focused
+The reviewed patched source also passes **860 native tests in 74 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 312 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
-turn/phase-schedule, conditional-cleanup and animation tests; these counts must not be added
+turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
 together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
@@ -882,3 +882,55 @@ Verification: **399 offline tests / 508 subtests**, all Python quality tools,
 identities remain separate. [Animation-state evidence](../engine/animation_state_evidence.json)
 binds the exact runtime, source, all 13 identity/payment expectations, stable
 before/after receipts, tests and selected versioned rule/catalog references.
+
+
+## Temporary-copy expiry
+
+The native temporary-copy cleanup now retains a mapped target, effect timestamp,
+saved imprinted cards and remembered card/player references. It removes the
+matching copy frame before restoring those saved values. References gained while
+copied are cleared only when that frame is removed. The existing native restoration
+contract retains remembered players and cards whose owners remain in the game;
+other remembered payload kinds are not restored. A copied player's later loss is
+evaluated in the copied world, without consulting the original game's membership.
+
+Temporary token keywords also use an explicit mapped card/timestamp command.
+Expiration removes that keyword layer while retaining intrinsic token keywords.
+The original native scheduling branch still selects end of turn or the activating
+player's next turn. This is separate from creating a new in-game copy or token.
+
+Thirteen native cases comprise ten paid card paths, one controlled face-down event
+and two synthetic memory contracts. They cover Mirage Mirror copying a creature,
+land, artifact or
+enchantment; Mirrorweave restoring multiple creatures; Shapesharer through the
+controller's next turn; a paid Vesuvan Shapeshifter followed by a controlled native
+face-down event; Eiganjo Uprising's two temporary keywords versus intrinsic
+vigilance; two same-deadline overlapping frames; a blinked new incarnation; and
+Cursed Mirror's copied characteristics/haste. The two pre-copy memory
+contracts verify independent mapped references, card filtering after
+elimination, retained player references and the native scalar-omission policy.
+These memory fixtures are contracts, not claims that Grizzly Bears has imprint.
+
+Eleven packaged witnesses cover ten paid card paths and the controlled face-down
+event. The stable native baseline has 12 failures and one passing blink control.
+The blink's primary outcome already passed; the earlier build still omitted its
+unconverted old-incarnation callback. New witnesses report no unmapped commands.
+Token identities, ownership, intrinsic vigilance and source-game state remain
+independent across the tested expiry operations.
+
+Fixtures use partial Commander registrations, controlled postcombat main states,
+ordinary payment and bounded native hooks without response priority. The face-down
+event isolates the end condition; it does not certify optional upkeep choice or
+special-action timing. These cases do not establish every copy exception,
+room/merged/perpetual layout, source/target transition, overlapping-memory lifetime,
+keyword duration, multiplayer-loss interaction, hidden view or AI policy. Other
+callbacks remain omitted/reported where scanned, and normal CLI reports still do
+not aggregate that diagnostic.
+
+Verification: **399 offline tests / 508 subtests**, all Python quality tools,
+**312 focused native tests**, **860 broader gameplay tests** including those 312,
+**256 serialization tests**, **25 live integrations / 431 subtests**, and
+**32,109 matched native constructions** pass. Seven non-starting meld-result
+identities remain separate. [Copy-expiration evidence](../engine/clone_state_evidence.json)
+binds the exact runtime, source, stable before/after receipts, tests and selected
+versioned rule/catalog references.

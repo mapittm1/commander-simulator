@@ -1,0 +1,1460 @@
+{
+  "scope": "Selected temporary-copy frame expiry, saved reference restoration and temporary token keyword cleanup; not full card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-copyframes",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "30bd0d2872298a6a9f85432d4b2a5392bd093eb99d23be2142eec252219394f2",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "0849e24683013a89a8d0f2dc92e63b120f416d7738b18c7e6d0059abccb5df75",
+    "native_tests": {
+      "total": 312,
+      "passed": 312,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "87fec5d7d6626d0347012fa7dc7b08f630a3200eeafac6520374a97bccac7ce2",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Reviewed Commander runtime: mapped temporary-copy frame expiration, restored references and token keyword deadlines; native and packaged witnesses; not complete rules certification"
+  },
+  "build_id": "e3e3ce61a135446f984287324d84c645",
+  "compiled_source_audit": {
+    "build_id": "e3e3ce61a135446f984287324d84c645",
+    "normalization": "Universal newlines only",
+    "source_sha256": {
+      "forge-game/src/main/java/forge/game/ability/effects/CloneEffect.java": "18bd3cb9933c1304ae6b1ec178a7ab65bf7bfbc1c476390c2a73091254f6f146",
+      "forge-game/src/main/java/forge/game/ability/effects/TokenEffectBase.java": "52954bc2bee330a08a84517b3fe463fd369d434de19441704b0f38be97503553"
+    }
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-copy-frames-reviewed",
+    "lock_sha256": "98f96b6d266cdf8376abdadd85f37262d94a3bebb3874bc82aa7ad922602ba93",
+    "engine_check_sha256": "726fb2e0feb38cf3e3a3796f2090bad7fdd912b8a47e1f58b10c90a20c0a2079",
+    "status": "ready",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-animations-reviewed"
+  },
+  "before": {
+    "run_id": "ed39dab3880a44f4b01d99579fbb0d4d",
+    "receipt_sha256": "e839863a49d11c4003c2cb25358f1a4af6e380e87154255787884b8b045353bf",
+    "worker_sha256": "aae64989b2880eaf45529777e87491fc5b5261095aed07cc01bd23f1647816df",
+    "observed": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-animations",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot",
+          "conditional_cleanup_snapshot",
+          "animation_snapshot_state"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "eaba5313733caa6099df92f5b8947bae672c5507b3ced7a98689971b1f594430",
+        "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "c1421b15f1a5e9f6c25272708957177ba8cc73564e04c53ae52bc2e329fdcf97",
+        "native_tests": {
+          "total": 299,
+          "passed": 299,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "ecd6ccf7c11d8d0bfd0112b762edc8aeb8a453f2ed3a53b1c3b409db21bd1105",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Reviewed Commander runtime: mapped animation expiration, all 13 Licid reversal payloads and canonical changed-trait collections; native and packaged witnesses; not complete rules certification"
+      },
+      "cases": [
+        {
+          "case": "mirage",
+          "target": "Serra Angel",
+          "paid": [
+            3,
+            2
+          ],
+          "before": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "after": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "source": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "mirage",
+          "target": "Forest",
+          "paid": [
+            3,
+            2
+          ],
+          "before": {
+            "name": "Forest",
+            "creature": false,
+            "aura": false,
+            "land": true,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "after": {
+            "name": "Forest",
+            "creature": false,
+            "aura": false,
+            "land": true,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "source": {
+            "name": "Forest",
+            "creature": false,
+            "aura": false,
+            "land": true,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "mirage",
+          "target": "Sol Ring",
+          "paid": [
+            3,
+            2
+          ],
+          "before": {
+            "name": "Sol Ring",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": true,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "after": {
+            "name": "Sol Ring",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": true,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "source": {
+            "name": "Sol Ring",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": true,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "mirage",
+          "target": "Glorious Anthem",
+          "paid": [
+            3,
+            2
+          ],
+          "before": {
+            "name": "Glorious Anthem",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "after": {
+            "name": "Glorious Anthem",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "source": {
+            "name": "Glorious Anthem",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "mirrorweave",
+          "paid": 4,
+          "after": [
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            },
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            }
+          ],
+          "source": [
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            },
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            }
+          ],
+          "target": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "shapesharer",
+          "paid": [
+            2,
+            3
+          ],
+          "turns": [
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            },
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            },
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            },
+            {
+              "name": "Serra Angel",
+              "creature": true,
+              "aura": false,
+              "land": false,
+              "artifact": false,
+              "power": 4,
+              "toughness": 4,
+              "flying": true,
+              "haste": false
+            }
+          ],
+          "source": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "unmapped": [
+            "CLEANUP.untilPlayer: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "vesuvan",
+          "paid": 5,
+          "face_down": true,
+          "after_frames": 1,
+          "after": {
+            "name": "",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 2,
+            "toughness": 2,
+            "flying": false,
+            "haste": false
+          },
+          "source_frames": 1,
+          "source": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "unmapped": [
+            "card.facedown: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "eiganjo",
+          "paid": 4,
+          "before": [
+            {
+              "id": 27,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 28,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 32,
+              "owner": 1,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 33,
+              "owner": 2,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 34,
+              "owner": 3,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            }
+          ],
+          "after": [
+            {
+              "id": 27,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 28,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 32,
+              "owner": 1,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 33,
+              "owner": 2,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 34,
+              "owner": 3,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            }
+          ],
+          "source": [
+            {
+              "id": 27,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 28,
+              "owner": 0,
+              "haste": true,
+              "menace": true,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 32,
+              "owner": 1,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 33,
+              "owner": 2,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            },
+            {
+              "id": 34,
+              "owner": 3,
+              "haste": false,
+              "menace": false,
+              "vigilance": true,
+              "power": 2
+            }
+          ],
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.TokenEffectBase$1"
+          ]
+        },
+        {
+          "case": "overlap",
+          "paid": [
+            3,
+            2,
+            2
+          ],
+          "before_frames": 2,
+          "after_frames": 2,
+          "after": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "source_frames": 2,
+          "source": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": false
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "blink",
+          "paid": [
+            3,
+            2,
+            1
+          ],
+          "after": {
+            "name": "Mirage Mirror",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": true,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "retained": true,
+          "source": {
+            "name": "Mirage Mirror",
+            "creature": false,
+            "aura": false,
+            "land": false,
+            "artifact": true,
+            "power": 0,
+            "toughness": 0,
+            "flying": false,
+            "haste": false
+          },
+          "source_retained": true,
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        },
+        {
+          "case": "cursed",
+          "paid": 3,
+          "before": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": true
+          },
+          "after": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": true
+          },
+          "source": {
+            "name": "Serra Angel",
+            "creature": true,
+            "aura": false,
+            "land": false,
+            "artifact": false,
+            "power": 4,
+            "toughness": 4,
+            "flying": true,
+            "haste": true
+          },
+          "unmapped": [
+            "END_OF_TURN.until: forge.game.ability.effects.CloneEffect$1"
+          ]
+        }
+      ]
+    }
+  },
+  "baseline_primary_outcome_controls": [
+    "blink"
+  ],
+  "baseline_control_note": "The blinked artifact already retained its new-incarnation memory; the earlier copier still omitted the unconverted old-incarnation callback.",
+  "stable_native_before": {
+    "counts": {
+      "total": 13,
+      "passed": 1,
+      "failed": 12,
+      "skipped": 0
+    },
+    "testng_results_sha256": "c9fffc6a9b3a9fec667f6506d26a856a4819b8ddbdc854f29e876cd1a7921521",
+    "log_sha256": "0eb553f3c96b2c44faf7e81cc5ba0ad0edbedce23e6f6cb8cb856822acd9191f",
+    "source_baseline_audit": {
+      "immutable_build": "7b16fba768d64531b3104e56e3220473",
+      "mutable_debug_build": "ccc4e91ab62540c4831da2aa59c6a8ba",
+      "normalized_matching_java_files": 1030
+    }
+  },
+  "packaged_run_ids": [
+    "62c208973af141c484d14e9fdbb7dcd6",
+    "ee4d6171ba92444cab250ac8c53ec557"
+  ],
+  "local_run_id": "ee4d6171ba92444cab250ac8c53ec557",
+  "observed": [
+    {
+      "case": "mirage",
+      "target": "Serra Angel",
+      "paid": [
+        3,
+        2
+      ],
+      "before": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "mirage",
+      "target": "Forest",
+      "paid": [
+        3,
+        2
+      ],
+      "before": {
+        "name": "Forest",
+        "creature": false,
+        "aura": false,
+        "land": true,
+        "artifact": false,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source": {
+        "name": "Forest",
+        "creature": false,
+        "aura": false,
+        "land": true,
+        "artifact": false,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "mirage",
+      "target": "Sol Ring",
+      "paid": [
+        3,
+        2
+      ],
+      "before": {
+        "name": "Sol Ring",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source": {
+        "name": "Sol Ring",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "mirage",
+      "target": "Glorious Anthem",
+      "paid": [
+        3,
+        2
+      ],
+      "before": {
+        "name": "Glorious Anthem",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source": {
+        "name": "Glorious Anthem",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "mirrorweave",
+      "paid": 4,
+      "after": [
+        {
+          "name": "Grizzly Bears",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 2,
+          "toughness": 2,
+          "flying": false,
+          "haste": false
+        },
+        {
+          "name": "Runeclaw Bear",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 2,
+          "toughness": 2,
+          "flying": false,
+          "haste": false
+        }
+      ],
+      "source": [
+        {
+          "name": "Serra Angel",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 4,
+          "toughness": 4,
+          "flying": true,
+          "haste": false
+        },
+        {
+          "name": "Serra Angel",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 4,
+          "toughness": 4,
+          "flying": true,
+          "haste": false
+        }
+      ],
+      "target": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "shapesharer",
+      "paid": [
+        2,
+        3
+      ],
+      "turns": [
+        {
+          "name": "Serra Angel",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 4,
+          "toughness": 4,
+          "flying": true,
+          "haste": false
+        },
+        {
+          "name": "Serra Angel",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 4,
+          "toughness": 4,
+          "flying": true,
+          "haste": false
+        },
+        {
+          "name": "Serra Angel",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 4,
+          "toughness": 4,
+          "flying": true,
+          "haste": false
+        },
+        {
+          "name": "Shapesharer",
+          "creature": true,
+          "aura": false,
+          "land": false,
+          "artifact": false,
+          "power": 1,
+          "toughness": 1,
+          "flying": false,
+          "haste": false
+        }
+      ],
+      "source": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "vesuvan",
+      "paid": 5,
+      "face_down": true,
+      "after_frames": 0,
+      "after": {
+        "name": "",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 2,
+        "toughness": 2,
+        "flying": false,
+        "haste": false
+      },
+      "source_frames": 1,
+      "source": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "eiganjo",
+      "paid": 4,
+      "before": [
+        {
+          "id": 27,
+          "owner": 0,
+          "haste": true,
+          "menace": true,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 28,
+          "owner": 0,
+          "haste": true,
+          "menace": true,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 32,
+          "owner": 1,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 33,
+          "owner": 2,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 34,
+          "owner": 3,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        }
+      ],
+      "after": [
+        {
+          "id": 27,
+          "owner": 0,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 28,
+          "owner": 0,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 32,
+          "owner": 1,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 33,
+          "owner": 2,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 34,
+          "owner": 3,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        }
+      ],
+      "source": [
+        {
+          "id": 27,
+          "owner": 0,
+          "haste": true,
+          "menace": true,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 28,
+          "owner": 0,
+          "haste": true,
+          "menace": true,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 32,
+          "owner": 1,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 33,
+          "owner": 2,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        },
+        {
+          "id": 34,
+          "owner": 3,
+          "haste": false,
+          "menace": false,
+          "vigilance": true,
+          "power": 2
+        }
+      ],
+      "unmapped": []
+    },
+    {
+      "case": "overlap",
+      "paid": [
+        3,
+        2,
+        2
+      ],
+      "before_frames": 2,
+      "after_frames": 0,
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source_frames": 2,
+      "source": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": false
+      },
+      "unmapped": []
+    },
+    {
+      "case": "blink",
+      "paid": [
+        3,
+        2,
+        1
+      ],
+      "after": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "retained": true,
+      "source": {
+        "name": "Mirage Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source_retained": true,
+      "unmapped": []
+    },
+    {
+      "case": "cursed",
+      "paid": 3,
+      "before": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": true
+      },
+      "after": {
+        "name": "Cursed Mirror",
+        "creature": false,
+        "aura": false,
+        "land": false,
+        "artifact": true,
+        "power": 0,
+        "toughness": 0,
+        "flying": false,
+        "haste": false
+      },
+      "source": {
+        "name": "Serra Angel",
+        "creature": true,
+        "aura": false,
+        "land": false,
+        "artifact": false,
+        "power": 4,
+        "toughness": 4,
+        "flying": true,
+        "haste": true
+      },
+      "unmapped": []
+    }
+  ],
+  "receipt_sha256": "fff5ef54223559f5aca38100045be4b67fd7fd4690c0c7f1c7bebf4ab2fb7302",
+  "worker_log_sha256": "55a8496ae0891111cb67feb29875125d0ae54663abc38debe2dd919a6c52c796",
+  "worker_sha256": "aae64989b2880eaf45529777e87491fc5b5261095aed07cc01bd23f1647816df",
+  "test_sha256": "602d01c4ef36e32dcf09e1e232c4d48f39e3d6a7d16687afcbdb9a49b7ae2f1f",
+  "native_source_sha256": "f231cbfa856e85c801a01f4e66c0b738dc55164fa6773485943d9afebd87b991",
+  "patch_sha256": "fba43a5becdb0d767e93ad434a7a89528b360826e03d4885914a9fc1d800fe3a",
+  "oracle_witnesses": [
+    {
+      "name": "Mirage Mirror",
+      "oracle_id": "6a84eda1-7e72-4b5a-849f-b6e177565aeb",
+      "mana_cost": "{3}",
+      "source": "https://scryfall.com/card/msc/206/mirage-mirror?utm_source=api",
+      "oracle_text_sha256": "863aaf96acf0b4e8054dcebcd5c42be54611086d9b8db3c0d384700f085d9183",
+      "raw_record_sha256": "e46e2ed335b93e824965caa6ba6302b4a5db84150422e40f1a592b6e6834c7d3"
+    },
+    {
+      "name": "Mirrorweave",
+      "oracle_id": "026b7221-0caf-4c8b-8c1b-e7de836797b7",
+      "mana_cost": "{2}{W/U}{W/U}",
+      "source": "https://scryfall.com/card/cm2/162/mirrorweave?utm_source=api",
+      "oracle_text_sha256": "715b562007253887fd8e99410e94b26b3c6da47a65c5a92c12b3c253dc952a54",
+      "raw_record_sha256": "1b308405efabb86d7a2516476440905985e736b34fa973362c566799e15076b5"
+    },
+    {
+      "name": "Shapesharer",
+      "oracle_id": "400c9fd8-c307-4b27-af6a-73e100717881",
+      "mana_cost": "{1}{U}",
+      "source": "https://scryfall.com/card/lrw/85/shapesharer?utm_source=api",
+      "oracle_text_sha256": "78350d0cf1aa44004facd68666392484d8a65b084451fec36f2b165d65ec13ef",
+      "raw_record_sha256": "90d5c172000c2f3be7185c00be8b66307cf166f4d21f7b40e1c010d87865e53b"
+    },
+    {
+      "name": "Vesuvan Shapeshifter",
+      "oracle_id": "ec577886-fb25-455b-9c3d-5fd610959436",
+      "mana_cost": "{3}{U}{U}",
+      "source": "https://scryfall.com/card/tsr/97/vesuvan-shapeshifter?utm_source=api",
+      "oracle_text_sha256": "661d2e761a3c243b1ee6508882275c02dacb4a86022d9bf8c9c2159739759438",
+      "raw_record_sha256": "91c6b33974f631b1446d52dddb67a2ea8108f83ae74ba63826e94013678207e6"
+    },
+    {
+      "name": "Eiganjo Uprising",
+      "oracle_id": "fe2fe9f2-908b-49a9-9648-b01e0417a364",
+      "mana_cost": "{X}{R}{W}",
+      "source": "https://scryfall.com/card/neo/217/eiganjo-uprising?utm_source=api",
+      "oracle_text_sha256": "1612bc52953f9b7bb1f03164e6a700769973f877a7e816c6aba4b385c316a550",
+      "raw_record_sha256": "3109e9db62c8c51bcd20290de1f64f2964eef04a630bb13b654c115ea5d37c8e"
+    },
+    {
+      "name": "Cursed Mirror",
+      "oracle_id": "4d67e2a7-4aa7-44cc-853b-500d7aac046d",
+      "mana_cost": "{2}{R}",
+      "source": "https://scryfall.com/card/frc/49/cursed-mirror?utm_source=api",
+      "oracle_text_sha256": "8d2c2f6387b496f1a0bd168a7e03f830a8eda0c86d0927df2b966e41f7b891dd",
+      "raw_record_sha256": "43e3564e4d4c1a8fb991e42279bdcc7ec84124d2243fc6a7d926a4f8672a4ca8"
+    },
+    {
+      "name": "Cloudshift",
+      "oracle_id": "6879f5ce-7a1b-4606-bad1-885779b0d456",
+      "mana_cost": "{W}",
+      "source": "https://scryfall.com/card/tle/152/cloudshift?utm_source=api",
+      "oracle_text_sha256": "ee5a66500a755dd86039a417fe325ffe44f9e019979bb1647ff170bc40cbe6de",
+      "raw_record_sha256": "8c6232b75fca90211cd0d8742512da05a61e608a194ac2b61889752c2092ab30"
+    },
+    {
+      "name": "Serra Angel",
+      "oracle_id": "4b7ac066-e5c7-43e6-9e7e-2739b24a905d",
+      "mana_cost": "{3}{W}{W}",
+      "source": "https://scryfall.com/card/fdn/740/serra-angel?utm_source=api",
+      "oracle_text_sha256": "f684a39aa1028505b2c4f766baee12539be12dcfc76f788e60b9ffc02e07e202",
+      "raw_record_sha256": "1d0cb038f9afaeeefae805e744811560a62d5551f6e83d620c0e5fd88256e52d"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "mana_cost": "{1}{G}",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_record_sha256": "bdf0ca990d04d698f5988082356c94f78f101eeb1682c1b473c88a3fd419dd1e"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "mana_cost": "{1}{G}",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "raw_record_sha256": "4a6eeb0b0e8cc544689789a05f0f745961ad7e1029e34d812365adf0d0957c31"
+    },
+    {
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "mana_cost": "",
+      "source": "https://scryfall.com/card/mdd/301/forest?utm_source=api",
+      "oracle_text_sha256": "6215eab3372e7128de713b41e7758fc9b179ade5bc47d33a5af8cef9c9c7493b",
+      "raw_record_sha256": "9492cd4796b109f4d51e9007c7f74a0810abd5f2ff4409adf659ccd04ca488e5"
+    },
+    {
+      "name": "Sol Ring",
+      "oracle_id": "6ad8011d-3471-4369-9d68-b264cc027487",
+      "mana_cost": "{1}",
+      "source": "https://scryfall.com/card/frc/21/sol-ring?utm_source=api",
+      "oracle_text_sha256": "8310b06afdea748af91bd3f1f23206140bba9309ef34fbd71e3211a8c3542d58",
+      "raw_record_sha256": "92135242ca3e396365ed1a32a88d6d1a65618efde05e397973db58cd4bcee4df"
+    },
+    {
+      "name": "Glorious Anthem",
+      "oracle_id": "e3886fe8-9b76-4613-8891-4ec74657c087",
+      "mana_cost": "{1}{W}{W}",
+      "source": "https://scryfall.com/card/m21/21/glorious-anthem?utm_source=api",
+      "oracle_text_sha256": "ce0bb963a8a090d56153734aa724b38c056130c01caae4d3824e308561fc2ca4",
+      "raw_record_sha256": "775b9954d6141a25a2e572bf212dc96be95dd7bfa24d91646d950acd4ca4c19c"
+    },
+    {
+      "name": "Mountain",
+      "oracle_id": "a3fb7228-e76b-4e96-a40e-20b5fed75685",
+      "mana_cost": "",
+      "source": "https://scryfall.com/card/mdd/298/mountain?utm_source=api",
+      "oracle_text_sha256": "91e8319d188a3c46e5c83ea1023ab6a453d5b028c8b00254c1168bdc23578e3c",
+      "raw_record_sha256": "6015bf003f4d739de0b6773fbdf99a1c8ba78c6346e1bee4b72ce84d342adac7"
+    }
+  ],
+  "rules_reference": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "bytes": 977752,
+    "checked_rules": [
+      "400.7",
+      "611.2a",
+      "613.1a",
+      "707.2",
+      "707.9",
+      "708.2"
+    ],
+    "scope": "Selected copy values/exceptions, continuous durations, new objects and face-down characteristics; not full or current rules certification"
+  },
+  "full_live_suite": {
+    "passed": 25,
+    "failed": 0,
+    "skipped": 0,
+    "subtests": 431,
+    "log_sha256": "2a9426fa42c3fd5629811d137c1f7286264661a13f4653fb77ebbaea5754d637"
+  },
+  "offline_quality": {
+    "tests": 399,
+    "subtests": 508,
+    "log_sha256": "3d47921a531c45396f8cf132a081700dd71d514043a8ac542c6db1967674f256"
+  },
+  "native_evidence_sha256": "b40c631f32762abdec8f44e149c51bdfbf77754b96479c9b51ea1d1b8efed5e3",
+  "catalog_probe": {
+    "report_sha256": "7167fe0cf964b9a485bb85ade9a0e37dcd3ffbf69897bda525dab697808679ff",
+    "run_id": "4ee1655b66db4674ba3172c0cedd9bcc",
+    "checked": 32116,
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    }
+  },
+  "limits": [
+    "Partial Commander registrations and controlled boards are not complete legal decks or pregame fixtures.",
+    "Thirteen native cases include ten paid card paths, one paid Vesuvan cast followed by a controlled native face-down event, and two synthetic memory contracts.",
+    "Eleven packaged witnesses cover the paid paths and controlled event. The blink outcome is an existing positive control.",
+    "Phase advancement uses real bounded hooks without response priority. Postcombat initial states avoid incidental AI combat changing the tested boards.",
+    "The face-down event tests the cleanup condition, not optional upkeep choice, admission or special-action timing.",
+    "Synthetic imprinted/remembered setup does not claim a printed Grizzly Bears imprint ability. Card-owner filtering uses copied-world membership; remembered players remain retained under the existing native contract.",
+    "Only Card and Player remembered values are restored; the native restoration already omitted other kinds. This is not a general arbitrary-payload restoration mechanism.",
+    "Two same-deadline overlapping frames and one blink guard do not certify all overlapping memory lifetimes, clone-source/target transitions, copy exceptions or room layouts.",
+    "Eiganjo checks end-of-turn keyword cleanup and intrinsic vigilance, not every token, pump duration or AI policy.",
+    "Other callbacks, merged/perpetual state, hidden views, arbitrary continuations and unexamined fields remain open. Normal CLI reports still do not aggregate the native unmapped-command diagnostic.",
+    "Selected versioned rules and retained catalog records do not certify every current rule or card."
+  ]
+}
