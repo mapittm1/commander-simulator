@@ -1,0 +1,92 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/DebuffEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DebuffEffect.java
+@@ -153,17 +153,31 @@
+             gameCard.addChangedCardKeywords(addedKW, removedKW, false, timestamp, null);
+ 
+             if (!"Permanent".equals(sa.getParam("Duration"))) {
+-                final GameCommand until = new GameCommand() {
+-                    private static final long serialVersionUID = 5387486776282932314L;
+-
+-                    @Override
+-                    public void run() {
+-                        gameCard.removeChangedCardKeywords(timestamp, 0);
+-                    }
+-                };
++                final GameCommand until = new KeywordRestoration(gameCard, timestamp);
+                 addUntilCommand(sa, until);
+             }
+         }
+     }
+ 
++
++    /** The removed keyword layer belongs to the mapped card, not the source world. */
++    private static final class KeywordRestoration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        private KeywordRestoration(Card card, long timestamp) {
++            this.card = card;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            card.removeChangedCardKeywords(timestamp, 0);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new KeywordRestoration(context.map(card), timestamp);
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/PowerExchangeEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PowerExchangeEffect.java
+@@ -71,21 +71,35 @@
+ 
+         if (!"Permanent".equals(sa.getParam("Duration")) && !perpetual) {
+             // If not Permanent, remove Pumped at EOT
+-            final GameCommand untilEOT = new GameCommand() {
+-
+-                private static final long serialVersionUID = -4890579038956651232L;
+-
+-                @Override
+-                public void run() {
+-                    c1.removeNewPT(timestamp, 0);
+-                    c2.removeNewPT(timestamp, 0);
+-                    game.fireEvent(new GameEventCardStatsChanged(c1));
+-                    game.fireEvent(new GameEventCardStatsChanged(c2));
+-                }
+-            };
++            final GameCommand untilEOT = new PowerExchangeExpiration(c1, c2, timestamp);
+ 
+             addUntilCommand(sa, untilEOT);
+         }
+     }
+ 
++
++    private static final class PowerExchangeExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card first;
++        private final Card second;
++        private final long timestamp;
++        private PowerExchangeExpiration(Card first, Card second, long timestamp) {
++            this.first = first;
++            this.second = second;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            first.removeNewPT(timestamp, 0);
++            second.removeNewPT(timestamp, 0);
++            first.getGame().fireEvent(new GameEventCardStatsChanged(first));
++            second.getGame().fireEvent(new GameEventCardStatsChanged(second));
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new PowerExchangeExpiration(context.map(first), context.map(second), timestamp);
++        }
++    }
++
+ }

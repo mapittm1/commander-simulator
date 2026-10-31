@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **866 native tests in 75 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 318 focused
+The reviewed patched source also passes **882 native tests in 76 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 334 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -964,3 +964,53 @@ protection quality, prevention, blocking, attachment, radiance, blink, overlappi
 duration, player-loss interaction or AI decision. Other effect callbacks and
 arbitrary continuation payloads still require separate verification. This is
 additional tested coverage, not complete Magic rules certification.
+
+
+## Keyword restoration and power exchange
+
+The reviewed runtime maps the cleanup payload for temporary keyword removal and
+for temporary power exchanges. Keyword cleanup retains the affected card and the
+layer timestamp; power-exchange cleanup maps both affected cards and its timestamp.
+These commands remove the same layers at the same native deadlines as before,
+without retaining cards or event targets from the original game.
+
+Sixteen native regressions cover eight scenarios with stack copying enabled and
+disabled. All sixteen first reproduced failed cleanup in the previous runtime:
+
+- Canopy Claws removes flying, then restores it at turn end.
+- Hammerheim pays its tap cost to remove River Boa's landwalk.
+- Canopy Dragon gains flying and loses trample through separate effect paths;
+  cleanup removes the flying grant and restores trample.
+- An opponent pays to activate Zerapa Minotaur's first-strike removal.
+- Cephalid Snitch pays its sacrifice cost against White Knight, Iridescent Angel,
+  and a creature enchanted with Spectra Ward. The latter two first use a paid
+  Moonlace to make the blue Snitch colorless, preserving target legality. Cleanup
+  restores the original protection layer and removes the temporary split entries.
+- A paid Serene Master cast is followed by a controlled attacker declaration.
+  Native AI blocker selection, the block trigger, combat damage and end-of-combat
+  hooks run normally. The copied Master returns to zero power while the source
+  world's exchange remains active until that world's own combat ends.
+
+Eight packaged-runtime witnesses repeat these paths, recording paid mana, tap or
+sacrifice costs, the acting player, copied active state, independent source/copy
+cleanup and unmapped-command diagnostics. The native fixtures also assert each
+removed keyword existed before removal. Before/after receipts and frozen source
+hashes are retained in
+[`keyword_expiration_evidence.json`](../engine/keyword_expiration_evidence.json).
+The retained September 25, 2026 rules reference covers duration, ability/power
+layers, protection targeting and end-of-combat expiration; it is versioned evidence,
+not a claim to have audited every rule or subsequent rules revision.
+
+Verification: **334 focused native tests**, **882 broader gameplay tests** including
+those 334, **256 serialization tests**, **27 live integrations / 442 subtests**,
+and **399 offline tests / 508 subtests**, with the full Python quality gate.
+The frozen catalog construction probe still passes **32,109 identities**, excluding
+the same seven non-starting meld records. Construction is not gameplay proof.
+
+These are controlled four-player boards with partial registrations, not complete
+legal decks or full pregame runs. Attacker declaration is installed as a fixture;
+this does not certify attacker admission, summoning-sickness handling or every
+combat choice. Native phase advancement omits response priority. This work does
+not certify every removed keyword, flashback path, overlapping layer, lost-player
+or blink interaction, permanent/perpetual power exchange, or AI decision. Other
+callbacks and arbitrary continuations still require separate verification.

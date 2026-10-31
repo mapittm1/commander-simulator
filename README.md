@@ -33,16 +33,19 @@ animation and copied reversal paths for all 13 retained Licids.
 copy frames, restored references and temporary token keywords.
 [Protection deadlines](docs/CARD_COVERAGE.md#protection-deadlines) cover temporary
 protection on individual creatures, groups and players in copied games.
+[Keyword restoration and power exchange](docs/CARD_COVERAGE.md#keyword-restoration-and-power-exchange)
+cover temporary keyword removal and Serene Master combat cleanup.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 318
+Seven additional records are non-starting meld results. The build passes 334
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
-conditional control/cleanup, animation reversal, temporary-copy expiry and protection deadlines.
-Broader native runs pass 866 AI/gameplay tests (including those 318) and 256
+conditional control/cleanup, animation reversal, temporary-copy expiry, protection deadlines, keyword restoration
+and combat power exchange.
+Broader native runs pass 882 AI/gameplay tests (including those 334) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

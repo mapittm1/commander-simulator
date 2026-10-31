@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed copied-world cleanup of temporary keyword removal and combat power
+  exchange. Sixteen native regressions first reproduced the failures; eight
+  packaged witnesses now check paid costs, independent deadlines, protection
+  splitting, opponent activation and Serene Master's native block trigger.
+  Pinned the patch and fixtures and retained before/after evidence and limits.
+
 - Fixed copied-game expiration of temporary creature, group and player protection.
   Six native regressions first reproduced the defect; paid Shelter, Brave the
   Elements and Seht's Tiger witnesses now preserve independent deadlines and

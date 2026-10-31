@@ -1,0 +1,917 @@
+{
+  "scope": "Selected temporary keyword restoration and Serene Master end-of-combat power-exchange expiry; not complete card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-keyword-expiry",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "3321bff0448a21c1cbb0621b64a220cd2eb4e6d19c7ad2af4a2e8b6aea78eddb",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "3aca3bdc365f3ce1bea3db92d31303c6ce46a20665242986529ca79671cf42ea",
+    "native_tests": {
+      "total": 334,
+      "passed": 334,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "6e8bf382715fc8d7d544378cdf48072bb545b4a4e38a76189465b4cba5e8d87b",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "bf97ba355e9545d19546f1e25ad662a4",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/ability/effects/DebuffEffect.java": "36ff785ad0df5ed36ac768b22329a573ce6570033200c797db1ea5943d787ca2",
+    "forge-game/src/main/java/forge/game/ability/effects/PowerExchangeEffect.java": "3f25b18b6d3e416cc5cd985c635b7faa37be0bc008ed097a5778cafdb9b5a1f4"
+  },
+  "patch_sha256": "eba5a951309f9f3694353525396fa48996c1ce361bd605790e1d28d9ec671976",
+  "native_test_sha256": "4e127d92f0eea94a110415f26cbf133c2fc44e42c69e3261874988c85c31c58d",
+  "worker_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+  "integration_test_sha256": "d2a98b9fa84074c40bc4edb11b05d1463f148f968364fafaa43e6bbf3db809df",
+  "native_before": {
+    "counts": {
+      "total": 16,
+      "passed": 0,
+      "failed": 16,
+      "skipped": 0
+    },
+    "fixture_sha256": "cdee3346b3cb2a681e7bb2b8cf3a70041eda3506a1a00e38b6fe659aa1cd8e1f",
+    "testng_sha256": "998e6755ab7e0e2ace7692a3447312883ebe4dcd317877bb5d45ba86b8b297b1",
+    "log_sha256": "d3568f28bc68ccb103c3a5a6e010b3d35a9ef70efea3f7a8f1188001bab77f42",
+    "production_files_compared": 1030,
+    "source_audit_sha256": "50b33046d7d3a8f90c1c5615842d2442d5ff75d13b65b7d8095fa5db7882139c",
+    "note": "The final fixture uses explicit imports and spacing changes; actions and assertions match the valid failing baseline. An earlier enum-name compilation error is not included in these counts."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "8e26d811c5b08ff380ef6361e09b5eb493b0f744b00f011640a7360d028d386a",
+    "log_sha256": "11bd1b972388d693cedae9edafb2f5cf8511f3525e005e804a239f034abdd6f9"
+  },
+  "baseline_positive_control": "Canopy Dragon flying grant already expired correctly through PumpEffect cleanup; the removed trample keyword remained missing until this DebuffEffect fix.",
+  "before": {
+    "run_id": "198d6deb226247b983e89eaa5ddae195",
+    "receipt_sha256": "f248aba4badcd444c8b74784cdad3d3b9c26da3b8872605b81bb9c12ac6db228",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "claws",
+        "paid": [
+          1
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "landwalk",
+        "paid": [
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": true,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "dragon",
+        "paid": [
+          6,
+          2
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "minotaur",
+        "paid": [
+          4,
+          2
+        ],
+        "costs": {
+          "activator": 1,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "snitch",
+        "paid": [
+          2,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "angel",
+        "paid": [
+          2,
+          1,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "ward",
+        "paid": [
+          5,
+          2,
+          1,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DebuffEffect$1"
+        ]
+      },
+      {
+        "case": "exchange",
+        "paid": [
+          2
+        ],
+        "blocked": true,
+        "before": [
+          6,
+          0
+        ],
+        "copied_before": 6,
+        "after": 6,
+        "source": 6,
+        "source_after": 0,
+        "unmapped": [
+          "COMBAT_END.until: forge.game.ability.effects.PowerExchangeEffect$1"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "run_id": "e071c22566af4439a5d3732ab22bb0ae",
+    "receipt_sha256": "b43e1f4e9974414a7a39d9b72596c1d284054c01f7d30e298f3d63d2df513f5d",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "claws",
+        "paid": [
+          1
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "landwalk",
+        "paid": [
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": true,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "dragon",
+        "paid": [
+          6,
+          2
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "minotaur",
+        "paid": [
+          4,
+          2
+        ],
+        "costs": {
+          "activator": 1,
+          "tapped": false,
+          "sacrificed": false
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "snitch",
+        "paid": [
+          2,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "angel",
+        "paid": [
+          2,
+          1,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": true,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": true,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "ward",
+        "paid": [
+          5,
+          2,
+          1,
+          0
+        ],
+        "costs": {
+          "activator": 0,
+          "tapped": false,
+          "sacrificed": true
+        },
+        "before": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "selected": false,
+          "flying": false,
+          "split_red": true,
+          "zone": "Battlefield"
+        },
+        "source_after": {
+          "selected": true,
+          "flying": false,
+          "split_red": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "exchange",
+        "paid": [
+          2
+        ],
+        "blocked": true,
+        "before": [
+          6,
+          0
+        ],
+        "copied_before": 6,
+        "after": 0,
+        "source": 6,
+        "source_after": 0,
+        "unmapped": []
+      }
+    ]
+  },
+  "packaged_candidate_run_ids": [
+    "75f7d5f77b7c4b53a6117b8eeb948082",
+    "e071c22566af4439a5d3732ab22bb0ae"
+  ],
+  "oracle_witnesses": [
+    {
+      "name": "Canopy Claws",
+      "oracle_id": "195c6453-e5cc-4b3b-8518-eaccf29bc4a6",
+      "source": "https://scryfall.com/card/jud/108/canopy-claws?utm_source=api",
+      "oracle_text_sha256": "ed88a7366213a75c0c2d6b35b03e04a9a920209a76dc5c263c6b297469238ce5",
+      "mana_cost": "{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Serra Angel",
+      "oracle_id": "4b7ac066-e5c7-43e6-9e7e-2739b24a905d",
+      "source": "https://scryfall.com/card/fdn/740/serra-angel?utm_source=api",
+      "oracle_text_sha256": "f684a39aa1028505b2c4f766baee12539be12dcfc76f788e60b9ffc02e07e202",
+      "mana_cost": "{3}{W}{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Hammerheim",
+      "oracle_id": "c7476beb-7923-4994-8476-bc69187ecb72",
+      "source": "https://scryfall.com/card/me3/207/hammerheim?utm_source=api",
+      "oracle_text_sha256": "4409c8eb311b316bb8b6d580efb4d13a7028b949185f60a0d3bd6fd13af44d4e",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "River Boa",
+      "oracle_id": "86187aed-77ce-4b2d-aab0-0a8f807a9451",
+      "source": "https://scryfall.com/card/ddm/49/river-boa?utm_source=api",
+      "oracle_text_sha256": "dba685d95ee407aa4127e763585db1b762a084917e3a40040da0e47532273011",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Canopy Dragon",
+      "oracle_id": "a9e59ee4-02a6-498c-82f0-f4f2ff334d65",
+      "source": "https://scryfall.com/card/mir/209/canopy-dragon?utm_source=api",
+      "oracle_text_sha256": "137462868b444406e50574f222c4d30995283827fcb38bf3d92345877c8d2b4e",
+      "mana_cost": "{4}{G}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Zerapa Minotaur",
+      "oracle_id": "4520c630-3650-462f-ab01-215eb2bdbbf5",
+      "source": "https://scryfall.com/card/pcy/108/zerapa-minotaur?utm_source=api",
+      "oracle_text_sha256": "c8d051e7da3b488efb79d3fc2fb65a16a1ba6964f50d639b95a8bd7770b92437",
+      "mana_cost": "{2}{R}{R}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Cephalid Snitch",
+      "oracle_id": "15093579-8258-41d2-9738-aaa7e3824c40",
+      "source": "https://scryfall.com/card/tor/30/cephalid-snitch?utm_source=api",
+      "oracle_text_sha256": "3fe2cc57233f852fad09ae45c0eabb1483187408f6fdfb4eb0113b66d9737fd7",
+      "mana_cost": "{1}{U}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "White Knight",
+      "oracle_id": "ddb021df-ae4a-4ac1-8353-d0b375761714",
+      "source": "https://scryfall.com/card/ddg/9/white-knight?utm_source=api",
+      "oracle_text_sha256": "da65a0690aee43deb39f65d5c040940df35f0574091c9a63e48cc9fe6db0132c",
+      "mana_cost": "{W}{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Iridescent Angel",
+      "oracle_id": "28fa9211-96bb-4fef-81bf-8f58114a8df7",
+      "source": "https://scryfall.com/card/ody/288/iridescent-angel?utm_source=api",
+      "oracle_text_sha256": "930777381e1d1bb9ed17f96c62bad998d26c36ff6fd8a78c147a57c7a1e470db",
+      "mana_cost": "{5}{W}{U}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Spectra Ward",
+      "oracle_id": "effb99e6-db1b-4ada-879d-431d9d13d4b7",
+      "source": "https://scryfall.com/card/m15/36/spectra-ward?utm_source=api",
+      "oracle_text_sha256": "b6443296e64e3997f5deac71a55776627a30aa07ce02f9c054fe8ef69248e97f",
+      "mana_cost": "{3}{W}{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Moonlace",
+      "oracle_id": "52d4dc8a-2799-4b4e-9c20-f14bb75c2279",
+      "source": "https://scryfall.com/card/tsp/68/moonlace?utm_source=api",
+      "oracle_text_sha256": "758af2b2bf1c79771e9c9413066d9dccc112766c49cfe5404ce5f49201d7e394",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Serene Master",
+      "oracle_id": "2ce0d583-81ca-4dca-bde0-52f86b683afd",
+      "source": "https://scryfall.com/card/c13/20/serene-master?utm_source=api",
+      "oracle_text_sha256": "0c7630febca034eb87ac0128bd8d18942b410b6c835a0148eac8b2b5d1e15409",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Colossal Dreadmaw",
+      "oracle_id": "08c7db90-c0cf-4482-b7ee-bb033e5996d2",
+      "source": "https://scryfall.com/card/m21/176/colossal-dreadmaw?utm_source=api",
+      "oracle_text_sha256": "25612a13b0af23dc726fb197810b666ef5c64cf679cc04ef481891c37c25171f",
+      "mana_cost": "{4}{G}{G}",
+      "catalog_commander_legality": "legal"
+    }
+  ],
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "611.2a",
+      "613.1f",
+      "613.4b",
+      "702.16b",
+      "511.2",
+      "702.16h"
+    ],
+    "scope": "Retained versioned reference for stated durations, ability and power layers, protection targeting and end-of-combat cleanup; not a full or current rules audit"
+  },
+  "full_live_suite": {
+    "passed": 27,
+    "subtests": 442,
+    "log_sha256": "0a71216294847f822e1bd2deaaf5d1fa38e484029a20a9df3ad80da0789e62f5"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 27,
+    "subtests": 508,
+    "log_sha256": "b9407272b9e101c10aa383306dff3937c2087e556aa9a3cbbe22a38009558bf5"
+  },
+  "native_evidence_sha256": "7ecbfde25b9779a042496c03d11984c2666ddf8db594fdbacc84f5aa3fe18a16",
+  "catalog_probe": {
+    "run_id": "7484492265af4af3b2da81280232415f",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "f99de83d7cc95f2327f17b07f51d29482bab81d1d9840b899f82dd305bd678c7"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-keyword-expiry-reviewed",
+    "lock_sha256": "5d3c9b932825f9432727c21b88b9d423bc480854f34d38b9c4d7222fa01cf266",
+    "engine_check_sha256": "c9001afdb2d235eed77d1db6be795cfec56aab92a376c243c2a7da35300185ca",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-protection-reviewed"
+  },
+  "limits": [
+    "Sixteen native cases use partial four-player registrations and controlled boards, with stack copying enabled and disabled.",
+    "Eight packaged witnesses pay real spell/activation costs and run bounded native phase hooks without response priority.",
+    "Native fixtures assert the original keywords existed before removal. Packaged receipts check paid mana, tap/sacrifice costs and the acting player.",
+    "Cephalid Snitch becomes colorless through paid Moonlace before targeting creatures protected from blue; split entries and their cleanup are observed.",
+    "Serene Master uses a paid cast and a controlled attacker declaration, followed by native AI blocker choice, block trigger, damage and combat cleanup. Attacker admission and summoning-sickness handling are not certified.",
+    "The packaged Claws before-state assertion was corrected to expect flying already removed; the failing preliminary assertion is not evidence of a candidate engine failure.",
+    "Not all removed keywords, flashback paths, overlapping layers, blink/player-loss interactions, permanent/perpetual exchanges or AI policies are verified.",
+    "Unmapped commands are checked in these fixtures, not yet aggregated into normal simulation reports. Other callbacks, arbitrary payloads and continuations remain unverified.",
+    "Catalog construction and retained versioned rules references do not establish full or current rules correctness."
+  ]
+}
