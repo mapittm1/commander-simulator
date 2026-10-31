@@ -8,6 +8,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ### Added
 
+- Map animation expiration cards/timestamps and explicit Licid end-effect payloads
+  into snapshots. Reverting a copy no longer executes the original game's closure.
+  Add a trusted native subclass-field hook and map changed-trait collections and
+  supported animation removal predicates through the canonical identity graph.
+- Add 33 native cases: both stack-copy modes for all 13 retained Licids, selected
+  timed/mass and permanent/temporary animation layers, and one synthetic alias/
+  collection contract. Eighteen packaged witnesses cover all 13 reversal paths and
+  five other animation outcomes, with Oracle-checked payment expectations.
+- Verification: all Python quality tools and 399 offline tests / 508 subtests;
+  299 focused native tests; 847 broader gameplay tests including those 299;
+  256 serialization tests; all 24 live integrations / 420 subtests; and all
+  32,109 matched native constructions pass. Activate the pinned animation runtime
+  while retaining previous builds, locks and exact before/after evidence.
+
 - Preserve conditional-control arrays with mapped targets and shared cleanup
   identities; reject unknown internal schemas. Map EffectEffect expiration,
   two-turn re-registration wrappers and the state-based cleanup queue without

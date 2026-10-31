@@ -1,0 +1,209 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/AnimateEffectBase.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/AnimateEffectBase.java
+@@ -18,13 +18,11 @@
+ package forge.game.ability.effects;
+ 
+ import com.google.common.collect.Lists;
+-import forge.GameCommand;
+ import forge.card.CardType;
+ import forge.card.ColorSet;
+ import forge.card.RemoveType;
+ import forge.card.mana.ManaCost;
+ import forge.game.CardTraitBase;
+-import forge.game.Game;
+ import forge.game.ability.AbilityFactory;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.SpellAbilityEffect;
+@@ -54,7 +52,6 @@
+             List<String> abilities, final List<String> triggers, final List<String> replacements, final List<String> stAbs,
+             final long timestamp, final String duration) {
+         final Card source = sa.getHostCard();
+-        final Game game = source.getGame();
+         final boolean perpetual = "Perpetual".equals(duration);
+ 
+         boolean addAllCreatureTypes = sa.hasParam("AddAllCreatureTypes");
+@@ -84,7 +81,7 @@
+             removeAbilities = Predicate.not(CardTraitBase::isManaAbility);
+             removeAllKeywords = true;
+         } else if (sa.hasParam("RemoveThisAbility")) {
+-            removeAbilities = e -> sa.getOriginalAbility().equals(e);
++            removeAbilities = new RemoveAnimationAbility(sa.getOriginalAbility());
+         }
+ 
+         if (sa.hasParam("RememberAnimated")) {
+@@ -186,36 +183,10 @@
+             addedStaticAbilities.add(StaticAbility.create(AbilityUtils.getSVar(sa, s), c, sa.getCardState(), false));
+         }
+ 
+-        final GameCommand unanimate = new GameCommand() {
+-            private static final long serialVersionUID = -5861759814760561373L;
+-
+-            @Override
+-            public void run() {
+-                doUnanimate(c, timestamp);
+-
+-                c.removeChangedSVars(timestamp, 0);
+-                c.removeChangedName(timestamp, 0);
+-                c.updateStateForView();
+-                c.updatePTforView();
+-
+-                game.fireEvent(new GameEventCardStatsChanged(c));
+-            }
+-        };
+-
++        final AnimationExpiration unanimate = new AnimationExpiration(c, timestamp);
+         if (sa.hasParam("RevertCost")) {
+             final ManaCost cost = new ManaCost(sa.getParam("RevertCost"));
+-            final String desc = sa.getStackDescription();
+-            final SpellAbility revertSA = new AbilityStatic(c, cost) {
+-                @Override
+-                public void resolve() {
+-                    unanimate.run();
+-                }
+-                @Override
+-                public String getDescription() {
+-                    return cost + ": End Effect: " + desc;
+-                }
+-            };
+-            addedAbilities.add(revertSA);
++            addedAbilities.add(new RevertAnimationAbility(c, cost, sa.getStackDescription(), unanimate));
+         }
+ 
+         // after unanimate to add RevertCost
+@@ -272,4 +243,58 @@
+ 
+         c.removeHiddenExtrinsicKeywords(timestamp, 0);
+     }
++
++    /** Explicit payloads replace closures over the original card and game. */
++    private static final class AnimationExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        private AnimationExpiration(Card card, long timestamp) {
++            this.card = card;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            doUnanimate(card, timestamp);
++            card.removeChangedSVars(timestamp, 0);
++            card.removeChangedName(timestamp, 0);
++            card.updateStateForView();
++            card.updatePTforView();
++            card.getGame().fireEvent(new GameEventCardStatsChanged(card));
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new AnimationExpiration(context.map(card), timestamp);
++        }
++    }
++
++    private static final class RevertAnimationAbility extends AbilityStatic {
++        private AnimationExpiration expiration;
++        private RevertAnimationAbility(Card card, ManaCost cost, String description,
++                AnimationExpiration expiration) {
++            super(card, cost);
++            setDescription(cost + ": End Effect: " + description);
++            this.expiration = expiration;
++        }
++        @Override public void resolve() { expiration.run(); }
++        @Override
++        protected void copySnapshotSubclassFieldsTo(SpellAbility target,
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            ((RevertAnimationAbility) target).expiration =
++                    (AnimationExpiration) context.command(expiration, "ability.revertAnimation");
++        }
++    }
++
++    private static final class RemoveAnimationAbility implements forge.game.card.SnapshotTraitPredicate {
++        private final SpellAbility ability;
++        private RemoveAnimationAbility(SpellAbility ability) { this.ability = ability; }
++        @Override public boolean test(CardTraitBase candidate) { return ability.equals(candidate); }
++        @Override
++        public Predicate<CardTraitBase> copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new RemoveAnimationAbility(context.copy(ability));
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -1320,8 +1320,12 @@
+         }
+         if (this instanceof WrappedAbility wrapped)
+             ((WrappedAbility) target).restoreSnapshotDelegate(context.copy(wrapped.getWrappedAbility()), context.map(wrapped.getDecider()));
++        copySnapshotSubclassFieldsTo(target, context);
+         target.view = new SpellAbilityView(target, context.getGame().getTracker());
+     }
++
++    /** Trusted native subclasses explicitly rebind extra mutable or game-bound payloads. */
++    protected void copySnapshotSubclassFieldsTo(SpellAbility target, SpellAbilitySnapshot context) { }
+ 
+     public SpellAbility copy() {
+         return copy(hostCard, false);
+--- /dev/null
++++ b/forge-game/src/main/java/forge/game/card/SnapshotTraitPredicate.java
+@@ -0,0 +1,11 @@
++package forge.game.card;
++
++import java.util.function.Predicate;
++
++import forge.game.CardTraitBase;
++import forge.game.spellability.SpellAbilitySnapshot;
++
++/** Explicit mapper for trusted trait-removal predicates with game-bound references. */
++public interface SnapshotTraitPredicate extends Predicate<CardTraitBase> {
++    Predicate<CardTraitBase> copyForSnapshot(SpellAbilitySnapshot context);
++}
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
+@@ -565,4 +565,29 @@
+         return result;
+     }
+ 
++
++    /** Map changed-trait collections through the same canonical graph as printed abilities. */
++    public forge.game.card.CardTraitChanges traitChanges(forge.game.card.CardTraitChanges source) {
++        forge.game.card.CardTraitChanges saved = (forge.game.card.CardTraitChanges) objects.get(source);
++        if (saved != null) return saved;
++        java.util.function.Predicate<forge.game.CardTraitBase> remove = source.remove();
++        if (remove instanceof forge.game.card.SnapshotTraitPredicate predicate) {
++            remove = predicate.copyForSnapshot(this);
++        }
++        saved = (forge.game.card.CardTraitChanges) objects.get(source);
++        if (saved != null) return saved;
++        List<SpellAbility> added = new ArrayList<>();
++        List<Trigger> triggers = new ArrayList<>();
++        List<ReplacementEffect> replacements = new ArrayList<>();
++        List<StaticAbility> statics = new ArrayList<>();
++        forge.game.card.CardTraitChanges result =
++                new forge.game.card.CardTraitChanges(added, triggers, replacements, statics, remove);
++        objects.put(source, result);
++        for (SpellAbility ability : source.getAbilities()) added.add(copy(ability));
++        for (Trigger trigger : source.getTriggers()) triggers.add(trigger(trigger));
++        for (ReplacementEffect replacement : source.getReplacements()) replacements.add(replacement(replacement));
++        for (StaticAbility ability : source.getStaticAbilities()) statics.add(staticAbility(ability));
++        return result;
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8415,6 +8415,14 @@
+                 context.cardState(state).copySnapshotTraitsFrom(state, context);
+             }
+         }
++        for (Table.Cell<Long, Long, ICardTraitChanges> entry : original.changedCardTraits.cellSet()) {
++            if (entry.getValue() instanceof CardTraitChanges traits) {
++                changedCardTraits.put(entry.getRowKey(), entry.getColumnKey(), context.traitChanges(traits));
++            }
++        }
++        for (Table.Cell<Long, Long, CardTraitChanges> entry : original.changedCardTraitsByText.cellSet()) {
++            changedCardTraitsByText.put(entry.getRowKey(), entry.getColumnKey(), context.traitChanges(entry.getValue()));
++        }
+         updateKeywordsCache();
+         updateStateForView();
+     }

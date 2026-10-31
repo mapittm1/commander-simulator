@@ -26,7 +26,8 @@ trigger queues, deferred registrations and mapped cost-payment receipts.
 A sixteenth preserves extra-turn/phase stacks, attached obligations and scheduler
 state. A seventeenth preserves conditional control checks, explicit effect
 expiration, two-turn cleanup wrappers and the state-based cleanup queue.
-All seventeen patches are pinned. No remote branch is used at build time.
+An eighteenth maps animation expiration, Licid reversal payloads and changed-trait
+collections. All eighteen patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -42,9 +43,9 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-266 native sticker, chosen-color, companion, supplementary-copy, history,
+299 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
-temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup tests.
+temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup and animation tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -74,15 +75,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins sixteen regression source files and exactly three card-script
+The recipe pins seventeen regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 814 gameplay and 256
+686 files verified against immutable source. The broader 847 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 266 focused tests are included in the 814.
+in `native_test_evidence.json`; the 299 focused tests are included in the 847.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -211,3 +212,14 @@ EffectEffect expiration and the two-turn registration wrapper now implement the
 explicit command protocol. Conditional card arrays and the game state-based cleanup
 queue are scanned for unconverted callbacks; normal CLI reports still do not
 aggregate these diagnostics. Other effect callbacks and continuations remain open.
+
+
+Animation evidence is retained in [animation_state_evidence.json](animation_state_evidence.json).
+Thirty-three native cases include both stack-copy modes for all 13 Licids,
+selected timed/mass animation, permanent/temporary layering and a changed-trait
+collection contract. Eighteen packaged witnesses retain exact before/after state.
+The previous runtime executed the original Licid's reversal closure when reversing
+a copy. Explicit expiration/reversal classes, a native subclass-payload hook and
+canonical changed-trait collections remove that source-world reference for these
+paths. A supported animation removal predicate also maps its ability reference.
+Other subclasses and predicates require separate conversion/validation.

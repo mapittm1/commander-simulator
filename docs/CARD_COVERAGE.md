@@ -120,11 +120,11 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **814 native tests in 72 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 266 focused
+The reviewed patched source also passes **847 native tests in 73 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 299 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
-turn/phase-schedule and conditional-cleanup tests; these counts must not be added
+turn/phase-schedule, conditional-cleanup and animation tests; these counts must not be added
 together.
 A separate card/deck serialization run passes 256 tests without failures or skips. GUI/download tests were
 outside this run. The selected class inventory, process result and raw-report
@@ -831,3 +831,54 @@ Verification: **399 offline tests / 508 subtests**, all Python quality tools,
 identities remain separate. [Conditional-state evidence](../engine/conditional_state_evidence.json)
 binds the exact runtime, source, stable baseline, worker/test hashes, outcomes and
 selected versioned rule/catalog references.
+
+
+## Animation snapshots
+
+Animation expiration now stores a mapped card and the original effect timestamp.
+It removes only that timestamp's power/toughness, type, keyword, color, trait,
+name and related changes, using the native unanimation operation. Timed Animate
+and AnimateAll paths share this explicit command. Permanent effects do not gain
+an expiration merely because a snapshot is made.
+
+Licid end-effect actions use an explicit native ability with a mapped expiration
+payload. The standard snapshot copier invokes a protected native hook for supported
+subclass fields after mapping the base ability state. Changed CardTraitChanges
+records retain independent mutable collections and canonical mapped abilities,
+triggers, replacements and static abilities. The animation's RemoveThisAbility
+predicate explicitly maps its ability reference. Other record predicates retain
+the previous native behavior and need separate conversion where they hold mutable
+or game-bound data; this is not a universal predicate copier.
+
+All 13 retained scripts with RevertCost are Licids. Twenty-six native cases use
+both stack-copy modes to pay for casting, animation and reversal, checking that
+reversing the copy leaves the original Aura intact. Six further paid-action cases
+(including both Factory stack-copy modes) cover Mishra's Factory, Animate Land,
+Sudden Spoiling, Natural Affinity and Awakening of Vitu-Ghazi under temporary
+Factory animation. The permanent name, haste and 9/9 state survive expiration of
+the temporary layer. One synthetic native contract checks changed-trait collection
+independence and canonical ability/host/player aliases.
+
+Eighteen packaged witnesses include each Licid and five other animation paths.
+The previous build mutates the original game in all 13 Licid reversal witnesses,
+leaves temporary animations active and fails to restore Spoiling's power/flying.
+The stable native baseline fails all 33 cases. The earlier layering payment fixture
+was corrected to supply a spare Forest before recording that baseline.
+
+These are partial games with Commander registrations, controlled initial boards,
+admitted payments and bounded native phase hooks without response priority. Licid
+fixtures advance a turn cycle before creating their friendly target; timed/mass
+fixtures start in postcombat main to avoid incidental AI combat. Licid reversion
+coverage does not certify every separate enchanted-creature ability, hostile-target
+control interaction, target/source transition or every possible animation overlap.
+All remaining subtype payloads, removal predicates, face-up animation durations,
+perpetual/merged states and arbitrary continuations need further work. The native
+unmapped-command API still is not aggregated into normal CLI simulation reports.
+
+Verification: **399 offline tests / 508 subtests**, all Python quality tools,
+**299 focused native tests**, **847 broader gameplay tests** including those 299,
+**256 serialization tests**, **24 live integrations / 420 subtests**, and
+**32,109 matched native constructions** pass. Seven non-starting meld-result
+identities remain separate. [Animation-state evidence](../engine/animation_state_evidence.json)
+binds the exact runtime, source, all 13 identity/payment expectations, stable
+before/after receipts, tests and selected versioned rule/catalog references.
