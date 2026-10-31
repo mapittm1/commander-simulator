@@ -51,10 +51,12 @@ cover effect-card expiration, regeneration quotas/history and Spiny Starfish tok
 restrictions/deadlines and tap admission after newly controlled creatures lose haste.
 [Player-control snapshots](docs/CARD_COVERAGE.md#player-control-snapshots) cover
 turn/combat deadlines, layered controllers and Emrakul's following extra turn.
+[Decision beneficiaries and pending responses](docs/CARD_COVERAGE.md#decision-beneficiaries-and-pending-responses)
+cover actual AI choices, fixed scoring perspective and spell/ability stack targets.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 524
+Seven additional records are non-starting meld results. The build passes 550
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
@@ -63,13 +65,17 @@ conditional control/cleanup, animation reversal, temporary-copy expiry, protecti
 deadlines, keyword restoration, combat power exchange, forced-block requirements,
 prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
 haste, host-bound exile returns, temporary effects, regeneration history, Detain,
-raw control age and player-control snapshots.
-Broader native runs pass 1,072 AI/gameplay tests (including those 524) and 256
+raw control age, player-control snapshots and decision/response planning.
+Broader native runs pass 1,098 AI/gameplay tests (including those 550) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
-Known AI gaps include explicit rejection of Worst Fears, Mindslaver's activation
-and Secret of Bloodbending. The controlled native witnesses pay legal actions
-directly and do not establish automated selection or hostile decision policy.
+The heuristic AI still classifies three primary ControlPlayer actions as unsupported:
+Worst Fears, Mindslaver's activation and Secret of Bloodbending. Full-simulation
+candidate enumeration already admits those legal actions; admission does not
+prove valuable selection. Controlled players now plan for their decision
+controller's benefit while paying with their own resources. Selected paid Shock,
+Counterspell and Stifle outcomes are verified. Separate combat research reproduces
+controlled attacks against their decision controller; hostile combat policy remains open.
 Other callbacks, arbitrary suspended continuations and general AI policy still
 need separate validation.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

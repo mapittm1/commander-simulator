@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,072 native tests in 83 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 524 focused
+The reviewed patched source also passes **1,098 native tests in 84 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 550 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1416,10 +1416,97 @@ AI coverage. Unmapped diagnostics still need regular CLI report aggregation.
 
 A separate native research fixture checks three legal, affordable primary
 ControlPlayer actions: Worst Fears, Mindslaver's activation and Secret of
-Bloodbending. Each is assigned to `CannotPlayAi` and returns `CantPlayAi` with
+Bloodbending. In heuristic mode each is assigned to `CannotPlayAi` and returns `CantPlayAi` with
 rating zero. All three research checks fail the criterion that an implemented
 strategy should evaluate the action instead of classifying it as unsupported;
-they do not require choosing every legal action. This is an open AI support gap
-outside the passing snapshot suites. Emrakul's mandatory trigger fallback in the
+they do not require choosing every legal action. This is an open heuristic AI support gap
+outside the passing snapshot suites. Full-simulation candidate enumeration admits
+these legal actions, as verified separately below. Emrakul's mandatory trigger fallback in the
 paid witnesses is separate from automated selection of those primary actions.
 Full hostile decision policy and arbitrary custom AI state still need work.
+
+
+## Decision beneficiaries and pending responses
+
+The planner distinguishes the acting player from the player whose decisions it
+implements. A controlled player's legal spell/ability choices are evaluated for
+its current decision controller, following native controller links. The actor
+still owns and pays for its actions; teams, opponents and object control are not
+rewritten. Self-control uses the ordinary objective. Cross-game references and
+cycles without a unique beneficiary are rejected explicitly; broader cyclic and
+custom-agent behavior is not certified.
+
+A rollout captures the beneficiary before copying or resolving anything. All
+three simulator constructors, initial scores and resulting scores use that same
+participant, even after a lethal action removes its control effect. Cached plans
+are discarded when their beneficiary changes. Controlled heuristic selection now
+uses legal-action simulation; ordinary uncontrolled heuristic selection is retained.
+
+Pending spells and abilities are copied before response planning. The no-response
+baseline resolves them using a separate copier, keeping the action-world mapping
+intact. Incremental free-cast checks during an already resolving parent keep
+their board-only baseline and do not replay that parent. The broader suite caught
+this regression in an intermediate candidate; all fourteen existing one-play
+safety checks pass after the guard. Response enumeration includes legal stack
+spell/ability targets as well
+as card/player entities. It sees Barbarian Ring's activated damage ability after
+the source has been sacrificed, when no card occupies the stack zone. These
+changes make the tested Counterspell and Stifle responses selectable.
+
+The **identical final 26-case native fixture** has **16 failures / 10 passes** on
+audited previous production source and **26 passes** with this patch. Failures
+comprise four harmful controlled/chain choices, seven initial/rollout score
+contracts, three spell-response decisions and two activated-response decisions.
+Positive controls cover ordinary/self choices, full-mode candidate admission,
+ordinary heuristic damage-counter behavior and uncounterable threats. All 1,032
+prior AI/gameplay production paths/text were compared; raw hashes and exact
+fixture bytes are retained. The candidate adds one production Java class.
+
+**Sixteen packaged cases** observe actual AI-selected actions and native payment
+and resolution. Paid Worst Fears sets up control; Shock choices protect the
+beneficiary. Ordinary and controlled responses use Counterspell against pending
+Shock. Stifle counters Barbarian Ring's native threshold activation with its real
+red, tap and sacrifice costs; the Ring cannot fund its own tap cost. Volcanic
+Fallout remains uncounterable and causes the expected unavoidable loss. Chain and
+self contexts additionally exercise native controller APIs; they are not claimed
+as complete card-generated control chains. Planning must leave the original
+game unchanged; receipts retain identities, targets, mana owners, zones and lives.
+
+Both requested heuristic and full modes are tested. The ordinary heuristic
+response positive uses the unchanged shipped **Cautious** profile's damage-counter
+preference; its normal cheap-counter policy is probabilistic, so arbitrary
+political or always-counter expectations are excluded. Default and Cautious
+profile hashes and selected native profile names are retained. Draft fixtures
+that expected precombat full-mode casting, read cast history from a graveyard
+card, or required arbitrary/default random counter behavior were corrected and
+excluded from the final identical baseline. No production fix is attributed to
+those fixture errors. An intermediate 548-test build was never selected; two
+activated-response regressions were added before the final 550-test build.
+
+Verification for this milestone is recorded in
+[`decision_perspective_evidence.json`](../engine/decision_perspective_evidence.json):
+**550 focused native tests**, **1,098 broader gameplay tests** including those 550
+in **84 classes**, **256 serialization tests**, **35 live integrations / 544
+subtests**, and **399 offline tests / 508 subtests**, with the Python quality gate.
+The catalog probe covers **32,109 constructed identities** and seven nonstarting
+meld results. Construction remains distinct from full gameplay verification.
+
+This is bounded planning on controlled partial four-player boards, not complete
+Commander game/strategy certification. Primary ControlPlayer heuristic support
+still needs work; full-mode admission is verified separately from valuable
+selection. Combat/blocks, mandatory choices, search-only control, arbitrary
+responses, custom/cyclic controllers, stochastic future effects and suspended
+continuations remain unverified. Callback diagnostics still need normal CLI
+aggregation. Versioned rules references are not a complete current-rules audit.
+
+
+A separate current-source combat research fixture reproduces an open policy gap:
+a Shivan Dragon controlled through paid Worst Fears is declared against its
+2-life decision controller despite three legal defenders and an empty opposing
+creature board. Both requested heuristic/full cases fail the protection criterion;
+both ordinary-player attack controls pass. All 1,033 AI/gameplay production paths
+match this build. This is a fixed declaration checkpoint after native control
+acquisition, not full combat-damage resolution or forced-attack certification.
+The earlier automatic-declaration checkpoint error is excluded. These two open
+research failures are separate from the passing native and live suites above;
+their source/fixture/observation hashes are retained in the decision evidence.

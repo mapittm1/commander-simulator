@@ -43,7 +43,9 @@ A twenty-seventh preserves independent Detain membership, maps player-bound expi
 and retains raw control age in live/LKI copies.
 A twenty-eighth maps player-control start/end commands and retains timestamped
 controller layers with new game-bound agent instances.
-All twenty-eight patches are pinned. No remote branch is used at build time.
+A twenty-ninth preserves the fixed decision beneficiary, pending-stack planning
+and legal spell/ability target enumeration.
+All twenty-nine patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -59,10 +61,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-524 native sticker, chosen-color, companion, supplementary-copy, history,
+550 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age and player-control tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control and decision/response tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -92,15 +94,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-seven regression source files and exactly three card-script
+The recipe pins twenty-eight regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,072 gameplay and 256
+686 files verified against immutable source. The broader 1,098 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 524 focused tests are included in the 1,072.
+in `native_test_evidence.json`; the 550 focused tests are included in the 1,098.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -307,5 +309,20 @@ are retained. The same final native fixture changes from 28 failures / 2 passes
 to 30 passes. Thirteen paid packaged witnesses retain source/copy observations;
 [`player_control_evidence.json`](player_control_evidence.json) records the exact
 inputs, baseline, compiled source and coverage limits. Three separate research
-probes still classify legal primary actions as `CantPlayAi`; native execution
-and snapshot fidelity do not establish hostile AI policy or automated selection.
+heuristic probes classify legal primary actions as `CantPlayAi`. Full-simulation
+candidate enumeration admits those actions; execution, admission and snapshot
+fidelity do not establish complete hostile AI policy.
+
+
+Decision planning now separates the acting player from the decision beneficiary.
+Controlled heuristic play uses the legal-action simulator, whose objective stays
+fixed even when the controlling player dies and control ends during a rollout.
+Planning copies paid pending stack state; a separate copier computes the resolved
+no-response score. Stack spell/ability targets join ordinary entity targets,
+including abilities whose sacrificed source is already in the graveyard.
+The 26-case native fixture reproduces 16 failures and ten positive controls on
+previous production source. Sixteen packaged witnesses check actual selection,
+costs, unchanged original state while planning, canonical targets and outcomes.
+Ordinary heuristic damage-counter controls explicitly use shipped Cautious AI;
+no profile is edited. Exact inputs, baseline and limits are retained in
+[`decision_perspective_evidence.json`](decision_perspective_evidence.json).

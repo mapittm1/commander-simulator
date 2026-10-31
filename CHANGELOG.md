@@ -6,12 +6,28 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Corrected controlled-player planning to retain the decision controller's scoring
+  perspective without changing the acting player's costs or resources. Preserve
+  pending stack entries, resolve an independent no-response baseline, and enumerate
+  legal spell/ability targets. Preserve incremental free-cast safety without
+  replaying an already resolving parent. The identical final native fixture changes from
+  16 failures / 10 positive controls to 26 passes; sixteen packaged cases exercise
+  actual Shock, Counterspell, Stifle and uncounterable-threat outcomes. Ordinary
+  heuristic response controls use the unchanged shipped Cautious profile.
+  Separate source-bound combat research retains two controlled attack failures
+  and two ordinary positive controls. Cyclic/custom control, combat policy and
+  arbitrary mandatory choices remain open.
+- Clarified the earlier ControlPlayer support finding: the three unsupported
+  classifications belong to heuristic AI. Full-simulation candidate enumeration
+  already admits those legal actions; neither admission nor snapshot fidelity
+  establishes complete strategic support.
+
 - Preserved timestamped player-control layers and created independent copied-world
   agents. Mapped scheduled turn/combat acquisition and release without replaying
   control events during copying. Thirty native cases and thirteen paid packaged
   witnesses cover Worst Fears, Mindslaver, Secret of Bloodbending and Emrakul's
   following uncontrolled extra turn, with explicit policy and cost-choice limits.
-  Automated selection still rejects the three tested primary ControlPlayer
+  The heuristic selector rejects the three tested primary ControlPlayer
   actions as unsupported; the source-bound research failures remain documented.
 
 - Moved the remaining loose legacy simulator script and original project ZIP from

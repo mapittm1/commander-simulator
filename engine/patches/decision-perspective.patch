@@ -1,0 +1,234 @@
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/DecisionPerspective.java
+@@ -0,0 +1,27 @@
++package forge.ai.simulation;
++
++import forge.game.player.Player;
++import java.util.Collections;
++import java.util.IdentityHashMap;
++import java.util.Set;
++
++/** Resolve the decision beneficiary without changing the actor's ownership or resources. */
++public final class DecisionPerspective {
++    private DecisionPerspective() {}
++
++    public static Player beneficiary(Player actor) {
++        Set<Player> visited = Collections.newSetFromMap(new IdentityHashMap<>());
++        Player current = actor;
++        while (visited.add(current)) {
++            Player master = current.getControllingPlayer();
++            if (master == null || master == current) {
++                return current;
++            }
++            if (master.getGame() != actor.getGame()) {
++                throw new IllegalStateException("Decision controller belongs to a different game");
++            }
++            current = master;
++        }
++        throw new IllegalStateException("Cyclic player control has no unique decision beneficiary");
++    }
++}
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -1609,7 +1609,9 @@
+         // Reset priority mana reservation that's meant to work for one spell only
+         memory.clearMemorySet(AiCardMemory.MemorySet.HELD_MANA_SOURCES_FOR_NEXT_SPELL);
+ 
+-        if (usesFullSimulation()) {
++        // A controlled actor needs legal-action search scored for its controller,
++        // rather than heuristics that optimize the actor's own position.
++        if (usesFullSimulation() || player.isControlled()) {
+             return singleSpellAbilityList(simPicker.chooseSpellAbilityToPlay(null));
+         }
+ 
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+@@ -29,6 +29,7 @@
+     private SpellAbilityChoicesIterator interceptor;
+ 
+     private Plan plan;
++    private Player planBeneficiary;
+     private int numSimulations;
+ 
+     public SpellAbilityPicker(Player player) {
+@@ -88,7 +89,12 @@
+             return null;
+         }
+ 
+-        Score origGameScore = new GameStateEvaluator().getScoreForGameState(game, player);
++        Player beneficiary = DecisionPerspective.beneficiary(player);
++        if (planBeneficiary != beneficiary) {
++            plan = null;
++            planBeneficiary = beneficiary;
++        }
++        Score origGameScore = GameSimulator.scoreForDecision(game, player);
+         List<SpellAbility> candidateSAs = getCandidateSpellsAndAbilities();
+         if (controller != null) {
+             // This is a recursion during a higher-level simulation. Just return the head of the best
+@@ -135,7 +141,7 @@
+         }
+ 
+         PhaseType currentPhase = game.getPhaseHandler().getPhase();
+-        if (currentPhase.isBefore(PhaseType.COMBAT_DECLARE_BLOCKERS)) {
++        if (game.getStack().isEmpty() && currentPhase.isBefore(PhaseType.COMBAT_DECLARE_BLOCKERS)) {
+             List<SpellAbility> candidateSAs2 = new ArrayList<>();
+             for (SpellAbility sa : candidateSAs) {
+                 if (!SpellAbilityAi.isSorcerySpeed(sa, player)) {
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+@@ -20,6 +20,8 @@
+     private GameCopier copier;
+     private Game simGame;
+     private Player aiPlayer;
++    // Captured before advancing or resolving; release must not switch the objective mid-plan.
++    private Player evaluationPlayer;
+     private GameStateEvaluator eval;
+     private List<String> origLines;
+     private Score origScore;
+@@ -41,32 +43,30 @@
+ 
+     public GameSimulator(SimulationController controller, Game origGame, Player origAiPlayer, PhaseType advanceToPhase) {
+         this.controller = controller;
+-        copier = new GameCopier(origGame);
++        Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
++        // During resolution the parent is still registered on the stack. An
++        // incremental free-cast check must not replay that parent.
++        boolean pendingPriority = !origGame.getStack().isResolving();
++        copier = new GameCopier(origGame).withStack(pendingPriority
++                && (COPY_STACK || !origGame.getStack().isEmpty()));
+         simGame = copier.makeCopy(advanceToPhase, origAiPlayer);
+ 
+         aiPlayer = copier.find(origAiPlayer);
++        evaluationPlayer = copier.find(originalBeneficiary);
+         eval = new GameStateEvaluator();
+ 
+         origLines = new ArrayList<>();
+         debugLines = origLines;
+ 
+         debugPrint = false;
+-        origScore = eval.getScoreForGameState(origGame, origAiPlayer);
++        origScore = eval.getScoreForGameState(origGame, originalBeneficiary);
+ 
+         if (advanceToPhase == null && CHECK_GAME_COPY_SCORE) {
+-            ensureGameCopyScoreMatches(origGame, origAiPlayer);
+-        }
+-
+-        // If the stack on the original game is not empty, resolve it
+-        // first and get the updated eval score, since this is what we'll
+-        // want to compare to the eval score after simulating.
+-        if (COPY_STACK && !origGame.getStackZone().isEmpty()) {
+-            origLines = new ArrayList<>();
+-            debugLines = origLines;
+-            Game copyOrigGame = copier.makeCopy();
+-            Player copyOrigAiPlayer = copyOrigGame.getPlayers().get(1);
+-            resolveStack(copyOrigGame, copyOrigGame.getPlayers().get(0));
+-            origScore = eval.getScoreForGameState(copyOrigGame, copyOrigAiPlayer);
++            ensureGameCopyScoreMatches(origGame, originalBeneficiary);
++        }
++
++        if (!origGame.getStack().isEmpty() && !origGame.getStack().isResolving()) {
++            origScore = scoreForDecision(origGame, origAiPlayer);
+         }
+ 
+         debugPrint = false;
+@@ -82,10 +82,12 @@
+      */
+     public GameSimulator(Game origGame, Player origAiPlayer) {
+         this.controller = new SimulationController(new Score(0), 0);
++        Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
+         copier = new GameCopier(origGame);
+         simGame = copier.makeCopy(null, origAiPlayer);
+ 
+         aiPlayer = copier.find(origAiPlayer);
++        evaluationPlayer = copier.find(originalBeneficiary);
+         eval = new GameStateEvaluator();
+         origLines = new ArrayList<>();
+     }
+@@ -93,19 +95,39 @@
+     /** As the lightweight constructor, optionally copying the spells on the stack (for decisions made in response to one). */
+     public GameSimulator(Game origGame, Player origAiPlayer, boolean copyStack) {
+         this.controller = new SimulationController(new Score(0), 0);
++        Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
+         copier = new GameCopier(origGame).withStack(copyStack);
+         simGame = copier.makeCopy(null, origAiPlayer);
+ 
+         aiPlayer = copier.find(origAiPlayer);
++        evaluationPlayer = copier.find(originalBeneficiary);
+         eval = new GameStateEvaluator();
+         origLines = new ArrayList<>();
++    }
++
++    /** Value passing priority to the current stack, from this decision's captured beneficiary. */
++    public static Score scoreForDecision(Game game, Player actor) {
++        Player beneficiary = DecisionPerspective.beneficiary(actor);
++        GameStateEvaluator evaluator = new GameStateEvaluator();
++        if (game.getStack().isEmpty() || game.getStack().isResolving()) {
++            return evaluator.getScoreForGameState(game, beneficiary);
++        }
++        // Use a separate copier: rebuilding the action simulator's copier would
++        // replace its object map with objects from the baseline world.
++        GameCopier baseline = new GameCopier(game).withStack(true);
++        Game copy = baseline.makeCopy();
++        Player copiedActor = baseline.find(actor);
++        Player copiedBeneficiary = baseline.find(beneficiary);
++        Player resolver = copiedActor.getWeakestOpponent();
++        resolveStack(copy, resolver == null ? copiedActor : resolver);
++        return evaluator.getScoreForGameState(copy, copiedBeneficiary);
+     }
+ 
+     private void ensureGameCopyScoreMatches(Game origGame, Player origAiPlayer) {
+         eval.setDebugging(true);
+         List<String> simLines = new ArrayList<>();
+         debugLines = simLines;
+-        Score simScore = eval.getScoreForGameState(simGame, aiPlayer);
++        Score simScore = eval.getScoreForGameState(simGame, evaluationPlayer);
+         if (!simScore.equals(origScore)) {
+             // Re-eval orig with debug printing.
+             origLines = new ArrayList<>();
+@@ -265,14 +287,15 @@
+             debugLines = simLines;
+             debugPrint = false;
+         }
+-        Score score = eval.getScoreForGameState(simGame, aiPlayer);
++        Score score = eval.getScoreForGameState(simGame, evaluationPlayer);
+         if (simLines != null) {
+             debugLines = null;
+             debugPrint = true;
+             printDiff(origLines, simLines);
+         }
+         controller.possiblyCacheResult(score, origSa);
+-        if (controller.shouldRecurse() && !simGame.isGameOver()) {
++        if (controller.shouldRecurse() && !simGame.isGameOver() && aiPlayer.isInGame()
++                && DecisionPerspective.beneficiary(aiPlayer) == evaluationPlayer) {
+             controller.push(sa, score, this);
+             SpellAbilityPicker sim = new SpellAbilityPicker(aiPlayer);
+             SpellAbility nextSa = sim.chooseSpellAbilityToPlay(controller);
+--- a/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
+@@ -8,6 +8,8 @@
+ import forge.game.combat.Combat;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilityStackInstance;
++import forge.game.zone.ZoneType;
+ import forge.game.spellability.TargetRestrictions;
+ 
+ import java.util.ArrayList;
+@@ -66,6 +68,17 @@
+         targetingSa.resetTargets();
+         TargetRestrictions tgt = targetingSa.getTargetRestrictions();
+         maxTargets = tgt.getMaxTargets(sa.getHostCard(), targetingSa);
++
++        // TargetRestrictions.getAllCandidates contains entities, not stack abilities.
++        // Native spell/ability targets must be enumerated separately (e.g. Counterspell).
++        if (tgt.getZone().contains(ZoneType.Stack)) {
++            for (SpellAbilityStackInstance entry : player.getGame().getStack()) {
++                SpellAbility pending = entry.getSpellAbility();
++                if (targetingSa.canTargetSpellAbility(pending)) {
++                    validTargets.add(pending);
++                }
++            }
++        }
+ 
+         SimilarTargetSkipper skipper = new SimilarTargetSkipper();
+         for (GameObject o : tgt.getAllCandidates(targetingSa)) {
