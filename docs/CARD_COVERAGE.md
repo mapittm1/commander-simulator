@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **962 native tests in 79 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 414 focused
+The reviewed patched source also passes **984 native tests in 80 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 436 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1166,8 +1166,68 @@ living weapon, modified attachment restrictions, hidden/merged/perpetual state,
 other callbacks and arbitrary continuations still need separate validation.
 Catalog construction remains availability evidence rather than full rules proof.
 
-A separate retained native research probe reproduces a current host-bound exile
-return defect with Banishing Light in both snapshot modes: the original game's
+At the attachment/mana milestone, a separate retained native research probe
+reproduced a host-bound exile return defect with Banishing Light in both snapshot modes: the original game's
 paid Disenchant returns the exiled creature, while copied Disenchant leaves it in
-exile. The return callback and linked-card list require their own fix and tests.
-This is an open defect, outside the passing suites selected for this milestone.
+exile. The return callback and linked-card list required their own fix and tests.
+That historical failure is addressed by the following milestone.
+
+
+## Host-bound exile returns
+
+Copied games now retain the explicit return command created by duration-based
+zone changes. The command maps its host, original/destination zone table, ability
+graph and historical return-ability host through the snapshot context. Copying
+only restores state; it does not exile or return cards, replay a trigger, or share
+an original-world closure. The return itself uses the existing native zone-change
+and trigger paths in the copied game.
+
+The host's linked-card list is restored as a separate collection of mapped cards.
+Cross-game historical copies also retain mapped links; ordinary in-game card
+copy characteristics are unchanged. The captured table retains game timestamps,
+and existing token filtering and early-zone-exit cleanup still apply. Selected
+cards return to their prior zones and, on battlefield return, their owners'
+control. A host that already left before its triggered exile resolves continues
+to leave the target untouched.
+
+The identical final native fixture has twenty-two cases. Against the previous
+runtime, thirteen return checks and four live/historical link checks fail. Four
+more early-move/token cases already have the right visible outcome but report
+unsupported callbacks; the host-already-gone control passes. All twenty-two pass
+with the mapped return implementation. The fixture includes both stack-copy
+modes for eight card/cleanup scenarios and two reference contracts, plus a paid
+pending Disenchant and a pending exile trigger whose host has already left.
+
+Ten packaged witnesses retain actual paid costs, target IDs, zone timestamps,
+owners/controllers, link membership, world identity and original/copy outcomes:
+Banishing Light destroyed or bounced, Banisher Priest, three opponents' Grasp of
+Fate targets, Kitesail Freebooter's hand return, Lagrella's selected targets, Pull
+from Eternity before host removal, tokens, and the two pending-stack cases.
+The natural packaged AI selects opposing Lagrella targets. The native positive
+counter case fixes legal targets at the controller boundary, restores the original
+controller before copying, and checks that only the returned friendly creature
+gets two counters. These are distinct coverage claims.
+
+Verification: **436 focused native tests**, **984 broader gameplay tests** including
+those 436, **256 serialization tests**, **31 live integrations / 491 subtests**,
+and **399 offline tests / 508 subtests**, with the Python quality gate. The catalog
+probe still constructs **32,109 identities**, excluding seven nonstarting meld
+results. Exact source/worker hashes, the failing baseline, paid observations and
+limits are retained in [`host_return_evidence.json`](../engine/host_return_evidence.json).
+
+The fixtures use controlled partial four-player games and bounded settling without
+response priority, except for the two explicitly staged paid stack points. They
+do not certify every duration, untap/control deadline, simultaneous host departure,
+blink/re-exile incarnation pattern, ownership replacement, full hidden-information
+policy, or unrelated card ability. Arbitrary suspended mid-resolution state,
+including partially accumulated global return-zone tables, needs separate work.
+Other callbacks, merged/perpetual state and AI decisions remain unvalidated.
+Script construction and versioned rule references do not prove complete gameplay
+or a complete current-rules audit.
+
+A separate native research probe currently reproduces Fog's effect surviving end
+of turn in both snapshot modes. A paid Grizzly Bears waits a turn cycle; original
+following-turn combat deals two damage after Fog expires, while copied combat
+still deals none. Its attacker declaration is controlled, followed by native
+combat processing. This remains an open effect-cleanup defect outside the passing
+suites selected for the host-return milestone.

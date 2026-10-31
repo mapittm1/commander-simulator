@@ -1,0 +1,2668 @@
+{
+  "scope": "Selected duration-bound zone returns, captured return abilities and linked exile in live/historical snapshots; not complete card, rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-host-return",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "e22719430fcb15f6d24fa3b98543ebd2cad09d377374d8c52023218dff986f05",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "103a5848474ad51a9a5ce6862f6c9051d38c33066c1f5dc15c2c4dcd6886becb",
+    "native_tests": {
+      "total": 436,
+      "passed": 436,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "0d6b5c19eb156a2d9bab085587877a155217bd11416fce463f04773cf82357cb",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "2fd129d3549545eeab54de0bb5ba0b6d",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/card/Card.java": "5d9b2dac22a904d3aef3a68f05871932c66fc96d84af83ddd1aa709912d22e37",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java": "8bc672e59331f0748848687cc46ee41bd01261c346cb20637c129d8fe0332f89",
+    "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java": "89e940dba50798163d50f827f88c9ef98d9039c8903d5bde1e9c5038097de621"
+  },
+  "patch_sha256": "89152e60f2edde868c2a647ad10efbd9a02369f28f3732447b226afe2d3823c0",
+  "native_test_sha256": "3d0b2d4dd9b64d9403cfaf9b9466a3d845d04848133244aed827ff2dc6d9944d",
+  "worker_sha256": "60598a6d72462b0f6a829f41019ab822a37e8aba263e897e7890fb1c85f359d0",
+  "worker_freeze": {
+    "sha256": "60598a6d72462b0f6a829f41019ab822a37e8aba263e897e7890fb1c85f359d0",
+    "mtime_ns": 1793469293699526800
+  },
+  "baseline_launcher_log_sha256": "aaf9b1ef1998a97a23230bc8cd1e65e5e910e78dafbac521210beebef024d5e9",
+  "integration_test_sha256": "ac9f773812e1c4665463238f210beba897137cf1e08148fffe1e483e260361aa",
+  "native_evidence_sha256": "bdc0d2e85eff242f5ea5f6a18e7503e2223b8123b960e4958ed1eb91dabc33fc",
+  "shared_fixed_fixture_helpers": {
+    "tests/support/animation_worker.py": {
+      "working_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "git_blob_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/duration_worker.py": {
+      "working_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "git_blob_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/keyword_expiration_worker.py": {
+      "working_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "git_blob_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/native_worker.py": {
+      "working_sha256": "7b329d6d6b3dbafd6e5a2cad72e5d2bb0d1aa678f73cfd8b5ae06ec4ce831eb1",
+      "git_blob_sha256": "39d3d2cd34952ae5903ecebbbaf339b6c558048c7d6b01cbe3fc7c3884f9709d",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/stack_worker.py": {
+      "working_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "git_blob_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/usage_worker.py": {
+      "working_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "git_blob_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "note": "Text matches HEAD with normalized line endings"
+    }
+  },
+  "native_before": {
+    "counts": {
+      "total": 22,
+      "passed": 1,
+      "failed": 21,
+      "skipped": 0
+    },
+    "testng_sha256": "c3c384a8573576c2212536c3ec4aaab871f663a3d6edcd118b69cd987b0c60f7",
+    "log_sha256": "d11f0ad9ff7dc7e5f3df221ff5202625978b0086d20316d10eb1221070477ae2",
+    "source_audit_sha256": "19ac12ecd282a1beace928bcbeafd1982d7fc7a94204ae7735bbc340f58fab71",
+    "production_files_compared": 1031,
+    "failure_breakdown": {
+      "return_outcomes": 13,
+      "live_historical_link_contracts": 4,
+      "diagnostics_only_with_correct_visible_outcomes": 4,
+      "passing_host_already_gone_control": 1
+    },
+    "note": "Identical final fixture. Earlier Lagrella fixture wiring used the static-trigger controller hook instead of the simultaneous-stack choice hook; those setup failures are excluded."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 22,
+      "passed": 22,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "382354f1150bd145a6a89f0448ea00218425b44afdfd94741ca8cb2985b5ea24",
+    "log_sha256": "cb3a129df70db2b4f14e4a6237a06466870a19793518af795968ee8b24d7017d"
+  },
+  "before": {
+    "run_id": "b22cb691e2324c03850c56b71cc38a04",
+    "receipt_sha256": "042f845e319fa1b8524cb0457e9f880a36ccd73f4f2d01762b8f76e4d12a507c",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "destroy",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "bounce",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "priest",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "grasp",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85,
+            86,
+            87
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85,
+            86,
+            87
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 95,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "hand",
+        "paid": {
+          "preparation": 0,
+          "host": 2,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Hand",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "lagrella",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            86,
+            87,
+            88
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            86,
+            87,
+            88
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 98,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "early",
+        "paid": {
+          "preparation": 1,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "token",
+        "paid": {
+          "preparation": 2,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "pending_removal",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_stack": 1,
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_stack": 1,
+        "pending_paid": 2,
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.SpellAbilityEffect$1"
+        ]
+      },
+      {
+        "case": "host_gone",
+        "paid": {
+          "host": 3,
+          "preparation": 0,
+          "removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_stack": 1,
+        "copied_before": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_stack": 1,
+        "pending_paid": 0,
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "after": {
+    "run_id": "0d9425c3d9374837a5088d65fb290b4a",
+    "receipt_sha256": "1ecfc12dedd4b381e89c36121166899809dc988c1304251757a93ec5d5ebad3d",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "destroy",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "bounce",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "priest",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "grasp",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85,
+            86,
+            87
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85,
+            86,
+            87
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 95,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85,
+            86,
+            87
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 95,
+              "in_world": true
+            },
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "hand",
+        "paid": {
+          "preparation": 0,
+          "host": 2,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Hand",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Hand",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "lagrella",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "copied_removal": 1,
+          "source_removal": 1
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            86,
+            87,
+            88
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            86,
+            87,
+            88
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 98,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            86,
+            87,
+            88
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Exile",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 92,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Exile",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 93,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Hand",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 86,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 96,
+              "in_world": true
+            },
+            {
+              "id": 87,
+              "zone": "Battlefield",
+              "owner": 2,
+              "controller": 2,
+              "counters": 0,
+              "timestamp": 97,
+              "in_world": true
+            },
+            {
+              "id": 88,
+              "zone": "Battlefield",
+              "owner": 3,
+              "controller": 3,
+              "counters": 0,
+              "timestamp": 98,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "early",
+        "paid": {
+          "preparation": 1,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Graveyard",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 90,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "token",
+        "paid": {
+          "preparation": 2,
+          "host": 3,
+          "copied_removal": 2,
+          "source_removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [],
+          "tokens": 1
+        },
+        "unmapped": []
+      },
+      {
+        "case": "pending_removal",
+        "paid": {
+          "preparation": 0,
+          "host": 3,
+          "removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_stack": 1,
+        "copied_before": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_stack": 1,
+        "pending_paid": 2,
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Battlefield",
+          "linked": [
+            85
+          ],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Exile",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 88,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 91,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      },
+      {
+        "case": "host_gone",
+        "paid": {
+          "host": 3,
+          "preparation": 0,
+          "removal": 2
+        },
+        "acting_id": 0,
+        "before": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_stack": 1,
+        "copied_before": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "copied_stack": 1,
+        "pending_paid": 0,
+        "after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "source_after": {
+          "host_zone": "Graveyard",
+          "linked": [],
+          "linked_world": true,
+          "cards": [
+            {
+              "id": 85,
+              "zone": "Battlefield",
+              "owner": 1,
+              "controller": 1,
+              "counters": 0,
+              "timestamp": 85,
+              "in_world": true
+            }
+          ],
+          "tokens": 0
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "packaged_candidate_run_ids": [
+    "92dc865577514d1d8d97f0a30cea2115",
+    "0d9425c3d9374837a5088d65fb290b4a"
+  ],
+  "known_open_regression": {
+    "scope": "Research baseline for expired effect-card cleanup; no fix or full-support claim",
+    "production_files_compared": 1031,
+    "fixture_sha256": "6b451ad78daf469249602501d8aa8d79f6e48851b54a9b29f282ee8180680db4",
+    "native_tests": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "report_sha256": "9309626b5d938d3bff69f7a54dc9f71a6b4f4ae9e870ec853e2c82fcbcee1360",
+    "log_sha256": "52823cb4a4d82bfb2536017e2d363add9a6000f6d995d159eaeb8e7591aad246",
+    "oracle_id": "27e9db49-7af7-4bef-ad4c-bf5dfb92030d",
+    "oracle_text_sha256": "0dcdee85ce7dc3d36f90c6a73819712bb38c10bcbe03dd5e56d0fcb459ef0ad5",
+    "observation": "A paid Grizzly Bears waits a turn cycle. Paid Fog expires in the original game, whose next-turn declared attack deals two combat damage to take its defender from 40 to 38. The independent copied defender starts at 40, but remains at 40 after its corresponding following-turn combat in both stack-copy modes. Failure occurs after the original expiry and combat assertions pass. Attacker declarations are controlled; subsequent native triggers, blocker decisions and combat damage run natively.",
+    "baseline_evidence_sha256": "8644fd4f585f64a467374ddb1205301853dd8fe39cd4bc2c839803cff2c991d3"
+  },
+  "positive_controls": "Original paid returns already work. Early moves out of exile and token nonreturn already have the correct visible outcome on both worlds in the baseline, while reporting omitted callbacks. A host gone before its triggered exile resolves already leaves the target unchanged without an unmapped command.",
+  "resolved_prior_research_evidence_sha256": "565eea774bf59836e8cf5439319f07e604a15f9565af4cb739202de139f89431",
+  "oracle_witnesses": [
+    {
+      "name": "Banishing Light",
+      "oracle_id": "f28b21a6-f7ce-437a-8c5b-0423cb55cefb",
+      "source": "https://scryfall.com/card/hoc/161/banishing-light?utm_source=api",
+      "oracle_text_sha256": "3da6b29c38daeee9097923d1fa4b4f676c2580d842669dce5d83087a927cd8e1",
+      "mana_cost": "{2}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Banisher Priest",
+      "oracle_id": "9f560b83-32d4-4bb4-a956-8f5db18599db",
+      "source": "https://scryfall.com/card/moc/173/banisher-priest?utm_source=api",
+      "oracle_text_sha256": "34fcfa039a9f50454fc9748a4e6a92edfdb654adfbcbde25d31ca569d71be75f",
+      "mana_cost": "{1}{W}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Grasp of Fate",
+      "oracle_id": "1b26a54f-6c27-4940-b77e-2a66175c5eff",
+      "source": "https://scryfall.com/card/cmm/823/grasp-of-fate?utm_source=api",
+      "oracle_text_sha256": "fec223accedf66a00538118110eccfb93525b87db26b63f681f7abfd4ce31914",
+      "mana_cost": "{1}{W}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Kitesail Freebooter",
+      "oracle_id": "8aa1bbc9-b047-4d68-93f4-728e40dafc5e",
+      "source": "https://scryfall.com/card/m21/107/kitesail-freebooter?utm_source=api",
+      "oracle_text_sha256": "75c9e3ea77745ff629e7e4702a174357e4d0768bd8b4b6252d49d6c9885804bf",
+      "mana_cost": "{1}{B}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Lagrella, the Magpie",
+      "oracle_id": "6a98b586-5187-48a1-bde3-f6141f3e9cb1",
+      "source": "https://scryfall.com/card/snc/196/lagrella-the-magpie?utm_source=api",
+      "oracle_text_sha256": "8beb7ab9b4c1a0c22a9c89bdc8f8426bd6ecdd27f832d15221be8bb00bb7bc83",
+      "mana_cost": "{G}{W}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "source": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
+      "oracle_text_sha256": "1c8ec5180252d4d2258eec2c0312b6f3c86b101696246288422c2d46aaa5ff8b",
+      "mana_cost": "{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Raise the Alarm",
+      "oracle_id": "5b2364d7-a811-4595-a1b4-224c70555ffa",
+      "source": "https://scryfall.com/card/cmr/41/raise-the-alarm?utm_source=api",
+      "oracle_text_sha256": "b1ce38ee166582710fdfeb34be7ebfbacc2d51675956b1cea1ff59a5c460168d",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Pull from Eternity",
+      "oracle_id": "2903bd66-6948-445b-a18a-12e2ce1a86c3",
+      "source": "https://scryfall.com/card/tsp/35/pull-from-eternity?utm_source=api",
+      "oracle_text_sha256": "1a07bdce0acf767e93fd97769953d7e93b05868788b23743ccd820a1d6b8fdfa",
+      "mana_cost": "{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Disenchant",
+      "oracle_id": "a7e97fa9-4b72-4548-b854-5be5f18a6f1a",
+      "source": "https://scryfall.com/card/fdn/572/disenchant?utm_source=api",
+      "oracle_text_sha256": "1c50bfdd31a28155b4cab0e9b74980c1307c66df9ec65f7c88afa3f9f87a8317",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Disperse",
+      "oracle_id": "9d8fe3f8-5027-4f9e-999e-e277caa96478",
+      "source": "https://scryfall.com/card/m19/50/disperse?utm_source=api",
+      "oracle_text_sha256": "b04c6dc57919c570543209fe41e656414ec21294f396fe442bb85ecdabbd5929",
+      "mana_cost": "{1}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Unsummon",
+      "oracle_id": "837182db-1bf3-4a2c-bd01-1af9d9873561",
+      "source": "https://scryfall.com/card/fra/46/unsummon?utm_source=api",
+      "oracle_text_sha256": "949ea0ec2b12afb4e8dd8a5b647f2ae7adfb1af38909f725f589c3cc8814dfa2",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Plains",
+      "oracle_id": "bc71ebf6-2056-41f7-be35-b2e5c34afa99",
+      "source": "https://scryfall.com/card/mdd/292/plains?utm_source=api",
+      "oracle_text_sha256": "f3f8e4a29db20544bd9a5b0ae8e10a23a2ae52112da77fa9111d60fb9d409d22",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Island",
+      "oracle_id": "b2c6aa39-2d2a-459c-a555-fb48ba993373",
+      "source": "https://scryfall.com/card/mdd/294/island?utm_source=api",
+      "oracle_text_sha256": "a6050f1a6c1f21586486a1e21aa8be9bc41340fa0beb2ae1a5952cf26b7f4a57",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Swamp",
+      "oracle_id": "56719f6a-1a6c-4c0a-8d21-18f7d7350b68",
+      "source": "https://scryfall.com/card/mdd/296/swamp?utm_source=api",
+      "oracle_text_sha256": "5ad0718d1920ec4ca2dc64a9aff6383c8d801d418cfda034ed19aa016d16dfb4",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "source": "https://scryfall.com/card/mdd/301/forest?utm_source=api",
+      "oracle_text_sha256": "6215eab3372e7128de713b41e7758fc9b179ade5bc47d33a5af8cef9c9c7493b",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    }
+  ],
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "610.3",
+      "610.3a",
+      "610.3b",
+      "610.3c",
+      "111.8",
+      "400.7"
+    ],
+    "online_reference_check": "The current web tool could not retrieve the URL; validation uses the already retained local file with this verified hash.",
+    "scope": "Versioned source for duration-based returns, token nonreturn and zone identities; not a complete current-rules audit"
+  },
+  "full_live_suite": {
+    "passed": 31,
+    "subtests": 491,
+    "log_sha256": "ce1da5076a79213a05621dfaf4a8a014df9038ef70008c7a269e5d56960fce54"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 31,
+    "subtests": 508,
+    "log_sha256": "0df1f51927251e621d90ad7b21076ce15762c3ff5588fbf063709bf835069716"
+  },
+  "catalog_probe": {
+    "run_id": "2408098b70bf41ad8486510e6c317073",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "116a555b07749b60353ef1ec5024f0a7449f152e408b0d221db16458ec601ddb"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-host-return-reviewed",
+    "lock_sha256": "48ed1ae0493f853cbfbfd0f10af79b66eea1ea174a9501452bb1765112d35aa5",
+    "engine_check_sha256": "ebc833f50ad86f2b7aabe9d506f4cadc0955c8063684586f6039d6ed23a5c640",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-attachment-mana-reviewed"
+  },
+  "limits": [
+    "Controlled partial four-player registrations, not full legal-deck games. Eight native scenarios and two identity contracts run both stack-copy modes; two additional paid pending-stack cases run with stack copying enabled.",
+    "Ten packaged witnesses pay native spell costs and observe target IDs, zone timestamps, owners/controllers, linked-card membership, mapped worlds and source/copy independence.",
+    "Lagrella friendly return counters use fixed legal target choices at the native simultaneous-stack controller boundary. The original controller is restored before copying. The packaged natural AI selects opposing targets; those captures do not prove friendly return counters.",
+    "Historical link tests explicitly call cross-game LKI copying and assert canonical mapped target identity and collection independence. They do not certify every historical object subclass.",
+    "Early-move and token cases are positive visible-outcome controls. Their baseline diagnostic failures are not described as failed return rules.",
+    "The paid pending removal and host-already-gone cases stage explicit stack points. Other settling runs without response priority; arbitrary suspended mid-resolution state and partially accumulated global return-zone tables remain unverified.",
+    "Other duration/untap/control deadlines, simultaneous host departures, blink/re-exile incarnation sequences, ownership replacements, hidden/merged/perpetual state and general AI policy require separate implementation or validation.",
+    "Other callbacks remain incomplete; unmapped diagnostics are asserted here rather than aggregated into normal simulation reports.",
+    "Catalog construction proves script availability, not full gameplay correctness. The seven unavailable entries are nonstarting meld results. Versioned references are not a complete current-rules audit."
+  ]
+}

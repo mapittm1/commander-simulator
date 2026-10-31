@@ -1,0 +1,181 @@
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -836,11 +836,8 @@
+         }
+ 
+         final Card hostCard = sa.getHostCard();
+-        final Game game = hostCard.getGame();
+         // tokens cease to exist once exiled and never return, and nothing ever cleans them from this list
+         hostCard.addUntilLeavesBattlefield(CardLists.filter(triggerList.allCards(), CardPredicates.NON_TOKEN));
+-        final TriggerHandler trigHandler = game.getTriggerHandler();
+-
+         final Card lki;
+         if (sa.hasParam("ReturnAbility")) {
+             lki = CardCopyService.getLKICopy(hostCard);
+@@ -850,67 +847,85 @@
+             lki = null;
+         }
+ 
+-        GameCommand gc = new GameCommand() {
+-
+-            private static final long serialVersionUID = 1L;
+-
+-            @Override
+-            public void run() {
+-                CardCollectionView untilCards = hostCard.getUntilLeavesBattlefield();
+-                // if the list is empty, then the table doesn't need to be checked anymore
+-                if (untilCards.isEmpty()) {
+-                    return;
+-                }
+-                Map<AbilityKey, Object> moveParams = AbilityKey.newMap();
+-                moveParams.put(AbilityKey.LastStateBattlefield, game.copyLastStateBattlefield());
+-                moveParams.put(AbilityKey.LastStateGraveyard, game.copyLastStateGraveyard());
+-                for (Table.Cell<ZoneType, ZoneType, CardCollection> cell : triggerList.cellSet()) {
+-                    for (Card c : cell.getValue()) {
+-                        // check if card is still in the until host leaves play list
+-                        if (!untilCards.contains(c)) {
+-                            continue;
+-                        }
+-                        // better check if card didn't changed zones again?
+-                        Card newCard = game.getCardState(c, null);
+-                        if (newCard == null || !newCard.equalsWithGameTimestamp(c)) {
+-                            continue;
+-                        }
+-                        if (sa.hasAdditionalAbility("ReturnAbility")) {
+-                            String valid = sa.getParamOrDefault("ReturnValid", "Card.IsTriggerRemembered");
+-
+-                            String trigSA = "Mode$ ChangesZone | Origin$ " + cell.getColumnKey() + " | Destination$ " + cell.getRowKey() + " | ValidCard$ " + valid +
+-                                    " | TriggerDescription$ " + sa.getAdditionalAbility("ReturnAbility").getParam("SpellDescription");
+-
+-                            Trigger trig = TriggerHandler.parseTrigger(trigSA, hostCard, sa.isIntrinsic(), null);
+-                            trig.setSpawningAbility(sa.copy(lki, true));
+-                            trig.setActiveZone(null);
+-                            trig.addRemembered(newCard);
+-
+-                            SpellAbility overridingSA = sa.getAdditionalAbility("ReturnAbility").copy(hostCard, sa.getActivatingPlayer(), false);
+-                            // need to reset the parent, additionalAbility does set it to this
+-                            if (overridingSA instanceof AbilitySub) {
+-                                ((AbilitySub)overridingSA).setParent(null);
+-                            }
+-
+-                            trig.setOverridingAbility(overridingSA);
+-
+-                            // Delayed Trigger should only happen once, no need for cleanup?
+-                            trigHandler.registerThisTurnDelayedTrigger(trig);
+-                        }
+-                        // no cause there?
+-                        Card movedCard = game.getAction().moveTo(cell.getRowKey(), newCard, 0, null, moveParams);
+-                        game.getUntilHostLeavesPlayTriggerList().put(cell.getColumnKey(), cell.getRowKey(), movedCard);
+-                    }
+-                }
+-            }
+-
+-        };
++        GameCommand gc = new ZoneReturnCommand(hostCard, triggerList, sa, lki);
+ 
+         // corner case can lead to host exiling itself during the effect
+         if (sa.getParam("Duration").contains("UntilHostLeavesPlay") && !hostCard.isInPlay()) {
+             gc.run();
+         } else {
+             addUntilCommand(sa, gc);
++        }
++    }
++
++    /** Captured return state is rebound explicitly; copying does not move any cards. */
++    private static final class ZoneReturnCommand implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card hostCard;
++        private final CardZoneTable triggerList;
++        private final SpellAbility sa;
++        private final Card lki;
++        private ZoneReturnCommand(Card hostCard, CardZoneTable triggerList, SpellAbility sa, Card lki) {
++            this.hostCard = hostCard;
++            this.triggerList = triggerList;
++            this.sa = sa;
++            this.lki = lki;
++        }
++        @Override
++        public void run() {
++            Game game = hostCard.getGame();
++            TriggerHandler trigHandler = game.getTriggerHandler();
++            CardCollectionView untilCards = hostCard.getUntilLeavesBattlefield();
++            // if the list is empty, then the table doesn't need to be checked anymore
++            if (untilCards.isEmpty()) {
++                return;
++            }
++            Map<AbilityKey, Object> moveParams = AbilityKey.newMap();
++            moveParams.put(AbilityKey.LastStateBattlefield, game.copyLastStateBattlefield());
++            moveParams.put(AbilityKey.LastStateGraveyard, game.copyLastStateGraveyard());
++            for (Table.Cell<ZoneType, ZoneType, CardCollection> cell : triggerList.cellSet()) {
++                for (Card c : cell.getValue()) {
++                    // check if card is still in the until host leaves play list
++                    if (!untilCards.contains(c)) {
++                        continue;
++                    }
++                    // better check if card didn't changed zones again?
++                    Card newCard = game.getCardState(c, null);
++                    if (newCard == null || !newCard.equalsWithGameTimestamp(c)) {
++                        continue;
++                    }
++                    if (sa.hasAdditionalAbility("ReturnAbility")) {
++                        String valid = sa.getParamOrDefault("ReturnValid", "Card.IsTriggerRemembered");
++
++                        String trigSA = "Mode$ ChangesZone | Origin$ " + cell.getColumnKey() + " | Destination$ " + cell.getRowKey() + " | ValidCard$ " + valid +
++                                " | TriggerDescription$ " + sa.getAdditionalAbility("ReturnAbility").getParam("SpellDescription");
++
++                        Trigger trig = TriggerHandler.parseTrigger(trigSA, hostCard, sa.isIntrinsic(), null);
++                        trig.setSpawningAbility(sa.copy(lki, true));
++                        trig.setActiveZone(null);
++                        trig.addRemembered(newCard);
++
++                        SpellAbility overridingSA = sa.getAdditionalAbility("ReturnAbility").copy(hostCard, sa.getActivatingPlayer(), false);
++                        // need to reset the parent, additionalAbility does set it to this
++                        if (overridingSA instanceof AbilitySub) {
++                            ((AbilitySub)overridingSA).setParent(null);
++                        }
++
++                        trig.setOverridingAbility(overridingSA);
++
++                        // Delayed Trigger should only happen once, no need for cleanup?
++                        trigHandler.registerThisTurnDelayedTrigger(trig);
++                    }
++                    // no cause there?
++                    Card movedCard = game.getAction().moveTo(cell.getRowKey(), newCard, 0, null, moveParams);
++                    game.getUntilHostLeavesPlayTriggerList().put(cell.getColumnKey(), cell.getRowKey(), movedCard);
++                }
++            }
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new ZoneReturnCommand(context.map(hostCard),
++                    (CardZoneTable) context.data(triggerList), context.copy(sa), context.map(lki));
+         }
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8572,6 +8572,9 @@
+ 
+     public void copySnapshotCommandsFrom(Card original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
++        untilLeavesBattlefield = new CardCollection();
++        view.set(TrackableProperty.UntilLeavesBattlefield, null);
++        addUntilLeavesBattlefield(context.cards(original.untilLeavesBattlefield));
+         context.copyCommands(original.untapCommandList, untapCommandList, "card.untap");
+         context.copyCommands(original.unattachCommandList, unattachCommandList, "card.unattach");
+         context.copyCommands(original.faceupCommandList, faceupCommandList, "card.faceup");
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -503,6 +503,11 @@
+         }
+         newCopy.setCastFrom(copyFrom.getCastFrom());
+ 
++        if (historyMap != null) {
++            for (Card linked : copyFrom.getUntilLeavesBattlefield()) {
++                newCopy.addUntilLeavesBattlefield(historyMap.map(linked));
++            }
++        }
+         newCopy.setExiledBy(historyPlayer(copyFrom.getExiledBy()));
+         newCopy.setExiledWith(historyCard(copyFrom.getExiledWith(), cachedMap));
+         newCopy.setExiledSA(historyAbility(copyFrom.getExiledSA(), cachedMap));

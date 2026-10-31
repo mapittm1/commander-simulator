@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed host-bound exile returns in snapshots by mapping captured return commands,
+  zone records and live/historical linked-card lists. Twenty-two native and ten
+  packaged cases cover Banishing Light, Banisher Priest, Grasp of Fate, Kitesail
+  Freebooter, Lagrella, early exile exits, tokens and already-paid pending spells.
+
 - Fixed Reconfigure cleanup and temporary mana-granted keywords in copied games.
   Explicit mapped callbacks remove attachment effect cards and expire only their
   granted keyword layer. Paid regressions cover Lion Sash, Lizard Blades, all
