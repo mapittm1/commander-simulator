@@ -1,0 +1,138 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -2594,6 +2594,33 @@
+         }
+     }
+ 
++    /** Restore control layers without sharing game-bound decision controllers or firing events. */
++    public void copySnapshotControllersFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        controlledBy.clear();
++        for (Entry<Long, Pair<Player, PlayerController>> entry : original.controlledBy.entrySet()) {
++            Player master = context.map(entry.getValue().getLeft());
++            // Preserve the agent selected when the effect began, even if its master
++            // has since gained or lost another controlling player. Snapshot agents
++            // come from the new game's registered factories, including human-to-AI conversion.
++            LobbyPlayer originalFactory = entry.getValue().getRight().getLobbyPlayer();
++            Player decisionMaker = null;
++            for (Player participant : original.getGame().getRegisteredPlayers()) {
++                if (participant.getOriginalLobbyPlayer() == originalFactory) {
++                    decisionMaker = context.map(participant);
++                    break;
++                }
++            }
++            if (decisionMaker == null) {
++                throw new IllegalStateException("Snapshot controller factory is not a registered participant");
++            }
++            IGameEntitiesFactory factory = (IGameEntitiesFactory) decisionMaker.getOriginalLobbyPlayer();
++            PlayerController copiedController = factory.createMindSlaveController(master, this);
++            controlledBy.put(entry.getKey(), Pair.of(master, copiedController));
++        }
++        getView().updateMindSlaveMaster(this);
++    }
++
+     public void clearController() {
+         controlledBy.clear();
+         game.fireEvent(new GameEventPlayerControl(getView(), null, !getController().isAI()));
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -259,6 +259,7 @@
+         }
+         abilitySnapshot = context;
+         for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
++            entry.getValue().copySnapshotControllersFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+--- a/forge-game/src/main/java/forge/game/ability/effects/ControlPlayerEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ControlPlayerEffect.java
+@@ -3,6 +3,8 @@
+ import java.util.List;
+ 
+ import forge.game.Game;
++import forge.game.SnapshotCommand;
++import forge.game.spellability.SpellAbilitySnapshot;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.player.Player;
+@@ -22,27 +24,67 @@
+         return TextUtil.concatWithSpace(sa.getActivatingPlayer().toString(), "controls", Lang.joinHomogenous(tgtPlayers), "during their next turn");
+     }
+ 
+-    @SuppressWarnings("serial")
+     @Override
+     public void resolve(SpellAbility sa) {
+         final Player controller = AbilityUtils.getDefinedPlayers(sa.getHostCard(), sa.getParam("Controller"), sa).get(0);
+         final Game game = controller.getGame();
+         final boolean combat = sa.hasParam("Combat");
+ 
+-        for (final Player pTarget: getTargetPlayers(sa)) {
+-            // before next untap gain control
+-            (combat ? game.getBeginOfCombat() : game.getCleanup()).addUntil(pTarget, () -> {
+-                // CR 800.4b
+-                if (!controller.isInGame()) {
+-                    return;
+-                }
++        for (final Player target : getTargetPlayers(sa)) {
++            (combat ? game.getBeginOfCombat() : game.getCleanup()).addUntil(
++                    target, new StartControl(controller, target, combat));
++        }
++    }
+ 
+-                long ts = game.getNextTimestamp();
+-                pTarget.addController(ts, controller);
++    private static final class StartControl implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Player controller;
++        private final Player target;
++        private final boolean combat;
+ 
+-                // after following cleanup release control
+-                (combat ? game.getEndOfCombat() : game.getCleanup()).addUntil(() -> pTarget.removeController(ts));
+-            });
++        private StartControl(Player controller, Player target, boolean combat) {
++            this.controller = controller;
++            this.target = target;
++            this.combat = combat;
++        }
++
++        @Override
++        public void run() {
++            // CR 800.4b: a departed player cannot acquire control of another player.
++            if (!controller.isInGame()) {
++                return;
++            }
++            Game game = target.getGame();
++            long timestamp = game.getNextTimestamp();
++            target.addController(timestamp, controller);
++            (combat ? game.getEndOfCombat() : game.getCleanup()).addUntil(
++                    new EndControl(target, timestamp));
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(SpellAbilitySnapshot context) {
++            return new StartControl(context.map(controller), context.map(target), combat);
++        }
++    }
++
++    private static final class EndControl implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Player target;
++        private final long timestamp;
++
++        private EndControl(Player target, long timestamp) {
++            this.target = target;
++            this.timestamp = timestamp;
++        }
++
++        @Override
++        public void run() {
++            target.removeController(timestamp);
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(SpellAbilitySnapshot context) {
++            return new EndControl(context.map(target), timestamp);
+         }
+     }
+ }

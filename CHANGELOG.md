@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserved timestamped player-control layers and created independent copied-world
+  agents. Mapped scheduled turn/combat acquisition and release without replaying
+  control events during copying. Thirty native cases and thirteen paid packaged
+  witnesses cover Worst Fears, Mindslaver, Secret of Bloodbending and Emrakul's
+  following uncontrolled extra turn, with explicit policy and cost-choice limits.
+  Automated selection still rejects the three tested primary ControlPlayer
+  actions as unsupported; the source-bound research failures remain documented.
+
 - Moved the remaining loose legacy simulator script and original project ZIP from
   Downloads into ignored `data/local-archive/`, with collision checks, byte hashes
   and a migration receipt. Active project files remain in the Desktop checkout.

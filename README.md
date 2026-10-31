@@ -49,10 +49,12 @@ linked exiled cards, battlefield/hand returns and copied return abilities.
 cover effect-card expiration, regeneration quotas/history and Spiny Starfish tokens.
 [Detain and control age](docs/CARD_COVERAGE.md#detain-and-control-age) cover independent
 restrictions/deadlines and tap admission after newly controlled creatures lose haste.
+[Player-control snapshots](docs/CARD_COVERAGE.md#player-control-snapshots) cover
+turn/combat deadlines, layered controllers and Emrakul's following extra turn.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 494
+Seven additional records are non-starting meld results. The build passes 524
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
@@ -60,12 +62,14 @@ histories, scheduled effects, delayed triggers, turn/phase schedules and
 conditional control/cleanup, animation reversal, temporary-copy expiry, protection
 deadlines, keyword restoration, combat power exchange, forced-block requirements,
 prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
-haste, host-bound exile returns, temporary effects, regeneration history, Detain
-and raw control age.
-Broader native runs pass 1,042 AI/gameplay tests (including those 494) and 256
+haste, host-bound exile returns, temporary effects, regeneration history, Detain,
+raw control age and player-control snapshots.
+Broader native runs pass 1,072 AI/gameplay tests (including those 524) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
-Known gameplay gaps include copied pending/active turn control from Worst Fears.
+Known AI gaps include explicit rejection of Worst Fears, Mindslaver's activation
+and Secret of Bloodbending. The controlled native witnesses pay legal actions
+directly and do not establish automated selection or hostile decision policy.
 Other callbacks, arbitrary suspended continuations and general AI policy still
 need separate validation.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

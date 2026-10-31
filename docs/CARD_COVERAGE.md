@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,042 native tests in 82 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 494 focused
+The reviewed patched source also passes **1,072 native tests in 83 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 524 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1354,11 +1354,72 @@ aggregated into regular CLI reports. Catalog construction and retained versioned
 rules references do not establish full card/rules support or a current-rules audit.
 
 
-A separate native research probe now reproduces lost turn control from paid Worst
+At the Detain milestone, a separate native research probe reproduced lost turn control from paid Worst
 Fears, both before the controlled player's next turn and while that turn is
 active. All four cases fail on production source audited against this candidate:
 the original target is controlled, its copy is not, and an unmapped start/expiry
-callback is reported. This open defect is outside the passing reviewed suites;
-its later expiry and decision-policy checks are not reached. The retained Detain
-evidence records this research baseline without claiming the unrelated card
-interaction is fixed.
+callback is reported. That defect was outside the passing reviewed suites; its later expiry and
+decision-policy checks were not reached. The retained Detain evidence records
+that research baseline. The snapshot repair is described below.
+
+
+## Player-control snapshots
+
+Pending player-control effects now map their controller and target into the
+copied world, along with the flag selecting a turn or combat deadline. Release
+commands retain the target and exact timestamp. Already active effects preserve
+all timestamped control layers and rebuild game-bound decision controllers using
+the new game's registered factories, without firing new control events. The
+stored agent is preserved even when its master has since gained or lost control
+by another player. Custom factories outside registered participants are rejected
+explicitly. This mechanism does not copy arbitrary custom agent or strategy state.
+
+The **identical final 30-case native fixture** produces **28 failures / 2 passes**
+on the audited previous source and **30 passes** after the repair. Twenty-two
+failures cover paid control lifecycles, including legal self-targeting; four are
+independent layer/factory-history contracts using native controller APIs; two are
+omitted-command diagnostics after the controller concedes even though visible
+outcomes are already correct. The two already-expired snapshots are positive
+controls. All 1,032 gameplay/AI production Java paths and text were compared for
+the baseline; raw file hashes and exact fixture bytes were retained.
+
+**Thirteen packaged witnesses** pay real costs and check independent source/copy
+worlds: pending and active Worst Fears, Mindslaver, Secret of Bloodbending combat
+control, two different players' overlapping Worst Fears effects, already expired
+control, self-control, concession before acquisition, and pending/active Emrakul
+cast-trigger control. Mindslaver is actually cast, tapped and sacrificed through
+its native activation cost. Secret uses its normal four-blue cost without paying
+the optional waterbend cost. Emrakul is cast for thirteen mana with no graveyard
+cost reduction, gets a natural mandatory trigger target on the fixed board, and
+preserves the promised following extra turn without retaining control of it.
+Receipts retain costs, active/lost participants, master/view/agent identities,
+game-bound controller checks, phases, turns, extra-turn flags and source-card
+zones or absence after an owner's concession.
+
+Verification: **524 focused native tests**, **1,072 broader gameplay tests** including
+those 524 in **83 classes**, **256 serialization tests**, **34 live integrations /
+528 subtests**, and **399 offline tests / 508 subtests**, with the Python quality
+gate. The catalog probe constructs **32,109 identities**, excluding seven
+nonstarting meld results. Exact source/worker hashes, failing baselines, frozen
+final fixtures, actual observations and limits are retained in
+[`player_control_evidence.json`](../engine/player_control_evidence.json).
+
+The fixtures use partial four-player boards and fixed legal action choices,
+with native payment, resolution and phase hooks but no response priority. They
+cover both native stack-copy modes at resolved checkpoints, not arbitrary paid
+pending spells or mid-resolution continuations. Other control cards, untap/skip
+interactions, targets leaving, active-master departure, human-controller conversion,
+custom agents, search-only control, optional waterbend payment, Emrakul cost
+reductions and strategic target/action choices remain unverified. Catalog
+construction and versioned rules references do not establish complete rules or
+AI coverage. Unmapped diagnostics still need regular CLI report aggregation.
+
+A separate native research fixture checks three legal, affordable primary
+ControlPlayer actions: Worst Fears, Mindslaver's activation and Secret of
+Bloodbending. Each is assigned to `CannotPlayAi` and returns `CantPlayAi` with
+rating zero. All three research checks fail the criterion that an implemented
+strategy should evaluate the action instead of classifying it as unsupported;
+they do not require choosing every legal action. This is an open AI support gap
+outside the passing snapshot suites. Emrakul's mandatory trigger fallback in the
+paid witnesses is separate from automated selection of those primary actions.
+Full hostile decision policy and arbitrary custom AI state still need work.
