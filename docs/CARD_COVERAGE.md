@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **898 native tests in 77 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 350 focused
+The reviewed patched source also passes **938 native tests in 78 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 390 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1059,3 +1059,67 @@ Multiple concurrent forced-block timestamps, multi-attacker BlockAllDefined path
 prevention subabilities, radiance/divided shields, already-consumed effect lifecycle,
 blink, player loss, hidden views and arbitrary AI policies remain unverified.
 Other callbacks and general continuations still need separate verification.
+
+
+## Ring designations and text changes
+
+The reviewed runtime preserves the temptation count, existing Ring effect card,
+Ring-bearer reference and designation flag in game snapshots. It reuses the copied
+emblem without tempting again or rebuilding its acquired abilities. Historical
+card copies retain the designation; an ordinary paid Clone still does not copy it.
+A stale loss callback now checks the player's exact current bearer, so an old
+bearer belonging to another player cannot clear the former player's newer bearer.
+That sequence first failed in the original game as well as copied games.
+
+Color/type word maps, timestamped type-line layers and word-derived keyword layers
+are restored with canonical copied traits. State-changed type records receive an
+independent type value. Expiring a word edit refreshes the active keyword cache;
+the original game previously kept islandwalk after the edit map was cleared.
+Native fixtures cover temporary and permanent color edits, controlled legal type
+choices, forestwalk/islandwalk restoration, and Forest/Island type and mana changes.
+The two type-choice scenarios and original word-cache check are native-only;
+they install a fixed controller choice rather than change the printed ability.
+
+Exchange of Words previously had no AI handler, so its mandatory ETB effect was
+skipped. A registered handler now selects legal targets, rejects an opposing
+hexproof second target, uses the existing native creature evaluator with power/
+toughness and mana-value contributions disabled for basic preferences, and supplies
+a legal fallback for mandatory choices. This is a heuristic, not strategic
+certification. Duration cleanup maps both creatures, retains incarnation guards,
+and restores their original text without replaying entry triggers.
+
+Forty native regressions cover both stack-copy modes plus original-game contracts.
+The valid baseline had **39 failures and one existing positive outcome**: the
+opposing-hexproof pair already remained unchanged while the entire exchange API
+was unsupported. That positive outcome does not prove the old targeting policy
+worked. The candidate passes all forty. Nineteen packaged witnesses cover:
+
+- Temporary/permanent color edits with actual anthem power changes.
+- Exchanged keywords/activated abilities, a controller-dependent Merfolk bonus,
+  restored ETB drawing, real damage prevention, and a blinked incarnation guard.
+- Ring levels one through four, the next temptation without duplicate emblems,
+  leaving-play/control-change cleanup, the stale former-owner sequence in both
+  original and copied games, and Clone versus historical designation behavior.
+- Actual copied Ring looting and combat-damage life loss. A forced block by a
+  surviving Wall of Omens also exercises the native end-of-combat sacrifice.
+- The existing opposing-hexproof no-exchange outcome as a negative targeting case.
+
+Frozen source hashes, the valid failing baseline, actual observations and limits
+are retained in [`ring_text_evidence.json`](../engine/ring_text_evidence.json).
+The local Oracle witnesses select unique legal non-token identities; Ornithopter
+also has a same-name token record that is not a starting-deck card.
+
+Verification: **390 focused native tests**, **938 broader gameplay tests** including
+those 390, **256 serialization tests**, **29 live integrations / 469 subtests**,
+and **399 offline tests / 508 subtests**, with all Python quality tools. The frozen
+catalog construction probe still passes **32,109 identities**, excluding the same
+seven non-starting meld records. Construction does not establish full gameplay.
+
+Fixtures use partial four-player registrations and controlled boards. Attacker
+declaration is installed directly; native attack/block triggers, blocker choice,
+damage, looting and deadlines run afterward without response priority. This does
+not certify all Ring choices, controllers, ward costs, control/reselection patterns,
+spell-on-stack word edits, cipher/buyback/flashback choices, overlapping word/text
+layers, all Deadpool entry paths, lost-player or hidden-view behavior, arbitrary
+subclass payloads, general continuations or AI policy. The retained rules reference
+is versioned evidence, not a claim to have audited every rule or newer revisions.

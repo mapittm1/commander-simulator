@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed Ring progression/designation snapshots, stale former-owner bearer cleanup,
+  copied word/type layers and stale word-derived keyword caches. Registered legal
+  mandatory text-box exchange targeting and mapped text restoration. Forty native
+  and nineteen packaged cases cover original-game defects, actual Ring combat,
+  Clone/LKI distinctions, word expiry and exchanged abilities with explicit limits.
+
 - Fixed lost forced-block requirements and lingering finite prevention shields in
   copied games. The snapshot retains requirement timestamps and mapped attackers;
   cleanup maps blockers, effect cards, target views and player-stat events.

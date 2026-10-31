@@ -37,17 +37,20 @@ protection on individual creatures, groups and players in copied games.
 cover temporary keyword removal and Serene Master combat cleanup.
 [Forced blocking and prevention shields](docs/CARD_COVERAGE.md#forced-blocking-and-prevention-shields)
 cover copied block requirements and finite shield cleanup.
+[Ring designations and text changes](docs/CARD_COVERAGE.md#ring-designations-and-text-changes)
+cover Ring progression, bearer loss, word edits and text-box exchange.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 350
+Seven additional records are non-starting meld results. The build passes 390
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
 conditional control/cleanup, animation reversal, temporary-copy expiry, protection deadlines, keyword restoration
-combat power exchange, forced-block requirements and prevention shields.
-Broader native runs pass 898 AI/gameplay tests (including those 350) and 256
+combat power exchange, forced-block requirements, prevention shields, Ring state
+and text changes.
+Broader native runs pass 938 AI/gameplay tests (including those 390) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

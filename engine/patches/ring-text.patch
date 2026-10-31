@@ -1,0 +1,345 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -259,6 +259,7 @@
+         }
+         abilitySnapshot = context;
+         for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
++            entry.getValue().copySnapshotRingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+         }
+@@ -525,6 +526,8 @@
+             newCard.setDamageReceivedThisTurn(c.getDamageReceivedThisTurn());
+ 
+             newCard.copyFrom(c);
++            newCard.copySnapshotTextFrom(c);
++            newCard.setRingBearer(c.isRingBearer());
+             newCard.updateKeywordsCache();
+ 
+             if (c.isTapped()) {
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -414,6 +414,8 @@
+         newCopy.setUnearthed(copyFrom.isUnearthed());
+         newCopy.setMonstrous(copyFrom.isMonstrous());
+         newCopy.setRenowned(copyFrom.isRenowned());
++        // Historical state retains the designation; ordinary copiable characteristics do not.
++        newCopy.setRingBearer(copyFrom.isRingBearer());
+         newCopy.setSolved(copyFrom.isSolved());
+         newCopy.setPromisedGift(copyFrom.getPromisedGift());
+         newCopy.setSaddled(copyFrom.isSaddled());
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -2818,6 +2818,7 @@
+      */
+     public void copyEffectCardsToSnapshot(Player toPlayer, Function<Card, Card> mapper) {
+         toPlayer.keywordEffect = mapEffectCard(keywordEffect, mapper);
++        toPlayer.theRing = mapEffectCard(theRing, mapper);
+         toPlayer.monarchEffect = mapEffectCard(monarchEffect, mapper);
+         toPlayer.initiativeEffect = mapEffectCard(initiativeEffect, mapper);
+         toPlayer.blessingEffect = mapEffectCard(blessingEffect, mapper);
+@@ -4141,6 +4142,13 @@
+         return elementalBendThisTurn.size() >= 4;
+     }
+ 
++    /** Restore progression and designation without tempting again or rebuilding the emblem. */
++    public void copySnapshotRingFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        numRingTemptedYou = original.numRingTemptedYou;
++        ringBearer = context.map(original.ringBearer);
++    }
++
+     /** Restore existing keyword layers without firing gain events or allocating effect cards. */
+     public void copySnapshotKeywordsFrom(Player original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
+--- a/forge-game/src/main/java/forge/game/ability/effects/RingTemptsYouEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RingTemptsYouEffect.java
+@@ -35,17 +35,9 @@
+         Card ringBearer = p.getController().chooseSingleEntityForEffect(creatures, sa, Localizer.getInstance().getMessage("lblChooseRingBearer"), false, null);
+         p.setRingBearer(ringBearer);
+ 
+-        // 701.52a That creature becomes your Ring-bearer until another player gains control of it.
++        // Losing control or leaving play ends this player's current bearer designation.
+         if (ringBearer != null) {
+-            GameCommand loseCommand = new GameCommand() {
+-                private static final long serialVersionUID = 1L;
+-                @Override
+-                public void run() {
+-                    if (ringBearer.isRingBearer()) {
+-                        p.clearRingBearer();
+-                    }
+-                }
+-            };
++            GameCommand loseCommand = new RingBearerExpiration(p, ringBearer);
+             ringBearer.addChangeControllerCommand(loseCommand);
+             ringBearer.addLeavesPlayCommand(loseCommand);
+         }
+@@ -54,4 +46,25 @@
+         runParams.put(AbilityKey.Card, ringBearer);
+         game.getTriggerHandler().runTrigger(TriggerType.RingTemptsYou, runParams, false);
+     }
++
++    private static final class RingBearerExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Player player;
++        private final Card bearer;
++        private RingBearerExpiration(Player player, Card bearer) {
++            this.player = player;
++            this.bearer = bearer;
++        }
++        @Override
++        public void run() {
++            // The former bearer may now belong to another player. Never clear a newer designation.
++            if (player.getRingBearer() == bearer) player.clearRingBearer();
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new RingBearerExpiration(context.map(player), context.map(bearer));
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java
+@@ -108,18 +108,8 @@
+             }
+ 
+             if (!permanent) {
+-                final GameCommand revert = new GameCommand() {
+-                    private static final long serialVersionUID = -7802388880114360593L;
+-                    @Override
+-                    public void run() {
+-                        if (changedColorWordNew != null) {
+-                            c.removeChangedTextColorWord(timestamp, 0);
+-                        }
+-                        if (changedTypeWordNew != null) {
+-                            c.removeChangedTextTypeWord(timestamp, 0);
+-                        }
+-                    }
+-                };
++                final GameCommand revert = new WordExpiration(c, timestamp,
++                        changedColorWordNew != null, changedTypeWordNew != null);
+                 game.getEndOfTurn().addUntil(revert);
+             }
+ 
+@@ -230,4 +220,29 @@
+         return sb.toString();
+     }
+ 
++
++    private static final class WordExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        private final boolean color;
++        private final boolean type;
++        private WordExpiration(Card card, long timestamp, boolean color, boolean type) {
++            this.card = card;
++            this.timestamp = timestamp;
++            this.color = color;
++            this.type = type;
++        }
++        @Override
++        public void run() {
++            if (color) card.removeChangedTextColorWord(timestamp, 0);
++            if (type) card.removeChangedTextTypeWord(timestamp, 0);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new WordExpiration(context.map(card), timestamp, color, type);
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/TextBoxExchangeEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/TextBoxExchangeEffect.java
+@@ -61,32 +61,7 @@
+         swapTextBox(c2, data1, ts);
+ 
+         if (sa.hasParam("Duration")) {
+-            final GameCommand revertTextExchange = new GameCommand() {
+-                private static final long serialVersionUID = 5331255714437747836L;
+-
+-                @Override
+-                public void run() {
+-                    // Check if the cards are still there
+-                    Card card1 = game.getCardState(c1, null);
+-                    Card card2 = game.getCardState(c2, null);
+-
+-                    if (card1 != null && c1.equalsWithGameTimestamp(card1)) {
+-                        card1.removeChangedCardTraitsByText(ts, 0);
+-                        card1.removeChangedCardKeywords(ts, 0, false);
+-                        card1.updateChangedText();
+-                        card1.updateStateForView();
+-                        game.fireEvent(new GameEventCardStatsChanged(card1));
+-                    }
+-
+-                    if (card2 != null && c2.equalsWithGameTimestamp(card2)) {
+-                        card2.removeChangedCardTraitsByText(ts, 0);
+-                        card2.removeChangedCardKeywords(ts, 0, false);
+-                        card2.updateChangedText();
+-                        card2.updateStateForView();
+-                        game.fireEvent(new GameEventCardStatsChanged(card2));
+-                    }
+-                }
+-            };
++            final GameCommand revertTextExchange = new TextBoxExpiration(c1, c2, ts);
+ 
+             addUntilCommand(sa, revertTextExchange);
+         }
+@@ -179,4 +154,38 @@
+         List<StaticAbility> statics;
+         List<KeywordInterface> keywords;
+     }
++
++    private static final class TextBoxExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card first;
++        private final Card second;
++        private final long timestamp;
++        private TextBoxExpiration(Card first, Card second, long timestamp) {
++            this.first = first;
++            this.second = second;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            restore(first);
++            restore(second);
++        }
++        private void restore(Card previous) {
++            Game game = previous.getGame();
++            Card current = game.getCardState(previous, null);
++            if (current != null && previous.equalsWithGameTimestamp(current)) {
++                current.removeChangedCardTraitsByText(timestamp, 0);
++                current.removeChangedCardKeywords(timestamp, 0, false);
++                current.updateChangedText();
++                current.updateStateForView();
++                game.fireEvent(new GameEventCardStatsChanged(current));
++            }
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new TextBoxExpiration(context.map(first), context.map(second), timestamp);
++        }
++    }
++
+ }
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -100,6 +100,7 @@
+             .put(ApiType.ExchangeControl, ControlExchangeAi.class)
+             .put(ApiType.ExchangeControlVariant, CannotPlayAi.class)
+             .put(ApiType.ExchangePower, PowerExchangeAi.class)
++            .put(ApiType.ExchangeTextBox, TextBoxExchangeAi.class)
+             .put(ApiType.ExchangeZone, ZoneExchangeAi.class)
+             .put(ApiType.Explore, ExploreAi.class)
+             .put(ApiType.Fight, FightAi.class)
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/TextBoxExchangeAi.java
+@@ -0,0 +1,59 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.ai.ComputerUtilCard;
++import forge.ai.SpellAbilityAi;
++import forge.game.card.Card;
++import forge.game.card.CardLists;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++
++import java.util.Comparator;
++import java.util.List;
++
++/** Basic text-value preferences, with a legal fallback for mandatory exchanges. */
++public class TextBoxExchangeAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision canPlay(Player ai, SpellAbility sa) {
++        return select(ai, sa, sa.isMandatory());
++    }
++    @Override
++    public AiAbilityDecision chkDrawback(Player ai, SpellAbility sa) {
++        return select(ai, sa, sa.isMandatory());
++    }
++    @Override
++    protected AiAbilityDecision doTriggerNoCost(Player ai, SpellAbility sa, boolean mandatory) {
++        return select(ai, sa, mandatory);
++    }
++    private static int textValue(Card card) {
++        return ComputerUtilCard.evaluateCreature(card, false, false);
++    }
++    private static AiAbilityDecision select(Player ai, SpellAbility sa, boolean mandatory) {
++        if (!sa.usesTargeting()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        sa.resetTargets();
++        List<Card> candidates = CardLists.getValidCards(ai.getGame().getCardsIn(ZoneType.Battlefield),
++                sa.getTargetRestrictions().getValidTgts(), ai, sa.getHostCard(), sa);
++        candidates = CardLists.filter(candidates, sa::canTarget);
++        Card friendly = candidates.stream().filter(c -> !ai.isOpponentOf(c.getController()))
++                .min(Comparator.comparingInt(TextBoxExchangeAi::textValue)).orElse(null);
++        Card opponent = candidates.stream().filter(c -> ai.isOpponentOf(c.getController()))
++                .max(Comparator.comparingInt(TextBoxExchangeAi::textValue)).orElse(null);
++        if (friendly != null && opponent != null && textValue(opponent) > textValue(friendly)) {
++            sa.getTargets().add(friendly);
++            if (sa.canTarget(opponent)) sa.getTargets().add(opponent);
++            if (sa.isTargetNumberValid()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++            sa.resetTargets();
++        }
++        if (mandatory) {
++            for (Card card : candidates) {
++                if (!sa.canAddMoreTarget()) break;
++                if (sa.canTarget(card)) sa.getTargets().add(card);
++            }
++            if (sa.isTargetNumberValid()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        }
++        sa.resetTargets();
++        return new AiAbilityDecision(0, mandatory ? AiPlayDecision.TargetingFailed : AiPlayDecision.CantPlayAi);
++    }
++}
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -5636,6 +5636,7 @@
+         }
+ 
+         changedCardKeywordsByWord = new KeywordsChange(addKeywords, removeKeywords, false);
++        updateKeywordsCache();
+ 
+         text = AbilityUtils.applyDescriptionTextChangeEffects(originalText, this);
+ 
+@@ -5656,6 +5657,24 @@
+ 
+     public final ImmutableMap<String, String> getChangedTextTypeWords() {
+         return ImmutableMap.copyOf(changedTextTypes);
++    }
++
++    /** Preserve timestamped word/type layers without replaying text-changing effects. */
++    public void copySnapshotTextFrom(Card original) {
++        copyChangedTextFrom(original);
++        changedCardTypesByText.clear();
++        for (Table.Cell<Long, Long, ICardChangedType> cell : original.changedCardTypesByText.cellSet()) {
++            ICardChangedType copy;
++            if (cell.getValue() instanceof WordChangedType word) {
++                copy = new WordChangedType(word.oldWord(), word.newWord());
++            } else if (cell.getValue() instanceof StateChangedType state) {
++                copy = new StateChangedType(new CardType(state.type()));
++            } else {
++                throw new IllegalArgumentException("Unsupported text-layer type record");
++            }
++            changedCardTypesByText.put(cell.getRowKey(), cell.getColumnKey(), copy);
++        }
++        updateTypeCache();
+     }
+ 
+     /**
+@@ -8423,6 +8442,7 @@
+         for (Table.Cell<Long, Long, CardTraitChanges> entry : original.changedCardTraitsByText.cellSet()) {
+             changedCardTraitsByText.put(entry.getRowKey(), entry.getColumnKey(), context.traitChanges(entry.getValue()));
+         }
++        changedCardKeywordsByWord = original.changedCardKeywordsByWord.copyForSnapshot(this, context);
+         updateKeywordsCache();
+         updateStateForView();
+     }

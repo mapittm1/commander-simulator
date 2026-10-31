@@ -1,0 +1,2840 @@
+{
+  "scope": "Selected Ring designation, word/type change and text-box exchange behavior; not complete card, rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-ring-text",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "5fd671dcd2500cca87ca178c3466d8df19676fe16a03ae19e905fedb168f26bf",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "6eabdbb614ae2796dcbb8d29d2d7d3a285156674464abe9b5b9abd7d4d416332",
+    "native_tests": {
+      "total": 390,
+      "passed": 390,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "294f57caabe3ea94d8346e2d7eb79b6196ad91365cc9dbbe3749b4822071787e",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "b18b51ad4dfa479c827cad667700a4f4",
+  "compiled_source_sha256": {
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "3592acb965a530ce9092c8cda48d06aaec93f623d9b7f500daf2ca85545f4359",
+    "forge-ai/src/main/java/forge/ai/SpellApiToAi.java": "17cbefb87e120ae52d293220b726f6efc2adce2a91925a0a8de891a08a0040de",
+    "forge-ai/src/main/java/forge/ai/ability/TextBoxExchangeAi.java": "0caa50723177c6912db724adda3860f24511da2d4085b41114ad955e00b953c9",
+    "forge-game/src/main/java/forge/game/card/Card.java": "783842cb6f5d63007558fd4b80bb1b69ab9e148f9c10ff9e63458892c0aa2c54",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java": "e2d9a62e22af2dabbfd938c347d2936342aaa4cc32f5baccfd1c9c5634bda9f6",
+    "forge-game/src/main/java/forge/game/player/Player.java": "eaa5c367f4c59882c2254b8d81d94c6bc91f385b9bd1331ea268fda22c8d1f3b",
+    "forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java": "6c064c6bbdd8bb49a51c0af7b0f4f8d3cf5e0a8b02d83c9bcb5e9c558e4f2e8c",
+    "forge-game/src/main/java/forge/game/ability/effects/TextBoxExchangeEffect.java": "959e55ed09603ca58ade3d60530de07486e9b6715e80e4bc72e9ea5a1ac5e0b4",
+    "forge-game/src/main/java/forge/game/ability/effects/RingTemptsYouEffect.java": "8af57d4e8731f7c54fbeaf9da4f6d382338869ca01477a765b3aee29285a685f"
+  },
+  "patch_sha256": "a92394ee3a9b3d3c0e07bfdb6a4bdeba449a6c04a12488abc9df24f4cc982b37",
+  "native_test_sha256": "35c911099049863b1a962f004450d7cec927bd5e15f3b4342ee5038ad94e6cdb",
+  "worker_sha256": "d7227f804564335cfcdf64a63bfc9644f53ed2a7b9f1a4b4a48d9ffc2d82f83f",
+  "integration_test_sha256": "c07f14aa1c7aeebdd6444823af0ba4c6e0082d2ad396df14b1c5a0dd6f8c7933",
+  "native_evidence_sha256": "615b184396036818bf5214c6620bc79dcb4b67775e88f310568ebe122b44eec4",
+  "native_before": {
+    "counts": {
+      "total": 40,
+      "passed": 1,
+      "failed": 39,
+      "skipped": 0
+    },
+    "testng_sha256": "a47620c0b9e07b2fe7a523fa7ddee74c2e4eaad1e8c5b5a18205ecdb11644dd0",
+    "source_audit_sha256": "d60dfb2f4610727583622fde0e94d4a8603ee09473c22faef0924359b327d758",
+    "note": "Identical final fixture: 39 failures and one unchanged illegal-pair positive control. Mandatory text-box exchange was skipped by the old AI registry; those baseline failures do not establish that old expiry ran."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 40,
+      "passed": 40,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "6918d0d2bf7ede0bafe3646464e0d168e1f186d896a66983d11194c3396e7a42"
+  },
+  "before": {
+    "run_id": "e7cf24a595484fc7959fb01c3753b73d",
+    "receipt_sha256": "2c13a841ee24f044bdaae76d53f9842083f2f1cc8da3f375aec4c72d025ed988",
+    "worker_log_sha256": "92ffefb2bba311072785df089589be246a7038db627cfe067ecfafce4b660af5",
+    "observed": [
+      {
+        "case": "words_temporary",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "copied_before": {
+          "words": {},
+          "power": [
+            2,
+            3
+          ]
+        },
+        "after": {
+          "words": {},
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source_after": {
+          "words": {},
+          "power": [
+            3,
+            2
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.ChangeTextEffect$1"
+        ]
+      },
+      {
+        "case": "words_permanent",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "copied_before": {
+          "words": {},
+          "power": [
+            2,
+            3
+          ]
+        },
+        "after": {
+          "words": {},
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source_after": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "exchange_keywords",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ]
+      },
+      {
+        "case": "exchange_static",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "merfolk_copy": [
+          2,
+          1
+        ],
+        "merfolk_source": [
+          2,
+          1
+        ]
+      },
+      {
+        "case": "exchange_trigger",
+        "paid": [
+          3,
+          2,
+          1
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "library_before_blink": 12,
+        "library_after_blink": 11
+      },
+      {
+        "case": "exchange_replacement",
+        "paid": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copy_damage": {
+          "flying": false,
+          "vigilance": false,
+          "triggers": 0,
+          "destroy": false,
+          "zone": "Battlefield",
+          "damage": 0,
+          "memory": false
+        },
+        "source_damage": {
+          "flying": false,
+          "vigilance": false,
+          "triggers": 0,
+          "destroy": false,
+          "zone": "Battlefield",
+          "damage": 0,
+          "memory": false
+        }
+      },
+      {
+        "case": "exchange_blink",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "source": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ]
+      },
+      {
+        "case": "ring_level",
+        "level": 1,
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ],
+        "after": {
+          "count": 1,
+          "ring_id": 129,
+          "ring_triggers": 0,
+          "ring_cards": 2,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 2,
+        "paid": [
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ],
+        "after": {
+          "count": 1,
+          "ring_id": 130,
+          "ring_triggers": 0,
+          "ring_cards": 2,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 3,
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ],
+        "after": {
+          "count": 1,
+          "ring_id": 131,
+          "ring_triggers": 0,
+          "ring_cards": 2,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 4,
+        "paid": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ],
+        "after": {
+          "count": 1,
+          "ring_id": 132,
+          "ring_triggers": 0,
+          "ring_cards": 2,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "bearer_leave",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Hand"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ]
+      },
+      {
+        "case": "bearer_control",
+        "paid": [
+          1,
+          3
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "count": 0,
+          "ring_id": null,
+          "ring_triggers": null,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ]
+      },
+      {
+        "case": "former_copy",
+        "paid": [
+          1,
+          4,
+          1,
+          0,
+          1,
+          1
+        ],
+        "source_before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "before": [
+          {
+            "count": 0,
+            "ring_id": null,
+            "ring_triggers": null,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 131,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 0,
+            "ring_id": null,
+            "ring_triggers": null,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "after": [
+          {
+            "count": 0,
+            "ring_id": null,
+            "ring_triggers": null,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 131,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 0,
+            "ring_id": null,
+            "ring_triggers": null,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "source": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ]
+      },
+      {
+        "case": "former_original",
+        "paid": [
+          1,
+          4,
+          1,
+          0,
+          1,
+          1
+        ],
+        "source_before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "after": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 131,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "source": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 131,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "unmapped": []
+      },
+      {
+        "case": "designation",
+        "paid": [
+          1,
+          4
+        ],
+        "clone_flag": false,
+        "clone_legendary": false,
+        "lki_flag": false,
+        "unmapped": []
+      },
+      {
+        "case": "illegal_pair",
+        "paid": [
+          3
+        ],
+        "angel_flying": true,
+        "bogle_flying": false,
+        "unmapped": []
+      },
+      {
+        "case": "combat_hit",
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "library": 8,
+          "hand": 4
+        },
+        "after": {
+          "library": 8,
+          "hand": 4,
+          "life": [
+            40,
+            38,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "library": 8,
+          "hand": 4,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ]
+      },
+      {
+        "case": "combat_block",
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "library": 9,
+          "hand": 3
+        },
+        "after": {
+          "library": 9,
+          "hand": 3,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ],
+          "wall_zone": "Battlefield"
+        },
+        "source": {
+          "library": 9,
+          "hand": 3,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ],
+          "wall_zone": "Battlefield"
+        },
+        "unmapped": [
+          "card.controller: forge.game.ability.effects.RingTemptsYouEffect$1",
+          "card.leave: forge.game.ability.effects.RingTemptsYouEffect$1"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "run_id": "9dc033978fd342dab6688c1008fa7cde",
+    "receipt_sha256": "0b396ba725012915c0f3344c9d2efce965ebb0c89038ce809d73cfb42dd942fa",
+    "worker_log_sha256": "69726bee4de0d1ff528cff9e0c99b64dc58fc4d26b50e810192f14ca83a7acc6",
+    "observed": [
+      {
+        "case": "words_temporary",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "copied_before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "after": {
+          "words": {},
+          "power": [
+            3,
+            2
+          ]
+        },
+        "source": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source_after": {
+          "words": {},
+          "power": [
+            3,
+            2
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "words_permanent",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "copied_before": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "after": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "source_after": {
+          "words": {
+            "White": "Blue"
+          },
+          "power": [
+            2,
+            3
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "exchange_keywords",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ]
+      },
+      {
+        "case": "exchange_static",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "merfolk_copy": [
+          2,
+          1
+        ],
+        "merfolk_source": [
+          1,
+          2
+        ]
+      },
+      {
+        "case": "exchange_trigger",
+        "paid": [
+          3,
+          2,
+          1
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 1,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "library_before_blink": 12,
+        "library_after_blink": 11
+      },
+      {
+        "case": "exchange_replacement",
+        "paid": [
+          3,
+          2,
+          1,
+          1
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          }
+        ],
+        "copy_damage": {
+          "flying": false,
+          "vigilance": false,
+          "triggers": 0,
+          "destroy": false,
+          "zone": "Battlefield",
+          "damage": 0,
+          "memory": false
+        },
+        "source_damage": {
+          "flying": false,
+          "vigilance": false,
+          "triggers": 0,
+          "destroy": false,
+          "zone": "Graveyard",
+          "damage": 0,
+          "memory": false
+        }
+      },
+      {
+        "case": "exchange_blink",
+        "paid": [
+          3,
+          2
+        ],
+        "before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "copied_before": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "unmapped": [],
+        "after": [
+          {
+            "flying": true,
+            "vigilance": true,
+            "triggers": 0,
+            "destroy": false,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ],
+        "source": [
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": false
+          },
+          {
+            "flying": false,
+            "vigilance": false,
+            "triggers": 0,
+            "destroy": true,
+            "zone": "Battlefield",
+            "damage": 0,
+            "memory": true
+          }
+        ]
+      },
+      {
+        "case": "ring_level",
+        "level": 1,
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [],
+        "after": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 2,
+        "paid": [
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [],
+        "after": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 2,
+          "ring_id": 127,
+          "ring_triggers": 1,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 3,
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [],
+        "after": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 3,
+          "ring_id": 127,
+          "ring_triggers": 2,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "ring_level",
+        "level": 4,
+        "paid": [
+          1,
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": [],
+        "after": {
+          "count": 5,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 4,
+          "ring_id": 127,
+          "ring_triggers": 3,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        }
+      },
+      {
+        "case": "bearer_leave",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Hand"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "bearer_control",
+        "paid": [
+          1,
+          3
+        ],
+        "before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "copied_before": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "after": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": null,
+          "physical_id": 125,
+          "flag": false,
+          "legendary": false,
+          "zone": "Battlefield"
+        },
+        "source": {
+          "count": 1,
+          "ring_id": 127,
+          "ring_triggers": 0,
+          "ring_cards": 1,
+          "bearer_id": 125,
+          "physical_id": 125,
+          "flag": true,
+          "legendary": true,
+          "zone": "Battlefield"
+        },
+        "unmapped": []
+      },
+      {
+        "case": "former_copy",
+        "paid": [
+          1,
+          4,
+          1,
+          0,
+          1,
+          1
+        ],
+        "source_before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "after": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "source": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "unmapped": []
+      },
+      {
+        "case": "former_original",
+        "paid": [
+          1,
+          4,
+          1,
+          0,
+          1,
+          1
+        ],
+        "source_before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "before": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": 125,
+            "physical_id": 125,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          }
+        ],
+        "after": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "source": [
+          {
+            "count": 2,
+            "ring_id": 127,
+            "ring_triggers": 1,
+            "ring_cards": 1,
+            "bearer_id": 131,
+            "physical_id": 131,
+            "flag": true,
+            "legendary": true,
+            "zone": "Battlefield"
+          },
+          {
+            "count": 1,
+            "ring_id": 130,
+            "ring_triggers": 0,
+            "ring_cards": 1,
+            "bearer_id": null,
+            "physical_id": 125,
+            "flag": false,
+            "legendary": false,
+            "zone": "Battlefield"
+          }
+        ],
+        "unmapped": []
+      },
+      {
+        "case": "designation",
+        "paid": [
+          1,
+          4
+        ],
+        "clone_flag": false,
+        "clone_legendary": false,
+        "lki_flag": true,
+        "unmapped": []
+      },
+      {
+        "case": "illegal_pair",
+        "paid": [
+          3
+        ],
+        "angel_flying": true,
+        "bogle_flying": false,
+        "unmapped": []
+      },
+      {
+        "case": "combat_hit",
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "library": 8,
+          "hand": 4
+        },
+        "after": {
+          "library": 7,
+          "hand": 4,
+          "life": [
+            40,
+            35,
+            37,
+            37
+          ]
+        },
+        "source": {
+          "library": 8,
+          "hand": 4,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "combat_block",
+        "paid": [
+          1,
+          1,
+          1,
+          1
+        ],
+        "before": {
+          "library": 9,
+          "hand": 3
+        },
+        "after": {
+          "library": 8,
+          "hand": 3,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ],
+          "wall_zone": "Graveyard"
+        },
+        "source": {
+          "library": 9,
+          "hand": 3,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ],
+          "wall_zone": "Battlefield"
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "packaged_candidate_run_ids": [
+    "3315991d449d46e28ff58875ae7fee21",
+    "9dc033978fd342dab6688c1008fa7cde"
+  ],
+  "worker_freeze": {
+    "sha256": "d7227f804564335cfcdf64a63bfc9644f53ed2a7b9f1a4b4a48d9ffc2d82f83f",
+    "mtime_ns": 1793465474497058300,
+    "note": "Both final candidate captures and the recaptured baseline postdate this freeze. Baseline was recaptured after the full candidate suite; chronological order is not used as engine identity."
+  },
+  "oracle_witnesses": [
+    {
+      "name": "Birthday Escape",
+      "oracle_id": "4f958678-2a32-4a30-8fe7-47df9ada6b2f",
+      "source": "https://scryfall.com/card/ltr/43/birthday-escape?utm_source=api",
+      "oracle_text_sha256": "ed05a07f1f182826d77c250d17d7b543b6206788855ed96e457e73f28933bad6",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Wall of Stone",
+      "oracle_id": "cd4cadb4-3156-49bd-b36e-12ba5c85938b",
+      "source": "https://scryfall.com/card/8ed/232/wall-of-stone?utm_source=api",
+      "oracle_text_sha256": "82fdab220543c360845cafccf126965515be4b0c831d0392f9aca2221b4c921d",
+      "mana_cost": "{1}{R}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Ornithopter",
+      "oracle_id": "a3a98bc9-caa0-49b7-951c-fe4e4f54e4ba",
+      "source": "https://scryfall.com/card/dmr/233/ornithopter?utm_source=api",
+      "oracle_text_sha256": "75a4c2fe3b9e4d3cd2bd3d7787c7c138adf405fad5c27011227787947baf9b14",
+      "mana_cost": "{0}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Clone",
+      "oracle_id": "42226b87-0746-4ebf-9fd0-108d508462af",
+      "source": "https://scryfall.com/card/m14/47/clone?utm_source=api",
+      "oracle_text_sha256": "89054bc9b2839ac82d27a4357336a00da6c13b9c21ea8ceff1c4f7a20bf7a7b1",
+      "mana_cost": "{3}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Control Magic",
+      "oracle_id": "cd0d7141-46d2-4aa3-bc77-6b3b4513803e",
+      "source": "https://scryfall.com/card/cma/34/control-magic?utm_source=api",
+      "oracle_text_sha256": "d486ad0002ddd59bd73e52f10a69857c777e4f049d3fbb47f9e5d6298fb3b49f",
+      "mana_cost": "{2}{U}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Cloudshift",
+      "oracle_id": "6879f5ce-7a1b-4606-bad1-885779b0d456",
+      "source": "https://scryfall.com/card/tle/152/cloudshift?utm_source=api",
+      "oracle_text_sha256": "ee5a66500a755dd86039a417fe325ffe44f9e019979bb1647ff170bc40cbe6de",
+      "mana_cost": "{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Act of Treason",
+      "oracle_id": "9d08af23-9f4a-4097-9abc-3b17475ab744",
+      "source": "https://scryfall.com/card/rvr/99/act-of-treason?utm_source=api",
+      "oracle_text_sha256": "0ade38d4cd197e84a4331daaeb1044d2b69911e116669c63be1d22e4b3606617",
+      "mana_cost": "{2}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Unsummon",
+      "oracle_id": "837182db-1bf3-4a2c-bd01-1af9d9873561",
+      "source": "https://scryfall.com/card/fra/46/unsummon?utm_source=api",
+      "oracle_text_sha256": "949ea0ec2b12afb4e8dd8a5b647f2ae7adfb1af38909f725f589c3cc8814dfa2",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Exchange of Words",
+      "oracle_id": "a55ef412-257b-4ecd-9440-4545521be938",
+      "source": "https://scryfall.com/card/unf/45/exchange-of-words?utm_source=api",
+      "oracle_text_sha256": "5db4b3d13b5f2a9f8cf1159d0f928d44fdd080269ad7875cdc0405381c1d49f4",
+      "mana_cost": "{1}{U}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Disenchant",
+      "oracle_id": "a7e97fa9-4b72-4548-b854-5be5f18a6f1a",
+      "source": "https://scryfall.com/card/fdn/572/disenchant?utm_source=api",
+      "oracle_text_sha256": "1c50bfdd31a28155b4cab0e9b74980c1307c66df9ec65f7c88afa3f9f87a8317",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Serra Angel",
+      "oracle_id": "4b7ac066-e5c7-43e6-9e7e-2739b24a905d",
+      "source": "https://scryfall.com/card/fdn/740/serra-angel?utm_source=api",
+      "oracle_text_sha256": "f684a39aa1028505b2c4f766baee12539be12dcfc76f788e60b9ffc02e07e202",
+      "mana_cost": "{3}{W}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Royal Assassin",
+      "oracle_id": "9ed6f28f-a3db-48c5-9ab0-b90a7fba5f57",
+      "source": "https://scryfall.com/card/dmr/101/royal-assassin?utm_source=api",
+      "oracle_text_sha256": "3750892f50aa04be6132834454f67c7acbcb7eef31c1efc20ee899659e332e27",
+      "mana_cost": "{1}{B}{B}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Merfolk Sovereign",
+      "oracle_id": "16aba9af-7a12-4c3d-87eb-06278921cb7c",
+      "source": "https://scryfall.com/card/lcc/164/merfolk-sovereign?utm_source=api",
+      "oracle_text_sha256": "776b7fe1f555c2f247edd9781cf9a9c081260455d3171d57b66aebad9f0ee9cc",
+      "mana_cost": "{1}{U}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Merfolk of the Pearl Trident",
+      "oracle_id": "218d9277-c179-4de3-9c7f-79b5a6d4fa38",
+      "source": "https://scryfall.com/card/m13/60/merfolk-of-the-pearl-trident?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Wall of Omens",
+      "oracle_id": "5f601f48-d24b-4883-9fde-b3f620e7c9ea",
+      "source": "https://scryfall.com/card/tdc/138/wall-of-omens?utm_source=api",
+      "oracle_text_sha256": "2e081e6e66865a42547c194d6d9f78320cae2edfec76eccac308d8c6cc3c53a0",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Cho-Manno, Revolutionary",
+      "oracle_id": "91af5e35-b3b8-43ce-b1ea-997ed74e4ad2",
+      "source": "https://scryfall.com/card/10e/12/cho-manno-revolutionary?utm_source=api",
+      "oracle_text_sha256": "0076e13508b56c7c04bf80d17e5ef6e1866ff8d2db1024c5866e2a26cfa41b6b",
+      "mana_cost": "{2}{W}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "source": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
+      "oracle_text_sha256": "1c8ec5180252d4d2258eec2c0312b6f3c86b101696246288422c2d46aaa5ff8b",
+      "mana_cost": "{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Honor of the Pure",
+      "oracle_id": "eb4188bb-62df-4309-bde1-f66318fe2f05",
+      "source": "https://scryfall.com/card/m12/23/honor-of-the-pure?utm_source=api",
+      "oracle_text_sha256": "81cdaccb14418dcbf9c65cac46c4484c948de1d416e06775abc240fdb1731a07",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Whim of Volrath",
+      "oracle_id": "51a20c9f-68d2-471b-8622-67d481b53b92",
+      "source": "https://scryfall.com/card/tmp/102/whim-of-volrath?utm_source=api",
+      "oracle_text_sha256": "5df3e905a4a8ac5c29070ee1e9c47eeb5826566dd8f78d5c0b01721e597cf4b0",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Sleight of Mind",
+      "oracle_id": "99dba614-40d3-41c1-a3b2-edc8777b010f",
+      "source": "https://scryfall.com/card/5ed/124/sleight-of-mind?utm_source=api",
+      "oracle_text_sha256": "42311e324ce89dbdd30cfcebd831e16e7611b748b994b49d628a55eb16e14faa",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Shanodin Dryads",
+      "oracle_id": "998484cc-fefc-4da5-9987-5d6e89599c34",
+      "source": "https://scryfall.com/card/7ed/269/shanodin-dryads?utm_source=api",
+      "oracle_text_sha256": "51079cf0d07f8f1627a7be856aa5fc573b57dacd83da36b54ef8dfd97abf321a",
+      "mana_cost": "{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "source": "https://scryfall.com/card/mdd/301/forest?utm_source=api",
+      "oracle_text_sha256": "6215eab3372e7128de713b41e7758fc9b179ade5bc47d33a5af8cef9c9c7493b",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Coral Merfolk",
+      "oracle_id": "4ed27607-21a8-4bc3-997e-6d2242313f6d",
+      "source": "https://scryfall.com/card/m20/315/coral-merfolk?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Silvercoat Lion",
+      "oracle_id": "e3c0b11e-7340-4e0a-98b7-91b38439d4f9",
+      "source": "https://scryfall.com/card/m13/35/silvercoat-lion?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Savannah Lions",
+      "oracle_id": "60ba93eb-39e6-4af2-9c66-cd38f72daff2",
+      "source": "https://scryfall.com/card/fdn/146/savannah-lions?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Slippery Bogle",
+      "oracle_id": "f64878c1-1fba-44f7-a24f-d24bef2e03ae",
+      "source": "https://scryfall.com/card/uma/223/slippery-bogle?utm_source=api",
+      "oracle_text_sha256": "c4368931a6bfb4eda8ba006e6420a1466c621ccb96cbf075422e91c3d23c0f05",
+      "mana_cost": "{G/U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Hunt Down",
+      "oracle_id": "29b0f3bd-d9bd-4c54-b4c3-9c2e01720e34",
+      "source": "https://scryfall.com/card/lrw/218/hunt-down?utm_source=api",
+      "oracle_text_sha256": "8e8867981fe019a74e32bbb8d42c010bd7b2a5cf4ebae8a33f4021928562be38",
+      "mana_cost": "{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    }
+  ],
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "701.54a",
+      "701.54b",
+      "701.54c",
+      "611.2a",
+      "612.1",
+      "612.5"
+    ],
+    "scope": "Retained versioned reference for Ring designations, progression, text replacement and duration; not a full or current rules audit"
+  },
+  "full_live_suite": {
+    "passed": 29,
+    "subtests": 469,
+    "log_sha256": "4698baf5e53286d97e3e609f5c19a104f247742ded55be7ee71782456476c6c5"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 29,
+    "subtests": 508,
+    "log_sha256": "be1b55e8739dbd2891ea55d1eb61b834be9f84b7012a8a875e22d80c65ec2440"
+  },
+  "catalog_probe": {
+    "run_id": "bc5d7281b92b489f886ab8ac92567655",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "77018f09c516fbb157c06d54c6bb456b1b501aaea42ebb2e0e8fff4713e1fa85"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-ring-text-reviewed",
+    "lock_sha256": "4a3e198506a34c8e84c5d07e912d7c05aef7736d21f6969238288a6348037c9d",
+    "engine_check_sha256": "90aa0e43f7ffb58264929e73ace31e2cf01865b3a9ab558f55424d834cf371b0",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-blocking-prevention-reviewed"
+  },
+  "limits": [
+    "Forty native cases use controlled partial four-player registrations. Paired snapshot cases cover both stack-copy modes.",
+    "Nineteen packaged witnesses pay actual costs and run bounded native phase hooks without response priority; their captured boards are controlled fixtures.",
+    "Native-only type-word and type-line cases fix the legal choice at the native controller boundary; original-game word-cache regression is also native-only.",
+    "Ring combat witnesses use controlled attacker declarations followed by native triggers, block decisions, damage and cleanup. General attacker admission is not certified.",
+    "The former-owner callback and expired word-keyword cache defects were reproduced in original games, independently of snapshot restoration.",
+    "Text exchange now has a registered basic native evaluation policy and mandatory legal-target fallback; this does not certify optimal choices or every optional Deadpool path.",
+    "Copying Ring state does not replay temptation; ordinary Clone characteristics exclude the designation while LKI retains it.",
+    "Spell-on-stack word edits, overlapping text exchanges, all Ring choices and ward patterns, player loss, hidden/merged/perpetual state and general continuations remain unverified.",
+    "Unmapped-command diagnostics are asserted for these fixtures and are not yet aggregated into normal simulation reports.",
+    "Catalog construction proves availability of scripts, not rules correctness for every card. The seven unavailable entries are nonstarting meld results. Retained rules are versioned, not a complete current-rules audit."
+  ]
+}
