@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed Reconfigure cleanup and temporary mana-granted keywords in copied games.
+  Explicit mapped callbacks remove attachment effect cards and expire only their
+  granted keyword layer. Paid regressions cover Lion Sash, Lizard Blades, all
+  three retained temporary-haste mana sources and permanent Hall haste as a control.
+
 - Fixed Ring progression/designation snapshots, stale former-owner bearer cleanup,
   copied word/type layers and stale word-derived keyword caches. Registered legal
   mandatory text-box exchange targeting and mapped text restoration. Forty native

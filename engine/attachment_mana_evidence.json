@@ -1,0 +1,1251 @@
+{
+  "scope": "Selected Reconfigure effect cleanup and mana-granted keyword expiration; not complete card, rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-attachment-mana",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "5d3297029d6b83d9f371de88ba5a6f825aee509a10118d103684317efe0c2c2a",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "c5c659eb69f3d4ac23f3d959f6a1b02def2d807ffbd32fce8627252086c63b1c",
+    "native_tests": {
+      "total": 414,
+      "passed": 414,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "99e32923d5a5461f95f43d05ce43ac5cf8b5e5ef0aef2546c9d4976ed4c7d551",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "241212c62ecb489d8f02460032ab501a",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/card/Card.java": "e0ceb8cf1b11359bc6e9f83bfac40fb233fafeb7f1100c9864f8c5b176a568f0",
+    "forge-game/src/main/java/forge/game/spellability/SpellAbility.java": "f65bcaecac2b42d404a8cc1d0c85cbe06643fcdb5a17e02fb44fe37d33daa11d"
+  },
+  "patch_sha256": "198a98dc60d070464cc3a006a28a60844d876fc0cc23fcda807137d560f561c4",
+  "native_test_sha256": "c9bf04ba06c5fdf874974c3098f483b93f2cfccb23f9abea661cd4958a3b1c6e",
+  "worker_sha256": "00a1f2896e5619f5d59a37cbf53d66211d730335a92e6661bb8a60c3185b81bb",
+  "integration_test_sha256": "5da1757c3b37cd30e7f46705700ce554b0d6d2bac8f2e0206e4e31dc81e82f51",
+  "native_evidence_sha256": "2203f4643b7d8ac31f374cfaa26c91ad563131398e80412194d255858f5e9df0",
+  "shared_fixed_fixture_helpers": {
+    "tests/support/animation_worker.py": {
+      "working_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "git_blob_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/duration_worker.py": {
+      "working_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "git_blob_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/keyword_expiration_worker.py": {
+      "working_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "git_blob_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/native_worker.py": {
+      "working_sha256": "7b329d6d6b3dbafd6e5a2cad72e5d2bb0d1aa678f73cfd8b5ae06ec4ce831eb1",
+      "git_blob_sha256": "39d3d2cd34952ae5903ecebbbaf339b6c558048c7d6b01cbe3fc7c3884f9709d",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/stack_worker.py": {
+      "working_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "git_blob_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/usage_worker.py": {
+      "working_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "git_blob_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "note": "Text matches HEAD with normalized line endings"
+    }
+  },
+  "native_before": {
+    "counts": {
+      "total": 24,
+      "passed": 2,
+      "failed": 22,
+      "skipped": 0
+    },
+    "testng_sha256": "09479f73fe3bc0b404dd892d758ebc2739f20132a49c6c6755603d3575436d25",
+    "log_sha256": "3aae51523ce434d4c9dd7731bad686643e67149f1c66729f9f8288e829c730e0",
+    "source_audit_sha256": "928433539e4ef208bf35b709e01c962bc8c6ea68c6ea7c36ca6bad24e86b6798",
+    "note": "Identical final fixture: 22 failures and two passing permanent-haste controls. Earlier invalid Unsummon-on-equipment fixtures are excluded."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 24,
+      "passed": 24,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "1c78bb99167f8e6bde934b7e6975f4b29d737e58a5227c34d75436c5c2c69079",
+    "log_sha256": "82e2eb057bff1d0ea23c0f0f43703bac3ed344d5fd2c916c70fc7fe0f59b3a5c"
+  },
+  "before": {
+    "run_id": "f75879297ce84cc695b363062ff29e5b",
+    "receipt_sha256": "9f5c1304f28d569b658a58bbea39f5b44c730d97706de1d2def255d49904698b",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "Lion Sash:detach",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lion Sash:bearer",
+        "paid": [
+          2,
+          2,
+          1,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lion Sash:source",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Hand",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lion Sash:reattach",
+        "paid": [
+          2,
+          2,
+          4,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": {
+          "creature": false,
+          "attached_to": 40,
+          "zone": "Battlefield",
+          "effects": 2
+        },
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lizard Blades:detach",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lizard Blades:bearer",
+        "paid": [
+          2,
+          2,
+          1,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lizard Blades:source",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Hand",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Lizard Blades:reattach",
+        "paid": [
+          2,
+          2,
+          4,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": false,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": {
+          "creature": false,
+          "attached_to": 40,
+          "zone": "Battlefield",
+          "effects": 2
+        },
+        "second": 40,
+        "unmapped": [
+          "card.unattach: forge.game.card.Card$$Lambda$484/0x0000027381277a10",
+          "card.leave: forge.game.card.Card$$Lambda$484/0x0000027381277a10"
+        ]
+      },
+      {
+        "case": "Carnelian Orb of Dragonkind",
+        "paid": [
+          3,
+          4
+        ],
+        "mana_sources": [
+          39,
+          27,
+          28,
+          29
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Battlefield",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": true,
+        "source": true,
+        "source_after": false,
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.spellability.SpellAbility$1"
+        ]
+      },
+      {
+        "case": "Generator Servant",
+        "paid": [
+          2,
+          4
+        ],
+        "mana_sources": [
+          39,
+          39,
+          24,
+          25
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Graveyard",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": true,
+        "source": true,
+        "source_after": false,
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.spellability.SpellAbility$1"
+        ]
+      },
+      {
+        "case": "Arena of Glory",
+        "paid": [
+          0,
+          4
+        ],
+        "mana_sources": [
+          39,
+          39,
+          9,
+          10
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Battlefield",
+        "exerted": 1,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": true,
+        "source": true,
+        "source_after": false,
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.spellability.SpellAbility$1"
+        ]
+      },
+      {
+        "case": "Hall of the Bandit Lord",
+        "paid": [
+          0,
+          4
+        ],
+        "mana_sources": [
+          39,
+          24,
+          25,
+          26
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 37,
+        "source_zone": "Battlefield",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": true,
+        "source": true,
+        "source_after": true,
+        "unmapped": []
+      }
+    ]
+  },
+  "after": {
+    "run_id": "20391679deea411692d4b4e977cd2c2d",
+    "receipt_sha256": "3a3efd722cd037f6e83eb7daf771788bcc76bcaf91bbf17f8dfd8143228944ec",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "Lion Sash:detach",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lion Sash:bearer",
+        "paid": [
+          2,
+          2,
+          1,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lion Sash:source",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Hand",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lion Sash:reattach",
+        "paid": [
+          2,
+          2,
+          4,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": {
+          "creature": false,
+          "attached_to": 40,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lizard Blades:detach",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lizard Blades:bearer",
+        "paid": [
+          2,
+          2,
+          1,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lizard Blades:source",
+        "paid": [
+          2,
+          2,
+          2,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Hand",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": null,
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Lizard Blades:reattach",
+        "paid": [
+          2,
+          2,
+          4,
+          2
+        ],
+        "before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "copied_before": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "source": {
+          "creature": false,
+          "attached_to": 39,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "source_after": {
+          "creature": true,
+          "attached_to": null,
+          "zone": "Battlefield",
+          "effects": 0
+        },
+        "transferred": {
+          "creature": false,
+          "attached_to": 40,
+          "zone": "Battlefield",
+          "effects": 1
+        },
+        "second": 40,
+        "unmapped": []
+      },
+      {
+        "case": "Carnelian Orb of Dragonkind",
+        "paid": [
+          3,
+          4
+        ],
+        "mana_sources": [
+          39,
+          27,
+          28,
+          29
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Battlefield",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": false,
+        "source": true,
+        "source_after": false,
+        "unmapped": []
+      },
+      {
+        "case": "Generator Servant",
+        "paid": [
+          2,
+          4
+        ],
+        "mana_sources": [
+          39,
+          39,
+          24,
+          25
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Graveyard",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": false,
+        "source": true,
+        "source_after": false,
+        "unmapped": []
+      },
+      {
+        "case": "Arena of Glory",
+        "paid": [
+          0,
+          4
+        ],
+        "mana_sources": [
+          39,
+          39,
+          9,
+          10
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 40,
+        "source_zone": "Battlefield",
+        "exerted": 1,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": false,
+        "source": true,
+        "source_after": false,
+        "unmapped": []
+      },
+      {
+        "case": "Hall of the Bandit Lord",
+        "paid": [
+          0,
+          4
+        ],
+        "mana_sources": [
+          39,
+          24,
+          25,
+          26
+        ],
+        "source_id": 39,
+        "before": true,
+        "life": 37,
+        "source_zone": "Battlefield",
+        "exerted": 0,
+        "source_tapped": true,
+        "copied_before": true,
+        "after": true,
+        "source": true,
+        "source_after": true,
+        "unmapped": []
+      }
+    ]
+  },
+  "packaged_candidate_run_ids": [
+    "1710f2177168475e87e71a2c6112959d",
+    "20391679deea411692d4b4e977cd2c2d"
+  ],
+  "baseline_positive_controls": "Original worlds already remove the Reconfigure effect and expire temporary haste; Hall of the Bandit Lord grants haste without an end-of-turn duration in both worlds.",
+  "known_open_regression": {
+    "scope": "Research baseline for host-bound exile return; no fix or completion claim",
+    "production_files_compared": 1031,
+    "fixture_sha256": "680335df0e4b0709add9b4cf73f65acbf780c7d6fb5f524e578fee185e01c23e",
+    "native_tests": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "report_sha256": "33ae43b9ba256fdf42dd4cad42a0bd67035cacf9ff5a4b7bda078f11b18bad7e",
+    "log_sha256": "7968ed2883fddc21b90596b057ce373476742abae2e25d7a97417fbf1a163523",
+    "observation": "Paid Banishing Light exiles the opposing Grizzly Bears. Paid Disenchant returns it in the original game before the copied-world action. Paid copied Disenchant leaves it in exile, with both stack-copy modes. Failure occurs at the copied return lookup, after the source return assertions pass. The until-leaves list and explicit callback mapping require investigation.",
+    "baseline_evidence_sha256": "8b83721dcfe61768cc1fca231837a59072cb2a0a710397dde36346f6745d807b"
+  },
+  "build_guard_note": "The first packaging attempt correctly rejected a stale expected native count of 390 despite 414 passing tests. The recipe count was corrected and a fresh frozen build produced this runtime.",
+  "oracle_witnesses": [
+    {
+      "name": "Lion Sash",
+      "oracle_id": "50330e48-db74-4c5f-a0bc-f9a8607e8f31",
+      "source": "https://scryfall.com/card/neo/26/lion-sash?utm_source=api",
+      "oracle_text_sha256": "1145f7ceda7d71004f9f0e37b2db5e4f90c658d6bcba7b1c299121fd02bba698",
+      "mana_cost": "{1}{W}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Lizard Blades",
+      "oracle_id": "f6314e50-a610-4fff-8f60-803d23460ff0",
+      "source": "https://scryfall.com/card/neo/153/lizard-blades?utm_source=api",
+      "oracle_text_sha256": "e4c75bc7c9573bd835c4faaf4af6316a1fc11760fd9dabc82e33a9a822af5dc3",
+      "mana_cost": "{1}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Carnelian Orb of Dragonkind",
+      "oracle_id": "651c967c-8f71-4eb5-b22f-545e55ea050e",
+      "source": "https://scryfall.com/card/fdn/759/carnelian-orb-of-dragonkind?utm_source=api",
+      "oracle_text_sha256": "e85d7a0067783a107b94524ebe5313186d95419d3e0fb5be8ed5de079fb27005",
+      "mana_cost": "{2}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Generator Servant",
+      "oracle_id": "68ac061a-e4a3-46df-9169-62f6a8481584",
+      "source": "https://scryfall.com/card/uma/133/generator-servant?utm_source=api",
+      "oracle_text_sha256": "d4c6c4652c29f407ad7ef234523c34293205ce73ece2a3edb378dc412c4f40a1",
+      "mana_cost": "{1}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Arena of Glory",
+      "oracle_id": "63dfe794-5f56-41ec-9883-5523b41cc3e0",
+      "source": "https://scryfall.com/card/mh3/215/arena-of-glory?utm_source=api",
+      "oracle_text_sha256": "b076d1293271b6657c5bba03152a884c83696e77c17dc2859291a2c3b41a81cf",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Hall of the Bandit Lord",
+      "oracle_id": "32fe7ac4-86f5-44af-9f73-ee8f6a9ce2ba",
+      "source": "https://scryfall.com/card/chk/277/hall-of-the-bandit-lord?utm_source=api",
+      "oracle_text_sha256": "9fc200011488d381b78f988232a3bd46f2a784162ed7378e96975a391e325620",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Unsummon",
+      "oracle_id": "837182db-1bf3-4a2c-bd01-1af9d9873561",
+      "source": "https://scryfall.com/card/fra/46/unsummon?utm_source=api",
+      "oracle_text_sha256": "949ea0ec2b12afb4e8dd8a5b647f2ae7adfb1af38909f725f589c3cc8814dfa2",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Disperse",
+      "oracle_id": "9d8fe3f8-5027-4f9e-999e-e277caa96478",
+      "source": "https://scryfall.com/card/m19/50/disperse?utm_source=api",
+      "oracle_text_sha256": "b04c6dc57919c570543209fe41e656414ec21294f396fe442bb85ecdabbd5929",
+      "mana_cost": "{1}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Furnace Whelp",
+      "oracle_id": "8422f1e0-00ca-4ffb-a6b2-e2c9f96d7f23",
+      "source": "https://scryfall.com/card/jmp/323/furnace-whelp?utm_source=api",
+      "oracle_text_sha256": "e74575fc5da3990b1a3ad046658d95976f710451bdeb79ad7470464394f5ce04",
+      "mana_cost": "{2}{R}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Plains",
+      "oracle_id": "bc71ebf6-2056-41f7-be35-b2e5c34afa99",
+      "source": "https://scryfall.com/card/mdd/292/plains?utm_source=api",
+      "oracle_text_sha256": "f3f8e4a29db20544bd9a5b0ae8e10a23a2ae52112da77fa9111d60fb9d409d22",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Island",
+      "oracle_id": "b2c6aa39-2d2a-459c-a555-fb48ba993373",
+      "source": "https://scryfall.com/card/mdd/294/island?utm_source=api",
+      "oracle_text_sha256": "a6050f1a6c1f21586486a1e21aa8be9bc41340fa0beb2ae1a5952cf26b7f4a57",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Mountain",
+      "oracle_id": "a3fb7228-e76b-4e96-a40e-20b5fed75685",
+      "source": "https://scryfall.com/card/mdd/298/mountain?utm_source=api",
+      "oracle_text_sha256": "91e8319d188a3c46e5c83ea1023ab6a453d5b028c8b00254c1168bdc23578e3c",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "source": "https://scryfall.com/card/mdd/301/forest?utm_source=api",
+      "oracle_text_sha256": "6215eab3372e7128de713b41e7758fc9b179ade5bc47d33a5af8cef9c9c7493b",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    }
+  ],
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "702.151a",
+      "702.151b",
+      "106.6",
+      "611.2a",
+      "702.10b",
+      "702.10c"
+    ],
+    "scope": "Retained versioned Reconfigure, mana-linked effects, duration and haste reference; not a complete or current rules audit"
+  },
+  "full_live_suite": {
+    "passed": 30,
+    "subtests": 481,
+    "log_sha256": "a418e60c588baf79a75cfc262443ccee779ab33c85bfa1114b932346c242f010"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 30,
+    "subtests": 508,
+    "log_sha256": "e6da363ab9ed62278d7d3d9e5e7c4da6de1a325e21ca61e4d018eb9ea7f3fb94"
+  },
+  "catalog_probe": {
+    "run_id": "37ce17c4967041689fbea10748633e28",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "e743b9b2de02b3ae1a00d33ee35e0a2f757f33c4744957342e98376b1a3c8e0f"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-attachment-mana-reviewed",
+    "lock_sha256": "07e981347b078de3c5744baecc2d1a7fe1dafd9ed4b43a88b9ca122915ffac33",
+    "engine_check_sha256": "f6c3ba312a0987fa9bebbc23ebb8df48f3ce36b902e2df23fa99402a87f78b07",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-ring-text-reviewed"
+  },
+  "limits": [
+    "Twenty-four native cases run both stack-copy modes on controlled partial four-player boards. Twelve packaged witnesses run actual native payments and bounded phases without response priority.",
+    "The equipment-leaves case uses Disperse on a legal nonland permanent; equipped-creature bounce uses Unsummon. Both check native target admission.",
+    "Attachment IDs, canonical mapped targets in native tests and command-zone effect counts are checked. Reattaching creates one new effect after removing the old effect.",
+    "Land sources are installed on the battlefield. Spells and activation costs are paid natively. Generator Servant waits a full turn cycle before tapping; sacrifice, Arena exertion and Hall life costs are observed.",
+    "Haste is checked before and after deadlines, with actual spent-mana source IDs; general attack admission, multiple-spell allocation and all copied mana-source abilities remain unverified.",
+    "Only the selected Reconfigure cards and paths are exercised; other card abilities, ordinary equipment, living weapon, all attachment restrictions and overlapping keyword grants need separate validation.",
+    "Banishing Light host-bound exile return currently fails in both snapshot modes in a separate research probe; original-game paid returns pass. This milestone does not fix it.",
+    "Other callbacks, hidden/merged/perpetual state, arbitrary continuations and general AI policy remain incomplete. Unmapped diagnostics are asserted in these fixtures, not aggregated into normal simulation reports.",
+    "Catalog construction proves script availability, not full gameplay correctness. Seven unavailable entries are nonstarting meld results. The retained rules reference is versioned rather than a complete current-rules audit."
+  ]
+}

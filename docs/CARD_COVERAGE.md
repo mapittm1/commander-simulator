@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **938 native tests in 78 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 390 focused
+The reviewed patched source also passes **962 native tests in 79 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 414 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1123,3 +1123,51 @@ spell-on-stack word edits, cipher/buyback/flashback choices, overlapping word/te
 layers, all Deadpool entry paths, lost-player or hidden-view behavior, arbitrary
 subclass payloads, general continuations or AI policy. The retained rules reference
 is versioned evidence, not a claim to have audited every rule or newer revisions.
+
+
+## Reconfigure and mana-granted keywords
+
+Copied games now retain the explicit cleanup shared by a Reconfigure equipment's
+leave-play and unattach queues. The callback maps the effect card into the new
+world, so detaching, bouncing the equipped creature, bouncing the equipment, or
+moving it to another creature removes the correct type-changing effect. It never
+executes an original-world closure. A new attachment creates its own effect and
+cleanup as usual; the old one does not accumulate after moving the equipment.
+
+Temporary keywords granted by mana now use a mapped card/timestamp callback.
+Expiry removes only that changed-keyword layer and refreshes native views. The
+mana source can already have been sacrificed, as with Generator Servant. The
+normal paid-casting path still determines which mana was spent; these checks do
+not manually grant haste or inject a payment result.
+
+Twenty-four native cases run both stack-copy modes: sixteen exercise Lion Sash
+and Lizard Blades through the four attachment paths, six exercise Carnelian Orb
+of Dragonkind, Generator Servant and Arena of Glory, and two retain Hall of the
+Bandit Lord's permanent haste. The identical final fixture fails twenty-two cases
+against the prior runtime while both permanent controls pass. Twelve packaged
+witnesses also retain paid costs, attachment IDs, effect-card counts, actual mana
+source IDs, sacrifice/exert/life costs and independent source/copy outcomes.
+An earlier fixture incorrectly tried Unsummon on noncreature attached equipment;
+the retained valid baseline uses Disperse and checks native target admission.
+
+Verification: **414 focused native tests**, **962 broader gameplay tests** including
+those 414, **256 serialization tests**, **30 live integrations / 481 subtests**,
+and **399 offline tests / 508 subtests**, with the Python quality gate. Evidence,
+source hashes and actual observations are retained in
+[`attachment_mana_evidence.json`](../engine/attachment_mana_evidence.json).
+
+Fixtures use controlled partial four-player boards and bounded phase hooks
+without response priority. Land mana sources are installed on the battlefield;
+spell casts and activation costs are paid natively. Generator Servant waits a
+full turn cycle before tapping. The cases check haste presence and expiry, not
+all attack admission, multiple-spell allocation, copied mana abilities, overlapping
+grant layers or every Reconfigure card's other abilities. Ordinary equipment,
+living weapon, modified attachment restrictions, hidden/merged/perpetual state,
+other callbacks and arbitrary continuations still need separate validation.
+Catalog construction remains availability evidence rather than full rules proof.
+
+A separate retained native research probe reproduces a current host-bound exile
+return defect with Banishing Light in both snapshot modes: the original game's
+paid Disenchant returns the exiled creature, while copied Disenchant leaves it in
+exile. The return callback and linked-card list require their own fix and tests.
+This is an open defect, outside the passing suites selected for this milestone.

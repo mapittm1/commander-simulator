@@ -39,20 +39,23 @@ cover temporary keyword removal and Serene Master combat cleanup.
 cover copied block requirements and finite shield cleanup.
 [Ring designations and text changes](docs/CARD_COVERAGE.md#ring-designations-and-text-changes)
 cover Ring progression, bearer loss, word edits and text-box exchange.
+[Reconfigure and mana-granted keywords](docs/CARD_COVERAGE.md#reconfigure-and-mana-granted-keywords)
+cover attachment-effect cleanup and temporary haste after actual mana payment.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 390
+Seven additional records are non-starting meld results. The build passes 414
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
-conditional control/cleanup, animation reversal, temporary-copy expiry, protection deadlines, keyword restoration
-combat power exchange, forced-block requirements, prevention shields, Ring state
-and text changes.
-Broader native runs pass 938 AI/gameplay tests (including those 390) and 256
+conditional control/cleanup, animation reversal, temporary-copy expiry, protection
+deadlines, keyword restoration, combat power exchange, forced-block requirements,
+prevention shields, Ring state, text changes, Reconfigure cleanup and mana-granted haste.
+Broader native runs pass 962 AI/gameplay tests (including those 414) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
+Known gameplay gaps include Banishing Light host-bound exile returns in copied games.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
 

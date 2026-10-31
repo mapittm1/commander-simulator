@@ -36,7 +36,8 @@ expiration plus finite prevention-shield cleanup.
 A twenty-third preserves Ring progression/designations and word/type layers,
 corrects stale bearer and word-keyword cleanup, and enables mandatory text-box
 exchange targeting with mapped restoration.
-All twenty-three patches are pinned. No remote branch is used at build time.
+A twenty-fourth maps Reconfigure effect removal and mana-granted keyword expiry.
+All twenty-four patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -52,10 +53,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-390 native sticker, chosen-color, companion, supplementary-copy, history,
+414 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring and text-edit tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -85,15 +86,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-two regression source files and exactly three card-script
+The recipe pins twenty-three regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 938 gameplay and 256
+686 files verified against immutable source. The broader 962 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 390 focused tests are included in the 938.
+in `native_test_evidence.json`; the 414 focused tests are included in the 962.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -258,3 +259,9 @@ Forced-blocking requirements and finite prevention-shield evidence is retained i
 Ring progression, text edits, mandatory text-exchange targeting and cleanup evidence
 is retained in `ring_text_evidence.json`, with forty native and nineteen packaged
 cases. This includes original-game regressions, not only snapshot cleanup.
+
+Reconfigure and mana-keyword expiry evidence is retained in
+`attachment_mana_evidence.json`, with twenty-four native and twelve packaged cases.
+Attachment changes remove the mapped effect card; mana expiry retains the
+existing timestamp-specific removal policy. General attachment and mana choices
+still require separate validation.
