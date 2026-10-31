@@ -39,7 +39,9 @@ exchange targeting with mapped restoration.
 A twenty-fourth maps Reconfigure effect removal and mana-granted keyword expiry.
 A twenty-fifth maps captured zone-return state and live/historical linked exile.
 A twenty-sixth maps temporary effect cleanup and restores regeneration quotas/history.
-All twenty-six patches are pinned. No remote branch is used at build time.
+A twenty-seventh preserves independent Detain membership, maps player-bound expiry
+and retains raw control age in live/LKI copies.
+All twenty-seven patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -55,10 +57,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-464 native sticker, chosen-color, companion, supplementary-copy, history,
+494 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect and regeneration tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain and control-age tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -88,15 +90,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-five regression source files and exactly three card-script
+The recipe pins twenty-six regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,012 gameplay and 256
+686 files verified against immutable source. The broader 1,042 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 464 focused tests are included in the 1,012.
+in `native_test_evidence.json`; the 494 focused tests are included in the 1,042.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -279,3 +281,15 @@ Temporary effect cleanup and regeneration evidence is retained in
 paths, two scheme-helper contracts and regeneration history/quota contracts.
 Twelve packaged witnesses exercise legal cards only. The shared command maps one
 effect card; raw regeneration-state restoration does not perform regeneration.
+
+
+Detain state and expiry now map the detained card and detaining participants into
+an independent game. Its activation restrictions include mana abilities; native
+attack/block predicates remain distinct from tap and sickness constraints. The
+raw first-turn-controlled flag is copied before haste masks its effect. LKI also
+preserves this flag without applying new control changes or modifying ordinary
+copiable characteristics. The exact final native fixture fails 26 cases on the
+prior reviewed production source and passes all 30 on this build. The four other
+cases are positive controls. Twelve paid packaged witnesses and the retained
+[`detain_control_age_evidence.json`](detain_control_age_evidence.json) document
+actual admission, original/copy independence, deadline checkpoints and limits.

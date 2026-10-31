@@ -1,0 +1,84 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -6635,6 +6635,15 @@
+         view.updateExertedThisTurn(this, false);
+     }
+ 
++    /** Restore independent detainer identities without applying a new detain effect. */
++    public void copySnapshotDetainFrom(Card original, forge.game.IEntityMap map) {
++        detainedByPlayer = new PlayerCollection();
++        for (Player player : original.detainedByPlayer) {
++            detainedByPlayer.add(map == null ? player : map.map(player));
++        }
++        view.updateDetained(this);
++    }
++
+     public boolean isDetained() { return !detainedByPlayer.isEmpty(); }
+     public void detain(final Player player) {
+         detainedByPlayer.add(player);
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -268,6 +268,7 @@
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRegenerationFrom(entry.getKey());
++            entry.getValue().copySnapshotDetainFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotCommandsFrom(entry.getKey(), context);
+         }
+         newGame.getUntap().copySnapshotCommandsFrom(origGame.getUntap(), context);
+@@ -336,7 +337,7 @@
+             Card otherCard = cardMap.get(card);
+             otherCard.setGameTimestamp(card.getGameTimestamp());
+             otherCard.setLayerTimestamp(card.getLayerTimestamp());
+-            otherCard.setSickness(card.hasSickness());
++            otherCard.setSickness(card.isFirstTurnControlled());
+             otherCard.setState(card.getCurrentStateName(), false);
+             if (card.isAttachedToEntity()) {
+                 GameEntity ge = gameObjectMap.map(card.getEntityAttachedTo());
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -410,6 +410,7 @@
+         newCopy.setColor(copyFrom.getColor());
+         newCopy.setPhasedOut(copyFrom.getPhasedOut());
+         newCopy.setTapped(copyFrom.isTapped());
++        newCopy.setSickness(copyFrom.isFirstTurnControlled());
+         newCopy.setTributed(copyFrom.isTributed());
+         newCopy.setUnearthed(copyFrom.isUnearthed());
+         newCopy.setMonstrous(copyFrom.isMonstrous());
+@@ -417,6 +418,7 @@
+         // Historical state retains the designation; ordinary copiable characteristics do not.
+         newCopy.setRingBearer(copyFrom.isRingBearer());
+         newCopy.copySnapshotRegenerationFrom(copyFrom);
++        newCopy.copySnapshotDetainFrom(copyFrom, historyMap);
+         newCopy.setSolved(copyFrom.isSolved());
+         newCopy.setPromisedGift(copyFrom.getPromisedGift());
+         newCopy.setSaddled(copyFrom.isSaddled());
+--- a/forge-game/src/main/java/forge/game/ability/effects/DetainEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DetainEffect.java
+@@ -19,7 +19,25 @@
+         final Game game = pl.getGame();
+         for (final Card c : getTargetCards(sa)) {
+             c.detain(pl);
+-            game.getCleanup().addUntil(pl, () -> c.removeDetainedBy(pl));
++            game.getCleanup().addUntil(pl, new DetainExpiration(c, pl));
++        }
++    }
++    private static final class DetainExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final Player player;
++        private DetainExpiration(Card card, Player player) {
++            this.card = card;
++            this.player = player;
++        }
++        @Override
++        public void run() {
++            card.removeDetainedBy(player);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new DetainExpiration(context.map(card), context.map(player));
+         }
+     }
+ }

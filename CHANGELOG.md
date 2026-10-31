@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Moved the remaining loose legacy simulator script and original project ZIP from
+  Downloads into ignored `data/local-archive/`, with collision checks, byte hashes
+  and a migration receipt. Active project files remain in the Desktop checkout.
+
+- Preserved Detain membership, player-bound deadlines and independent live/LKI
+  state in game snapshots. Preserved raw control age so a newly controlled
+  creature cannot use a tap ability after losing haste. Thirty native cases
+  reproduce 26 failures and four positive controls on the previous engine;
+  twelve paid packaged witnesses check expiry, multiple detainers, blink,
+  control changes, extra turns and haste loss. Pinned the patch and evidence.
+
 - Mapped temporary effect-card cleanup for Fog, regeneration, death replacement,
   Unearth, Amass and replayed spells. Preserved regeneration quotas/history in live
   snapshots and LKI, correcting negative quotas and missing Spiny Starfish tokens.

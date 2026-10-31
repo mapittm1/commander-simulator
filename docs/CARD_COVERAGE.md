@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,012 native tests in 81 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 464 focused
+The reviewed patched source also passes **1,042 native tests in 82 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 494 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1288,10 +1288,77 @@ arbitrary suspended continuations and general AI policy still require work.
 Script presence, construction and versioned references do not prove complete
 card/rules support or a complete current-rules audit.
 
-A separate native research probe reproduces lost Detain restrictions in both
-snapshot modes. Azure Mage is cast and waits a turn cycle, then paid Inaction
+At the effect-cleanup milestone, a separate native research probe reproduced lost
+Detain restrictions in both snapshot modes. Azure Mage is cast and waits a turn cycle, then paid Inaction
 Injunction blocks its native activation admission in the original game. The copy
 loses the detained flag, incorrectly admits that activation and reports an omitted
-player-bound cleanup callback. This remains an open defect outside this
-milestone's passing suites; its future deadline checks are not reached in that
-failing baseline.
+player-bound cleanup callback. That defect was outside this milestone's passing
+suites. Its future deadline checks were not reached in that baseline; the repair
+is described below.
+
+
+## Detain and control age
+
+Detain now retains an independent collection of detaining participants in live
+snapshots and last-known information. Explicit expiration commands map both the
+card and the detaining player; they run at the original native deadline. Clearing
+one participant's Detain does not clear another's. Blink creates a new incarnation
+without Detain while the old expiration still points to its historical object.
+
+A separate defect appeared when a snapshot copied the effective sickness value
+of a creature with haste. That value masked its raw first-turn-controlled flag.
+After Naturalize removed Fervor, a copied newly controlled Prodigal Pyromancer
+could incorrectly activate its tap ability. The copy now preserves raw control
+age. LKI also preserves this state for both new and established permanents;
+ordinary copiable characteristics and physical zone-change copies are unchanged.
+
+The **same final 30-case native fixture** produces **26 failures / 4 passes** on
+an audited prior source and **30 passes** with the repair. Fourteen failures lose
+live Detain restrictions, three lose Detain history, four lose raw control age in
+a hasted snapshot, two admit an illegal tap activation after haste loss, one
+loses established control age in LKI, and two report omitted blink-expiration
+commands despite already correct visible outcomes. The four positive controls
+cover expired Detain and fresh historical control age. An intermediate Detain-only
+candidate passes 23 cases; its remaining seven failures demonstrate the separate
+control-age repair. The earlier 24-case fixture was corrected to respect tapped
+and sick creatures when checking post-expiry combat eligibility; those fixture
+expectation failures are excluded from the final baseline.
+
+**Twelve packaged witnesses** pay actual costs for Azure Mage, Icy Manipulator,
+Llanowar Elves, Inaction Injunction, Lyev Decree, Lyev Skyknight, Cloudshift, Act of
+Treason, Time Warp, Fervor, Prodigal Pyromancer and Naturalize. They retain native
+activation and attack/block predicates, view/LKI values, raw/effective control age,
+controller/world identity and deadline checkpoints. Cases distinguish repeated
+Detain by one participant, two participants' separate deadlines, a new blink
+incarnation, temporary control, a queued extra turn, already expired restrictions
+and loss of haste. Source/copy equality and independence are checked separately.
+
+Verification: **494 focused native tests**, **1,042 broader gameplay tests** including
+those 494 in **82 classes**, **256 serialization tests**, **33 live integrations /
+515 subtests**, and **399 offline tests / 508 subtests**, with the Python quality
+gate. The catalog probe still constructs **32,109 identities**, excluding seven
+nonstarting meld results. Exact source/worker hashes, frozen final fixtures,
+valid failing baselines, actual observations and limits are retained in
+[`detain_control_age_evidence.json`](../engine/detain_control_age_evidence.json).
+
+These are controlled partial four-player boards with bounded native settling,
+not complete legal-deck games or an AI strategy certification. Combat checks are
+native eligibility predicates at fixed main-phase checkpoints, not attacker or
+blocker declaration policy. The fixtures do not certify every target/controller
+combination, player departure, response-priority ordering, untap-symbol cost,
+control-change history or historical-object consumer. Native cases cover both
+stack-copy modes; packaged witnesses use stack copying. Other callbacks, hidden,
+merged or perpetual states and arbitrary suspended continuations remain open.
+Unmapped callback diagnostics are asserted in these fixtures and are not yet
+aggregated into regular CLI reports. Catalog construction and retained versioned
+rules references do not establish full card/rules support or a current-rules audit.
+
+
+A separate native research probe now reproduces lost turn control from paid Worst
+Fears, both before the controlled player's next turn and while that turn is
+active. All four cases fail on production source audited against this candidate:
+the original target is controlled, its copy is not, and an unmapped start/expiry
+callback is reported. This open defect is outside the passing reviewed suites;
+its later expiry and decision-policy checks are not reached. The retained Detain
+evidence records this research baseline without claiming the unrelated card
+interaction is fixed.

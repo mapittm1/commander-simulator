@@ -6,6 +6,8 @@ See [PROJECT_PLAN.md](docs/PROJECT_PLAN.md) for the confirmed product direction.
 See [CHANGELOG.md](CHANGELOG.md) for ongoing changes and historical milestones.
 Use one active repository checkout; local development scratch work and preserved
 older copies belong under ignored `data/`, following [CONTRIBUTING.md](CONTRIBUTING.md#workspace-and-file-placement).
+The remaining loose legacy simulator source and original ZIP were moved from
+Downloads to `data/local-archive/downloads-loose-20261031/` with verified hashes.
 
 The core CLI requires Python 3.10 or newer and no third-party runtime packages.
 Companion condition validation, explicit Attraction printing checks and controlled
@@ -45,21 +47,27 @@ cover attachment-effect cleanup and temporary haste after actual mana payment.
 linked exiled cards, battlefield/hand returns and copied return abilities.
 [Temporary effect cleanup and regeneration](docs/CARD_COVERAGE.md#temporary-effect-cleanup-and-regeneration)
 cover effect-card expiration, regeneration quotas/history and Spiny Starfish tokens.
+[Detain and control age](docs/CARD_COVERAGE.md#detain-and-control-age) cover independent
+restrictions/deadlines and tap admission after newly controlled creatures lose haste.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 464
+Seven additional records are non-starting meld results. The build passes 494
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
 conditional control/cleanup, animation reversal, temporary-copy expiry, protection
 deadlines, keyword restoration, combat power exchange, forced-block requirements,
-prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted haste, host-bound exile returns, temporary effects and regeneration history.
-Broader native runs pass 1,012 AI/gameplay tests (including those 464) and 256
+prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
+haste, host-bound exile returns, temporary effects, regeneration history, Detain
+and raw control age.
+Broader native runs pass 1,042 AI/gameplay tests (including those 494) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
-Known gameplay gaps include copied Detain activation restrictions.
+Known gameplay gaps include copied pending/active turn control from Worst Fears.
+Other callbacks, arbitrary suspended continuations and general AI policy still
+need separate validation.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
 
