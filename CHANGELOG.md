@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Mapped temporary effect-card cleanup for Fog, regeneration, death replacement,
+  Unearth, Amass and replayed spells. Preserved regeneration quotas/history in live
+  snapshots and LKI, correcting negative quotas and missing Spiny Starfish tokens.
+  Twenty-eight native checks and twelve packaged witnesses distinguish gameplay,
+  state, lifecycle and diagnostic coverage; scheme-only helper checks stay separate.
+
 - Fixed host-bound exile returns in snapshots by mapping captured return commands,
   zone records and live/historical linked-card lists. Twenty-two native and ten
   packaged cases cover Banishing Light, Banisher Priest, Grasp of Fate, Kitesail

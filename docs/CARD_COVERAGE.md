@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **984 native tests in 80 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 436 focused
+The reviewed patched source also passes **1,012 native tests in 81 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 464 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1225,9 +1225,73 @@ Other callbacks, merged/perpetual state and AI decisions remain unvalidated.
 Script construction and versioned rule references do not prove complete gameplay
 or a complete current-rules audit.
 
-A separate native research probe currently reproduces Fog's effect surviving end
-of turn in both snapshot modes. A paid Grizzly Bears waits a turn cycle; original
+At the host-return milestone, a separate native research probe reproduced Fog's
+effect surviving end of turn in both snapshot modes. A paid Grizzly Bears waits a turn cycle; original
 following-turn combat deals two damage after Fog expires, while copied combat
 still deals none. Its attacker declaration is controlled, followed by native
-combat processing. This remains an open effect-cleanup defect outside the passing
-suites selected for the host-return milestone.
+combat processing. That failure was outside the passing suites selected for the host-return
+milestone and is addressed below.
+
+
+## Temporary effect cleanup and regeneration
+
+A shared explicit snapshot command now maps a temporary effect card into the new
+world before removing it. Seven native helper paths use it: Fog, regeneration,
+death-zone replacement, Unearth, Amass subtype grants, replayed-spell replacement,
+and the scheme-only extra-turn helper. The last is a native utility contract;
+Schemes are not admitted as normal Commander starting cards. The existing native
+deadlines, zone events and removal policy are retained rather than replayed while
+copying the game.
+
+Regeneration state needed a separate repair. Live snapshots lost the regeneration
+shield quota and the number of times a creature regenerated that turn. Consuming
+a copied shield could produce a negative quota, and Spiny Starfish could fail to
+create its end-step token. Original-game LKI copies also lost both values. Raw
+state restoration now preserves them in live and LKI copies, updates the native
+view and leaves ordinary copiable characteristics unchanged. These regeneration
+shields are distinct from shield counters, whose mechanics are not changed here.
+
+The identical final native fixture has **28 cases**. All fail against the previous
+reviewed source and all pass with the candidate. The failures are not equivalent:
+eight are gameplay outcomes, eight are quota/history contracts, six are dangling
+effect lifecycle checks, four are diagnostic-only controls whose visible outcomes
+already work, and two are scheme-helper contracts. An intermediate candidate that
+only mapped cleanup passed eighteen; the remaining ten demonstrated the need for
+regeneration-state restoration. Earlier invalid counterspell targeting and use of
+the common-card lookup for a Scheme are excluded from the retained final baseline.
+
+**Twelve packaged witnesses** pay real costs and retain independent source/copy
+state: Fog expires before following-turn combat; Regenerate expires or is consumed;
+Wrap in Vigor is partially consumed; Incendiary Flow's death replacement is checked
+before and after expiry; Unearth exits via bounce or its native end-step trigger;
+an existing Zombie Army gains Orc through Amass and then leaves; Spiny Starfish
+creates its token; and an Opt replayed by Torrential Gearhulk resolves or is
+countered before end-of-turn cleanup. The replay and unexpired death-replacement
+controls already have correct visible outcomes on the old runtime; their omitted
+callback diagnostics are tracked separately from actual rules failures.
+
+Verification: **464 focused native tests**, **1,012 broader gameplay tests** including
+those 464, **256 serialization tests**, **32 live integrations / 503 subtests**,
+and **399 offline tests / 508 subtests**, with the Python quality gate. The catalog
+probe still constructs **32,109 identities**, excluding seven nonstarting meld
+results. Exact source/worker hashes, valid failing baselines, actual outcomes and
+limits are retained in [`effect_cleanup_evidence.json`](../engine/effect_cleanup_evidence.json).
+
+The fixtures use controlled partial four-player boards. Fog's paid attacker waits
+a turn cycle; its declaration is installed directly before native triggers,
+blocking and combat damage run. Replayed spells use explicit paid stack points.
+The remaining scenarios use bounded native settling without response priority.
+They do not certify every replacement ordering, combat-regeneration case, shield
+counter interaction, token subtype combination, alternate controller, rollback,
+replay permission or scheme rule. Other callbacks, hidden/merged/perpetual states,
+arbitrary suspended continuations and general AI policy still require work.
+Script presence, construction and versioned references do not prove complete
+card/rules support or a complete current-rules audit.
+
+A separate native research probe reproduces lost Detain restrictions in both
+snapshot modes. Azure Mage is cast and waits a turn cycle, then paid Inaction
+Injunction blocks its native activation admission in the original game. The copy
+loses the detained flag, incorrectly admits that activation and reports an omitted
+player-bound cleanup callback. This remains an open defect outside this
+milestone's passing suites; its future deadline checks are not reached in that
+failing baseline.

@@ -43,21 +43,23 @@ cover Ring progression, bearer loss, word edits and text-box exchange.
 cover attachment-effect cleanup and temporary haste after actual mana payment.
 [Host-bound exile returns](docs/CARD_COVERAGE.md#host-bound-exile-returns) cover
 linked exiled cards, battlefield/hand returns and copied return abilities.
+[Temporary effect cleanup and regeneration](docs/CARD_COVERAGE.md#temporary-effect-cleanup-and-regeneration)
+cover effect-card expiration, regeneration quotas/history and Spiny Starfish tokens.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 436
+Seven additional records are non-starting meld results. The build passes 464
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
 histories, scheduled effects, delayed triggers, turn/phase schedules and
 conditional control/cleanup, animation reversal, temporary-copy expiry, protection
 deadlines, keyword restoration, combat power exchange, forced-block requirements,
-prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted haste and host-bound exile returns.
-Broader native runs pass 984 AI/gameplay tests (including those 436) and 256
+prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted haste, host-bound exile returns, temporary effects and regeneration history.
+Broader native runs pass 1,012 AI/gameplay tests (including those 464) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
-Known gameplay gaps include Fog effect cleanup after end of turn in copied games.
+Known gameplay gaps include copied Detain activation restrictions.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the
 [reviewed engine build](engine/README.md) for the exact source, patches and limits.
 

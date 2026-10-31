@@ -1,0 +1,140 @@
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -749,7 +749,7 @@
+                 eff.copyChangedTextFrom(host);
+             }
+ 
+-            game.getEndOfTurn().addUntil(() -> game.getAction().exileEffect(eff));
++            game.getEndOfTurn().addUntil(new forge.game.ExileEffectCommand(eff));
+ 
+             game.getAction().moveToCommand(eff, sa);
+         }
+--- a/forge-game/src/main/java/forge/game/ability/effects/AddTurnEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/AddTurnEffect.java
+@@ -79,7 +79,7 @@
+         eff.addReplacementEffect(re);
+ 
+         game.getAction().moveToCommand(eff, sa);
+-        game.getEndOfTurn().addUntil(() -> game.getAction().exileEffect(eff));
++        game.getEndOfTurn().addUntil(new forge.game.ExileEffectCommand(eff));
+     }
+ 
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/AmassEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/AmassEffect.java
+@@ -110,7 +110,7 @@
+             String s = "Mode$ Continuous | Affected$ Card.IsRemembered | EffectZone$ Command | AddType$ " + type;
+             eff.addStaticAbility(s);
+ 
+-            tgt.addLeavesPlayCommand(() -> game.getAction().exileEffect(eff));
++            tgt.addLeavesPlayCommand(new forge.game.ExileEffectCommand(eff));
+             game.getAction().moveToCommand(eff, sa);
+         }
+     }
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
+@@ -690,7 +690,7 @@
+ 
+                     // If it would leave the battlefield, exile it instead of putting it anywhere else.
+                     addLeaveBattlefieldReplacement(eff, "Exile");
+-                    movedCard.addLeavesPlayCommand(() -> game.getAction().exileEffect(eff));
++                    movedCard.addLeavesPlayCommand(new forge.game.ExileEffectCommand(eff));
+ 
+                     game.getAction().moveToCommand(eff, sa);
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/FogEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/FogEffect.java
+@@ -30,6 +30,6 @@
+ 
+         game.getAction().moveToCommand(eff, sa);
+ 
+-        game.getEndOfTurn().addUntil(() -> game.getAction().exileEffect(eff));
++        game.getEndOfTurn().addUntil(new forge.game.ExileEffectCommand(eff));
+     }
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java
+@@ -519,7 +519,7 @@
+             eff.copyChangedTextFrom(hostCard);
+         }
+ 
+-        game.getEndOfTurn().addUntil(() -> game.getAction().exileEffect(eff));
++        game.getEndOfTurn().addUntil(new forge.game.ExileEffectCommand(eff));
+ 
+         tgtSA.addRollbackEffect(eff);
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/RegenerateEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RegenerateEffect.java
+@@ -114,7 +114,7 @@
+         }
+         game.getAction().moveToCommand(eff, sa);
+ 
+-        game.getEndOfTurn().addUntil(() -> game.getAction().exileEffect(eff));
++        game.getEndOfTurn().addUntil(new forge.game.ExileEffectCommand(eff));
+     }
+ 
+ }
+--- /dev/null
++++ b/forge-game/src/main/java/forge/game/ExileEffectCommand.java
+@@ -0,0 +1,25 @@
++package forge.game;
++
++import forge.game.card.Card;
++import forge.game.spellability.SpellAbilitySnapshot;
++import java.util.Objects;
++
++/** Remove a temporary effect in its own game without retaining a source-world closure. */
++public final class ExileEffectCommand implements SnapshotCommand {
++    private static final long serialVersionUID = 1L;
++    private final Card effect;
++
++    public ExileEffectCommand(Card effect) {
++        this.effect = Objects.requireNonNull(effect, "Effect card");
++    }
++
++    @Override
++    public void run() {
++        effect.getGame().getAction().exileEffect(effect);
++    }
++
++    @Override
++    public SnapshotCommand copyForSnapshot(SpellAbilitySnapshot context) {
++        return new ExileEffectCommand(context.map(effect));
++    }
++}
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -3516,6 +3516,13 @@
+     }
+ 
+     // shield = regeneration
++    /** Restore raw current or historical state without performing regeneration. */
++    public void copySnapshotRegenerationFrom(Card original) {
++        shieldCount = original.shieldCount;
++        regeneratedThisTurn = original.regeneratedThisTurn;
++        view.updateShieldCount(this);
++    }
++
+     public final int getShieldCount() {
+         return shieldCount;
+     }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -267,6 +267,7 @@
+             entry.getValue().copySnapshotNumberFrom(entry.getKey());
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotRegenerationFrom(entry.getKey());
+             entry.getValue().copySnapshotCommandsFrom(entry.getKey(), context);
+         }
+         newGame.getUntap().copySnapshotCommandsFrom(origGame.getUntap(), context);
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -416,6 +416,7 @@
+         newCopy.setRenowned(copyFrom.isRenowned());
+         // Historical state retains the designation; ordinary copiable characteristics do not.
+         newCopy.setRingBearer(copyFrom.isRingBearer());
++        newCopy.copySnapshotRegenerationFrom(copyFrom);
+         newCopy.setSolved(copyFrom.isSolved());
+         newCopy.setPromisedGift(copyFrom.getPromisedGift());
+         newCopy.setSaddled(copyFrom.isSaddled());

@@ -1,0 +1,4200 @@
+{
+  "scope": "Selected temporary effect cleanup and live/LKI regeneration quotas/history; not complete card, rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-effect-cleanup",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "4780f57be5afd2b080929ee988fa9189ba73088477111d406429e278ad4b7395",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "e74bb390ae82a56c2fd5931a72f993c5f746c927ea74688d41f4415146ddc28d",
+    "native_tests": {
+      "total": 464,
+      "passed": 464,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "b356bc489c5e2cc89a8a2c0fad91a981934ff94eadf92bc0114ee3856b481414",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "29faaa4bb52d4d7c88968f794dc40440",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/ExileEffectCommand.java": "7d6500bedd6f76b5cdf1c2dfd50771307898ff964681da974250f31dd8d7b6db",
+    "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java": "24d730b90aa0505115e271bcbc9ed14db05ef961e14f766770130cbf4dace178",
+    "forge-game/src/main/java/forge/game/ability/effects/AddTurnEffect.java": "8f875b5dcdb39e893a8019e9bd1d084d59b8febab7caa7f476535b112154d548",
+    "forge-game/src/main/java/forge/game/ability/effects/AmassEffect.java": "5239e7a8d633e4017fdf93a4aba6d33ac22ae6a4469c8eb1d2967336d8300425",
+    "forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java": "9f4b1675ab6c527411f6dd82fb7e4b4fe5a2c595718772bfd94add251d9635c6",
+    "forge-game/src/main/java/forge/game/ability/effects/FogEffect.java": "5d4d40fa431333b5b397a42b2b9dd9d9be80a30bf5bf10d5cafc84ffd7ceee78",
+    "forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java": "a13b7e553936c17489401c8745b229949d13a72e1398f1a9008a0ca01ebf4466",
+    "forge-game/src/main/java/forge/game/ability/effects/RegenerateEffect.java": "324fb6b956c21df57ef9836e16fb5dfb4db7e62b735593a9fdebe9afdcd9cb02",
+    "forge-game/src/main/java/forge/game/card/Card.java": "9227b271abc7982a99f6a06a0fd9fd68ba8ef44933c711555f1738f36dd6d19f",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java": "258fcdf4775d69b138537d0c758cf48f581ecf8b0d9637790902329b0fd45ff7",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "e55b4d0a26b638b225aabc85a22975052cc2c6c35e420a44ba10b93f985edd46"
+  },
+  "patch_sha256": "db8ed8867ce3dea5aa08fb7d357e036350565340af3a17175f9db80baf763462",
+  "native_test_sha256": "70fb34a25b2dbc0133fa8fb3a25e4313682b2546c31bc794b261057295676070",
+  "worker_sha256": "3f801c61437787acceb52da58a1d070be55a7239a55dd449291fe730d08f13c2",
+  "worker_freeze": {
+    "sha256": "3f801c61437787acceb52da58a1d070be55a7239a55dd449291fe730d08f13c2",
+    "mtime_ns": 1793472370026843200
+  },
+  "baseline_launcher_log_sha256": "cda11e53ed9bbcc1cfd045a3311a994965f458281d3883feaebff42c6b73d4a3",
+  "integration_test_sha256": "09b4db0559aa3570bda02e7a20f884f8047d33d361e39f56dcff2d8381d3314c",
+  "native_evidence_sha256": "e5ae8de1b768972cc765f4561826ad6651790d1a8c4d063d2f9d008eb4b9cece",
+  "shared_fixed_fixture_helpers": {
+    "tests/support/animation_worker.py": {
+      "working_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "git_blob_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/duration_worker.py": {
+      "working_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "git_blob_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/keyword_expiration_worker.py": {
+      "working_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "git_blob_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/native_worker.py": {
+      "working_sha256": "7b329d6d6b3dbafd6e5a2cad72e5d2bb0d1aa678f73cfd8b5ae06ec4ce831eb1",
+      "git_blob_sha256": "39d3d2cd34952ae5903ecebbbaf339b6c558048c7d6b01cbe3fc7c3884f9709d",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/stack_worker.py": {
+      "working_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "git_blob_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/turn_schedule_worker.py": {
+      "working_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+      "git_blob_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/usage_worker.py": {
+      "working_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "git_blob_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "note": "Text matches HEAD with normalized line endings"
+    }
+  },
+  "native_before": {
+    "counts": {
+      "total": 28,
+      "passed": 0,
+      "failed": 28,
+      "skipped": 0
+    },
+    "testng_sha256": "3520eacd18e9f876cdf6f8722978640bd6667facea343ed7fd0025c6841e4452",
+    "log_sha256": "4c593a768cd65a02a3557432be9259b7148725ba99c2d904db4a744dea124af2",
+    "source_audit_sha256": "db9604e598e79c94b469587f69e67292c5d4b017e78cccee6f501360467effa3",
+    "production_files_compared": 1031,
+    "failure_breakdown": {
+      "gameplay_outcomes": 8,
+      "quota_history_contracts": 8,
+      "effect_lifecycle": 6,
+      "diagnostics_only_with_correct_visible_outcomes": 4,
+      "scheme_helper_contracts": 2
+    },
+    "note": "The final frozen fixture excludes earlier invalid counterspell targeting and use of the common-card registry for a nonstarting Scheme."
+  },
+  "cleanup_only_intermediate": {
+    "counts": {
+      "total": 28,
+      "passed": 18,
+      "failed": 10,
+      "skipped": 0
+    },
+    "testng_sha256": "ef164aaaff7246cd32702264282972259fbe71e73dd2cf16a2f8c8b6907056f5",
+    "log_sha256": "97eba6ec9dd4290bc26094112f0c11f824a1e939f98e9b7f87447a69fe48a20b",
+    "cleanup_source_sha256": {
+      "forge-game/src/main/java/forge/game/ExileEffectCommand.java": "992de43bb089a7217d4f851f0fd1dd487aaa5539258ba4b5990e26dfbd40fff3",
+      "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java": "043a6f0ed8f262d21f85bd307314396007b4ae0a36a4a602555dc124ff3679f8",
+      "forge-game/src/main/java/forge/game/ability/effects/AddTurnEffect.java": "bb2eba92a47f0659e4b718d5eb4ff8b8d36515ce6e191bf1274005432306e47d",
+      "forge-game/src/main/java/forge/game/ability/effects/AmassEffect.java": "8eeeafe35d2cd2f383faff118940c4b46a7fad9464bacf81d0515b77a66e2ef8",
+      "forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java": "a43877095924737c784eae2cb4e58d61dd644e2a32857be4db52bfaa8f2ea537",
+      "forge-game/src/main/java/forge/game/ability/effects/FogEffect.java": "7d6ada850aa80f0b7cc31dd2ec37714057b61b876c329dd77f249f31649e6d92",
+      "forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java": "91750d3b6ab1674a38b9236e0afd89559cb13acc626ad29b6a4255babcd11452",
+      "forge-game/src/main/java/forge/game/ability/effects/RegenerateEffect.java": "3642eb1f2553c5f9ab9c9eeca0c0fd5f6d97286fd9df17390fe6fd4f6f6a3956"
+    },
+    "note": "The final 28-case fixture passed 18 cases with only the shared cleanup command; ten remaining failures reproduced missing regeneration quotas/history, including original LKI and copied Starfish tokens."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 28,
+      "passed": 28,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "b59a69c131ab5b4bc6529b1a917748cae87202a619dde671f54697d952dbbe28",
+    "log_sha256": "0539d9ad47d4d756435155b7d7e0d1af1cbf8274a6c247c08b56ed993aab79bb"
+  },
+  "before": {
+    "run_id": "e04571a197334090bc9d27eca6e46aca",
+    "receipt_sha256": "a531db752913b682f90db5cee62dbe3c21f8906261e94295471775db19f4530d",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "fog",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            38,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.FogEffect$$Lambda$492/0x0000026b3325abc8"
+        ]
+      },
+      {
+        "case": "regen_expiry",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": -1,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.RegenerateEffect$$Lambda$545/0x0000026b3326a1e8"
+        ]
+      },
+      {
+        "case": "regen_partial",
+        "paid": [
+          2,
+          3,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": -1,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.RegenerateEffect$$Lambda$545/0x0000026b3326a1e8"
+        ]
+      },
+      {
+        "case": "regen_use",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": -1,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.RegenerateEffect$$Lambda$545/0x0000026b3326a1e8"
+        ]
+      },
+      {
+        "case": "dying_expiry",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.SpellAbilityEffect$$Lambda$553/0x0000026b3328ade8"
+        ]
+      },
+      {
+        "case": "dying_active",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.SpellAbilityEffect$$Lambda$553/0x0000026b3328ade8"
+        ]
+      },
+      {
+        "case": "unearth_bounce",
+        "paid": [
+          2,
+          1,
+          1
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.effects.ChangeZoneEffect$$Lambda$556/0x0000026b3328bae0"
+        ]
+      },
+      {
+        "case": "unearth_end",
+        "paid": [
+          2,
+          0,
+          0
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.effects.ChangeZoneEffect$$Lambda$556/0x0000026b3328bae0"
+        ]
+      },
+      {
+        "case": "starfish",
+        "paid": [
+          3,
+          1,
+          3,
+          0,
+          0
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 1,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.RegenerateEffect$$Lambda$545/0x0000026b3326a1e8"
+        ]
+      },
+      {
+        "case": "amass",
+        "paid": [
+          2,
+          3,
+          1,
+          1
+        ],
+        "before": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "copied_before": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "after": {
+          "armies": [],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "source": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "source_after": {
+          "armies": [],
+          "effects": []
+        },
+        "unmapped": [
+          "card.leave: forge.game.ability.effects.AmassEffect$$Lambda$580/0x0000026b33296908"
+        ]
+      },
+      {
+        "case": "replay_resolve",
+        "paid": [
+          6,
+          0
+        ],
+        "library_change": 1,
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.PlayEffect$$Lambda$595/0x0000026b33299180"
+        ]
+      },
+      {
+        "case": "replay_counter",
+        "paid": [
+          6,
+          2
+        ],
+        "library_change": 0,
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.PlayEffect$$Lambda$595/0x0000026b33299180"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "run_id": "1be5dcd2d2b9484b9ff358fd7c327222",
+    "receipt_sha256": "a9b5b5c6e64e34f814451ac7cf5103dd60e4ca3af1cd775f0f39f9d20d094c66",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "fog",
+        "paid": [
+          2,
+          1
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            38,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Fog (194)'s Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            38,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "regen_expiry",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "regen_partial",
+        "paid": [
+          2,
+          3,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Wrap in Vigor (195)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            },
+            {
+              "id": 194,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "regen_use",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 1,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 1,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Regenerate (194)'s Regeneration"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "dying_expiry",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Graveyard",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "dying_active",
+        "paid": [
+          2,
+          3,
+          3
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 3,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Incendiary Flow's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "unearth_bounce",
+        "paid": [
+          2,
+          1,
+          1
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "unearth_end",
+        "paid": [
+          2,
+          0,
+          0
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": true,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Unearth Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "starfish",
+        "paid": [
+          3,
+          1,
+          3,
+          0,
+          0
+        ],
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 1,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 1,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 1,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 1,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Battlefield",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": true,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 1,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "amass",
+        "paid": [
+          2,
+          3,
+          1,
+          1
+        ],
+        "before": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "copied_before": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "after": {
+          "armies": [],
+          "effects": []
+        },
+        "source": {
+          "armies": [
+            {
+              "id": 195,
+              "orc": true,
+              "zombie": true,
+              "counters": 3,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Amass Effect"
+          ]
+        },
+        "source_after": {
+          "armies": [],
+          "effects": []
+        },
+        "unmapped": []
+      },
+      {
+        "case": "replay_resolve",
+        "paid": [
+          6,
+          0
+        ],
+        "library_change": 1,
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "replay_counter",
+        "paid": [
+          6,
+          2
+        ],
+        "library_change": 0,
+        "before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "copied_before": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Stack",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [
+            "Torrential Gearhulk's Effect"
+          ],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "source_after": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "after_cleanup": {
+          "cards": [
+            {
+              "id": 193,
+              "zone": "Exile",
+              "regeneration_shields": 0,
+              "regenerated_this_turn": 0,
+              "lki_regeneration_shields": 0,
+              "lki_regenerated_this_turn": 0,
+              "tapped": false,
+              "damage": 0,
+              "haste": false,
+              "in_world": true
+            }
+          ],
+          "effects": [],
+          "tokens": 0,
+          "life": [
+            40,
+            40,
+            40,
+            40
+          ]
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "packaged_candidate_run_ids": [
+    "03677de520004811bb29bf175f0e10d9",
+    "1be5dcd2d2b9484b9ff358fd7c327222"
+  ],
+  "build_count_correction": {
+    "previous_reviewed": 436,
+    "new_fixture_tests": 28,
+    "correct_total": 464,
+    "note": "Stopped the uniquely identified in-progress build and its child processes after detecting a declared count of 462. Interrupted output is excluded; a fresh build uses 464."
+  },
+  "known_open_regression": {
+    "scope": "Research baseline only: copied detain restrictions are lost; no fix or full-support claim",
+    "production_files_compared": 1032,
+    "native_tests": {
+      "total": 2,
+      "passed": 0,
+      "failed": 2,
+      "skipped": 0
+    },
+    "fixture_sha256": "0df06c85ae616f43f66e54e8338cebb40b47f163531db3e5cafd81dc80837812",
+    "report_sha256": "c361895f31d739e52212479fa870e0b85f509c9705295eadf94c0f755dae8619",
+    "log_sha256": "7a0db2a0a4dc92be0a2b1c0ba61172f89d8c2afd3771916f08d80e354d300e5a",
+    "observed": [
+      "Detain copy: flag=false, activation=true, omitted=[CLEANUP.untilPlayer: forge.game.ability.effects.DetainEffect$$Lambda$1496/0x0000000801886cd8]",
+      "Detain copy: flag=false, activation=true, omitted=[CLEANUP.untilPlayer: forge.game.ability.effects.DetainEffect$$Lambda$1496/0x0000000801886cd8]"
+    ],
+    "observation": "Azure Mage is cast with real mana, waits a turn cycle and can activate before detain. Paid Inaction Injunction detains it and blocks native ability admission in the original game. In both snapshot modes the copy loses the flag, admits the ability and reports an omitted player-bound cleanup callback. The test fails at copied native admission before its future deadline checks. An earlier unused-import checkstyle failure is excluded.",
+    "baseline_evidence_sha256": "470446904c76c89005bcd2a00f2d25e26e09bc5f08a359ba2d25f45c6c9673e8"
+  },
+  "positive_controls": "Original timed cleanup already works; active death replacement and replay-to-exile already have correct visible outcomes in baseline snapshots but report omitted callbacks. These diagnostic cases are not called failed gameplay rules.",
+  "resolved_prior_research_evidence_sha256": "84680121b5e6baa8df5f9d6ca9bfe46c338e895386de3693623624658a1fc385",
+  "oracle_witnesses": [
+    {
+      "name": "Fog",
+      "oracle_id": "27e9db49-7af7-4bef-ad4c-bf5dfb92030d",
+      "source": "https://scryfall.com/card/ema/167/fog?utm_source=api",
+      "oracle_text_sha256": "0dcdee85ce7dc3d36f90c6a73819712bb38c10bcbe03dd5e56d0fcb459ef0ad5",
+      "mana_cost": "{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Regenerate",
+      "oracle_id": "4ce6c946-7a93-4a8d-a2c9-086cbd036e3c",
+      "source": "https://scryfall.com/card/m10/202/regenerate?utm_source=api",
+      "oracle_text_sha256": "e3e2cb9a408e9ae7a6df14abab1a0e171e5fa20d6edc57b6ab6f27a3509ddd2e",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Wrap in Vigor",
+      "oracle_id": "39da2aa8-f4d9-44f6-a446-488beaec821f",
+      "source": "https://scryfall.com/card/cns/183/wrap-in-vigor?utm_source=api",
+      "oracle_text_sha256": "464f107cb08b86dc0652f2cb02c3c262861eed1159f390f4402a4c106d1eafcc",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Murder",
+      "oracle_id": "938b4e2c-88d9-4637-bc00-e228920c9a78",
+      "source": "https://scryfall.com/card/dsk/110/murder?utm_source=api",
+      "oracle_text_sha256": "4450f881acf81db3f315d77019f00046464eb918f33660e720624cd8c9f9a605",
+      "mana_cost": "{1}{B}{B}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Incendiary Flow",
+      "oracle_id": "91b2ffe8-155d-4b9f-82dd-868cc895856b",
+      "source": "https://scryfall.com/card/emn/133/incendiary-flow?utm_source=api",
+      "oracle_text_sha256": "d66bb49459e5c52c079991865e1b86e403db0449709783f3adff964828ab1939",
+      "mana_cost": "{1}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Wall of Stone",
+      "oracle_id": "cd4cadb4-3156-49bd-b36e-12ba5c85938b",
+      "source": "https://scryfall.com/card/8ed/232/wall-of-stone?utm_source=api",
+      "oracle_text_sha256": "82fdab220543c360845cafccf126965515be4b0c831d0392f9aca2221b4c921d",
+      "mana_cost": "{1}{R}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Sedraxis Specter",
+      "oracle_id": "eccc1230-df5a-44a0-859b-9e1e0d176dff",
+      "source": "https://scryfall.com/card/2x2/273/sedraxis-specter?utm_source=api",
+      "oracle_text_sha256": "83d9062b95fdd97478ba02761b82485e4d49e4e38f3160090692dd49c7a32d28",
+      "mana_cost": "{U}{B}{R}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Unsummon",
+      "oracle_id": "837182db-1bf3-4a2c-bd01-1af9d9873561",
+      "source": "https://scryfall.com/card/fra/46/unsummon?utm_source=api",
+      "oracle_text_sha256": "949ea0ec2b12afb4e8dd8a5b647f2ae7adfb1af38909f725f589c3cc8814dfa2",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Lazotep Reaver",
+      "oracle_id": "85643f9b-49ea-434b-9f27-c1431064345e",
+      "source": "https://scryfall.com/card/war/96/lazotep-reaver?utm_source=api",
+      "oracle_text_sha256": "65f359fbc71f0e975f2b25a47c85e6310d09d1936c53c625cc4588d0e2444c05",
+      "mana_cost": "{1}{B}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Dunland Crebain",
+      "oracle_id": "9dd755a5-0bef-4bde-92fa-14ef2a1a1410",
+      "source": "https://scryfall.com/card/ltr/82/dunland-crebain?utm_source=api",
+      "oracle_text_sha256": "b60c3c634dbca161eb8c8952fd0e3182970b85e0088003fc053aca0ada03284e",
+      "mana_cost": "{2}{B}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Spiny Starfish",
+      "oracle_id": "663d6c61-e269-4f2f-9d8f-49c4c23f05d8",
+      "source": "https://scryfall.com/card/me3/50/spiny-starfish?utm_source=api",
+      "oracle_text_sha256": "3f453b4b6396877ee2ea139686e286628a36115ca7fcd53fff54f873c8ab251c",
+      "mana_cost": "{2}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Opt",
+      "oracle_id": "713332c1-5bd8-400f-bfff-c1ca0697a043",
+      "source": "https://scryfall.com/card/tdc/158/opt?utm_source=api",
+      "oracle_text_sha256": "1eccd7bd99ba95e48986c4f2ca4d1db4fcee5a7dbf7bc749bf498e7a4aa66dbc",
+      "mana_cost": "{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Torrential Gearhulk",
+      "oracle_id": "a6395447-677d-4c39-8eda-2d57e527c94e",
+      "source": "https://scryfall.com/card/cmm/128/torrential-gearhulk?utm_source=api",
+      "oracle_text_sha256": "6e6cb02202ee3c13fa4742cf2788ec678cc9a02c5e47a79ea87a2ea7a62fb595",
+      "mana_cost": "{4}{U}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Counterspell",
+      "oracle_id": "cc187110-1148-4090-bbb8-e205694a39f5",
+      "source": "https://scryfall.com/card/dsc/114/counterspell?utm_source=api",
+      "oracle_text_sha256": "6e7e3fa9bb231a1c1910cd956dc7e5c91bb22e9705b39ed61a2ebd23201950e4",
+      "mana_cost": "{U}{U}",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Forest",
+      "oracle_id": "b34bb2dc-c1af-4d77-b0b3-a0fb342a5fc6",
+      "source": "https://scryfall.com/card/mdd/301/forest?utm_source=api",
+      "oracle_text_sha256": "6215eab3372e7128de713b41e7758fc9b179ade5bc47d33a5af8cef9c9c7493b",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Swamp",
+      "oracle_id": "56719f6a-1a6c-4c0a-8d21-18f7d7350b68",
+      "source": "https://scryfall.com/card/mdd/296/swamp?utm_source=api",
+      "oracle_text_sha256": "5ad0718d1920ec4ca2dc64a9aff6383c8d801d418cfda034ed19aa016d16dfb4",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Island",
+      "oracle_id": "b2c6aa39-2d2a-459c-a555-fb48ba993373",
+      "source": "https://scryfall.com/card/mdd/294/island?utm_source=api",
+      "oracle_text_sha256": "a6050f1a6c1f21586486a1e21aa8be9bc41340fa0beb2ae1a5952cf26b7f4a57",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Mountain",
+      "oracle_id": "a3fb7228-e76b-4e96-a40e-20b5fed75685",
+      "source": "https://scryfall.com/card/mdd/298/mountain?utm_source=api",
+      "oracle_text_sha256": "91e8319d188a3c46e5c83ea1023ab6a453d5b028c8b00254c1168bdc23578e3c",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    },
+    {
+      "name": "Plains",
+      "oracle_id": "bc71ebf6-2056-41f7-be35-b2e5c34afa99",
+      "source": "https://scryfall.com/card/mdd/292/plains?utm_source=api",
+      "oracle_text_sha256": "f3f8e4a29db20544bd9a5b0ae8e10a23a2ae52112da77fa9111d60fb9d409d22",
+      "mana_cost": "",
+      "catalog_commander_legality": "legal",
+      "layout": "normal"
+    }
+  ],
+  "nonstarting_scheme_helper": {
+    "name": "All in Good Time",
+    "role": "Nonstarting Scheme, not a Commander-legal deck card",
+    "script_sha256": "41385d211ea85ddeaee24dc81bfccc9233d93c4041a967f9e42c9ba5c939039e",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "scope": "Two direct native helper/state contracts using the variant-card registry; no scheme format or normal Commander admission claim"
+  },
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "614.8",
+      "701.19a",
+      "701.19b",
+      "701.47",
+      "702.84a",
+      "611.2a"
+    ],
+    "scope": "Retained versioned rules for regeneration, Amass, Unearth and duration. Not a complete or current-rules audit."
+  },
+  "full_live_suite": {
+    "passed": 32,
+    "subtests": 503,
+    "log_sha256": "8b554286007b9ce5eb4ae775ddeedac5f3a11af908e06fb271102f7b00806884"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 32,
+    "subtests": 508,
+    "log_sha256": "9806de8a13d75454dfe356dd20c362e63baa26a7cf96b62264575f129ec4be3c"
+  },
+  "catalog_probe": {
+    "run_id": "de850b7a74c04563b3c176f6081972f5",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "e626eb164a9add4729186f9053335e7ead861fea11510f42523482efdc0073ab"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-effect-cleanup-reviewed",
+    "lock_sha256": "e0edb66898431f2a4c36fc1d6bc675d748fd76a3f9b4b321fed7e2c905120690",
+    "engine_check_sha256": "b98eba715384d0dd8e9d7858d5bac6d029866369cfb7a24825bc173e4c3d7a66",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-host-return-reviewed"
+  },
+  "limits": [
+    "Controlled partial four-player boards. Twenty-four paired native cases run both stack-copy modes; two replayed-spell cases use stack copying, and two original LKI contracts do not copy a game.",
+    "The two scheme-only native helper contracts use the variant-card registry. They are not normal Commander admission or scheme-rule certification; packaged witnesses use legal cards only.",
+    "Twelve packaged witnesses retain paid costs, card IDs/zones, raw regeneration counts and LKI values, effect-card inventories, native token/life outcomes and source/copy independence.",
+    "Fog uses a paid creature that waits a turn cycle. Its attacker declaration is controlled, followed by native triggers, blocker decisions and combat damage; general attacker policy is not certified.",
+    "Torrential Gearhulk stages a naturally replayed Opt on the stack. The copy resolves or counters it using a native legal spell target and actual counterspell costs. Existing move-trigger cleanup removes the effect before its idempotent end-of-turn callback.",
+    "Regeneration quotas are distinct from shield counters. Other combat-regeneration cases, replacement ordering, shield-counter interactions, subtype/controller variants, rollback and replay permissions remain unverified.",
+    "The source and LKI regeneration-history fixes copy raw state without performing regeneration or changing ordinary copiable characteristics.",
+    "Other callbacks, hidden/merged/perpetual state, arbitrary continuations and general AI policy remain incomplete. Unmapped diagnostics are asserted in fixtures, not aggregated into normal simulation reports.",
+    "Catalog construction proves script availability rather than full gameplay correctness. Seven unavailable entries are nonstarting meld results. Versioned references are not a complete current-rules audit."
+  ]
+}

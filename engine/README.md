@@ -38,7 +38,8 @@ corrects stale bearer and word-keyword cleanup, and enables mandatory text-box
 exchange targeting with mapped restoration.
 A twenty-fourth maps Reconfigure effect removal and mana-granted keyword expiry.
 A twenty-fifth maps captured zone-return state and live/historical linked exile.
-All twenty-five patches are pinned. No remote branch is used at build time.
+A twenty-sixth maps temporary effect cleanup and restores regeneration quotas/history.
+All twenty-six patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -54,10 +55,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-436 native sticker, chosen-color, companion, supplementary-copy, history,
+464 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword and host-return tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect and regeneration tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -87,15 +88,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-four regression source files and exactly three card-script
+The recipe pins twenty-five regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 984 gameplay and 256
+686 files verified against immutable source. The broader 1,012 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 436 focused tests are included in the 984.
+in `native_test_evidence.json`; the 464 focused tests are included in the 1,012.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -272,3 +273,9 @@ native cases and ten packaged witnesses check captured return payloads, canonica
 live/historical links, native paid removals, return destinations and ownership.
 Lagrella's friendly return counters use fixed legal native controller choices;
 packaged observations retain the ordinary AI's opposing-target selections.
+
+Temporary effect cleanup and regeneration evidence is retained in
+`effect_cleanup_evidence.json`. Twenty-eight native cases cover six Commander-card
+paths, two scheme-helper contracts and regeneration history/quota contracts.
+Twelve packaged witnesses exercise legal cards only. The shared command maps one
+effect card; raw regeneration-state restoration does not perform regeneration.
