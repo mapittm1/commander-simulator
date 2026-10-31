@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,098 native tests in 84 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 550 focused
+The reviewed patched source also passes **1,124 native tests in 85 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 576 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1500,13 +1500,73 @@ continuations remain unverified. Callback diagnostics still need normal CLI
 aggregation. Versioned rules references are not a complete current-rules audit.
 
 
-A separate current-source combat research fixture reproduces an open policy gap:
+At the decision-perspective milestone, a separate source-bound combat research
+fixture reproduced a policy gap:
 a Shivan Dragon controlled through paid Worst Fears is declared against its
 2-life decision controller despite three legal defenders and an empty opposing
-creature board. Both requested heuristic/full cases fail the protection criterion;
-both ordinary-player attack controls pass. All 1,033 AI/gameplay production paths
-match this build. This is a fixed declaration checkpoint after native control
+creature board. Both requested heuristic/full cases failed the protection criterion;
+both ordinary-player attack controls passed. All 1,033 AI/gameplay production paths
+matched that build. This was a fixed declaration checkpoint after native control
 acquisition, not full combat-damage resolution or forced-attack certification.
-The earlier automatic-declaration checkpoint error is excluded. These two open
-research failures are separate from the passing native and live suites above;
+The earlier automatic-declaration checkpoint error is excluded. Those two
+research failures were separate from the passing native and live suites above;
 their source/fixture/observation hashes are retained in the decision evidence.
+
+
+## Controlled attack planning
+
+The reviewed controlled-attack build evaluates legal attack declarations for the controlling decision
+beneficiary without changing the actor's ownership, teams or resources. It reuses
+native attack constraints, preserves mandatory assignments, and considers the
+heuristic declaration, a native legal seed, passing, whole groups and individual
+changes across native player/card defenders. Candidates that violate restrictions
+or satisfy fewer requirements than the native legal result are rejected.
+This includes keeping a mandatory attack on the controller when it is the only
+legal defender; an attack tax remains an optional payment under native rules.
+
+Each evaluated candidate uses an independent game copy, mapped attackers and
+defenders, native declaration/payment, attack triggers, blocking and combat damage
+through the second main phase. The beneficiary is captured before copying and
+remains fixed through loss or combat-control expiration. Incomplete nonterminal
+rollouts are excluded. Equal seeded samples restore the original random provider.
+The existing shared decision deadline applies; at most 128 legal declarations
+are evaluated, retaining the best fully evaluated one if time runs out. A
+reentrancy guard prevents nested predictions from recursively starting this search.
+These limits describe bounded strategy search, not exhaustive optimization.
+
+The identical final **26-case native fixture** has **19 failures / 7 passes** on
+previous production source audited across all **1,033 AI/gameplay Java paths and
+text**, and **26 passes** after the patch. Eighteen failures declare unforced
+attacks against the decision beneficiary. One full-mode tax witness fails to
+select its reachable defender; that is a selection expectation, not an illegal
+attack. The seven positives comprise ordinary/self attacks, mandatory harmful
+attacks with no alternative, and the heuristic actor-paid tax witness. These
+baselines preserve exact fixture bytes and raw source hashes; only text comparison
+normalizes line endings. The candidate adds one production Java class.
+
+Cases use paid Worst Fears or the normal four-blue Secret of Bloodbending cost,
+without optional waterbend payment. Native outcomes cover Shivan Dragon,
+Juggernaut's required attacks, Blazing Archon restrictions, Propaganda payments,
+Silent Arbiter's limit, paired Mogg Flunkies, Baneslayer Angel blocking with first
+strike/protection/lifelink, chain/self API contexts, and recovery after an expired
+deadline. Planning must leave original life, lands and attackers unchanged.
+Combat-only control expires before the scored main phase. Chain/self contexts are
+native API contracts, separate from card-generated control-chain certification.
+
+The packaged witness worker writes two fixed hash-bound receipt parts within the
+existing 128 KiB document bound. An initial oversized receipt, an incorrect draft
+group-card name, unused imports and an automatic-attack checkpoint mistake were
+fixture errors and are excluded from gameplay failure claims. Packaged/broader
+validation passed before runtime promotion. The reviewed runtime passes **576
+focused native tests**, **1,124 broader gameplay tests** including those 576 in
+**85 selected classes**, **256 serialization tests**, **36 live integrations /
+570 subtests**, and **399 offline tests / 508 subtests**, with all Python quality
+checks. The catalog probe constructs **32,109 identities** and retains seven
+nonstarting meld results. Exact source/fixture/worker hashes, bounded receipt parts,
+baselines, outcomes and limits are retained in
+[`controlled_attack_evidence.json`](../engine/controlled_attack_evidence.json).
+
+Controlled blocking, arbitrary mandatory choices, tax-choice variants, hidden or
+stochastic future effects, different declaring players, cyclic/custom controllers,
+all attack combinations and complete Commander games remain unverified. Script
+construction and these selected scenarios do not establish complete card support.

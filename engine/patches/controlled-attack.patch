@@ -1,0 +1,204 @@
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -1461,7 +1461,11 @@
+             lastAttackAggression = aiAtk.declareAttackers(combat);
+ 
+             aiAtk.reinforceWithBanding(combat);
+-            refineAttackWithFlatMonteCarlo(attacker, combat);
++            if (attacker == player && attacker.isControlled()) {
++                forge.ai.simulation.ControlledAttackPlanner.refine(attacker, combat);
++            } else {
++                refineAttackWithFlatMonteCarlo(attacker, combat);
++            }
+         } catch (AITimeoutTracker.Expired e) {
+             // out of time: attack with what was decided so far; the validity check below repairs an illegal declaration
+         } finally {
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/ControlledAttackPlanner.java
+@@ -0,0 +1,186 @@
++package forge.ai.simulation;
++
++import forge.ai.PlayerControllerAi;
++import forge.game.Game;
++import forge.game.GameEntity;
++import forge.game.card.Card;
++import forge.game.combat.AttackConstraints;
++import forge.game.combat.Combat;
++import forge.game.combat.CombatUtil;
++import forge.game.phase.PhaseType;
++import forge.game.player.Player;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++
++import java.util.ArrayList;
++import java.util.Collections;
++import java.util.HashSet;
++import java.util.LinkedHashMap;
++import java.util.List;
++import java.util.Map;
++import java.util.Random;
++import java.util.Set;
++
++/** Compare native combat outcomes for a controlled actor's decision beneficiary. */
++public final class ControlledAttackPlanner {
++    private static final int MAX_CANDIDATES = 128;
++    private static final ThreadLocal<Boolean> PLANNING = ThreadLocal.withInitial(() -> false);
++
++    private ControlledAttackPlanner() { }
++
++    /** Called inside the ordinary attack decision's armed timeout, before original costs are paid. */
++    public static void refine(final Player actor, final Combat combat) {
++        if (PLANNING.get() || !actor.isControlled()
++                || !actor.getGame().getPhaseHandler().is(PhaseType.COMBAT_DECLARE_ATTACKERS)) {
++            return;
++        }
++        PLANNING.set(true);
++        try {
++            final Search search = new Search(actor, combat);
++            try {
++                search.run();
++            } catch (final AITimeoutTracker.Expired e) {
++                // Retain the best fully evaluated legal declaration when the shared deadline expires.
++            }
++            if (search.best != null) {
++                combat.clearAttackers();
++                for (final Map.Entry<Card, GameEntity> entry : search.best.entrySet()) {
++                    combat.addAttacker(entry.getKey(), entry.getValue());
++                }
++            }
++        } finally {
++            PLANNING.remove();
++        }
++    }
++
++    private static final class Search {
++        private final Player actor;
++        private final Player beneficiary;
++        private final Combat combat;
++        private final AttackConstraints constraints;
++        private final Map<Card, GameEntity> required;
++        private final int minimumViolations;
++        private final Set<String> seen = new HashSet<>();
++        private Map<Card, GameEntity> best;
++        private Integer bestValue;
++        private int evaluated;
++
++        private Search(final Player actor, final Combat combat) {
++            this.actor = actor;
++            this.beneficiary = DecisionPerspective.beneficiary(actor);
++            this.combat = combat;
++            this.constraints = combat.getAttackConstraints();
++            final var legal = constraints.getLegalAttackers();
++            this.required = new LinkedHashMap<>(legal.getLeft());
++            this.minimumViolations = legal.getRight();
++        }
++
++        private void run() {
++            final Map<Card, GameEntity> heuristic = new LinkedHashMap<>(combat.getAttackersAndDefenders());
++            consider(heuristic);
++            consider(required);
++            consider(Collections.emptyMap());
++            // Include whole-group attacks so "can't attack alone" does not hide a legal declaration.
++            for (final GameEntity defender : combat.getDefenders()) {
++                final Map<Card, GameEntity> group = new LinkedHashMap<>(required);
++                for (final Card creature : actor.getCreaturesInPlay()) {
++                    if (CombatUtil.canAttack(creature, defender)) {
++                        group.put(creature, defender);
++                    }
++                }
++                consider(group);
++                if (evaluated >= MAX_CANDIDATES) {
++                    return;
++                }
++            }
++            // Preserve mandatory assignments while adding, omitting or retargeting individual creatures.
++            for (final Map<Card, GameEntity> base : List.of(required, heuristic)) {
++                for (final Card creature : actor.getCreaturesInPlay()) {
++                    final Map<Card, GameEntity> fewer = new LinkedHashMap<>(base);
++                    fewer.remove(creature);
++                    consider(fewer);
++                    for (final GameEntity defender : combat.getDefenders()) {
++                        final Map<Card, GameEntity> changed = new LinkedHashMap<>(base);
++                        changed.put(creature, defender);
++                        consider(changed);
++                        if (evaluated >= MAX_CANDIDATES) {
++                            return;
++                        }
++                    }
++                }
++            }
++        }
++
++        private void consider(final Map<Card, GameEntity> declaration) {
++            AITimeoutTracker.check();
++            if (evaluated >= MAX_CANDIDATES) {
++                return;
++            }
++            for (final Map.Entry<Card, GameEntity> entry : declaration.entrySet()) {
++                if (entry.getKey().getController() != actor || !combat.getDefenders().contains(entry.getValue())
++                        || !CombatUtil.canAttack(entry.getKey(), entry.getValue())) {
++                    return;
++                }
++            }
++            final int violations = constraints.countViolations(declaration);
++            if (violations < 0 || violations > minimumViolations) {
++                return;
++            }
++            final List<String> identities = new ArrayList<>();
++            for (final Map.Entry<Card, GameEntity> entry : declaration.entrySet()) {
++                identities.add(entry.getKey().getId() + ">" + entry.getValue().getId());
++            }
++            Collections.sort(identities);
++            if (!seen.add(String.join(",", identities))) {
++                return;
++            }
++            final Integer value = score(declaration);
++            evaluated++;
++            if (value == null) {
++                return;
++            }
++            if (bestValue == null || value > bestValue) {
++                bestValue = value;
++                best = new LinkedHashMap<>(declaration);
++            }
++        }
++
++        private Integer score(final Map<Card, GameEntity> declaration) {
++            final Random savedRandom = MyRandom.getRandom();
++            try {
++                // Equal samples per candidate without advancing the original game's random provider.
++                MyRandom.setRandom(new Random(0L));
++                final GameSimulator simulator = new GameSimulator(actor.getGame(), actor, true);
++                final Game game = simulator.getSimulatedGameState();
++                final Player copiedActor = simulator.getSimulatedAiPlayer();
++                final Player copiedBeneficiary = simulator.getGameCopier().find(beneficiary);
++                final Combat copiedCombat = game.getCombat();
++                final Map<Card, GameEntity> mapped = new LinkedHashMap<>();
++                for (final Map.Entry<Card, GameEntity> entry : declaration.entrySet()) {
++                    final Card attacker = simulator.getGameCopier().find(entry.getKey());
++                    final GameEntity defender = simulator.getGameCopier().find(entry.getValue());
++                    if (attacker == null || defender == null) {
++                        throw new IllegalStateException("Controlled attack cannot be mapped into its simulation");
++                    }
++                    mapped.put(attacker, defender);
++                }
++                copiedCombat.clearAttackers();
++                ((PlayerControllerAi) copiedActor.getController()).getAi().setAttackOverride(mapped);
++                game.getPhaseHandler().devDeclareAttackers();
++                GameSimulator.resolveStack(game, copiedActor.getWeakestOpponent());
++                if (!game.isGameOver() && copiedActor.isInGame()) {
++                    game.getPhaseHandler().devAdvanceToPhase(PhaseType.MAIN2,
++                            () -> GameSimulator.resolveStack(game, copiedActor.getWeakestOpponent()));
++                }
++                if (!game.isGameOver() && !copiedBeneficiary.hasLost() && !copiedBeneficiary.hasWon()
++                        && !game.getPhaseHandler().is(PhaseType.MAIN2)) {
++                    // A skipped/reversed/aborted phase path is not a comparable completed combat.
++                    return null;
++                }
++                return new GameStateEvaluator().getScoreForGameState(game, copiedBeneficiary).value;
++            } finally {
++                MyRandom.setRandom(savedRandom);
++            }
++        }
++    }
++}

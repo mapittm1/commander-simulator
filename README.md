@@ -53,10 +53,13 @@ restrictions/deadlines and tap admission after newly controlled creatures lose h
 turn/combat deadlines, layered controllers and Emrakul's following extra turn.
 [Decision beneficiaries and pending responses](docs/CARD_COVERAGE.md#decision-beneficiaries-and-pending-responses)
 cover actual AI choices, fixed scoring perspective and spell/ability stack targets.
+[Controlled attack planning](docs/CARD_COVERAGE.md#controlled-attack-planning) describes
+native attack requirements, actor-paid costs, controller-benefit decisions and
+real combat outcomes.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 550
+Seven additional records are non-starting meld results. The build passes 576
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
@@ -65,17 +68,19 @@ conditional control/cleanup, animation reversal, temporary-copy expiry, protecti
 deadlines, keyword restoration, combat power exchange, forced-block requirements,
 prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
 haste, host-bound exile returns, temporary effects, regeneration history, Detain,
-raw control age, player-control snapshots and decision/response planning.
-Broader native runs pass 1,098 AI/gameplay tests (including those 550) and 256
+raw control age, player-control snapshots, decision/response planning and
+controlled attack outcomes.
+Broader native runs pass 1,124 AI/gameplay tests (including those 576) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 The heuristic AI still classifies three primary ControlPlayer actions as unsupported:
 Worst Fears, Mindslaver's activation and Secret of Bloodbending. Full-simulation
 candidate enumeration already admits those legal actions; admission does not
 prove valuable selection. Controlled players now plan for their decision
-controller's benefit while paying with their own resources. Selected paid Shock,
-Counterspell and Stifle outcomes are verified. Separate combat research reproduces
-controlled attacks against their decision controller; hostile combat policy remains open.
+controller's benefit while paying with their own resources. Verified outcomes
+include paid Shock, Counterspell, Stifle and selected controlled combat. Native
+mandatory attacks remain required even when harmful to the controller; broader
+combat and mandatory-choice policy still need work.
 Other callbacks, arbitrary suspended continuations and general AI policy still
 need separate validation.
 See [card support and evidence](docs/CARD_COVERAGE.md) and the

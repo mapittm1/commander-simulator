@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added controlled-attack planning that compares native combat outcomes for the
+  fixed decision controller while retaining the actor's ownership and resources.
+  Candidates must satisfy native restrictions and attack requirements; mandatory
+  attacks against the controller remain legal when required, and optional attack
+  taxes cannot be forced. The identical 26-case native fixture changes from
+  19 failures / 7 passes to 26 passes, including real damage, first strike,
+  lifelink, actor-paid taxes, group restrictions and combat-only control expiry.
+  Twenty-six packaged cases verify actual choices, payments and damage in two
+  bounded hash-bound receipt parts. Activated the pinned runtime after 576 focused,
+  1,124 broader gameplay, 256 serialization and 36 live tests / 570 subtests, the
+  Python quality gate and 32,109 matched catalog constructions. Primary heuristic
+  control actions, controlled blocking and arbitrary mandatory choices remain open.
+
 - Corrected controlled-player planning to retain the decision controller's scoring
   perspective without changing the acting player's costs or resources. Preserve
   pending stack entries, resolve an independent no-response baseline, and enumerate

@@ -45,7 +45,9 @@ A twenty-eighth maps player-control start/end commands and retains timestamped
 controller layers with new game-bound agent instances.
 A twenty-ninth preserves the fixed decision beneficiary, pending-stack planning
 and legal spell/ability target enumeration.
-All twenty-nine patches are pinned. No remote branch is used at build time.
+A thirtieth adds bounded controlled-attack outcome planning under native attack
+constraints and the existing shared decision deadline.
+All thirty patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -61,10 +63,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-550 native sticker, chosen-color, companion, supplementary-copy, history,
+576 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control and decision/response tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response and controlled-attack tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -94,15 +96,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-eight regression source files and exactly three card-script
+The recipe pins twenty-nine regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,098 gameplay and 256
+686 files verified against immutable source. The broader 1,124 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 550 focused tests are included in the 1,098.
+in `native_test_evidence.json`; the 576 focused tests are included in the 1,124.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -326,3 +328,18 @@ costs, unchanged original state while planning, canonical targets and outcomes.
 Ordinary heuristic damage-counter controls explicitly use shipped Cautious AI;
 no profile is edited. Exact inputs, baseline and limits are retained in
 [`decision_perspective_evidence.json`](decision_perspective_evidence.json).
+
+
+Controlled attack planning now evaluates native legal declarations for the fixed
+decision beneficiary. It retains actor ownership and costs, respects mandatory
+attacks and optional tax payments, and resolves native blocking/damage through
+the second main phase. Search shares the existing deadline, compares at most
+128 legal declarations and restores the original random provider. Incomplete
+nonterminal rollouts are excluded. Twenty-six native and twenty-six packaged
+cases cover actual decisions, costs, damage, control expiry and timeout recovery.
+The identical previous-source fixture has 19 failures / 7 passes; all 26 pass
+with this patch. [`controlled_attack_evidence.json`](controlled_attack_evidence.json)
+retains exact provenance.
+This is selected bounded combat planning, not exhaustive strategy or full card
+certification; primary heuristic control actions and other decision policies
+remain open.
