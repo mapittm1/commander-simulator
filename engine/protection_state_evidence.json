@@ -1,0 +1,341 @@
+{
+  "scope": "Selected temporary card/group/player protection expiration in copied games; not complete card, rules or AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-protection",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "1e06820ba50497f435f96045a465f9d5109c179f020fd39cea5922865104f9f1",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "98c7c98cd665991979fa7504b72cf98f57e13b7196d38513495970f2f393da43",
+    "native_tests": {
+      "total": 318,
+      "passed": 318,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "47bd6cda293ac70585bb699cfa3a48ff44466c44c9e0eecc0b4a36fd3a0efda7",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "16cb64aa56a348d7a529cdb8e107fa29",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/ability/effects/ProtectEffect.java": "fef6ae388bacdb0607eb30f1d42bd5a0768666dc0d4405c0d64b01de4b4b02ea",
+    "forge-game/src/main/java/forge/game/ability/effects/ProtectAllEffect.java": "784ef7eec11741bee1a124ada41c6bc5213b515141c3c933f312feb08e2b8a43"
+  },
+  "patch_sha256": "0aa9bb1accedd4358a73ae4baee1df0124d4d0e7f8b86ca59169820816022f70",
+  "native_test_sha256": "c1aba5d0b6faac237779fbab9be81b9bceed0f8915bfb52c285d460fc75788f7",
+  "worker_sha256": "cc02a614ae7d9f414838a6642f35ac8f4761e260f7487430dbf905967c588ba9",
+  "integration_test_sha256": "6c87badd7b22fdedcf47e880093ce2d91c48bc2d0f960bc9a9447511a892acfe",
+  "baseline_native": {
+    "counts": {
+      "total": 6,
+      "passed": 0,
+      "failed": 6,
+      "skipped": 0
+    },
+    "fixture_sha256": "268dd8a309b069a24c6359ed6b11b0656ae11d6b74f44aa415c4662c2b8c1b5c",
+    "testng_sha256": "a9fa7991c2fe916f22f819795eb68891564d76bd3f89611d9b3709c093ee74cc",
+    "log_sha256": "dcb78dc0528feb5092e2bc1a386114965b7cdd4a39a6690ce09e091fdd35b3b5",
+    "production_files_compared": 1030,
+    "source_audit_sha256": "8993bc44c64f1bedbda918916136d8ca9077e24193fb357ba585d4f2a567246c",
+    "note": "Final fixture changes only the player and match display names; test actions and assertions match the failing baseline."
+  },
+  "before": {
+    "run_id": "ad208de8e5a7466688d8671e8683a349",
+    "receipt_sha256": "3c17afbf6ea69f3fb6fe2213b73a76a1f84a77cc0dc3c5fe9ad3f2cc4fa78747",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "card": "Shelter",
+        "paid": 2,
+        "before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.ProtectEffect$1"
+        ]
+      },
+      {
+        "card": "Brave the Elements",
+        "paid": 1,
+        "before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.ProtectAllEffect$1"
+        ]
+      },
+      {
+        "card": "Seht's Tiger",
+        "paid": 4,
+        "before": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.ProtectAllEffect$2"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "run_id": "c6458c7d2b214e0f88ea81e6865d1eab",
+    "receipt_sha256": "48b17c4558a98f8481d5f5accc2e297ee08c955bcad8b3c2a8445a5d71745286",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "card": "Shelter",
+        "paid": 2,
+        "before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": []
+      },
+      {
+        "card": "Brave the Elements",
+        "paid": 1,
+        "before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": true,
+          "player": false,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": []
+      },
+      {
+        "card": "Seht's Tiger",
+        "paid": 4,
+        "before": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "copied_before": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "source": {
+          "creature": false,
+          "player": true,
+          "intrinsic": true
+        },
+        "source_after": {
+          "creature": false,
+          "player": false,
+          "intrinsic": true
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "oracle_witnesses": [
+    {
+      "name": "Shelter",
+      "oracle_id": "c1909d70-d8f4-4c54-8587-0a910f123238",
+      "source": "https://scryfall.com/card/cmm/56/shelter?utm_source=api",
+      "oracle_text_sha256": "f26a939da3fc95c647202913ea1c9df9f31d66c937891d44c760eaae39030b16",
+      "mana_cost": "{1}{W}"
+    },
+    {
+      "name": "Brave the Elements",
+      "oracle_id": "9d73a51a-1c8e-40cd-8124-aeff406a0884",
+      "source": "https://scryfall.com/card/c14/66/brave-the-elements?utm_source=api",
+      "oracle_text_sha256": "ac7eed0ffcd9233d9c6d2b7dde0aa255e68ae8de7ee7b45750ca5338b999b15f",
+      "mana_cost": "{W}"
+    },
+    {
+      "name": "Seht's Tiger",
+      "oracle_id": "7d71a78d-fda8-424d-b343-b901a0df3acf",
+      "source": "https://scryfall.com/card/c17/72/sehts-tiger?utm_source=api",
+      "oracle_text_sha256": "e4cde42d9b2d233113752abcab5000a64d961e665b0566c341890478770485d3",
+      "mana_cost": "{2}{W}{W}"
+    },
+    {
+      "name": "Silvercoat Lion",
+      "oracle_id": "e3c0b11e-7340-4e0a-98b7-91b38439d4f9",
+      "source": "https://scryfall.com/card/m13/35/silvercoat-lion?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{W}"
+    },
+    {
+      "name": "White Knight",
+      "oracle_id": "ddb021df-ae4a-4ac1-8353-d0b375761714",
+      "source": "https://scryfall.com/card/ddg/9/white-knight?utm_source=api",
+      "oracle_text_sha256": "da65a0690aee43deb39f65d5c040940df35f0574091c9a63e48cc9fe6db0132c",
+      "mana_cost": "{W}{W}"
+    }
+  ],
+  "full_live_suite": {
+    "passed": 26,
+    "subtests": 434,
+    "log_sha256": "d929bccf9979d4d15efbc3a20f0788675db4e9ef50967b608aba6091180b2b7e"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 26,
+    "subtests": 508,
+    "log_sha256": "09bb69f3b1b0763ef046aec8d5955e9ead58c046198dc03a1e11dff536b61ffe"
+  },
+  "native_evidence_sha256": "5e312c31eb3eadfc9252258fd78e154891cea4f57c18e7639a8c3d96164e593e",
+  "catalog_probe": {
+    "run_id": "524bd4648ac246649cac6f26089303e8",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "c4ee0d64bcfc7d9febad22749e3a803d50073442de9dc1caa692a1eee8d726e2"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-protection-reviewed",
+    "lock_sha256": "833e048abfdef1e72a701fb91fa062a36a6570dd903504478835a82be4f548fe",
+    "engine_check_sha256": "a466b1871ad5523383bafafd85ee74c7a934afb3fc47b828ce200c340b9b120e",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-copy-frames-reviewed"
+  },
+  "limits": [
+    "Six native cases use partial four-player registrations and controlled boards, with stack copying enabled and disabled.",
+    "Three packaged witnesses pay real card costs and use native turn hooks; turn advancement does not offer response priority.",
+    "The selected AI color choice is not prescribed. Assertions check the granted protection deadline and retained intrinsic protection.",
+    "Expiration and world independence do not certify all protection qualities, prevention, blocking, attachment, radiance, blink, overlapping layers or player-loss behavior.",
+    "Unmapped callback diagnostics are asserted for the selected fixtures, not yet aggregated into normal simulation reports.",
+    "Other callbacks, arbitrary subclass payloads, hidden views, merged/perpetual states, general continuations and AI policies remain unverified."
+  ]
+}

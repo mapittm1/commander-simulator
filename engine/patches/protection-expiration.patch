@@ -1,0 +1,111 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/ProtectEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ProtectEffect.java
+@@ -161,17 +161,7 @@
+ 
+             if (!"Permanent".equals(sa.getParam("Duration"))) {
+                 // If not Permanent, remove protection at EOT
+-                final GameCommand untilEOT = new GameCommand() {
+-                    private static final long serialVersionUID = 7682700789217703789L;
+-
+-                    @Override
+-                    public void run() {
+-                        if (gameCard.isInPlay()) {
+-                            gameCard.removeChangedCardKeywords(timestamp, 0, true);
+-                            game.fireEvent(new GameEventCardStatsChanged(gameCard));
+-                        }
+-                    }
+-                };
++                final GameCommand untilEOT = new CardProtectionExpiration(gameCard, timestamp);
+                 addUntilCommand(sa, untilEOT);
+             }
+         }
+@@ -201,4 +191,28 @@
+         return gains;
+     }
+ 
++
++    /** Explicit payload so a deadline never retains a card from another game. */
++    static final class CardProtectionExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++        private final long timestamp;
++        CardProtectionExpiration(Card card, long timestamp) {
++            this.card = card;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            if (card.isInPlay()) {
++                card.removeChangedCardKeywords(timestamp, 0, true);
++                card.getGame().fireEvent(new GameEventCardStatsChanged(card));
++            }
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new CardProtectionExpiration(context.map(card), timestamp);
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/ProtectAllEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ProtectAllEffect.java
+@@ -90,17 +90,7 @@
+ 
+                 if (!"Permanent".equals(sa.getParam("Duration"))) {
+                     // If not Permanent, remove protection at EOT
+-                    final GameCommand untilEOT = new GameCommand() {
+-                        private static final long serialVersionUID = -6573962672873853565L;
+-
+-                        @Override
+-                        public void run() {
+-                            if (tgtC.isInPlay()) {
+-                                tgtC.removeChangedCardKeywords(timestamp, 0, true);
+-                                game.fireEvent(new GameEventCardStatsChanged(tgtC));
+-                            }
+-                        }
+-                    };
++                    final GameCommand untilEOT = new ProtectEffect.CardProtectionExpiration(tgtC, timestamp);
+                     addUntilCommand(sa, untilEOT);
+                 }
+             }
+@@ -114,18 +104,31 @@
+ 
+                 if (!"Permanent".equals(sa.getParam("Duration"))) {
+                     // If not Permanent, remove protection at EOT
+-                    final GameCommand revokeCommand = new GameCommand() {
+-                        private static final long serialVersionUID = -6573962672873853565L;
+-
+-                        @Override
+-                        public void run() {
+-                            player.removeChangedKeywords(timestamp, 0);
+-                        }
+-                    };
++                    final GameCommand revokeCommand = new PlayerProtectionExpiration(player, timestamp);
+                     addUntilCommand(sa, revokeCommand);
+                 }
+             }
+         }
+     }
+ 
++
++    private static final class PlayerProtectionExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Player player;
++        private final long timestamp;
++        private PlayerProtectionExpiration(Player player, long timestamp) {
++            this.player = player;
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            player.removeChangedKeywords(timestamp, 0);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new PlayerProtectionExpiration(context.map(player), timestamp);
++        }
++    }
++
+ }

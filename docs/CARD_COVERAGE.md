@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **860 native tests in 74 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 312 focused
+The reviewed patched source also passes **866 native tests in 75 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 318 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -934,3 +934,33 @@ Verification: **399 offline tests / 508 subtests**, all Python quality tools,
 identities remain separate. [Copy-expiration evidence](../engine/clone_state_evidence.json)
 binds the exact runtime, source, stable before/after receipts, tests and selected
 versioned rule/catalog references.
+
+
+## Protection deadlines
+
+The reviewed runtime maps temporary protection cleanup for both individual and
+mass protection effects. Card cleanup retains the affected incarnation and its
+keyword timestamp; player cleanup retains the mapped player and timestamp.
+The existing duration scheduler and card-in-play guard remain in use. Copying
+these payloads does not execute their cleanup or retain original-game closures.
+
+Six native regressions cover paid Shelter, Brave the Elements and Seht's Tiger
+paths with stack copying enabled and disabled. All six first reproduced lingering
+protection after the copied world's native turn-end hooks. The fixed cases check
+active protection before expiry, independent original-game deadlines, and White
+Knight's intrinsic protection surviving cleanup. Three packaged-runtime witnesses
+repeat these paid paths and record both worlds before and after their own turns.
+
+The runtime passes **318 focused native tests**, **866 broader gameplay tests**
+including those 318, and **256 serialization tests**. The opt-in live suite passes
+**26 tests / 434 subtests**; the offline quality gate passes **399 tests / 508
+subtests**. Frozen source, patch, fixture, receipt and log hashes are recorded in
+[`protection_state_evidence.json`](../engine/protection_state_evidence.json).
+
+These controlled four-player boards are partial registrations, not complete legal
+decks. Native turn advancement runs bounded phase hooks without offering response
+priority. These cases test expiration and copied-world ownership, not every
+protection quality, prevention, blocking, attachment, radiance, blink, overlapping
+duration, player-loss interaction or AI decision. Other effect callbacks and
+arbitrary continuation payloads still require separate verification. This is
+additional tested coverage, not complete Magic rules certification.

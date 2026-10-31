@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed copied-game expiration of temporary creature, group and player protection.
+  Six native regressions first reproduced the defect; paid Shelter, Brave the
+  Elements and Seht's Tiger witnesses now preserve independent deadlines and
+  intrinsic protection. Pinned the patch and regression hashes, rebuilt the
+  runtime, and retained broader validation and coverage limits.
+
 ### Added
 
 - Map temporary-copy expiration targets/timestamps and saved card/player references
