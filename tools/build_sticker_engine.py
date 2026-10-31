@@ -113,6 +113,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/copy-frame-expiration.patch",
                 "engine/patches/protection-expiration.patch",
                 "engine/patches/keyword-expiration.patch",
+                "engine/patches/blocking-prevention.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -138,6 +139,7 @@ def _verify_inputs(args, recipe):
         "CloneDurationGameCopyTest.java": "clone_duration_test_sha256",
         "ProtectionGameCopyTest.java": "protection_expiration_test_sha256",
         "KeywordExpirationGameCopyTest.java": "keyword_expiration_test_sha256",
+        "BlockingPreventionGameCopyTest.java": "blocking_prevention_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -332,6 +334,12 @@ def _patch_source(source, run, recipe):
         / "forge-gui-desktop/src/test/java/forge/ai/KeywordExpirationGameCopyTest.java",
     )
 
+    shutil.copyfile(
+        PROJECT / "engine/tests/BlockingPreventionGameCopyTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/BlockingPreventionGameCopyTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -372,7 +380,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

@@ -1,0 +1,994 @@
+{
+  "scope": "Selected forced-block snapshot state and temporary finite prevention-shield cleanup; not complete card/rules/AI certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-blocking-prevention",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "e214ac6b3ba9bfa8762b4ac472c750a747935f034efdd6c069955326a6d3aaef",
+    "cards_sha256": "372fc73b495372df6a362480ce05c30a0f931d530417128f6c5c78560f39792f",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "e88d96163f884dface3f7414d1cf228b7daaf8c62a0078db5fa0aa7161e669ae",
+    "native_tests": {
+      "total": 350,
+      "passed": 350,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "05cfffb133a5542c27fa5eb1a133095b8e363cc262beac3c42666ea0703327fa",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "5110394c8f4f4645ae162034d9bde232",
+  "compiled_source_sha256": {
+    "forge-game/src/main/java/forge/game/card/Card.java": "21b6208360b453da16d646e0ba7ef0588b674a2b67df4c3d87d2f2a26e953105",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "e0cd114e5d2b9460d1542d9e4aa4350dd161fe805203c509551d65d412c609f2",
+    "forge-game/src/main/java/forge/game/ability/effects/MustBlockEffect.java": "ac2781d6a273fd9eb3f11799f2a5013ed062269e0c0e6173dcb21ee213bd2004",
+    "forge-game/src/main/java/forge/game/ability/effects/DamagePreventEffect.java": "c73cb1517a644a12c232acd9250541f37f72605663aac1bb940436eaa5251dfe"
+  },
+  "patch_sha256": "651f5c5b93dda18fbc107adc7c71179568d6cd1de54cab24592588735a05c29d",
+  "native_test_sha256": "a4ba13a8b3c328e68f1a3521e7046505eb01a6ccb0a5d7ed39b3777ea20af641",
+  "worker_sha256": "95115c68f4098ba53e0674182db7174a09feb99c5c7caf2fabf8efc4926ee251",
+  "integration_test_sha256": "3dfaf0e9a625472eeafc24edfc81ed3b96016f94ba4567f35303a4fb8893ef99",
+  "shared_fixed_fixture_helpers": {
+    "tests/support/animation_worker.py": {
+      "working_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "git_blob_sha256": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/delayed_worker.py": {
+      "working_sha256": "5a02ed687138cde21c23ac93b484834faaa80a4cd480fb101eed3be96d959085",
+      "git_blob_sha256": "5a02ed687138cde21c23ac93b484834faaa80a4cd480fb101eed3be96d959085",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/duration_worker.py": {
+      "working_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "git_blob_sha256": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/keyword_expiration_worker.py": {
+      "working_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "git_blob_sha256": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/native_worker.py": {
+      "working_sha256": "7b329d6d6b3dbafd6e5a2cad72e5d2bb0d1aa678f73cfd8b5ae06ec4ce831eb1",
+      "git_blob_sha256": "39d3d2cd34952ae5903ecebbbaf339b6c558048c7d6b01cbe3fc7c3884f9709d",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/stack_worker.py": {
+      "working_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "git_blob_sha256": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/turn_schedule_worker.py": {
+      "working_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+      "git_blob_sha256": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+      "note": "Text matches HEAD with normalized line endings"
+    },
+    "tests/support/usage_worker.py": {
+      "working_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "git_blob_sha256": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+      "note": "Text matches HEAD with normalized line endings"
+    }
+  },
+  "native_before": {
+    "counts": {
+      "total": 16,
+      "passed": 0,
+      "failed": 16,
+      "skipped": 0
+    },
+    "testng_sha256": "c75cdf35ef12601dd6793b00c7be4b96452da1086f626866103af1237622e897",
+    "log_sha256": "88fcf73e5d8a44eaed92b79e4199ecfa4b5db80e2104ac6edc21b34c8e455b27",
+    "production_files_compared": 1030,
+    "source_audit_sha256": "e959de6f142f088c2d847aa9ea816196a297a3f01030c05b911055b602c9285a",
+    "note": "The identical final fixture first reproduced eight missing forced-block maps and eight lingering shields. An earlier shared-helper target-type compilation error is not included."
+  },
+  "native_candidate": {
+    "counts": {
+      "total": 16,
+      "passed": 16,
+      "failed": 0,
+      "skipped": 0
+    },
+    "testng_sha256": "db69e63a56d669ff99c69c049860bd620e929a67568441b84280ffabdeab5619",
+    "log_sha256": "b12cec2fa3fe97b3e4c2c25c0d5519ecdb85eb1fcb62476b27d0cad6bdf6e8c5"
+  },
+  "before": {
+    "run_id": "4260d8097da84cf2afe2d9cd7bd34ea0",
+    "receipt_sha256": "f46f26569d2a41d8b3417ca78c1415cc7b88cf0e615db5f68cc4b7bdf151b043",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "hunt",
+        "paid": [
+          1
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "step",
+        "paid": [
+          5
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "sled",
+        "paid": [
+          6,
+          1
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "tusker",
+        "paid": [
+          5
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": [
+          "COMBAT_END.until: forge.game.ability.effects.MustBlockEffect$1"
+        ]
+      },
+      {
+        "case": "player",
+        "paid": [
+          1
+        ],
+        "before": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DamagePreventEffect$1"
+        ]
+      },
+      {
+        "case": "creature",
+        "paid": [
+          1
+        ],
+        "before": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "copied_before": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "after": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "source": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "copy_damage": {
+          "shield": 1,
+          "life": null,
+          "damage": 0
+        },
+        "source_damage": {
+          "shield": 1,
+          "life": null,
+          "damage": 0
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": null,
+          "damage": 0
+        },
+        "source_final": {
+          "shield": 0,
+          "life": null,
+          "damage": 3
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DamagePreventEffect$1"
+        ]
+      },
+      {
+        "case": "partial",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 0,
+          "life": 38,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 0,
+          "life": 38,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 38,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 35,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DamagePreventEffect$1"
+        ]
+      },
+      {
+        "case": "stacked",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 5,
+          "life": 40,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 5,
+          "life": 40,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": [
+          "END_OF_TURN.until: forge.game.ability.effects.DamagePreventEffect$1"
+        ]
+      }
+    ]
+  },
+  "after": {
+    "run_id": "a181238a551a44958f518c7c35c43151",
+    "receipt_sha256": "3c8151eaa8228d70623c30848102d5fd3e6dc26fc36439d9e2977b7857db0d56",
+    "worker_log_sha256": "df0ded3a50a30d2befdcecfc5d60cf81fb315e7de018efc12f878df71bcad956",
+    "observed": [
+      {
+        "case": "hunt",
+        "paid": [
+          1
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "step",
+        "paid": [
+          5
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "sled",
+        "paid": [
+          6,
+          1
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "tusker",
+        "paid": [
+          5
+        ],
+        "attacker": 30,
+        "before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "copied_before": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "source": {
+          "attackers": [
+            30
+          ],
+          "mapped_world": true
+        },
+        "source_after": {
+          "attackers": [],
+          "mapped_world": true
+        },
+        "unmapped": []
+      },
+      {
+        "case": "player",
+        "paid": [
+          1
+        ],
+        "before": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 4,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "creature",
+        "paid": [
+          1
+        ],
+        "before": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "copied_before": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "after": {
+          "shield": 0,
+          "life": null,
+          "damage": 0
+        },
+        "source": {
+          "shield": 4,
+          "life": null,
+          "damage": 0
+        },
+        "copy_damage": {
+          "shield": 0,
+          "life": null,
+          "damage": 3
+        },
+        "source_damage": {
+          "shield": 1,
+          "life": null,
+          "damage": 0
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": null,
+          "damage": 0
+        },
+        "source_final": {
+          "shield": 0,
+          "life": null,
+          "damage": 3
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "partial",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 1,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 0,
+          "life": 38,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 38,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 35,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": []
+      },
+      {
+        "case": "stacked",
+        "paid": [
+          1,
+          1
+        ],
+        "before": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "copied_before": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "after": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source": {
+          "shield": 8,
+          "life": 40,
+          "damage": null
+        },
+        "copy_damage": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "source_damage": {
+          "shield": 5,
+          "life": 40,
+          "damage": null
+        },
+        "source_expired": {
+          "shield": 0,
+          "life": 40,
+          "damage": null
+        },
+        "source_final": {
+          "shield": 0,
+          "life": 37,
+          "damage": null
+        },
+        "damage_costs": {
+          "copy_bolt": 1,
+          "source_bolts": [
+            1,
+            1
+          ]
+        },
+        "unmapped": []
+      }
+    ]
+  },
+  "baseline_positive_controls": "The original world already expired the selected requirements and shields correctly; copied shield quotas were present before expiry even in the baseline.",
+  "packaged_candidate_run_ids": [
+    "79ebeec474984fa6b2e60ab47f0193ad",
+    "a181238a551a44958f518c7c35c43151"
+  ],
+  "oracle_witnesses": [
+    {
+      "name": "Hunt Down",
+      "oracle_id": "29b0f3bd-d9bd-4c54-b4c3-9c2e01720e34",
+      "source": "https://scryfall.com/card/lrw/218/hunt-down?utm_source=api",
+      "oracle_text_sha256": "8e8867981fe019a74e32bbb8d42c010bd7b2a5cf4ebae8a33f4021928562be38",
+      "mana_cost": "{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Monstrous Step",
+      "oracle_id": "af045109-ed00-469f-814b-c759c0c5357c",
+      "source": "https://scryfall.com/card/iko/166/monstrous-step?utm_source=api",
+      "oracle_text_sha256": "3675ed7bce9fd24b323e623629992d7756fb5f52c1346f571759987829581f22",
+      "mana_cost": "{4}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Auriok Siege Sled",
+      "oracle_id": "6a1a9e8a-a323-489a-b4db-b04da76662f4",
+      "source": "https://scryfall.com/card/dst/105/auriok-siege-sled?utm_source=api",
+      "oracle_text_sha256": "97551c76916c11dfe981fee0ca473c5ae1311069cf73996f402600cd9169c22b",
+      "mana_cost": "{6}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Avalanche Tusker",
+      "oracle_id": "ccad8b03-5ff1-4895-94e0-0c96883cb875",
+      "source": "https://scryfall.com/card/ktk/166/avalanche-tusker?utm_source=api",
+      "oracle_text_sha256": "647f8f235805b0e6161252b407b9fd6fb63f7cc1142ca4a5e092bf949ce6e8bb",
+      "mana_cost": "{2}{G}{U}{R}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Bronze Sable",
+      "oracle_id": "f27e5e11-0ad0-448b-8760-75ed1b97e7d8",
+      "source": "https://scryfall.com/card/cn2/208/bronze-sable?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{2}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Wall of Stone",
+      "oracle_id": "cd4cadb4-3156-49bd-b36e-12ba5c85938b",
+      "source": "https://scryfall.com/card/8ed/232/wall-of-stone?utm_source=api",
+      "oracle_text_sha256": "82fdab220543c360845cafccf126965515be4b0c831d0392f9aca2221b4c921d",
+      "mana_cost": "{1}{R}{R}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "source": "https://scryfall.com/card/10e/268/grizzly-bears?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Runeclaw Bear",
+      "oracle_id": "ec49dfcf-d16d-4621-af4b-4a6f09043221",
+      "source": "https://scryfall.com/card/m15/197/runeclaw-bear?utm_source=api",
+      "oracle_text_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "mana_cost": "{1}{G}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Mending Hands",
+      "oracle_id": "a612f30d-cd55-438b-a7de-8c80509183aa",
+      "source": "https://scryfall.com/card/9ed/29/mending-hands?utm_source=api",
+      "oracle_text_sha256": "fa75102d53e79d0c068cb9ee04b5b8ad27fcb99c71a285080e769d84d3674204",
+      "mana_cost": "{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Serra Angel",
+      "oracle_id": "4b7ac066-e5c7-43e6-9e7e-2739b24a905d",
+      "source": "https://scryfall.com/card/fdn/740/serra-angel?utm_source=api",
+      "oracle_text_sha256": "f684a39aa1028505b2c4f766baee12539be12dcfc76f788e60b9ffc02e07e202",
+      "mana_cost": "{3}{W}{W}",
+      "catalog_commander_legality": "legal"
+    },
+    {
+      "name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "source": "https://scryfall.com/card/msc/806/lightning-bolt?utm_source=api",
+      "oracle_text_sha256": "1c8ec5180252d4d2258eec2c0312b6f3c86b101696246288422c2d46aaa5ff8b",
+      "mana_cost": "{R}",
+      "catalog_commander_legality": "legal"
+    }
+  ],
+  "versioned_rules_reference": {
+    "source_url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "effective_date": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "checked_sections": [
+      "509.1c",
+      "511.2",
+      "611.2a"
+    ],
+    "scope": "Retained versioned reference for block requirements and stated deadlines; not a full or current rules audit"
+  },
+  "full_live_suite": {
+    "passed": 28,
+    "subtests": 450,
+    "log_sha256": "2249c7d218356cb0102ac0482b196547f5db7fe79c7e33176d427ece4b1a675c"
+  },
+  "offline_quality": {
+    "passed": 399,
+    "skipped_opt_in": 28,
+    "subtests": 508,
+    "log_sha256": "ba5faff49046840fb95ce8223ca9d9ffd8b9c1b78dd2d7d691b1f0e9b612bb78"
+  },
+  "native_evidence_sha256": "3de545e802fa9efb506bb393d8e889aa208b37cee81430e036b61d5dafb474e1",
+  "catalog_probe": {
+    "run_id": "f5c72d266f234714ae1788d3ba49e34a",
+    "counts": {
+      "constructed": 32109,
+      "script_unavailable": 7
+    },
+    "report_sha256": "e8c74e3441e86d9e4abfd7c19df730f36a3d4ed41f419d616575296d5dcce63f"
+  },
+  "activation": {
+    "home": "data/engines/forge-3e6c036-blocking-prevention-reviewed",
+    "lock_sha256": "d2038e05b2f4ce11fe17ae2aaf93b855d8bfce976e483a2b5809d6c7a137355c",
+    "engine_check_sha256": "18b3f4c67f97174306703182d0e3dff0011aee7e540bbff34cafca388f804235",
+    "previous_runtime_retained": "data/engines/forge-3e6c036-keyword-expiry-reviewed"
+  },
+  "limits": [
+    "Sixteen native cases use partial four-player registrations and controlled boards, with stack copying enabled and disabled.",
+    "Eight packaged witnesses pay real spell/activation costs and run bounded native phase hooks without response priority.",
+    "Native fixtures check canonical copied attacker identity; packaged receipts observe the mapped game, target IDs and independent source/copy deadlines.",
+    "Avalanche Tusker uses a controlled attacker declaration after a paid cast and native turn cycle. The declared-attacker trigger, blocker choice, combat damage and combat-end cleanup run natively; attacker admission is not certified.",
+    "Wall of Stone survives combat so the selected combat-end requirement must expire independently of creature death.",
+    "Shield checks use actual damage and life outcomes, including a partially consumed quota and two stacked shields. They do not certify all shield ordering, radiance, divided amounts, prevention subabilities or already-consumed effect lifecycle.",
+    "Concurrent blocking timestamps, multi-attacker BlockAllDefined paths, blink, player loss, hidden views and arbitrary AI policy remain unverified.",
+    "Unmapped command diagnostics are asserted only in these fixtures, not yet aggregated into normal simulation reports. Other callbacks and general continuations still need separate verification.",
+    "Catalog construction and retained versioned rule references do not establish full or current rules correctness."
+  ]
+}

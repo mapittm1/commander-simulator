@@ -31,7 +31,9 @@ collections. A nineteenth maps temporary-copy expiration and token-keyword
 cleanup payloads.
 A twentieth maps card and player protection expiration to their own copied worlds.
 A twenty-first maps keyword restoration and temporary power-exchange expiration.
-All twenty-one patches are pinned. No remote branch is used at build time.
+A twenty-second preserves timestamped blocking requirements and maps their
+expiration plus finite prevention-shield cleanup.
+All twenty-two patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -47,9 +49,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-334 native sticker, chosen-color, companion, supplementary-copy, history,
+350 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
-temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration and power-exchange tests.
+temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
+forced-blocking and prevention-shield tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -79,15 +82,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty regression source files and exactly three card-script
+The recipe pins twenty-one regression source files and exactly three card-script
 overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 882 gameplay and 256
+686 files verified against immutable source. The broader 898 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 334 focused tests are included in the 882.
+in `native_test_evidence.json`; the 350 focused tests are included in the 898.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -245,3 +248,6 @@ packaged witnesses also check original-game independence and intrinsic protectio
 Keyword-restoration and Serene Master combat evidence is retained in
 `keyword_expiration_evidence.json`. Sixteen native cases cover both stack-copy
 modes; eight packaged witnesses record independent source/copy deadlines.
+
+Forced-blocking requirements and finite prevention-shield evidence is retained in
+`blocking_prevention_evidence.json`, with sixteen native and eight packaged cases.

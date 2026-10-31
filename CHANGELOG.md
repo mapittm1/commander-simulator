@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fixed lost forced-block requirements and lingering finite prevention shields in
+  copied games. The snapshot retains requirement timestamps and mapped attackers;
+  cleanup maps blockers, effect cards, target views and player-stat events.
+  Sixteen native and eight packaged witnesses check paid actions, canonical
+  references, expiry, partial/stacked quotas and actual damage outcomes.
+
 - Fixed copied-world cleanup of temporary keyword removal and combat power
   exchange. Sixteen native regressions first reproduced the failures; eight
   packaged witnesses now check paid costs, independent deadlines, protection

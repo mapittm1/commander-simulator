@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **882 native tests in 76 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 334 focused
+The reviewed patched source also passes **898 native tests in 77 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 350 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1014,3 +1014,48 @@ combat choice. Native phase advancement omits response priority. This work does
 not certify every removed keyword, flashback path, overlapping layer, lost-player
 or blink interaction, permanent/perpetual power exchange, or AI decision. Other
 callbacks and arbitrary continuations still require separate verification.
+
+
+## Forced blocking and prevention shields
+
+Game snapshots now retain each card's timestamped forced-block map and map the
+required attacker references into the new world. The collection is copied without
+replaying the ability that established the requirement. Explicit cleanup payloads
+map the affected blockers for duration-bound requirements, and map both the effect
+card and affected card/player for finite prevention-shield expiry. Cleanup updates
+the copied world's prevention view and player-stat event targets.
+
+Sixteen native cases first reproduced eight missing copied block requirements and
+eight lingering copied shields, covering both stack-copy modes. The candidate
+passes all sixteen. Eight packaged witnesses repeat the paid paths:
+
+- Hunt Down and Monstrous Step retain both chosen targets and the block requirement.
+- Auriok Siege Sled pays its cast and activation costs against an artifact creature.
+- A paid Avalanche Tusker uses a controlled attacker declaration and the native
+  declared-attacker trigger. Wall of Stone remains alive through combat, so the
+  requirement must actually expire at combat end rather than disappear on death.
+- Mending Hands shields a player or creature. Other cases consume three of its
+  four points before copying, or stack two shields for eight total points.
+  After the copied turn ends, a paid Lightning Bolt deals three damage. The
+  original world's shield still prevents damage until its own deadline.
+
+The native fixtures assert canonical copied attacker identity, and both native
+and packaged checks observe independent source/copy requirements or shield quotas.
+The shield checks use actual damage and life totals, not shield descriptions.
+The frozen local Oracle identities, valid failing baseline, compiled source hashes,
+receipts and logs are retained in
+[`blocking_prevention_evidence.json`](../engine/blocking_prevention_evidence.json).
+
+Verification: **350 focused native tests**, **898 broader gameplay tests** including
+those 350, **256 serialization tests**, **28 live integrations / 450 subtests**, and
+**399 offline tests / 508 subtests**, with all Python quality tools. The frozen
+catalog construction probe still passes **32,109 identities**, with the same seven
+non-starting meld records excluded. Construction is not full gameplay evidence.
+
+The fixtures use partial four-player registrations and controlled boards. Attacker
+declaration is installed directly; the native attack trigger, blocker selection,
+damage and deadlines run afterward. Phase advancement omits response priority.
+Multiple concurrent forced-block timestamps, multi-attacker BlockAllDefined paths,
+prevention subabilities, radiance/divided shields, already-consumed effect lifecycle,
+blink, player loss, hidden views and arbitrary AI policies remain unverified.
+Other callbacks and general continuations still need separate verification.

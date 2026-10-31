@@ -1,0 +1,129 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8522,6 +8522,16 @@
+         }
+     }
+ 
++    /** Preserve each requirement's cleanup timestamp and canonical copied attackers. */
++    public void copySnapshotBlockingFrom(Card original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        mustBlockCards.clear();
++        for (Map.Entry<Long, CardCollection> entry : original.mustBlockCards.entrySet()) {
++            mustBlockCards.put(entry.getKey(), context.cards(entry.getValue()));
++        }
++        view.updateMustBlockCards(this);
++    }
++
+     public void copySnapshotCommandsFrom(Card original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
+         context.copyCommands(original.untapCommandList, untapCommandList, "card.untap");
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -265,6 +265,7 @@
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+             entry.getValue().copySnapshotNumberFrom(entry.getKey());
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotCommandsFrom(entry.getKey(), context);
+         }
+         newGame.getUntap().copySnapshotCommandsFrom(origGame.getUntap(), context);
+--- a/forge-game/src/main/java/forge/game/ability/effects/MustBlockEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/MustBlockEffect.java
+@@ -81,16 +81,7 @@
+         }
+ 
+         if (sa.hasParam("Duration")) {
+-            final GameCommand removeBlockingRequirements = new GameCommand() {
+-                private static final long serialVersionUID = -5861529814760561373L;
+-
+-                @Override
+-                public void run() {
+-                    for (final Card c : tgtCards) {
+-                        c.removeMustBlockCards(ts);
+-                    }
+-                }
+-            };
++            final GameCommand removeBlockingRequirements = new BlockingExpiration(tgtCards, ts);
+             addUntilCommand(sa, removeBlockingRequirements);
+         }
+     }
+@@ -120,4 +111,24 @@
+         return sb.toString();
+     }
+ 
++
++    private static final class BlockingExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final forge.game.card.CardCollection cards;
++        private final long timestamp;
++        private BlockingExpiration(Iterable<Card> cards, long timestamp) {
++            this.cards = new forge.game.card.CardCollection(cards);
++            this.timestamp = timestamp;
++        }
++        @Override
++        public void run() {
++            for (Card card : cards) card.removeMustBlockCards(timestamp);
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new BlockingExpiration(context.cards(cards), timestamp);
++        }
++    }
++
+ }
+--- a/forge-game/src/main/java/forge/game/ability/effects/DamagePreventEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DamagePreventEffect.java
+@@ -4,7 +4,6 @@
+ 
+ import com.google.common.collect.Lists;
+ 
+-import forge.GameCommand;
+ import forge.game.Game;
+ import forge.game.GameEntity;
+ import forge.game.ability.AbilityFactory;
+@@ -171,17 +170,31 @@
+             game.fireEvent(new GameEventPlayerStatsChanged((Player) o));
+         }
+ 
+-        game.getEndOfTurn().addUntil(new GameCommand() {
+-            private static final long serialVersionUID = 1L;
+-
+-            @Override
+-            public void run() {
+-                game.getAction().exileEffect(eff);
+-                o.getView().updatePreventNextDamage(o);
+-                if (o instanceof Player) {
+-                    game.fireEvent(new GameEventPlayerStatsChanged((Player) o));
+-                }
+-            }
+-        });
+-    }
++        game.getEndOfTurn().addUntil(new PreventionExpiration(eff, o));
++    }
++
++    private static final class PreventionExpiration implements forge.game.SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card effect;
++        private final GameEntity target;
++        private PreventionExpiration(Card effect, GameEntity target) {
++            this.effect = effect;
++            this.target = target;
++        }
++        @Override
++        public void run() {
++            Game game = effect.getGame();
++            game.getAction().exileEffect(effect);
++            target.getView().updatePreventNextDamage(target);
++            if (target instanceof Player player) {
++                game.fireEvent(new GameEventPlayerStatsChanged(player));
++            }
++        }
++        @Override
++        public forge.game.SnapshotCommand copyForSnapshot(
++                forge.game.spellability.SpellAbilitySnapshot context) {
++            return new PreventionExpiration(context.map(effect), (GameEntity) context.map(target));
++        }
++    }
++
+ }
