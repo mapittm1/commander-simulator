@@ -19,6 +19,14 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Primary-control planning now evaluates paid native future windows for Worst Fears,
+Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
+The reviewed build passes 613 focused native regressions, 1,161 broader gameplay
+checks, 256 serialization checks and 37 live tests / 593 subtests, plus the Python
+quality gate. See [primary-control coverage](docs/CARD_COVERAGE.md#primary-control-future-planning)
+for exact scope and limits. Forecasts sample at most two legal actions per future
+main phase. Full-card rules and strategy coverage remain in progress.
+
 Usage-history work and its remaining validation limits are described in
 [usage histories and trait identities](docs/CARD_COVERAGE.md#usage-histories-and-trait-identities).
 See also [scheduled effects and temporal state](docs/CARD_COVERAGE.md#scheduled-effects-and-temporal-state)
@@ -59,7 +67,7 @@ real combat outcomes.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 576
+Seven additional records are non-starting meld results. The build passes 613
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
@@ -69,15 +77,15 @@ deadlines, keyword restoration, combat power exchange, forced-block requirements
 prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
 haste, host-bound exile returns, temporary effects, regeneration history, Detain,
 raw control age, player-control snapshots, decision/response planning and
-controlled attack outcomes.
-Broader native runs pass 1,124 AI/gameplay tests (including those 576) and 256
+controlled attack outcomes, primary-control forecasts and resolving-parent safety.
+Broader native runs pass 1,161 AI/gameplay tests (including those 613) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
-The heuristic AI still classifies three primary ControlPlayer actions as unsupported:
-Worst Fears, Mindslaver's activation and Secret of Bloodbending. Full-simulation
-candidate enumeration already admits those legal actions; admission does not
-prove valuable selection. Controlled players now plan for their decision
-controller's benefit while paying with their own resources. Verified outcomes
+Five primary player-control sources now have paid native choice/outcome witnesses
+in heuristic, hybrid and full modes. Source and packaged fixtures each change
+from 23 failed criteria to 23 passes. Control timing, costs, source transitions,
+original-state independence and survival are observed. Controlled players plan
+for their decision controller's benefit while paying with their own resources. Verified outcomes
 include paid Shock, Counterspell, Stifle and selected controlled combat. Native
 mandatory attacks remain required even when harmful to the controller; broader
 combat and mandatory-choice policy still need work.

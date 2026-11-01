@@ -1,0 +1,622 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -190,6 +190,12 @@
+         if (cost.payCostFromSource()) {
+             return PaymentDecision.card(source);
+         }
++        if (type.equals("OriginalHost")) {
++            // A granted ability may exile its equipment source rather than its creature host.
++            // Preserve native ownership, zone, and exile-prohibition checks.
++            return cost.getAbilityAmount(ability) == 1 && cost.canPay(ability, player, isEffect())
++                    ? PaymentDecision.card(ability.getOriginalHost()) : null;
++        }
+ 
+         if (type.equals("All")) {
+             return PaymentDecision.card(player.getCardsIn(cost.getFrom()));
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -69,7 +69,7 @@
+             .put(ApiType.Connive, ConniveAi.class)
+             .put(ApiType.CopyPermanent, CopyPermanentAi.class)
+             .put(ApiType.CopySpellAbility, CopySpellAbilityAi.class)
+-            .put(ApiType.ControlPlayer, CannotPlayAi.class)
++            .put(ApiType.ControlPlayer, ControlPlayerAi.class)
+             .put(ApiType.ControlSpell, CannotPlayAi.class)
+             .put(ApiType.Counter, CounterAi.class)
+             .put(ApiType.DamageAll, DamageAllAi.class)
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ControlPlayerAi.java b/forge-ai/src/main/java/forge/ai/ability/ControlPlayerAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/ControlPlayerAi.java
+@@ -0,0 +1,60 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PlayerControlPlanner;
++import forge.game.ability.AbilityUtils;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import java.util.ArrayList;
++import java.util.Comparator;
++import java.util.List;
++
++/** Native-cost future evaluation for primary control actions; mandatory triggers retain native fallback. */
++public final class ControlPlayerAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        if (PlayerControlPlanner.isEvaluating() || sa.isTrigger()) return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
++        Player selected = null;
++        int best = Integer.MIN_VALUE;
++        boolean completed = false;
++        List<Player> candidates = new ArrayList<>(ai.getGame().getPlayers());
++        candidates.sort(Comparator.comparingInt((Player player) -> player == ai ? -1 :
++                player.getCreaturesInPlay().stream().mapToInt(card -> Math.max(0, card.getNetPower())).sum()).reversed());
++        for (Player candidate : candidates) {
++            if (!sa.canTarget(candidate)) continue;
++            SpellAbility trial = sa.copy();
++            trial.resetTargets();
++            trial.getTargets().add(candidate);
++            PlayerControlPlanner.Assessment assessment = PlayerControlPlanner.assess(ai, trial);
++            completed |= assessment != null;
++            if (assessment != null && assessment.useful() && assessment.utility() > best) {
++                selected = candidate;
++                best = assessment.utility();
++                if (assessment.maximal()) break;
++            }
++        }
++        sa.resetTargets();
++        if (selected == null) return new AiAbilityDecision(0, completed ? AiPlayDecision.DoesntImpactGame : AiPlayDecision.AnotherTime);
++        sa.getTargets().add(selected);
++        return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player ai, SpellAbility sa) {
++        if (!sa.getConditions().areMet(sa)) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        if (sa.usesTargeting()) {
++            sa.resetTargets();
++            for (Player opponent : ai.getOpponents()) {
++                if (sa.canTarget(opponent)) {
++                    sa.getTargets().add(opponent);
++                    return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++                }
++            }
++            return new AiAbilityDecision(0, AiPlayDecision.TargetingFailed);
++        }
++        return new AiAbilityDecision(AbilityUtils.getDefinedPlayers(sa.getHostCard(), sa.getParam("Defined"), sa).isEmpty() ? 0 : 100,
++                AiPlayDecision.WillPlay);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+@@ -20,6 +20,9 @@
+     private GameCopier copier;
+     private Game simGame;
+     private Player aiPlayer;
++    private Game sourceGame;
++    private Player sourceActor;
++    private SpellAbility lastPlayedAbility;
+     // Captured before advancing or resolving; release must not switch the objective mid-plan.
+     private Player evaluationPlayer;
+     private GameStateEvaluator eval;
+@@ -43,6 +46,8 @@
+ 
+     public GameSimulator(SimulationController controller, Game origGame, Player origAiPlayer, PhaseType advanceToPhase) {
+         this.controller = controller;
++        sourceGame = origGame;
++        sourceActor = origAiPlayer;
+         Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
+         // During resolution the parent is still registered on the stack. An
+         // incremental free-cast check must not replay that parent.
+@@ -82,6 +87,8 @@
+      */
+     public GameSimulator(Game origGame, Player origAiPlayer) {
+         this.controller = new SimulationController(new Score(0), 0);
++        sourceGame = origGame;
++        sourceActor = origAiPlayer;
+         Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
+         copier = new GameCopier(origGame);
+         simGame = copier.makeCopy(null, origAiPlayer);
+@@ -95,6 +102,8 @@
+     /** As the lightweight constructor, optionally copying the spells on the stack (for decisions made in response to one). */
+     public GameSimulator(Game origGame, Player origAiPlayer, boolean copyStack) {
+         this.controller = new SimulationController(new Score(0), 0);
++        sourceGame = origGame;
++        sourceActor = origAiPlayer;
+         Player originalBeneficiary = DecisionPerspective.beneficiary(origAiPlayer);
+         copier = new GameCopier(origGame).withStack(copyStack);
+         simGame = copier.makeCopy(null, origAiPlayer);
+@@ -230,6 +239,7 @@
+         return simulateSpellAbility(origSa, this.eval, resolve);
+     }
+     public Score simulateSpellAbility(SpellAbility origSa, GameStateEvaluator eval, boolean resolve) {
++        lastPlayedAbility = null;
+         SpellAbility sa;
+         if (origSa.isLandAbility()) {
+             Card hostCard = (Card) copier.find(origSa.getHostCard());
+@@ -258,6 +268,9 @@
+                 } else {
+                     SpellAbilityChoiceCopier.copyTargets(origSa, playingSa, copier::find);
+                 }
++                // Native stack resolution clears live target choices after handoff.
++                // Keep the selected variant before costs/zone changes can replace it.
++                lastPlayedAbility = playingSa.copy();
+                 if (debugPrint && !playingSa.getAllTargetChoices().isEmpty()) {
+                     debugPrint("Targets: ");
+                     for (TargetChoices target : playingSa.getAllTargetChoices()) {
+@@ -293,8 +306,14 @@
+             debugPrint = true;
+             printDiff(origLines, simLines);
+         }
++        PlayerControlPlanner.Assessment futureControl = resolve ? PlayerControlPlanner.assessAfter(
++                sourceGame, sourceActor, simGame, aiPlayer, evaluationPlayer,
++                lastPlayedAbility == null ? sa : lastPlayedAbility) : null;
++        if (futureControl != null) {
++            score = futureControl.relativeTo(origScore == null ? score : origScore);
++        }
+         controller.possiblyCacheResult(score, origSa);
+-        if (controller.shouldRecurse() && !simGame.isGameOver() && aiPlayer.isInGame()
++        if (futureControl == null && controller.shouldRecurse() && !simGame.isGameOver() && aiPlayer.isInGame()
+                 && DecisionPerspective.beneficiary(aiPlayer) == evaluationPlayer) {
+             controller.push(sa, score, this);
+             SpellAbilityPicker sim = new SpellAbilityPicker(aiPlayer);
+@@ -324,6 +343,7 @@
+      *                     put there should resolve before it gets priority again (see {@link #resolveOwnTop})
+      */
+     public boolean applySpellAbility(SpellAbility origSa, boolean resolveStack) {
++        lastPlayedAbility = null;
+         if (origSa.isLandAbility()) {
+             if (!origSa.canPlay()) {
+                 return false;
+@@ -341,8 +361,10 @@
+             sa.setActivatingPlayer(aiPlayer);
+ 
+             simGame.copyLastState();
+-            boolean success = ComputerUtil.handlePlayingSpellAbility(aiPlayer, sa,
+-                    playingSa -> SpellAbilityChoiceCopier.copyTargets(origSa, playingSa, copier::find));
++            boolean success = ComputerUtil.handlePlayingSpellAbility(aiPlayer, sa, playingSa -> {
++                SpellAbilityChoiceCopier.copyTargets(origSa, playingSa, copier::find);
++                lastPlayedAbility = playingSa.copy();
++            });
+             if (!success) {
+                 if (Boolean.getBoolean("flatmc.trace")) {
+                     System.err.println("[sim] applySpellAbility: could not pay/play " + sa + " cost=" + sa.getPayCosts());
+@@ -376,6 +398,8 @@
+         }, sim);
+     }
+ 
++    SpellAbility getLastPlayedAbility() { return lastPlayedAbility; }
++
+     /** The copy of the AI player (given to the constructor) living in the simulated game. */
+     public Player getSimulatedAiPlayer() {
+         return aiPlayer;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+@@ -52,7 +52,11 @@
+         GameCopier copier = new GameCopier(evalGame);
+         Game gameCopy = copier.makeCopy(null, aiPlayer);
+ 
+-        gameCopy.getPhaseHandler().devAdvanceToPhase(PhaseType.COMBAT_DAMAGE, () -> GameSimulator.resolveStack(gameCopy, aiPlayer.getWeakestOpponent()));
++        Player copiedAi = copier.find(aiPlayer);
++        gameCopy.getPhaseHandler().devAdvanceToPhase(PhaseType.COMBAT_DAMAGE, () -> {
++            Player opponent = copiedAi.getWeakestOpponent();
++            GameSimulator.resolveStack(gameCopy, opponent == null ? copiedAi : opponent);
++        });
+         CombatSimResult result = new CombatSimResult();
+         result.copier = copier;
+         return result;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java b/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
+@@ -148,7 +148,9 @@
+     private List<SpellAbility> getTargetingSAs(SpellAbility sa, List<AbilitySub> plannedSubs) {
+         List<SpellAbility> result = new ArrayList<>();
+         for (SpellAbility saOrSubSa = sa; saOrSubSa != null; saOrSubSa = saOrSubSa.getSubAbility()) {
+-            if (saOrSubSa.usesTargeting() && conditionsAreMet(saOrSubSa)) {
++            // A root spell's cast targets remain required even when this branch
++            // will not resolve (e.g. the alternate paid Secret of Bloodbending branch).
++            if (saOrSubSa.usesTargeting() && (saOrSubSa == sa || conditionsAreMet(saOrSubSa))) {
+                 result.add(saOrSubSa);
+             }
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java b/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
+@@ -16,6 +16,12 @@
+         if (sa == null || CHECKING.get()
+                 || (!player.getGame().getStack().isEmpty() && !player.getGame().getStack().isResolving())) {
+             return true;
++        }
++
++        if (sa.getApi() == forge.game.ability.ApiType.ControlPlayer && !PlayerControlPlanner.isEvaluating()
++                && !player.getGame().getStack().isResolving()) {
++            PlayerControlPlanner.Assessment assessment = PlayerControlPlanner.assess(player, sa);
++            return assessment == null || assessment.acceptable();
+         }
+ 
+         CHECKING.set(true);
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PlayerControlPlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PlayerControlPlanner.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/PlayerControlPlanner.java
+@@ -0,0 +1,186 @@
++package forge.ai.simulation;
++
++import com.google.common.collect.Iterables;
++import forge.ai.ComputerUtil;
++import forge.ai.ComputerUtilCost;
++import forge.ai.PlayerControllerAi;
++import forge.game.Game;
++import forge.game.ability.ApiType;
++import forge.game.phase.PhaseType;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++import java.util.Random;
++
++/** Paired native future windows for paid primary player-control actions. */
++public final class PlayerControlPlanner {
++    private static final int MAX_PLAYS_PER_MAIN = 2;
++    private static final int MAX_UTILITY = 100000;
++    private static final ThreadLocal<Boolean> EVALUATING = ThreadLocal.withInitial(() -> false);
++
++    private PlayerControlPlanner() { }
++
++    public static boolean isEvaluating() { return EVALUATING.get(); }
++
++    /** Native outcome flags accompany discounted terminal scores; MIN is a failed simulation. */
++    public record Window(GameStateEvaluator.Score score, boolean lost, boolean won) { }
++
++    public record Assessment(Window controlled, Window baseline) {
++        public int utility() {
++            if (controlled.lost()) return -MAX_UTILITY;
++            if (controlled.won() && !baseline.won()) return MAX_UTILITY;
++            if (baseline.lost()) return MAX_UTILITY;
++            return (int) Math.max(-MAX_UTILITY, Math.min(MAX_UTILITY,
++                    (long) controlled.score().value - baseline.score().value));
++        }
++
++        public boolean useful() { return !controlled.lost() && utility() >= 10; }
++        public boolean acceptable() { return !controlled.lost() && utility() >= 0; }
++        public boolean maximal() { return utility() == MAX_UTILITY; }
++
++        public GameStateEvaluator.Score relativeTo(GameStateEvaluator.Score current) {
++            if (controlled.lost() || controlled.won()) return controlled.score();
++            int value = (int) Math.max((long) Integer.MIN_VALUE + 1,
++                    Math.min((long) Integer.MAX_VALUE - 1, (long) current.value + utility()));
++            return new GameStateEvaluator.Score(value);
++        }
++    }
++
++    public static Assessment assess(Player actor, SpellAbility action) {
++        // The remaining continuation of a resolving parent is not a future window.
++        if (actor.getGame().getStack().isResolving()) return null;
++        return MyRandom.withRandom(new Random(0L), () -> assessScoped(actor, action));
++    }
++
++    private static Assessment assessScoped(Player actor, SpellAbility action) {
++        if (isEvaluating() || action.getApi() != ApiType.ControlPlayer || action.isTrigger()
++                || action instanceof AbilitySub || Iterables.size(action.getTargets().getTargetPlayers()) != 1
++                || !action.canPlay() || !ComputerUtilCost.canPayCost(action, actor, false)) return null;
++        final Player beneficiary = DecisionPerspective.beneficiary(actor);
++        final Random savedRandom = MyRandom.getRandom();
++        EVALUATING.set(true);
++        try {
++            MyRandom.setRandom(new Random(0L));
++            GameSimulator paid = new GameSimulator(actor.getGame(), actor, true);
++            if (!paid.applySpellAbility(action)) return null;
++            MyRandom.setRandom(new Random(0L));
++            SpellAbility played = paid.getLastPlayedAbility();
++            boolean combatWindow = combatOnly(played == null ? action : played);
++            Player target = paid.getGameCopier().find(Iterables.getOnlyElement(action.getTargets().getTargetPlayers()));
++            Player mappedBeneficiary = paid.getGameCopier().find(beneficiary);
++            Window controlled = finishWindow(paid.getSimulatedGameState(), target, mappedBeneficiary, combatWindow);
++            MyRandom.setRandom(new Random(0L));
++            GameSimulator baseline = new GameSimulator(actor.getGame(), actor, true);
++            Window ordinary = finishWindow(baseline.getSimulatedGameState(),
++                    baseline.getGameCopier().find(Iterables.getOnlyElement(action.getTargets().getTargetPlayers())),
++                    baseline.getGameCopier().find(beneficiary), combatWindow);
++            return controlled == null || ordinary == null ? null :
++                    new Assessment(controlled, ordinary);
++        } finally {
++            EVALUATING.remove();
++            MyRandom.setRandom(savedRandom);
++        }
++    }
++
++    /** Use already paid, interceptor-selected targets without mutating the action simulator. */
++    public static Assessment assessAfter(Game original, Player originalActor, Game paidGame,
++            Player paidActor, Player paidBeneficiary, SpellAbility action) {
++        if (action.getApi() != ApiType.ControlPlayer || isEvaluating()
++                || original.getStack().isResolving() || paidGame.getStack().isResolving()) return null;
++        return MyRandom.withRandom(new Random(0L), () -> assessAfterScoped(
++                original, originalActor, paidGame, paidActor, paidBeneficiary, action));
++    }
++
++    private static Assessment assessAfterScoped(Game original, Player originalActor, Game paidGame,
++            Player paidActor, Player paidBeneficiary, SpellAbility action) {
++        if (isEvaluating() || action.getApi() != ApiType.ControlPlayer || action.isTrigger()
++                || action instanceof AbilitySub || Iterables.size(action.getTargets().getTargetPlayers()) != 1) return null;
++        int targetSeat = paidGame.getRegisteredPlayers().indexOf(Iterables.getOnlyElement(action.getTargets().getTargetPlayers()));
++        int beneficiarySeat = paidGame.getRegisteredPlayers().indexOf(paidBeneficiary);
++        if (targetSeat < 0 || beneficiarySeat < 0) throw new IllegalStateException("Future control participant is not registered");
++        final Random savedRandom = MyRandom.getRandom();
++        EVALUATING.set(true);
++        try {
++            MyRandom.setRandom(new Random(0L));
++            GameSimulator paid = new GameSimulator(paidGame, paidActor, true);
++            Game controlledGame = paid.getSimulatedGameState();
++            Window controlled = finishWindow(controlledGame, controlledGame.getRegisteredPlayers().get(targetSeat),
++                    controlledGame.getRegisteredPlayers().get(beneficiarySeat), combatOnly(action));
++            MyRandom.setRandom(new Random(0L));
++            GameSimulator baseline = new GameSimulator(original, originalActor, true);
++            Game baselineGame = baseline.getSimulatedGameState();
++            Window ordinary = finishWindow(baselineGame, baselineGame.getRegisteredPlayers().get(targetSeat),
++                    baselineGame.getRegisteredPlayers().get(beneficiarySeat), combatOnly(action));
++            return controlled == null || ordinary == null ? null :
++                    new Assessment(controlled, ordinary);
++        } finally {
++            EVALUATING.remove();
++            MyRandom.setRandom(savedRandom);
++        }
++    }
++
++    private static boolean combatOnly(SpellAbility action) {
++        return action.hasParam("Combat") && action.getConditions().areMet(action);
++    }
++
++    private static void resolve(Game game, Player actor) {
++        if (game.isGameOver()) return;
++        Player opponent = actor.getWeakestOpponent();
++        GameSimulator.resolveStack(game, opponent == null ? actor : opponent);
++    }
++
++    private static Window outcome(Game game, Player beneficiary) {
++        return new Window(new GameStateEvaluator().getScoreForGameState(game, beneficiary),
++                beneficiary.hasLost(), beneficiary.hasWon());
++    }
++
++    private static Window finishWindow(Game game, Player target, Player beneficiary, boolean combat) {
++        final var phases = game.getPhaseHandler();
++        if (game.isGameOver() || beneficiary.hasLost()) return outcome(game, beneficiary);
++        boolean sameCombat = combat && phases.getPlayerTurn() == target && phases.getPhase().isBefore(PhaseType.COMBAT_BEGIN);
++        if (!sameCombat) {
++            int limit = game.getRegisteredPlayers().size() * 2 + 8;
++            do {
++                AITimeoutTracker.check();
++                if (--limit < 0 || phases.getPlayerTurn().isPhasesReversed()) return null;
++                if (!phases.devAdvanceThroughTurnEnd(PhaseType.MAIN1, () -> resolve(game, target))) {
++                    return game.isGameOver() || beneficiary.hasLost() ? outcome(game, beneficiary) : null;
++                }
++                if (beneficiary.hasLost()) return outcome(game, beneficiary);
++                if (!target.isInGame()) return null;
++            } while (phases.getPlayerTurn() != target);
++        }
++        if (!phases.is(PhaseType.MAIN1) || target.isPhasesReversed()) return null;
++        playMain(game, target);
++        if (!game.isGameOver() && target.isInGame()) {
++            if (!phases.devAdvanceToPhase(PhaseType.MAIN2, () -> resolve(game, target))) {
++                return game.isGameOver() || beneficiary.hasLost() ? outcome(game, beneficiary) : null;
++            }
++            playMain(game, target);
++        }
++        resolve(game, target);
++        if (!game.isGameOver() && !beneficiary.hasLost() && !phases.is(PhaseType.MAIN2)) return null;
++        return outcome(game, beneficiary);
++    }
++
++    private static void playMain(Game game, Player player) {
++        for (int play = 0; play < MAX_PLAYS_PER_MAIN && player.isInGame() && !game.isGameOver(); play++) {
++            AITimeoutTracker.check();
++            if (!(player.getController() instanceof PlayerControllerAi controller)) return;
++            // A future-window sample uses one-ply legal action search, not another
++            // recursively expanding full planning session for every sample.
++            SimulationController horizon = new SimulationController(GameSimulator.scoreForDecision(game, player), 0);
++            SpellAbility choice = controller.getAi().getSimulationPicker().chooseSpellAbilityToPlay(horizon);
++            if (choice == null) return;
++            if (choice.isLandAbility()) {
++                if (!choice.canPlay()) return;
++                player.playLand(choice.getHostCard(), choice);
++            } else if (!ComputerUtil.handlePlayingSpellAbility(player, choice, null)) {
++                return;
++            }
++            resolve(game, player);
++        }
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+@@ -105,7 +105,20 @@
+         if (!currentStack.isEmpty()) {
+             throw new RuntimeException("getBestPlan() expects currentStack to be empty!");
+         }
+-
++        return completedPlan();
++    }
++
++    /** A deadline may leave an unevaluated branch on the stack. Only doneEvaluating
++     * publishes bestSequence, so the last completed improving sequence remains usable.
++     */
++    public Plan getBestCompletedPlan() {
++        Score initial = scoreStack.get(0);
++        if (bestSequence == null || bestScore.value <= initial.value
++                || bestScore.availableValue <= initial.availableValue) return null;
++        return completedPlan();
++    }
++
++    private Plan completedPlan() {
+         ArrayList<Plan.Decision> sequence = new ArrayList<>();
+         Plan.Decision current = bestSequence;
+         while (current != null) {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+@@ -14,6 +14,7 @@
+ import forge.game.spellability.SpellAbilityCondition;
+ import forge.game.zone.ZoneType;
+ import forge.util.MyRandom;
++import forge.util.AITimeoutTracker;
+ import forge.util.TextUtil;
+ 
+ import java.util.ArrayList;
+@@ -113,11 +114,14 @@
+ 
+     private Plan formulatePlanWithPhase(Score origGameScore, List<SpellAbility> candidateSAs, PhaseType phase) {
+         SimulationController controller = new SimulationController(origGameScore);
+-        SpellAbility sa = chooseSpellAbilityToPlayImpl(controller, candidateSAs, origGameScore, phase);
+-        if (sa != null) {
+-            return controller.getBestPlan();
+-        }
+-        return null;
++        try {
++            SpellAbility sa = chooseSpellAbilityToPlayImpl(controller, candidateSAs, origGameScore, phase);
++            return sa == null ? null : controller.getBestPlan();
++        } catch (AITimeoutTracker.Expired expired) {
++            // Retain a fully scored branch; getPlannedSpellAbility still revalidates
++            // its original score, ability identity, modes, and legal targets.
++            return controller.getBestCompletedPlan();
++        }
+     }
+ 
+     private void printPlan(Plan plan, String intro) {
+@@ -354,25 +358,25 @@
+         Random origRandom = MyRandom.getRandom();
+         long randomSeedToUse = origRandom.nextLong();
+ 
+-        Score bestScore = new Score(Integer.MIN_VALUE);
+-        final SpellAbilityChoicesIterator choicesIterator = new SpellAbilityChoicesIterator(controller);
+-        Score lastScore;
+-        do {
+-            // TODO: MyRandom should be an instance on the game object, so that we could do
+-            // simulations in parallel without messing up global state.
+-            MyRandom.setRandom(new Random(randomSeedToUse));
+-            GameSimulator simulator = new GameSimulator(controller, game, player, phase);
+-            simulator.setInterceptor(choicesIterator);
+-            // I feel like something here is making a wrong assumption about what the target is
+-            lastScore = simulator.simulateSpellAbility(sa);
+-            numSimulations++;
+-            if (lastScore.value > bestScore.value) {
+-                bestScore = lastScore;
+-            }
+-        } while (choicesIterator.advance(lastScore));
+-        controller.doneEvaluating(bestScore);
+-        MyRandom.setRandom(origRandom);
+-        return bestScore;
++        return MyRandom.withRandom(new Random(randomSeedToUse), () -> {
++            Score bestScore = new Score(Integer.MIN_VALUE);
++            final SpellAbilityChoicesIterator choicesIterator = new SpellAbilityChoicesIterator(controller);
++            Score lastScore;
++            do {
++                // Each branch replays its seed inside this thread-local preview scope.
++                MyRandom.setRandom(new Random(randomSeedToUse));
++                GameSimulator simulator = new GameSimulator(controller, game, player, phase);
++                simulator.setInterceptor(choicesIterator);
++                // I feel like something here is making a wrong assumption about what the target is
++                lastScore = simulator.simulateSpellAbility(sa);
++                numSimulations++;
++                if (lastScore.value > bestScore.value) {
++                    bestScore = lastScore;
++                }
++            } while (choicesIterator.advance(lastScore));
++            controller.doneEvaluating(bestScore);
++            return bestScore;
++        });
+     }
+ 
+     public List<AbilitySub> chooseModeForAbility(SpellAbility sa, List<AbilitySub> choices, int min, int num, boolean allowRepeat) {
+diff --git a/forge-core/src/main/java/forge/util/MyRandom.java b/forge-core/src/main/java/forge/util/MyRandom.java
+--- a/forge-core/src/main/java/forge/util/MyRandom.java
++++ b/forge-core/src/main/java/forge/util/MyRandom.java
+@@ -19,6 +19,8 @@
+ 
+ import java.security.SecureRandom;
+ import java.util.Random;
++import java.util.Objects;
++import java.util.function.Supplier;
+ import java.util.concurrent.atomic.AtomicLong;
+ 
+ /**
+@@ -33,6 +35,7 @@
+ public class MyRandom {
+     /** Constant <code>random</code>. */
+     private static final AtomicLong calls = new AtomicLong();
++    private static final ThreadLocal<Random> scopedRandom = new ThreadLocal<>();
+     private static Random random = new CountingRandom(new SecureRandom());
+ 
+     /** Every Random method (nextInt, nextBoolean, shuffle, ...) funnels through next(bits). */
+@@ -60,7 +63,8 @@
+      * @return the random
+      */
+     public static Random getRandom() {
+-        return MyRandom.random;
++        Random scoped = scopedRandom.get();
++        return scoped == null ? MyRandom.random : scoped;
+     }
+ 
+     /**
+@@ -68,14 +72,36 @@
+      * @param random the random
+      */
+     public static void setRandom(Random random) {
+-        MyRandom.random = random instanceof CountingRandom ? random : new CountingRandom(random);
++        Objects.requireNonNull(random, "random");
++        if (scopedRandom.get() != null) {
++            scopedRandom.set(random);
++        } else {
++            MyRandom.random = random instanceof CountingRandom ? random : new CountingRandom(random);
++        }
++    }
++
++    /** Isolate a synchronous preview, including legacy get/set calls, from live randomness.
++     * Preview draws do not invalidate undo in the original game. Nested scopes restore
++     * the enclosing provider even when the preview throws.
++     */
++    public static <T> T withRandom(Random provider, Supplier<T> action) {
++        Objects.requireNonNull(provider, "provider");
++        Objects.requireNonNull(action, "action");
++        Random previous = scopedRandom.get();
++        scopedRandom.set(provider);
++        try {
++            return action.get();
++        } finally {
++            if (previous == null) scopedRandom.remove();
++            else scopedRandom.set(previous);
++        }
+     }
+ 
+     public static int[] splitIntoRandomGroups(final int value, final int numGroups) {
+         int[] groups = new int[numGroups];
+ 
+         for (int i = 0; i < value; i++) {
+-            groups[random.nextInt(numGroups)]++;
++            groups[getRandom().nextInt(numGroups)]++;
+         }
+ 
+         return groups;
+diff --git a/forge-gui/res/cardsfolder/m/mindslaver.txt b/forge-gui/res/cardsfolder/m/mindslaver.txt
+--- a/forge-gui/res/cardsfolder/m/mindslaver.txt
++++ b/forge-gui/res/cardsfolder/m/mindslaver.txt
+@@ -2,5 +2,4 @@
+ ManaCost:6
+ Types:Legendary Artifact
+ A:AB$ ControlPlayer | Cost$ 4 T Sac<1/CARDNAME> | ValidTgts$ Player | SpellDescription$ You control target player during that player's next turn.
+-AI:RemoveDeck:All
+ Oracle:{4}, {T}, Sacrifice Mindslaver: You control target player during that player's next turn. (You see all cards that player could see and make all decisions for the player.)
+diff --git a/forge-gui/res/cardsfolder/w/worst_fears.txt b/forge-gui/res/cardsfolder/w/worst_fears.txt
+--- a/forge-gui/res/cardsfolder/w/worst_fears.txt
++++ b/forge-gui/res/cardsfolder/w/worst_fears.txt
+@@ -3,5 +3,4 @@
+ Types:Sorcery
+ A:SP$ ControlPlayer | ValidTgts$ Player | SubAbility$ DBChange | SpellDescription$ You control target player during that player's next turn. Exile CARDNAME. (You see all cards that player could see and make all decisions for that player.)
+ SVar:DBChange:DB$ ChangeZone | Origin$ Stack | Destination$ Exile
+-AI:RemoveDeck:All
+ Oracle:You control target player during that player's next turn. Exile Worst Fears. (You see all cards that player could see and make all decisions for the player.)

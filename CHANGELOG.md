@@ -6,6 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added a separately validated primary-control candidate for Worst Fears,
+  Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
+  Compare paid native future windows against no-action windows; preserve native
+  control timing, source costs, fixed beneficiary and original-world state.
+  Added explicit terminal outcomes, thread-local preview randomness, native
+  original-equipment exile payment and completed-plan recovery at deadlines.
+  The identical 23-case source fixture changes from 23 failures to 23 passes;
+  Fourteen additional outcome, randomness, recovery and resolver-boundary
+  contracts pass. Exclude unfinished parent continuations from future forecasts
+  while retaining incremental free-cast safety, including lethal Ruric Thar
+  cast triggers. Activated the final pinned runtime after 613 focused native,
+  1,161 broader gameplay, 256 serialization and 37 live tests / 593 subtests,
+  the Python quality gate and 32,109 matched catalog constructions. Forecasts sample
+  at most two legal actions per main phase; full search can retain redundant
+  legal equip prefixes. General strategy and full-card certification remain open.
+  Compared all 34,132 card-archive entries before carrying one exact alias and
+  two companion wording reviews to the new archive hash; only two AI eligibility
+  flags changed. Retained prior reviews and native positive/negative controls.
+
+
 - Added controlled-attack planning that compares native combat outcomes for the
   fixed decision controller while retaining the actor's ownership and resources.
   Candidates must satisfy native restrictions and attack requirements; mandatory

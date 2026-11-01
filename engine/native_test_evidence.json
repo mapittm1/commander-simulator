@@ -1,11 +1,11 @@
 {
   "scope": "Selected non-UI native gameplay and card/deck serialization regressions; not all-card rules certification",
   "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
-  "recipe_sha256": "b58c680864790ce5115f8fabbdddd742ef033126309858d81862fad1640fb9fc",
+  "recipe_sha256": "53b4b696967cdca1d6a09051ec23e24a1f5bde88dadf7a1f1a0ecceade982039",
   "suites": {
     "gameplay": {
-      "total": 1124,
-      "passed": 1124,
+      "total": 1161,
+      "passed": 1161,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -17,9 +17,11 @@
         "forge.ai.CloneDurationGameCopyTest",
         "forge.ai.CommanderColorChoiceTest",
         "forge.ai.CompanionPregameTest",
+        "forge.ai.CompletedPlanRecoveryTest",
         "forge.ai.ComputerUtilManaFilterTest",
         "forge.ai.ComputerUtilManaTest",
         "forge.ai.ConditionalGameCopyTest",
+        "forge.ai.ControlOutcomeScoringTest",
         "forge.ai.ControlTurnGameCopyTest",
         "forge.ai.ControlledCombatAiCoverageTest",
         "forge.ai.ControlledDecisionAiTest",
@@ -40,6 +42,8 @@
         "forge.ai.HostReturnGameCopyTest",
         "forge.ai.KeywordExpirationGameCopyTest",
         "forge.ai.ParticipantGameCopyTest",
+        "forge.ai.PlayerControlPlanningTest",
+        "forge.ai.PreviewRandomIsolationTest",
         "forge.ai.ProtectionGameCopyTest",
         "forge.ai.RingTextGameCopyTest",
         "forge.ai.StackGameCopyTest",
@@ -81,6 +85,7 @@
         "forge.ai.simulation.GameStateEvaluatorTest",
         "forge.ai.simulation.OnePlaySafetyCheckerTest",
         "forge.ai.simulation.OpeningHandTest",
+        "forge.ai.simulation.ResolvingControlForecastTest",
         "forge.ai.simulation.SimulationTest",
         "forge.ai.simulation.SpellAbilityPickerSimulationTest",
         "forge.ai.simulation.TerminalScoreDiscountTest",
@@ -95,16 +100,16 @@
         "forge.game.trigger.MandatoryLoopTest",
         "forge.game.trigger.SimultaneousEntryTriggerTest"
       ],
-      "selected_classes": 85,
+      "selected_classes": 90,
       "process": {
         "status": "finished",
-        "bytes": 254902,
+        "bytes": 257638,
         "returncode": 0,
-        "elapsed_seconds": 101.984
+        "elapsed_seconds": 136.657
       },
-      "local_run_id": "native-gameplay-68da6f227f4644e98268a2300b2e7c45",
-      "testng_results_sha256": "fef1396f90fc778da5b162f08e4155e2bd63aa0610f07931adfde381e861e09d",
-      "log_sha256": "ffb0857a74bce6f5639879a55d0e62a06eaafb67b7c0480969700591b91740b1"
+      "local_run_id": "native-gameplay-a88a653e5ead438ab7f1c04bb5a70428",
+      "testng_results_sha256": "36d52759ea7dc6acd38f060f5ee1251ff683ba6646dff979134bd3ca60a8cfb4",
+      "log_sha256": "233ced807ff9a5f09424673cee900cfcac7b297d93bd9944228301dec783cd0d"
     },
     "serialization": {
       "total": 256,
@@ -132,13 +137,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 30800,
+        "bytes": 30832,
         "returncode": 0,
-        "elapsed_seconds": 126.625
+        "elapsed_seconds": 124.016
       },
-      "local_run_id": "native-serialization-bb908ff448af455ba413baa5a19344b6",
-      "testng_results_sha256": "1fd6fa103b0c75ea6ef0dbfaf3a3f9fbc159d309c819d5d35653d23f2ae9b34c",
-      "log_sha256": "dfb76f8409a3d22688afe85102ded7191dcb477ad7169e9bdf4da4281d9c6653"
+      "local_run_id": "native-serialization-0ecbd1f02b124e62b4338d1de2a9cf49",
+      "testng_results_sha256": "b857a7685010079eaf8c51f6f64c7087ccd24b12461d2bdbfb2b1373f878d9cf",
+      "log_sha256": "9ac74d626b9bbcee254c115fac64457dc3d2e8afdee66b9031cc2f18506de6e8"
     }
   },
   "evidence_note": "Raw reports remain ignored local data under each recorded run ID."

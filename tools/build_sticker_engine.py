@@ -122,6 +122,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/player-control.patch",
                 "engine/patches/decision-perspective.patch",
                 "engine/patches/controlled-attack.patch",
+                "engine/patches/primary-control-planning.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -156,6 +157,11 @@ def _verify_inputs(args, recipe):
         "ControlTurnGameCopyTest.java": "player_control_test_sha256",
         "ControlledDecisionAiTest.java": "decision_perspective_test_sha256",
         "ControlledCombatAiCoverageTest.java": "controlled_attack_test_sha256",
+        "PlayerControlPlanningTest.java": "primary_control_test_sha256",
+        "PreviewRandomIsolationTest.java": "preview_random_test_sha256",
+        "ControlOutcomeScoringTest.java": "control_outcome_test_sha256",
+        "CompletedPlanRecoveryTest.java": "completed_plan_test_sha256",
+        "ResolvingControlForecastTest.java": "resolving_control_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -166,6 +172,8 @@ def _verify_inputs(args, recipe):
         "w/wicker_picker.txt",
         "t/the_prismatic_piper.txt",
         "f/faceless_one.txt",
+        "w/worst_fears.txt",
+        "m/mindslaver.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -401,6 +409,23 @@ def _patch_source(source, run, recipe):
         / "forge-gui-desktop/src/test/java/forge/ai/ControlledCombatAiCoverageTest.java",
     )
 
+    for filename in (
+        "PlayerControlPlanningTest.java",
+        "PreviewRandomIsolationTest.java",
+        "ControlOutcomeScoringTest.java",
+        "CompletedPlanRecoveryTest.java",
+    ):
+        shutil.copyfile(
+            PROJECT / "engine/tests" / filename,
+            source / "forge-gui-desktop/src/test/java/forge/ai" / filename,
+        )
+
+    shutil.copyfile(
+        PROJECT / "engine/tests/ResolvingControlForecastTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/simulation/ResolvingControlForecastTest.java",
+    )
+
 
 def _compile(args, source, maven, run):
     (run / "home").mkdir()
@@ -441,7 +466,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

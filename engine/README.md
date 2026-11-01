@@ -63,10 +63,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-576 native sticker, chosen-color, companion, supplementary-copy, history,
+613 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response and controlled-attack tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control and resolver-boundary tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -102,9 +102,9 @@ is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,124 gameplay and 256
+686 files verified against immutable source. The broader 1,161 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 576 focused tests are included in the 1,124.
+in `native_test_evidence.json`; the 613 focused tests are included in the 1,161.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -341,5 +341,32 @@ The identical previous-source fixture has 19 failures / 7 passes; all 26 pass
 with this patch. [`controlled_attack_evidence.json`](controlled_attack_evidence.json)
 retains exact provenance.
 This is selected bounded combat planning, not exhaustive strategy or full card
-certification; primary heuristic control actions and other decision policies
-remain open.
+certification; the primary-control extension below covers selected additional decisions.
+
+
+When a candidate changes the card archive, exact alias and companion wording
+reviews remain bound to the previous archive hash. Before catalog and interaction
+checks, compare all archive entries and carry a review forward only after checking
+its exact script, Oracle identity and native condition. Keep the previous archive
+reviews for reproducibility. The primary-control candidate changes only two
+AI eligibility flags; the Ratonhnhaké꞉ton alias script and Gyruda/Obosh parity
+predicates remain unchanged. Missing reviews correctly block admission.
+
+
+Primary-control planning now uses paired paid/no-action native future windows.
+Five primary sources are witnessed in three AI modes; both Secret cost paths,
+Sorin loyalty, Mindslaver sacrifice and original-equipment exile costs are paid
+natively. Forecasts sample at most two one-ply actions per main phase under the
+shared deadline. Synchronous previews isolate random providers; native terminal
+outcomes retain their win/loss flags. Only completed improving full-search plans
+can survive a deadline, and the normal picker still validates their identity,
+score and targets. Legal redundant equip prefixes remain a strategy gap.
+
+Do not advance unfinished resolving-parent continuations. The three-case
+resolver-boundary fixture changes from two failures / one positive control to
+three passes, retaining incremental lethal free-cast safety. The 23-case primary
+native fixture changes from 23 failures to 23 passes, as does the packaged
+witness. Fourteen additional native contracts cover scoring, randomness,
+recovery and resolver safety. Full verification passes 613 focused, 1,161 broader
+gameplay, 256 serialization and 37 live tests / 593 subtests. Exact provenance and
+limits are in `primary_control_evidence.json`; this is not full-card certification.

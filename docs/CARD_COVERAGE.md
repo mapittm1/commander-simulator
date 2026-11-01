@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,124 native tests in 85 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 576 focused
+The reviewed patched source also passes **1,161 native tests in 90 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 613 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1557,7 +1557,7 @@ The packaged witness worker writes two fixed hash-bound receipt parts within the
 existing 128 KiB document bound. An initial oversized receipt, an incorrect draft
 group-card name, unused imports and an automatic-attack checkpoint mistake were
 fixture errors and are excluded from gameplay failure claims. Packaged/broader
-validation passed before runtime promotion. The reviewed runtime passes **576
+validation passed before that runtime promotion. At the controlled-attack milestone, the runtime passed **576
 focused native tests**, **1,124 broader gameplay tests** including those 576 in
 **85 selected classes**, **256 serialization tests**, **36 live integrations /
 570 subtests**, and **399 offline tests / 508 subtests**, with all Python quality
@@ -1570,3 +1570,41 @@ Controlled blocking, arbitrary mandatory choices, tax-choice variants, hidden or
 stochastic future effects, different declaring players, cyclic/custom controllers,
 all attack combinations and complete Commander games remain unverified. Script
 construction and these selected scenarios do not establish complete card support.
+
+
+## Primary-control future planning
+
+A separate candidate adds native future-window assessment for Worst Fears,
+Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
+The identical 23-case source fixture fails all 23 cases on the previous reviewed
+source and passes all 23 on the candidate. Fourteen additional native contracts
+cover discounted terminal outcomes, scoped random-provider isolation and recovery
+of completed plans after interrupted search, plus resolving-parent boundaries.
+All 37 candidate-native cases pass. The final reviewed archive-based build passes
+613 focused native regressions, 1,161 broader gameplay tests in 90 selected classes,
+256 serialization tests, 37 live tests / 593 subtests and the Python quality gate
+(399 offline tests / 508 subtests). It constructs all 32,109 matched catalog
+identities; seven nonstarting meld results remain separate. Provenance is retained
+in [`primary_control_evidence.json`](../engine/primary_control_evidence.json).
+
+Each branch pays real native costs, retains the original decision beneficiary,
+and compares the selected future window with an independent no-action branch.
+The bound is two legal one-ply actions per main phase through the selected second
+main phase, under the existing shared deadline. Both Secret cost paths retain
+cast targets and native control timing; Bracelet payment exiles the granting
+equipment rather than the creature host. Sorin's fixed eight-loyalty fixture
+represents previously accumulated counters, not a fabricated activation history.
+
+Full search may retain legal redundant equip prefixes before Bracelet activation;
+these are actually paid and executed by the witness. That remains a strategy
+optimization gap. Incomplete future windows are excluded. Current coverage does
+not establish arbitrary turn/combat schedules, response priority, optimal choices,
+composed-control strategy, or all-card rules correctness. Synchronous scoped
+previews restore their random provider after exceptions; this is not a global
+concurrency certification for every remaining native AI path.
+
+A future forecast cannot advance an unfinished resolving parent. The paid-child
+regression reproduced that incorrect forecast, and a separate native Ruric Thar
+case exposed a free-cast safety bypass. The guarded fixture changes from two
+failures and one positive control to three passes. Existing incremental free-cast
+safety remains active; arbitrary parent continuations are not forecast.

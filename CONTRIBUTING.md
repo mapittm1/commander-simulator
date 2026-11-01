@@ -107,7 +107,8 @@ Keep suppressions narrow and explain them. Black owns line wrapping; test method
 names describe behavior instead of duplicating names in docstrings. The urllib
 redirect callback retains its required inherited signature. Targeted Bandit
 annotations cover the trusted quality runner and engine adapter's internal
-subprocess arguments. Engine paths are trusted operator configuration;
+subprocess arguments. One B105 annotation identifies a public MTG card title in
+a fixed test fixture. Engine paths are trusted operator configuration;
 deck contents cannot supply commands or output locations.
 No blanket security-check suppression or Pylint score threshold is used.
 

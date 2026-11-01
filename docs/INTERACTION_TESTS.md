@@ -369,3 +369,18 @@ refunded costs, use of another player's lands, malformed target IDs, missing
 mana/target evidence and an unaffordable cast. Existing process, heap, JSON and
 callback limits apply unchanged. These selected three-player sequences do not
 certify longer stacks, all cards, additional/variable costs or default AI strategy.
+
+
+Primary-control integration uses the fixed `primary_control_worker.py` with four
+fixed-name, hash-bound receipt parts under the unchanged 128 KiB per-document
+limit. Eighteen positive scenarios exercise five sources across heuristic, hybrid
+and full modes, including both Secret payment paths. Five affordable no-benefit
+controls require a supported decline. Check actual targets, payer-only costs,
+loyalty, sacrifice/exile, original-world independence, control timing and survival.
+A completed full plan may contain up to three actual paid equip prefixes.
+
+Separate native tests cover discounted terminal outcomes, nested/parallel random
+scopes, exception restoration, completed-plan deadline recovery and resolving-parent
+boundaries with lethal free-cast triggers. They are not complete legal-deck games
+or exhaustive rules/strategy certification. See `engine/primary_control_evidence.json`
+for exact sources, before/after outcomes, gates and limitations.
