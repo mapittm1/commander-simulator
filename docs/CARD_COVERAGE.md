@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,214 native tests in 94 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 666 focused
+The reviewed patched source also passes **1,241 native tests in 96 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 693 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1694,3 +1694,42 @@ These are selected gameplay witnesses, not full-card certification.
 Reference: [Wizards' Commander Masters release notes](https://media.wizards.com/2023/downloads/CMM_Release_Notes/EN_MTGCMM_ReleaseNotes_20230616.pdf)
 and the retained Comprehensive Rules 112.2, 601 and 109.5; references are versioned
 and do not constitute a complete current-rules audit.
+
+
+## Mass counter removal and paid outcomes
+
+Before this change, `RemoveCounterAll` was mapped to `CannotPlayAi`; it now uses
+`CountersRemoveAllAi`. Fourteen exact-name Commander-legal scripts reference that
+API; this inventory is not a count of unsupported cards. The Heartmender
+mandatory-upkeep control already passes through native rules resolution. Six
+initial AI-choice failures for Aether Snap, Dust of Moments and Oblivion Stone
+expand to eight when Pestilent Haze is included.
+
+The reviewed planner compares complete paid native outcomes, including token exile,
+vanishing/suspend triggers, fate-counter cleanup and modal loyalty removal.
+The target enumerator distinguishes an untargeted action from a required target
+with no legal candidate. The shared planner retains two fixed seeds, at most
+128 target combinations, the native shared deadline and resolving-parent/reentry
+guards. Native costs and resolution remain responsible for gameplay.
+
+The final 22-case previous-source baseline has eight failures / fourteen passing
+controls. The fresh archive-based build passes all 22 plus five shared-planner
+contracts, and all 693 focused native regressions. The fourteen packaged cases
+change from eight failures / six controls to fourteen passes. Modal witnesses use
+the production AI cast path, which selects and chains native modes before native
+payment. Explicit manual modal choices remain limited to rules controls.
+
+Final validation passes 1,241 broader gameplay checks in 96 selected classes,
+256 serialization checks, 40 live tests / 633 subtests and the Python quality gate
+(399 offline tests / 508 subtests). The 32,109 catalog constructions match; seven
+meld results remain nonstarting objects. All 34,132 archive entries were compared;
+only AI exclusion metadata for Aether Snap, Dust of Moments and Oblivion Stone
+changed. Exact unchanged alias/companion predicates were reviewed before carrying
+their receipts forward. See [bound evidence](../engine/mass_counter_evidence.json).
+This is selected rules/choice coverage; full-card certification remains open.
+
+Mass-counter references: the retained [Wizards Comprehensive Rules, 2026-09-25 edition](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt),
+122.2, 400.7, 702.62 and 702.63. These are versioned references, not a complete
+current-rules audit. Exiled suspended-card states, counter amounts, token
+identity and controller layers are explicit fixture preconditions; they do not
+claim to exercise every prior suspension, token-creation or control-acquisition path.

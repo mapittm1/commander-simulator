@@ -1,0 +1,291 @@
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -160,7 +160,7 @@
+             .put(ApiType.Regenerate, RegenerateAi.class)
+             .put(ApiType.Regeneration, AlwaysPlayAi.class)
+             .put(ApiType.RemoveCounter, CountersRemoveAi.class)
+-            .put(ApiType.RemoveCounterAll, CannotPlayAi.class)
++            .put(ApiType.RemoveCounterAll, CountersRemoveAllAi.class)
+             .put(ApiType.RemoveFromCombat, RemoveFromCombatAi.class)
+             .put(ApiType.RemoveFromGame, AlwaysPlayAi.class)
+             .put(ApiType.RemoveFromMatch, AlwaysPlayAi.class)
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CharmAi.java b/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
+@@ -4,6 +4,7 @@
+ import forge.ai.*;
+ import forge.game.GameActionUtil;
+ import forge.game.ability.AbilityUtils;
++import forge.game.ability.ApiType;
+ import forge.game.ability.effects.CharmEffect;
+ import forge.game.card.Card;
+ import forge.game.keyword.Keyword;
+@@ -121,7 +122,10 @@
+             handleDependentModes(sa, chosen, sub);
+             sub.setActivatingPlayer(ai);
+             // TODO instead of shuffling check all to sort by AiAbilityDecision rating
+-            if (SpellApiToAi.Converter.get(sub).canPlayWithSubs(ai, sub).willingToPlay() && canPayForAdditionalMode(sa, chosen, sub, ai)) {
++            AiAbilityDecision decision = sub.getApi() == ApiType.RemoveCounterAll
++                    ? CountersRemoveAllAi.assessMode(ai, sa, sub)
++                    : SpellApiToAi.Converter.get(sub).canPlayWithSubs(ai, sub);
++            if (decision.willingToPlay() && canPayForAdditionalMode(sa, chosen, sub, ai)) {
+                 if (pawprintLimit > 0) {
+                     int curPawprintAmount = AbilityUtils.calculateAmount(sub.getHostCard(), sub.getParamOrDefault("Pawprint", "0"), sub);
+                     if (pawprintAmount + curPawprintAmount > pawprintLimit) {
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CountersRemoveAllAi.java b/forge-ai/src/main/java/forge/ai/ability/CountersRemoveAllAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/CountersRemoveAllAi.java
+@@ -0,0 +1,36 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.game.ability.effects.CharmEffect;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import java.util.ArrayList;
++import java.util.List;
++
++/** Value counter removal together with its actual parent, native costs and aftermath. */
++public final class CountersRemoveAllAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    /** Assess a complete modal cast, not a free unattached mode or cleanup fragment. */
++    public static AiAbilityDecision assessMode(Player actor, SpellAbility root, AbilitySub mode) {
++        SpellAbility trial = root.copy();
++        trial.setActivatingPlayer(actor);
++        trial.setSubAbility(null);
++        List<AbilitySub> modes = new ArrayList<>();
++        modes.add((AbilitySub) mode.copy(actor));
++        trial.setChosenList(modes);
++        CharmEffect.chainAbilities(trial, modes);
++        return PaidOutcomePlanner.choose(actor, trial);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java b/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/MultiTargetSelector.java
+@@ -39,6 +39,11 @@
+             selectors.add(new PossibleTargetSelector(sa, targetingSAs.get(i), i));
+         }
+         currentIndex = -1;
++    }
++
++    /** Whether any required targeting decisions exist, independent of legal candidates. */
++    public boolean hasTargeting() {
++        return !selectors.isEmpty();
+     }
+ 
+     public boolean hasPossibleTargets() {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -0,0 +1,79 @@
++package forge.ai.simulation;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++import java.util.Random;
++
++/** Bounded paired native paid outcomes for complete spells and activated abilities. */
++public final class PaidOutcomePlanner {
++    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
++    private static final long[] SEEDS = {0L, 4096L};
++    private static final int MAX_TARGET_CHOICES = 128;
++
++    private PaidOutcomePlanner() { }
++
++    public static AiAbilityDecision choose(Player actor, SpellAbility action) {
++        if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
++                || actor.getGame().getStack().isResolving()) {
++            return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
++        }
++        ASSESSING.set(true);
++        try {
++            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action));
++        } finally {
++            ASSESSING.remove();
++        }
++    }
++
++    private static AiAbilityDecision assess(Player actor, SpellAbility action) {
++        GameStateEvaluator.Score[] baseline = new GameStateEvaluator.Score[SEEDS.length];
++        long baselineValue = 0;
++        long baselineAvailable = 0;
++        for (int i = 0; i < SEEDS.length; i++) {
++            final long seed = SEEDS[i];
++            baseline[i] = MyRandom.withRandom(new Random(seed),
++                    () -> GameSimulator.scoreForDecision(actor.getGame(), actor));
++            baselineValue += baseline[i].value;
++            baselineAvailable += baseline[i].availableValue;
++        }
++        SpellAbility trial = action.copy();
++        MultiTargetSelector selector = new MultiTargetSelector(trial, null);
++        SpellAbility best = null;
++        long bestValue = baselineValue;
++        // An untargeted action has one empty target combination, not zero choices.
++        for (int choice = 0; choice < MAX_TARGET_CHOICES
++                && (selector.hasTargeting() ? selector.selectNextTargets() : choice == 0); choice++) {
++            AITimeoutTracker.check();
++            long value = 0;
++            long available = 0;
++            boolean complete = true;
++            for (int i = 0; i < SEEDS.length; i++) {
++                final long seed = SEEDS[i];
++                final GameStateEvaluator.Score start = baseline[i];
++                GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
++                    GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
++                    return simulator.simulateSpellAbility(trial);
++                });
++                if (result.value == Integer.MIN_VALUE) {
++                    complete = false;
++                    break;
++                }
++                value += result.value;
++                available += result.availableValue;
++            }
++            if (complete && value > bestValue && available > baselineAvailable) {
++                best = trial.copy();
++                bestValue = value;
++            }
++        }
++        if (best == null) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) part.resetTargets();
++        SpellAbilityChoiceCopier.copyTargets(best, action, object -> object);
++        return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java
+@@ -3,19 +3,11 @@
+ import forge.ai.AiAbilityDecision;
+ import forge.ai.AiPlayDecision;
+ import forge.game.player.Player;
+-import forge.game.spellability.AbilitySub;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.zone.ZoneType;
+-import forge.util.AITimeoutTracker;
+-import forge.util.MyRandom;
+-import java.util.Random;
+ 
+-/** Bounded paired native outcomes for complete compound stack responses. */
++/** Restrict shared paid-outcome planning to complete compound stack responses. */
+ public final class StackResponsePlanner {
+-    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
+-    private static final long[] SEEDS = {0L, 4096L};
+-    private static final int MAX_TARGET_CHOICES = 128;
+-
+     private StackResponsePlanner() { }
+ 
+     public static boolean targetsStack(SpellAbility action) {
+@@ -23,60 +15,7 @@
+     }
+ 
+     public static AiAbilityDecision choose(Player actor, SpellAbility action) {
+-        if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
+-                || actor.getGame().getStack().isResolving() || !targetsStack(action)) {
+-            return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+-        }
+-        ASSESSING.set(true);
+-        try {
+-            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action));
+-        } finally {
+-            ASSESSING.remove();
+-        }
+-    }
+-
+-    private static AiAbilityDecision assess(Player actor, SpellAbility action) {
+-        GameStateEvaluator.Score[] baseline = new GameStateEvaluator.Score[SEEDS.length];
+-        long baselineValue = 0;
+-        long baselineAvailable = 0;
+-        for (int i = 0; i < SEEDS.length; i++) {
+-            final long seed = SEEDS[i];
+-            baseline[i] = MyRandom.withRandom(new Random(seed),
+-                    () -> GameSimulator.scoreForDecision(actor.getGame(), actor));
+-            baselineValue += baseline[i].value;
+-            baselineAvailable += baseline[i].availableValue;
+-        }
+-        SpellAbility trial = action.copy();
+-        MultiTargetSelector selector = new MultiTargetSelector(trial, null);
+-        SpellAbility best = null;
+-        long bestValue = baselineValue;
+-        for (int choice = 0; choice < MAX_TARGET_CHOICES && selector.selectNextTargets(); choice++) {
+-            AITimeoutTracker.check();
+-            long value = 0;
+-            long available = 0;
+-            boolean complete = true;
+-            for (int i = 0; i < SEEDS.length; i++) {
+-                final long seed = SEEDS[i];
+-                final GameStateEvaluator.Score start = baseline[i];
+-                GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
+-                    GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
+-                    return simulator.simulateSpellAbility(trial);
+-                });
+-                if (result.value == Integer.MIN_VALUE) {
+-                    complete = false;
+-                    break;
+-                }
+-                value += result.value;
+-                available += result.availableValue;
+-            }
+-            if (complete && value > bestValue && available > baselineAvailable) {
+-                best = trial.copy();
+-                bestValue = value;
+-            }
+-        }
+-        if (best == null) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
+-        for (SpellAbility part = action; part != null; part = part.getSubAbility()) part.resetTargets();
+-        SpellAbilityChoiceCopier.copyTargets(best, action, object -> object);
+-        return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        if (!targetsStack(action)) return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
++        return PaidOutcomePlanner.choose(actor, action);
+     }
+ }
+diff --git a/forge-gui/res/cardsfolder/a/aether_snap.txt b/forge-gui/res/cardsfolder/a/aether_snap.txt
+--- a/forge-gui/res/cardsfolder/a/aether_snap.txt
++++ b/forge-gui/res/cardsfolder/a/aether_snap.txt
+@@ -3,6 +3,5 @@
+ Types:Sorcery
+ A:SP$ RemoveCounterAll | ValidCards$ Permanent | AllCounterTypes$ True | StackDescription$ SpellDescription | SubAbility$ DBRemove | SpellDescription$ Remove all counters from all permanents and exile all tokens.
+ SVar:DBRemove:DB$ ChangeZoneAll | ChangeType$ Card.token | Origin$ Battlefield | Destination$ Exile
+-AI:RemoveDeck:All
+ AI:RemoveDeck:Random
+ Oracle:Remove all counters from all permanents and exile all tokens.
+diff --git a/forge-gui/res/cardsfolder/d/dust_of_moments.txt b/forge-gui/res/cardsfolder/d/dust_of_moments.txt
+--- a/forge-gui/res/cardsfolder/d/dust_of_moments.txt
++++ b/forge-gui/res/cardsfolder/d/dust_of_moments.txt
+@@ -6,6 +6,5 @@
+ SVar:QuickenTime:DB$ RemoveCounterAll | ValidCards$ Card.suspended | CounterType$ TIME | CounterNum$ 2 | ValidZone$ Exile
+ SVar:GainTime:DB$ PutCounterAll | ValidCards$ Permanent.counters_GE1_TIME | CounterType$ TIME | CounterNum$ 2 | SubAbility$ SlowTime | SpellDescription$ Put two time counters on each permanent with a time counter on it and each suspended card.
+ SVar:SlowTime:DB$ PutCounterAll | ValidCards$ Card.suspended | CounterType$ TIME | CounterNum$ 2 | ValidZone$ Exile
+-AI:RemoveDeck:All
+ AI:RemoveDeck:Random
+ Oracle:Choose one —\n• Remove two time counters from each permanent and each suspended card.\n• Put two time counters on each permanent with a time counter on it and each suspended card.
+diff --git a/forge-gui/res/cardsfolder/o/oblivion_stone.txt b/forge-gui/res/cardsfolder/o/oblivion_stone.txt
+--- a/forge-gui/res/cardsfolder/o/oblivion_stone.txt
++++ b/forge-gui/res/cardsfolder/o/oblivion_stone.txt
+@@ -4,5 +4,4 @@
+ A:AB$ PutCounter | Cost$ 4 T | ValidTgts$ Permanent | CounterType$ FATE | CounterNum$ 1 | SpellDescription$ Put a fate counter on target permanent.
+ A:AB$ DestroyAll | Cost$ 5 T Sac<1/CARDNAME> | ValidCards$ Permanent.nonLand+counters_LT1_FATE | SubAbility$ DBRemove | SpellDescription$ Destroy each nonland permanent without a fate counter on it, then remove all fate counters from all permanents.
+ SVar:DBRemove:DB$ RemoveCounterAll | ValidCards$ Permanent | CounterType$ FATE | AllCounters$ True
+-AI:RemoveDeck:All
+ Oracle:{4}, {T}: Put a fate counter on target permanent.\n{5}, {T}, Sacrifice Oblivion Stone: Destroy each nonland permanent without a fate counter on it, then remove all fate counters from all permanents.

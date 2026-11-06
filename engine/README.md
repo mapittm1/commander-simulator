@@ -47,7 +47,7 @@ A twenty-ninth preserves the fixed decision beneficiary, pending-stack planning
 and legal spell/ability target enumeration.
 A thirtieth adds bounded controlled-attack outcome planning under native attack
 constraints and the existing shared decision deadline.
-All thirty-three patches are pinned. No remote branch is used at build time.
+All thirty-four patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -63,7 +63,7 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-666 native sticker, chosen-color, companion, supplementary-copy, history,
+693 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
 forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary and paid spell-control/retargeting tests.
@@ -96,15 +96,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins thirty-eight regression source files and exactly nine card-script
+The recipe pins forty regression source files and exactly twelve card-script
 overrides, listed explicitly in the recipe. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,214 gameplay and 256
+686 files verified against immutable source. The broader 1,241 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 666 focused tests are included in the 1,214.
+in `native_test_evidence.json`; the 693 focused tests are included in the 1,241.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -396,3 +396,17 @@ to fourteen passes. Exact source, build, report and receipt identities are in
 [`composed_control_evidence.json`](composed_control_evidence.json). The native
 boundary choices and two-seed/128-target forecast bounds are documented there;
 full-card rules and strategy certification remain open.
+
+
+The thirty-fourth patch factors paid outcome scoring into a shared planner,
+retains the stack-response adapter and implements the mass-counter AI entry point
+and complete modal-cast assessment. An untargeted action gets one candidate;
+a targeted action without legal candidates is rejected. The fresh build passes
+all 693 focused tests, including 22 mass-counter witnesses and five additional
+planner contracts. Final validation also passes 1,241 broader gameplay,
+256 serialization and 40 live tests / 633 subtests, plus the Python quality gate.
+Fourteen packaged cases change from eight failures / six controls to fourteen
+passes. See [`mass_counter_evidence.json`](mass_counter_evidence.json) for exact
+source, build, baseline, report, profile and archive identities and material limits.
+The initial fresh build omitted the two new fixture copies; its 666-test result
+was rejected by the exact-count guard before packaging or activation.

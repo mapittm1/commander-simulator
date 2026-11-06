@@ -125,6 +125,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/primary-control-planning.patch",
                 "engine/patches/spell-control-retargeting.patch",
                 "engine/patches/composed-spell-control.patch",
+                "engine/patches/mass-counter-removal.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -168,6 +169,8 @@ def _verify_inputs(args, recipe):
         "ComposedSpellControlTest.java": "composed_control_test_sha256",
         "OptionalTriggerCheckpointTest.java": "optional_checkpoint_test_sha256",
         "SpellControlCastHistoryTest.java": "spell_cast_provenance_test_sha256",
+        "MassCounterRemovalTest.java": "mass_counter_test_sha256",
+        "PaidOutcomePlannerTest.java": "paid_outcome_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -184,6 +187,9 @@ def _verify_inputs(args, recipe):
         "c/commandeer.txt",
         "p/perplexing_chimera.txt",
         "s/sudden_substitution.txt",
+        "a/aether_snap.txt",
+        "d/dust_of_moments.txt",
+        "o/oblivion_stone.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -428,6 +434,8 @@ def _patch_source(source, run, recipe):
         "ComposedSpellControlTest.java",
         "OptionalTriggerCheckpointTest.java",
         "SpellControlCastHistoryTest.java",
+        "MassCounterRemovalTest.java",
+        "PaidOutcomePlannerTest.java",
     ):
         shutil.copyfile(
             PROJECT / "engine/tests" / filename,
@@ -480,7 +488,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

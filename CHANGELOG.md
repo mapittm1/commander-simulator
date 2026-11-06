@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added complete paid mass-counter forecasts for Aether Snap, Dust of Moments,
+  Oblivion Stone and Pestilent Haze, including native modal selection and attached
+  cleanup. Share the bounded outcome evaluator with composed spell-control
+  planning. An untargeted action has one empty target combination; required
+  targets still need legal candidates. The identical 22-case source fixture
+  changes from eight failures / fourteen controls to 22 passes. Five additional
+  contracts cover untargeted actions, missing required targets despite payable
+  mana, unaffordable spells, controlled-player perspective and resolving-parent
+  guards. Fourteen packaged cases change from eight failures / six controls to
+  fourteen passes. Activated the pinned runtime after 693 focused native,
+  1,241 broader gameplay, 256 serialization and 40 live tests / 633 subtests,
+  the Python quality gate and 32,109 matched catalog constructions. Compared all
+  34,132 archive entries; only three AI exclusion flags changed. Retained prior
+  runtimes and carried exact unchanged alias/companion reviews forward. All
+  native fixture copies are included in the reviewed build; the exact-count
+  guard rejected an earlier incomplete build. Forecasts retain two fixed seeds,
+  128 target combinations and the shared deadline. Full-card certification and
+  exhaustive strategy remain open.
+
 - Added reviewed composed-control planning with paired native response forecasts,
   compound target selection and exact optional-trigger checkpoint continuations.
   Reuse native body/completion code, including resolution events, control cleanup

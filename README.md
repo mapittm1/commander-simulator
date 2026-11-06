@@ -19,10 +19,19 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The reviewed runtime evaluates composed control for Invert Polarity, Sudden
-Substitution and Perplexing Chimera. Cast provenance now preserves the original
+The reviewed runtime now evaluates complete paid mass-counter outcomes for
+Aether Snap, Dust of Moments, Oblivion Stone and Pestilent Haze. Modal choices,
+attached counter cleanup and source-decline controls have native and packaged
+witnesses. Validation passes 693 focused native, 1,241 broader gameplay,
+256 serialization and 40 live tests / 633 subtests, plus the Python quality gate
+(399 offline tests / 508 subtests). See
+[mass counter removal and paid outcomes](docs/CARD_COVERAGE.md#mass-counter-removal-and-paid-outcomes)
+for exact scope and remaining full-card limits.
+
+The earlier composed-control milestone added native planning for Invert Polarity,
+Sudden Substitution and Perplexing Chimera. Cast provenance now preserves the original
 caster, paid costs and announced targets when a live spell changes control.
-This fixes the stolen-Zacama land-untap outcome. Validation passes 666 focused
+That milestone fixed the stolen-Zacama land-untap outcome and passed 666 focused
 native regressions, 1,214 broader gameplay checks, 256 serialization checks,
 39 live tests / 619 subtests and the Python quality gate (399 offline tests /
 508 subtests). See [composed control and cast provenance](docs/CARD_COVERAGE.md#composed-control-and-cast-provenance)

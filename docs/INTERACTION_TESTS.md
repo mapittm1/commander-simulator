@@ -417,3 +417,18 @@ graveyard outcome, rather than assuming the stolen Shock damages a player.
 The ordinary-Zacama control also checks trigger processing after the final
 resolution. Final validation passes 39 live tests / 619 subtests. See
 [bound evidence](../engine/composed_control_evidence.json).
+
+
+## Mass counter removal
+
+The fixed worker requests Aether Snap, Dust of Moments, Oblivion Stone and
+Pestilent Haze in heuristic, hybrid and full simulation modes, plus two Aether
+Snap source-decline controls. Four fixed receipt names bind native outcomes to
+the engine, unchanged Default profile and file digests through bounded JSON I/O.
+The cast path is `playChosenSpellAbility`, including native modal selection;
+actual paid mana, original card identities, counter values and resulting zones
+are checked. Oblivion Stone is first cast for three mana, then its activation
+pays five mana and sacrifices it. No selected action is forced when AI declines.
+The previous-runtime baseline has eight failing criteria and six passing controls.
+All fourteen candidate cases pass; the complete live suite passes 40 tests /
+633 subtests. See [bound evidence](../engine/mass_counter_evidence.json).
