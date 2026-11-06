@@ -1,0 +1,609 @@
+{
+  "scope": "Selected composed spell-control decisions, exact optional-trigger checkpoints and cast provenance; not full-card rules or optimal strategy certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-composed-control",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "12933afd34cff35b1788dd138f23eab93eeca95424b717d347b768d6b96e43b6",
+    "cards_sha256": "f46ee48d0283e97285743ee4272ef372d1114e1b56356aa9ab9ec4ac3f5758ea",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "d407d0f89863cae574357fa67501487fe0debe9d98ec456108a6f7cbbdddc42d",
+    "native_tests": {
+      "total": 666,
+      "passed": 666,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "71ff34389b71f6173f6dd40369505c8d2cc1526f942ff59dd807ce95ccb61bde",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "6dffe43369044130863935b66a8d54b7",
+  "patch_sha256": "481f22402a54b7ac9615c868c9fe7dadec8ead1dcd2edb4e5269798fc469caae",
+  "source_baseline": {
+    "counts": {
+      "tests": 16,
+      "failures": 7,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fixture_sha256": "7f56a1bed2c7594df58e422dd18a4dfd68be1455436bfbe904cc0bff155bfeba",
+    "report_sha256": "aa3aaf3e886c1a6562e24e3a5bc68e493757c1ab6af8c4e586fc15b2570f824d",
+    "failed_methods": [
+      "chimeraFull",
+      "chimeraHybrid",
+      "chimeraOptionalTriggerProtectsController",
+      "polarityHeuristic",
+      "polarityHybrid",
+      "substitutionHeuristic",
+      "substitutionHybrid"
+    ],
+    "rules_boundary_choices": "Explicit legal affirmative decisions for original threatened spell; not AI-admission witnesses."
+  },
+  "native_candidate": {
+    "ComposedSpellControlTest": {
+      "tests": 16,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report_sha256": "18889894273caa487e4be645f11a76b44e58cb97aa32684f9c6a95441ff201d8",
+      "fixture_sha256": "7f56a1bed2c7594df58e422dd18a4dfd68be1455436bfbe904cc0bff155bfeba"
+    },
+    "OptionalTriggerCheckpointTest": {
+      "tests": 4,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report_sha256": "662d95dba23ce6d844222bbe053c5a3fc7a65be9a899cdd2860071792fe0b3d5",
+      "fixture_sha256": "ca83851a58c8991b7b7ce9ce3af8116cd33135ce3a873e5cf3022666d9555e3d"
+    },
+    "SpellControlCastHistoryTest": {
+      "tests": 5,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "report_sha256": "9d88b56b5910776bf210c8c11a755c12811cbbb97d0f772c627a70feb24af14f",
+      "fixture_sha256": "e90130c2d2dea86df766df24ba7059563491e25eecb04f905f45866600a0ec97"
+    }
+  },
+  "cast_provenance_baseline": {
+    "tests": 5,
+    "failed": 4,
+    "passed": 1,
+    "fixture_sha256": "e90130c2d2dea86df766df24ba7059563491e25eecb04f905f45866600a0ec97",
+    "production_audit_sha256": "d611dc280a319f689bc4a93a4c68c453834d90da97e181b1cc8dad18aac1995c",
+    "scope": "Native cast-provenance failures on the pre-provenance-fix checkpoint prototype, separate from the previous-reviewed-source 16-case baseline."
+  },
+  "source_audit": {
+    "production_java_files": 2110,
+    "baseline_java_files": 2108,
+    "all_candidate_production_audit_sha256": "36f8ecbf5a50e274df29dddb2f94e759042ce20e66a95fda8ba8eeca79998c8b",
+    "baseline_production_audit_sha256": "ed81be5fbd66b3f299ef0f8f96a0ea4a5c9bede4226d153f41caa6258c513ddc",
+    "modified_or_added_java": {
+      "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java": "c9c2285c8414f2cc737e2dea237604cb2b06182e02a9d089c132e4afa30ae6b7",
+      "forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java": "4b7b0c396e71474ca49559faa879e22f97fab3994769dbe9a6166bcaa8fa378e",
+      "forge-ai/src/main/java/forge/ai/ability/PumpAi.java": "aa363514cbc20fa954b3626fcef7e05b83cffaa1c636ce07ec1a710fac1ac287",
+      "forge-ai/src/main/java/forge/ai/simulation/OptionalTriggerPlanner.java": "92d42a541d1bcf5bf2911d8fba1a8cadfebd9d0461cf75bdb0527d90744efd15",
+      "forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java": "1964e772700db24a52be7286f0aff8ad703190bfa2766a8f39272b8d59267236",
+      "forge-game/src/main/java/forge/game/trigger/WrappedAbility.java": "aa91e41185301fe41ba1fd1f8f84d3b69f1552e528b4ce371aef794516b09268",
+      "forge-game/src/main/java/forge/game/zone/MagicStack.java": "8fc4a08a80ac5fdf60686e7d75a45d6428f5ed024a8971065065d1dbbca7fec6"
+    },
+    "reviewed_java_and_card_paths": {
+      "forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java": {
+        "prototype_raw_sha256": "e13af717431675e55ceb68b93cfa546acc44f94ebabeaa6e35dfd31b32206b06",
+        "fresh_build_raw_sha256": "4b7b0c396e71474ca49559faa879e22f97fab3994769dbe9a6166bcaa8fa378e",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-ai/src/main/java/forge/ai/ability/PumpAi.java": {
+        "prototype_raw_sha256": "6f3d4ef9d6b35e4226d8358798006d9dee916e20ec99c77e782cf4ce85fd5fd0",
+        "fresh_build_raw_sha256": "aa363514cbc20fa954b3626fcef7e05b83cffaa1c636ce07ec1a710fac1ac287",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java": {
+        "prototype_raw_sha256": "dd6729084d84cd1388b14fe33dd5ce461f70e577007c46e3e5d5d36aeaae9666",
+        "fresh_build_raw_sha256": "c9c2285c8414f2cc737e2dea237604cb2b06182e02a9d089c132e4afa30ae6b7",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-game/src/main/java/forge/game/trigger/WrappedAbility.java": {
+        "prototype_raw_sha256": "23784b6b850d38e414f5bd970a01106d888debebf3869391037f2e6b11c43188",
+        "fresh_build_raw_sha256": "aa91e41185301fe41ba1fd1f8f84d3b69f1552e528b4ce371aef794516b09268",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-game/src/main/java/forge/game/zone/MagicStack.java": {
+        "prototype_raw_sha256": "e185ee398c9ec5de542589d351ee3de196aa47104aa5d87c8a6409ef8502db9f",
+        "fresh_build_raw_sha256": "8fc4a08a80ac5fdf60686e7d75a45d6428f5ed024a8971065065d1dbbca7fec6",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-gui/res/cardsfolder/s/sudden_substitution.txt": {
+        "prototype_raw_sha256": "5d3997bbdfe2bff554786bad026e19e22dce84e50e6193fd2b8d58bec21ff030",
+        "fresh_build_raw_sha256": "5d3997bbdfe2bff554786bad026e19e22dce84e50e6193fd2b8d58bec21ff030",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-gui/res/cardsfolder/p/perplexing_chimera.txt": {
+        "prototype_raw_sha256": "6fc159de40e44d17d28ec06fe44c0307ade81adfdbb98f189bb660f390626ffb",
+        "fresh_build_raw_sha256": "6fc159de40e44d17d28ec06fe44c0307ade81adfdbb98f189bb660f390626ffb",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java": {
+        "prototype_raw_sha256": "37aa5bffc92de99a2b42cdfd19248b9663150a4e17bed6c06ad8c5f2021d67a6",
+        "fresh_build_raw_sha256": "1964e772700db24a52be7286f0aff8ad703190bfa2766a8f39272b8d59267236",
+        "text_equal_after_eol_normalization": true
+      },
+      "forge-ai/src/main/java/forge/ai/simulation/OptionalTriggerPlanner.java": {
+        "prototype_raw_sha256": "5deb098902a787edf4fec16520696eedaca6cde347d0e2c54af03cd9b06f2a3c",
+        "fresh_build_raw_sha256": "92d42a541d1bcf5bf2911d8fba1a8cadfebd9d0461cf75bdb0527d90744efd15",
+        "text_equal_after_eol_normalization": true
+      }
+    },
+    "other_production_text_unchanged": true,
+    "baseline_source_comparison": {
+      "baseline_production_files": 2108,
+      "raw_identical_files": 2102,
+      "eol_only_differences": [
+        {
+          "path": "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "baseline_prototype_raw_sha256": "e98c65fcd530a073b923b2f736e35b8583c27442fea97b7181f8b4be60b8124d",
+          "reviewed_build_raw_sha256": "26f831ddd6f24801823f251d11cf4647819da6fe1f95d663dce7c802ddee05a1",
+          "text_equal_after_eol_normalization": true
+        },
+        {
+          "path": "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
+          "baseline_prototype_raw_sha256": "68e1dd113b3310686a7b24076c4619d4cfe4e15b786ba5d56e9e0b7e95a1c1a9",
+          "reviewed_build_raw_sha256": "7ab447e914f08817cbe1a180886eb2518819305ac1fe483851582dd2b661f523",
+          "text_equal_after_eol_normalization": true
+        },
+        {
+          "path": "forge-ai/src/main/java/forge/ai/ability/ControlSpellAi.java",
+          "baseline_prototype_raw_sha256": "888bb83d461aee0ea6e1703713becc04b58b75825193d3bf3b0807327610cd45",
+          "reviewed_build_raw_sha256": "827a9b23a24f5ce672a45a455280fda383bec0f1e8a8608066c358c6f96cb57e",
+          "text_equal_after_eol_normalization": true
+        },
+        {
+          "path": "forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java",
+          "baseline_prototype_raw_sha256": "1e1c246b941a90abb383d60011d11ed217df7691e89875488e80aec1f5b3cd11",
+          "reviewed_build_raw_sha256": "3678513092c5af9a5a0fa49c4845407897e2473d68e9bcd9d48ea755141cde86",
+          "text_equal_after_eol_normalization": true
+        },
+        {
+          "path": "forge-ai/src/main/java/forge/ai/simulation/RetargetChooser.java",
+          "baseline_prototype_raw_sha256": "4f93fdd3d50191f8925338aaefbf13e75bce361fe15539558899391fca26989e",
+          "reviewed_build_raw_sha256": "b9658f53c9ed84ff8fcb4713aa612c2e3f4fd3b6d46706cc31eff3715903a8b8",
+          "text_equal_after_eol_normalization": true
+        },
+        {
+          "path": "forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java",
+          "baseline_prototype_raw_sha256": "d65b8cf73d1c1c0552cb76e1e73400193ca7b814f01dc7ca40789038b1239395",
+          "reviewed_build_raw_sha256": "170f5141139a35738e249fa179a06939d2ee18b821858dc7a94d4e1f2aeac8b3",
+          "text_equal_after_eol_normalization": true
+        }
+      ],
+      "baseline_audit_sha256": "ed81be5fbd66b3f299ef0f8f96a0ea4a5c9bede4226d153f41caa6258c513ddc"
+    }
+  },
+  "packaged": {
+    "sha256": "8804bc113a0b1b3abf0676d4ce88694473ace280f05f3ffb77347b819e206d64",
+    "integration_sha256": "76208329dacdc2da028084a3eaf8f6c222305a9a17f27572729380331ec526f5",
+    "baseline_run": "e438870668d64ab7bb05c71fb56e400e",
+    "baseline_engine": {
+      "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-spell-control",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+      "jar_sha256": "c355e87bf5c488cde38783702a7bb5df72b3a32ad7177d89df1bff4ebfdbe33e",
+      "cards_sha256": "29cab953e56e6f231e632dfc1fbb2ceb6c8a0dc71a5ca752b159aa40e1df84c8",
+      "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+      "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+      "recipe_sha256": "aaf060fe5266d523e13b3fa9c23cb09d85ac13b07dc80e4f2f9bffaa1cc78233",
+      "native_tests": {
+        "total": 641,
+        "passed": 641,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "b3bc37ffc193f46633d43b9e809792900f651a4cd0ae590c199061383455d5a8",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "baseline_assertions": {
+      "cases": 14,
+      "failed": 12,
+      "passed": 2,
+      "failures": [
+        {
+          "kind": "polarity",
+          "mode": "heuristic",
+          "physical_seed": 0,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "polarity",
+          "mode": "heuristic",
+          "physical_seed": 4096,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "substitution",
+          "mode": "heuristic",
+          "physical_seed": null,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "chimera",
+          "mode": "heuristic",
+          "physical_seed": null,
+          "assertion": "0 != 1"
+        },
+        {
+          "kind": "polarity",
+          "mode": "hybrid",
+          "physical_seed": 0,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "polarity",
+          "mode": "hybrid",
+          "physical_seed": 4096,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "substitution",
+          "mode": "hybrid",
+          "physical_seed": null,
+          "assertion": "unexpectedly None"
+        },
+        {
+          "kind": "chimera",
+          "mode": "hybrid",
+          "physical_seed": null,
+          "assertion": "0 != 1"
+        },
+        {
+          "kind": "polarity",
+          "mode": "full",
+          "physical_seed": 0,
+          "assertion": "Lists differ: [2, 0, 0, 0] != [1, 1, 0, 0]\n\nFirst differing element 0:\n2\n1\n\n- [2, 0, 0, 0]\n+ [1, 1, 0, 0]"
+        },
+        {
+          "kind": "substitution",
+          "mode": "full",
+          "physical_seed": null,
+          "assertion": "Lists differ: [2, 0, 0, 0] != [1, 1, 0, 0]\n\nFirst differing element 0:\n2\n1\n\n- [2, 0, 0, 0]\n+ [1, 1, 0, 0]"
+        },
+        {
+          "kind": "chimera",
+          "mode": "full",
+          "physical_seed": null,
+          "assertion": "0 != 1"
+        },
+        {
+          "kind": "zacama_stolen",
+          "mode": null,
+          "physical_seed": null,
+          "assertion": "0 != 6"
+        }
+      ]
+    },
+    "baseline_manifest_parts": [
+      {
+        "name": "composed-control-heuristic.json",
+        "sha256": "8c2a96c13a8baf2144769ed12a617cd6aebe20fb8f36a567014673719bb76ca6",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-hybrid.json",
+        "sha256": "ff4316c1269cd1f9d15dfdddc096a45794f2a15d3072913d68c9b5942ba49ede",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-full.json",
+        "sha256": "ea8ed542ae39557b540506d5d084e8761e5341b3154413c6661811efab3d962f",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-provenance.json",
+        "sha256": "a00d43abc4fe5b20d39a8bcaf77f4c62dee7459745eda6a84044ef87b7b4c21b",
+        "cases": 2
+      }
+    ],
+    "candidate_run": "ab348352947542a49a48529c571bbf89",
+    "candidate_assertions": {
+      "cases": 14,
+      "passed": 14,
+      "failed": 0
+    },
+    "candidate_manifest_parts": [
+      {
+        "name": "composed-control-heuristic.json",
+        "sha256": "2d56573ba7d23b854f357e5159a52add19d1bf9b5d06a9f9dbed410c5a971d24",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-hybrid.json",
+        "sha256": "2be7d80460dcd552d501595d8cb1b5c65e8277660895d89b6b2171149712bbe6",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-full.json",
+        "sha256": "505b68672a3414cac563619e09a71c9f29ea1511f5f95f8a89138cb7a1ed696c",
+        "cases": 4
+      },
+      {
+        "name": "composed-control-provenance.json",
+        "sha256": "7dad413c71312ae4a44995962363e234fd1d1819fd80b8f1ad21d429b94eec66",
+        "cases": 2
+      }
+    ]
+  },
+  "profiles": {
+    "Default": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d",
+    "Cautious": "52045bb47e26ef2da4248427aa53f0b3122f5988fc4b01b0dbcf356f6daef7a1"
+  },
+  "card_archive_transition": {
+    "old_archive_sha256": "29cab953e56e6f231e632dfc1fbb2ceb6c8a0dc71a5ca752b159aa40e1df84c8",
+    "new_archive_sha256": "f46ee48d0283e97285743ee4272ef372d1114e1b56356aa9ab9ec4ac3f5758ea",
+    "archive_entries_compared": 34132,
+    "changes": [
+      {
+        "path": "p/perplexing_chimera.txt",
+        "before_sha256": "e7191d5983a066c9a46343daf48be0f3fe893e5ec7e1f334853728eee02c7016",
+        "after_sha256": "6fc159de40e44d17d28ec06fe44c0307ade81adfdbb98f189bb660f390626ffb",
+        "change": "Only AI exclusion metadata removed after line-ending normalization; rules script unchanged."
+      },
+      {
+        "path": "s/sudden_substitution.txt",
+        "before_sha256": "24985a46ba995a9aafdbab53f34dc970f939ae710ef5e371a3429882bfcd0eb4",
+        "after_sha256": "5d3997bbdfe2bff554786bad026e19e22dce84e50e6193fd2b8d58bec21ff030",
+        "change": "Only AI exclusion metadata removed after line-ending normalization; rules script unchanged."
+      }
+    ],
+    "alias_script_unchanged": true,
+    "companion_scripts_and_predicates_unchanged": true
+  },
+  "exact_review_registries": {
+    "aliases_sha256": "205a5fbec86f6e579c5c4ae8efea067cf3586128f12617cb4eaf740aa9d8344a",
+    "companions_sha256": "013be9f7b5cce080dae356e9945dab369a94db870b98e230e389afeeb511dab1",
+    "retained_previous_reviews": true,
+    "scripts_and_companion_predicates_unchanged": true
+  },
+  "oracle_identities": [
+    {
+      "name": "Invert Polarity",
+      "oracle_id": "69e12b1f-0fd9-43a9-b3db-fe08290442c6",
+      "oracle_text_sha256": "10fe2cbfc7525438788624dbf28a02d0cbb142a1af78aee0231ee9b92caf7cca"
+    },
+    {
+      "name": "Sudden Substitution",
+      "oracle_id": "e5ddacfb-e5a8-4885-a4c9-fa117f321293",
+      "oracle_text_sha256": "597d27d8e597d835deb6e505608a7bed0481a84208b17b02b1e716308ba41621"
+    },
+    {
+      "name": "Perplexing Chimera",
+      "oracle_id": "7d075b8a-a606-4590-b52b-b4ef3a9e342f",
+      "oracle_text_sha256": "ecd28f0188fd7fba4527fefb18fe786245de3c2708f7025a8d5bd4565240cb33"
+    },
+    {
+      "name": "Zacama, Primal Calamity",
+      "oracle_id": "23270e4a-a222-4ffb-a946-d0e20d665187",
+      "oracle_text_sha256": "ab9eafce558b494a655ea0c7a79203f1fa36db5f3eaa8e6a1afb17d64e88958a"
+    },
+    {
+      "name": "Shock",
+      "oracle_id": "a9d288b8-cdc1-4e55-a0c9-d6edfc95e65d",
+      "oracle_text_sha256": "a7b357197a4c544b56984802625f09764893a30f06241be624c13c722ada0fd4"
+    },
+    {
+      "name": "Aethersnatch",
+      "oracle_id": "45892ec2-8996-444f-a61c-5151926baa0b",
+      "oracle_text_sha256": "b81eb957fa00cc51212caa084001e8ac9ef79227d1b39218c08445aa55e97ced"
+    },
+    {
+      "name": "Commandeer",
+      "oracle_id": "ad7d854b-d303-40eb-acd6-03a8023e05e7",
+      "oracle_text_sha256": "b1b86c1055cca19b83bf32c8b87ab3442cafd842e97690afeaf7d7f4e988540f"
+    }
+  ],
+  "catalog_source": {
+    "object": "bulk_data",
+    "id": "27bf3214-1271-490b-bdfe-c0be6c23d02e",
+    "type": "oracle_cards",
+    "updated_at": "2026-11-04T22:02:02.236+00:00",
+    "uri": "https://api.scryfall.com/bulk-data/27bf3214-1271-490b-bdfe-c0be6c23d02e",
+    "name": "Oracle Cards",
+    "description": "A JSON file containing one Scryfall card object for each Oracle ID on Scryfall. The chosen sets for the cards are an attempt to return the most up-to-date recognizable version of the card.",
+    "jsonl_download_uri": "https://data.scryfall.io/oracle-cards/oracle-cards-20261104220202.jsonl.gz",
+    "compressed_size": 25309408
+  },
+  "rules_reference": {
+    "retained_comprehensive_rules": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "version": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "reviewed_rules": [
+      "112.2",
+      "109.5",
+      "601"
+    ],
+    "zacama_release_notes": "https://media.wizards.com/2023/downloads/CMM_Release_Notes/EN_MTGCMM_ReleaseNotes_20230616.pdf",
+    "scope": "Versioned references; not a comprehensive current-rules audit"
+  },
+  "excluded_drafts": [
+    "Pre-provenance checkpoint failures are recorded separately from the exact previous-reviewed-source baseline.",
+    "An observer draft did not flush ETB triggers created by the final resolution; the ordinary-Zacama control caught it.",
+    "The initial full packaged run passed 39 tests and 616 subtests but failed three new Sudden Substitution assertions: the legal Shock target was the exchanged Ornithopter, while the assertions expected player damage. Final witnesses record card targets, creature damage and the resulting graveyard zone.",
+    "Initial Pylint duplicate-helper failures were resolved before the final quality gate."
+  ],
+  "limits": [
+    "Response forecasts enumerate at most 128 compound target choices and two fixed paired seeds (0,4096); this is not exhaustive probability or strategy search.",
+    "Optional continuations apply only to the exact original resolving exchange wrapper at its checked optional decision. Foreign/live copied-world misuse is rejected; arbitrary unfinished parents are not replayed.",
+    "Three native boundary controls explicitly accept only the original threatened spell trigger; these test rules outcomes, not AI admission.",
+    "Native control and retarget callbacks retain distinct ownership, current spell controller, fixed decision beneficiary and original cast provenance.",
+    "Selected fixtures and catalog construction do not certify all cards or all interactions."
+  ],
+  "validation": {
+    "focused": {
+      "total": 666,
+      "passed": 666,
+      "failed": 0,
+      "skipped": 0
+    },
+    "broader_sha256": "cd11e4c4c7e014e4cd7022634162469cbee8797db5f95a79f231c7b0b0b3a8c4",
+    "live": {
+      "tests": 39,
+      "subtests": 619,
+      "log_sha256": "fc21891f14d0c30f14eb93e29ab38a6a29c17e328eecf4569f6c81b4f3691675"
+    },
+    "offline": {
+      "passed": 399,
+      "skipped_integration": 39,
+      "subtests": 508,
+      "log_sha256": "acd290e67f4e71678904964c8d2bcf7d42fdadf812432462675ff803db12f9f2"
+    },
+    "catalog": {
+      "counts": {
+        "constructed": 32109,
+        "script_unavailable": 7
+      },
+      "run_id": "0330f6752b694759bc3cb107affa64e4",
+      "purpose": "native_card_factory_construction_not_full_rules_or_ai_validation",
+      "log_sha256": "d5bd539e56f27412e6205432239b2e7eeb6d265bf83fec6de9c2007294d0c762",
+      "native_report_sha256": "04cbdc650fab54992aac754b2e16e14093a730d508a352d24855f54862f88c20",
+      "nonstarting_objects": [
+        {
+          "card_id": "b23587e0-9fb7-492e-8bb4-f218e8e4ce6c",
+          "name": "Brisela, Voice of Nightmares",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "6923cf6b-7d3e-4d95-abaf-1df1a04ac7c1",
+          "name": "Chittering Host",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "f4905c40-003e-4992-b8d7-3f07ba09c686",
+          "name": "Hanweir, the Writhing Township",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "3989308a-4c0f-493a-b38f-cb4f5019dfe7",
+          "name": "Mishra, Lost to Phyrexia",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "14b839ef-80b1-4e7d-b2fd-38e973899cde",
+          "name": "Ragnarok, Divine Deliverance",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "43230d70-4d60-4ceb-bb45-fbc043280652",
+          "name": "Titania, Gaea Incarnate",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "759406d7-44ae-4260-9ef5-3bb2c92f751a",
+          "name": "Urza, Planeswalker",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        }
+      ],
+      "observations_sha256": "2f6542bcd2dcd8737c0222905875770c05e2932f75561dd0b227084495ec85bd"
+    },
+    "engine_check_sha256": "ddc013de8d3a9088f9c3d40ff7ab3c4589d397039d66c54f2933c92ab3ffc95e",
+    "frozen_live_inputs_sha256": "957e43a70faf7e52c3086198fbc44a4cc3d54bdc8790bcb8cb8e9bca337c9b8a"
+  },
+  "activation": {
+    "source": "data/engine-builds/6dffe43369044130863935b66a8d54b7/runtime",
+    "destination": "data/engines/forge-3e6c036-composed-control-reviewed",
+    "lock_sha256": "f9d56192625c9008a82205159e63297df835bf65712c4c78908c3724d1cc4993",
+    "archive_lock": "config/engine_locks/forge-3e6c036-composed-control.json",
+    "canonical_lock_matches": true,
+    "promoted_engine_check_sha256": "281f250cc170a6a5da68d9ed480dc72341557f1eced7449fe175fb53c48560e3"
+  }
+}

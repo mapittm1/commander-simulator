@@ -47,7 +47,7 @@ A twenty-ninth preserves the fixed decision beneficiary, pending-stack planning
 and legal spell/ability target enumeration.
 A thirtieth adds bounded controlled-attack outcome planning under native attack
 constraints and the existing shared decision deadline.
-All thirty patches are pinned. No remote branch is used at build time.
+All thirty-three patches are pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -63,7 +63,7 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-641 native sticker, chosen-color, companion, supplementary-copy, history,
+666 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
 forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary and paid spell-control/retargeting tests.
@@ -96,15 +96,15 @@ See [card support and evidence](../docs/CARD_COVERAGE.md) for the distinction
 between constructor coverage, controlled rules checks and full gameplay support.
 
 
-The recipe pins twenty-nine regression source files and exactly three card-script
-overrides: Wicker Picker, The Prismatic Piper and Faceless One. The initial recipe
+The recipe pins thirty-eight regression source files and exactly nine card-script
+overrides, listed explicitly in the recipe. The initial recipe
 is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,189 gameplay and 256
+686 files verified against immutable source. The broader 1,214 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 641 focused tests are included in the 1,189.
+in `native_test_evidence.json`; the 666 focused tests are included in the 1,214.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -383,3 +383,16 @@ gameplay, 256 serialization and 38 live tests / 605 subtests, plus the Python
 quality gate and catalog checks. See `spell_control_evidence.json` for frozen
 inputs, binary identities, native payments, baseline failures and remaining
 composed-source/strategy limits. This is not full-card certification.
+
+
+The thirty-third patch adds a bounded paired native response planner,
+optional-trigger suffix checkpoints and detached cast provenance. The fresh build
+passes 666 focused tests: sixteen composed scenarios, four checkpoint contracts
+and five provenance cases supplement the previous 641. Final verification passes
+1,214 broader gameplay, 256 serialization and 39 live tests / 619 subtests,
+plus the Python quality gate. The provenance tests include actual Zacama mana
+outcomes. Fourteen packaged witnesses change from twelve failures / two controls
+to fourteen passes. Exact source, build, report and receipt identities are in
+[`composed_control_evidence.json`](composed_control_evidence.json). The native
+boundary choices and two-seed/128-target forecast bounds are documented there;
+full-card rules and strategy certification remain open.

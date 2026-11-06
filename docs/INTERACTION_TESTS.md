@@ -399,3 +399,21 @@ manifest binds the verified runtime and unchanged Default profile.
 The previous runtime baseline is retained separately; no uploaded deck can
 select a worker program. The reviewed runtime is active after the full validation gate; all twelve
 packaged cases pass. See [bound evidence](../engine/spell_control_evidence.json).
+
+
+## Composed-control and cast provenance
+
+The fixed `composed_control_worker.py` records both Invert Polarity branches,
+Sudden Substitution and Perplexing Chimera in each of three AI modes, plus ordinary
+and stolen Zacama in a separate provenance part. Four fixed receipt names are
+hash-bound in the manifest and use the existing bounded JSON I/O. Native mana
+payments, source/target identities, ownership, controllers, original cast counts,
+announced targets, damage and land untaps are checked. Optional trigger decisions
+are exercised through native resolution; no script is made mandatory. The three
+native boundary fixtures document explicit manual choices separately. All fourteen
+packaged cases pass; the identical previous-runtime fixture has twelve failures
+and two controls. Sudden Substitution records both the creature target and its
+graveyard outcome, rather than assuming the stolen Shock damages a player.
+The ordinary-Zacama control also checks trigger processing after the final
+resolution. Final validation passes 39 live tests / 619 subtests. See
+[bound evidence](../engine/composed_control_evidence.json).

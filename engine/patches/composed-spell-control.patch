@@ -1,0 +1,322 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java b/forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/FlipCoinAi.java
+@@ -16,6 +16,9 @@
+      */
+     @Override
+     protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        if (forge.ai.simulation.StackResponsePlanner.targetsStack(sa)) {
++            return forge.ai.simulation.StackResponsePlanner.choose(ai, sa);
++        }
+         if (sa.hasParam("AILogic")) {
+             String ailogic = sa.getParam("AILogic");
+             if (ailogic.equals("PhaseOut")) {
+diff --git a/forge-ai/src/main/java/forge/ai/ability/PumpAi.java b/forge-ai/src/main/java/forge/ai/ability/PumpAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/PumpAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/PumpAi.java
+@@ -116,6 +116,9 @@
+ 
+     @Override
+     protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        if (forge.ai.simulation.StackResponsePlanner.targetsStack(sa)) {
++            return forge.ai.simulation.StackResponsePlanner.choose(ai, sa);
++        }
+         final Game game = ai.getGame();
+         final Card source = sa.getHostCard();
+         final SpellAbility root = sa.getRootAbility();
+@@ -658,6 +661,22 @@
+         final SpellAbility root = sa.getRootAbility();
+         final Card source = sa.getHostCard();
+ 
++        // Structural target/remember nodes are valued with the complete response.
++        // They do not independently promise a power, toughness or keyword bonus.
++        if (root != sa && forge.ai.simulation.StackResponsePlanner.targetsStack(root)
++                && sa.hasParam("RememberObjects") && !sa.hasParam("NumAtt")
++                && !sa.hasParam("NumDef") && !sa.hasParam("KW")) {
++            SpellAbility validation = sa.copy();
++            validation.resetTargets();
++            for (forge.game.GameObject target : sa.getTargets()) {
++                if (!validation.canTarget(target) || !validation.getTargets().add(target)) {
++                    return new AiAbilityDecision(0, AiPlayDecision.TargetingFailed);
++                }
++            }
++            return new AiAbilityDecision(validation.isTargetNumberValid() ? 100 : 0,
++                    validation.isTargetNumberValid() ? AiPlayDecision.WillPlay : AiPlayDecision.TargetingFailed);
++        }
++
+         final String numDefense = sa.getParamOrDefault("NumDef", "");
+         final String numAttack = sa.getParamOrDefault("NumAtt", "");
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -482,6 +482,8 @@
+         if (wrapper.isMandatory()) {
+             return true;
+         }
++        Boolean checkpointDecision = forge.ai.simulation.OptionalTriggerPlanner.choose(player, wrapper);
++        if (checkpointDecision != null) return checkpointDecision;
+         // Store/replace target choices more properly to get this SA cleared.
+         TargetChoices tc = null;
+         TargetChoices subtc = null;
+diff --git a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+--- a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
++++ b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+@@ -437,7 +437,14 @@
+             }
+         }
+ 
+-        getActivatingPlayer().getController().playSpellAbilityNoStack(sa, false);
++        resumeAfterOptionalDecision(true);
++    }
++
++    /** Continue the already-checked body without asking the optional decision again. */
++    public void resumeAfterOptionalDecision(final boolean accepted) {
++        if (accepted) {
++            getActivatingPlayer().getController().playSpellAbilityNoStack(sa, false);
++        }
+     }
+ 
+     @Override
+diff --git a/forge-game/src/main/java/forge/game/zone/MagicStack.java b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+--- a/forge-game/src/main/java/forge/game/zone/MagicStack.java
++++ b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+@@ -347,9 +347,16 @@
+         Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+ 
+         if (sp.isSpell() && !sp.isCopied()) {
+-            final Card lki = sp.equals(source.getCastSA()) ? source.getCastSA().getHostCard() : CardCopyService.getLKICopy(source);
++            // Cast provenance is independent of later live-spell control/target changes.
++            final Card lki = CardCopyService.getLKICopy(source);
++            final SpellAbility castRecord = sp.copy(lki, true);
++            // Match native LKI cast records: retain choices/costs, not whole-world frames.
++            castRecord.setLastStateBattlefield(forge.game.card.CardCollection.EMPTY);
++            castRecord.setLastStateGraveyard(forge.game.card.CardCollection.EMPTY);
++            lki.setCastSA(castRecord);
++            source.setCastSA(castRecord);
+             runParams.put(AbilityKey.CardLKI, lki);
+-            thisTurnCast.add(sp.equals(source.getCastSA()) ? source.getCastSA() : sp.copy(lki, true));
++            thisTurnCast.add(castRecord);
+             sp.getActivatingPlayer().addSpellCastThisTurn();
+ 
+             // Add expend mana
+@@ -617,6 +624,8 @@
+         if (sa.getControlledByPlayer() != null) {
+             sa.getActivatingPlayer().addController(sa.getControlledByPlayer().getLeft(), sa.getControlledByPlayer().getRight());
+         }
++
++        final boolean resolvedApi = !thisHasFizzled && sa.getApi() != null;
+ 
+         if (thisHasFizzled) { // Fizzle
+             if (sa.isBestow()) {
+@@ -635,17 +644,45 @@
+                 game.fireEvent(new GameEventCardStatsChanged(source));
+                 AbilityUtils.resolve(first);
+             }
+-        } else if (sa.getApi() != null) {
++        } else if (resolvedApi) {
+             AbilityUtils.handleRemembering(sa);
+             AbilityUtils.resolve(sa);
++        } else {
++            sa.resolve();
++            // do creatures ETB from here?
++        }
++
++        completeResolution(sa, thisHasFizzled, resolvedApi, source);
++    }
++
++    /**
++     * Continue an isolated copy captured at a WrappedAbility optional decision.
++     * The AI caller must first verify the exact original resolving wrapper.
++     * Its checked prefix is not replayed; native body and completion stay shared.
++     */
++    public void resumeOptionalTriggerCheckpoint(final forge.game.trigger.WrappedAbility wrapper,
++            final boolean accepted) {
++        if (wrapper == null || !isFrozen() || isResolving() || peekAbility() != wrapper
++                || wrapper.getHostCard().getGame() != game || wrapper.getDecider() == null) {
++            throw new IllegalStateException("Checkpoint flags frozen=" + isFrozen() + " resolving=" + isResolving()
++                    + " top=" + (peekAbility() == wrapper) + " world=" + (wrapper.getHostCard().getGame() == game)
++                    + " decider=" + (wrapper.getDecider() != null) + " api=" + wrapper.getApi());
++        }
++        setResolving(true);
++        curResolvingCard = wrapper.getHostCard();
++        final boolean resolvedApi = wrapper.getApi() != null;
++        final Card source = wrapper.getHostCard();
++        wrapper.resumeAfterOptionalDecision(accepted);
++        completeResolution(wrapper, false, resolvedApi, source);
++    }
++
++    private void completeResolution(final SpellAbility sa, final boolean thisHasFizzled,
++            final boolean resolvedApi, final Card source) {
++        if (resolvedApi) {
+             final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(source);
+             runParams.put(AbilityKey.SpellAbility, sa);
+             game.getTriggerHandler().runTrigger(TriggerType.AbilityResolves, runParams, false);
+-        } else {
+-            sa.resolve();
+-            // do creatures ETB from here?
+-        }
+-
++        }
+         // Change controller back if it was changed
+         if (sa.getControlledByPlayer() != null) {
+             sa.getActivatingPlayer().removeController(sa.getControlledByPlayer().getLeft());
+diff --git a/forge-gui/res/cardsfolder/s/sudden_substitution.txt b/forge-gui/res/cardsfolder/s/sudden_substitution.txt
+--- a/forge-gui/res/cardsfolder/s/sudden_substitution.txt
++++ b/forge-gui/res/cardsfolder/s/sudden_substitution.txt
+@@ -9,5 +9,4 @@
+ SVar:DBControlSpell:DB$ ControlSpell | Defined$ Targeted | NewController$ Player.IsRemembered | Mode$ Gain | ConditionDefined$ Remembered | ConditionPresent$ Card | StackDescription$ None | SubAbility$ DBChooseTargets
+ SVar:DBChooseTargets:DB$ ChangeTargets | Defined$ Targeted | Chooser$ Player.IsRemembered | Optional$ True | ConditionDefined$ Imprinted | ConditionPresent$ Card | StackDescription$ None | SubAbility$ DBCleanup
+ SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True | ClearImprinted$ True
+-AI:RemoveDeck:All
+ Oracle:Split second (As long as this spell is on the stack, players can't cast spells or activate abilities that aren't mana abilities.)\nExchange control of target noncreature spell and target creature. Then the spell's controller may choose new targets for it.
+diff --git a/forge-gui/res/cardsfolder/p/perplexing_chimera.txt b/forge-gui/res/cardsfolder/p/perplexing_chimera.txt
+--- a/forge-gui/res/cardsfolder/p/perplexing_chimera.txt
++++ b/forge-gui/res/cardsfolder/p/perplexing_chimera.txt
+@@ -6,5 +6,4 @@
+ SVar:ExchangeControlSpell:DB$ ControlSpell | Defined$ TriggeredSpellAbility | Mode$ Exchange | Remember$ True | SubAbility$ DBChooseTargets
+ SVar:DBChooseTargets:DB$ ChangeTargets | Defined$ TriggeredSpellAbility | Optional$ True | ConditionDefined$ Remembered | ConditionPresent$ Card | ConditionCompare$ GE2 | SubAbility$ DBCleanup
+ SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+-AI:RemoveDeck:All
+ Oracle:Whenever an opponent casts a spell, you may exchange control of Perplexing Chimera and that spell. If you do, you may choose new targets for the spell. (If the spell becomes a permanent, you control that permanent.)
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/StackResponsePlanner.java
+@@ -0,0 +1,82 @@
++package forge.ai.simulation;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++import java.util.Random;
++
++/** Bounded paired native outcomes for complete compound stack responses. */
++public final class StackResponsePlanner {
++    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
++    private static final long[] SEEDS = {0L, 4096L};
++    private static final int MAX_TARGET_CHOICES = 128;
++
++    private StackResponsePlanner() { }
++
++    public static boolean targetsStack(SpellAbility action) {
++        return action.usesTargeting() && action.getTargetRestrictions().getZone().contains(ZoneType.Stack);
++    }
++
++    public static AiAbilityDecision choose(Player actor, SpellAbility action) {
++        if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
++                || actor.getGame().getStack().isResolving() || !targetsStack(action)) {
++            return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
++        }
++        ASSESSING.set(true);
++        try {
++            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action));
++        } finally {
++            ASSESSING.remove();
++        }
++    }
++
++    private static AiAbilityDecision assess(Player actor, SpellAbility action) {
++        GameStateEvaluator.Score[] baseline = new GameStateEvaluator.Score[SEEDS.length];
++        long baselineValue = 0;
++        long baselineAvailable = 0;
++        for (int i = 0; i < SEEDS.length; i++) {
++            final long seed = SEEDS[i];
++            baseline[i] = MyRandom.withRandom(new Random(seed),
++                    () -> GameSimulator.scoreForDecision(actor.getGame(), actor));
++            baselineValue += baseline[i].value;
++            baselineAvailable += baseline[i].availableValue;
++        }
++        SpellAbility trial = action.copy();
++        MultiTargetSelector selector = new MultiTargetSelector(trial, null);
++        SpellAbility best = null;
++        long bestValue = baselineValue;
++        for (int choice = 0; choice < MAX_TARGET_CHOICES && selector.selectNextTargets(); choice++) {
++            AITimeoutTracker.check();
++            long value = 0;
++            long available = 0;
++            boolean complete = true;
++            for (int i = 0; i < SEEDS.length; i++) {
++                final long seed = SEEDS[i];
++                final GameStateEvaluator.Score start = baseline[i];
++                GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
++                    GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
++                    return simulator.simulateSpellAbility(trial);
++                });
++                if (result.value == Integer.MIN_VALUE) {
++                    complete = false;
++                    break;
++                }
++                value += result.value;
++                available += result.availableValue;
++            }
++            if (complete && value > bestValue && available > baselineAvailable) {
++                best = trial.copy();
++                bestValue = value;
++            }
++        }
++        if (best == null) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) part.resetTargets();
++        SpellAbilityChoiceCopier.copyTargets(best, action, object -> object);
++        return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/OptionalTriggerPlanner.java b/forge-ai/src/main/java/forge/ai/simulation/OptionalTriggerPlanner.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/OptionalTriggerPlanner.java
+@@ -0,0 +1,49 @@
++package forge.ai.simulation;
++
++import forge.game.Game;
++import forge.game.ability.ApiType;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.trigger.WrappedAbility;
++import forge.util.MyRandom;
++import java.util.Random;
++
++/** Paired native suffixes at an exact optional-trigger resolution checkpoint. */
++public final class OptionalTriggerPlanner {
++    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
++
++    private OptionalTriggerPlanner() { }
++
++    public static Boolean choose(Player actor, WrappedAbility wrapper) {
++        Game game = actor.getGame();
++        SpellAbility action = wrapper.getWrappedAbility();
++        if (ASSESSING.get() || !game.getStack().isResolving()
++                || game.getStack().peekAbility() != wrapper || action.usesTargeting()
++                || action.getApi() != ApiType.ControlSpell || !"Exchange".equals(action.getParam("Mode"))) {
++            return null;
++        }
++        ASSESSING.set(true);
++        try {
++            Player beneficiary = DecisionPerspective.beneficiary(actor);
++            GameStateEvaluator.Score declined = project(game, actor, beneficiary, wrapper, false);
++            GameStateEvaluator.Score accepted = project(game, actor, beneficiary, wrapper, true);
++            return accepted.value > declined.value && accepted.availableValue > declined.availableValue;
++        } finally {
++            ASSESSING.remove();
++        }
++    }
++
++    private static GameStateEvaluator.Score project(Game source, Player actor, Player beneficiary,
++            WrappedAbility wrapper, boolean accepted) {
++        return MyRandom.withRandom(new Random(0L), () -> {
++            GameCopier copier = new GameCopier(source).withStack(true);
++            Game game = copier.makeCopy();
++            WrappedAbility copiedWrapper = copier.find(wrapper);
++            game.getStack().resumeOptionalTriggerCheckpoint(copiedWrapper, accepted);
++            Player copiedActor = copier.find(actor);
++            Player resolver = copiedActor.getWeakestOpponent();
++            GameSimulator.resolveStack(game, resolver == null ? copiedActor : resolver);
++            return new GameStateEvaluator().getScoreForGameState(game, copier.find(beneficiary));
++        });
++    }
++}

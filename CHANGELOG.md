@@ -6,6 +6,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added reviewed composed-control planning with paired native response forecasts,
+  compound target selection and exact optional-trigger checkpoint continuations.
+  Reuse native body/completion code, including resolution events, control cleanup
+  and stack bookkeeping. The identical sixteen-case source fixture changes from
+  seven failures / nine controls to sixteen passes. Four additional contracts
+  cover live-world/random isolation, accepted/declined suffixes, foreign/live
+  checkpoint rejection and controlled-player perspective.
+  These contracts exposed cast-provenance aliasing. Five dedicated cases change
+  from four failures / one control to five passes after separating cast records
+  from live spells; include repeated theft, announced targets and Zacama's
+  conditional land untap. Activated the pinned runtime after 666 focused native,
+  1,214 broader gameplay, 256 serialization and 39 live tests / 619 subtests,
+  the Python quality gate (399 offline tests / 508 subtests) and 32,109 matched
+  catalog constructions. Fourteen packaged cases change from twelve failures /
+  two controls to fourteen passes. They include both coin outcomes, all three
+  AI modes, original cast counts, creature/player retargeting and ordinary/stolen
+  Zacama. Compared all 34,132 card entries; only two AI exclusion flags changed.
+  Retained prior runtime/reviews and carried exact unchanged aliases/companion
+  predicates forward. Forecasts sample two fixed seeds and at most 128 target
+  combinations; full-card rules and exhaustive strategy certification remain open.
+
 - Added paid native spell-control decisions for Aethersnatch, Commandeer and
   Chef's Kiss, comparing paid outcomes with letting the pending stack resolve.
   Retarget in a copied world, preserve the native spell controller, decision

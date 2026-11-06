@@ -19,13 +19,22 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+The reviewed runtime evaluates composed control for Invert Polarity, Sudden
+Substitution and Perplexing Chimera. Cast provenance now preserves the original
+caster, paid costs and announced targets when a live spell changes control.
+This fixes the stolen-Zacama land-untap outcome. Validation passes 666 focused
+native regressions, 1,214 broader gameplay checks, 256 serialization checks,
+39 live tests / 619 subtests and the Python quality gate (399 offline tests /
+508 subtests). See [composed control and cast provenance](docs/CARD_COVERAGE.md#composed-control-and-cast-provenance)
+for the bounded forecasts, exact fixtures and remaining limits.
+
 Paid spell control and retargeting now have native choice/outcome witnesses for
 Aethersnatch, Commandeer and Chef's Kiss, including Commandeer's alternate exile
-cost. The active reviewed build passes 641 focused native regressions,
+cost. That earlier reviewed build passed 641 focused native regressions,
 1,189 broader gameplay checks, 256 serialization checks and 38 live tests /
 605 subtests, plus the Python quality gate. See
 [spell-control coverage](docs/CARD_COVERAGE.md#paid-spell-control-and-retargeting)
-for exact scope and remaining composed-source gaps. Full-card rules and strategy
+for its exact historical scope. Full-card rules and strategy
 coverage remain in progress.
 
 The recorded catalog refresh uses Scryfall’s November 4 export (39,287 records).

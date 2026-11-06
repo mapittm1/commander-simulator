@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,189 native tests in 91 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 641 focused
+The reviewed patched source also passes **1,214 native tests in 94 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 666 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1631,13 +1631,13 @@ Counterspell retargeting, controlled-player perspective, Arc Lightning divisions
 Fireball X, insufficient alternate payment, no-benefit choices and an additional
 restriction/random-provider contract. The identical previous-source fixture
 fails 18 cases and passes ten controls. The fresh build passes all 28, and all twelve packaged choice/payment/outcome
-witnesses pass. The active runtime passes 641 focused native, 1,189 broader
+witnesses pass. That earlier runtime passed 641 focused native, 1,189 broader
 gameplay, 256 serialization and 38 live tests / 605 subtests, plus the Python
 quality gate. Exact provenance is retained in
 [`spell_control_evidence.json`](../engine/spell_control_evidence.json).
 
-Remaining scope: Invert Polarity, Perplexing Chimera and Sudden Substitution
-compose spell control with other APIs and are not certified by these fixtures.
+That fixture does not cover Invert Polarity, Perplexing Chimera and Sudden
+Substitution; their later composed-control witnesses are described below.
 The primary heuristic declines resolving-parent contexts, trigger/subability
 entry points and reentrant assessment. Retargeting keeps the original choices
 if native heuristics cannot propose a complete valid replacement; it does not
@@ -1646,3 +1646,51 @@ selected outcomes, not stochastic fairness or full-card certification.
 
 Rules reference: [Wizards Comprehensive Rules, retained 2026-09-25 edition](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt),
 115.7d–f and 601.2c–d. This is a versioned reference, not a current-rules audit.
+
+## Composed control and cast provenance
+
+The reviewed runtime evaluates complete native stack responses for Invert Polarity and
+Sudden Substitution, with up to 128 target combinations and paired seeds 0/4096.
+These two deterministic preview samples are not an exhaustive probability model.
+Native payment, targeting, coin outcomes, exchange rules and resolution remain
+responsible for gameplay. Structural target/remember nodes are validated with
+their complete response rather than being mistaken for independent stat bonuses.
+
+Perplexing Chimera asks its optional question inside an already resolving
+trigger. The planner captures that exact wrapper checkpoint and previews the
+accepted and declined native suffixes, preserving the normal completion event,
+control cleanup, stack removal and phase bookkeeping. It does not replay the
+checked prefix or advance arbitrary unfinished parents. Existing resolver guards
+remain in place. Live-world and random-provider invariants have native contracts.
+
+Cast history is recorded after payment as separate native LKI-backed abilities.
+The live spell's controller and targets can change while the record retains its
+original caster, costs and announced choices. Zacama is a concrete gameplay
+witness: gaining control of its spell does not make the thief its caster and
+must not grant that thief its conditional land untap. Ordinary casting, repeated
+theft and current/recorded target separation are tested separately.
+
+The sixteen-case identical-source baseline has seven failures and nine controls.
+Three boundary controls use explicit affirmative choices for the original spell
+and real Rapid Hybridization, March of Swirling Mist and Counterspell responses;
+these are rules checks, not AI-admission witnesses. Four checkpoint contracts
+and five cast-provenance cases also pass. The latter's pre-provenance-fix prototype
+has four failures / one control, recorded separately from the previous-runtime
+sixteen-case baseline. The fresh archive-based build passes 666 focused native,
+1,214 broader gameplay and 256 serialization checks. Fourteen packaged witnesses
+change from twelve failures / two controls to fourteen passes. All 39 live tests /
+619 subtests and the Python quality gate (399 offline tests / 508 subtests) pass.
+The Sudden Substitution witness records Shock targeting the exchanged Ornithopter,
+two creature damage and its resulting graveyard zone. Ordinary/stolen Zacama
+controls flush triggers created by the final resolution before checking untaps.
+
+All 34,132 card-archive entries were compared; only the AI exclusion flags for
+Perplexing Chimera and Sudden Substitution changed. Exact unchanged alias scripts
+and companion predicates were reviewed before carrying their receipts forward.
+The catalog probe matches 32,109 constructions; seven meld results remain
+nonstarting objects. See [bound evidence](../engine/composed_control_evidence.json).
+These are selected gameplay witnesses, not full-card certification.
+
+Reference: [Wizards' Commander Masters release notes](https://media.wizards.com/2023/downloads/CMM_Release_Notes/EN_MTGCMM_ReleaseNotes_20230616.pdf)
+and the retained Comprehensive Rules 112.2, 601 and 109.5; references are versioned
+and do not constitute a complete current-rules audit.

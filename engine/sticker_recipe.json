@@ -135,14 +135,18 @@
     {
       "path": "engine/patches/spell-control-retargeting.patch",
       "sha256": "720198ebb526490404693449b62c07b5ad0b45d7d06c9b977bdb902ec5504622"
+    },
+    {
+      "path": "engine/patches/composed-spell-control.patch",
+      "sha256": "481f22402a54b7ac9615c868c9fe7dadec8ead1dcd2edb4e5269798fc469caae"
     }
   ],
   "test_sha256": "c0af95496b1e1764ac1e5bdb0f97d4246220cbc33f5e547c26a01c1d793839b0",
   "patch_source": "https://github.com/Card-Forge/forge/pull/12129",
   "patch_commit": "470d983bea1dd40b06ea81c6e061b4b14c31f933",
   "commander_color_test_sha256": "d7e05a0ad8abba97ef16b38fb2f6316a738be7d135e124aac09dffd6ce8e90c1",
-  "native_test_count": 641,
-  "runtime_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-spell-control",
+  "native_test_count": 666,
+  "runtime_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-composed-control",
   "capabilities": [
     "sticker_kicker",
     "explicit_commander_colors",
@@ -174,7 +178,9 @@
     "decision_beneficiary_planning",
     "controlled_attack_planning",
     "primary_control_future_planning",
-    "paid_spell_control_retargeting"
+    "paid_spell_control_retargeting",
+    "composed_spell_control",
+    "cast_provenance_records"
   ],
   "card_overrides": [
     "w/wicker_picker.txt",
@@ -183,7 +189,9 @@
     "w/worst_fears.txt",
     "m/mindslaver.txt",
     "a/aethersnatch.txt",
-    "c/commandeer.txt"
+    "c/commandeer.txt",
+    "p/perplexing_chimera.txt",
+    "s/sudden_substitution.txt"
   ],
   "companion_pregame_test_sha256": "c1407e3f50c3dcd7b89157ac253682d647a45356d3e86a17fb3e090a0894b799",
   "supplementary_copy_test_sha256": "9cae83e69d32413c5f98755ea052a5d724581d9e88877154fe26f8289ef211e4",
@@ -217,5 +225,8 @@
   "control_outcome_test_sha256": "862b6d0b178fbff88d39b7a1bd63574c92c7c4afe42b9bc55f21c0b3b5ffa7d5",
   "completed_plan_test_sha256": "150272c183c9db1d8c9134d3759a6757c82fea635ee8a864695ffe5033dde1d5",
   "resolving_control_test_sha256": "a7fce750a767140cee1509dbb68c2178b9c41fb870d3af5ff83a2793312fab9d",
-  "spell_control_test_sha256": "42e35d38bbf8d62b3aa90eeb96d7245a8f29a341e9ed4e963b335e3e9b99d413"
+  "spell_control_test_sha256": "42e35d38bbf8d62b3aa90eeb96d7245a8f29a341e9ed4e963b335e3e9b99d413",
+  "composed_control_test_sha256": "7f56a1bed2c7594df58e422dd18a4dfd68be1455436bfbe904cc0bff155bfeba",
+  "optional_checkpoint_test_sha256": "ca83851a58c8991b7b7ce9ce3af8116cd33135ce3a873e5cf3022666d9555e3d",
+  "spell_cast_provenance_test_sha256": "e90130c2d2dea86df766df24ba7059563491e25eecb04f905f45866600a0ec97"
 }
