@@ -1733,3 +1733,37 @@ Mass-counter references: the retained [Wizards Comprehensive Rules, 2026-09-25 e
 current-rules audit. Exiled suspended-card states, counter amounts, token
 identity and controller layers are explicit fixture preconditions; they do not
 claim to exercise every prior suspension, token-creation or control-acquisition path.
+
+## Creature exchanges and random piles
+
+The reviewed runtime covers selected paid decisions for Cultural Exchange and
+Whims of the Fates. A shared bounded
+paid-outcome forecast evaluates actual costs and native resolution. Creature
+selection ranks both equal-sized groups together from the decision beneficiary's
+perspective, including a controlled player's decisions. The exchange effect
+validates current eligible objects, unique identities, cardinality and destination
+control permission before changing either side; a canceled choice ends safely.
+Seeded pile rolls are assigned in the same player order as pile separation.
+
+The fixed native rules cases cover zero/equal groups, shroud, phasing, illegal
+player targets, empty piles and Assault Suit's sacrifice restriction. Separate
+AI cases require actual source admission and payment. The pile AI retains its
+legal all-in-one-pile policy; this is not an optimal partition strategy. Paired
+forecasts sample two fixed seeds under the existing deadline, not every possible
+roll or creature subset. Controlled-player fixtures establish a controller layer;
+they do not claim to test a preceding paid player-control spell. The runtime passed
+724 focused native tests, 1,272 broader gameplay checks (99 classes),
+256 serialization checks (16 classes), 41 live tests / 648 subtests and the
+Python quality gate (399 offline tests / 508 subtests). Catalog probing
+constructed 32,109 matched cards; seven unavailable entries were verified as
+nonstarting meld results. These counts are not full rules certification.
+
+The identical 26-case native fixture changes from eleven failures / fifteen
+passing controls to 26 passes, with five additional paired-selection contracts.
+Fifteen packaged cases change from ten failures / five passing controls to
+fifteen passes. The failing native baseline includes one canceled-choice
+exception and one seeded replay contract. Shroud, phasing, protection and
+Assault Suit were passing controls before this work. See
+[exact evidence](../engine/exchange_pile_evidence.json) and the
+[official Whims release notes](https://magic.wizards.com/en/news/feature/release-notes-2014-01-22)
+for the recorded scope and card-specific reference.

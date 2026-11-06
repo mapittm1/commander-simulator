@@ -50,3 +50,26 @@ def read_test_receipts(
             raise ValueError("Native witness receipt digest or case count changed")
         cases.extend(rows)
     return cases
+
+
+def assert_paid_outcome(case, row):
+    """Check shared preview isolation, source admission and paid-resolution invariants."""
+    case.assertEqual(row["before"], row["after_choice"])
+    case.assertTrue(row["world_unchanged"] and row["rng_restored"])
+    selected = row["selected"]
+    source = row["before"]["cards"]["source"]
+    if row["control"] != "positive":
+        if selected is not None:
+            case.assertNotEqual(selected["host_id"], source["id"])
+        return False
+    case.assertIsNotNone(selected)
+    case.assertEqual((selected["host_id"], selected["actor"]), (source["id"], 0))
+    case.assertTrue(selected["in_world"])
+    case.assertEqual(row["paid_action"]["host_id"], source["id"])
+    case.assertEqual(row["cast_counts"], [1, 0, 0, 0])
+    case.assertEqual(row["life"], [40, 40, 40, 40])
+    case.assertEqual(row["final"]["source"]["zone"], "Graveyard")
+    for tag, card in row["final"].items():
+        before = row["before"]["cards"][tag]
+        case.assertEqual((card["id"], card["owner"]), (before["id"], before["owner"]))
+    return True

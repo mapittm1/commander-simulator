@@ -9,7 +9,7 @@ import pytest
 from commander.engine.forge_config import read_settings
 from commander.engine.native_runtime import create_run
 from commander.paths import PROJECT_ROOT
-from tests.support.native_receipts import read_test_receipts
+from tests.support.native_receipts import assert_paid_outcome, read_test_receipts
 from tests.support.native_worker import run_test_worker
 
 pytestmark = pytest.mark.integration
@@ -24,31 +24,14 @@ class MassCounterIntegrationTests(unittest.TestCase):
 
     def assert_row(self, row):
         """Check one fixed outcome or source-decline control."""
-        self.assertEqual(row["before"], row["after_choice"])
-        self.assertTrue(row["world_unchanged"] and row["rng_restored"])
-        selected = row["selected"]
-        source = row["before"]["cards"]["source"]
-        if row["control"] != "positive":
-            if selected is not None:
-                self.assertNotEqual(selected["host_id"], source["id"])
+        if not assert_paid_outcome(self, row):
             return
-        self.assertIsNotNone(selected)
-        self.assertEqual(
-            (selected["host_id"], selected["name"], selected["actor"]),
-            (source["id"], row["source"], 0),
-        )
-        self.assertTrue(selected["in_world"])
+        final = row["final"]
+        selected = row["selected"]
+        self.assertEqual(selected["name"], row["source"])
         kind = row["kind"]
         self.assertEqual(row["setup_paid"], 3 if kind == "stone" else 0)
         self.assertEqual(row["paid_mana"], 5 if kind in ("aether", "stone") else 3)
-        self.assertEqual(row["paid_action"]["host_id"], source["id"])
-        self.assertEqual(row["cast_counts"], [1, 0, 0, 0])
-        self.assertEqual(row["life"], [40, 40, 40, 40])
-        final = row["final"]
-        self.assertEqual(final["source"]["zone"], "Graveyard")
-        for tag, card in final.items():
-            self.assertEqual(card["id"], row["before"]["cards"][tag]["id"])
-            self.assertEqual(card["owner"], row["before"]["cards"][tag]["owner"])
         if kind in ("dust", "haze"):
             self.assertEqual(row["paid_action"]["api"], "Charm")
             self.assertEqual(row["mode_api"], "RemoveCounterAll")

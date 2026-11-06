@@ -19,10 +19,19 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The reviewed runtime now evaluates complete paid mass-counter outcomes for
+The reviewed runtime now plans paid Cultural Exchange and Whims of the Fates
+plays, rejects invalid exchange replies before either transfer, and preserves
+player order for seeded pile rolls. Validation passes 724 focused native,
+1,272 broader gameplay, 256 serialization and 41 live tests / 648 subtests,
+plus the Python quality gate (399 offline tests / 508 subtests). The pile AI
+retains a legal all-in-one-pile policy; optimal partitions and full-card
+certification remain open. See
+[exchange and pile coverage](docs/CARD_COVERAGE.md#creature-exchanges-and-random-piles).
+
+The earlier mass-counter milestone added complete paid outcomes for
 Aether Snap, Dust of Moments, Oblivion Stone and Pestilent Haze. Modal choices,
 attached counter cleanup and source-decline controls have native and packaged
-witnesses. Validation passes 693 focused native, 1,241 broader gameplay,
+witnesses. That milestone passed 693 focused native, 1,241 broader gameplay,
 256 serialization and 40 live tests / 633 subtests, plus the Python quality gate
 (399 offline tests / 508 subtests). See
 [mass counter removal and paid outcomes](docs/CARD_COVERAGE.md#mass-counter-removal-and-paid-outcomes)

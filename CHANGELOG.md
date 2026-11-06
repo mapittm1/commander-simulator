@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added paid native planning for Cultural Exchange and Whims of the Fates.
+  Validate both creature groups before transferring either side, including
+  canceled, unequal and out-of-group replies. Choose paired groups from the
+  decision beneficiary's perspective and preserve separation order for seeded
+  pile replay. The same 26-case fixture changes from eleven failures / fifteen
+  controls to 26 passes; five additional selection contracts pass. Fifteen
+  packaged cases change from ten failures / five controls to fifteen passes.
+  Activated the pinned runtime after 724 focused native, 1,272 broader gameplay,
+  256 serialization and 41 live tests / 648 subtests, the Python quality gate
+  and 32,109 matched catalog constructions. Compared all 34,132 archive entries;
+  only the two intended AI exclusion flags changed. Retained earlier runtimes
+  and exact alias/companion reviews. The pile policy remains all-in-one-pile;
+  forecasts and creature ranking are bounded, not optimal or full-card proof.
+
 - Added complete paid mass-counter forecasts for Aether Snap, Dust of Moments,
   Oblivion Stone and Pestilent Haze, including native modal selection and attached
   cleanup. Share the bounded outcome evaluator with composed spell-control

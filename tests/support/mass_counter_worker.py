@@ -122,46 +122,45 @@ def _observe(java, board):
     }
 
 
-def _case(java, kind, mode, control="positive"):
-    board = _prepare(java, kind, mode, control)
+def _choose(java, board):
+    """Observe a native decision while retaining evidence of preview isolation."""
     before = _observe(java, board)
     fingerprint = _world_fingerprint(board.game)
     randoms = java.JClass("forge.util.MyRandom")
     provider = randoms.getRandom()
     choices = board.actor.getController().chooseSpellAbilityToPlay()
     action = None if choices is None or choices.isEmpty() else choices.get(java.JInt(0))
-    row = {
-        "kind": kind,
-        "mode": mode,
-        "control": control,
-        "source": SOURCES[kind],
-        "setup_paid": board.setup_paid,
+    return action, {
         "before": before,
         "after_choice": _observe(java, board),
         "world_unchanged": fingerprint == _world_fingerprint(board.game),
         "rng_restored": randoms.getRandom() == provider,
         "selected": None if action is None else _ability(board.game, action),
     }
-    if (
-        control != "positive"
-        or action is None
-        or action.getHostCard().getId() != board.cards["source"].getId()
-    ):
-        return row
+
+
+def _source_selected(board, action, control):
+    """Decline controls never force admission of the scenario source."""
+    return (
+        control == "positive"
+        and action is not None
+        and action.getHostCard().getId() == board.cards["source"].getId()
+    )
+
+
+def _paid_cast(board, action, row):
+    """Cast the selected action and record actual native payment."""
     board.actor.getController().playChosenSpellAbility(action)
     if board.game.getStack().isEmpty():
-        raise AssertionError(
-            "Selected native mass-counter action did not reach the stack"
-        )
+        raise AssertionError("Selected native action did not reach the stack")
     pending = board.game.getStack().peekAbility()
     row["paid_mana"] = int(pending.getPayingMana().size())
     row["paid_action"] = _ability(board.game, pending)
-    row["mode_api"] = (
-        None
-        if pending.getSubAbility() is None
-        else str(pending.getSubAbility().getApi())
-    )
-    _settle(board.game)
+    return pending
+
+
+def _finished(java, board, row):
+    """Record card identity and participant state after native resolution."""
     row["final"] = _snapshot(java, board)
     row["cast_counts"] = [
         int(player.getSpellsCastThisTurn())
@@ -171,6 +170,28 @@ def _case(java, kind, mode, control="positive"):
         int(player.getLife()) for player in board.game.getRegisteredPlayers()
     ]
     return row
+
+
+def _case(java, kind, mode, control="positive"):
+    board = _prepare(java, kind, mode, control)
+    action, row = _choose(java, board)
+    row.update(
+        kind=kind,
+        mode=mode,
+        control=control,
+        source=SOURCES[kind],
+        setup_paid=board.setup_paid,
+    )
+    if not _source_selected(board, action, control):
+        return row
+    pending = _paid_cast(board, action, row)
+    row["mode_api"] = (
+        None
+        if pending.getSubAbility() is None
+        else str(pending.getSubAbility().getApi())
+    )
+    _settle(board.game)
+    return _finished(java, board, row)
 
 
 def main() -> None:

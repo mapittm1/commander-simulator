@@ -1,0 +1,258 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ControlExchangeVariantAi.java b/forge-ai/src/main/java/forge/ai/ability/ControlExchangeVariantAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/ControlExchangeVariantAi.java
+@@ -0,0 +1,100 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.ComputerUtilCard;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.DecisionPerspective;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.game.ability.AbilityUtils;
++import forge.game.card.Card;
++import forge.game.card.CardCollection;
++import forge.game.card.CardCollectionView;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.AITimeoutTracker;
++import java.util.ArrayList;
++import java.util.Comparator;
++import java.util.IdentityHashMap;
++import java.util.List;
++import java.util.Map;
++
++/** Assess paid exchanges and choose both equal-sized creature groups together. */
++public final class ControlExchangeVariantAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    private static int relationship(Player beneficiary, Player player) {
++        return player == beneficiary || beneficiary.getAllies().contains(player) ? 1 : -1;
++    }
++
++    private static List<Card> eligible(Player from, Player to, SpellAbility action) {
++        ZoneType zone = ZoneType.smartValueOf(action.getParamOrDefault("Zone", "Battlefield"));
++        CardCollectionView pool = AbilityUtils.filterListByType(from.getCardsIn(zone),
++                action.getParamOrDefault("Type", "Card"), action);
++        List<Card> result = new ArrayList<>();
++        for (Card card : pool) {
++            AITimeoutTracker.check();
++            if (!card.isPhasedOut() && card.canBeControlledBy(to)) result.add(card);
++        }
++        return result;
++    }
++
++    private static Map<Card, Integer> values(List<Card> first, List<Card> second) {
++        Map<Card, Integer> result = new IdentityHashMap<>();
++        for (List<Card> group : List.of(first, second)) for (Card card : group) {
++            AITimeoutTracker.check();
++            result.put(card, card.isCreature() ? ComputerUtilCard.evaluateCreature(card)
++                    : ComputerUtilCard.evaluatePermanentList(new CardCollection(card)));
++        }
++        return result;
++    }
++
++    /** Pure paired selection; do not replay an already resolving parent or cache live-world cards. */
++    public static CardCollection chooseCards(Player actor, CardCollectionView pool,
++            SpellAbility action, int min, int max) {
++        List<Player> players = new ArrayList<>();
++        action.getTargets().getTargetPlayers().forEach(players::add);
++        CardCollection result = new CardCollection();
++        if (players.size() != 2 || min < 0 || max < min) return result;
++        Player firstPlayer = players.get(0), secondPlayer = players.get(1);
++        if (firstPlayer == secondPlayer || firstPlayer.getGame() != actor.getGame()
++                || secondPlayer.getGame() != actor.getGame()) return result;
++        Player beneficiary = DecisionPerspective.beneficiary(actor);
++        int delta = relationship(beneficiary, secondPlayer) - relationship(beneficiary, firstPlayer);
++        List<Card> first = eligible(firstPlayer, secondPlayer, action);
++        List<Card> second = eligible(secondPlayer, firstPlayer, action);
++        Map<Card, Integer> values = values(first, second);
++        first.sort(Comparator.<Card>comparingLong(card -> delta * (long) values.get(card))
++                .reversed().thenComparingInt(Card::getId));
++        second.sort(Comparator.<Card>comparingLong(card -> -delta * (long) values.get(card))
++                .reversed().thenComparingInt(Card::getId));
++        int limit = Math.min(max, Math.min(first.size(), second.size()));
++        if (limit < min) return result;
++        long gain = 0;
++        long bestGain = min == 0 ? 0 : Long.MIN_VALUE;
++        int bestCount = min;
++        for (int count = 1; count <= limit; count++) {
++            AITimeoutTracker.check();
++            gain += delta * (long) values.get(first.get(count - 1));
++            gain -= delta * (long) values.get(second.get(count - 1));
++            if (count >= min && gain > bestGain) {
++                bestGain = gain;
++                bestCount = count;
++            }
++        }
++        for (int index = 0; index < bestCount; index++) {
++            Card left = first.get(index), right = second.get(index);
++            if (pool.contains(left)) result.add(left);
++            if (pool.contains(right)) result.add(right);
++        }
++        return result;
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/ability/MultiplePilesAi.java b/forge-ai/src/main/java/forge/ai/ability/MultiplePilesAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/MultiplePilesAi.java
+@@ -0,0 +1,20 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++
++/** Compare the native paid pile-selection and sacrifice outcome with passing. */
++public final class MultiplePilesAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/AiController.java b/forge-ai/src/main/java/forge/ai/AiController.java
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -22,6 +22,7 @@
+ 
+ import forge.ai.AiCardMemory.MemorySet;
+ import forge.ai.ability.ChangeZoneAi;
++import forge.ai.ability.ControlExchangeVariantAi;
+ import forge.ai.ability.LearnAi;
+ import forge.ai.simulation.ComboGuard;
+ import forge.ai.simulation.ComboPlan;
+@@ -2812,6 +2813,8 @@
+             max = AbilityUtils.calculateAmount(sa.getHostCard(), sa.getParam("AIMaxAmount"), sa);
+         }
+         switch (sa.getApi()) {
++            case ExchangeControlVariant:
++                return ControlExchangeVariantAi.chooseCards(player, pool, sa, min, max);
+             case TwoPiles:
+                 // TODO: improve AI
+                 Card biggest = null;
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -98,7 +98,7 @@
+             .put(ApiType.ExchangeLife, LifeExchangeAi.class)
+             .put(ApiType.ExchangeLifeVariant, LifeExchangeVariantAi.class)
+             .put(ApiType.ExchangeControl, ControlExchangeAi.class)
+-            .put(ApiType.ExchangeControlVariant, CannotPlayAi.class)
++            .put(ApiType.ExchangeControlVariant, ControlExchangeVariantAi.class)
+             .put(ApiType.ExchangePower, PowerExchangeAi.class)
+             .put(ApiType.ExchangeTextBox, TextBoxExchangeAi.class)
+             .put(ApiType.ExchangeZone, ZoneExchangeAi.class)
+@@ -131,7 +131,7 @@
+             .put(ApiType.Meld, MeldAi.class)
+             .put(ApiType.Mill, MillAi.class)
+             .put(ApiType.MoveCounter, CountersMoveAi.class)
+-            .put(ApiType.MultiplePiles, CannotPlayAi.class)
++            .put(ApiType.MultiplePiles, MultiplePilesAi.class)
+             .put(ApiType.MultiplyCounter, CountersMultiplyAi.class)
+             .put(ApiType.MustBlock, MustBlockAi.class)
+             .put(ApiType.Mutate, MutateAi.class)
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ControlExchangeVariantEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ControlExchangeVariantEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ControlExchangeVariantEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ControlExchangeVariantEffect.java
+@@ -29,6 +29,8 @@
+         }
+         final Player player1 = players.get(0);
+         final Player player2 = players.get(1);
++        if (player1 == player2 || player1.getGame() != activator.getGame()
++                || player2.getGame() != activator.getGame()) return;
+         final ZoneType zone = ZoneType.smartValueOf(sa.getParamOrDefault("Zone", "Battlefield"));
+         final String type = sa.getParamOrDefault("Type", "Card");
+         // get valid lists
+@@ -37,19 +39,13 @@
+         int max = Math.min(list1.size(), list2.size());
+         // choose the same number of cards
+         CardCollectionView chosen1 = activator.getController().chooseCardsForEffect(list1, sa, Localizer.getInstance().getMessage("lblChooseCards") + ":" + player1, 0, max, true, null);
++        if (chosen1 == null || chosen1.size() > max) return;
+         int num = chosen1.size();
+         CardCollectionView chosen2 = activator.getController().chooseCardsForEffect(list2, sa, Localizer.getInstance().getMessage("lblChooseCards") + ":" + player2, num, num, true, null);
+-        // check all cards can be controlled by the other player
+-        for (final Card c : chosen1) {
+-            if (!c.canBeControlledBy(player2)) {
+-                return;
+-            }
+-        }
+-        for (final Card c : chosen2) {
+-            if (!c.canBeControlledBy(player1)) {
+-                return;
+-            }
+-        }
++        // Never apply only half an exchange after cancellation or an invalid reply.
++        if (chosen2 == null || chosen2.size() != num
++                || !validGroup(chosen1, list1, player1, player2, zone)
++                || !validGroup(chosen2, list2, player2, player1, zone)) return;
+         // set new controller
+         final long tStamp = sa.getActivatingPlayer().getGame().getNextTimestamp();
+         for (final Card c : chosen1) {
+@@ -59,4 +55,17 @@
+             c.addTempController(player1, tStamp);
+         }
+     }
++    private static boolean validGroup(CardCollectionView chosen, CardCollectionView eligible,
++            Player from, Player to, ZoneType zone) {
++        java.util.Set<Card> allowed = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
++        for (Card card : eligible) allowed.add(card);
++        java.util.Set<Integer> seen = new java.util.HashSet<>();
++        for (Card card : chosen) {
++            if (card == null || card.getGame() != from.getGame() || card.getController() != from
++                    || card.getZone() == null || !card.getZone().is(zone) || card.isPhasedOut()
++                    || !allowed.contains(card) || !seen.add(card.getId()) || !card.canBeControlledBy(to)) return false;
++        }
++        return true;
++    }
++
+ }
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/MultiplePilesEffect.java b/forge-game/src/main/java/forge/game/ability/effects/MultiplePilesEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/MultiplePilesEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/MultiplePilesEffect.java
+@@ -50,7 +50,8 @@
+         final ZoneType zone = sa.hasParam("Zone") ? ZoneType.smartValueOf(sa.getParam("Zone")) : ZoneType.Battlefield;
+         final boolean randomChosen = sa.hasParam("RandomChosen");
+         final int piles = Integer.parseInt(sa.getParam("Piles"));
+-        final Map<Player, List<CardCollectionView>> record = Maps.newHashMap();
++        // Preserve separation order so seeded rolls map to the same players in copied games.
++        final Map<Player, List<CardCollectionView>> record = Maps.newLinkedHashMap();
+ 
+         final String valid = sa.getParamOrDefault("ValidCards", "");
+ 
+diff --git a/forge-gui/res/cardsfolder/c/cultural_exchange.txt b/forge-gui/res/cardsfolder/c/cultural_exchange.txt
+--- a/forge-gui/res/cardsfolder/c/cultural_exchange.txt
++++ b/forge-gui/res/cardsfolder/c/cultural_exchange.txt
+@@ -2,5 +2,4 @@
+ ManaCost:4 U U
+ Types:Sorcery
+ A:SP$ ExchangeControlVariant | ValidTgts$ Player | TargetMin$ 2 | TargetMax$ 2 | Zone$ Battlefield | Type$ Creature | SpellDescription$ Choose any number of creatures target player controls. Choose the same number of creatures another target player controls. Those players exchange control of those creatures. (This effect lasts indefinitely.)
+-AI:RemoveDeck:All
+ Oracle:Choose any number of creatures target player controls. Choose the same number of creatures another target player controls. Those players exchange control of those creatures. (This effect lasts indefinitely.)
+diff --git a/forge-gui/res/cardsfolder/w/whims_of_the_fates.txt b/forge-gui/res/cardsfolder/w/whims_of_the_fates.txt
+--- a/forge-gui/res/cardsfolder/w/whims_of_the_fates.txt
++++ b/forge-gui/res/cardsfolder/w/whims_of_the_fates.txt
+@@ -3,6 +3,5 @@
+ Types:Sorcery
+ A:SP$ MultiplePiles | Defined$ Player | Zone$ Battlefield | ValidCards$ Permanent | RandomChosen$ True | Piles$ 3 | ChosenPile$ DBSacrifice | SpellDescription$ Starting with you, each player separates all permanents they control into three piles. Then each player chooses one of their piles at random and sacrifices those permanents. (Piles can be empty.)
+ SVar:DBSacrifice:DB$ SacrificeAll | ValidCards$ Card.IsRemembered
+-AI:RemoveDeck:All
+ AI:RemoveDeck:Random
+ Oracle:Starting with you, each player separates all permanents they control into three piles. Then each player chooses one of their piles at random and sacrifices those permanents. (Piles can be empty.)
