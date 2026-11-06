@@ -1,0 +1,222 @@
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -1505,8 +1505,7 @@
+ 
+     @Override
+     public TargetChoices chooseNewTargetsFor(SpellAbility ability, Predicate<GameObject> filter, boolean optional) {
+-        // AI currently can't do this. But when it can it will need to be based on Ability API
+-        return null;
++        return forge.ai.simulation.RetargetChooser.choose(player, ability, filter);
+     }
+ 
+     @Override
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -70,7 +70,7 @@
+             .put(ApiType.CopyPermanent, CopyPermanentAi.class)
+             .put(ApiType.CopySpellAbility, CopySpellAbilityAi.class)
+             .put(ApiType.ControlPlayer, ControlPlayerAi.class)
+-            .put(ApiType.ControlSpell, CannotPlayAi.class)
++            .put(ApiType.ControlSpell, ControlSpellAi.class)
+             .put(ApiType.Counter, CounterAi.class)
+             .put(ApiType.DamageAll, DamageAllAi.class)
+             .put(ApiType.DayTime, DayTimeAi.class)
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ControlSpellAi.java b/forge-ai/src/main/java/forge/ai/ability/ControlSpellAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/ControlSpellAi.java
+@@ -0,0 +1,62 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.GameSimulator;
++import forge.ai.simulation.GameStateEvaluator.Score;
++import forge.ai.simulation.SimulationController;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++import java.util.Random;
++
++/** Compare paid native responses with letting the pending stack resolve. */
++public final class ControlSpellAi extends SpellAbilityAi {
++    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
++
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility action) {
++        if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
++                || ai.getGame().getStack().isResolving() || !action.usesTargeting()) {
++            return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
++        }
++        ASSESSING.set(true);
++        try {
++            return MyRandom.withRandom(new Random(0L), () -> assess(ai, action));
++        } finally {
++            ASSESSING.remove();
++        }
++    }
++
++    private AiAbilityDecision assess(Player ai, SpellAbility action) {
++        Score baseline = MyRandom.withRandom(new Random(0L),
++                () -> GameSimulator.scoreForDecision(ai.getGame(), ai));
++        SpellAbility best = null;
++        Score bestScore = baseline;
++        for (var entry : ai.getGame().getStack()) {
++            AITimeoutTracker.check();
++            SpellAbility pending = entry.getSpellAbility();
++            if (!action.canTargetSpellAbility(pending)) continue;
++            SpellAbility trial = action.copy();
++            trial.resetTargets();
++            trial.getTargets().add(pending);
++            Score result = MyRandom.withRandom(new Random(0L), () -> {
++                SimulationController controller = new SimulationController(baseline, 0);
++                GameSimulator simulator = new GameSimulator(controller, ai.getGame(), ai, null);
++                return simulator.simulateSpellAbility(trial);
++            });
++            if (result.value != Integer.MIN_VALUE && result.value > bestScore.value
++                    && result.availableValue > baseline.availableValue) {
++                best = pending;
++                bestScore = result;
++            }
++        }
++        action.resetTargets();
++        if (best == null) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
++        action.getTargets().add(best);
++        return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+@@ -131,6 +131,11 @@
+             return SpecialCardAi.ChainOfAcid.consider(aiPlayer, sa);
+         }
+ 
++        // A defined subeffect has no independent spell/target choice. Evaluate it
++        // as part of its parent rather than vetoing a paid action as a new copy spell.
++        if (!sa.usesTargeting() && sa.hasParam("Defined")) {
++            return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        }
+         AiAbilityDecision decision = canPlay(aiPlayer, sa);
+         if (!decision.willingToPlay()) {
+             if (sa.isMandatory()) {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/RetargetChooser.java b/forge-ai/src/main/java/forge/ai/simulation/RetargetChooser.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/RetargetChooser.java
+@@ -0,0 +1,73 @@
++package forge.ai.simulation;
++
++import forge.ai.SpellApiToAi;
++import forge.game.Game;
++import forge.game.GameObject;
++import forge.game.cost.Cost;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.spellability.TargetChoices;
++import forge.util.MyRandom;
++import java.util.Random;
++import java.util.function.Predicate;
++
++/** Native effect heuristics on an isolated world; retargeting never recasts a spell. */
++public final class RetargetChooser {
++    private static final ThreadLocal<Boolean> CHOOSING = ThreadLocal.withInitial(() -> false);
++
++    private RetargetChooser() { }
++
++    public static TargetChoices choose(Player actor, SpellAbility ability, Predicate<GameObject> filter) {
++        TargetChoices original = ability.getTargets();
++        if (CHOOSING.get() || !ability.usesTargeting() || original.isEmpty()) return original;
++        CHOOSING.set(true);
++        try {
++            TargetChoices selected = MyRandom.withRandom(new Random(0L), () -> proposed(actor, ability, filter));
++            if (selected != null) ability.setTargets(selected);
++            return ability.getTargets();
++        } finally {
++            CHOOSING.remove();
++        }
++    }
++
++    private static TargetChoices proposed(Player actor, SpellAbility ability, Predicate<GameObject> filter) {
++        Game source = actor.getGame();
++        GameCopier copier = new GameCopier(source).withStack(true);
++        copier.makeCopy();
++        SpellAbility projected = copier.find(ability);
++        Player copiedActor = copier.find(ability.getActivatingPlayer());
++        Player beneficiary = copier.find(DecisionPerspective.beneficiary(actor));
++        int count = ability.getTargets().size();
++        projected.setTargetRestrictions(projected.getTargetRestrictions().forRetargeting(count));
++        // We are choosing targets for an already-paid spell, not paying its cost again.
++        projected.getRootAbility().setPayCosts(new Cost("0", projected.getRootAbility().isAbility()));
++        projected.setPayCosts(new Cost("0", projected.isAbility()));
++        projected.resetTargets();
++        if (!SpellApiToAi.Converter.get(projected).doTrigger(beneficiary, projected, true)
++                || projected.getActivatingPlayer() != copiedActor || projected.getTargets().size() != count) return null;
++        TargetChoices mapped = new TargetChoices();
++        SpellAbility validation = ability.copy();
++        validation.resetTargets();
++        int slot = 0;
++        for (GameObject target : projected.getTargets()) {
++            GameObject originalTarget = reverse(source, copier, target);
++            if (originalTarget == null) return null;
++            boolean retained = originalTarget == ability.getTargets().get(slot);
++            if (!retained && (filter != null && !filter.test(originalTarget) || !validation.canTarget(originalTarget))) return null;
++            if (!validation.getTargets().add(originalTarget) || !mapped.add(originalTarget)) return null;
++            Integer allocation = ability.getDividedValue(ability.getTargets().get(slot++));
++            if (allocation != null) mapped.addDividedAllocation(originalTarget, allocation);
++        }
++        return validation.isTargetNumberValid() ? mapped : null;
++    }
++
++    private static GameObject reverse(Game game, GameCopier copier, GameObject object) {
++        if (!(object instanceof SpellAbility)) return copier.reverseFind(object);
++        for (var entry : game.getStack()) {
++            for (SpellAbility action = entry.getSpellAbility(); action != null; action = action.getSubAbility()) {
++                if (copier.find(action) == object) return action;
++            }
++        }
++        return null;
++    }
++}
+diff --git a/forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java b/forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java
+--- a/forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java
++++ b/forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java
+@@ -595,6 +595,15 @@
+     public final boolean isUniqueTargets() {
+         return this.uniqueTargets;
+     }
++    /** A retarget keeps the announced number of targets; other restrictions survive. */
++    public TargetRestrictions forRetargeting(final int count) {
++        if (count < 0) throw new IllegalArgumentException("Negative target count");
++        TargetRestrictions result = copy();
++        result.minTargets = Integer.toString(count);
++        result.maxTargets = Integer.toString(count);
++        return result;
++    }
++
+     public final void setUniqueTargets(final boolean unique) {
+         this.uniqueTargets = unique;
+     }
+diff --git a/forge-gui/res/cardsfolder/a/aethersnatch.txt b/forge-gui/res/cardsfolder/a/aethersnatch.txt
+--- a/forge-gui/res/cardsfolder/a/aethersnatch.txt
++++ b/forge-gui/res/cardsfolder/a/aethersnatch.txt
+@@ -3,5 +3,4 @@
+ Types:Instant
+ A:SP$ ControlSpell | ValidTgts$ Card | TargetType$ Spell | Mode$ Gain | SubAbility$ DBChooseTargets | SpellDescription$ Gain control of target spell. You may choose new targets for it. (If that spell becomes a permanent, it enters under your control.)
+ SVar:DBChooseTargets:DB$ ChangeTargets | Defined$ Targeted | Optional$ True
+-AI:RemoveDeck:All
+ Oracle:Gain control of target spell. You may choose new targets for it. (If that spell becomes a permanent, it enters under your control.)
+diff --git a/forge-gui/res/cardsfolder/c/commandeer.txt b/forge-gui/res/cardsfolder/c/commandeer.txt
+--- a/forge-gui/res/cardsfolder/c/commandeer.txt
++++ b/forge-gui/res/cardsfolder/c/commandeer.txt
+@@ -4,5 +4,4 @@
+ S:Mode$ AlternativeCost | ValidSA$ Spell.Self | EffectZone$ All | Cost$ ExileFromHand<2/Card.Blue+Other> | Description$ You may exile two blue cards from your hand rather than pay this spell's mana cost.
+ A:SP$ ControlSpell | ValidTgts$ Card.nonCreature | TargetType$ Spell | Mode$ Gain | SubAbility$ DBChooseTargets | SpellDescription$ Gain control of target noncreature spell. You may choose new targets for it. (If that spell is an artifact, enchantment, or planeswalker, the permanent you control enters.)
+ SVar:DBChooseTargets:DB$ ChangeTargets | Defined$ Targeted | Optional$ True
+-AI:RemoveDeck:All
+ Oracle:You may exile two blue cards from your hand rather than pay this spell's mana cost.\nGain control of target noncreature spell. You may choose new targets for it. (If that spell is an artifact, enchantment, or planeswalker, the permanent you control enters.)

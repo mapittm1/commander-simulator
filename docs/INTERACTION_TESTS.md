@@ -384,3 +384,18 @@ scopes, exception restoration, completed-plan deadline recovery and resolving-pa
 boundaries with lethal free-cast triggers. They are not complete legal-deck games
 or exhaustive rules/strategy certification. See `engine/primary_control_evidence.json`
 for exact sources, before/after outcomes, gates and limitations.
+
+
+## Paid spell-control witnesses
+
+`tests/support/spell_control_worker.py` exercises twelve real native choices in
+three fixed receipt parts: each contains Aethersnatch, Commandeer and Chef's Kiss
+with mana payments, plus Commandeer's two-other-blue-card alternate payment.
+`tests/integration/test_spell_control_integration.py` checks the untouched original
+world, restored random provider, real source/stack identities, native payments,
+changed controllers/targets and final damage/survival. Receipt names and order
+are fixed, each part uses the existing bounded JSON reader/writer, and the
+manifest binds the verified runtime and unchanged Default profile.
+The previous runtime baseline is retained separately; no uploaded deck can
+select a worker program. The reviewed runtime is active after the full validation gate; all twelve
+packaged cases pass. See [bound evidence](../engine/spell_control_evidence.json).

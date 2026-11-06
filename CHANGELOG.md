@@ -6,6 +6,29 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added paid native spell-control decisions for Aethersnatch, Commandeer and
+  Chef's Kiss, comparing paid outcomes with letting the pending stack resolve.
+  Retarget in a copied world, preserve the native spell controller, decision
+  beneficiary, announced target count, X and damage division, and validate
+  mapped replacements before changing live targets. Native effects still handle
+  control changes and target events. Defined nontargeting copy subeffects are
+  assessed with their parent while retaining Chain of Smog/Acid policies.
+  The identical 28-case source fixture changes from 18 failures / 10 passing
+  controls to 28 passes. Twelve packaged choice/payment/outcome checks change
+  from 11 failures / one passing control to twelve passes. Both native Commandeer
+  cost paths, insufficient alternate payment, Counterspell targets, ownership,
+  no-benefit decisions and random-provider restoration have fixed witnesses.
+  Activated the pinned runtime after 641 focused native, 1,189 broader gameplay,
+  256 serialization and 38 live tests / 605 subtests, the Python quality gate
+  and 32,109 matched catalog constructions. Compared all 34,132 card entries;
+  only two AI exclusion flags changed. Retained old exact alias/companion reviews
+  and carried them forward after script/predicate checks. Composed-source AI,
+  exhaustive retarget strategy and full-card certification remain open.
+  Refreshed the active catalog from the real November 4 Scryfall export after
+  preserving a database backup. All 32,116 Commander Oracle/identity records
+  remain unchanged; three keyword metadata and two other-format legality
+  differences are recorded explicitly. Freshness checks remain enforced.
+
 - Added a separately validated primary-control candidate for Worst Fears,
   Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
   Compare paid native future windows against no-action windows; preserve native

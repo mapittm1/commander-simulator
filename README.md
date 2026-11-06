@@ -19,9 +19,22 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Paid spell control and retargeting now have native choice/outcome witnesses for
+Aethersnatch, Commandeer and Chef's Kiss, including Commandeer's alternate exile
+cost. The active reviewed build passes 641 focused native regressions,
+1,189 broader gameplay checks, 256 serialization checks and 38 live tests /
+605 subtests, plus the Python quality gate. See
+[spell-control coverage](docs/CARD_COVERAGE.md#paid-spell-control-and-retargeting)
+for exact scope and remaining composed-source gaps. Full-card rules and strategy
+coverage remain in progress.
+
+The recorded catalog refresh uses Scryfall’s November 4 export (39,287 records).
+The previous database is preserved under `data/local-archive/`; real provider
+timestamps and normal freshness checks remain in effect.
+
 Primary-control planning now evaluates paid native future windows for Worst Fears,
 Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
-The reviewed build passes 613 focused native regressions, 1,161 broader gameplay
+That earlier milestone passed 613 focused native regressions, 1,161 broader gameplay
 checks, 256 serialization checks and 37 live tests / 593 subtests, plus the Python
 quality gate. See [primary-control coverage](docs/CARD_COVERAGE.md#primary-control-future-planning)
 for exact scope and limits. Forecasts sample at most two legal actions per future
@@ -67,7 +80,7 @@ real combat outcomes.
 
 The default reviewed Commander Forge build constructs all **32,109 matched
 native card identities** in the frozen local Commander-format catalog without errors.
-Seven additional records are non-starting meld results. The build passes 613
+Seven additional records are non-starting meld results. The build passes 641
 focused native tests for stickers, chosen commander colors, companion pregame
 behavior, supplementary AI zones, historical card state, damage provenance,
 participant state, starting-life baselines, paid stack state, cast forms, usage
@@ -77,8 +90,8 @@ deadlines, keyword restoration, combat power exchange, forced-block requirements
 prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
 haste, host-bound exile returns, temporary effects, regeneration history, Detain,
 raw control age, player-control snapshots, decision/response planning and
-controlled attack outcomes, primary-control forecasts and resolving-parent safety.
-Broader native runs pass 1,161 AI/gameplay tests (including those 613) and 256
+controlled attack outcomes, primary-control forecasts, resolving-parent safety and paid spell control.
+Broader native runs pass 1,189 AI/gameplay tests (including those 641) and 256
 card/deck serialization tests, with no failures or skips.
 The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
 Five primary player-control sources now have paid native choice/outcome witnesses

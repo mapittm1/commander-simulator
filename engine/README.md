@@ -63,10 +63,10 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-613 native sticker, chosen-color, companion, supplementary-copy, history,
+641 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
-forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control and resolver-boundary tests.
+forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary and paid spell-control/retargeting tests.
 It packages a standalone runtime only when all pass without skips. It disables only the optional Windows GUI launcher packaging;
 the native engine is unchanged by that build setting. Maven needs network access
 to resolve the pinned source project's dependencies; transitive plugin and
@@ -102,9 +102,9 @@ is saved with the build; inputs are rechecked after compilation and packaging.
 Locks pin both the Java executable and the JVM library, in addition to the JAR
 and card ZIP, plus the bounded complete edition metadata inventory. Edition
 filenames and bytes use a portable ordered fingerprint; the default lock pins
-686 files verified against immutable source. The broader 1,161 gameplay and 256
+686 files verified against immutable source. The broader 1,189 gameplay and 256
 serialization checks are recorded
-in `native_test_evidence.json`; the 613 focused tests are included in the 1,161.
+in `native_test_evidence.json`; the 641 focused tests are included in the 1,189.
 
 
 The supplementary-zone regression checks real independent AI copies rather than
@@ -370,3 +370,16 @@ witness. Fourteen additional native contracts cover scoring, randomness,
 recovery and resolver safety. Full verification passes 613 focused, 1,161 broader
 gameplay, 256 serialization and 37 live tests / 593 subtests. Exact provenance and
 limits are in `primary_control_evidence.json`; this is not full-card certification.
+
+
+Paid spell-control planning compares native paid outcomes with a separate
+no-response baseline. AI retargeting uses native effect heuristics on a copied
+world, maps and validates replacements, retains announced target count and
+per-slot damage division, and leaves native target-event dispatch intact.
+The identical 28-case fixture changes from 18 failures / 10 positive controls to
+28 passes; twelve packaged witnesses change from 11 failures / one positive
+control to twelve passes. Final verification passes 641 focused, 1,189 broader
+gameplay, 256 serialization and 38 live tests / 605 subtests, plus the Python
+quality gate and catalog checks. See `spell_control_evidence.json` for frozen
+inputs, binary identities, native payments, baseline failures and remaining
+composed-source/strategy limits. This is not full-card certification.

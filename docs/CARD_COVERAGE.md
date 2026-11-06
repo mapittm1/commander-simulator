@@ -120,8 +120,8 @@ a companion.
 
 ## Broader native regressions
 
-The reviewed patched source also passes **1,161 native tests in 90 selected AI and
-gameplay classes**, with zero failures, errors or skips. This includes the 613 focused
+The reviewed patched source also passes **1,189 native tests in 91 selected AI and
+gameplay classes**, with zero failures, errors or skips. This includes the 641 focused
 sticker, chosen-color, companion, supplementary-copy, history, damage, participant,
 starting-life, paid-stack, cast-form, usage-history, scheduled-state, delayed-trigger,
 turn/phase-schedule, conditional-cleanup, animation and temporary-copy tests; these counts must not be added
@@ -1608,3 +1608,41 @@ regression reproduced that incorrect forecast, and a separate native Ruric Thar
 case exposed a free-cast safety bypass. The guarded fixture changes from two
 failures and one positive control to three passes. Existing incremental free-cast
 safety remains active; arbitrary parent continuations are not forecast.
+
+## Paid spell control and retargeting
+
+The reviewed extension covers primary ControlSpell actions: Aethersnatch, Commandeer and
+Chef's Kiss. It compares native paid stack outcomes with a separate no-response
+baseline. Each branch uses the same isolated preview seed; previews preserve
+original state and the live random provider. Native casting still controls
+legality, costs, spell ownership, targeting and resolution.
+
+A generic AI retarget callback delegates to native effect heuristics in a copied
+world, maps selected objects back, validates changed targets and retains original
+per-slot damage allocations. It preserves the announced number of targets and
+X value. The callback mutates the live spell's choices only after validation;
+the native ChangeTargets effect remains responsible for target events.
+A defined, nontargeting copy subeffect is assessed with its parent instead of
+being rejected as a separate copy spell. Chain of Smog/Acid policies remain first.
+
+The 28-case fixture includes nine primary AI choices, three alternate-cost AI
+choices, paid manual resolutions, ownership, the creature-target prohibition,
+Counterspell retargeting, controlled-player perspective, Arc Lightning divisions,
+Fireball X, insufficient alternate payment, no-benefit choices and an additional
+restriction/random-provider contract. The identical previous-source fixture
+fails 18 cases and passes ten controls. The fresh build passes all 28, and all twelve packaged choice/payment/outcome
+witnesses pass. The active runtime passes 641 focused native, 1,189 broader
+gameplay, 256 serialization and 38 live tests / 605 subtests, plus the Python
+quality gate. Exact provenance is retained in
+[`spell_control_evidence.json`](../engine/spell_control_evidence.json).
+
+Remaining scope: Invert Polarity, Perplexing Chimera and Sudden Substitution
+compose spell control with other APIs and are not certified by these fixtures.
+The primary heuristic declines resolving-parent contexts, trigger/subability
+entry points and reentrant assessment. Retargeting keeps the original choices
+if native heuristics cannot propose a complete valid replacement; it does not
+exhaustively search every legal target combination. Seeded examples establish
+selected outcomes, not stochastic fairness or full-card certification.
+
+Rules reference: [Wizards Comprehensive Rules, retained 2026-09-25 edition](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt),
+115.7d–f and 601.2c–d. This is a versioned reference, not a current-rules audit.

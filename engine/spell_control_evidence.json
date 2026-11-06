@@ -1,0 +1,1181 @@
+{
+  "scope": "Selected paid primary spell-control decisions and retargeting contracts; not complete card rules or optimal strategy certification",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-spell-control",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "c355e87bf5c488cde38783702a7bb5df72b3a32ad7177d89df1bff4ebfdbe33e",
+    "cards_sha256": "29cab953e56e6f231e632dfc1fbb2ceb6c8a0dc71a5ca752b159aa40e1df84c8",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "aaf060fe5266d523e13b3fa9c23cb09d85ac13b07dc80e4f2f9bffaa1cc78233",
+    "native_tests": {
+      "total": 641,
+      "passed": 641,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "b3bc37ffc193f46633d43b9e809792900f651a4cd0ae590c199061383455d5a8",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "2744bd65568d488e9b582ecb370cc0c1",
+  "patch_sha256": "720198ebb526490404693449b62c07b5ad0b45d7d06c9b977bdb902ec5504622",
+  "fixture_sha256": "42e35d38bbf8d62b3aa90eeb96d7245a8f29a341e9ed4e963b335e3e9b99d413",
+  "source_baseline": {
+    "counts": {
+      "tests": 28,
+      "failures": 18,
+      "errors": 0,
+      "skipped": 0
+    },
+    "fixture_sha256": "42e35d38bbf8d62b3aa90eeb96d7245a8f29a341e9ed4e963b335e3e9b99d413",
+    "failed_methods": [
+      "aetherFull",
+      "aetherHeuristic",
+      "aetherHybrid",
+      "chefsHeuristic",
+      "chefsHybrid",
+      "commandAlternateFull",
+      "commandAlternateHeuristic",
+      "commandAlternateHybrid",
+      "commandAlternatePaysTwoOtherBlueCards",
+      "commandFull",
+      "commandHeuristic",
+      "commandHybrid",
+      "controlledRetargetPreservesBeneficiaryAndCaster",
+      "counterspellCanBeRetargetedToResponse",
+      "nativeAetherDamage",
+      "nativeCommandeerDamage",
+      "retargetPreservesAnnouncedDividedAllocations",
+      "retargetPreservesAnnouncedX"
+    ],
+    "report_sha256": "ea1e70996b083e511be76729537271b35b6eb2d6ce6d4574f64d1f518bf5b0b0",
+    "source_audit_sha256": "53f45b1c3c485267ace61471a61051cd440c4cdad9984bb7aabfbd0b82d72338"
+  },
+  "native_candidate": {
+    "tests": 28,
+    "failures": 0,
+    "errors": 0,
+    "skipped": 0,
+    "report_sha256": "8fc729c20e662f6c9e3af3cc38ca2ad8789f278b16c1b4db67d046dc750b2c39"
+  },
+  "source_audit": {
+    "production_java_files": 2108,
+    "baseline_java_files": 2106,
+    "candidate_modified_or_added_paths": {
+      "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java": "e98c65fcd530a073b923b2f736e35b8583c27442fea97b7181f8b4be60b8124d",
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java": "68e1dd113b3310686a7b24076c4619d4cfe4e15b786ba5d56e9e0b7e95a1c1a9",
+      "forge-ai/src/main/java/forge/ai/ability/ControlSpellAi.java": "888bb83d461aee0ea6e1703713becc04b58b75825193d3bf3b0807327610cd45",
+      "forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java": "1e1c246b941a90abb383d60011d11ed217df7691e89875488e80aec1f5b3cd11",
+      "forge-ai/src/main/java/forge/ai/simulation/RetargetChooser.java": "4f93fdd3d50191f8925338aaefbf13e75bce361fe15539558899391fca26989e",
+      "forge-game/src/main/java/forge/game/spellability/TargetRestrictions.java": "d65b8cf73d1c1c0552cb76e1e73400193ca7b814f01dc7ca40789038b1239395",
+      "forge-gui/res/cardsfolder/a/aethersnatch.txt": "74ca1df02628ef7bbde9f6f0b31e7e64d17c75e5f88b2893c8e8b7db781eb5bc",
+      "forge-gui/res/cardsfolder/c/commandeer.txt": "8cf573f9f7658863f8380eb152f6005b2e2e3ed8d2437b2c76164b11919f63d5"
+    },
+    "full_candidate_map_sha256": "090b65ffa74a104117c3863fba15e6fd4c3cc6d1e93e56f8b0f7a1c3b355b52e",
+    "full_baseline_map_sha256": "53f45b1c3c485267ace61471a61051cd440c4cdad9984bb7aabfbd0b82d72338",
+    "unchanged_prior_production_text_verified": true
+  },
+  "packaged": {
+    "worker_sha256": "12142d95d9e4133f0508511ec240089a09b43536e5c73318adece439d655ee00",
+    "integration_sha256": "61d7c62fd5715e0d5aff820d8d00eca7a4936399d280087802f021b0371c7b42",
+    "baseline_run": "97e4fcabdd904029b31cdb5647d85913",
+    "baseline_engine": {
+      "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-primary-control",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+      "jar_sha256": "159cd097cede187d1fa0ff943115887ebf2eb81b9957ce09210f2dc5bccbb5f6",
+      "cards_sha256": "3cfc8d7fc3f26bdc3c5641980f4c5e9ae58a38ac1dafb8ee75e5f454ad14d5ca",
+      "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+      "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+      "recipe_sha256": "53b4b696967cdca1d6a09051ec23e24a1f5bde88dadf7a1f1a0ecceade982039",
+      "native_tests": {
+        "total": 613,
+        "passed": 613,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "50495b691a2cdf3bb0c92b63577c665981139572b06e34b62a744e6536846608",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "baseline_failed_criteria": [
+      [
+        "Aethersnatch",
+        "heuristic",
+        false
+      ],
+      [
+        "Commandeer",
+        "heuristic",
+        false
+      ],
+      [
+        "Chef's Kiss",
+        "heuristic",
+        false
+      ],
+      [
+        "Commandeer",
+        "heuristic",
+        true
+      ],
+      [
+        "Aethersnatch",
+        "hybrid",
+        false
+      ],
+      [
+        "Commandeer",
+        "hybrid",
+        false
+      ],
+      [
+        "Chef's Kiss",
+        "hybrid",
+        false
+      ],
+      [
+        "Commandeer",
+        "hybrid",
+        true
+      ],
+      [
+        "Aethersnatch",
+        "full",
+        false
+      ],
+      [
+        "Commandeer",
+        "full",
+        false
+      ],
+      [
+        "Commandeer",
+        "full",
+        true
+      ]
+    ],
+    "baseline_total": 12,
+    "candidate_run": "ceeb8a010ccd403c8a41263ac8cf39c0",
+    "manifest_sha256": "d029c75edbdbc111fb854c89b39bc872bc61f32bc253a4016683c0628e4fbe1c",
+    "log_sha256": "ff9a7e876e3a8d4b4e44016e77dd3255ec316a24dfdf3539f20b2e0cae5c5528",
+    "parts": [
+      {
+        "name": "spell-control-heuristic.json",
+        "sha256": "ee5b46355da8be9d8100f138935ef151a60952073429718903167307d4d5ebf7",
+        "cases": 4
+      },
+      {
+        "name": "spell-control-hybrid.json",
+        "sha256": "8520ecce9ee2682ea5fdb98815c66873f8a2bff2acc8390da50ef004683ebfe2",
+        "cases": 4
+      },
+      {
+        "name": "spell-control-full.json",
+        "sha256": "6d1939c150f7f0bb2efb8941c0138dbcabd7245cc4f15aa131fb1f11d15f7014",
+        "cases": 4
+      }
+    ],
+    "observed": [
+      {
+        "source": "Aethersnatch",
+        "mode": "heuristic",
+        "alternate": false,
+        "selected": {
+          "name": "Aethersnatch",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 6,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "heuristic",
+        "alternate": false,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 7,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Chef's Kiss",
+        "mode": "heuristic",
+        "alternate": false,
+        "selected": {
+          "name": "Chef's Kiss",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 3,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 103,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          },
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          36,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "heuristic",
+        "alternate": true,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 104,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 0,
+        "fodder_zones": [
+          "Exile",
+          "Exile"
+        ],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Aethersnatch",
+        "mode": "hybrid",
+        "alternate": false,
+        "selected": {
+          "name": "Aethersnatch",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 6,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "hybrid",
+        "alternate": false,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 7,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Chef's Kiss",
+        "mode": "hybrid",
+        "alternate": false,
+        "selected": {
+          "name": "Chef's Kiss",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 3,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 103,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              2
+            ],
+            "spells": [],
+            "in_world": true
+          },
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              3
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          40,
+          38,
+          38
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "hybrid",
+        "alternate": true,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 104,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 0,
+        "fodder_zones": [
+          "Exile",
+          "Exile"
+        ],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Aethersnatch",
+        "mode": "full",
+        "alternate": false,
+        "selected": {
+          "name": "Aethersnatch",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 6,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "full",
+        "alternate": false,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 7,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Chef's Kiss",
+        "mode": "full",
+        "alternate": false,
+        "selected": {
+          "name": "Chef's Kiss",
+          "host_id": 102,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 3,
+        "fodder_zones": [],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 103,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          },
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              2
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          38,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      },
+      {
+        "source": "Commandeer",
+        "mode": "full",
+        "alternate": true,
+        "selected": {
+          "name": "Commandeer",
+          "host_id": 104,
+          "api": "ControlSpell",
+          "is_spell": true,
+          "actor": 0,
+          "players": [],
+          "spells": [
+            101
+          ],
+          "in_world": true
+        },
+        "paid_mana": 0,
+        "fodder_zones": [
+          "Exile",
+          "Exile"
+        ],
+        "controlled_stack": [
+          {
+            "name": "Shock",
+            "host_id": 101,
+            "api": "DealDamage",
+            "is_spell": true,
+            "actor": 0,
+            "players": [
+              1
+            ],
+            "spells": [],
+            "in_world": true
+          }
+        ],
+        "life": [
+          2,
+          38,
+          40,
+          40
+        ],
+        "actor_lost": false,
+        "world_unchanged": true,
+        "rng_restored": true
+      }
+    ]
+  },
+  "profiles": {
+    "Default": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d",
+    "Cautious": "52045bb47e26ef2da4248427aa53f0b3122f5988fc4b01b0dbcf356f6daef7a1"
+  },
+  "card_archive_transition": {
+    "old_archive_sha256": "3cfc8d7fc3f26bdc3c5641980f4c5e9ae58a38ac1dafb8ee75e5f454ad14d5ca",
+    "new_archive_sha256": "29cab953e56e6f231e632dfc1fbb2ceb6c8a0dc71a5ca752b159aa40e1df84c8",
+    "archive_entries_compared": 34132,
+    "changes": [
+      {
+        "path": "a/aethersnatch.txt",
+        "before_sha256": "a41b8a3b9c0e498519595a39265153718bb49710d5072efcc6786ebe8bb2211c",
+        "after_sha256": "74ca1df02628ef7bbde9f6f0b31e7e64d17c75e5f88b2893c8e8b7db781eb5bc",
+        "change": "Only AI:RemoveDeck:All removed; normalized rules script unchanged."
+      },
+      {
+        "path": "c/commandeer.txt",
+        "before_sha256": "4c6813b16bc191c728a9690237a57f90215f2a3abeccd3d15acdbd7d02e3cee5",
+        "after_sha256": "8cf573f9f7658863f8380eb152f6005b2e2e3ed8d2437b2c76164b11919f63d5",
+        "change": "Only AI:RemoveDeck:All removed; normalized rules script unchanged."
+      }
+    ],
+    "alias_script_unchanged": true,
+    "companion_scripts_and_predicates_unchanged": true
+  },
+  "exact_review_registries": {
+    "aliases_sha256": "60066377cc8d0afee5d8240ccec8f1a9920a5591a06c67c8034434907a7578e0",
+    "companions_sha256": "6ae10298ec9e279f513d61fe8c8b2ab034b311fb01656f2186ec30e435d25a61",
+    "retained_previous_reviews": true,
+    "companion_positive_negative_controls": true
+  },
+  "oracle_identities": [
+    {
+      "name": "Aethersnatch",
+      "card_id": "45892ec2-8996-444f-a61c-5151926baa0b",
+      "oracle_id": "45892ec2-8996-444f-a61c-5151926baa0b",
+      "oracle_text_sha256": "b81eb957fa00cc51212caa084001e8ac9ef79227d1b39218c08445aa55e97ced",
+      "scope": "primary fixture"
+    },
+    {
+      "name": "Commandeer",
+      "card_id": "ad7d854b-d303-40eb-acd6-03a8023e05e7",
+      "oracle_id": "ad7d854b-d303-40eb-acd6-03a8023e05e7",
+      "oracle_text_sha256": "b1b86c1055cca19b83bf32c8b87ab3442cafd842e97690afeaf7d7f4e988540f",
+      "scope": "primary fixture"
+    },
+    {
+      "name": "Chef's Kiss",
+      "card_id": "3d177c04-9aa3-44b8-bbe4-df5de23a4ce6",
+      "oracle_id": "3d177c04-9aa3-44b8-bbe4-df5de23a4ce6",
+      "oracle_text_sha256": "97db3f4d274193cb1a1a87e7c8de607412782898f99507e690101a7d4a8fe134",
+      "scope": "primary fixture"
+    },
+    {
+      "name": "Invert Polarity",
+      "card_id": "69e12b1f-0fd9-43a9-b3db-fe08290442c6",
+      "oracle_id": "69e12b1f-0fd9-43a9-b3db-fe08290442c6",
+      "oracle_text_sha256": "10fe2cbfc7525438788624dbf28a02d0cbb142a1af78aee0231ee9b92caf7cca",
+      "scope": "composed source remains open"
+    },
+    {
+      "name": "Perplexing Chimera",
+      "card_id": "7d075b8a-a606-4590-b52b-b4ef3a9e342f",
+      "oracle_id": "7d075b8a-a606-4590-b52b-b4ef3a9e342f",
+      "oracle_text_sha256": "ecd28f0188fd7fba4527fefb18fe786245de3c2708f7025a8d5bd4565240cb33",
+      "scope": "composed source remains open"
+    },
+    {
+      "name": "Sudden Substitution",
+      "card_id": "e5ddacfb-e5a8-4885-a4c9-fa117f321293",
+      "oracle_id": "e5ddacfb-e5a8-4885-a4c9-fa117f321293",
+      "oracle_text_sha256": "597d27d8e597d835deb6e505608a7bed0481a84208b17b02b1e716308ba41621",
+      "scope": "composed source remains open"
+    }
+  ],
+  "catalog_refresh": {
+    "fresh_source": {
+      "object": "bulk_data",
+      "id": "27bf3214-1271-490b-bdfe-c0be6c23d02e",
+      "type": "oracle_cards",
+      "updated_at": "2026-11-04T22:02:02.236+00:00",
+      "uri": "https://api.scryfall.com/bulk-data/27bf3214-1271-490b-bdfe-c0be6c23d02e",
+      "name": "Oracle Cards",
+      "description": "A JSON file containing one Scryfall card object for each Oracle ID on Scryfall. The chosen sets for the cards are an attempt to return the most up-to-date recognizable version of the card.",
+      "jsonl_download_uri": "https://data.scryfall.io/oracle-cards/oracle-cards-20261104220202.jsonl.gz",
+      "compressed_size": 25309408
+    },
+    "records": 39287,
+    "old_database_backup": "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\local-archive\\catalog-before-spell-control-20261105\\cards.sqlite3",
+    "commander_legal_rows_identical": 32116,
+    "critical_fields_compared": [
+      "name",
+      "oracle_id",
+      "oracle_text",
+      "type_line",
+      "color_identity",
+      "card_faces",
+      "layout",
+      "legalities.commander"
+    ],
+    "oracle_critical_fields_sha256": "28893029e59d8291d86a3f5e7907da1391f3685fe56ab84d15a3f29d34157834",
+    "reviewed_metadata_changes": [
+      {
+        "name": "Concealed Weapon",
+        "id": "104565b1-2db8-4c01-ae3d-14087768be45",
+        "fields": [
+          "keywords"
+        ],
+        "before": {
+          "keywords": [
+            "Disguise",
+            "Equip"
+          ]
+        },
+        "after": {
+          "keywords": [
+            "Equip",
+            "Disguise"
+          ]
+        }
+      },
+      {
+        "name": "Reckless Impulse",
+        "id": "584cf0fd-112a-4ca6-9c0e-1f3228a7d325",
+        "fields": [
+          "legalities"
+        ],
+        "before": {
+          "legalities": {
+            "standard": "not_legal",
+            "future": "not_legal",
+            "historic": "legal",
+            "timeless": "legal",
+            "gladiator": "legal",
+            "pioneer": "legal",
+            "modern": "legal",
+            "legacy": "legal",
+            "pauper": "legal",
+            "vintage": "legal",
+            "penny": "not_legal",
+            "commander": "legal",
+            "oathbreaker": "legal",
+            "standardbrawl": "not_legal",
+            "brawl": "legal",
+            "competitivebrawl": "legal",
+            "alchemy": "not_legal",
+            "paupercommander": "legal",
+            "duel": "legal",
+            "oldschool": "not_legal",
+            "premodern": "not_legal",
+            "predh": "not_legal",
+            "tlr": "legal"
+          }
+        },
+        "after": {
+          "legalities": {
+            "standard": "not_legal",
+            "future": "legal",
+            "historic": "legal",
+            "timeless": "legal",
+            "gladiator": "legal",
+            "pioneer": "legal",
+            "modern": "legal",
+            "legacy": "legal",
+            "pauper": "legal",
+            "vintage": "legal",
+            "penny": "not_legal",
+            "commander": "legal",
+            "oathbreaker": "legal",
+            "standardbrawl": "not_legal",
+            "brawl": "legal",
+            "competitivebrawl": "legal",
+            "alchemy": "not_legal",
+            "paupercommander": "legal",
+            "duel": "legal",
+            "oldschool": "not_legal",
+            "premodern": "not_legal",
+            "predh": "not_legal",
+            "tlr": "legal"
+          }
+        }
+      },
+      {
+        "name": "Mjölnir, Hammer of Thor",
+        "id": "7f9a8845-d760-44a7-a4c9-8a20dba4e14a",
+        "fields": [
+          "keywords"
+        ],
+        "before": {
+          "keywords": [
+            "Double"
+          ]
+        },
+        "after": {
+          "keywords": [
+            "Equip",
+            "Double"
+          ]
+        }
+      },
+      {
+        "name": "Engineered Explosives",
+        "id": "95fd897e-9086-42c4-8e0d-61bb02333c5f",
+        "fields": [
+          "legalities"
+        ],
+        "before": {
+          "legalities": {
+            "standard": "not_legal",
+            "future": "not_legal",
+            "historic": "not_legal",
+            "timeless": "not_legal",
+            "gladiator": "not_legal",
+            "pioneer": "not_legal",
+            "modern": "legal",
+            "legacy": "legal",
+            "pauper": "not_legal",
+            "vintage": "legal",
+            "penny": "not_legal",
+            "commander": "legal",
+            "oathbreaker": "legal",
+            "standardbrawl": "not_legal",
+            "brawl": "not_legal",
+            "competitivebrawl": "not_legal",
+            "alchemy": "not_legal",
+            "paupercommander": "not_legal",
+            "duel": "legal",
+            "oldschool": "not_legal",
+            "premodern": "not_legal",
+            "predh": "legal",
+            "tlr": "legal"
+          }
+        },
+        "after": {
+          "legalities": {
+            "standard": "not_legal",
+            "future": "legal",
+            "historic": "not_legal",
+            "timeless": "not_legal",
+            "gladiator": "not_legal",
+            "pioneer": "not_legal",
+            "modern": "legal",
+            "legacy": "legal",
+            "pauper": "not_legal",
+            "vintage": "legal",
+            "penny": "not_legal",
+            "commander": "legal",
+            "oathbreaker": "legal",
+            "standardbrawl": "not_legal",
+            "brawl": "not_legal",
+            "competitivebrawl": "not_legal",
+            "alchemy": "not_legal",
+            "paupercommander": "not_legal",
+            "duel": "legal",
+            "oldschool": "not_legal",
+            "premodern": "not_legal",
+            "predh": "legal",
+            "tlr": "legal"
+          }
+        }
+      },
+      {
+        "name": "Excalibur, Sword of Eden",
+        "id": "9fb6bd72-031b-40a1-83c5-8a1c82f84e12",
+        "fields": [
+          "keywords"
+        ],
+        "before": {
+          "keywords": []
+        },
+        "after": {
+          "keywords": [
+            "Equip"
+          ]
+        }
+      }
+    ],
+    "bulk_sha256": "4f634dfe5717ff3872eb1557649011681ce3ddfb5bc873bc11f55f957f5ff1ae",
+    "active_catalog": {
+      "id": 3,
+      "source": "oracle_cards",
+      "source_updated_at": "2026-11-04T22:02:02.236+00:00",
+      "imported_at": "2026-11-06 03:44:04",
+      "records": 39287
+    },
+    "fresh_probe_run": "5a97e54e5d434eb3809c81bdd3e6b24f",
+    "scope": "Real current Scryfall import; Commander Oracle/identity fields unchanged, three keyword metadata and two other-format legality differences retained explicitly. No freshness-policy override."
+  },
+  "remaining_composed_research": {
+    "scope": "Ignored source-only follow-up research; not part of 641-case reviewed recipe or claimed composed-source coverage",
+    "counts": {
+      "tests": 7,
+      "failures": 3,
+      "errors": 0,
+      "skipped": 0
+    },
+    "failed_methods": [
+      "chimeraOptionalTriggerProtectsController",
+      "polarityHeuristic",
+      "polarityHybrid"
+    ],
+    "passed_methods": [
+      "polarityFull",
+      "polarityNativeLoss",
+      "polarityNativeWin",
+      "suddenSubstitutionNativeExchange"
+    ],
+    "fixture_sha256": "fadd0dd352cc31eab14788bb77339fd456c13f798ab09ad7f5fcde4fb7eaaf76",
+    "report_sha256": "b37a97c504f3e68ef4dc22a2b914a6241a092da1e75b17005cf14d63e4a7dfda",
+    "production_text_matches_reviewed_candidate": true,
+    "source_notes": [
+      "Invert Polarity seeded win and loss native branches pass; full mode passes; heuristic/hybrid selection return no action.",
+      "Sudden Substitution manual paid exchange and damage survival pass, not AI admission certification.",
+      "Perplexing Chimera native paid five-mana setup and opposing Shock lead to failed survival with optional AI trigger; exchange rules were not independently certified.",
+      "Undefined DefinedExchange resolves through AbilityUtils.getDefinedObjects(null) to Self. Its absent script parameter is not evidence of a missing source reference."
+    ]
+  },
+  "rules_reference": {
+    "url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.txt",
+    "version": "2026-09-25",
+    "sha256": "8d860e451f20f38865b725b42d82feb714c725373dd8f3b32b8652b3eeb070ca",
+    "reviewed_rules": [
+      "115.7d",
+      "115.7e",
+      "115.7f",
+      "115.8",
+      "601.2b",
+      "601.2c",
+      "601.2d"
+    ],
+    "scope": "Retained versioned reference and official rules-page link verified; not comprehensive current-rules certification"
+  },
+  "validation": {
+    "focused": {
+      "total": 641,
+      "passed": 641,
+      "failed": 0,
+      "skipped": 0
+    },
+    "broader_sha256": "1c3a697bf4fa8aac226cf1e99c180521ec5e96c6c1950b65d32577971d38b640",
+    "live": {
+      "tests": 38,
+      "subtests": 605,
+      "log_sha256": "57521647b0a063c65107de153a28d47d254c648a7cfb9dc77533b37db6a8493f"
+    },
+    "offline": {
+      "passed": 399,
+      "skipped_integration": 38,
+      "subtests": 508,
+      "log_sha256": "a945884c661230e73b24e2211395ccf115635f49ef7d71ca60a9113392baa663"
+    },
+    "catalog": {
+      "counts": {
+        "constructed": 32109,
+        "script_unavailable": 7
+      },
+      "log_sha256": "65a2d878117cf24d471ac636c1326eeb9b78fed10707cf54667d467a56dda13c"
+    },
+    "engine_check_sha256": "21ad1d1e1f929f0cbf6dec4be1bc6b5d39d5209714168ea0792633184256122c",
+    "frozen_live_inputs_sha256": "a9b4853e2827b233ccf775ca6046de5be0c19bf23083f99d26029f52622df176"
+  },
+  "activation": {
+    "runtime": "data/engines/forge-3e6c036-spell-control-reviewed",
+    "archive_lock": "config/engine_locks/forge-3e6c036-spell-control.json",
+    "canonical_lock_matches": true
+  },
+  "excluded_drafts": "A fixture Iterable indexing compile error, an initial new-file patch header error, one observer helper arity error and a misspelled archive lookup were corrected before final validation. These runs are excluded from passing evidence. The baseline has 18 failures, including the alternate-cost manual damage outcome; an initial expected count of 17 was corrected to the actual report count.",
+  "limits": [
+    "Native primary spell-control examples cover Aethersnatch, Commandeer and Chef's Kiss. Invert Polarity, Perplexing Chimera and Sudden Substitution are composed-source follow-up work.",
+    "Native heuristics propose complete replacements on an isolated world; incomplete, unmappable or invalid proposals retain original targets. This is not exhaustive legal-target or strategic search.",
+    "Preview comparisons use a deterministic seed and restore the live provider; seeded witnesses do not certify stochastic fairness or arbitrary hidden information.",
+    "The native activating-player field records the current stolen-spell controller. Retargeting does not substitute the decision beneficiary for that field or change spell ownership.",
+    "Trigger, subability, reentrant and unfinished resolving-parent entry points are declined by the primary heuristic. Native effect execution remains separate from AI admission.",
+    "Rules and Oracle inputs are versioned retained references; construction of all matched cards is not all-card gameplay certification."
+  ]
+}
