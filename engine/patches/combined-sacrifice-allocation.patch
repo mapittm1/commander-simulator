@@ -1,0 +1,548 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -30,6 +30,8 @@
+     private final CardCollection discarded;
+     private final CardCollection tapped;
+ 
++    private CardCollectionView plannedSacrifices;
++
+     public AiCostDecision(Player ai0, SpellAbility sa, final boolean effect) {
+         this(ai0, sa, effect, false);
+     }
+@@ -494,8 +496,16 @@
+         return PaymentDecision.card(totap);
+     }
+ 
++    AiCostDecision withPlannedSacrifices(CardCollectionView cards) {
++        plannedSacrifices = cards;
++        return this;
++    }
++
+     @Override
+     public PaymentDecision visit(CostSacrifice cost) {
++        if (plannedSacrifices != null) {
++            return PaymentDecision.card(plannedSacrifices);
++        }
+         if (cost.payCostFromSource()) {
+             return PaymentDecision.card(source);
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -737,6 +737,11 @@
+         int testEnergyPool = ai.getCounters(CounterEnumType.ENERGY);
+         ManaCostShard toPay = null;
+         List<SpellAbility> saExcludeList = new ArrayList<>();
++        CostPartMana manaPart = sa.getPayCosts().getCostMana();
++        List<CostSacrifice> sacrifices = effect || manaPart == null ? List.of() : sa.getPayCosts().getCostParts().stream()
++                .filter(CostSacrifice.class::isInstance).map(CostSacrifice.class::cast)
++                .filter(part -> part.paymentOrder() > manaPart.paymentOrder()).toList();
++        Set<Card> consumedManaSources = new HashSet<>();
+ 
+         // Loop over mana needed
+         while (!cost.isPaid()) {
+@@ -806,6 +811,18 @@
+                 continue;
+             }
+ 
++            CardCollection manaSacrifices = null;
++            if (saPayment != null && !sacrifices.isEmpty()) {
++                CostSacrifice manaCost = saPayment.getPayCosts().getCostPartByType(CostSacrifice.class);
++                if (manaCost != null) {
++                    manaSacrifices = chooseManaSacrifices(saPayment, manaCost, sa, sacrifices, ai, consumedManaSources);
++                    if (manaSacrifices == null) {
++                        saExcludeList.add(saPayment);
++                        continue;
++                    }
++                }
++            }
++
+             if (saPayment != null && "BlackLotus".equals(saPayment.getParam("AILogic")) && !SpecialCardAi.BlackLotus.consider(ai, sa, cost)) {
+                 // since we checked this already, do not loop indefinitely checking again
+                 saExcludeList.add(saPayment);
+@@ -859,7 +876,8 @@
+                 // A Signet-like source is about to be activated: float the mana for its own cost first,
+                 // from a source the remaining cost can spare, so that its cost payment doesn't grab a
+                 // land that's needed for a colored shard.
+-                if (!test && !prepayFilterManaAbility(cost, sa, ai, saPayment, toPay, sourcesForShards, paymentList, effect)) {
++                if (!test && !prepayFilterManaAbility(cost, sa, ai, saPayment, toPay, sourcesForShards,
++                        paymentList, effect, sacrifices, manaSacrifices)) {
+                     saPayment.getManaPart().clearExpressChoice();
+                     saExcludeList.add(saPayment);
+                     continue;
+@@ -883,6 +901,10 @@
+                 }
+ 
+                 projectMana(saPayment, sa, ai, toPay, cost);
++                if (manaSacrifices != null) {
++                    consumedManaSources.addAll(manaSacrifices);
++                    sourcesForShards.values().removeIf(source -> consumedManaSources.contains(source.getHostCard()));
++                }
+                 // the mana to activate the ability has to come from the remaining sources
+                 if (manaCostToActivate > 0) {
+                     cost.addManaCost(getManaCostToActivate(saPayment));
+@@ -892,7 +914,9 @@
+                 sourcesForShards.values().removeIf(CardTraitPredicates.isHostCard(saPayment.getHostCard()));
+             } else {
+                 final CostPayment pay = new CostPayment(saPayment.getPayCosts(), saPayment);
+-                if (!pay.payComputerCosts(new AiCostDecision(ai, saPayment, effect, true))) {
++                AiCostDecision decision = new AiCostDecision(ai, saPayment, effect, true)
++                        .withPlannedSacrifices(manaSacrifices);
++                if (!pay.payComputerCosts(decision)) {
+                     // saList can be a reordered copy, so exclude through the list that is applied on every pass
+                     saExcludeList.add(saPayment);
+                     continue;
+@@ -947,6 +971,55 @@
+         return paymentList;
+     }
+ 
++    private static CardCollection chooseManaSacrifices(SpellAbility manaAbility, CostSacrifice manaCost,
++            SpellAbility spell, List<CostSacrifice> spellCosts, Player payer, Set<Card> consumed) {
++        Card manaHost = manaAbility.getHostCard();
++        boolean distinctNames = manaCost.getType().contains("+WithDifferentNames");
++        CardCollection candidates;
++        if (manaCost.payCostFromSource()) {
++            candidates = new CardCollection(manaHost);
++        } else if (manaCost.getType().equals("OriginalHost")) {
++            candidates = new CardCollection(manaAbility.getOriginalHost());
++        } else {
++            String types = manaCost.getType().replace("+WithDifferentNames", "");
++            candidates = CardLists.getValidCards(payer.getCardsIn(ZoneType.Battlefield), types.split(";"),
++                    payer, manaHost, manaAbility);
++        }
++        candidates.removeIf(card -> consumed.contains(card) || spell.isTargeting(card)
++                || !card.canBeSacrificedBy(manaAbility, false));
++        int amount = manaCost.getAmount().equalsIgnoreCase("All") ? candidates.size() : manaCost.getAbilityAmount(manaAbility);
++        CardCollection selected = new CardCollection();
++        Set<String> usedNames = new HashSet<>();
++        Set<Card> unavailable = new HashSet<>(consumed);
++
++        // Spare the other available mana sources where possible.
++        candidates.sort(Comparator.comparing(card -> !card.getManaAbilities().isEmpty()));
++        for (Card card : candidates) {
++            if (selected.size() == amount) {
++                break;
++            }
++            if (distinctNames && usedNames.contains(card.getName())) {
++                continue;
++            }
++            unavailable.add(card);
++            if (canReserveSacrifices(spell, spellCosts, payer, unavailable)) {
++                selected.add(card);
++                usedNames.add(card.getName());
++            } else {
++                unavailable.remove(card);
++            }
++        }
++        return selected.size() == amount ? selected : null;
++    }
++
++    private static boolean canReserveSacrifices(SpellAbility spell, List<CostSacrifice> costs,
++            Player payer, Set<Card> unavailable) {
++        if (costs.size() == 1) {
++            return costs.get(0).canPayExcluding(spell, payer, false, unavailable);
++        }
++        return CostSacrifice.allocate(costs, spell, payer, false, unavailable) != null;
++    }
++
+     // a source adding several mana that is needed either way goes first, so nothing else is tapped beside it for no reason
+     private static Collection<SpellAbility> requiredSourcesFirst(final Collection<SpellAbility> shardProducers, final ManaCostBeingPaid cost, final SpellAbility sa) {
+         final int generic = cost.getGenericManaAmount();
+@@ -1088,7 +1161,8 @@
+      */
+     private static boolean prepayFilterManaAbility(final ManaCostBeingPaid cost, final SpellAbility sa, final Player ai,
+             final SpellAbility filter, final ManaCostShard toPay, final Multimap<ManaCostShard, SpellAbility> sourcesForShards,
+-            final List<SpellAbility> paymentList, final boolean effect) {
++            final List<SpellAbility> paymentList, final boolean effect,
++            List<CostSacrifice> sacrifices, CardCollection filterSacrifices) {
+         final Card filterHost = filter.getHostCard();
+         final ManaPool manapool = ai.getManaPool();
+ 
+@@ -1098,6 +1172,7 @@
+ 
+         final ManaCost toActivate = getManaCostToActivate(filter);
+         final Set<SpellAbility> tried = new HashSet<>();
++        Set<Card> reserved = filterSacrifices == null ? Set.of() : new HashSet<>(filterSacrifices);
+         while (true) {
+             // what the floating mana leaves of the filter's cost; it stays in the pool to pay that cost
+             final ManaCostBeingPaid toFloat = new ManaCostBeingPaid(toActivate);
+@@ -1107,6 +1182,7 @@
+             }
+             final ManaCostShard shard = getNextShardToPay(toFloat, sourcesForShards);
+             SpellAbility chosen = null;
++            CardCollection chosenSacrifices = null;
+             for (final SpellAbility m : sourcesForShards.get(shard)) {
+                 final Card host = m.getHostCard();
+                 if (host.equals(filterHost) || getManaToActivate(m) > 0 || tried.contains(m)) {
+@@ -1130,6 +1206,13 @@
+                     }
+                 }
+                 if (!needed && canPayShardWithSpellAbility(shard, ai, m, filter, toFloat, true, toFloat.getXManaCostPaidByColor())) {
++                    CostSacrifice manaCost = m.getPayCosts().getCostPartByType(CostSacrifice.class);
++                    if (!sacrifices.isEmpty() && manaCost != null) {
++                        chosenSacrifices = chooseManaSacrifices(m, manaCost, sa, sacrifices, ai, reserved);
++                        if (chosenSacrifices == null) {
++                            continue;
++                        }
++                    }
+                     chosen = m;
+                     break;
+                 }
+@@ -1142,8 +1225,9 @@
+             if (chosen.getPayCosts().hasTapCost()) {
+                 AiCardMemory.rememberCard(ai, chosen.getHostCard(), MemorySet.PAYS_TAP_COST);
+             }
+-            if (!new CostPayment(chosen.getPayCosts(), chosen).
+-                    payComputerCosts(new AiCostDecision(ai, chosen, effect, true))) {
++            AiCostDecision decision = new AiCostDecision(ai, chosen, effect, true)
++                    .withPlannedSacrifices(chosenSacrifices);
++            if (!new CostPayment(chosen.getPayCosts(), chosen).payComputerCosts(decision)) {
+                 if (chosen.getPayCosts().hasTapCost()) {
+                     AiCardMemory.forgetCard(ai, chosen.getHostCard(), MemorySet.PAYS_TAP_COST);
+                 }
+@@ -1151,6 +1235,10 @@
+             }
+             resolveManaAbility(chosen, filter, new ManaCostBeingPaid(toActivate), ai);
+             paymentList.add(chosen);
++            if (chosenSacrifices != null) {
++                CardCollection consumed = chosenSacrifices;
++                sourcesForShards.values().removeIf(source -> consumed.contains(source.getHostCard()));
++            }
+             final SpellAbility used = chosen;
+             if (!used.canPlay()) {
+                 sourcesForShards.values().removeIf(s -> s == used || (s.getHostCard().equals(used.getHostCard()) && !s.canPlay()));
+diff --git a/forge-game/src/main/java/forge/game/cost/Cost.java b/forge-game/src/main/java/forge/game/cost/Cost.java
+--- a/forge-game/src/main/java/forge/game/cost/Cost.java
++++ b/forge-game/src/main/java/forge/game/cost/Cost.java
+@@ -37,6 +37,7 @@
+ import java.util.ArrayList;
+ import java.util.Arrays;
+ import java.util.List;
++import java.util.Set;
+ 
+ /**
+  * <p>
+@@ -1099,7 +1100,12 @@
+             }
+         }
+ 
+-        return true;
++        if (getCostPartByType(CostSacrifice.class) == null) {
++            return true;
++        }
++        List<CostSacrifice> sacrifices = getCostParts().stream().filter(CostSacrifice.class::isInstance)
++                .map(CostSacrifice.class::cast).toList();
++        return sacrifices.size() < 2 || CostSacrifice.allocate(sacrifices, sa, payer, effect, Set.of()) != null;
+     }
+ 
+     public boolean hasXInAnyCostPart() {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -34,6 +34,7 @@
+ import java.util.ArrayList;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Set;
+ 
+ /**
+  * <p>
+@@ -187,12 +188,22 @@
+         // for Trinisphere make sure to include Zero
+         List<CostPart> parts = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect()).getCostPartsWithZeroMana();
+ 
++        List<CostSacrifice> sacrifices = parts.stream().filter(CostSacrifice.class::isInstance)
++                .map(CostSacrifice.class::cast).toList();
++        Map<CostSacrifice, CardCollection> allocation = sacrifices.size() > 1
++                ? CostSacrifice.allocate(sacrifices, ability, decisionMaker.getPlayer(), decisionMaker.isEffect(), Set.of())
++                : Map.of();
++        if (allocation == null) {
++            return false;
++        }
++
+         // Set all of the decisions before attempting to pay anything
+ 
+         final Game game = decisionMaker.getPlayer().getGame();
+ 
+         for (final CostPart part : parts) {
+-            PaymentDecision decision = part.accept(decisionMaker);
++            PaymentDecision decision = allocation.containsKey(part)
++                    ? PaymentDecision.card(allocation.get(part)) : part.accept(decisionMaker);
+             if (null == decision) return false;
+ 
+             try {
+@@ -207,12 +218,29 @@
+             decisions.put(part, decision);
+         }
+ 
++        int paidSacrifices = 0;
+         for (final CostPart part : parts) {
+             // wrap the payment and push onto the cost stack
+             try {
+                 game.costPaymentStack.push(part, this);
+ 
+-                if (!part.payAsDecided(decisionMaker.getPlayer(), decisions.get(part), this.ability, decisionMaker.isEffect())) {
++                PaymentDecision decision = decisions.get(part);
++                if (part instanceof CostSacrifice sacrifice) {
++                    if (sacrifices.size() > 1 && (paidSacrifices == 0
++                            || !sacrifice.selectedCardsAvailable(decisionMaker.getPlayer(), decision, ability, decisionMaker.isEffect()))) {
++                        allocation = CostSacrifice.allocate(sacrifices.subList(paidSacrifices, sacrifices.size()),
++                                ability, decisionMaker.getPlayer(), decisionMaker.isEffect(), Set.of());
++                        if (allocation == null) {
++                            return false;
++                        }
++                        allocation.forEach((costPart, cards) -> decisions.put(costPart, PaymentDecision.card(cards)));
++                        decision = decisions.get(part);
++                    } else if (!sacrifice.selectedCardsAvailable(decisionMaker.getPlayer(), decision, ability, decisionMaker.isEffect())) {
++                        decision = part.accept(decisionMaker);
++                    }
++                    paidSacrifices++;
++                }
++                if (decision == null || !part.payAsDecided(decisionMaker.getPlayer(), decision, this.ability, decisionMaker.isEffect())) {
+                     return false;
+                 }
+                 // abilities care what was used to pay for them
+diff --git a/forge-game/src/main/java/forge/game/cost/CostSacrifice.java b/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
+--- a/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
++++ b/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
+@@ -21,6 +21,7 @@
+ import forge.game.Game;
+ import forge.game.ability.AbilityKey;
+ import forge.game.card.Card;
++import forge.game.card.CardCollection;
+ import forge.game.card.CardCollectionView;
+ import forge.game.card.CardLists;
+ import forge.game.card.CardPredicates;
+@@ -29,7 +30,13 @@
+ import forge.game.zone.ZoneType;
+ import forge.util.Lang;
+ 
++
++import java.util.ArrayDeque;
++import java.util.ArrayList;
++import java.util.LinkedHashMap;
++import java.util.List;
+ import java.util.Map;
++import java.util.Set;
+ 
+ /**
+  * The Class CostSacrifice.
+@@ -57,6 +64,10 @@
+ 
+     @Override
+     public Integer getMaxAmountX(SpellAbility ability, Player payer, final boolean effect) {
++        return getMaxAmountX(ability, payer, effect, Set.of());
++    }
++
++    private int getMaxAmountX(SpellAbility ability, Player payer, boolean effect, Set<Card> unavailable) {
+         final Card source = ability.getHostCard();
+ 
+         String type = getType();
+@@ -70,7 +81,8 @@
+         if (!type.contains("X")) {
+             typeList = CardLists.getValidCards(typeList, type.split(";"), payer, source, ability);
+         }
+-        typeList = CardLists.filter(typeList, CardPredicates.canBeSacrificedBy(ability, effect));
++        typeList = CardLists.filter(typeList,
++                CardPredicates.canBeSacrificedBy(ability, effect).and(card -> !unavailable.contains(card)));
+         if (differentNames) {
+             return CardLists.getDifferentNamesCount(typeList);
+         }
+@@ -122,15 +134,21 @@
+      */
+     @Override
+     public final boolean canPay(final SpellAbility ability, final Player activator, final boolean effect) {
++        return canPayExcluding(ability, activator, effect, Set.of());
++    }
++
++    /** Test the remaining candidates after a separate payment consumes cards. */
++    public final boolean canPayExcluding(SpellAbility ability, Player activator, boolean effect, Set<Card> unavailable) {
+         final Card source = ability.getHostCard();
+ 
+         if (getType().equals("OriginalHost")) {
+             Card originalEquipment = ability.getOriginalHost();
+-            return originalEquipment.isEquipping() && originalEquipment.canBeSacrificedBy(ability, effect);
++            return !unavailable.contains(originalEquipment) && originalEquipment.isEquipping()
++                    && originalEquipment.canBeSacrificedBy(ability, effect);
+         }
+ 
+         if (payCostFromSource()) {
+-            return source.canBeSacrificedBy(ability, effect);
++            return !unavailable.contains(source) && source.canBeSacrificedBy(ability, effect);
+         }
+ 
+         // You can always sac all
+@@ -138,7 +156,8 @@
+             CardCollectionView typeList = activator.getCardsIn(ZoneType.Battlefield);
+             typeList = CardLists.getValidCards(typeList, getType().split(";"), activator, source, ability);
+             // it needs to check if everything can be sacrificed
+-            return typeList.allMatch(CardPredicates.canBeSacrificedBy(ability, effect));
++            return typeList.stream().filter(card -> !unavailable.contains(card))
++                    .allMatch(CardPredicates.canBeSacrificedBy(ability, effect));
+         }
+ 
+         int amount = getAbilityAmount(ability);
+@@ -146,7 +165,161 @@
+         // If amount is null, it's either "ALL" or "X"
+         // if X is defined, it needs to be calculated and checked, if X is
+         // choice, it can be Paid even if it's 0
+-        return getMaxAmountX(ability, activator, effect) >= amount;
++        return getMaxAmountX(ability, activator, effect, unavailable) >= amount;
++    }
++
++    private boolean distinctNames() {
++        return getType().contains("+WithDifferentNames");
++    }
++
++    private CardCollection candidates(SpellAbility ability, Player payer, boolean effect, Set<Card> unavailable) {
++        CardCollection candidates;
++        if (getType().equals("OriginalHost")) {
++            candidates = new CardCollection(ability.getOriginalHost());
++        } else if (payCostFromSource()) {
++            candidates = new CardCollection(ability.getHostCard());
++        } else {
++            String type = getType().replace("+WithDifferentNames", "");
++            candidates = CardLists.getValidCards(payer.getCardsIn(ZoneType.Battlefield),
++                    type.split(";"), payer, ability.getHostCard(), ability);
++        }
++        candidates.removeIf(card -> unavailable.contains(card) || !card.canBeSacrificedBy(ability, effect));
++        return candidates;
++    }
++
++    private int amountFor(SpellAbility ability, CardCollectionView candidates) {
++        return getAmount().equalsIgnoreCase("All") ? candidates.size() : getAbilityAmount(ability);
++    }
++
++    public boolean selectedCardsAvailable(Player payer, PaymentDecision decision, SpellAbility ability, boolean effect) {
++        if (decision == null || decision.cards == null || !canPay(ability, payer, effect)) {
++            return false;
++        }
++        CardCollection eligible = candidates(ability, payer, effect, Set.of());
++        if (decision.cards.size() != amountFor(ability, eligible)
++                || distinctNames() && CardLists.getDifferentNamesCount(decision.cards) != decision.cards.size()) {
++            return false;
++        }
++        return decision.cards.stream().allMatch(card -> eligible.stream().anyMatch(available -> available == card));
++    }
++
++    @Override
++    public boolean payAsDecided(Player payer, PaymentDecision decision, SpellAbility ability, boolean effect) {
++        return selectedCardsAvailable(payer, decision, ability, effect)
++                && super.payAsDecided(payer, decision, ability, effect);
++    }
++
++    /** Allocate separate physical cards to all outstanding sacrifice requirements. */
++    public static Map<CostSacrifice, CardCollection> allocate(List<CostSacrifice> costs,
++            SpellAbility ability, Player payer, boolean effect, Set<Card> unavailable) {
++        List<List<AllocationEdge>> graph = new ArrayList<>();
++        int source = addNode(graph);
++        int sink = addNode(graph);
++        Map<Card, Integer> cardNodes = new LinkedHashMap<>();
++        Map<CostSacrifice, Map<Card, AllocationEdge>> choices = new LinkedHashMap<>();
++        int required = 0;
++        for (CostSacrifice cost : costs) {
++            if (!cost.canPayExcluding(ability, payer, effect, unavailable)) {
++                return null;
++            }
++            CardCollection eligible = cost.candidates(ability, payer, effect, unavailable);
++            int amount = cost.amountFor(ability, eligible);
++            int requirement = addNode(graph);
++            connect(graph, source, requirement, amount);
++            required += amount;
++            Map<String, Integer> nameNodes = new LinkedHashMap<>();
++            Map<Card, AllocationEdge> edges = new LinkedHashMap<>();
++            choices.put(cost, edges);
++            for (Card card : eligible) {
++                int from = requirement;
++                if (cost.distinctNames()) {
++                    from = nameNodes.computeIfAbsent(card.getName(), name -> {
++                        int node = addNode(graph);
++                        connect(graph, requirement, node, 1);
++                        return node;
++                    });
++                }
++                int to = cardNodes.computeIfAbsent(card, key -> {
++                    int node = addNode(graph);
++                    connect(graph, node, sink, 1);
++                    return node;
++                });
++                edges.put(card, connect(graph, from, to, 1));
++            }
++        }
++        if (required > cardNodes.size()) {
++            return null;
++        }
++        for (int count = 0; count < required; count++) {
++            if (!augment(graph, source, sink)) {
++                return null;
++            }
++        }
++        Map<CostSacrifice, CardCollection> result = new LinkedHashMap<>();
++        choices.forEach((cost, edges) -> {
++            CardCollection selected = new CardCollection();
++            edges.forEach((card, edge) -> {
++                if (edge.capacity == 0) {
++                    selected.add(card);
++                }
++            });
++            result.put(cost, selected);
++        });
++        return result;
++    }
++
++    private static int addNode(List<List<AllocationEdge>> graph) {
++        graph.add(new ArrayList<>());
++        return graph.size() - 1;
++    }
++
++    private static AllocationEdge connect(List<List<AllocationEdge>> graph, int from, int to, int capacity) {
++        AllocationEdge forward = new AllocationEdge(to, graph.get(to).size(), capacity);
++        AllocationEdge reverse = new AllocationEdge(from, graph.get(from).size(), 0);
++        graph.get(from).add(forward);
++        graph.get(to).add(reverse);
++        return forward;
++    }
++
++    private static boolean augment(List<List<AllocationEdge>> graph, int source, int sink) {
++        AllocationEdge[] previous = new AllocationEdge[graph.size()];
++        boolean[] visited = new boolean[graph.size()];
++        ArrayDeque<Integer> queue = new ArrayDeque<>();
++        queue.add(source);
++        visited[source] = true;
++        while (!queue.isEmpty() && !visited[sink]) {
++            int node = queue.remove();
++            for (AllocationEdge edge : graph.get(node)) {
++                if (edge.capacity > 0 && !visited[edge.to]) {
++                    visited[edge.to] = true;
++                    previous[edge.to] = edge;
++                    queue.add(edge.to);
++                }
++            }
++        }
++        if (!visited[sink]) {
++            return false;
++        }
++        for (int node = sink; node != source;) {
++            AllocationEdge edge = previous[node];
++            AllocationEdge reverse = graph.get(node).get(edge.reverse);
++            edge.capacity--;
++            reverse.capacity++;
++            node = reverse.to;
++        }
++        return true;
++    }
++
++    private static final class AllocationEdge {
++        private final int to;
++        private final int reverse;
++        private int capacity;
++
++        private AllocationEdge(int to, int reverse, int capacity) {
++            this.to = to;
++            this.reverse = reverse;
++            this.capacity = capacity;
++        }
+     }
+ 
+     @Override

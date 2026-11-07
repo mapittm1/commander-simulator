@@ -17,6 +17,25 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Sacrifice allocation
+
+The native AI assigns distinct creatures to Demon's Herald's three color
+requirements. A multicolored creature can satisfy any one eligible slot. The
+engine checks the actual activated ability with two and three creatures.
+
+For Altar's Reap, mana planning reserves the spell's sacrifice while considering
+Blood Pet and Ashnod's Altar. The checks also exercise an Orzhov Signet
+activation funded by Ashnod's Altar. With a second creature available, the
+engine pays the Signet activation, uses its mana for the spell, and pays the
+spell's sacrifice. With only one creature, it rejects the attempt.
+
+The packaged test suite passed 125 cases and checked that the named production
+classes came from the pinned JAR. The broader native suite passed 1,397
+gameplay and 256 serialization checks. A separate fault-injected Yawgmoth
+activation still retains one life already paid when the required creature
+becomes unavailable before the sacrifice. See
+[sacrifice allocation evidence](../engine/sacrifice_allocation_evidence.json).
+
 ## Cast recovery and chosen mana
 
 When payment fails, the AI returns the card to its original zone and position.
@@ -34,8 +53,7 @@ allow players to reverse legal mana abilities subject to specific exceptions.
 
 The Hall of Gemstone fixture resolves the actual upkeep trigger, then verifies
 a paid Opt from a Forest. Wastes remains colorless. The 11 additional cases run
-against both the pinned build and the packaged JAR. Joint allocation of mana
-and nonmana costs still needs separate work. See
+against both the pinned build and the packaged JAR. See
 [cast recovery evidence](../engine/cast_recovery_evidence.json).
 
 ## Mana events and snow payments

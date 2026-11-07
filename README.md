@@ -19,6 +19,12 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+The native AI now checks that a creature is available for only one sacrifice
+when a spell also needs a sacrifice to produce its mana. Tests cover Blood
+Pet, Ashnod's Altar, and Orzhov Signet funding Altar's Reap. A separate test
+checks that Demon's Herald needs three distinct creatures. See
+[sacrifice allocation](docs/CARD_COVERAGE.md#sacrifice-allocation).
+
 Failed casts return the card to its original zone, including when mana was
 already spent. The engine drops triggers caused by the abandoned move to the
 stack and preserves earlier triggers. Hall of Gemstone's chosen color now

@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Assign distinct creatures to simultaneous sacrifice requirements, including
+  Demon's Herald's three overlapping color requirements.
+- Reserve creatures for a spell's sacrifice cost during mana planning and
+  payment. Altar's Reap can use Blood Pet or Ashnod's Altar with a second
+  creature, and it can use Orzhov Signet when the nested mana payment leaves
+  a creature available for the spell.
+- Verify nine new cases in the focused native suite and against the packaged
+  JAR. The previous runtime failed seven of those cases.
+
+
 - Restore failed casts to their original zone and position. Refund spent mana,
   undo reversible activations, and keep effects from activations that Forge
   marks non-undoable.
