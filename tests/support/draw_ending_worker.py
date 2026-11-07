@@ -34,6 +34,9 @@ SOURCES = {
     "ReflectedManaCoverageTest": "reflected_mana_test_sha256",
     "ManaTriggerFollowupTest": "mana_trigger_test_sha256",
     "MixedReflectedManaTest": "mixed_reflected_mana_test_sha256",
+    "ManaAddedCoverageTest": "mana_added_test_sha256",
+    "SnowManaProjectionTest": "snow_mana_projection_test_sha256",
+    "ManaReplacementCoverageTest": "mana_replacement_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -46,6 +49,8 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.ManaReflectedEffect",
     "forge.game.spellability.AbilityManaPart",
     "forge.game.trigger.TriggerTapsForMana",
+    "forge.game.trigger.TriggerManaAdded",
+    "forge.game.mana.ManaCostBeingPaid",
     "forge.ai.simulation.GameCopier",
 )
 

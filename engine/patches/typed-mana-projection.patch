@@ -1,0 +1,328 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -435,30 +435,26 @@
+         return null;
+     }
+ 
+-    private static String predictMana(SpellAbility saPayment, SpellAbility payingFor, Player ai,
++    private static void projectMana(SpellAbility saPayment, SpellAbility payingFor, Player payer,
+             ManaCostShard toPay, ManaCostBeingPaid cost) {
+-        Card hostCard = saPayment.getHostCard();
+-
+-        StringBuilder manaProduced = new StringBuilder(predictManaReplacement(saPayment, ai, toPay));
+-        String originalProduced = manaProduced.toString();
+-
+-        if (originalProduced.isEmpty()) {
+-            return originalProduced;
+-        }
+-
+-        final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(hostCard);
+-        runParams.put(AbilityKey.Activator, ai);
+-        runParams.put(AbilityKey.Player, ai);
++        String sourceMana = predictManaReplacement(saPayment, payer, toPay);
++        if (sourceMana.isEmpty()) {
++            return;
++        }
++        payProjectedMana(cost, payer, payingFor, saPayment, sourceMana, 1);
++
++        final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(saPayment.getHostCard());
++        runParams.put(AbilityKey.Activator, payer);
++        runParams.put(AbilityKey.Player, payer);
+         runParams.put(AbilityKey.AbilityMana, saPayment);
+-        runParams.put(AbilityKey.Produced, originalProduced);
+-        projectManaTriggers(TriggerType.ManaAdded, runParams, manaProduced, payingFor, ai, cost, originalProduced);
++        runParams.put(AbilityKey.Produced, sourceMana);
++        projectManaTriggers(TriggerType.ManaAdded, runParams, payingFor, payer, cost, sourceMana);
+         if (saPayment.isManaAbility() && saPayment.getPayCosts().hasTapCost()) {
+-            projectManaTriggers(TriggerType.TapsForMana, runParams, manaProduced, payingFor, ai, cost, originalProduced);
+-        }
+-        return manaProduced.toString();
+-    }
+-
+-    private static void projectManaTriggers(TriggerType event, Map<AbilityKey, Object> runParams, StringBuilder produced,
++            projectManaTriggers(TriggerType.TapsForMana, runParams, payingFor, payer, cost, sourceMana);
++        }
++    }
++
++    private static void projectManaTriggers(TriggerType event, Map<AbilityKey, Object> runParams,
+             SpellAbility payingFor, Player payer, ManaCostBeingPaid cost, String sourceMana) {
+         for (Trigger tr : payer.getGame().getTriggerHandler().getActiveTrigger(event, runParams)) {
+             SpellAbility template = tr.ensureAbility();
+@@ -477,7 +473,7 @@
+             }
+             for (SpellAbility effect = trigger; effect != null && isProjectedManaEffect(effect);
+                     effect = effect.getSubAbility()) {
+-                appendProjectedMana(produced, effect, payingFor, payer, cost, sourceMana);
++                projectManaEffect(effect, payingFor, payer, cost, sourceMana);
+             }
+         }
+     }
+@@ -487,7 +483,7 @@
+                 || effect.getApi() == ApiType.RepeatEach && effect.hasParam("RepeatCards");
+     }
+ 
+-    private static void appendProjectedMana(StringBuilder result, SpellAbility effect, SpellAbility payingFor,
++    private static void projectManaEffect(SpellAbility effect, SpellAbility payingFor,
+             Player payer, ManaCostBeingPaid cost, String landMana) {
+         if (!effect.metConditions() || effect.usesTargeting() || effect.hasParam("UnlessCost")) {
+             return;
+@@ -512,45 +508,62 @@
+                 || !AbilityUtils.getDefinedPlayers(host, effect.getParamOrDefault("Defined", "You"), effect).contains(payer)) {
+             return;
+         }
+-        String produced;
+         if (effect.getApi() == ApiType.Mana) {
+-            produced = effect.getParam("Produced");
++            String produced = effect.getParam("Produced");
+             if ("Chosen".equals(produced)) {
+                 produced = MagicColor.toShortString(host.getChosenColor());
+             }
+-            repetitions = AbilityUtils.calculateAmount(host, effect.getParamOrDefault("Amount", "1"), effect);
+-        } else {
+-            if (!"Produced".equals(effect.getParam("ReflectProperty"))) {
+-                return;
+-            }
++            int amount = AbilityUtils.calculateAmount(host, effect.getParamOrDefault("Amount", "1"), effect);
++            payProjectedMana(cost, payer, payingFor, effect, produced, amount);
++        } else if ("Produced".equals(effect.getParam("ReflectProperty"))) {
+             boolean type = "Type".equals(effect.getParam("ColorOrType"));
+             List<String> available = Arrays.stream(landMana.split(" "))
+-                    .filter(mana -> !mana.isEmpty() && (type || !mana.equals("C")))
++                    .filter(mana -> !mana.isEmpty() && !mana.equals("0"))
++                    .map(mana -> StringUtils.isNumeric(mana) ? "C" : mana)
++                    .filter(mana -> type || !mana.equals("C"))
+                     .distinct().toList();
+             if (available.isEmpty()) {
+                 return;
+             }
+-            ManaCostBeingPaid remaining = new ManaCostBeingPaid(cost);
+-            payMultipleMana(remaining, result.toString(), payer);
+             for (int index = 0; index < repetitions; index++) {
+-                String choice = chooseReflectedType(available, remaining, payer.getManaPool());
+-                result.append(" ").append(choice);
+-                remaining.ai_payMana(choice, payer.getManaPool());
+-            }
++                String choice = chooseReflectedType(available, cost, payer, payingFor, effect);
++                payProjectedMana(cost, payer, payingFor, effect, choice, 1);
++            }
++        }
++    }
++
++    private static void payProjectedMana(ManaCostBeingPaid cost, Player payer, SpellAbility payingFor,
++            SpellAbility source, String produced, int multiplier) {
++        Card host = source.getHostCard();
++        AbilityManaPart part = source.getManaPart();
++        if (part == null || !part.meetsManaRestrictions(payingFor)) {
+             return;
+         }
+-        if (!produced.isEmpty() && repetitions > 0) {
+-            result.append(" ").append(StringUtils.repeat(produced, " ", repetitions));
+-        }
+-    }
+-
+-    private static String chooseReflectedType(Collection<String> available, ManaCostBeingPaid remaining, ManaPool pool) {
++        for (String symbol : TextUtil.split(produced, ' ')) {
++            int amount = StringUtils.isNumeric(symbol) ? Integer.parseInt(symbol) : 1;
++            byte color = ManaAtom.fromName(symbol);
++            if (color == 0) {
++                color = (byte) ManaAtom.COLORLESS;
++            }
++            if (!payingFor.allowsPayingWithShard(host, color)) {
++                continue;
++            }
++            for (int count = 0; count < amount * multiplier; count++) {
++                if (!cost.payProjectedMana(color, host.isSnow(), part, payer.getManaPool())) {
++                    break;
++                }
++            }
++        }
++    }
++
++    private static String chooseReflectedType(Collection<String> available, ManaCostBeingPaid remaining,
++            Player payer, SpellAbility payingFor, SpellAbility effect) {
+         String choice = available.iterator().next();
+         int bestMana = Integer.MAX_VALUE;
+         int bestColored = Integer.MAX_VALUE;
+         for (String option : available) {
+             ManaCostBeingPaid candidate = new ManaCostBeingPaid(remaining);
+-            candidate.ai_payMana(MagicColor.toShortString(option), pool);
++            payProjectedMana(candidate, payer, payingFor, effect, option, 1);
+             int total = candidate.getConvertedManaCost();
+             int colored = total - candidate.getGenericManaAmount();
+             if (total < bestMana || (total == bestMana && colored < bestColored)) {
+@@ -565,8 +578,8 @@
+     private static void resolveManaAbility(SpellAbility source, SpellAbility payingFor,
+             ManaCostBeingPaid cost, Player payer) {
+         AbilityManaPart manaPart = source.getManaPart();
+-        var previousChoice = manaPart.setReflectedManaChoice((recipient, available) ->
+-                recipient == payer ? chooseReflectedTypeForPayment(available, cost, payingFor, payer.getManaPool()) : null);
++        var previousChoice = manaPart.setReflectedManaChoice((recipient, effect, available) -> recipient == payer
++                ? chooseReflectedTypeForPayment(available, cost, payingFor, payer, effect) : null);
+         try {
+             payer.getGame().getStack().addAndUnfreeze(source);
+         } finally {
+@@ -575,7 +588,8 @@
+     }
+ 
+     private static String chooseReflectedTypeForPayment(Collection<String> available, ManaCostBeingPaid cost,
+-            SpellAbility payingFor, ManaPool pool) {
++            SpellAbility payingFor, Player payer, SpellAbility effect) {
++        ManaPool pool = payer.getManaPool();
+         ManaCostBeingPaid remaining = new ManaCostBeingPaid(cost);
+         for (Mana mana : pool) {
+             if (remaining.isNeeded(mana, pool) && mana.meetsManaRestrictions(payingFor)
+@@ -583,13 +597,13 @@
+                 remaining.payMana(mana, pool);
+             }
+         }
+-        return chooseReflectedType(available, remaining, pool);
++        return chooseReflectedType(available, remaining, payer, payingFor, effect);
+     }
+ 
+     private static String predictManaReplacement(SpellAbility saPayment, Player ai, ManaCostShard toPay) {
+         Card hostCard = saPayment.getHostCard();
+         Game game = hostCard.getGame();
+-        String manaProduced = toPay.isSnow() && hostCard.isSnow() ? "S" : GameActionUtil.generatedTotalMana(saPayment);
++        String manaProduced = GameActionUtil.generatedTotalMana(saPayment);
+ 
+         final Map<AbilityKey, Object> repParams = AbilityKey.mapFromAffected(hostCard);
+         repParams.put(AbilityKey.Mana, manaProduced);
+@@ -895,8 +909,7 @@
+                     }
+                 }
+ 
+-                String manaProduced = predictMana(saPayment, sa, ai, toPay, cost);
+-                payMultipleMana(cost, manaProduced, ai);
++                projectMana(saPayment, sa, ai, toPay, cost);
+                 // the mana to activate the ability has to come from the remaining sources
+                 if (manaCostToActivate > 0) {
+                     cost.addManaCost(getManaCostToActivate(saPayment));
+@@ -1108,7 +1121,7 @@
+ 
+         // what the cost will look like once the filter has produced its mana
+         final ManaCostBeingPaid remaining = new ManaCostBeingPaid(cost);
+-        payMultipleMana(remaining, predictMana(filter, sa, ai, toPay, cost), ai);
++        projectMana(filter, sa, ai, toPay, remaining);
+ 
+         final ManaCost toActivate = getManaCostToActivate(filter);
+         final Set<SpellAbility> tried = new HashSet<>();
+diff --git a/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java b/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java
+--- a/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java
++++ b/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java
+@@ -26,6 +26,7 @@
+ import forge.card.mana.ManaAtom;
+ import forge.card.mana.ManaCost;
+ import forge.card.mana.ManaCostShard;
++import forge.game.spellability.AbilityManaPart;
+ import forge.util.IterableUtil;
+ import org.apache.commons.lang3.StringUtils;
+ 
+@@ -477,11 +478,14 @@
+             throw new RuntimeException("ManaCost : addMana() error, mana not needed - " + mana);
+         }
+ 
+-        Predicate<ManaCostShard> predCanBePaid = ms -> canBePaidWith(ms, mana, pool, xManaCostPaidByColor);
+-
+-        byte inColor = mana.getColor();
+-        byte outColor = pool.getPossibleColorUses(inColor);
+-        return tryPayMana(inColor, IterableUtil.filter(unpaidShards.keySet(), predCanBePaid), outColor) != null;
++        return payProjectedMana(mana.getColor(), mana.isSnow(), mana.getManaAbility(), pool);
++    }
++
++    /** Apply one hypothetical mana with the same shard checks as an actual payment. */
++    public final boolean payProjectedMana(byte color, boolean snowSource, AbilityManaPart source, ManaPool pool) {
++        Predicate<ManaCostShard> allowed = shard ->
++                canBePaidWith(shard, color, snowSource, source, pool, xManaCostPaidByColor);
++        return tryPayMana(color, IterableUtil.filter(unpaidShards.keySet(), allowed), pool.getPossibleColorUses(color)) != null;
+     }
+     
+     public final ManaCostShard payManaViaConvoke(final byte color) {
+@@ -561,24 +565,25 @@
+     }
+ 
+     private static boolean canBePaidWith(final ManaCostShard shard, final Mana mana, final ManaPool pool, Map<String, Integer> xManaCostPaidByColor) {
+-        if (shard.isSnow() && !mana.isSnow()) {
++        return canBePaidWith(shard, mana.getColor(), mana.isSnow(), mana.getManaAbility(), pool, xManaCostPaidByColor);
++    }
++
++    private static boolean canBePaidWith(ManaCostShard shard, byte color, boolean snowSource,
++            AbilityManaPart source, ManaPool pool, Map<String, Integer> xManaCostPaidByColor) {
++        if (shard.isSnow() && !snowSource) {
+             return false;
+         }
+-        if (mana.isRestricted() && !mana.getManaAbility().meetsManaShardRestrictions(shard, mana.getColor())) {
+-        	return false;
+-        }
+-
+-        // snow can be paid for any color
+-        if (shard.getColorMask() != 0 && mana.isSnow() && pool.isSnowForColor()) {
++        if (source != null && !source.meetsManaShardRestrictions(shard, color)) {
++            return false;
++        }
++
++        if (shard.getColorMask() != 0 && snowSource && pool.isSnowForColor()) {
+             return true;
+         }
+ 
+-        // Check Colored X and see if the color is already used
+-        if (shard == ManaCostShard.COLORED_X && !canColoredXShardBePaidByColor(MagicColor.toShortString(mana.getColor()), xManaCostPaidByColor)) {
++        if (shard == ManaCostShard.COLORED_X && !canColoredXShardBePaidByColor(MagicColor.toShortString(color), xManaCostPaidByColor)) {
+             return false;
+         }
+-
+-        byte color = mana.getColor();
+         return pool.canPayForShardWithColor(shard, color);
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java b/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java
+--- a/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java
++++ b/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java
+@@ -55,7 +55,6 @@
+ import java.util.Collection;
+ import java.util.List;
+ import java.util.Map;
+-import java.util.function.BiFunction;
+ import java.util.stream.Collectors;
+ 
+ /**
+@@ -96,18 +95,22 @@
+      * Dev Mode Constructor for AbilityMana.
+      * </p>
+      */
+-    private BiFunction<Player, Collection<String>, String> reflectedManaChoice;
++    @FunctionalInterface
++    public interface ReflectedManaChoice {
++        String choose(Player recipient, SpellAbility effect, Collection<String> available);
++    }
++
++    private ReflectedManaChoice reflectedManaChoice;
+ 
+     /** Scope an automatic payment preference to the current mana activation. */
+-    public BiFunction<Player, Collection<String>, String> setReflectedManaChoice(
+-            BiFunction<Player, Collection<String>, String> preference) {
++    public ReflectedManaChoice setReflectedManaChoice(ReflectedManaChoice preference) {
+         var previous = reflectedManaChoice;
+         reflectedManaChoice = preference;
+         return previous;
+     }
+ 
+-    public String chooseReflectedMana(Player recipient, Collection<String> available) {
+-        return reflectedManaChoice == null ? null : reflectedManaChoice.apply(recipient, available);
++    public String chooseReflectedMana(Player recipient, SpellAbility effect, Collection<String> available) {
++        return reflectedManaChoice == null ? null : reflectedManaChoice.choose(recipient, effect, available);
+     }
+ 
+     public AbilityManaPart(final SpellAbility sourceSA, final Map<String, String> params) {
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ManaReflectedEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ManaReflectedEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ManaReflectedEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ManaReflectedEffect.java
+@@ -71,7 +71,7 @@
+         if (colors.size() > 1 && "Produced".equals(sa.getParam("ReflectProperty"))
+                 && !sa.getManaPart().isComboMana() && tappedAbility instanceof SpellAbility payment
+                 && payment.getManaPart() != null) {
+-            String selected = payment.getManaPart().chooseReflectedMana(player, colors);
++            String selected = payment.getManaPart().chooseReflectedMana(player, sa, colors);
+             if (selected != null && colors.contains(selected)) {
+                 return StringUtils.repeat(MagicColor.toShortString(selected), " ", amount);
+             }

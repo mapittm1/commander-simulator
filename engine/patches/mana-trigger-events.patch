@@ -1,0 +1,48 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -446,12 +446,21 @@
+             return originalProduced;
+         }
+ 
+-        // Run triggers like Nissa
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(hostCard);
+-        runParams.put(AbilityKey.Activator, ai); // assuming AI would only ever gives itself mana
++        runParams.put(AbilityKey.Activator, ai);
++        runParams.put(AbilityKey.Player, ai);
+         runParams.put(AbilityKey.AbilityMana, saPayment);
+         runParams.put(AbilityKey.Produced, originalProduced);
+-        for (Trigger tr : ai.getGame().getTriggerHandler().getActiveTrigger(TriggerType.TapsForMana, runParams)) {
++        projectManaTriggers(TriggerType.ManaAdded, runParams, manaProduced, payingFor, ai, cost, originalProduced);
++        if (saPayment.isManaAbility() && saPayment.getPayCosts().hasTapCost()) {
++            projectManaTriggers(TriggerType.TapsForMana, runParams, manaProduced, payingFor, ai, cost, originalProduced);
++        }
++        return manaProduced.toString();
++    }
++
++    private static void projectManaTriggers(TriggerType event, Map<AbilityKey, Object> runParams, StringBuilder produced,
++            SpellAbility payingFor, Player payer, ManaCostBeingPaid cost, String sourceMana) {
++        for (Trigger tr : payer.getGame().getTriggerHandler().getActiveTrigger(event, runParams)) {
+             SpellAbility template = tr.ensureAbility();
+             if (!tr.isStatic() || template == null || !isProjectedManaEffect(template)) {
+                 continue;
+@@ -463,15 +472,14 @@
+             trigger.setTrigger(tr);
+             tr.setTriggeringObjects(trigger, runParams);
+             if (tr.hasParam("OptionalDecider")
+-                    && !AbilityUtils.getDefinedPlayers(triggerHost, tr.getParam("OptionalDecider"), trigger).contains(ai)) {
++                    && !AbilityUtils.getDefinedPlayers(triggerHost, tr.getParam("OptionalDecider"), trigger).contains(payer)) {
+                 continue;
+             }
+             for (SpellAbility effect = trigger; effect != null && isProjectedManaEffect(effect);
+                     effect = effect.getSubAbility()) {
+-                appendProjectedMana(manaProduced, effect, payingFor, ai, cost, originalProduced);
+-            }
+-        }
+-        return manaProduced.toString();
++                appendProjectedMana(produced, effect, payingFor, payer, cost, sourceMana);
++            }
++        }
+     }
+ 
+     private static boolean isProjectedManaEffect(SpellAbility effect) {

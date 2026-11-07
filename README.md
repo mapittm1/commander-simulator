@@ -19,7 +19,14 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The reviewed runtime spends Overabundance's bonus on automatic payments,
+Automatic payment now distinguishes mana being added from a source being
+tapped. It counts Caged Sun's bonus, excludes Kinnan's bonus for sacrifice-only
+mana, and preserves both the mana type and its source when checking snow costs.
+The reviewed build passed 829 focused native tests, 1,377 broader gameplay
+checks, 256 serialization checks, and 42 live tests with 753 subtests. See
+[mana events and snow payments](docs/CARD_COVERAGE.md#mana-events-and-snow-payments).
+
+The reflected-mana milestone added support for Overabundance's bonus on automatic payments,
 including mixed-color and typed colorless costs. Sasaya's Essence counts and
 chooses each repeated bonus separately. Snowfall's mana is available only for
 cumulative upkeep. Validation passed 813 focused native tests, 1,361 broader

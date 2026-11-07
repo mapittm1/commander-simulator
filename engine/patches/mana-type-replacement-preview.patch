@@ -1,0 +1,46 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -607,6 +607,7 @@
+ 
+         final Map<AbilityKey, Object> repParams = AbilityKey.mapFromAffected(hostCard);
+         repParams.put(AbilityKey.Mana, manaProduced);
++        repParams.put(AbilityKey.Player, ai);
+         repParams.put(AbilityKey.Activator, ai);
+         repParams.put(AbilityKey.AbilityMana, saPayment); // RootAbility
+ 
+@@ -621,7 +622,7 @@
+ 
+         // try to guess the color the mana gets replaced to
+         for (ReplacementEffect re : reList) {
+-            SpellAbility o = re.getOverridingAbility();
++            SpellAbility o = re.ensureAbility();
+ 
+             if (o == null || o.getApi() != ApiType.ReplaceMana) {
+                 continue;
+@@ -663,7 +664,7 @@
+ 
+         // then apply this one
+         if (!replaceType.isEmpty()) {
+-            for (SpellAbility saMana : replaceAmount) {
++            for (SpellAbility saMana : replaceType) {
+                 Card card = saMana.getHostCard();
+                 if (saMana.hasParam("ReplaceType")) {
+                     // replace color and colorless
+@@ -1918,6 +1919,7 @@
+                         String origin = mp.getOrigProduced();
+                         final Map<AbilityKey, Object> repParams = AbilityKey.mapFromAffected(sourceCard);
+                         repParams.put(AbilityKey.Mana, origin);
++                        repParams.put(AbilityKey.Player, ai);
+                         repParams.put(AbilityKey.Activator, ai);
+                         repParams.put(AbilityKey.AbilityMana, m); // RootAbility
+ 
+@@ -1934,7 +1936,7 @@
+                         } else {
+                             // try to guess the color the mana gets replaced to
+                             for (ReplacementEffect re : reList) {
+-                                SpellAbility o = re.getOverridingAbility();
++                                SpellAbility o = re.ensureAbility();
+                                 String replaced = origin;
+                                 if (o == null || o.getApi() != ApiType.ReplaceMana) {
+                                     continue;

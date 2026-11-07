@@ -17,6 +17,25 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Mana events and snow payments
+
+Caged Sun's bonus is available when the land ability actually adds the chosen
+color. The payment tests cover an opponent's copy, a nonland source,
+multiple green mana from one activation, River of Tears before and after a land
+play, and composition with Overabundance. Blood Pet verifies that a
+sacrifice-only activation gives no Kinnan bonus.
+
+Payment forecasting retains the mana type and source separately. A snow Island
+and Caged Sun can pay Frostwalk Bastion's activation. Overabundance's nonsnow
+bonus cannot pay a second snow cost. Mana Reflection can double the snow
+Island's own mana to pay both snow costs. Ritual of Subdual supplies typed
+colorless mana and prevents the replaced blue mana from triggering Caged Sun.
+
+The 16 new cases run against both the pinned build and packaged JAR. The
+catalog probe is construction evidence. Full failed-payment rollback and other
+replacement interactions still require separate validation. See
+[mana event evidence](../engine/mana_event_evidence.json).
+
 ## Reflected and triggered mana
 
 Overabundance adds mana before dealing damage. Tests cover typed colorless

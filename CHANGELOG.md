@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Forecast Caged Sun's bonus from mana actually added by the land ability.
+  Count Kinnan's bonus only for mana abilities with a tap cost.
+- Preserve the type and snow status of each mana source during payment
+  forecasting. Respect Ritual of Subdual's replacement before checking mana
+  triggers. The regressions cover Frostwalk Bastion, River of Tears,
+  Blood Pet, Icehide Troll, and typed colorless payment.
+- Verify 16 additional mana-event, snow and replacement cases through the
+  native and packaged suites. The live gate passed 42 tests with 753 subtests.
+
 - Resolve Overabundance's bonus mana before damage. Choose reflected mana
   against the outstanding cost during automatic payment and restore the
   previous choice policy when the activation ends.
