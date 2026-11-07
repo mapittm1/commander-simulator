@@ -120,9 +120,34 @@ def _resolve(java, board, kind, row):
     _settle(board.game)
 
 
+def _choose_piles(java, board):
+    """Use the native witness seed without advancing the enclosing RNG stream."""
+    randoms = java.JClass("forge.util.MyRandom")
+    provider = randoms.getRandom()
+    calls = int(randoms.callCount())
+    outcome = {}
+
+    def choose():
+        outcome["selection"] = _choose(java, board)
+
+    randoms.withRandom(
+        java.JClass("java.util.Random")(java.JLong(0)),
+        java.JProxy("java.util.function.Supplier", dict={"get": choose}),
+    )
+    if "selection" not in outcome:
+        raise AssertionError("Seeded native decision did not execute")
+    action, row = outcome["selection"]
+    row["decision_seed"] = 0
+    row["decision_rng_restored"] = randoms.getRandom() == provider
+    row["decision_rng_calls_unchanged"] = int(randoms.callCount()) == calls
+    return action, row
+
+
 def _case(java, kind, mode, control="positive"):
     board = _prepare(java, kind, mode, control)
-    action, row = _choose(java, board)
+    action, row = (
+        _choose_piles(java, board) if kind == "whims" else _choose(java, board)
+    )
     row.update(
         {
             "kind": kind,

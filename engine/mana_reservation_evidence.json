@@ -1,0 +1,1403 @@
+{
+  "status": "activated_after_validation",
+  "scope": "Expired mana reservation timing, hybrid preview RNG isolation and two-sample safety; integrates the pending Divine Intervention correction. Not all-card or optimal strategy certification.",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-mana-reservations",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "cc905277930d43db94e5dd437e138c27956375781560235d34b839d0a598c894",
+    "cards_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "c497991ce75e4f48a60de8c484da00dd55fa7e7abf7f1ca729a63ff4a0bc139f",
+    "native_tests": {
+      "total": 760,
+      "passed": 760,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "75ad77b5f4902710a134d014e1509febaa27f6faa44b84ff6add7061e455325b",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "build_id": "6ab861af1a674ee79f5b44538be036ab",
+  "patch_sha256": "7d2762cf5cc450658528e4d7c9edb8d3f2951e31e2780a5becbcf984278023eb",
+  "source_baseline": {
+    "counts": {
+      "total": 13,
+      "passed": 6,
+      "failed": 7,
+      "skipped": 0
+    },
+    "fixture_sha256": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+    "testng_results_sha256": "7b9d7482f71f1e07c0ac408c112e9dc82e3c09c3fa2a2cc91b214cd9f63a4c07",
+    "failed_methods": [
+      "costPreviewDoesNotIncrementLiveUndoRandomCounter",
+      "costPreviewPreservesCallerSeedStream",
+      "defaultHybridWorkerChoiceDoesNotAdvanceLiveRandomness",
+      "defaultProfileFullPlannerCanChooseAndPayForWhims",
+      "hybridSafetyPreviewDoesNotAdvanceLiveRandomness",
+      "pairedSafetyAcceptsBeneficialRandomOutcomeAverage",
+      "secondMainClearsExpiredReservationEvenAtZeroChance"
+    ],
+    "scope": "Default-profile expired reservation, direct/worker hybrid preview isolation and paired stochastic safety; not all-card or optimal strategy proof"
+  },
+  "native_candidate": {
+    "DrawEndingCoverageTest": {
+      "tests": 23,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "fixture_sha256": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+      "report_sha256": "e548f6dd0c2e9b13fb2421ad85331dff136895781a982fdb0b59bb40c1c9c9ca"
+    },
+    "CostPreviewIsolationTest": {
+      "tests": 13,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "fixture_sha256": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+      "report_sha256": "7135e345375c1578d5dbd21282297f302b0f6dbd354be65cc74e9d72aa222f3a"
+    }
+  },
+  "source_audit": {
+    "production_java_files": 2114,
+    "changed_java": {
+      "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java": "f583d2e30fde2fc26bde40d24e57dea050c0bd3af94b75be27e9cb88779ce55a",
+      "forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java": "6d0d664ad29d94545aa2febbfc15aa24182a0fb326b793bfcf0245a889a19a5f"
+    },
+    "other_production_java_text_unchanged": true,
+    "compiled_source_audit_sha256": "c37873bf8632ceee7055e103ab5b9155710c7fd6caf6b727a2b6a0670d5a3486",
+    "baseline_build": "937175749f5d485abe086f6fbeab87cf"
+  },
+  "profiles": {
+    "Default": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d",
+    "Cautious": "52045bb47e26ef2da4248427aa53f0b3122f5988fc4b01b0dbcf356f6daef7a1"
+  },
+  "packaged_baseline": {
+    "run": "1f2b026a53ee46559b076ef4353191ba",
+    "manifest": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-draw-endings",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot",
+          "conditional_cleanup_snapshot",
+          "animation_snapshot_state",
+          "copy_frame_expiration",
+          "protection_expiration",
+          "keyword_exchange_expiration",
+          "blocking_prevention_snapshot",
+          "ring_text_snapshot",
+          "attachment_mana_cleanup",
+          "host_bound_return_snapshot",
+          "effect_cleanup_regeneration",
+          "detain_control_age_snapshot",
+          "player_control_snapshot",
+          "decision_beneficiary_planning",
+          "controlled_attack_planning",
+          "primary_control_future_planning",
+          "paid_spell_control_retargeting",
+          "composed_spell_control",
+          "cast_provenance_records",
+          "paid_mass_counter_planning",
+          "paid_exchange_pile_planning",
+          "divine_intervention_counter_trigger"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "fc330082e111d7a23e148d4066665a07664310e12f76da534a1659a160e46ea3",
+        "cards_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "98820997d35fcb0fa1339ad8e152f728cb057d8fd3dd9ff5339e93d16f54afae",
+        "native_tests": {
+          "total": 747,
+          "passed": 747,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "40d5df25675a0490d26c70380141bddabf3cd76c88f535bda6a4c316b1e25833",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+      },
+      "parts": [
+        {
+          "name": "draw-ending-summary.json",
+          "sha256": "9f9ba8c6c331be5764e513c92838731be9b9cba2c3f67afc4764df2632996d4c",
+          "cases": 1
+        },
+        {
+          "name": "draw-ending-methods.json",
+          "sha256": "66b10b9daa652d230d7956e079d509c87d3433501c29f44cf900e7ff6c3a4a01",
+          "cases": 36
+        }
+      ],
+      "default_profile_sha256": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d"
+    },
+    "summary": {
+      "counts": {
+        "total": 36,
+        "passed": 29,
+        "failed": 7,
+        "skipped": 0
+      },
+      "testng_status": 1,
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348"
+      },
+      "classes": {
+        "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+        "forge/ai/CostPreviewIsolationTest.class": "357e79e567c1086ae8061b08746725942b7051558b9389f4fa07801074f515a4",
+        "forge/ai/DrawEndingCoverageTest.class": "778c2534ee936f7bedb1395618544559c960bccea4901255712c154af75e70a6"
+      },
+      "report_sha256": "d55212bb23fd54b8abbcb17207a0b2963f44619799c4039bbc3e5569427a39f5",
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "partial_successes": 0,
+      "production_classes_from_packaged_jar": [
+        "forge.ai.ComputerUtilMana",
+        "forge.ai.simulation.OnePlaySafetyChecker",
+        "forge.game.Game",
+        "forge.game.card.Card",
+        "forge.game.trigger.TriggerCounterRemoved",
+        "forge.game.ability.effects.GameDrawEffect",
+        "forge.ai.simulation.GameCopier"
+      ],
+      "compiler_log_sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+    },
+    "methods": [
+      {
+        "method": "celestialEntersWithSevenAndFirstUpkeepDoesNotEndGame",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialExternalRemovalWaitsForUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialNoCountersAtEntryStillChecksUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialTiedHighestDraws",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialUniqueOpponentHighestWins",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewDoesNotIncrementLiveUndoRandomCounter",
+        "status": "FAIL"
+      },
+      {
+        "method": "costPreviewPreservesCallerSeedStream",
+        "status": "FAIL"
+      },
+      {
+        "method": "costPreviewRestoresEnclosingProvider",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewRetainsRequiredTargetRejection",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewRetainsUnaffordableSpellRejection",
+        "status": "PASS"
+      },
+      {
+        "method": "defaultHybridWorkerChoiceDoesNotAdvanceLiveRandomness",
+        "status": "FAIL"
+      },
+      {
+        "method": "defaultProfileFullPlannerCanChooseAndPayForWhims",
+        "status": "FAIL"
+      },
+      {
+        "method": "divineCopiedCounterRemovalDoesNotQueueOriginalTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "divineCopiedPendingTriggerEndsOnlyCopiedGame",
+        "status": "PASS"
+      },
+      {
+        "method": "divineCurrentControllerCanCauseDrawAfterControlChanges",
+        "status": "PASS"
+      },
+      {
+        "method": "divineDrawIgnoresCannotLoseEffects",
+        "status": "PASS"
+      },
+      {
+        "method": "divineDrawTriggerCanBeCounteredAfterRemoval",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnemyRemovalDoesNotBecomeDrawAtNextUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnemyRemovingLastCounterDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnteringWithoutCountersDoesNotDrawOnUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEntersWithTwoAndFirstUpkeepRemovesOnlyOne",
+        "status": "PASS"
+      },
+      {
+        "method": "divineLastUpkeepCounterQueuesSeparateDrawTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOpponentUpkeepDoesNotRemoveCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOriginalOwnerCannotCauseDrawAfterControlChanges",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOtherCounterTypeDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOwnPaidAetherSnapQueuesDrawOutsideUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divinePendingDrawDoesNotRecheckNewCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "divinePendingDrawSurvivesSourceDestruction",
+        "status": "PASS"
+      },
+      {
+        "method": "divineRemovingZeroCountersDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineUpkeepRemovalCanBeCountered",
+        "status": "PASS"
+      },
+      {
+        "method": "firstMainRetainsFutureMainPhaseReservation",
+        "status": "PASS"
+      },
+      {
+        "method": "hybridSafetyPreviewDoesNotAdvanceLiveRandomness",
+        "status": "FAIL"
+      },
+      {
+        "method": "pairedSafetyAcceptsBeneficialRandomOutcomeAverage",
+        "status": "FAIL"
+      },
+      {
+        "method": "pairedSafetyRejectsRiskToOnlyOwnPermanents",
+        "status": "PASS"
+      },
+      {
+        "method": "secondMainClearsExpiredReservationEvenAtZeroChance",
+        "status": "FAIL"
+      },
+      {
+        "method": "secondMainRetainsNextSpellReservation",
+        "status": "PASS"
+      }
+    ],
+    "inputs": {
+      "tests/support/draw_ending_worker.py": "20901bc4da9bf5a774fc682266bdc1a9fafdc9eebddcb3ba294bfbd841cdab37",
+      "tests/integration/test_draw_endings_integration.py": "223ad751bf8cfa69417bd55636030e18338c5393e3ac91e6dd9405966a2ef3a2",
+      "tests/support/exchange_piles_worker.py": "e0b3585a077cfb1f2093dd54d56f454d219154467fd6472749e951156106442b",
+      "tests/integration/test_exchange_piles_integration.py": "e66b2313a5716bd250ea611b5147f211f82f2c8c15c63e7689c6d759f9edd4a1",
+      "engine/tests/AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "engine/tests/DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+      "engine/tests/CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+      "tests/support/native_receipts.py": "c1abf848857cbaf2774d024595eea801599e11f0e6124075edc9d0f5991d5d0d"
+    },
+    "log_sha256": "540ca3d65d50d27d4affcd3c193bbbc3afb0d832d09bad49e89622413cb65e30",
+    "exchange_run": "bb38aac4cc674a948714fb98f7fdede3",
+    "exchange_manifest": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-draw-endings",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot",
+          "conditional_cleanup_snapshot",
+          "animation_snapshot_state",
+          "copy_frame_expiration",
+          "protection_expiration",
+          "keyword_exchange_expiration",
+          "blocking_prevention_snapshot",
+          "ring_text_snapshot",
+          "attachment_mana_cleanup",
+          "host_bound_return_snapshot",
+          "effect_cleanup_regeneration",
+          "detain_control_age_snapshot",
+          "player_control_snapshot",
+          "decision_beneficiary_planning",
+          "controlled_attack_planning",
+          "primary_control_future_planning",
+          "paid_spell_control_retargeting",
+          "composed_spell_control",
+          "cast_provenance_records",
+          "paid_mass_counter_planning",
+          "paid_exchange_pile_planning",
+          "divine_intervention_counter_trigger"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "fc330082e111d7a23e148d4066665a07664310e12f76da534a1659a160e46ea3",
+        "cards_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "98820997d35fcb0fa1339ad8e152f728cb057d8fd3dd9ff5339e93d16f54afae",
+        "native_tests": {
+          "total": 747,
+          "passed": 747,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "40d5df25675a0490d26c70380141bddabf3cd76c88f535bda6a4c316b1e25833",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+      },
+      "parts": [
+        {
+          "name": "exchange-piles-heuristic.json",
+          "sha256": "67b86dc86e6ed447ea96e585d83e18d9447360da2c429a6f3dcfe15b3390cd6b",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-hybrid.json",
+          "sha256": "4ee1609bdec52f008d502c0d811a975408add386e4c0dda7029979bb2c4d1c87",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-full.json",
+          "sha256": "d47afcf895ff126cb26922ff4c32d265f71df284f71675e1f03a0c1301e7222e",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-controls.json",
+          "sha256": "3106dc917f9b549fd18d44157d8d2c9eb77e8915af6fa101c211a568a39b1fd3",
+          "cases": 3
+        }
+      ],
+      "default_profile_sha256": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d"
+    }
+  },
+  "card_archive_transition": {
+    "old_archive_sha256": "595fe0e742ded011f7431616c9558e8a33424d2795fb67b081fbf8f096db5486",
+    "new_archive_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+    "archive_entries_compared": 34132,
+    "changes": [
+      {
+        "path": "d/divine_intervention.txt",
+        "before_sha256": "812b3afdd54f1f86fe6ee20b616069583ef726fc8a931f9ab0beeca5023ed968",
+        "after_sha256": "019a78f21cd400e2773e362c4051380209f511dddd09369d60d02973b7deb0d6",
+        "change": "Separated upkeep removal from current-controller last-counter trigger; Oracle text and AI exclusions unchanged."
+      }
+    ],
+    "alias_script_unchanged": true,
+    "companion_scripts_and_predicates_unchanged": true
+  },
+  "identity_reviews": {
+    "aliases_sha256": "755615882ae70b85bc0f7e4213083a76f694594ea3b8ad2954296206b2ff2121",
+    "companions_sha256": "e31fd8abe7529ce5f955043f7cc58ab33bbe78c6cc43eac06aef83e39f5f14a9",
+    "existing_reviews_reused_for_identical_card_archive": true
+  },
+  "previous_draw_candidate": {
+    "commit": "3405adacc396b6d2f3861120b3d762cfb1335605",
+    "historical_evidence_sha256": "d07d4a1353f8bae23dbedde660ee6e83ee6e0a778e4ee035ae6ad2f5e53fc678",
+    "source_baseline": {
+      "counts": {
+        "total": 23,
+        "passed": 12,
+        "failed": 11,
+        "skipped": 0
+      },
+      "fixture_sha256": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+      "testng_results_sha256": "407e3cf4c2811eaab47e6eba22256ce9631ed63bfe658a42f04b67bd58198897",
+      "failed_methods": [
+        "divineCopiedCounterRemovalDoesNotQueueOriginalTrigger",
+        "divineCopiedPendingTriggerEndsOnlyCopiedGame",
+        "divineCurrentControllerCanCauseDrawAfterControlChanges",
+        "divineDrawIgnoresCannotLoseEffects",
+        "divineDrawTriggerCanBeCounteredAfterRemoval",
+        "divineEnemyRemovalDoesNotBecomeDrawAtNextUpkeep",
+        "divineEnteringWithoutCountersDoesNotDrawOnUpkeep",
+        "divineLastUpkeepCounterQueuesSeparateDrawTrigger",
+        "divineOwnPaidAetherSnapQueuesDrawOutsideUpkeep",
+        "divinePendingDrawDoesNotRecheckNewCounter",
+        "divinePendingDrawSurvivesSourceDestruction"
+      ],
+      "excluded_draft": "Initial draft omitted native phase registration reset. The corrected final fixture restores phase trigger registration before dispatch."
+    },
+    "prior_full_suite": {
+      "passed": 42,
+      "passed_subtests": 670,
+      "failed_subtests": 1,
+      "log_sha256": "ae8e0b70b7ad75aa0b4db7ab6cd06bb07e58ec40198a0aad35644f82fc24d8f5",
+      "failure": "Whims of the Fates full-mode positive witness selected no action",
+      "run_id": "4c608dd39cbc4c9b8560649bf3eedcb1"
+    }
+  },
+  "diagnostics": {
+    "default_cost_precheck_run": "f37c01cde2404376a43e95628b53416c",
+    "hybrid_live_rng_run": "2fc1393e2d864dcdaea127c8da3e4dd4",
+    "root_cause": "Default profile reservation chance is 100; expired MAIN2 holds still drew randomness before being cleared. Hybrid OnePlaySafetyChecker also ran on Game AI Eval without a worker-local RNG scope.",
+    "discarded_inference": "Absence of TracingRandom.nextLong logs did not prove an empty candidate list: CountingRandom delegates nextInt. Corrected tracing established the actual draws.",
+    "default_cost_precheck_log_sha256": "57a9c7e2e9587476a47914b01e4d68c060112568a0b8365850d563a4a0c0ddc3",
+    "hybrid_live_rng_log_sha256": "421f9b49965268da045eb5a1a8a520303a0a8d4ebd7b90c7dd4660d5d14f6da1"
+  },
+  "frozen_inputs": {
+    "commander/__init__.py": "c6349d05dc281c29131a1ab50cedac6c04eff97e05bca6eca799d41d075819fa",
+    "commander/catalog/__init__.py": "46ae70e5a8587b556ad9cef0926f7b5cfdecaf5ebfe06ab9b65cdfa6efac1c56",
+    "commander/catalog/attraction_sync.py": "805a0093ed30af676d32c5722b02240445807a4ccc1d12ad56032f8bd48ec883",
+    "commander/catalog/database.py": "d6a70fb678a4baa68ea0ea1b85d8fea7c0d0f5115578923537153dc5d9ca14c1",
+    "commander/catalog/printed_names.py": "c8c18c8d849a0a71d67be0d91f1ef22625dc717c3efc60fd7a6fceb0422d78a1",
+    "commander/catalog/printing_choices.py": "47667218973ac320b381f447a367e0b9d667ea1ff911c62c3be300f7fd6e2d39",
+    "commander/catalog/scryfall.py": "f9838c408e484a58d23fe5ba7a3a199ea995357e43c29e07f6fc4b705dc8e522",
+    "commander/cli/__init__.py": "94e83f052e52c8b154517113d2297ff5ffcda092b8e5e0dcdda0a6ed1207da3f",
+    "commander/cli/app.py": "89437027e6fc199e9944459ba8cf1fdfa189699012ab896ebe07037874496dbf",
+    "commander/cli/batch_commands.py": "e029ef93c1680980673216b4f02a3036676ba6077d41772769a9200f4e5dc680",
+    "commander/cli/bracket_commands.py": "031700c82f08634e84b777362b49632aca35d903ef05284c047b0e8559628951",
+    "commander/cli/deck_commands.py": "4ba4e0a8d36f54810d877b6aadd612c791e402a2970cfa37c14d486e4e680030",
+    "commander/cli/engine_commands.py": "c1235498439061a0175884417e8c22e0c077293637a8ff8d16ca4ce89cd11797",
+    "commander/cli/json_output.py": "6180a75fecb4465c5bc6d5d2c07334b599da1a34be00bce73e8d02407e9f5215",
+    "commander/cli/opponent_commands.py": "5ebdcb3f7cd09857449423bd26ae92936395e67b65cb50b185c3ddae34797d05",
+    "commander/cli/project_health.py": "2833fc4e033a6173451bbb2b3e8a5f92cffaf109187bac4ebdb15035dab978ce",
+    "commander/cli/salt_commands.py": "0d76551e2c7bae4a896b7999ff604fee5d8631a8bea76e87db8e7f8ff5aa7804",
+    "commander/cli/workflow_commands.py": "6c7f85cac294f73b435fb760da1227e7123094df629fbc63f1be7a1caab7b426",
+    "commander/decks/__init__.py": "47d666b0f98bb62b744ce56483be50e9c067ba9068c68151538a653641e35c2a",
+    "commander/decks/deck_snapshots.py": "526f56d1a282eea576d368b3ae5017cc18db42d8785e433057c78b0a7e9a8709",
+    "commander/decks/deck_store.py": "fb2074b1d75d33321f96556ab56107e1044d5cc3147802f0994f0a3da7c1fa6a",
+    "commander/decks/decks.py": "fc3cbb6dbd396b5f9ac3ca1ded5f3ef24ee798a037b45d2adb74f7db75416513",
+    "commander/decks/pod_import.py": "b47247029478dc72070585301442164bc85541eea76ddf8ccb0f14f62ebb7e94",
+    "commander/diagnostics/__init__.py": "55916619977bc2f0166c29ed60d280a365da878825c0bd45edc296f0767620a9",
+    "commander/diagnostics/batch_diagnostics.py": "32ab28f43169e758ae13236e515ecf7a66626f2e50d6a7dc8f6d3f8127146cca",
+    "commander/diagnostics/diagnostic_artifacts.py": "d550c5b2bf415869daf908e849ea78dee944c7a382419bc649c0bab5a13cf630",
+    "commander/diagnostics/game_diagnostics.py": "a87dcf174b68a696e9565d281b7f790878ef5f2f0631d3e19004691fa48607c1",
+    "commander/diagnostics/game_events.py": "5f3330cb7eb00a8c425ebdf255bb169e96ae72551a62b499f0f547bca3479a83",
+    "commander/engine/__init__.py": "d639abfbf2f8259b9fe263d68ee66132e28d9f54ea9fba439143812e49c702e9",
+    "commander/engine/catalog_probe.py": "baceb0443e42e47a2d64ae644e7189021b8edb2718039253f023e2c7cee0b69b",
+    "commander/engine/catalog_probe_io.py": "123d1e614b72f1c548c954681bc070aa67d5c482ba2995f3161a031b09804381",
+    "commander/engine/catalog_probe_worker.py": "56e44ecc8aaa595338e7853db0b2a326f22bab67f2e6eab6ced048382f8ca5d5",
+    "commander/engine/companion_admission.py": "705619f89d020454666c02913164288a64841b53f0777ea3fa41a0876188195f",
+    "commander/engine/companion_reviews.py": "88cb6ac0b00fc71d4d9b13983d706dfe3939b2fa29584ffaabd4a9f70e46b8db",
+    "commander/engine/companion_worker.py": "e321b22095126fc4ffa9989f511f01e2e709c14c45579070ad6470a09e823a03",
+    "commander/engine/conformance_checks.py": "3b1da2163a3314e9fab275edc695459cc28d651e94fb9de188ec91cd09ae4d3b",
+    "commander/engine/engine_aliases.py": "cd06e1d3dcbaf02c3fe4c6f34e318ff2db954d6d5ee25c0ca2433b690c72c0ec",
+    "commander/engine/engine_audit.py": "04a9c9f04e2bfafae9e92776bc042002dcc7ba9c459adfc875ab30ad35b23b20",
+    "commander/engine/engine_audit_store.py": "0115e9b44ba8b29b16ba3b7b27bc07e380df620d5a211498a36c09b299279f1c",
+    "commander/engine/engine_conformance.py": "11eb975af5801b509b317002fc4bdaff0746a7c404ff5bff452efe681a83195d",
+    "commander/engine/engine_fixtures.py": "1adad7d95d23f38bce2e25c31178a21792741bb1d667597ecc6b2d11f15c543d",
+    "commander/engine/engine_gaps.py": "aa38644b9d859bd3d7bfd63001ba7edc6d5c5f9882740b3e69df67ac0a091caf",
+    "commander/engine/engine_process.py": "3ace238138bb446585b5fd1e7453a6cd3eef62362b147a5e73e32d170cdde970",
+    "commander/engine/forge_config.py": "929e7a37d654532d729afcc7fd317fc42f412a5a88e297b82ea503b622e1a5be",
+    "commander/engine/forge_decks.py": "7e1bab2f1b3775a439b269aa46716458ad822daac14b4383cabb22514bbb95c4",
+    "commander/engine/forge_engine.py": "a931fdf63bc5fab818b684d1b1caa3897dba579bd7854eb3851ddf9ce0f8c2d0",
+    "commander/engine/forge_results.py": "b8f5d2d33daa58a654a9044fa05485154d7c720dbe1213eb9fadd2a4c4213e6f",
+    "commander/engine/interactions/__init__.py": "d0ebe9df47104bc0abf54c2881fe520b6c287239e84e3acb9938ccd6c5e88162",
+    "commander/engine/interactions/casting.py": "7283b029fd9f3eaff7d4be653070712ab07b31e640a77be3b45d9ed6c1ecc632",
+    "commander/engine/interactions/casting_fixtures.py": "3a6a0642d127cb4ec3a06966887110b40080679674d962a6f950237362bf0908",
+    "commander/engine/interactions/chains.py": "0017775866c8eecebadacf3050a2c7e1ec4c005f65d84761eebc69706e374765",
+    "commander/engine/interactions/fixtures.py": "e57f02b86c63d7a8a4b51a81b7a58675f5731bdca5f27153f5ebbb87b3817e61",
+    "commander/engine/interactions/native_bridge.py": "0649c50eb770fb419a3344991aea1cb9aa988439f6aab9ee3eea7902fc74c77d",
+    "commander/engine/interactions/ordering.py": "36bc54206a6f1656b1d3fdf32c2138e6a3b8453e81bff56e3a5162a21b6deb1b",
+    "commander/engine/interactions/ordering_fixtures.py": "ec196bd7b35923e31c5f7ec908fdcce28696c9b15407c369ae09c41336313332",
+    "commander/engine/interactions/priority.py": "5cce445372f92ec04207862b2fb7535d005a78c41b44cfe28e29c6a1b2693562",
+    "commander/engine/interactions/priority_fixtures.py": "61e9a770b069743237ff0302f4759756e96b4a97699bbde01538f2798dbd17e1",
+    "commander/engine/interactions/responses.py": "1f2430f91bff84332406ac072169cf16258a5f8b17c7c614804caf060dc92c85",
+    "commander/engine/interactions/runner.py": "86cb3b9283aad72c06b97d906dcf8ac0f01f3548b7088693f96f5f09344e2421",
+    "commander/engine/interactions/suite.py": "035a18158512ebe25b23f2ed3ad6a2de30a93a086140169863a6e0f5e858940f",
+    "commander/engine/interactions/worker.py": "378e13b8d76b3ca7f529c87b2eeea9500078717af85b6ec58a84d9b24ae46114",
+    "commander/engine/native_runtime.py": "637215d2ceb920ba6654845fa9c919a023a7abffc9f2d99fa050779262128937",
+    "commander/engine/printing_admission.py": "a28c8dd687f90bb1b8600a07aa50b85fab22010bf8323749fdd8102bc22386cd",
+    "commander/engine/printing_resources.py": "c0f5f19dee24e17bae45a45978d1ff7d002feddedb39f1b579c4f28bc417f540",
+    "commander/engine/printing_worker.py": "1546f82516b0dd7206328759472431416ca3c03f85c85ea799682ac1de3cd7fc",
+    "commander/json_safety.py": "f7e917b583c638bf37f34147b41239296f92b82a855bed530c2fe1f7d1bbc74a",
+    "commander/opponents/__init__.py": "3280e2f0c404497519c6a9db425d2b767c62fe6783d1ed9c0fc199d3eff2ca67",
+    "commander/opponents/opponent_manifest.py": "0eb4eb43901d727e60e6ba24eda0b7b21267742200ad98ed562f0d607cc7b875",
+    "commander/opponents/opponents.py": "e2a242634e691f65ab9d721759e86b84edca6aa30ee0432f6abc726498c6fa62",
+    "commander/paths.py": "4c4f418042dd2c9a98eebf45e8fda00438d17d44889c04da1815539b343dd5c7",
+    "commander/rules/__init__.py": "878a5370f89ae4d944db4269a9e83cfd89d1cd824449548b10bba913ff13c887",
+    "commander/rules/brackets.py": "381f698a96b07006224c5a1e729fa15e0786a2d0b829327bb76c36db14ffff83",
+    "commander/rules/card_structure.py": "33e9ea2f8102d9eef25b275951c980c60799f76e558695c392d41c32c0c162f8",
+    "commander/rules/commander_colors.py": "611f4b2871f25f917429f0064bffa0e1e164bb7937bfaeda9f04cfeb81539f92",
+    "commander/rules/companions.py": "b4785bfe315c6779d385726466b525ecc366ccdfc6227bc2cf25f0ae72a3d50a",
+    "commander/rules/legality.py": "148b44aac756d4a5af4c0c3345f4e22d2a6f6d4812b405bf9320834c78c2e848",
+    "commander/rules/meld_part_reviews.py": "142b171c2623ee2c1584e2b4c971af7171d68439b68f373502347cef5d7d4bc4",
+    "commander/rules/meld_reviews.py": "ba411d73caa11c1b2acfb2f54b476f6ee8ed8732340c138180625992f86753b2",
+    "commander/rules/supplementary.py": "639250da9f6585ce5eccc62264a8abe0ef05d3e42bca92c83a27598e4d41d77f",
+    "commander/salt/__init__.py": "1d768254a036eea1e08d3b58760dbe422e13a5f3f683ee0342d2aea82fbb8400",
+    "commander/salt/salt_analysis.py": "55971e756129e2290afc855b3ddee2bfa73b0fe84c24f9994c34a55a64871acf",
+    "commander/salt/salt_data.py": "71ed07c44cb46146f1e3528e9f8ba25422bd048b5c52782c17d383631d000064",
+    "commander/salt/salt_store.py": "a4a62064eb903a05ade41fe5f070297290d47d1c839e167069bcc42baf3c7eab",
+    "commander/simulation/__init__.py": "27cdad5c6e8a4c8ff16811daecaf7777a034897f968ecbad9c8a10218c1fa4fa",
+    "commander/simulation/batch_store.py": "b70b4ce28f919d2bf3d5f7d4687f467e31a86ee9f4534df252f903db070e3ba6",
+    "commander/simulation/batches.py": "ebca777a91c95b32e29e07b17af6266fa16dc9f08dfb39e07a304ac8c33c2311",
+    "commander/simulation/workflow.py": "e0c34d0e76eb2f99eb33be90f61959814446fed072b21447e8b21de12eb9ec6b",
+    "commander_simulator.py": "d1ea6979cd45209c48ad542f7ee7e208209e15a31a38bf3f4d079ec49a1da655",
+    "config/companion_condition_reviews.json": "e31fd8abe7529ce5f955043f7cc58ab33bbe78c6cc43eac06aef83e39f5f14a9",
+    "config/engine_alias_reviews.json": "755615882ae70b85bc0f7e4213083a76f694594ea3b8ad2954296206b2ff2121",
+    "engine/sticker_recipe.json": "c497991ce75e4f48a60de8c484da00dd55fa7e7abf7f1ca729a63ff4a0bc139f",
+    "engine/tests/AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+    "engine/tests/CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+    "engine/tests/DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+    "pyproject.toml": "107b4ce247e6e978f3d912093f6040b909812608b55ec93bf8e0e6735449ec05",
+    "tests/__init__.py": "8a1054f0081eff47cb6bb6dca970985180efd68b52064cfa1a296ae149e80d6b",
+    "tests/integration/test_animation_integration.py": "c614aec34c6f0083ae642ff907e4ed0bf2a797fba6cc3f4f576d73ee131467e9",
+    "tests/integration/test_attachment_mana_integration.py": "5da1757c3b37cd30e7f46705700ce554b0d6d2bac8f2e0206e4e31dc81e82f51",
+    "tests/integration/test_attack_integration.py": "7bb212c6caecd7d66668822efd897743f36a63d8c8b99ec5c5c478e16a616071",
+    "tests/integration/test_attraction_printings_integration.py": "d24ac5e0e73c85a753ebde3c37bc13b448b816203166e2e1a02ccb03eb47ee8b",
+    "tests/integration/test_blocking_prevention_integration.py": "3dfaf0e9a625472eeafc24edfc81ed3b96016f94ba4567f35303a4fb8893ef99",
+    "tests/integration/test_cast_form_integration.py": "50ad1fb24dbceba2417695608a0d0c92cfabc3dc2c440af4e5d5847b3df3186c",
+    "tests/integration/test_cli_integration.py": "abb369e61753e03e226467269f1bb27933348e1627eab23675534223f52f8edd",
+    "tests/integration/test_clone_duration_integration.py": "602d01c4ef36e32dcf09e1e232c4d48f39e3d6a7d16687afcbdb9a49b7ae2f1f",
+    "tests/integration/test_commander_colors_integration.py": "8b6d3b2a178afa2bec53220391598fe15c24f8151a2fd12aba2a9c84901f99dc",
+    "tests/integration/test_companion_integration.py": "f0234032e431ecb0b279b3828a4134142f1b0c2cd863df6355eb59b6c4de87a9",
+    "tests/integration/test_companion_matrix.py": "18cc34a6698b277f64d34cf660e96993f7fdb0dc7c405352088fd2f9ae044a81",
+    "tests/integration/test_composed_control_integration.py": "76208329dacdc2da028084a3eaf8f6c222305a9a17f27572729380331ec526f5",
+    "tests/integration/test_conditional_integration.py": "e21e0331b62623a603eaac1d2b7320a87e0ee068fae7a4ebb56e15983c289793",
+    "tests/integration/test_control_turn_integration.py": "07f80fc9cb492c0020cb00ac044d8328ac39209df9b62835bf8ffed12e3e868b",
+    "tests/integration/test_damage_integration.py": "f8e680b438ad7e82bec06bb3bb9fa1a50597ae1622facca12cde262e7f96c356",
+    "tests/integration/test_decision_integration.py": "6c2073aa808bfb87e5f1fbc22f913f0a6da9edb6bd4645ef33decdb0834e65d0",
+    "tests/integration/test_delayed_integration.py": "f693a5c337b7c7366768201a39d7d93e9a1fa441f3df35dceea232336cf0d82c",
+    "tests/integration/test_detain_integration.py": "fc56d1bc58ffdd80df12abdd5d377b65735ece14453a7e3d06f086702b2185ff",
+    "tests/integration/test_draw_endings_integration.py": "223ad751bf8cfa69417bd55636030e18338c5393e3ac91e6dd9405966a2ef3a2",
+    "tests/integration/test_duration_integration.py": "61be69aaab32a02d2e3908016abec2bc85021a73f7f26588dfda238eaa54a927",
+    "tests/integration/test_effect_cleanup_integration.py": "09b4db0559aa3570bda02e7a20f884f8047d33d361e39f56dcff2d8381d3314c",
+    "tests/integration/test_engine_integration.py": "ce12d1fce432d89cdfe097b11e351fdd6587981dc49b53489f17ba84c4be9fa5",
+    "tests/integration/test_exchange_piles_integration.py": "e66b2313a5716bd250ea611b5147f211f82f2c8c15c63e7689c6d759f9edd4a1",
+    "tests/integration/test_history_integration.py": "13711f04d2463a74dbe59100492f640ce0dd70eeb84a9d81d592cf62157484a0",
+    "tests/integration/test_host_return_integration.py": "ac9f773812e1c4665463238f210beba897137cf1e08148fffe1e483e260361aa",
+    "tests/integration/test_interactions_integration.py": "be818b4edad996653291c61afd57ff2e8eecfb6fa6c80484186f3180d0ad52e3",
+    "tests/integration/test_keyword_expiration_integration.py": "d2a98b9fa84074c40bc4edb11b05d1463f148f968364fafaa43e6bbf3db809df",
+    "tests/integration/test_mass_counter_integration.py": "0b835b5987d8bf90f37d37cde54798ce61f27634c0a2d78dc7cacaf1e3d0fd09",
+    "tests/integration/test_meld_integration.py": "e06b8d390eefab583151bf67a56c077fcba785d9aac18329a02b8437cd00d587",
+    "tests/integration/test_participant_integration.py": "d2bf0a5faefe99ad71461885336dc736e34f30f9adca23890d25ce5976ada4ca",
+    "tests/integration/test_primary_control_integration.py": "24957601cd26a547b844f5c9cb617d020d6652f0e062d33dcf7cff183cd98531",
+    "tests/integration/test_protection_integration.py": "6c87badd7b22fdedcf47e880093ce2d91c48bc2d0f960bc9a9447511a892acfe",
+    "tests/integration/test_ring_text_integration.py": "c07f14aa1c7aeebdd6444823af0ba4c6e0082d2ad396df14b1c5a0dd6f8c7933",
+    "tests/integration/test_spell_control_integration.py": "61d7c62fd5715e0d5aff820d8d00eca7a4936399d280087802f021b0371c7b42",
+    "tests/integration/test_stack_integration.py": "ecc63541ebc6de8893970a05f3b2a8bcc039e3f7cb6adca3f26cdbc98a8373e9",
+    "tests/integration/test_starting_life_integration.py": "7e4cdf84712a43d8cfd0f5eff0289c1a274afde494919f8962b267c9060df766",
+    "tests/integration/test_sticker_state_integration.py": "7ccccbcc4a6c0df7daecf2e31e4130b0d7737d3701c72c6bb25952d0ae4e5a70",
+    "tests/integration/test_supplementary_integration.py": "62ca1b87f4d312a90d1796e4aff7eab6b825a61e4dbd811451cb3a4a8cbf4bbc",
+    "tests/integration/test_turn_schedule_integration.py": "b1ae8ca7f8855d8647297d46339f78168a11e6d4edf1629d2931a204ef126914",
+    "tests/integration/test_usage_integration.py": "3817a5f72d71c018db2311827b98e48d328c83713ce4f0771c89da678b077dca",
+    "tests/support/__init__.py": "8a1054f0081eff47cb6bb6dca970985180efd68b52064cfa1a296ae149e80d6b",
+    "tests/support/animation_worker.py": "cec785d4e19d975258427faa51c68396c100aff85ec8cf9d566f60f5293ddd4a",
+    "tests/support/attachment_mana_worker.py": "00a1f2896e5619f5d59a37cbf53d66211d730335a92e6661bb8a60c3185b81bb",
+    "tests/support/attack_worker.py": "f50bc97f5fc4f348198714d307b1483adb14cbfd46b705d0fb43acbbc8e91783",
+    "tests/support/attraction_printing_worker.py": "fdc72e86087b67925005f870b0dd334f11c8ab2914f2a1419788ebc1874d1202",
+    "tests/support/batch_fixture.py": "bd0b312d8519afc3ba572b10084edac155d8785f3d78a462d6520009e3741f1b",
+    "tests/support/blocking_prevention_worker.py": "95115c68f4098ba53e0674182db7174a09feb99c5c7caf2fabf8efc4926ee251",
+    "tests/support/cast_form_worker.py": "8ed6e058658952c354c9c84b00fc26b92c6f08f2b99f9390a67324b9817f4c21",
+    "tests/support/casting_fixture.py": "413e97c20db460cb951350850cffe9606521b296464b07b382bfb19c649045b0",
+    "tests/support/catalog_fixture.py": "dbae64834bec0e17af35023f48b834272c19a9a89b93a6a02aca5d5b88266cd6",
+    "tests/support/chain_fixture.py": "fbdcb0bfcedad1d964b4ac0b65fa0f5669fcb4dbb1b73040c242f87c51303ba3",
+    "tests/support/clone_worker.py": "aae64989b2880eaf45529777e87491fc5b5261095aed07cc01bd23f1647816df",
+    "tests/support/commander_color_worker.py": "fbfaf502524abea65dca945820d87c283c56c723ab2250e84d5afbf57c7d0d3d",
+    "tests/support/companion_matrix_worker.py": "2fa82478726aa0ad32ae2ae514320fa6052e676906c3860b42d93cb072947ad8",
+    "tests/support/composed_control_worker.py": "8804bc113a0b1b3abf0676d4ce88694473ace280f05f3ffb77347b819e206d64",
+    "tests/support/conditional_worker.py": "5eb346cd9552f8916a7af203a5a69cda0df48df11a4e9fd248db54480ec96dc0",
+    "tests/support/control_turn_worker.py": "8ef77a5f3390bfad225409b64f03f302980dc3c6ba40c7f3938e010d5302b9c9",
+    "tests/support/damage_worker.py": "7545744cc2e9ddd143a82502dc3c6a278166a9dec924bf3dad92b16abef160e9",
+    "tests/support/decision_worker.py": "64f080e721f6257f6f51a1cf853d0064d508bdebefaef1418c35f41b987f95cc",
+    "tests/support/delayed_worker.py": "5a02ed687138cde21c23ac93b484834faaa80a4cd480fb101eed3be96d959085",
+    "tests/support/detain_worker.py": "6a2e1d11a94b942e82b1d0670b17ef9232405e07a75d0400c48ae0591ce7f26e",
+    "tests/support/draw_ending_worker.py": "20901bc4da9bf5a774fc682266bdc1a9fafdc9eebddcb3ba294bfbd841cdab37",
+    "tests/support/duration_worker.py": "6ae92083a099a040f39513121f096a7950731195212b91e27225928e7bd0a0f4",
+    "tests/support/effect_cleanup_worker.py": "3f801c61437787acceb52da58a1d070be55a7239a55dd449291fe730d08f13c2",
+    "tests/support/exchange_piles_worker.py": "e0b3585a077cfb1f2093dd54d56f454d219154467fd6472749e951156106442b",
+    "tests/support/history_worker.py": "0dafd1524e820fbdd5c5f5ffd84f5eaac7715c17c01b1be4866c784062fdd938",
+    "tests/support/host_return_worker.py": "60598a6d72462b0f6a829f41019ab822a37e8aba263e897e7890fb1c85f359d0",
+    "tests/support/interaction_fixture.py": "0575d30028b832fbef56feb2df0d4115e425e331120e58d40f1ed00baa59feaa",
+    "tests/support/keyword_expiration_worker.py": "62e1d9b2b3a72b2d659db63556819bfff2a0cede0b7526dbd073f0bea6c555b7",
+    "tests/support/mass_counter_worker.py": "1f6ff60bdbe752fbfdab2fd4cd5f6831489171b1fba63c1673dc5434636e2d3d",
+    "tests/support/meld_worker.py": "ba30a8f83c3863b55beef6457fa7c8b1f83f15fd8fd9e1474a8864c8b82c71a3",
+    "tests/support/native_receipts.py": "c1abf848857cbaf2774d024595eea801599e11f0e6124075edc9d0f5991d5d0d",
+    "tests/support/native_worker.py": "7b329d6d6b3dbafd6e5a2cad72e5d2bb0d1aa678f73cfd8b5ae06ec4ce831eb1",
+    "tests/support/participant_worker.py": "f9d0006d36d5507f85c01b3fc354e72147e5d62898ca6b4605961eb31d12f741",
+    "tests/support/primary_control_worker.py": "22a43122167d2b8bc68d6e6baba61b9cf1ab061fa33901ea102b9deaa03780cf",
+    "tests/support/priority_fixture.py": "a515627125cff48a71b2ecb44a711576c7b68e396aed0cd6b8e55a4a9e192489",
+    "tests/support/protection_worker.py": "cc02a614ae7d9f414838a6642f35ac8f4761e260f7487430dbf905967c588ba9",
+    "tests/support/ring_text_worker.py": "d7227f804564335cfcdf64a63bfc9644f53ed2a7b9f1a4b4a48d9ffc2d82f83f",
+    "tests/support/spell_control_worker.py": "12142d95d9e4133f0508511ec240089a09b43536e5c73318adece439d655ee00",
+    "tests/support/stack_worker.py": "88bd55ea1a65db8f0f7cbf75a7240371106594c99facf49209dcabc1b41274ea",
+    "tests/support/starting_life_worker.py": "7ed69af9d576440692989723b4844d6d422d65aa0adb7aea81f2f4c155611bfe",
+    "tests/support/sticker_state_worker.py": "f350874e66f68efdb710b8b07b164a87f52c45a00587d757b6adc0e960090bac",
+    "tests/support/supplementary_worker.py": "9fc2b4d1ee1d344c8ada1e98e7b8b7d907b7f7b2773503c3a6e8f27b81d71c57",
+    "tests/support/turn_schedule_worker.py": "c36c8fe5c8f7ae1f50de70145af0bb0a64ba58406bba7b2dbf52c45d8d16ad20",
+    "tests/support/usage_worker.py": "9afdbd75575262f77220cb71aa68a625e3e456c3e577223f8348963b0fefa011",
+    "tests/unit/test_attraction_sync.py": "3741a413297aded16230c69661501076ac1f300138360476feb7d05381cf5d26",
+    "tests/unit/test_batches.py": "ff94e98b66d3dc8a1b316d93b163e6bf0edf3d0f046d0a6a5603efaae3bcc2e5",
+    "tests/unit/test_brackets.py": "0aad3de51053764cd385b515e8a62d030fd1b574dbae113c195248b74ef26173",
+    "tests/unit/test_casting.py": "cf26a2c899239dfa28ee4732d25fb34b3ebc0a69826849b95ad3fb6972ff26df",
+    "tests/unit/test_catalog_probe.py": "a6a33f0a512e7d34167c4af0a7e506c5f3a62ac06260cd9aa40095448055ad37",
+    "tests/unit/test_chains.py": "bd5f54dd14c00e42e88d5c231570b8e7009ca2207a115910db0cacdb748b6dba",
+    "tests/unit/test_commander_colors.py": "7b332368d239bb02eea3039f6055e2e03341f9ab6e9a013ea0519607d5e004ad",
+    "tests/unit/test_companion_reviews.py": "1eed0a7679627352c55187ad3927cba8cafc73ce6b9e699b9035bba5bacfae23",
+    "tests/unit/test_companions.py": "b0ac3d88d5618debf93e30ef4e30aed187a841e567f2a4d96c66cb60919df7f9",
+    "tests/unit/test_conformance.py": "51fd8f7c1ea40aecd23b6e5c98caef77d3d08c3702b34b98675ee07319404352",
+    "tests/unit/test_database.py": "b28c00a505a6bbbb12b843b1cd6b5e5fa6e50e755682f90257e512d1abf4c50c",
+    "tests/unit/test_deck_store.py": "8f35d7679258addfd28c7ef052e680403b7b54656992ae51cbf97e5b43076ae8",
+    "tests/unit/test_decks.py": "ce20aecaa9dc41fb31648e6ef3b8884e62103e2771a2c14450d1399b8110bcc7",
+    "tests/unit/test_diagnostics.py": "5950c3ea23e61704ba6491364a8f131159d886db530e67d5aa217caa06a2203e",
+    "tests/unit/test_engine.py": "aa7be06a6886bcaf48c231ef19e25895e8bf843313f516b8d91309412d8ba84f",
+    "tests/unit/test_engine_aliases.py": "a52c7ee342ddfc803e6b69c1370a217d5d066b2f606b1e1718f49e1959378a89",
+    "tests/unit/test_engine_audit.py": "74062d2e747bade2321059af30a2e2fa71257408658fb57818e51b11cff5cad3",
+    "tests/unit/test_engine_candidates.py": "a2800fd8ba27d38ddf171a1721fdfb07ca23288649a4aae3d0bf6286c4eb651e",
+    "tests/unit/test_engine_fixtures.py": "aaea1401189958bd0e1b64d9354950cb4d8fa7b5f17831c6575737809573e23f",
+    "tests/unit/test_engine_gaps.py": "3e43cee6b690445d6ae9009885cf4f068a609f7bf0f7378746fdc15a919cb6f9",
+    "tests/unit/test_face_references.py": "e96884b15da987dc4194b8001c8c20404aae1cf3d7030ed6284daab22ebbc28e",
+    "tests/unit/test_interaction_native_bridge.py": "3238525429b3b49b91846c762afd6266fdd454e1daadc89524e692695cb7a7f3",
+    "tests/unit/test_interaction_partitions.py": "da716f0e4f82e483ad342ebe4ee892ea8f7fbd3e50e6fa42fe1a0307f4326a12",
+    "tests/unit/test_interaction_runner.py": "648735a2102a1beb8013f276ad8cc882b94cf6600053b44101df725f10641cf5",
+    "tests/unit/test_interactions.py": "38fcd117c6d64c275e1caff34976da4897a229dbb5a380b0cd7310b43dc4f15b",
+    "tests/unit/test_json_output.py": "a45e4f722f74a42b67cfd6d5826635ef539919825665e832bec5e9f669e02c3e",
+    "tests/unit/test_legality.py": "2d26ecacf9c4b94e9121e91e32b8df0d45076483bffeb984c0ae8d9e16d97fd6",
+    "tests/unit/test_meld_part_reviews.py": "331fc2f5e1a4b122d52c25a861acd5475f8a81174b00afcbac6024cb912c53d2",
+    "tests/unit/test_meld_reviews.py": "27d6ce3e97054f14aefacf4ca6ab29c1a75d38ae876e04ff7fde2b4f0a9883d9",
+    "tests/unit/test_opponents.py": "02311f8f661b43bc24b257c2b124eaeaeb40fcd3c79f877a396433518a134ee0",
+    "tests/unit/test_printed_names.py": "b913bbbe59b05542ae46858180f8dff2907a70f19d71e2278781d9ce56e1a272",
+    "tests/unit/test_printing_admission.py": "36e9a4feb9a0e1fc545d7ea31a491c3e60b6a8dbae711d9286a3f5d00e3bc3da",
+    "tests/unit/test_printing_choices.py": "aa9bb63be40be1595fdcb3a85e7bc027e581241836de4171117b332492b40191",
+    "tests/unit/test_priority.py": "6f754c84c8c8f6f892dae4a930f14633d697944770b342ba0791a105f632e16b",
+    "tests/unit/test_replacement_order.py": "fc27a2df298420568c7a66b93587ab3fa89098a6752ff738f007de2e60d392db",
+    "tests/unit/test_runtime_integrity.py": "7371e4536bdfafbe33eae6d5c4573d08ff2612390a571805f92ea1730454d854",
+    "tests/unit/test_salt.py": "035a378d2760600158b62992e5016dcc3cf2f99569f3755ce587cf89c5978386",
+    "tests/unit/test_sticker_builder.py": "2fc455595148e8d2049f39abf99d8265a486e85b3390a566e2050f5122b85567",
+    "tests/unit/test_supplementary.py": "e495bc94f1b9973786ca3310cad4ed19dd58865387fc000c412b20974f7c30e3",
+    "tests/unit/test_workflows.py": "db38c0b31df218d3849b035517af547e5e08895a403ed8327431f1c2df2401a2",
+    "tools/build_sticker_engine.py": "dbf621f6e870fa77a3c50d2dd97d8ccceb60f267645df3de6397c446bcf9f839",
+    "tools/catalog_probe_worker.py": "44977807a56b424e2be61bb9426d8dbf0157eccc249897eb00e716bab1e22a26",
+    "tools/check.py": "965e1ca41b50fe2a26470ee454bf8ca033dac8db17a5703d6cf94842d00fe5fc",
+    "tools/companion_worker.py": "ef6fab0a103d6ad981d2d007774fb9143b372d5c3eaa923775ca347b5d6e41f8",
+    "tools/interaction_worker.py": "c6bffc805f5e719235b3e43a40f9526fca63095cfa191bf4cab841145d8ced6e",
+    "tools/printing_worker.py": "b2b4abe53baf54207d7b7c06a964f2e32c7ebe26368c4fdeff29f0a2e0b9c090"
+  },
+  "limits": [
+    "Main2 and cleanup clear expired reservations before rolling. First-main and next-spell reservations retain their existing behavior; this is not a claim of universal feasibility-query purity.",
+    "Hybrid safety averages margins over fixed seeds 0 and 4096, with the existing card-disadvantage tolerance. It is a bounded approximation, not exhaustive stochastic optimization.",
+    "The existing permissive behavior for a native minimum/unavailable score is retained. This does not certify every card or every failure path.",
+    "Divine Intervention strategic AI exclusions remain. The draw-rule fixtures are normal four-player Commander with explicit partial-state preconditions.",
+    "Mana-reflected draft witnesses remain separate ignored work and are not counted in this released regression selection."
+  ],
+  "excluded_drafts": [
+    "Unnamed native profiles did not exercise Default profile reservation randomness. Final fixtures explicitly name Default where required.",
+    "A seed-only packaged draft did not fix the original selection failure and was reverted. Final seeded scopes are accompanied by production fixes and live RNG-accounting checks.",
+    "Mana-only build 18d2aad089a34c07907fa070c9d5d777 passed 756 native tests but its packaged hybrid RNG check failed. It is preserved and not promoted.",
+    "A single fixed hybrid preview protected randomness but rejected the beneficial-risk witness. The final paired policy passes beneficial and harmful outcome controls."
+  ],
+  "single_seed_full_gate": {
+    "tests_passed": 41,
+    "subtests_passed": 684,
+    "failed": "LiveEngineTests.test_limited_rules_witnesses",
+    "run_id": "4a8ef0e86caf4438b862470216d8b2c3",
+    "scope": "Seed 42 did not exercise the Goreclaw attack witness; other two witnesses passed and no rule contradiction was observed. The final fixed matrix retains all required witnesses and fails on any counterexample.",
+    "log_sha256": "a2f8bc82b75e6d4f7cce9de26e3932a979f510f10ff9bb2f9a452f8e07ea2278",
+    "conformance_report_sha256": "89879747102fc0aef69e64c426bb87287782cdb7e738d849f3e2ceda436a2094",
+    "frozen_inputs_sha256": "97bb275cf38c8fa23652274776484a07e5a957c63b85cd5c997fe62d2e8a109a"
+  },
+  "fixed_conformance": {
+    "seeds": [
+      42,
+      0,
+      4096
+    ],
+    "targeted_run": "ab9e6538d95f4dc99f4cefcf1d044565",
+    "targeted_report_sha256": "4ad203ef5d3e5bd95b0c713d777184a795fa9ff9010eb010cfd8702f8ad24e77",
+    "policy": "Run all three fixed games, require a genuine witness per rule, fail on every contradiction, and keep incomplete games inconclusive.",
+    "full_live_run": "e9af3bb183754b02be15d650274f57f1",
+    "report_sha256": "dbeab9076f9231439d233a4c067db36ce8e6cd05482da57dd8e860a2e4541b29",
+    "checks": [
+      {
+        "id": "commander_tax_recast",
+        "status": "passed",
+        "scope": "Ruxa's contiguous basic-Forest payments, including at least one recast",
+        "evidence": [
+          {
+            "line": 15173,
+            "expected_cost": 4,
+            "observed_one_mana_activations": 4,
+            "distinct_sources": 4,
+            "seed": 42,
+            "run_id": "e9af3bb183754b02be15d650274f57f1"
+          },
+          {
+            "line": 15218,
+            "expected_cost": 6,
+            "observed_one_mana_activations": 6,
+            "distinct_sources": 6,
+            "seed": 42,
+            "run_id": "e9af3bb183754b02be15d650274f57f1"
+          },
+          {
+            "line": 15199,
+            "expected_cost": 4,
+            "observed_one_mana_activations": 4,
+            "distinct_sources": 4,
+            "seed": 0,
+            "run_id": "af828a99d0d14395b11a27760f92ce4f"
+          },
+          {
+            "line": 15244,
+            "expected_cost": 6,
+            "observed_one_mana_activations": 6,
+            "distinct_sources": 6,
+            "seed": 0,
+            "run_id": "af828a99d0d14395b11a27760f92ce4f"
+          },
+          {
+            "line": 15171,
+            "expected_cost": 4,
+            "observed_one_mana_activations": 4,
+            "distinct_sources": 4,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          },
+          {
+            "line": 15216,
+            "expected_cost": 6,
+            "observed_one_mana_activations": 6,
+            "distinct_sources": 6,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          }
+        ]
+      },
+      {
+        "id": "goreclaw_attack_trigger",
+        "status": "passed",
+        "scope": "Unblocked Goreclaw deals 5 player combat damage after its attack trigger resolves",
+        "evidence": [
+          {
+            "trigger_line": 14881,
+            "resolve_line": 14882,
+            "damage_line": 14887,
+            "expected_damage": 5,
+            "observed_damage": 5,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          }
+        ]
+      },
+      {
+        "id": "commander_loss_with_positive_life",
+        "status": "passed",
+        "scope": "A player loses to one commander's accumulated combat damage while still above zero life",
+        "evidence": [
+          {
+            "line": 15245,
+            "seat": 2,
+            "largest_single_commander_damage": 21,
+            "last_logged_life": 19,
+            "seed": 42,
+            "run_id": "e9af3bb183754b02be15d650274f57f1"
+          },
+          {
+            "line": 15246,
+            "seat": 3,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 42,
+            "run_id": "e9af3bb183754b02be15d650274f57f1"
+          },
+          {
+            "line": 15247,
+            "seat": 4,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 42,
+            "run_id": "e9af3bb183754b02be15d650274f57f1"
+          },
+          {
+            "line": 15271,
+            "seat": 2,
+            "largest_single_commander_damage": 21,
+            "last_logged_life": 19,
+            "seed": 0,
+            "run_id": "af828a99d0d14395b11a27760f92ce4f"
+          },
+          {
+            "line": 15272,
+            "seat": 3,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 0,
+            "run_id": "af828a99d0d14395b11a27760f92ce4f"
+          },
+          {
+            "line": 15273,
+            "seat": 4,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 0,
+            "run_id": "af828a99d0d14395b11a27760f92ce4f"
+          },
+          {
+            "line": 15243,
+            "seat": 2,
+            "largest_single_commander_damage": 21,
+            "last_logged_life": 19,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          },
+          {
+            "line": 15244,
+            "seat": 3,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          },
+          {
+            "line": 15245,
+            "seat": 4,
+            "largest_single_commander_damage": 28,
+            "last_logged_life": 12,
+            "seed": 4096,
+            "run_id": "eceaba58afa14ce0a9c469a5bff91920"
+          }
+        ]
+      }
+    ]
+  },
+  "packaged_candidate": {
+    "rules_run": "c79ce1d5f6414f3da1ede2d0fc572ffc",
+    "rules_manifest": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-mana-reservations",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot",
+          "conditional_cleanup_snapshot",
+          "animation_snapshot_state",
+          "copy_frame_expiration",
+          "protection_expiration",
+          "keyword_exchange_expiration",
+          "blocking_prevention_snapshot",
+          "ring_text_snapshot",
+          "attachment_mana_cleanup",
+          "host_bound_return_snapshot",
+          "effect_cleanup_regeneration",
+          "detain_control_age_snapshot",
+          "player_control_snapshot",
+          "decision_beneficiary_planning",
+          "controlled_attack_planning",
+          "primary_control_future_planning",
+          "paid_spell_control_retargeting",
+          "composed_spell_control",
+          "cast_provenance_records",
+          "paid_mass_counter_planning",
+          "paid_exchange_pile_planning",
+          "divine_intervention_counter_trigger",
+          "expired_mana_reservation_isolation",
+          "hybrid_safety_paired_random_isolation"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "cc905277930d43db94e5dd437e138c27956375781560235d34b839d0a598c894",
+        "cards_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "c497991ce75e4f48a60de8c484da00dd55fa7e7abf7f1ca729a63ff4a0bc139f",
+        "native_tests": {
+          "total": 760,
+          "passed": 760,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "75ad77b5f4902710a134d014e1509febaa27f6faa44b84ff6add7061e455325b",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+      },
+      "parts": [
+        {
+          "name": "draw-ending-summary.json",
+          "sha256": "595843527bafe8ef88d43587aa6feb02477cb53b4ad0129874765b57b9d28542",
+          "cases": 1
+        },
+        {
+          "name": "draw-ending-methods.json",
+          "sha256": "32179d59a88308dcdd11bf5898f3ab2c0deb5f9733d7e9d3e6cf1bb0a778e7cd",
+          "cases": 36
+        }
+      ],
+      "default_profile_sha256": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d"
+    },
+    "rules_summary": {
+      "counts": {
+        "total": 36,
+        "passed": 36,
+        "failed": 0,
+        "skipped": 0
+      },
+      "testng_status": 0,
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348"
+      },
+      "classes": {
+        "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+        "forge/ai/CostPreviewIsolationTest.class": "357e79e567c1086ae8061b08746725942b7051558b9389f4fa07801074f515a4",
+        "forge/ai/DrawEndingCoverageTest.class": "778c2534ee936f7bedb1395618544559c960bccea4901255712c154af75e70a6"
+      },
+      "report_sha256": "fe180b48d031e49d4af18cdaee3cfa648f499a51d76cbf495e8fba4922a616cd",
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "partial_successes": 0,
+      "production_classes_from_packaged_jar": [
+        "forge.ai.ComputerUtilMana",
+        "forge.ai.simulation.OnePlaySafetyChecker",
+        "forge.game.Game",
+        "forge.game.card.Card",
+        "forge.game.trigger.TriggerCounterRemoved",
+        "forge.game.ability.effects.GameDrawEffect",
+        "forge.ai.simulation.GameCopier"
+      ],
+      "compiler_log_sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+    },
+    "rules_methods": [
+      {
+        "method": "celestialEntersWithSevenAndFirstUpkeepDoesNotEndGame",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialExternalRemovalWaitsForUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialNoCountersAtEntryStillChecksUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialTiedHighestDraws",
+        "status": "PASS"
+      },
+      {
+        "method": "celestialUniqueOpponentHighestWins",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewDoesNotIncrementLiveUndoRandomCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewPreservesCallerSeedStream",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewRestoresEnclosingProvider",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewRetainsRequiredTargetRejection",
+        "status": "PASS"
+      },
+      {
+        "method": "costPreviewRetainsUnaffordableSpellRejection",
+        "status": "PASS"
+      },
+      {
+        "method": "defaultHybridWorkerChoiceDoesNotAdvanceLiveRandomness",
+        "status": "PASS"
+      },
+      {
+        "method": "defaultProfileFullPlannerCanChooseAndPayForWhims",
+        "status": "PASS"
+      },
+      {
+        "method": "divineCopiedCounterRemovalDoesNotQueueOriginalTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "divineCopiedPendingTriggerEndsOnlyCopiedGame",
+        "status": "PASS"
+      },
+      {
+        "method": "divineCurrentControllerCanCauseDrawAfterControlChanges",
+        "status": "PASS"
+      },
+      {
+        "method": "divineDrawIgnoresCannotLoseEffects",
+        "status": "PASS"
+      },
+      {
+        "method": "divineDrawTriggerCanBeCounteredAfterRemoval",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnemyRemovalDoesNotBecomeDrawAtNextUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnemyRemovingLastCounterDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEnteringWithoutCountersDoesNotDrawOnUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divineEntersWithTwoAndFirstUpkeepRemovesOnlyOne",
+        "status": "PASS"
+      },
+      {
+        "method": "divineLastUpkeepCounterQueuesSeparateDrawTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOpponentUpkeepDoesNotRemoveCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOriginalOwnerCannotCauseDrawAfterControlChanges",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOtherCounterTypeDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineOwnPaidAetherSnapQueuesDrawOutsideUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "divinePendingDrawDoesNotRecheckNewCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "divinePendingDrawSurvivesSourceDestruction",
+        "status": "PASS"
+      },
+      {
+        "method": "divineRemovingZeroCountersDoesNotTriggerDraw",
+        "status": "PASS"
+      },
+      {
+        "method": "divineUpkeepRemovalCanBeCountered",
+        "status": "PASS"
+      },
+      {
+        "method": "firstMainRetainsFutureMainPhaseReservation",
+        "status": "PASS"
+      },
+      {
+        "method": "hybridSafetyPreviewDoesNotAdvanceLiveRandomness",
+        "status": "PASS"
+      },
+      {
+        "method": "pairedSafetyAcceptsBeneficialRandomOutcomeAverage",
+        "status": "PASS"
+      },
+      {
+        "method": "pairedSafetyRejectsRiskToOnlyOwnPermanents",
+        "status": "PASS"
+      },
+      {
+        "method": "secondMainClearsExpiredReservationEvenAtZeroChance",
+        "status": "PASS"
+      },
+      {
+        "method": "secondMainRetainsNextSpellReservation",
+        "status": "PASS"
+      }
+    ],
+    "exchange_run": "6e4bae8fd37b4287b41f96178d0aa7d5",
+    "exchange_manifest": {
+      "engine": {
+        "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-mana-reservations",
+        "capabilities": [
+          "sticker_kicker",
+          "explicit_commander_colors",
+          "native_companion_pregame",
+          "supplementary_ai_zones",
+          "sticker_snapshot_state",
+          "historical_lki_state",
+          "damage_history_state",
+          "participant_snapshot_state",
+          "starting_life_snapshot",
+          "stack_snapshot_state",
+          "cast_form_snapshot",
+          "usage_snapshot_state",
+          "scheduled_snapshot_state",
+          "delayed_trigger_snapshot",
+          "turn_schedule_snapshot",
+          "conditional_cleanup_snapshot",
+          "animation_snapshot_state",
+          "copy_frame_expiration",
+          "protection_expiration",
+          "keyword_exchange_expiration",
+          "blocking_prevention_snapshot",
+          "ring_text_snapshot",
+          "attachment_mana_cleanup",
+          "host_bound_return_snapshot",
+          "effect_cleanup_regeneration",
+          "detain_control_age_snapshot",
+          "player_control_snapshot",
+          "decision_beneficiary_planning",
+          "controlled_attack_planning",
+          "primary_control_future_planning",
+          "paid_spell_control_retargeting",
+          "composed_spell_control",
+          "cast_provenance_records",
+          "paid_mass_counter_planning",
+          "paid_exchange_pile_planning",
+          "divine_intervention_counter_trigger",
+          "expired_mana_reservation_isolation",
+          "hybrid_safety_paired_random_isolation"
+        ],
+        "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+        "jar_sha256": "cc905277930d43db94e5dd437e138c27956375781560235d34b839d0a598c894",
+        "cards_sha256": "17fc307b71a54717cdc194094853d1fba7de833b8b354b027d3bede3a4b4beb8",
+        "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+        "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+        "recipe_sha256": "c497991ce75e4f48a60de8c484da00dd55fa7e7abf7f1ca729a63ff4a0bc139f",
+        "native_tests": {
+          "total": 760,
+          "passed": 760,
+          "failed": 0,
+          "skipped": 0
+        },
+        "build_log_sha256": "75ad77b5f4902710a134d014e1509febaa27f6faa44b84ff6add7061e455325b",
+        "edition_resources": {
+          "files": 686,
+          "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+        },
+        "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+        "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+        "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+      },
+      "parts": [
+        {
+          "name": "exchange-piles-heuristic.json",
+          "sha256": "0517c0503bc6222bd6bc460fb594c9fa3d3b9f0ecfe3d6228ff7098319016671",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-hybrid.json",
+          "sha256": "92feb61c2b8d7619f77f999390e43293710f46bcbbd8e727493bb89b79c22284",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-full.json",
+          "sha256": "142425208ebba9d8b28ddbbe1b6e73f0a3e376b6192a4fdf245f2b5d64c83b56",
+          "cases": 4
+        },
+        {
+          "name": "exchange-piles-controls.json",
+          "sha256": "3106dc917f9b549fd18d44157d8d2c9eb77e8915af6fa101c211a568a39b1fd3",
+          "cases": 3
+        }
+      ],
+      "default_profile_sha256": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d"
+    },
+    "exchange_cases": 15,
+    "exchange_assertions_passed": true
+  },
+  "validation": {
+    "focused": {
+      "total": 760,
+      "passed": 760,
+      "failed": 0,
+      "skipped": 0
+    },
+    "broader_evidence_sha256": "95bfd7bf49a542433432edd06876bff66237784874cd76197470df353ce07a83",
+    "full_live": {
+      "tests": 42,
+      "subtests": 684,
+      "log_sha256": "8bc0cc7509097de4c284004b3a0e3d19215e6dd3d17e0005bd1ad78ecbf1dd40"
+    },
+    "offline": {
+      "passed": 403,
+      "skipped": 42,
+      "subtests": 508,
+      "log_sha256": "845e987e81c2b1b5ba1c8685b40c4f4c6c39f587f71116b18a7178b4de64db1a"
+    },
+    "catalog": {
+      "counts": {
+        "constructed": 32109,
+        "script_unavailable": 7
+      },
+      "run_id": "09cb1148d36046c6a15d23edc766e217",
+      "purpose": "native_card_factory_construction_not_full_rules_or_ai_validation",
+      "log_sha256": "3dcfa459d2b68c91df7e340e7231d63ccabd61a0668941acdeded60f234255c5",
+      "native_report_sha256": "403e9963921d9a453a28154d1fc599b6e311c9978fa38c4b932286c52bfd00b9",
+      "observations_sha256": "edbbe81820aface604c6bd4638705787ed3087926d6bc92d51b0551b185fa8b2",
+      "nonstarting_objects": [
+        {
+          "card_id": "b23587e0-9fb7-492e-8bb4-f218e8e4ce6c",
+          "name": "Brisela, Voice of Nightmares",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "6923cf6b-7d3e-4d95-abaf-1df1a04ac7c1",
+          "name": "Chittering Host",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "f4905c40-003e-4992-b8d7-3f07ba09c686",
+          "name": "Hanweir, the Writhing Township",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "3989308a-4c0f-493a-b38f-cb4f5019dfe7",
+          "name": "Mishra, Lost to Phyrexia",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "14b839ef-80b1-4e7d-b2fd-38e973899cde",
+          "name": "Ragnarok, Divine Deliverance",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "43230d70-4d60-4ceb-bb45-fbc043280652",
+          "name": "Titania, Gaea Incarnate",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        },
+        {
+          "card_id": "759406d7-44ae-4260-9ef5-3bb2c92f751a",
+          "name": "Urza, Planeswalker",
+          "engine_name": null,
+          "status": "script_unavailable",
+          "classification": "nonstarting_meld_result"
+        }
+      ]
+    },
+    "promoted_health_sha256": "942a724b635135a041ba702c9b1b11e6dc56b6aee4e0f3bbc2fbfbf903ea84c4",
+    "frozen_inputs_sha256": "0eec937c23259b19366fc31d715c5882bb98b0f1aa840e3b794b4506ce25c771"
+  },
+  "activation": {
+    "source": "data/engine-builds/6ab861af1a674ee79f5b44538be036ab/runtime",
+    "destination": "data/engines/forge-3e6c036-mana-reservations-reviewed",
+    "lock_sha256": "603c268231e157e6597f90cc7593a14e244e4dc394eb9539c16df14513cd636d",
+    "archive_lock": "config/engine_locks/forge-3e6c036-mana-reservations.json",
+    "canonical_lock_matches": true
+  }
+}

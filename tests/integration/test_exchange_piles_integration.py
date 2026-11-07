@@ -24,6 +24,10 @@ class ExchangePileIntegrationTests(unittest.TestCase):
 
     def assert_row(self, row):
         """Check a fixed causal outcome without forcing AI to activate the source."""
+        if row["kind"] == "whims":
+            self.assertEqual(row["decision_seed"], 0)
+            self.assertTrue(row["decision_rng_restored"])
+            self.assertTrue(row["decision_rng_calls_unchanged"])
         if not assert_paid_outcome(self, row):
             return
         final = row["final"]

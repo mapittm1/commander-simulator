@@ -1771,7 +1771,7 @@ for the recorded scope and card-specific reference.
 
 ## Draw-ending rules
 
-Candidate rules work corrects Divine Intervention's separate last-counter
+Reviewed rules work corrects Divine Intervention's separate last-counter
 trigger. It checks the removal event, intervention counter type, zero remaining
 counters and the current controller as remover. Its draw effect can be countered
 after removal and survives the source leaving the battlefield or gaining another
@@ -1784,7 +1784,7 @@ Solemnity, another player removing counters, countering upkeep removal, unique
 and tied highest life totals, and different counter types. Added witnesses cover
 control changes and independent copied-game resolution. Fixed control layers and
 some counter totals are explicit setup preconditions, not preceding gameplay
-histories. The candidate retains Divine Intervention's AI exclusions. These are
+histories. The runtime retains Divine Intervention's AI exclusions. These are
 rules witnesses, not evidence of strategic casting or all-card correctness.
 
 Packaged tests compile the same reviewed fixture and its exact native AITest
@@ -1792,17 +1792,46 @@ base against the packaged JAR with pinned TestNG 7.10.2. Class-origin checks
 require production classes to come from that JAR. Compilation uses an
 operator-selected JDK, disables annotation processors and writes only into a
 generated run directory. Deck uploads cannot invoke this fixed test harness.
-All 23 rules cases pass against the packaged candidate. The fresh build passes
+All 23 rules cases pass against both the draw candidate and the combined runtime. The fresh build passes
 747 focused native, 1,295 broader gameplay (100 classes) and 256 serialization
 checks, plus the Python quality gate (399 offline tests / 508 subtests).
 All 2,114 production Java files are unchanged, and exactly one of 34,132 card
 archive entries changes. Oracle text and AI exclusions are unchanged.
 
-Activation remains pending: the full integration run passes 42 tests and 670
-subtests, with one Whims of the Fates full-mode positive witness returning no
-action. The same seeded failure reproduces on the preceding runtime. A seed-only
-fixture draft was reverted because it did not resolve the issue. The prior
-runtime remains active. These observations require a planner-context and
-stochastic-scoring investigation; they are not evidence of a new draw-rules
-regression. The [candidate evidence](../engine/draw_ending_evidence.json) retains
-the failing gate and exact native, packaged, dependency and source hashes.
+The initial packaged candidate's full gate had one Whims full-mode selection
+failure, also reproduced on the preceding runtime. Its historical failure is
+preserved in the [draw candidate evidence](../engine/draw_ending_evidence.json).
+The combined runtime integrates the rules correction after the mana reservation
+and hybrid preview fixes below. Divine Intervention's AI exclusions remain.
+
+## Mana reservations and hybrid previews
+
+The reviewed runtime resolves two defects found while validating the draw-rule runtime.
+The named Default profile reserves mana for Main Phase 2 with a 100% chance. The
+old feasibility check rolled that chance even after the deadline, advancing the
+RNG before a full planner selected its forecast seed. Zero-chance profiles could
+also retain stale reservation memory. Expired Main Phase 2 and cleanup holds now
+clear before the roll; first-main and next-spell reservations remain effective.
+
+Hybrid OnePlaySafetyChecker runs on a separate Game AI Eval thread. A caller's
+thread-local RNG scope does not propagate there. Its simulated Whims pile rolls
+therefore consumed live randomness and advanced the undo counter. Each hybrid
+safety sample now owns a worker-local RNG scope. Margins are combined over fixed
+seeds 0 and 4096, retaining the existing card-disadvantage tolerance and permissive
+handling of a native minimum/unavailable score. This is bounded sampling, not an
+exhaustive expected-value or optimal-strategy model.
+
+The identical thirteen-case native fixture changes from seven failures / six
+controls to thirteen passes, including actual Default-profile full and hybrid
+choices, paid costs, live RNG accounting, reservation deadlines and beneficial
+versus harmful stochastic positions. The combined fresh build passes 760 focused
+native tests. Its unchanged card archive includes the Divine Intervention
+correction. Packaged checks pass all 36 draw/reservation cases and all 15 exchange
+cases. The activated runtime passed 1,308 broader gameplay checks (101 classes),
+256 serialization checks (16 classes), 42 live tests / 684 subtests, and the
+Python quality gate (403 offline tests / 508 subtests). The catalog probe built
+32,109 matched cards; seven unavailable entries were verified as nonstarting
+meld results. See [validation evidence](../engine/mana_reservation_evidence.json)
+for the baseline, diagnostics, package receipts and activation hashes.
+Native and packaged tests use explicit partial-state preconditions. They do not
+certify every preceding setup action, all profiles or all card interactions.

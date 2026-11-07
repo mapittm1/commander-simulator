@@ -79,9 +79,20 @@ class LiveEngineTests(unittest.TestCase):
         with closing(connect(DEFAULT_DATABASE)) as source:
             report = run_rules_conformance(source, read_settings())
         self.assertEqual(report["status"], "passed", report)
+        self.assertEqual(report["seeds"], [42, 0, 4096])
+        self.assertEqual(len(report["witness_runs"]), 3)
         self.assertEqual(len(report["checks"]), 3)
         self.assertTrue(all(check["status"] == "passed" for check in report["checks"]))
-        print(json.dumps(report, indent=2))
+        print(
+            json.dumps(
+                {
+                    "conformance_run": report["run_id"],
+                    "seeds": report["seeds"],
+                    "status": report["status"],
+                }
+            ),
+            flush=True,
+        )
 
     def test_reviewed_identity_exports_and_casts(self):
         """The reviewed alias reaches the pinned engine with the real Oracle identity."""

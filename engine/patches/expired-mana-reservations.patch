@@ -1,0 +1,88 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -1328,6 +1328,13 @@
+             return true;
+         }
+ 
++        // The reservation deadline has passed. Availability checks must not roll
++        // for an expired reservation or leave it active in a zero-chance profile.
++        if (curPhase == PhaseType.MAIN2 || curPhase == PhaseType.CLEANUP) {
++            AiCardMemory.clearMemorySet(ai, AiCardMemory.MemorySet.HELD_MANA_SOURCES_FOR_MAIN2);
++            return false;
++        }
++
+         int chanceToReserve = aic.getIntProperty(AiProps.RESERVE_MANA_FOR_MAIN2_CHANCE);
+         // TODO use Math.min(100 - AiAbilityDecision.rating(), chanceToReserve)
+         if (chanceToReserve == 0 || !MyRandom.percentTrue(chanceToReserve)) {
+@@ -1335,9 +1342,7 @@
+             return false;
+         }
+ 
+-        if (curPhase == PhaseType.MAIN2 || curPhase == PhaseType.CLEANUP) {
+-            AiCardMemory.clearMemorySet(ai, AiCardMemory.MemorySet.HELD_MANA_SOURCES_FOR_MAIN2);
+-        } else if (AiCardMemory.isRememberedCard(ai, sourceCard, AiCardMemory.MemorySet.HELD_MANA_SOURCES_FOR_MAIN2)) {
++        if (AiCardMemory.isRememberedCard(ai, sourceCard, AiCardMemory.MemorySet.HELD_MANA_SOURCES_FOR_MAIN2)) {
+             // mana source is held elsewhere for a Main 2 spell
+             return true;
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java b/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/OnePlaySafetyChecker.java
+@@ -5,8 +5,13 @@
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.zone.ZoneType;
++import forge.util.MyRandom;
++import java.util.Random;
+ 
+ public final class OnePlaySafetyChecker {
++    private static final long[] SAMPLE_SEEDS = {0L, 4096L};
++    private record SafetyMargin(long value, boolean unavailable) { }
++
+     private static final ThreadLocal<Boolean> CHECKING = ThreadLocal.withInitial(() -> false);
+ 
+     public static boolean isAcceptable(Player player, SpellAbility sa) {
+@@ -26,17 +31,34 @@
+ 
+         CHECKING.set(true);
+         try {
+-            SimulationController controller = new SimulationController(new Score(0), 0);
+-            GameSimulator simulator = new GameSimulator(controller, player.getGame(), player, null);
+-            Score originalScore = simulator.getScoreForOrigGame();
+-            Score resultScore = simulator.simulateSpellAbility(sa);
+-
+-            // desperate plays are ok if next combat was already likely to kill AI
+-            return resultScore.value == Integer.MIN_VALUE
+-                    || resultScore.value >= (long) originalScore.value - expectedCardScoreLoss(player, sa, simulator);
++            long totalMargin = 0;
++            for (long seed : SAMPLE_SEEDS) {
++                // This method also runs on a separate AI evaluation thread;
++                // each outcome must own its RNG scope on that thread.
++                SafetyMargin sample = MyRandom.withRandom(new Random(seed), () -> assess(player, sa));
++                if (sample.unavailable()) {
++                    // Preserve the existing policy for an unavailable native score.
++                    return true;
++                }
++                totalMargin += sample.value();
++            }
++            return totalMargin >= 0;
+         } finally {
+             CHECKING.remove();
+         }
++    }
++
++    private static SafetyMargin assess(Player player, SpellAbility sa) {
++        SimulationController controller = new SimulationController(new Score(0), 0);
++        GameSimulator simulator = new GameSimulator(controller, player.getGame(), player, null);
++        Score originalScore = simulator.getScoreForOrigGame();
++        Score resultScore = simulator.simulateSpellAbility(sa);
++        if (resultScore.value == Integer.MIN_VALUE) {
++            return new SafetyMargin(0, true);
++        }
++        long margin = (long) resultScore.value - originalScore.value
++                + expectedCardScoreLoss(player, sa, simulator);
++        return new SafetyMargin(margin, false);
+     }
+ 
+     // sometimes simulation might not see the effect of some heuristics directly, so at least negate any card disadvantage

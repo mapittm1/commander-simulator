@@ -151,14 +151,18 @@
     {
       "path": "engine/patches/divine-intervention-trigger.patch",
       "sha256": "287f969d1348d33adfb0475f671cf9cb74da6c800003704ae28318d7f7cac318"
+    },
+    {
+      "path": "engine/patches/expired-mana-reservations.patch",
+      "sha256": "7d2762cf5cc450658528e4d7c9edb8d3f2951e31e2780a5becbcf984278023eb"
     }
   ],
   "test_sha256": "c0af95496b1e1764ac1e5bdb0f97d4246220cbc33f5e547c26a01c1d793839b0",
   "patch_source": "https://github.com/Card-Forge/forge/pull/12129",
   "patch_commit": "470d983bea1dd40b06ea81c6e061b4b14c31f933",
   "commander_color_test_sha256": "d7e05a0ad8abba97ef16b38fb2f6316a738be7d135e124aac09dffd6ce8e90c1",
-  "native_test_count": 747,
-  "runtime_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-draw-endings",
+  "native_test_count": 760,
+  "runtime_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-mana-reservations",
   "capabilities": [
     "sticker_kicker",
     "explicit_commander_colors",
@@ -195,7 +199,9 @@
     "cast_provenance_records",
     "paid_mass_counter_planning",
     "paid_exchange_pile_planning",
-    "divine_intervention_counter_trigger"
+    "divine_intervention_counter_trigger",
+    "expired_mana_reservation_isolation",
+    "hybrid_safety_paired_random_isolation"
   ],
   "card_overrides": [
     "w/wicker_picker.txt",
@@ -260,5 +266,6 @@
   "packaged_testng": {
     "path": "data/engine-builds/m2/org/testng/testng/7.10.2/testng-7.10.2.jar",
     "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
-  }
+  },
+  "cost_preview_test_sha256": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348"
 }

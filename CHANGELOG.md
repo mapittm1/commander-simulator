@@ -6,19 +6,36 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
-- Added a candidate Divine Intervention script correction: last-counter removal
-  by the current controller creates an independent, counterable draw trigger.
-  Zero counters without a removal event do not trigger it. Retain the strategic
-  AI exclusion pending separate casting-policy evidence. A 23-case native
-  fixture passes, including copied-game isolation, source removal and Celestial
-  Convergence controls. Fresh-build validation passes 747 focused native,
-  1,295 broader gameplay and 256 serialization checks, plus 23 packaged rules
-  cases and the Python quality gate (399 offline tests / 508 subtests).
-  The full integration run has 42 passing tests / 670 passing subtests and one
-  Whims full-mode selection failure, also reproduced on the prior runtime.
-  Activation remains pending that planner investigation; retain the previous
-  active runtime. A seed-only fixture change did not fix the issue and was
-  reverted. Evidence records the failed run rather than claiming a green gate.
+- Run limited Commander conformance across fixed seeds 42, 0 and 4096, retaining
+  all three games and their hashes. Each rule still needs a positive witness;
+  contradictions fail the suite and incomplete games remain inconclusive.
+  The prior single game did not exercise Goreclaw; the fixed matrix witnesses
+  five unblocked damage without dropping the commander-tax or damage checks.
+
+- Clear expired Main Phase 2 mana reservations before checking the reserve
+  chance, including zero-chance profiles. Preserve first-main and next-spell
+  reservations. Hybrid safety checks use their own RNG scope on the AI
+  evaluation thread and combine margins at seeds 0 and 4096. Thirteen native
+  cases change from seven failures / six controls to thirteen passes. The
+  packaged rules group passes all 36 cases; all 15 exchange/pile cases pass,
+  including actual paid Whims choices and unchanged live RNG accounting in
+  three AI modes. The bounded forecasts retain the previous permissive
+  behavior for an unavailable native score and do not certify optimal strategy.
+- Activated the combined runtime with the Divine Intervention correction after
+  760 focused native tests, 1,308 broader gameplay checks, 256 serialization
+  checks, 42 live tests / 684 subtests, the Python quality gate, and 32,109
+  matched catalog constructions. The previous candidate's failed full gate
+  remains in the historical evidence. Two production Java files changed;
+  the card archive is byte-identical to that draw candidate, with Divine
+  Intervention the only rules script changed from the earlier active runtime.
+  Oracle text and strategic AI exclusions are unchanged. Retain earlier
+  runtimes and exact alias/companion reviews.
+- Divine Intervention now queues a separate, counterable draw trigger when
+  its current controller removes the final intervention counter. Upkeep at
+  zero counters no longer draws by itself. The unchanged 23-case rules
+  fixture passes, including source removal, control changes, copied games,
+  and Celestial Convergence controls. Full-card and strategic casting
+  verification remain ongoing.
 
 - Added paid native planning for Cultural Exchange and Whims of the Fates.
   Validate both creature groups before transferring either side, including

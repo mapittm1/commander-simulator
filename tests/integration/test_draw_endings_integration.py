@@ -21,7 +21,7 @@ pytestmark = pytest.mark.integration
     "Requires reviewed draw-ending runtime, pinned local TestNG and JDK 17+",
 )
 class DrawEndingIntegrationTests(unittest.TestCase):
-    """Exercise real paid casts, counter events, trigger windows and copied games."""
+    """Exercise draw triggers, paid casts, copied games and mana-reservation previews."""
 
     def test_packaged_draw_ending_rules(self):
         """Require every fixed rules method to pass without skips or configuration failures."""
@@ -35,15 +35,15 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 23},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 36},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 23)
+        self.assertEqual(len({row["method"] for row in methods}), 36)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
-            summary["counts"], {"total": 23, "passed": 23, "failed": 0, "skipped": 0}
+            summary["counts"], {"total": 36, "passed": 36, "failed": 0, "skipped": 0}
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (
@@ -52,5 +52,5 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             "partial_successes",
         ):
             self.assertEqual(summary[key], 0)
-        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 5)
+        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 7)
         print(json.dumps({"draw_ending_run": run.name}), flush=True)

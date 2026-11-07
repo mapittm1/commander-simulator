@@ -19,16 +19,22 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-A candidate rules correction separates Divine Intervention's last-counter draw
-trigger from its upkeep removal. The current native fixture has 23 passing
-cases, versus eleven failures and twelve controls on the preceding runtime.
-The same 23 packaged cases pass. Activation is pending an existing Whims discrepancy in full
-planning that also reproduces on the prior runtime. The active
-runtime and strategic AI exclusions remain unchanged. See [draw-ending rules](docs/CARD_COVERAGE.md#draw-ending-rules).
+The reviewed runtime clears expired mana reservations before rolling and gives
+hybrid safety forecasts their own RNG scope on the evaluation thread. It
+combines two fixed samples so a single bad pile outcome does not dominate the
+safety check. The runtime also integrates the Divine Intervention rules fix:
+its controller's last-counter removal queues a separate draw trigger.
 
-The reviewed runtime now plans paid Cultural Exchange and Whims of the Fates
+Validation passes 760 focused native tests, 1,308 broader gameplay checks,
+256 serialization checks, 42 live tests / 684 subtests, and the Python quality
+gate (403 offline tests / 508 subtests). See
+[mana reservations and hybrid previews](docs/CARD_COVERAGE.md#mana-reservations-and-hybrid-previews)
+and [draw-ending rules](docs/CARD_COVERAGE.md#draw-ending-rules). Strategic AI
+exclusions on Divine Intervention remain; full-card correctness is ongoing.
+
+The earlier exchange/pile milestone added paid Cultural Exchange and Whims of the Fates
 plays, rejects invalid exchange replies before either transfer, and preserves
-player order for seeded pile rolls. Validation passes 724 focused native,
+player order for seeded pile rolls. That milestone passed 724 focused native,
 1,272 broader gameplay, 256 serialization and 41 live tests / 648 subtests,
 plus the Python quality gate (399 offline tests / 508 subtests). The pile AI
 retains a legal all-in-one-pile policy; optimal partitions and full-card
@@ -739,20 +745,22 @@ supplementary role is described in the [official Unfinity mechanics guide](https
 Uncertain meld roles continue to require review. Existing revisions are retained
 and revalidated; changed frozen batch evidence requires a new batch.
 
-`engine-conformance` runs a fixed, legal four-player fixture containing one
-commander and 99 Forests per seat, using current catalog metadata in a disposable
-database. It uses normal legality, fixture-only bracket reviews, pinned engine
-checks, and execution limits. It adds no fixture decks or reviews to the main
-library. The preserved run includes inputs, raw log, result, diagnostics, and
-`conformance.json` with input/log hashes and source line evidence.
+`engine-conformance` runs a fixed, legal four-player fixture at seeds 42, 0 and
+4096, with one commander and 99 Forests per seat. It uses current catalog
+metadata in a disposable database, normal legality and fixture-only bracket
+reviews. Each game has a 60-second engine limit. All three are executed and
+retained, including games that do not exercise a particular rule. The primary
+run's `conformance.json` links each game's inputs, log hashes and source lines.
+It adds no fixture decks or reviews to the main library.
 
 The limited checks require witnessed commander tax on a Ruxa recast, Goreclaw's
 resolved attack trigger followed by five unblocked combat damage, and a loss
 from one commander's accumulated combat damage while life remains positive.
 Commander tax and the 21-combat-damage rule are described in the
 [official Commander rules](https://magic.wizards.com/en/formats/commander).
-Absent evidence yields `not_exercised` and an overall `inconclusive` result.
-Counterexamples yield `failed`; only `passed` returns CLI exit code zero.
+Each rule needs an actual witness in at least one fixed game. A contradiction
+in any game fails the suite; missing evidence or an incomplete game yields
+`inconclusive`. Only `passed` returns CLI exit code zero.
 
 This is a limited log regression, not full rules conformance or AI validation.
 It does not prove the exact 21-point boundary, stack priority, targeted removal,

@@ -30,8 +30,12 @@ COMPILER_FLAGS = (
 SOURCES = {
     "AITest.java": "packaged_ai_base_sha256",
     "DrawEndingCoverageTest.java": "draw_ending_test_sha256",
+    "CostPreviewIsolationTest.java": "cost_preview_test_sha256",
 }
+TEST_CLASSES = ("forge.ai.DrawEndingCoverageTest", "forge.ai.CostPreviewIsolationTest")
 NATIVE_CLASSES = (
+    "forge.ai.ComputerUtilMana",
+    "forge.ai.simulation.OnePlaySafetyChecker",
     "forge.game.Game",
     "forge.game.card.Card",
     "forge.game.trigger.TriggerCounterRemoved",
@@ -130,7 +134,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Compile two fixed reviewed sources and retain hash-bound native outcomes."""
+    """Compile fixed reviewed sources and retain hash-bound native outcomes."""
     settings = read_settings()
     engine = settings.verify()
     run = Path(sys.argv[1]).resolve(strict=True)
@@ -161,7 +165,7 @@ def main() -> None:
             raise ValueError(
                 "Rules tests did not load production classes from the packaged JAR"
             )
-    for name in ("forge.ai.AITest", "forge.ai.DrawEndingCoverageTest"):
+    for name in ("forge.ai.AITest", *TEST_CLASSES):
         if not _origin(java, name).samefile(output):
             raise ValueError(
                 "Rules test classes did not load from the isolated compilation"
@@ -171,7 +175,7 @@ def main() -> None:
     runner.addListener(listener)
     runner.setTestClasses(
         java.JArray(java.JClass("java.lang.Class"))(
-            [java.JClass("forge.ai.DrawEndingCoverageTest").class_]
+            [java.JClass(name).class_ for name in TEST_CLASSES]
         )
     )
     runner.setOutputDirectory(str(run / "rules-reports"))

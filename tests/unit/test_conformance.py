@@ -5,6 +5,7 @@ import unittest
 from unittest.mock import patch
 
 from commander.engine.conformance_checks import check_rules_fixture
+from commander.engine.engine_conformance import WITNESS_SEEDS, _combine_reports
 from commander.engine.engine_fixtures import FOREST_POD
 
 # Behavior is expressed in test names.
@@ -145,3 +146,39 @@ class ConformanceWitnessTests(unittest.TestCase):
                 self._check()
         with self.assertRaises(ValueError):
             self._check("\n" * 100001)
+
+    def _matrix(self, logs):
+        return [
+            dict(self._check(log), seed=seed, run_id=f"fixture-{seed}")
+            for seed, log in zip(WITNESS_SEEDS, logs)
+        ]
+
+    def test_suite_can_witness_a_rule_in_another_fixed_game(self):
+        missing_attack = fixture_log().replace("triggered Goreclaw", "ignored Goreclaw")
+        report = _combine_reports(
+            self._matrix((missing_attack, fixture_log(), fixture_log()))
+        )
+        self.assertEqual(report["status"], "passed")
+        self.assertEqual(
+            {row["seed"] for row in report["checks"][1]["evidence"]}, {0, 4096}
+        )
+
+    def test_suite_keeps_a_contradiction_even_with_other_passing_games(self):
+        wrong_damage = fixture_log().replace(
+            "deals 5 combat damage", "deals 4 combat damage"
+        )
+        report = _combine_reports(
+            self._matrix((fixture_log(), wrong_damage, fixture_log()))
+        )
+        self.assertEqual(report["status"], "failed")
+        self.assertEqual(report["checks"][1]["status"], "failed")
+
+    def test_suite_requires_actual_exercise_in_at_least_one_game(self):
+        missing_attack = fixture_log().replace("triggered Goreclaw", "ignored Goreclaw")
+        report = _combine_reports(self._matrix((missing_attack,) * 3))
+        self.assertEqual(report["status"], "inconclusive")
+        self.assertEqual(report["checks"][1]["status"], "not_exercised")
+
+    def test_suite_cannot_pass_if_a_fixed_game_did_not_complete(self):
+        reports = self._matrix((fixture_log(), fixture_log(), "No result"))
+        self.assertEqual(_combine_reports(reports)["status"], "inconclusive")
