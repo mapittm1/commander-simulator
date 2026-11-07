@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Resolve Overabundance's bonus mana before damage. Choose reflected mana
+  against the outstanding cost during automatic payment and restore the
+  previous choice policy when the activation ends.
+- Forecast repeated same-name land bonuses for Sasaya's Essence. Apply
+  Snowfall's ordinary and snow Island amounts only to cumulative upkeep.
+- Verify 53 reflected and triggered mana cases in the native and packaged
+  suites. The combined gate passed 813 focused native, 1,361 broader gameplay
+  and 256 serialization tests, plus 42 live tests with 737 subtests and 403
+  offline tests with 508 subtests.
+
 - Run limited Commander conformance across fixed seeds 42, 0 and 4096, retaining
   all three games and their hashes. Each rule still needs a positive witness;
   contradictions fail the suite and incomplete games remain inconclusive.

@@ -17,6 +17,28 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Reflected and triggered mana
+
+Overabundance adds mana before dealing damage. Tests cover typed colorless
+payment when an opponent controls the enchantment and observe two red mana in
+the pool at the damage event during direct activation. A test with Izzet
+Boilerworks verifies that the payer chooses blue for Thassa's Oracle even when
+its hand favors red. Manual activation after the payment uses its usual choice
+policy. An unaffordable spell stays in hand and leaves mana, life and the land
+untouched.
+
+Sasaya's Essence counts other same-name lands its controller controls and can
+choose a different produced type for each bonus. Snowfall's bonus pays real
+cumulative upkeep with either an ordinary or snow Island. Its mana is excluded
+from previews for ordinary spells.
+
+The 53 cases also cover Reflecting Pool, Exotic Orchard, Fellwar Stone, Mox
+Amber and restricted mana from Plaza of Heroes. Some cases set the required
+battlefield state directly. The archived run covers these interactions and
+catalog construction. Strategy, other trigger combinations, and full
+failed-payment rollback still need separate evidence. See
+[reflected mana evidence](../engine/reflected_mana_evidence.json).
+
 ## Coverage levels
 
 These checks answer different questions:

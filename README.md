@@ -19,13 +19,20 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
-The reviewed runtime clears expired mana reservations before rolling and gives
+The reviewed runtime spends Overabundance's bonus on automatic payments,
+including mixed-color and typed colorless costs. Sasaya's Essence counts and
+chooses each repeated bonus separately. Snowfall's mana is available only for
+cumulative upkeep. Validation passed 813 focused native tests, 1,361 broader
+gameplay checks, 256 serialization checks, and 42 live tests with 737 subtests.
+See [reflected and triggered mana](docs/CARD_COVERAGE.md#reflected-and-triggered-mana).
+
+The earlier mana-reservation milestone cleared expired mana reservations before rolling and gave
 hybrid safety forecasts their own RNG scope on the evaluation thread. It
-combines two fixed samples so a single bad pile outcome does not dominate the
+combined two fixed samples so a single bad pile outcome does not dominate the
 safety check. The runtime also integrates the Divine Intervention rules fix:
 its controller's last-counter removal queues a separate draw trigger.
 
-Validation passes 760 focused native tests, 1,308 broader gameplay checks,
+That milestone passed 760 focused native tests, 1,308 broader gameplay checks,
 256 serialization checks, 42 live tests / 684 subtests, and the Python quality
 gate (403 offline tests / 508 subtests). See
 [mana reservations and hybrid previews](docs/CARD_COVERAGE.md#mana-reservations-and-hybrid-previews)

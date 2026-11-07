@@ -129,6 +129,8 @@ def _verify_inputs(args, recipe):
                 "engine/patches/exchange-pile-planning.patch",
                 "engine/patches/divine-intervention-trigger.patch",
                 "engine/patches/expired-mana-reservations.patch",
+                "engine/patches/overabundance-mana-order.patch",
+                "engine/patches/reflected-mana-payment.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -180,6 +182,9 @@ def _verify_inputs(args, recipe):
         "AITest.java": "packaged_ai_base_sha256",
         "DrawEndingCoverageTest.java": "draw_ending_test_sha256",
         "CostPreviewIsolationTest.java": "cost_preview_test_sha256",
+        "ReflectedManaCoverageTest.java": "reflected_mana_test_sha256",
+        "ManaTriggerFollowupTest.java": "mana_trigger_test_sha256",
+        "MixedReflectedManaTest.java": "mixed_reflected_mana_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -202,6 +207,7 @@ def _verify_inputs(args, recipe):
         "c/cultural_exchange.txt",
         "w/whims_of_the_fates.txt",
         "d/divine_intervention.txt",
+        "o/overabundance.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -454,6 +460,9 @@ def _patch_source(source, run, recipe):
         "AITest.java",
         "DrawEndingCoverageTest.java",
         "CostPreviewIsolationTest.java",
+        "ReflectedManaCoverageTest.java",
+        "ManaTriggerFollowupTest.java",
+        "MixedReflectedManaTest.java",
     ):
         shutil.copyfile(
             PROJECT / "engine/tests" / filename,
@@ -506,7 +515,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

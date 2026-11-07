@@ -1,4 +1,4 @@
-"""Opt-in identical draw-ending rules fixtures against the packaged production JAR."""
+"""Run fixed draw and mana rules fixtures against the packaged production JAR."""
 
 import json
 import os
@@ -21,7 +21,7 @@ pytestmark = pytest.mark.integration
     "Requires reviewed draw-ending runtime, pinned local TestNG and JDK 17+",
 )
 class DrawEndingIntegrationTests(unittest.TestCase):
-    """Exercise draw triggers, paid casts, copied games and mana-reservation previews."""
+    """Exercise draw triggers, paid casts, copied games and mana-source planning."""
 
     def test_packaged_draw_ending_rules(self):
         """Require every fixed rules method to pass without skips or configuration failures."""
@@ -35,15 +35,15 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 36},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 89},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 36)
+        self.assertEqual(len({row["method"] for row in methods}), 89)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
-            summary["counts"], {"total": 36, "passed": 36, "failed": 0, "skipped": 0}
+            summary["counts"], {"total": 89, "passed": 89, "failed": 0, "skipped": 0}
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (
@@ -52,5 +52,5 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             "partial_successes",
         ):
             self.assertEqual(summary[key], 0)
-        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 7)
+        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 10)
         print(json.dumps({"draw_ending_run": run.name}), flush=True)

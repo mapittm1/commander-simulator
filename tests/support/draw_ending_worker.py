@@ -28,11 +28,14 @@ COMPILER_FLAGS = (
     "UTF-8",
 )
 SOURCES = {
-    "AITest.java": "packaged_ai_base_sha256",
-    "DrawEndingCoverageTest.java": "draw_ending_test_sha256",
-    "CostPreviewIsolationTest.java": "cost_preview_test_sha256",
+    "AITest": "packaged_ai_base_sha256",
+    "DrawEndingCoverageTest": "draw_ending_test_sha256",
+    "CostPreviewIsolationTest": "cost_preview_test_sha256",
+    "ReflectedManaCoverageTest": "reflected_mana_test_sha256",
+    "ManaTriggerFollowupTest": "mana_trigger_test_sha256",
+    "MixedReflectedManaTest": "mixed_reflected_mana_test_sha256",
 }
-TEST_CLASSES = ("forge.ai.DrawEndingCoverageTest", "forge.ai.CostPreviewIsolationTest")
+TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
     "forge.ai.ComputerUtilMana",
     "forge.ai.simulation.OnePlaySafetyChecker",
@@ -40,6 +43,9 @@ NATIVE_CLASSES = (
     "forge.game.card.Card",
     "forge.game.trigger.TriggerCounterRemoved",
     "forge.game.ability.effects.GameDrawEffect",
+    "forge.game.ability.effects.ManaReflectedEffect",
+    "forge.game.spellability.AbilityManaPart",
+    "forge.game.trigger.TriggerTapsForMana",
     "forge.ai.simulation.GameCopier",
 )
 
@@ -48,7 +54,7 @@ def _inputs():
     recipe = json.loads(
         (PROJECT / "engine/sticker_recipe.json").read_text(encoding="utf-8")
     )
-    sources = [PROJECT / "engine/tests" / name for name in SOURCES]
+    sources = [PROJECT / "engine/tests" / f"{name}.java" for name in SOURCES]
     for source, key in zip(sources, SOURCES.values()):
         if file_hash(source) != recipe[key]:
             raise ValueError("Reviewed packaged rules source changed")

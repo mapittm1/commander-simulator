@@ -69,6 +69,9 @@ class CompanionWordingReviewTests(unittest.TestCase):
         stack = ExitStack()
         self.addCleanup(stack.close)
         path = Path(stack.enter_context(tempfile.TemporaryDirectory())) / "reviews.json"
-        path.write_text(json.dumps(self.registry, indent=4), encoding="utf-8")
+        # Change the bytes while keeping even a near-limit registry within its read budget.
+        path.write_text(
+            json.dumps(self.registry, separators=(",", ":")), encoding="utf-8"
+        )
         with patch("commander.engine.companion_reviews.REVIEWS_PATH", path):
             self.assertFalse(condition_matches(self.plan, self.native))

@@ -1,0 +1,15 @@
+diff --git a/forge-gui/res/cardsfolder/o/overabundance.txt b/forge-gui/res/cardsfolder/o/overabundance.txt
+--- a/forge-gui/res/cardsfolder/o/overabundance.txt
++++ b/forge-gui/res/cardsfolder/o/overabundance.txt
+@@ -1,8 +1,8 @@
+ Name:Overabundance
+ ManaCost:1 R G
+ Types:Enchantment
+-T:Mode$ TapsForMana | ValidCard$ Land | Execute$ TrigDmg | TriggerZones$ Battlefield | Static$ True | TriggerDescription$ Whenever a player taps a land for mana, that player adds one mana of any type that land produced, and CARDNAME deals 1 damage to the player.
+-SVar:TrigDmg:DB$ DealDamage | Defined$ TriggeredActivator | NumDmg$ 1 | SubAbility$ DBMana
+-SVar:DBMana:DB$ ManaReflected | ColorOrType$ Type | ReflectProperty$ Produced | Defined$ TriggeredActivator
++T:Mode$ TapsForMana | ValidCard$ Land | Execute$ DBMana | TriggerZones$ Battlefield | Static$ True | TriggerDescription$ Whenever a player taps a land for mana, that player adds one mana of any type that land produced, and CARDNAME deals 1 damage to the player.
++SVar:DBMana:DB$ ManaReflected | ColorOrType$ Type | ReflectProperty$ Produced | Defined$ TriggeredActivator | SubAbility$ TrigDmg
++SVar:TrigDmg:DB$ DealDamage | Defined$ TriggeredActivator | NumDmg$ 1
+ AI:RemoveDeck:Random
+ Oracle:Whenever a player taps a land for mana, that player adds one mana of any type that land produced, and Overabundance deals 1 damage to the player.
