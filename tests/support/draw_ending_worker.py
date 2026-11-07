@@ -37,6 +37,8 @@ SOURCES = {
     "ManaAddedCoverageTest": "mana_added_test_sha256",
     "SnowManaProjectionTest": "snow_mana_projection_test_sha256",
     "ManaReplacementCoverageTest": "mana_replacement_test_sha256",
+    "ChosenManaReplacementProbeTest": "chosen_mana_replacement_test_sha256",
+    "UnpaidCastRecoveryProbeTest": "unpaid_cast_recovery_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -51,6 +53,10 @@ NATIVE_CLASSES = (
     "forge.game.trigger.TriggerTapsForMana",
     "forge.game.trigger.TriggerManaAdded",
     "forge.game.mana.ManaCostBeingPaid",
+    "forge.ai.ComputerUtil",
+    "forge.game.GameActionUtil",
+    "forge.game.ability.effects.ReplaceManaEffect",
+    "forge.game.trigger.TriggerHandler",
     "forge.ai.simulation.GameCopier",
 )
 

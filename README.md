@@ -19,10 +19,17 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Failed casts return the card to its original zone, including when mana was
+already spent. The engine drops triggers caused by the abandoned move to the
+stack and preserves earlier triggers. Hall of Gemstone's chosen color now
+reaches the mana planner. Validation passed 840 focused native tests, 1,388
+broader gameplay checks, 256 serialization checks, and 42 live tests with 764
+subtests. See [cast recovery and chosen mana](docs/CARD_COVERAGE.md#cast-recovery-and-chosen-mana).
+
 Automatic payment now distinguishes mana being added from a source being
 tapped. It counts Caged Sun's bonus, excludes Kinnan's bonus for sacrifice-only
 mana, and preserves both the mana type and its source when checking snow costs.
-The reviewed build passed 829 focused native tests, 1,377 broader gameplay
+That milestone passed 829 focused native tests, 1,377 broader gameplay
 checks, 256 serialization checks, and 42 live tests with 753 subtests. See
 [mana events and snow payments](docs/CARD_COVERAGE.md#mana-events-and-snow-payments).
 

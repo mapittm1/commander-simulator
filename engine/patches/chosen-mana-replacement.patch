@@ -1,0 +1,187 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -20,6 +20,7 @@
+ import forge.game.ability.AbilityKey;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.ApiType;
++import forge.game.ability.effects.ReplaceManaEffect;
+ import forge.game.card.*;
+ import forge.game.combat.Combat;
+ import forge.game.combat.CombatUtil;
+@@ -662,44 +663,15 @@
+             }
+         }
+ 
+-        // then apply this one
+-        if (!replaceType.isEmpty()) {
+-            for (SpellAbility saMana : replaceType) {
+-                Card card = saMana.getHostCard();
+-                if (saMana.hasParam("ReplaceType")) {
+-                    // replace color and colorless
+-                    String color = saMana.getParam("ReplaceType");
+-                    if ("Any".equals(color)) {
+-                        byte rs = MagicColor.GREEN;
+-                        for (byte c : MagicColor.WUBRGC) {
+-                            if (toPay.canBePaidWithManaOfColor(c)) {
+-                                rs = c;
+-                                break;
+-                            }
+-                        }
+-                        color = MagicColor.toShortString(rs);
+-                    }
+-                    for (byte c : MagicColor.WUBRGC) {
+-                        String s = MagicColor.toShortString(c);
+-                        manaProduced = manaProduced.replace(s, color);
+-                    }
+-                } else if (saMana.hasParam("ReplaceColor")) {
+-                    String color = saMana.getParam("ReplaceColor");
+-                    if ("Chosen".equals(color)) {
+-                        if (card.hasChosenColor()) {
+-                            color = MagicColor.toShortString(card.getChosenColor());
+-                        }
+-                    }
+-                    if (saMana.hasParam("ReplaceOnly")) {
+-                        manaProduced = manaProduced.replace(saMana.getParam("ReplaceOnly"), color);
+-                    } else {
+-                        for (byte c : MagicColor.WUBRG) {
+-                            String s = MagicColor.toShortString(c);
+-                            manaProduced = manaProduced.replace(s, color);
+-                        }
+-                    }
+-                }
+-            }
++        for (SpellAbility replacement : replaceType) {
++            manaProduced = ReplaceManaEffect.replaceManaType(replacement, manaProduced, () -> {
++                for (byte color : MagicColor.WUBRG) {
++                    if (toPay.canBePaidWithManaOfColor(color)) {
++                        return MagicColor.toShortString(color);
++                    }
++                }
++                return "G";
++            });
+         }
+ 
+         // then multiply if able
+@@ -1943,22 +1915,8 @@
+                                 }
+                                 if (o.hasParam("ReplaceMana")) {
+                                     replaced = o.getParam("ReplaceMana");
+-                                } else if (o.hasParam("ReplaceType")) {
+-                                    String color = o.getParam("ReplaceType");
+-                                    for (byte c : MagicColor.WUBRGC) {
+-                                        String s = MagicColor.toShortString(c);
+-                                        replaced = replaced.replace(s, color);
+-                                    }
+-                                } else if (o.hasParam("ReplaceColor")) {
+-                                    String color = o.getParam("ReplaceColor");
+-                                    if (o.hasParam("ReplaceOnly")) {
+-                                        replaced = replaced.replace(o.getParam("ReplaceOnly"), color);
+-                                    } else {
+-                                        for (byte c : MagicColor.WUBRG) {
+-                                            String s = MagicColor.toShortString(c);
+-                                            replaced = replaced.replace(s, color);
+-                                        }
+-                                    }
++                                } else if (o.hasParam("ReplaceType") || o.hasParam("ReplaceColor")) {
++                                    replaced = ReplaceManaEffect.replaceManaType(o, replaced, () -> "Any");
+                                 }
+ 
+                                 for (byte color : MagicColor.WUBRG) {
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ReplaceManaEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ReplaceManaEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ReplaceManaEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ReplaceManaEffect.java
+@@ -1,6 +1,7 @@
+ package forge.game.ability.effects;
+ 
+ import java.util.Map;
++import java.util.function.Supplier;
+ 
+ import org.apache.commons.lang3.StringUtils;
+ 
+@@ -9,7 +10,6 @@
+ import forge.card.MagicColor;
+ import forge.game.ability.AbilityKey;
+ import forge.game.ability.SpellAbilityEffect;
+-import forge.game.card.Card;
+ import forge.game.player.Player;
+ import forge.game.replacement.ReplacementResult;
+ import forge.game.spellability.SpellAbility;
+@@ -18,7 +18,6 @@
+ 
+     @Override
+     public void resolve(SpellAbility sa) {
+-        final Card card = sa.getHostCard();
+         final Player player = sa.getActivatingPlayer();
+ 
+         // outside of Replacement Effect, unwanted result
+@@ -37,39 +36,9 @@
+                 byte rs = player.getController().chooseColor("Choose a color", sa, ColorSet.WUBRG);
+                 replaced = MagicColor.toShortString(rs);
+             }
+-        } else if (sa.hasParam("ReplaceType")) {
+-            // replace color and colorless
+-            String color = sa.getParam("ReplaceType");
+-            if ("Any".equals(color)) {
+-                byte rs = player.getController().chooseColor("Choose a color", sa, ColorSet.WUBRG);
+-                color = MagicColor.toShortString(rs);
+-            } else {
+-                // convert in case Color Word used
+-                color = MagicColor.toShortString(color);
+-            }
+-            for (byte c : MagicColor.WUBRGC) {
+-                String s = MagicColor.toShortString(c);
+-                replaced = replaced.replace(s, color);
+-            }
+-        } else if (sa.hasParam("ReplaceColor")) {
+-            // replace color
+-            String color = sa.getParam("ReplaceColor");
+-            if ("Chosen".equals(color)) {
+-                if (card.hasChosenColor()) {
+-                    color = MagicColor.toShortString(card.getChosenColor());
+-                }
+-            } else {
+-                // convert in case Color Word used
+-                color = MagicColor.toShortString(color);
+-            }
+-            if (sa.hasParam("ReplaceOnly")) {
+-                replaced = replaced.replace(sa.getParam("ReplaceOnly"), color);
+-            } else {
+-                for (byte c : MagicColor.WUBRG) {
+-                    String s = MagicColor.toShortString(c);
+-                    replaced = replaced.replace(s, color);
+-                }
+-            }
++        } else if (sa.hasParam("ReplaceType") || sa.hasParam("ReplaceColor")) {
++            replaced = replaceManaType(sa, replaced, () -> MagicColor.toShortString(
++                    player.getController().chooseColor("Choose a color", sa, ColorSet.WUBRG)));
+         } else if (sa.hasParam("ReplaceAmount")) {
+             // replace amount = multiples
+             replaced = StringUtils.repeat(replaced, " ", Integer.parseInt(sa.getParam("ReplaceAmount")));
+@@ -79,4 +48,26 @@
+         params.put(AbilityKey.ReplacementResult, ReplacementResult.Updated);
+     }
+ 
++
++    /** Apply a color or type replacement without changing game state. */
++    public static String replaceManaType(SpellAbility replacement, String produced, Supplier<String> chooseColor) {
++        boolean allTypes = replacement.hasParam("ReplaceType");
++        String color = replacement.getParam(allTypes ? "ReplaceType" : "ReplaceColor");
++        if (allTypes && "Any".equals(color)) {
++            color = chooseColor.get();
++        } else if (!allTypes && "Chosen".equals(color)) {
++            if (replacement.getHostCard().hasChosenColor()) {
++                color = MagicColor.toShortString(replacement.getHostCard().getChosenColor());
++            }
++        } else {
++            color = MagicColor.toShortString(color);
++        }
++        if (!allTypes && replacement.hasParam("ReplaceOnly")) {
++            return produced.replace(replacement.getParam("ReplaceOnly"), color);
++        }
++        for (byte type : allTypes ? MagicColor.WUBRGC : MagicColor.WUBRG) {
++            produced = produced.replace(MagicColor.toShortString(type), color);
++        }
++        return produced;
++    }
+ }

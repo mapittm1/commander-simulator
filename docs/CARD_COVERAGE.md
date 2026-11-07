@@ -17,6 +17,27 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Cast recovery and chosen mana
+
+When payment fails, the AI returns the card to its original zone and position.
+It holds the attempt's move-to-stack event until payment succeeds. A successful
+Gravecrawler cast still queues Syr Konrad. Aborted Gravecrawler and Haakon
+casts leave the card in the graveyard and suppress that trigger. A preexisting
+Phyrexian Arena trigger survives a failed cast.
+
+The partial-payment fixtures make a second mana source unavailable after the
+first produces mana. The engine refunds mana spent on the failed cast and
+undoes a reversible Island activation. It preserves the mana and damage from
+the activation that Forge marks non-undoable under Overabundance. The rules
+allow players to reverse legal mana abilities subject to specific exceptions.
+[Magic Comprehensive Rules, section 734](https://magic.wizards.com/en/rules).
+
+The Hall of Gemstone fixture resolves the actual upkeep trigger, then verifies
+a paid Opt from a Forest. Wastes remains colorless. The 11 additional cases run
+against both the pinned build and the packaged JAR. Joint allocation of mana
+and nonmana costs still needs separate work. See
+[cast recovery evidence](../engine/cast_recovery_evidence.json).
+
 ## Mana events and snow payments
 
 Caged Sun's bonus is available when the land ability actually adds the chosen

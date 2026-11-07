@@ -1,0 +1,161 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -54,6 +54,7 @@
+ import forge.game.staticability.StaticAbilityMode;
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerType;
++import forge.game.trigger.TriggerWaiting;
+ import forge.game.trigger.WrappedAbility;
+ import forge.game.zone.MagicStack;
+ import forge.game.zone.Zone;
+@@ -235,8 +236,12 @@
+             zonePosition = fromZone.getCards().indexOf(source);
+         }
+ 
+-        if (sa.isSpell() && !source.isCopiedSpell()) {
+-            sa.setHostCard(game.getAction().moveToStack(source, sa));
++        boolean movedSpell = sa.isSpell() && !source.isCopiedSpell();
++        TriggerWaiting placement = null;
++        if (movedSpell) {
++            Card onStack = game.getAction().moveToStack(source, sa);
++            placement = game.getTriggerHandler().holdCastPlacement(onStack);
++            sa.setHostCard(onStack);
+             sa = GameActionUtil.addExtraKeywordCost(sa);
+         }
+ 
+@@ -245,13 +250,21 @@
+ 
+         // do this after card got added to stack
+         if (!sa.checkRestrictions(ai)) {
+-            GameActionUtil.rollbackAbility(sa, fromZone, zonePosition, pay, source);
++            if (movedSpell) {
++                GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
++            } else {
++                GameActionUtil.rollbackAbility(sa, fromZone, zonePosition, pay, source);
++            }
+             return false;
+         }
+ 
+         if (pay.payComputerCosts(new AiCostDecision(ai, sa, false))) {
++            game.getTriggerHandler().commitCastPlacement(placement);
+             game.getStack().add(sa);
+             return true;
++        }
++        if (movedSpell) {
++            GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
+         }
+         return false;
+     }
+@@ -263,18 +276,27 @@
+         }
+ 
+         final Card source = sa.getHostCard();
+-        if (!effect && sa.isSpell() && !source.isCopiedSpell()) {
+-            sa.setHostCard(game.getAction().moveToStack(source, sa));
++        boolean movedSpell = !effect && sa.isSpell() && !source.isCopiedSpell();
++        Zone fromZone = movedSpell ? game.getZoneOf(source) : null;
++        int zonePosition = fromZone == null ? -1 : fromZone.getCards().indexOf(source);
++        TriggerWaiting placement = null;
++        if (movedSpell) {
++            Card onStack = game.getAction().moveToStack(source, sa);
++            placement = game.getTriggerHandler().holdCastPlacement(onStack);
++            sa.setHostCard(onStack);
+             sa = GameActionUtil.addExtraKeywordCost(sa);
+         }
+ 
+         final Cost cost = sa.getPayCosts();
+         final CostPayment pay = new CostPayment(cost, sa);
+         if (pay.payComputerCosts(new AiCostDecision(ai, sa, effect))) {
++            game.getTriggerHandler().commitCastPlacement(placement);
+             AbilityUtils.resolve(sa);
+             return true;
+         }
+-
++        if (movedSpell) {
++            GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
++        }
+         return false;
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/GameActionUtil.java b/forge-game/src/main/java/forge/game/GameActionUtil.java
+--- a/forge-game/src/main/java/forge/game/GameActionUtil.java
++++ b/forge-game/src/main/java/forge/game/GameActionUtil.java
+@@ -974,6 +974,14 @@
+             return;
+         }
+ 
++        restoreUnpaidCast(ability, fromZone, zonePosition, payment, oldCard);
++        game.getStack().clearFrozen();
++        game.getTriggerHandler().clearWaitingTriggers();
++    }
++
++    /** Restore the source card and refundable costs without clearing unrelated queued work. */
++    public static void restoreUnpaidCast(SpellAbility ability, Zone fromZone, int zonePosition,
++            CostPayment payment, Card oldCard) {
+         if (fromZone != null && !fromZone.is(ZoneType.None)) { // and not a copy
+             // add back to where it came from, hopefully old state
+             // skip GameAction
+@@ -1033,8 +1041,6 @@
+         ability.resetOnceResolved();
+         payment.refundPayment();
+ 
+-        game.getStack().clearFrozen();
+-        game.getTriggerHandler().clearWaitingTriggers();
+     }
+ 
+ }
+diff --git a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -185,16 +185,40 @@
+                 continue;
+             }
+ 
+-            // TODO we don't seem to handle Static ones from this,
+-            // so they shouldn't be checked for performance in the first place
+-            wt.setTriggers(getActiveTrigger(wt.getMode(), wt.getParams()));
+-
+-            // how often they trigger has to be determined now as well, not only when they are put on the stack
+-            for (final Trigger t : wt.getTriggers()) {
+-                if (!t.isStatic()) {
+-                    wt.setAdditionalTriggers(t, StaticAbilityPanharmonicon.countPanharmonicon(game, t, wt.getParams()));
+-                }
+-            }
++            collectWaitingTrigger(wt);
++        }
++    }
++
++    private void collectWaitingTrigger(TriggerWaiting waiting) {
++        waiting.setTriggers(getActiveTrigger(waiting.getMode(), waiting.getParams()));
++        for (Trigger trigger : waiting.getTriggers()) {
++            if (!trigger.isStatic()) {
++                waiting.setAdditionalTriggers(trigger,
++                        StaticAbilityPanharmonicon.countPanharmonicon(game, trigger, waiting.getParams()));
++            }
++        }
++    }
++
++    /** Hold the zone-change event for a tentative cast while mana abilities are resolving. */
++    public TriggerWaiting holdCastPlacement(Card card) {
++        for (int index = waitingTriggers.size() - 1; index >= 0; index--) {
++            TriggerWaiting waiting = waitingTriggers.get(index);
++            if (waiting.getMode() == TriggerType.ChangesZone
++                    && waiting.getParams().get(AbilityKey.Card) == card
++                    && ZoneType.Stack.name().equals(waiting.getParams().get(AbilityKey.Destination))) {
++                waitingTriggers.remove(index);
++                if (waiting.getTriggers() == null) {
++                    collectWaitingTrigger(waiting);
++                }
++                return waiting;
++            }
++        }
++        return null;
++    }
++
++    public void commitCastPlacement(TriggerWaiting waiting) {
++        if (waiting != null) {
++            waitingTriggers.add(waiting);
+         }
+     }
+ 

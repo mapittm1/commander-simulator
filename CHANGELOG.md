@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Restore failed casts to their original zone and position. Refund spent mana,
+  undo reversible activations, and keep effects from activations that Forge
+  marks non-undoable.
+- Hold the cast's zone-change trigger until payment succeeds. The checks cover
+  an earlier Phyrexian Arena trigger and Syr Konrad on successful and aborted
+  graveyard casts.
+- Share chosen mana replacement logic between the engine and payment
+  forecasts. Hall of Gemstone changes colored mana to the chosen color and
+  leaves colorless mana intact.
+- Verify 11 additional cases in the native and packaged suites. The full live
+  gate passed 42 tests with 764 subtests.
+
 - Forecast Caged Sun's bonus from mana actually added by the land ability.
   Count Kinnan's bonus only for mana abilities with a tap cost.
 - Preserve the type and snow status of each mana source during payment
