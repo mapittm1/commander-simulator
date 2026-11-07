@@ -1767,3 +1767,42 @@ Assault Suit were passing controls before this work. See
 [exact evidence](../engine/exchange_pile_evidence.json) and the
 [official Whims release notes](https://magic.wizards.com/en/news/feature/release-notes-2014-01-22)
 for the recorded scope and card-specific reference.
+
+
+## Draw-ending rules
+
+Candidate rules work corrects Divine Intervention's separate last-counter
+trigger. It checks the removal event, intervention counter type, zero remaining
+counters and the current controller as remover. Its draw effect can be countered
+after removal and survives the source leaving the battlefield or gaining another
+counter. Entering without counters does not cause a draw on a later upkeep.
+Celestial Convergence retains its distinct upkeep-only check.
+
+The identical 23-case source fixture changes from eleven failures / twelve
+passing controls to 23 passes. Controls cover actual paid entry counters,
+Solemnity, another player removing counters, countering upkeep removal, unique
+and tied highest life totals, and different counter types. Added witnesses cover
+control changes and independent copied-game resolution. Fixed control layers and
+some counter totals are explicit setup preconditions, not preceding gameplay
+histories. The candidate retains Divine Intervention's AI exclusions. These are
+rules witnesses, not evidence of strategic casting or all-card correctness.
+
+Packaged tests compile the same reviewed fixture and its exact native AITest
+base against the packaged JAR with pinned TestNG 7.10.2. Class-origin checks
+require production classes to come from that JAR. Compilation uses an
+operator-selected JDK, disables annotation processors and writes only into a
+generated run directory. Deck uploads cannot invoke this fixed test harness.
+All 23 rules cases pass against the packaged candidate. The fresh build passes
+747 focused native, 1,295 broader gameplay (100 classes) and 256 serialization
+checks, plus the Python quality gate (399 offline tests / 508 subtests).
+All 2,114 production Java files are unchanged, and exactly one of 34,132 card
+archive entries changes. Oracle text and AI exclusions are unchanged.
+
+Activation remains pending: the full integration run passes 42 tests and 670
+subtests, with one Whims of the Fates full-mode positive witness returning no
+action. The same seeded failure reproduces on the preceding runtime. A seed-only
+fixture draft was reverted because it did not resolve the issue. The prior
+runtime remains active. These observations require a planner-context and
+stochastic-scoring investigation; they are not evidence of a new draw-rules
+regression. The [candidate evidence](../engine/draw_ending_evidence.json) retains
+the failing gate and exact native, packaged, dependency and source hashes.

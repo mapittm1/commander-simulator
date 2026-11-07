@@ -1,0 +1,17 @@
+diff --git a/forge-gui/res/cardsfolder/d/divine_intervention.txt b/forge-gui/res/cardsfolder/d/divine_intervention.txt
+--- a/forge-gui/res/cardsfolder/d/divine_intervention.txt
++++ b/forge-gui/res/cardsfolder/d/divine_intervention.txt
+@@ -2,9 +2,10 @@
+ ManaCost:6 W W
+ Types:Enchantment
+ K:etbCounter:INTERVENTION:2
+-T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigRemoveCtr | TriggerDescription$ At the beginning of your upkeep, remove an intervention counter from CARDNAME. When you remove the last intervention counter from CARDNAME, the game is a draw.
+-SVar:TrigRemoveCtr:DB$ RemoveCounter | Defined$ Self | CounterType$ INTERVENTION | CounterNum$ 1 | SubAbility$ GameIsADraw
+-SVar:GameIsADraw:DB$ GameDrawn | ConditionPresent$ Card.Self+counters_EQ0_INTERVENTION
++T:Mode$ Phase | Phase$ Upkeep | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigRemoveCtr | TriggerDescription$ At the beginning of your upkeep, remove an intervention counter from CARDNAME.
++SVar:TrigRemoveCtr:DB$ RemoveCounter | Defined$ Self | CounterType$ INTERVENTION | CounterNum$ 1
++T:Mode$ CounterRemoved | ValidCard$ Card.Self | ValidPlayer$ You | CounterType$ INTERVENTION | NewCounterAmount$ 0 | Execute$ GameIsADraw | TriggerDescription$ When you remove the last intervention counter from CARDNAME, the game is a draw.
++SVar:GameIsADraw:DB$ GameDrawn
+ AI:RemoveDeck:Random
+ AI:RemoveDeck:All
+ DeckHas:Ability$Counters

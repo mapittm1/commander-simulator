@@ -19,6 +19,13 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+A candidate rules correction separates Divine Intervention's last-counter draw
+trigger from its upkeep removal. The current native fixture has 23 passing
+cases, versus eleven failures and twelve controls on the preceding runtime.
+The same 23 packaged cases pass. Activation is pending an existing Whims discrepancy in full
+planning that also reproduces on the prior runtime. The active
+runtime and strategic AI exclusions remain unchanged. See [draw-ending rules](docs/CARD_COVERAGE.md#draw-ending-rules).
+
 The reviewed runtime now plans paid Cultural Exchange and Whims of the Fates
 plays, rejects invalid exchange replies before either transfer, and preserves
 player order for seeded pile rolls. Validation passes 724 focused native,

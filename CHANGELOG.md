@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Added a candidate Divine Intervention script correction: last-counter removal
+  by the current controller creates an independent, counterable draw trigger.
+  Zero counters without a removal event do not trigger it. Retain the strategic
+  AI exclusion pending separate casting-policy evidence. A 23-case native
+  fixture passes, including copied-game isolation, source removal and Celestial
+  Convergence controls. Fresh-build validation passes 747 focused native,
+  1,295 broader gameplay and 256 serialization checks, plus 23 packaged rules
+  cases and the Python quality gate (399 offline tests / 508 subtests).
+  The full integration run has 42 passing tests / 670 passing subtests and one
+  Whims full-mode selection failure, also reproduced on the prior runtime.
+  Activation remains pending that planner investigation; retain the previous
+  active runtime. A seed-only fixture change did not fix the issue and was
+  reverted. Evidence records the failed run rather than claiming a green gate.
+
 - Added paid native planning for Cultural Exchange and Whims of the Fates.
   Validate both creature groups before transferring either side, including
   canceled, unequal and out-of-group replies. Choose paired groups from the

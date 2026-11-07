@@ -127,6 +127,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/composed-spell-control.patch",
                 "engine/patches/mass-counter-removal.patch",
                 "engine/patches/exchange-pile-planning.patch",
+                "engine/patches/divine-intervention-trigger.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -175,6 +176,8 @@ def _verify_inputs(args, recipe):
         "CulturalExchangeCoverageTest.java": "cultural_exchange_test_sha256",
         "MultiplePilesCoverageTest.java": "multiple_piles_test_sha256",
         "ExchangeChoiceContractsTest.java": "exchange_choice_test_sha256",
+        "AITest.java": "packaged_ai_base_sha256",
+        "DrawEndingCoverageTest.java": "draw_ending_test_sha256",
     }
     for filename, hash_key in regression_sources.items():
         if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
@@ -196,6 +199,7 @@ def _verify_inputs(args, recipe):
         "o/oblivion_stone.txt",
         "c/cultural_exchange.txt",
         "w/whims_of_the_fates.txt",
+        "d/divine_intervention.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -445,6 +449,8 @@ def _patch_source(source, run, recipe):
         "CulturalExchangeCoverageTest.java",
         "MultiplePilesCoverageTest.java",
         "ExchangeChoiceContractsTest.java",
+        "AITest.java",
+        "DrawEndingCoverageTest.java",
     ):
         shutil.copyfile(
             PROJECT / "engine/tests" / filename,
@@ -497,7 +503,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),
