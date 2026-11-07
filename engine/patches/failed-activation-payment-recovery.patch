@@ -1,0 +1,315 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -265,6 +265,8 @@
+         }
+         if (movedSpell) {
+             GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
++        } else if (sa.isActivatedAbility()) {
++            pay.refundPayment();
+         }
+         return false;
+     }
+@@ -296,6 +298,8 @@
+         }
+         if (movedSpell) {
+             GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
++        } else if (!effect && sa.isActivatedAbility()) {
++            pay.refundPayment();
+         }
+         return false;
+     }
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -851,6 +851,9 @@
+                     }
+                 }
+ 
++                if (!test && !ai.payLifeForCost(2, sa, false)) {
++                    break;
++                }
+                 if (toPay.isPhyrexian()) {
+                     cost.payPhyrexian();
+                     if (!test) {
+@@ -860,9 +863,6 @@
+                     cost.decreaseShard(ManaCostShard.BLACK, 1);
+                 }
+ 
+-                if (!test) {
+-                    ai.payLife(2, sa, false);
+-                }
+                 continue;
+             }
+ 
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayLife.java b/forge-game/src/main/java/forge/game/cost/CostPayLife.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayLife.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayLife.java
+@@ -79,7 +79,7 @@
+ 
+     @Override
+     public boolean payAsDecided(Player ai, PaymentDecision decision, SpellAbility ability, final boolean effect) {
+-        return ai.payLife(decision.c, ability, effect);
++        return ai.payLifeForCost(decision.c, ability, effect);
+     }
+ 
+     public <T> T accept(ICostVisitor<T> visitor) {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -29,6 +29,7 @@
+ import forge.game.mana.*;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.trigger.TriggerWaiting;
+ import org.apache.commons.lang3.tuple.Pair;
+ 
+ import java.util.ArrayList;
+@@ -50,6 +51,40 @@
+     private Cost adjustedCost;
+     private SpellAbility ability;
+     private final List<CostPart> paidCostParts = Lists.newArrayList();
++    private List<Runnable> lifePaymentRefunds;
++    private List<TriggerWaiting> lifePaymentTriggers;
++    private boolean paidPositiveLife;
++    private boolean tracksLifeCosts;
++
++    public static CostPayment forLifeCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        if (entry == null || !(entry.cost() instanceof CostPayLife || entry.cost() instanceof CostPartMana)) {
++            return null;
++        }
++        CostPayment payment = entry.payment();
++        if (!payment.tracksLifeCosts || payment.ability != cause) {
++            return null;
++        }
++        if (payment.lifePaymentRefunds == null) {
++            payment.lifePaymentRefunds = new ArrayList<>();
++            payment.lifePaymentTriggers = new ArrayList<>();
++        }
++        return payment;
++    }
++
++    public void recordLifeRefund(Runnable refund) {
++        lifePaymentRefunds.add(refund);
++    }
++
++    public void markPaidPositiveLife() {
++        paidPositiveLife = true;
++    }
++
++    public void holdLifeTrigger(TriggerWaiting trigger) {
++        if (trigger != null) {
++            lifePaymentTriggers.add(trigger);
++        }
++    }
+ 
+     /**
+      * <p>
+@@ -178,6 +213,37 @@
+     }
+ 
+     public final boolean payComputerCosts(final CostDecisionMakerBase decisionMaker) {
++        if (decisionMaker.isEffect()) {
++            return payComputerCostParts(decisionMaker);
++        }
++        tracksLifeCosts = true;
++        int previousPhyrexian = ability.getSpendPhyrexianMana();
++        boolean paid = false;
++        try {
++            paid = payComputerCostParts(decisionMaker);
++            if (paid && lifePaymentTriggers != null) {
++                Game game = decisionMaker.getPlayer().getGame();
++                if (paidPositiveLife) {
++                    game.getStack().clearTriggerRepeats();
++                }
++                lifePaymentTriggers.forEach(game.getTriggerHandler()::commitPaymentTrigger);
++            }
++            return paid;
++        } finally {
++            tracksLifeCosts = false;
++            if (!paid && lifePaymentRefunds != null) {
++                ability.restorePhyrexianManaPaid(previousPhyrexian);
++                for (int i = lifePaymentRefunds.size() - 1; i >= 0; i--) {
++                    lifePaymentRefunds.get(i).run();
++                }
++            }
++            lifePaymentRefunds = null;
++            lifePaymentTriggers = null;
++            paidPositiveLife = false;
++        }
++    }
++
++    private boolean payComputerCostParts(final CostDecisionMakerBase decisionMaker) {
+         // Just in case it wasn't set, but honestly it shouldn't have gotten
+         // here without being set
+         if (this.ability.getActivatingPlayer() == null) {
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -47,6 +47,7 @@
+ import forge.game.spellability.AlternativeCost;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.staticability.*;
++import forge.game.cost.CostPayment;
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerHandler;
+ import forge.game.trigger.TriggerType;
+@@ -498,6 +499,10 @@
+     }
+ 
+     public final int loseLife(int toLose, final boolean damage, final boolean manaBurn, final SpellAbility cause) {
++        return loseLife(toLose, damage, manaBurn, cause, null);
++    }
++
++    private int loseLife(int toLose, boolean damage, boolean manaBurn, SpellAbility cause, CostPayment payment) {
+         // Rule 118.4
+         // this is for players being able to pay 0 life nothing to do
+         // no trigger for lost no life
+@@ -530,6 +535,11 @@
+         }
+ 
+         life -= toLose;
++        if (payment != null) {
++            payment.markPaidPositiveLife();
++            int paid = toLose;
++            payment.recordLifeRefund(() -> restorePaidLife(paid));
++        }
+         view.updateLife(this);
+         if (manaBurn) {
+             game.fireEvent(new GameEventManaBurn(PlayerView.get(this), true, toLose));
+@@ -539,16 +549,34 @@
+ 
+         boolean firstLost = lifeLostThisTurn == 0;
+         lifeLostThisTurn += toLose;
+-        // a chain of triggers that costs life ends by itself
+-        game.getStack().clearTriggerRepeats();
++        // A chain of triggers that costs life ends by itself.
++        if (payment == null) {
++            game.getStack().clearTriggerRepeats();
++        }
+ 
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);
+         runParams.put(AbilityKey.LifeAmount, toLose);
+         runParams.put(AbilityKey.FirstTime, firstLost);
+         runParams.put(AbilityKey.SpellAbility, cause);
+-        game.getTriggerHandler().runTrigger(TriggerType.LifeLost, runParams, false);
++        runLifePaymentTrigger(TriggerType.LifeLost, runParams, payment);
+ 
+         return toLose;
++    }
++
++    private void runLifePaymentTrigger(TriggerType type, Map<AbilityKey, Object> params, CostPayment payment) {
++        if (payment == null) {
++            game.getTriggerHandler().runTrigger(type, params, false);
++        } else {
++            payment.holdLifeTrigger(game.getTriggerHandler().holdPaymentTrigger(type, params));
++        }
++    }
++
++    private void restorePaidLife(int amount) {
++        int oldLife = life;
++        life += amount;
++        lifeLostThisTurn -= amount;
++        view.updateLife(this);
++        game.fireEvent(new GameEventPlayerLivesChanged(this, oldLife, life));
+     }
+ 
+     public final boolean canLoseLife() {
+@@ -563,6 +591,18 @@
+     }
+ 
+     public final boolean payLife(final int lifePayment, final SpellAbility cause, final boolean effect) {
++        return payLife(lifePayment, cause, effect, null);
++    }
++
++    public final boolean payLifeForCost(int lifePayment, SpellAbility cause, boolean effect) {
++        return payLife(lifePayment, cause, effect, CostPayment.forLifeCost(this, cause));
++    }
++
++    private boolean payLife(int lifePayment, SpellAbility cause, boolean effect, CostPayment payment) {
++        if (payment != null) {
++            int previousPaid = cause.getAmountLifePaid();
++            payment.recordLifeRefund(() -> cause.setPaidLife(previousPaid));
++        }
+         // fast check for pay zero life
+         if (lifePayment <= 0) {
+             cause.setPaidLife(0);
+@@ -592,12 +632,12 @@
+             break;
+         }
+ 
+-        final int lost = loseLife(lifePayment, false, false, cause);
++        final int lost = loseLife(lifePayment, false, false, cause, payment);
+         cause.setPaidLife(lifePayment);
+ 
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);
+         runParams.put(AbilityKey.LifeAmount, lifePayment);
+-        game.getTriggerHandler().runTrigger(TriggerType.PayLife, runParams, false);
++        runLifePaymentTrigger(TriggerType.PayLife, runParams, payment);
+ 
+         if (lost > 0) { // Run triggers if player actually lost life
+             boolean runAll = false;
+@@ -606,10 +646,19 @@
+                 lossMap = Maps.newHashMap();
+                 runAll = true;
+             }
+-            lossMap.put(this, lost);
++            Integer previousLoss = lossMap.put(this, lost);
+             if (runAll) {
+                 final Map<AbilityKey, Object> runParams2 = AbilityKey.mapFromPIMap(lossMap);
+-                game.getTriggerHandler().runTrigger(TriggerType.LifeLostAll, runParams2, false);
++                runLifePaymentTrigger(TriggerType.LifeLostAll, runParams2, payment);
++            } else if (payment != null) {
++                Map<Player, Integer> recordedLoss = lossMap;
++                payment.recordLifeRefund(() -> {
++                    if (previousLoss == null) {
++                        recordedLoss.remove(this);
++                    } else {
++                        recordedLoss.put(this, previousLoss);
++                    }
++                });
+             }
+         }
+ 
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -878,6 +878,10 @@
+         this.spentPhyrexian = inc ? this.spentPhyrexian + 2 : 0;
+     }
+ 
++    public final void restorePhyrexianManaPaid(int amount) {
++        spentPhyrexian = amount;
++    }
++
+     public final int getAmountLifePaid() {
+         return this.paidLifeAmount;
+     }
+diff --git a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -301,6 +301,23 @@
+         }
+     }
+ 
++    public TriggerWaiting holdPaymentTrigger(TriggerType type, Map<AbilityKey, Object> params) {
++        if (isTriggerSuppressed(type)) {
++            return null;
++        }
++        TriggerWaiting waiting = new TriggerWaiting(type, params);
++        collectWaitingTrigger(waiting);
++        return waiting;
++    }
++
++    public void commitPaymentTrigger(TriggerWaiting waiting) {
++        if (game.getStack().isFrozen()) {
++            waitingTriggers.add(waiting);
++        } else {
++            runWaitingTrigger(waiting);
++        }
++    }
++
+     private void runStateTrigger(final Map<AbilityKey, Object> runParams) {
+         for (final Trigger t: Lists.newArrayList(activeTriggers)) {
+             if (canRunTrigger(t, TriggerType.Always, runParams)) {

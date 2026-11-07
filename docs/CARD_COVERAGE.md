@@ -17,6 +17,30 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Failed activation recovery
+
+The Yawgmoth fixtures make a creature unavailable after life is paid. An
+aborted activation restores the life total and life-loss history and discards
+the associated Lich's Mastery, Font of Agonies, and Ob Nixilis triggers.
+A successful activation still produces the triggers. The tests also preserve
+a second player's separate life loss and verify recovery of the actual amount
+lost under Bloodletter of Aclazotz.
+
+Zopandrel pays four life across two Phyrexian mana symbols. The failed
+activation restores both payments and clears the amount paid with Phyrexian
+mana. The successful activation keeps both life-loss events.
+
+The Vampiric Rites fixtures exercise undoable Swamp and Wastes activations,
+black mana floated before the attempt, and a Swamp activation under
+Overabundance. The engine refunds spent mana and keeps the consequences of
+mana abilities it classifies as non-undoable. See
+[Comprehensive Rules, section 734](https://magic.wizards.com/en/rules) and
+[activation payment evidence](../engine/activation_payment_evidence.json).
+
+Recovery for other nonmana costs, human payment, and costs paid while resolving
+an effect requires additional rules checks. The test fault makes an otherwise
+available resource disappear during payment and checks the resulting state.
+
 ## Sacrifice allocation
 
 The native AI assigns distinct creatures to Demon's Herald's three color
@@ -31,9 +55,7 @@ spell's sacrifice. With only one creature, it rejects the attempt.
 
 The packaged test suite passed 125 cases and checked that the named production
 classes came from the pinned JAR. The broader native suite passed 1,397
-gameplay and 256 serialization checks. A separate fault-injected Yawgmoth
-activation still retains one life already paid when the required creature
-becomes unavailable before the sacrifice. See
+gameplay and 256 serialization checks. See
 [sacrifice allocation evidence](../engine/sacrifice_allocation_evidence.json).
 
 ## Cast recovery and chosen mana

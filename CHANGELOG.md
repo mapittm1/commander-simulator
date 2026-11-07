@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Refund direct and Phyrexian life payments when a later cost fails. Restore
+  life-loss history and discard triggers from the abandoned payment.
+- Refund mana after failed AI activations. Restore previously floating mana
+  and undo reversible activations. Preserve damage and mana from Overabundance
+  when the mana activation is classified as non-undoable.
+- Add 11 native and packaged regression checks for payment, rollback, and
+  unrelated triggers.
+
+
 - Assign distinct creatures to simultaneous sacrifice requirements, including
   Demon's Herald's three overlapping color requirements.
 - Reserve creatures for a spell's sacrifice cost during mana planning and

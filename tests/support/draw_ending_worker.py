@@ -40,6 +40,8 @@ SOURCES = {
     "ChosenManaReplacementProbeTest": "chosen_mana_replacement_test_sha256",
     "UnpaidCastRecoveryProbeTest": "unpaid_cast_recovery_test_sha256",
     "OverlappingCastCostsProbeTest": "overlapping_cast_costs_test_sha256",
+    "NonmanaPaymentRecoveryProbeTest": "nonmana_payment_recovery_test_sha256",
+    "FailedActivationManaProbeTest": "failed_activation_mana_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -61,6 +63,9 @@ NATIVE_CLASSES = (
     "forge.ai.AiCostDecision",
     "forge.game.cost.Cost",
     "forge.game.cost.CostPayment",
+    "forge.game.cost.CostPayLife",
+    "forge.game.player.Player",
+    "forge.game.spellability.SpellAbility",
     "forge.game.cost.CostSacrifice",
     "forge.ai.simulation.GameCopier",
 )

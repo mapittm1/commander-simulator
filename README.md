@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+A failed AI activation now returns refundable mana and direct life payments,
+including life paid for Phyrexian mana. The checks cover Yawgmoth, Zopandrel,
+and Vampiric Rites. See
+[failed activation recovery](docs/CARD_COVERAGE.md#failed-activation-recovery).
+
 The native AI now checks that a creature is available for only one sacrifice
 when a spell also needs a sacrifice to produce its mana. Tests cover Blood
 Pet, Ashnod's Altar, and Orzhov Signet funding Altar's Reap. A separate test
