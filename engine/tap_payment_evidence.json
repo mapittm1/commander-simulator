@@ -1,0 +1,400 @@
+{
+  "status": "passed_and_activated",
+  "scope": "Validate shared-type and effective-power tap groups and reverse failed nonmana tap costs",
+  "build_id": "13efe93c07c447428d38b94222f62ccb",
+  "previous_lock_sha256": "b437678303b3539d865dffea9c1a945d0329b511c6f40c05ae93f7eafbd0cdcb",
+  "engine": {
+    "forge_version": "2.0.16-SNAPSHOT-3e6c036-reviewed-tap-payment",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-SNAPSHOT-jar-with-dependencies.jar",
+    "jar_sha256": "3025aada13af6637bb60290f11f7bb378e9b177cedf8c115511963f34ff328a4",
+    "cards_sha256": "6634e21902ea1604da52f881ba468d07c5bb3f89fc46798c86b3936121c07cea",
+    "source_commit": "3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76",
+    "source_archive_sha256": "b0fb4d1122754222a02667ed4430f27aad2c930a508b7bed08e439269c84d973",
+    "recipe_sha256": "6ac505ef66f99eaaa8333a02004641c3092a7b4779533c74e2e4fe0ae76b9c27",
+    "native_tests": {
+      "total": 874,
+      "passed": 874,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "60c0ab61f59f46cace96a49aa2c9197da74bc7e4742823da22b86d6546221286",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "093832248da76e53a27373a9e4f011d225b5805d5731f3ba332ca371f583958b"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "identical_cards_sha256": "6634e21902ea1604da52f881ba468d07c5bb3f89fc46798c86b3936121c07cea",
+  "production": {
+    "old_compiled_sources_sha256": {
+      "forge-ai/src/main/java/forge/ai/AiCostDecision.java": "e9807d4954b2560e0334d8009980a5fc8286ebf3788af45c3387a8438db19f3d",
+      "forge-ai/src/main/java/forge/ai/ComputerUtil.java": "f7255136cc86cfa0bfb55efa1fd5cd8d5d086e00e22ea3bca4fa3b0403a4f75b",
+      "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java": "1b71e7c9ffed0bfa1b366e02ec9ca7ee53f4011ee40e38767db4626eb44c042a",
+      "forge-game/src/main/java/forge/game/card/Card.java": "fc732943706b890f6404f55b62c0fd361d2343e2ef46a2271962e452b26e011d",
+      "forge-game/src/main/java/forge/game/cost/CostPayment.java": "b01a5e68c06f18c963ac13bc6a06f23b85f5f80472ac4b4e6ba8aab1e148f713",
+      "forge-game/src/main/java/forge/game/cost/CostTap.java": "b2fbb2d262742c9f8625eb81898a01559329e0f66aae1227e1555f7172564874",
+      "forge-game/src/main/java/forge/game/cost/CostTapType.java": "2234660557b46cdc594d51f26f8817c319df3aa9d10dcdecfc8a23c19a87378a",
+      "forge-game/src/main/java/forge/game/player/Player.java": "31f4240806ab7f5f50c9536ce0ef717f718bbecc2e7abce23e701b17c6f474a8"
+    },
+    "new_compiled_sources_sha256": {
+      "forge-ai/src/main/java/forge/ai/AiCostDecision.java": "613131dd6bebc29cd13209b720e190e5adecacefc7746f2b0a3a20b01f6c6f97",
+      "forge-ai/src/main/java/forge/ai/ComputerUtil.java": "185625ba90f8d205e1661dc582cf8cb5cf4622d2d8de70163b2fd6be3874bba8",
+      "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java": "0a25eee9813bcbd883255c5e05b267bb922b1cfe301677e5c3a87c27ee69fafe",
+      "forge-game/src/main/java/forge/game/card/Card.java": "8d87c1db07ea642750fc19342cc5fa651d8e75237339e8242e7c181e38da6b21",
+      "forge-game/src/main/java/forge/game/cost/CostPayment.java": "7987668b3777c48e58df09b58b3699bd4d5ebc7103f4db290d7294e04c2c1223",
+      "forge-game/src/main/java/forge/game/cost/CostTap.java": "7bc9f0fb4a61a575663de7dbeae086954e0d490f25a34c741be9559b5c83352f",
+      "forge-game/src/main/java/forge/game/cost/CostTapType.java": "7ac4de01f94da2246fa40e8746294e9599e2181a8c06110d7ac2b53c7831f747",
+      "forge-game/src/main/java/forge/game/player/Player.java": "b99ff4ddda228a6b09de75bae2fbb0e064f903ae3f47f529cb197a9d5020db6e"
+    },
+    "line_normalized_prototype_sha256": {
+      "forge-ai/src/main/java/forge/ai/AiCostDecision.java": "90d704c4c55a5420401c97af12b91c8a9825ea132aeadb8fd7627c1b50f2833e",
+      "forge-ai/src/main/java/forge/ai/ComputerUtil.java": "65ae592e26d1105276aa3b26bb4828d19a353af50c37a1cdec5adac0c9b6f6c5",
+      "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java": "7d97cc9854fb01c6b939e2163ca038c6948b058c11da0995f60bcfd1e50d3f3c",
+      "forge-game/src/main/java/forge/game/card/Card.java": "73be2143a54e8da59fe8018ec2b50fc1ff8f4027b7687c144a23c9774c4ede90",
+      "forge-game/src/main/java/forge/game/cost/CostPayment.java": "993d799ed6674ec5528e052617b7386e7191f228ed685b1aff7f97b257ccd790",
+      "forge-game/src/main/java/forge/game/cost/CostTap.java": "cfeceae4c35073eeab034d05ab94e90cdedee17cd90c696e974c6af2fdfce9ab",
+      "forge-game/src/main/java/forge/game/cost/CostTapType.java": "c13522dabe89e5333fcc8147b8213a75115928e90eb2100812f300efe78fc506",
+      "forge-game/src/main/java/forge/game/player/Player.java": "ccd5a56329e3473654d5d5a3b1d47ebdb6436195aba9f1d2f7b31740dbb9ff06"
+    },
+    "unchanged_java_sources": 2067,
+    "new_inventory_sha256": "baa773d5e635ed70f3a20ad58c672140d6d1fdfecd7935ba2a6439ac3349a02b"
+  },
+  "unchanged_profiles": {
+    "Default": "fb32c2067f30cb8820eff33024e3597a036d476ef35fb312459d0106a0c82f7d",
+    "Cautious": "52045bb47e26ef2da4248427aa53f0b3122f5988fc4b01b0dbcf356f6daef7a1"
+  },
+  "packaged_baseline": {
+    "run_id": "93bb4f21f0524888b93caf19229d055e",
+    "summary": {
+      "counts": {
+        "total": 150,
+        "passed": 142,
+        "failed": 8,
+        "skipped": 0
+      },
+      "testng_status": 1,
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ReflectedManaCoverageTest.java": "64ae42a00201b1e8ffb3ada8254f913c48972ed27bec9460a4cd7526086f10a5",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaTriggerFollowupTest.java": "a4d0f654054363cd5aeae8a58beb7680472dbb4a2c94059e1dc0b1a47e3806d3",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\MixedReflectedManaTest.java": "04d69fbf26bdb2b82fda1308fe8327d1d647927a8569ce3e385d7dc9ba2295eb",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaAddedCoverageTest.java": "8221d0ebe417c8c761d7f96fe8a9dab8a5149ef948f96e34fbb9540606c0ea86",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\SnowManaProjectionTest.java": "3ef241128016521440e4f4fb474582fddf794c36b02e4e52d67eb9bdae1d10ee",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaReplacementCoverageTest.java": "8a3c286d4bb361a772184c49b297aaabd979f68040092ca211de2937b8cb0a6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ChosenManaReplacementProbeTest.java": "b5d4f6523f5b881fb76011af735a53201aca56929b3b094c17947d62d3701b8c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\UnpaidCastRecoveryProbeTest.java": "94e5379ad4f9f1ca92a0f8db95ee8000fe42da868c9a4dfddbda6f09c77c6d1b",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\OverlappingCastCostsProbeTest.java": "c5e2c6c1969e1d3c17341a365e90eb89c9ef502f4776bbe42c5e8d5f627f4ff3",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\NonmanaPaymentRecoveryProbeTest.java": "602e16521f9697f79a3ddd46b558d32a3489110499d3d83455f473f3ce287e25",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedActivationManaProbeTest.java": "79ec8bf8d4eb225d92d8c0d5c0b2f454c31ae07ce6e5f3f96425f2626b34ac30",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedTapCostProbeTest.java": "97b3453af12eb396990d5e1f8a19541ad28c46197e0fc170839ea8b1d19ed0ae",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedGroupTapCostProbeTest.java": "d999e3b61c5d6a2696abb7186edac99a2871051d9d925edad269cd75f6ee3931",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\GroupTapSelectionProbeTest.java": "b05c9d357ceb9cba67820ce18ebe8fdc1669aa62633345d956a53215259dab71"
+      },
+      "classes": {
+        "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+        "forge/ai/ChosenManaReplacementProbeTest.class": "e549b9383ca2e390ea544b85f7d7dd71ddee2e4f27277fa41b3c9a173d079249",
+        "forge/ai/CostPreviewIsolationTest.class": "357e79e567c1086ae8061b08746725942b7051558b9389f4fa07801074f515a4",
+        "forge/ai/DrawEndingCoverageTest.class": "778c2534ee936f7bedb1395618544559c960bccea4901255712c154af75e70a6",
+        "forge/ai/FailedActivationManaProbeTest$LateSacrificeFault.class": "110adc55d6d436ebdbd93bcb7d13f918a513a43e0ec17636ddff2cccbf0c6f1d",
+        "forge/ai/FailedActivationManaProbeTest.class": "df7685947cdde774febee166db6d58f0cbfea0f2059018713e4bc5bf933cb598",
+        "forge/ai/FailedGroupTapCostProbeTest$FinalTapFault.class": "06d791e56efed5f4d4bbfe43167c13f0db766747bbd1cf23840339ef84e0b79a",
+        "forge/ai/FailedGroupTapCostProbeTest$GroupTapFault.class": "e54286b7a77caae96ddcd0be9d34f2e022f7b178d40756b1c3d6357e1e38dea6",
+        "forge/ai/FailedGroupTapCostProbeTest$Setup.class": "2429354f6bfa714e81f4963ab975df40c5e17a67ac57b00c7785554a51de92a2",
+        "forge/ai/FailedGroupTapCostProbeTest.class": "b459a19b0a26015850274c01d45d294d6b858108cf4a8e1d2dbbdbd913bf750e",
+        "forge/ai/FailedTapCostProbeTest$Setup.class": "00f6031436b274b5d51c656b296c524334385b51d2a41cf11c019748ed6f183b",
+        "forge/ai/FailedTapCostProbeTest$TapFault.class": "01b853e6124ef44b318cb9d3cd2ac95483b513e2f757759b37070faef6f45301",
+        "forge/ai/FailedTapCostProbeTest.class": "65bf554121a9ac2c7016d7a64cb96e6c8e36cc0472da9e8a322804ba2379f26a",
+        "forge/ai/GroupTapSelectionProbeTest$TrollSetup.class": "4e2d0a720ce24c88ed815cb4624e3d30f050e50f078566ef9b4d32814b1cd761",
+        "forge/ai/GroupTapSelectionProbeTest$WeightSetup.class": "77f96982a348ef188aee11cd8cfc54f7169511616de74f0db2519e80410857e7",
+        "forge/ai/GroupTapSelectionProbeTest.class": "18f05fe44c2f8588ad240d666142f2df4c120210a14ec08192dc7ea1d109223c",
+        "forge/ai/ManaAddedCoverageTest.class": "bf2eb287e3f545fee0877bbcf535ab7d852ad9ba66f61cd630f9ee54d3db46a9",
+        "forge/ai/ManaReplacementCoverageTest.class": "b54518528d325bbf2255df4230228fc831f4f5bef34e9dff376e3fb337d60028",
+        "forge/ai/ManaTriggerFollowupTest.class": "6386beac2e4162e4a7ef826609dfa8b299bd2b2484a0919d2db2ea338bf639e3",
+        "forge/ai/MixedReflectedManaTest.class": "a7b40242c7ea7beda78dd536b6b75b1ec9eed933cb880f68bfcc1f76ce22664b",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest$LateSacrificeFault.class": "08ae94b5298dcfae2a00c0f32fbad47fcba0d5b1ca657e12a655a7ab9bde2184",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest$Setup.class": "97dba829229a6858f55aaa5d870e109133d922a9a4b0b583b356fc00dbef2200",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest.class": "c026b4be8ad6663236643322a2cbc00e5cd90a81068e0e33a517089978b8acfb",
+        "forge/ai/OverlappingCastCostsProbeTest.class": "2977947c5fafaf5eb3a3f10c02fb7f8055ab8c53854a216163e8c982dc78d619",
+        "forge/ai/ReflectedManaCoverageTest$ManaAtDamage.class": "ce7a9bf06d3fe784e4cbd5d70a90b5dc9dfffd345b46d033f39aa3106af60d74",
+        "forge/ai/ReflectedManaCoverageTest.class": "8095a6da308162268a78ee044da1b25ae9e6f43266afff82a7c4c5396993f4fb",
+        "forge/ai/SnowManaProjectionTest.class": "a2b9f35724bf66200b3641601f915a4929b8c83f9fce00646cb0fa7210de1757",
+        "forge/ai/UnpaidCastRecoveryProbeTest$PartialManaFault.class": "b671eca5596a75ebefbf0b9d4a438caa3be0716e05446cb6b18a2a7a439beb8a",
+        "forge/ai/UnpaidCastRecoveryProbeTest$PaymentFault.class": "2dea809a931e9aaa2e8f0110510d6a2d7366033644ba516f13f6f711e9df7d20",
+        "forge/ai/UnpaidCastRecoveryProbeTest.class": "cef33adcfed30a3a640f37af62a5f3d0a49c1b4719d5947aee648297df2d5932"
+      },
+      "report_sha256": "488e9de884561b550fb2baf14412d889e130863de531219b3366bed585647bff",
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "partial_successes": 0,
+      "production_classes_from_packaged_jar": [
+        "forge.ai.ComputerUtilMana",
+        "forge.ai.simulation.OnePlaySafetyChecker",
+        "forge.game.Game",
+        "forge.game.card.Card",
+        "forge.game.trigger.TriggerCounterRemoved",
+        "forge.game.ability.effects.GameDrawEffect",
+        "forge.game.ability.effects.ManaReflectedEffect",
+        "forge.game.spellability.AbilityManaPart",
+        "forge.game.trigger.TriggerTapsForMana",
+        "forge.game.trigger.TriggerManaAdded",
+        "forge.game.mana.ManaCostBeingPaid",
+        "forge.ai.ComputerUtil",
+        "forge.game.GameActionUtil",
+        "forge.game.ability.effects.ReplaceManaEffect",
+        "forge.game.trigger.TriggerHandler",
+        "forge.ai.AiCostDecision",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilCost",
+        "forge.game.cost.CostTap",
+        "forge.game.cost.CostTapType",
+        "forge.game.cost.CostPayLife",
+        "forge.game.player.Player",
+        "forge.game.spellability.SpellAbility",
+        "forge.game.cost.CostSacrifice",
+        "forge.ai.simulation.GameCopier"
+      ],
+      "compiler_log_sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+    },
+    "failed_methods": [
+      "failedActivationRefundsDirectTapCost",
+      "failedGroveRestoresPriorTapReceiptsAfterBothCreaturesPaid",
+      "giantOxCrewsWithToughnessDespiteZeroPower",
+      "groveCannotTapACreatureControlledByAnotherPlayer",
+      "groveCannotTapACreatureThatLeftDuringPayment",
+      "tapRefundKeepsUnrelatedTapTrigger",
+      "weightAcceptsAChangelingAsMatchingTheOtherCreature",
+      "weightChoosesMatchingCreaturesAndExilesEnchantedCreature"
+    ],
+    "methods_sha256": "29052e9ca459e13f9b369e14966abe85f3445cdf4f711cca868cda70916684ff"
+  },
+  "tap_payment_development": {
+    "final_focused_prototype_sha256": "16092a6eed39ff435ca3cc3d087c9b97af71b4cd2ae6b307fcab58f33ad4203f"
+  },
+  "packaged_candidate": {
+    "run_id": "44b02f38d5ea44c0b4ff824d407df996",
+    "summary": {
+      "counts": {
+        "total": 150,
+        "passed": 150,
+        "failed": 0,
+        "skipped": 0
+      },
+      "testng_status": 0,
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\DrawEndingCoverageTest.java": "52a6c2f1c3f5cd606eef31a28318be7a3202c0d8254b92ad1eb1d57f71fabe85",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CostPreviewIsolationTest.java": "1ad8c40f97cda0d39e034a76920b49854bafb09547bb81d39608f3dca51ca348",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ReflectedManaCoverageTest.java": "64ae42a00201b1e8ffb3ada8254f913c48972ed27bec9460a4cd7526086f10a5",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaTriggerFollowupTest.java": "a4d0f654054363cd5aeae8a58beb7680472dbb4a2c94059e1dc0b1a47e3806d3",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\MixedReflectedManaTest.java": "04d69fbf26bdb2b82fda1308fe8327d1d647927a8569ce3e385d7dc9ba2295eb",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaAddedCoverageTest.java": "8221d0ebe417c8c761d7f96fe8a9dab8a5149ef948f96e34fbb9540606c0ea86",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\SnowManaProjectionTest.java": "3ef241128016521440e4f4fb474582fddf794c36b02e4e52d67eb9bdae1d10ee",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ManaReplacementCoverageTest.java": "8a3c286d4bb361a772184c49b297aaabd979f68040092ca211de2937b8cb0a6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ChosenManaReplacementProbeTest.java": "b5d4f6523f5b881fb76011af735a53201aca56929b3b094c17947d62d3701b8c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\UnpaidCastRecoveryProbeTest.java": "94e5379ad4f9f1ca92a0f8db95ee8000fe42da868c9a4dfddbda6f09c77c6d1b",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\OverlappingCastCostsProbeTest.java": "c5e2c6c1969e1d3c17341a365e90eb89c9ef502f4776bbe42c5e8d5f627f4ff3",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\NonmanaPaymentRecoveryProbeTest.java": "602e16521f9697f79a3ddd46b558d32a3489110499d3d83455f473f3ce287e25",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedActivationManaProbeTest.java": "79ec8bf8d4eb225d92d8c0d5c0b2f454c31ae07ce6e5f3f96425f2626b34ac30",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedTapCostProbeTest.java": "97b3453af12eb396990d5e1f8a19541ad28c46197e0fc170839ea8b1d19ed0ae",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\FailedGroupTapCostProbeTest.java": "d999e3b61c5d6a2696abb7186edac99a2871051d9d925edad269cd75f6ee3931",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\GroupTapSelectionProbeTest.java": "b05c9d357ceb9cba67820ce18ebe8fdc1669aa62633345d956a53215259dab71"
+      },
+      "classes": {
+        "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+        "forge/ai/ChosenManaReplacementProbeTest.class": "e549b9383ca2e390ea544b85f7d7dd71ddee2e4f27277fa41b3c9a173d079249",
+        "forge/ai/CostPreviewIsolationTest.class": "357e79e567c1086ae8061b08746725942b7051558b9389f4fa07801074f515a4",
+        "forge/ai/DrawEndingCoverageTest.class": "778c2534ee936f7bedb1395618544559c960bccea4901255712c154af75e70a6",
+        "forge/ai/FailedActivationManaProbeTest$LateSacrificeFault.class": "110adc55d6d436ebdbd93bcb7d13f918a513a43e0ec17636ddff2cccbf0c6f1d",
+        "forge/ai/FailedActivationManaProbeTest.class": "df7685947cdde774febee166db6d58f0cbfea0f2059018713e4bc5bf933cb598",
+        "forge/ai/FailedGroupTapCostProbeTest$FinalTapFault.class": "06d791e56efed5f4d4bbfe43167c13f0db766747bbd1cf23840339ef84e0b79a",
+        "forge/ai/FailedGroupTapCostProbeTest$GroupTapFault.class": "e54286b7a77caae96ddcd0be9d34f2e022f7b178d40756b1c3d6357e1e38dea6",
+        "forge/ai/FailedGroupTapCostProbeTest$Setup.class": "2429354f6bfa714e81f4963ab975df40c5e17a67ac57b00c7785554a51de92a2",
+        "forge/ai/FailedGroupTapCostProbeTest.class": "b459a19b0a26015850274c01d45d294d6b858108cf4a8e1d2dbbdbd913bf750e",
+        "forge/ai/FailedTapCostProbeTest$Setup.class": "00f6031436b274b5d51c656b296c524334385b51d2a41cf11c019748ed6f183b",
+        "forge/ai/FailedTapCostProbeTest$TapFault.class": "01b853e6124ef44b318cb9d3cd2ac95483b513e2f757759b37070faef6f45301",
+        "forge/ai/FailedTapCostProbeTest.class": "65bf554121a9ac2c7016d7a64cb96e6c8e36cc0472da9e8a322804ba2379f26a",
+        "forge/ai/GroupTapSelectionProbeTest$TrollSetup.class": "4e2d0a720ce24c88ed815cb4624e3d30f050e50f078566ef9b4d32814b1cd761",
+        "forge/ai/GroupTapSelectionProbeTest$WeightSetup.class": "77f96982a348ef188aee11cd8cfc54f7169511616de74f0db2519e80410857e7",
+        "forge/ai/GroupTapSelectionProbeTest.class": "18f05fe44c2f8588ad240d666142f2df4c120210a14ec08192dc7ea1d109223c",
+        "forge/ai/ManaAddedCoverageTest.class": "bf2eb287e3f545fee0877bbcf535ab7d852ad9ba66f61cd630f9ee54d3db46a9",
+        "forge/ai/ManaReplacementCoverageTest.class": "b54518528d325bbf2255df4230228fc831f4f5bef34e9dff376e3fb337d60028",
+        "forge/ai/ManaTriggerFollowupTest.class": "6386beac2e4162e4a7ef826609dfa8b299bd2b2484a0919d2db2ea338bf639e3",
+        "forge/ai/MixedReflectedManaTest.class": "a7b40242c7ea7beda78dd536b6b75b1ec9eed933cb880f68bfcc1f76ce22664b",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest$LateSacrificeFault.class": "08ae94b5298dcfae2a00c0f32fbad47fcba0d5b1ca657e12a655a7ab9bde2184",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest$Setup.class": "97dba829229a6858f55aaa5d870e109133d922a9a4b0b583b356fc00dbef2200",
+        "forge/ai/NonmanaPaymentRecoveryProbeTest.class": "c026b4be8ad6663236643322a2cbc00e5cd90a81068e0e33a517089978b8acfb",
+        "forge/ai/OverlappingCastCostsProbeTest.class": "2977947c5fafaf5eb3a3f10c02fb7f8055ab8c53854a216163e8c982dc78d619",
+        "forge/ai/ReflectedManaCoverageTest$ManaAtDamage.class": "ce7a9bf06d3fe784e4cbd5d70a90b5dc9dfffd345b46d033f39aa3106af60d74",
+        "forge/ai/ReflectedManaCoverageTest.class": "8095a6da308162268a78ee044da1b25ae9e6f43266afff82a7c4c5396993f4fb",
+        "forge/ai/SnowManaProjectionTest.class": "a2b9f35724bf66200b3641601f915a4929b8c83f9fce00646cb0fa7210de1757",
+        "forge/ai/UnpaidCastRecoveryProbeTest$PartialManaFault.class": "b671eca5596a75ebefbf0b9d4a438caa3be0716e05446cb6b18a2a7a439beb8a",
+        "forge/ai/UnpaidCastRecoveryProbeTest$PaymentFault.class": "2dea809a931e9aaa2e8f0110510d6a2d7366033644ba516f13f6f711e9df7d20",
+        "forge/ai/UnpaidCastRecoveryProbeTest.class": "cef33adcfed30a3a640f37af62a5f3d0a49c1b4719d5947aee648297df2d5932"
+      },
+      "report_sha256": "80ad6b0739c8c1d30fe94d84c4953d5ce01ebe19108731a277fd6bf1018228ee",
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "partial_successes": 0,
+      "production_classes_from_packaged_jar": [
+        "forge.ai.ComputerUtilMana",
+        "forge.ai.simulation.OnePlaySafetyChecker",
+        "forge.game.Game",
+        "forge.game.card.Card",
+        "forge.game.trigger.TriggerCounterRemoved",
+        "forge.game.ability.effects.GameDrawEffect",
+        "forge.game.ability.effects.ManaReflectedEffect",
+        "forge.game.spellability.AbilityManaPart",
+        "forge.game.trigger.TriggerTapsForMana",
+        "forge.game.trigger.TriggerManaAdded",
+        "forge.game.mana.ManaCostBeingPaid",
+        "forge.ai.ComputerUtil",
+        "forge.game.GameActionUtil",
+        "forge.game.ability.effects.ReplaceManaEffect",
+        "forge.game.trigger.TriggerHandler",
+        "forge.ai.AiCostDecision",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilCost",
+        "forge.game.cost.CostTap",
+        "forge.game.cost.CostTapType",
+        "forge.game.cost.CostPayLife",
+        "forge.game.player.Player",
+        "forge.game.spellability.SpellAbility",
+        "forge.game.cost.CostSacrifice",
+        "forge.ai.simulation.GameCopier"
+      ],
+      "compiler_log_sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+    },
+    "methods_sha256": "07a14b3b24ad8d20aeed507de6735d6fc214688e4c2a534c3238cf39aee13a01",
+    "worker_sha256": "511082efa7a634dabf0ca4e1be56cfea9ee36a86faaa59aafbcffb7bf3d137a7",
+    "test_sha256": "993d9eaba1b334a1e817ca25c55e42f1deb787f4c69b34443b530f59f09d71f9"
+  },
+  "validation": {
+    "broader_sha256": "765e7472c0d57c90128ebe2a08a4f45634f2e530e444519f08209409d7573a2a",
+    "frozen_inputs_sha256": "cbb43218d7829b5d12a3fe0b7a8bc32193ae0790e20dbee955ca3caf45938fa6",
+    "full_live": {
+      "tests": 42,
+      "subtests": 798,
+      "log_sha256": "087870eebbdf2d1fc2ca6e3033ee6bc2fa2918c4f92ce48401afcc075ed141ee"
+    },
+    "offline": {
+      "passed": 403,
+      "skipped": 42,
+      "subtests": 508,
+      "log_sha256": "a6f1863f68c5a0163f2df188dce740849f5a6f669d19b232c23638d46d2a0c7a"
+    },
+    "candidate_health_sha256": "61155c6a0e5279d3aeae06455f9b85ac2d322ffb398d2111211f5db88aea0103",
+    "catalog": {
+      "counts": {
+        "constructed": 32109,
+        "script_unavailable": 7
+      },
+      "run_id": "aa404f82c9d64b6dbd6a37566f3d4de3",
+      "observations_sha256": "edbbe81820aface604c6bd4638705787ed3087926d6bc92d51b0551b185fa8b2",
+      "log_sha256": "e2e5b9c02a48343d42aa1f41372278f3359ecd9c2a92e80196f9e2ea1926f7d6",
+      "nonstarting_objects": [
+        {
+          "card_id": "b23587e0-9fb7-492e-8bb4-f218e8e4ce6c",
+          "name": "Brisela, Voice of Nightmares",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "6923cf6b-7d3e-4d95-abaf-1df1a04ac7c1",
+          "name": "Chittering Host",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "f4905c40-003e-4992-b8d7-3f07ba09c686",
+          "name": "Hanweir, the Writhing Township",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "3989308a-4c0f-493a-b38f-cb4f5019dfe7",
+          "name": "Mishra, Lost to Phyrexia",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "14b839ef-80b1-4e7d-b2fd-38e973899cde",
+          "name": "Ragnarok, Divine Deliverance",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "43230d70-4d60-4ceb-bb45-fbc043280652",
+          "name": "Titania, Gaea Incarnate",
+          "engine_name": null,
+          "status": "script_unavailable"
+        },
+        {
+          "card_id": "759406d7-44ae-4260-9ef5-3bb2c92f751a",
+          "name": "Urza, Planeswalker",
+          "engine_name": null,
+          "status": "script_unavailable"
+        }
+      ]
+    },
+    "promoted_health_sha256": "72a76dbcab157a92a2c9431ba5cf8d3fd3b460dae779ca938ab48eb892000172"
+  },
+  "remaining_confirmed_gaps": [
+    "This release covers AI nonmana tap payments. Other nonmana costs, costs paid during an effect, tap-cost rollback in mana abilities, and human payment paths require separate rules checks."
+  ],
+  "limits": "The tests establish the reported native interactions and construction checks. Full-card rules and AI behavior require additional evidence.",
+  "activation": {
+    "runtime": "data/engines/forge-3e6c036-tap-payment-reviewed",
+    "archive_lock": "config/engine_locks/forge-3e6c036-tap-payment.json",
+    "canonical_lock_sha256": "b1c0ec664ab04a17e95c7a440d4ad72340f18c28c808add040080feafdacd5f9"
+  }
+}

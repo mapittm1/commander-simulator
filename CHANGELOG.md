@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Choose a legal shared-type pair for Weight of Conscience and honor
+  effective power or toughness when crewing a Vehicle.
+- Check that all creatures chosen for a grouped tap cost still qualify. If
+  payment fails, restore direct and grouped taps and their payment records,
+  and discard the associated tap triggers.
+- Add 14 native and packaged tests for direct taps, grouped costs, trigger
+  recovery, shared creature types, and Crew.
+
+
 - Refund direct and Phyrexian life payments when a later cost fails. Restore
   life-loss history and discard triggers from the abandoned payment.
 - Refund mana after failed AI activations. Restore previously floating mana

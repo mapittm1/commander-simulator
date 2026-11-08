@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+The AI can activate Weight of Conscience with creatures that share a type,
+including a Changeling. It also counts the power or toughness the rules
+assign to a crew payment and restores eligible taps when a later cost fails.
+See [tap costs and group selection](docs/CARD_COVERAGE.md#tap-costs-and-group-selection).
+
 A failed AI activation now returns refundable mana and direct life payments,
 including life paid for Phyrexian mana. The checks cover Yawgmoth, Zopandrel,
 and Vampiric Rites. See

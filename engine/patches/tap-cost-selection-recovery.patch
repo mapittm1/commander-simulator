@@ -1,0 +1,560 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -467,25 +467,16 @@
+ 
+     @Override
+     public PaymentDecision visit(CostTapType cost) {
+-        String type = cost.getType();
+-        boolean isVehicle = type.contains("+withTotalPowerGE");
+-
+-        CardCollection exclude = new CardCollection();
+-        exclude.addAll(tapped);
+-
+-        if (type.contains("sharesCreatureTypeWith")) {
+-            return null;
+-        }
+-
+-        String totalP = "";
+         CardCollectionView totap;
+-        if (isVehicle) {
+-            totalP = type.split("withTotalPowerGE")[1];
+-            type = TextUtil.fastReplace(type, "+withTotalPowerGE", "");
+-            totap = ComputerUtil.chooseTapTypeAccumulatePower(player, type, ability, !cost.canTapSource, Integer.parseInt(totalP), exclude);
++        int requiredPower = cost.getRequiredPower();
++        if (cost.requiresSharedCreatureType()) {
++            totap = ComputerUtil.chooseSharedTypeTapGroup(player, cost, ability, tapped);
++        } else if (requiredPower >= 0) {
++            totap = ComputerUtil.chooseTapTypeAccumulatePower(player, cost.getTapTypes(), ability,
++                    !cost.canTapSource, requiredPower, tapped);
+         } else {
+-            int c = cost.getAbilityAmount(ability);
+-            totap = ComputerUtil.chooseTapType(player, type, source, !cost.canTapSource, c, exclude, ability);
++            int amount = cost.getAbilityAmount(ability);
++            totap = ComputerUtil.chooseTapType(player, cost.getTapTypes(), source, !cost.canTapSource, amount, tapped, ability);
+         }
+ 
+         if (totap == null) {
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -759,6 +759,16 @@
+         return tapList;
+     }
+ 
++    static CardCollection chooseSharedTypeTapGroup(Player payer, CostTapType cost, SpellAbility ability,
++            Collection<Card> excluded) {
++        CardCollection candidates = cost.getTapCandidates(payer, ability);
++        if (excluded != null) {
++            candidates.removeAll(excluded);
++        }
++        CardLists.sortByPowerAsc(candidates);
++        return CostTapType.chooseSharedTypeGroup(candidates, cost.getAbilityAmount(ability));
++    }
++
+     public static CardCollection chooseTapTypeAccumulatePower(final Player ai, final String type, final SpellAbility sa,
+             final boolean tap, final int amount, final CardCollectionView exclude) {
+         // Used for Crewing vehicles, ideally we sort by useless creatures. Can't Attack/Defender
+@@ -781,7 +791,7 @@
+ 
+         // Accumulate from "worst" creature
+         for (Card next : typeList) {
+-            int pow = next.getNetPower();
++            int pow = CardLists.getTotalPower(List.of(next), sa);
+             if (pow <= 0) {
+                 continue;
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+@@ -457,14 +457,19 @@
+             return true;
+         }
+         for (final CostPart part : cost.getCostParts()) {
+-            if (part instanceof CostTapType) {
+-                String type = part.getType();
++            if (part instanceof CostTapType tapCost) {
++                if (tapCost.requiresSharedCreatureType()) {
++                    CardCollection choices = ComputerUtil.chooseSharedTypeTapGroup(ai, tapCost, sa, alreadyTapped);
++                    if (choices != null && alreadyTapped != null) {
++                        alreadyTapped.addAll(choices);
++                    }
++                    return choices != null;
++                }
++                String type = tapCost.getTapTypes();
+ 
+                 // "tap any number of creatures with total power N or more" costs (e.g. Crew, Saddle, Teamwork)
+                 // have the amount "Any", so check them the same way AiCostDecision pays them
+-                if (type.contains("+withTotalPowerGE")) {
+-                    String totalP = type.split("withTotalPowerGE")[1];
+-                    type = TextUtil.fastReplace(type, TextUtil.concatNoSpace("+withTotalPowerGE", totalP), "");
++                if (tapCost.getRequiredPower() >= 0) {
+                     CardCollection exclude = new CardCollection();
+                     /*
+                      * Only crew with creatures weaker than vehicle
+@@ -482,7 +487,7 @@
+                     if (alreadyTapped != null) {
+                         exclude.addAll(alreadyTapped);
+                     }
+-                    CardCollection tapChoices = ComputerUtil.chooseTapTypeAccumulatePower(ai, type, sa, sa.isCrew() || !((CostTapType) part).canTapSource, Integer.parseInt(totalP), exclude);
++                    CardCollection tapChoices = ComputerUtil.chooseTapTypeAccumulatePower(ai, type, sa, sa.isCrew() || !((CostTapType) part).canTapSource, tapCost.getRequiredPower(), exclude);
+                     if (tapChoices != null) {
+                         if (alreadyTapped != null) {
+                             alreadyTapped.addAll(tapChoices);
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -40,6 +40,7 @@
+ import forge.game.combat.Combat;
+ import forge.game.combat.CombatLki;
+ import forge.game.cost.Cost;
++import forge.game.cost.CostPayment;
+ import forge.game.event.*;
+ import forge.game.event.GameEventCardDamaged.DamageType;
+ import forge.game.keyword.*;
+@@ -4843,6 +4844,14 @@
+         return tap(false, tapAnimation, cause, tapper);
+     }
+     public final boolean tap(boolean attacker, boolean tapAnimation, SpellAbility cause, Player tapper) {
++        return tap(attacker, tapAnimation, cause, tapper, null);
++    }
++
++    public final boolean tapForCost(SpellAbility cause, Player tapper, CostPayment payment) {
++        return tap(false, true, cause, tapper, payment);
++    }
++
++    private boolean tap(boolean attacker, boolean tapAnimation, SpellAbility cause, Player tapper, CostPayment payment) {
+         if (tapped) { return false; }
+ 
+         // Run replacement effects
+@@ -4865,7 +4874,13 @@
+         runParams.put(AbilityKey.FirstTime, tappedThisTurn == 0);
+         runParams.put(AbilityKey.CostStack, getGame().costPaymentStack);
+         runParams.put(AbilityKey.IndividualCostPaymentInstance, getGame().costPaymentStack.peek());
+-        getGame().getTriggerHandler().runTrigger(TriggerType.Taps, runParams, false);
++        if (payment == null) {
++            getGame().getTriggerHandler().runTrigger(TriggerType.Taps, runParams, false);
++        } else {
++            payment.runCostTrigger(TriggerType.Taps, runParams);
++            int paymentTap = tappedThisTurn + 1;
++            payment.recordRefund(() -> restoreTapCost(paymentTap));
++        }
+ 
+         tappedThisTurn++;
+ 
+@@ -4873,6 +4888,13 @@
+         view.updateNeedsTapAnimation(tapAnimation);
+         getGame().fireEvent(new GameEventCardTapped(this, true));
+         return true;
++    }
++
++    private void restoreTapCost(int paymentTap) {
++        if (tappedThisTurn == paymentTap && isInPlay() && getGame().getCardState(this) == this) {
++            setTapped(false);
++        }
++        tappedThisTurn--;
+     }
+ 
+     public final boolean canUntap(Player phase, boolean predict) {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -29,6 +29,7 @@
+ import forge.game.mana.*;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.trigger.TriggerType;
+ import forge.game.trigger.TriggerWaiting;
+ import org.apache.commons.lang3.tuple.Pair;
+ 
+@@ -51,38 +52,50 @@
+     private Cost adjustedCost;
+     private SpellAbility ability;
+     private final List<CostPart> paidCostParts = Lists.newArrayList();
+-    private List<Runnable> lifePaymentRefunds;
+-    private List<TriggerWaiting> lifePaymentTriggers;
++    private List<Runnable> paymentRefunds;
++    private List<TriggerWaiting> paymentTriggers;
+     private boolean paidPositiveLife;
+-    private boolean tracksLifeCosts;
++    private boolean tracksReversibleCosts;
+ 
+     public static CostPayment forLifeCost(Player payer, SpellAbility cause) {
+         var entry = payer.getGame().costPaymentStack.peek();
+-        if (entry == null || !(entry.cost() instanceof CostPayLife || entry.cost() instanceof CostPartMana)) {
++        return entry != null && (entry.cost() instanceof CostPayLife || entry.cost() instanceof CostPartMana)
++                ? activePayment(entry.payment(), cause) : null;
++    }
++
++    public static CostPayment forTapCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && (entry.cost() instanceof CostTap || entry.cost() instanceof CostTapType)
++                && !cause.isManaAbility()
++                ? activePayment(entry.payment(), cause) : null;
++    }
++
++    private static CostPayment activePayment(CostPayment payment, SpellAbility cause) {
++        if (!payment.tracksReversibleCosts || payment.ability != cause) {
+             return null;
+         }
+-        CostPayment payment = entry.payment();
+-        if (!payment.tracksLifeCosts || payment.ability != cause) {
+-            return null;
+-        }
+-        if (payment.lifePaymentRefunds == null) {
+-            payment.lifePaymentRefunds = new ArrayList<>();
+-            payment.lifePaymentTriggers = new ArrayList<>();
++        if (payment.paymentRefunds == null) {
++            payment.paymentRefunds = new ArrayList<>();
++            payment.paymentTriggers = new ArrayList<>();
+         }
+         return payment;
+     }
+ 
+-    public void recordLifeRefund(Runnable refund) {
+-        lifePaymentRefunds.add(refund);
++    public void recordRefund(Runnable refund) {
++        paymentRefunds.add(refund);
++    }
++
++    public void runCostTrigger(TriggerType type, Map<AbilityKey, Object> params) {
++        holdCostTrigger(ability.getHostCard().getGame().getTriggerHandler().holdPaymentTrigger(type, params));
+     }
+ 
+     public void markPaidPositiveLife() {
+         paidPositiveLife = true;
+     }
+ 
+-    public void holdLifeTrigger(TriggerWaiting trigger) {
++    public void holdCostTrigger(TriggerWaiting trigger) {
+         if (trigger != null) {
+-            lifePaymentTriggers.add(trigger);
++            paymentTriggers.add(trigger);
+         }
+     }
+ 
+@@ -216,29 +229,29 @@
+         if (decisionMaker.isEffect()) {
+             return payComputerCostParts(decisionMaker);
+         }
+-        tracksLifeCosts = true;
++        tracksReversibleCosts = true;
+         int previousPhyrexian = ability.getSpendPhyrexianMana();
+         boolean paid = false;
+         try {
+             paid = payComputerCostParts(decisionMaker);
+-            if (paid && lifePaymentTriggers != null) {
++            if (paid && paymentTriggers != null) {
+                 Game game = decisionMaker.getPlayer().getGame();
+                 if (paidPositiveLife) {
+                     game.getStack().clearTriggerRepeats();
+                 }
+-                lifePaymentTriggers.forEach(game.getTriggerHandler()::commitPaymentTrigger);
++                paymentTriggers.forEach(game.getTriggerHandler()::commitPaymentTrigger);
+             }
+             return paid;
+         } finally {
+-            tracksLifeCosts = false;
+-            if (!paid && lifePaymentRefunds != null) {
++            tracksReversibleCosts = false;
++            if (!paid && paymentRefunds != null) {
+                 ability.restorePhyrexianManaPaid(previousPhyrexian);
+-                for (int i = lifePaymentRefunds.size() - 1; i >= 0; i--) {
+-                    lifePaymentRefunds.get(i).run();
+-                }
+-            }
+-            lifePaymentRefunds = null;
+-            lifePaymentTriggers = null;
++                for (int i = paymentRefunds.size() - 1; i >= 0; i--) {
++                    paymentRefunds.get(i).run();
++                }
++            }
++            paymentRefunds = null;
++            paymentTriggers = null;
+             paidPositiveLife = false;
+         }
+     }
+diff --git a/forge-game/src/main/java/forge/game/cost/CostTap.java b/forge-game/src/main/java/forge/game/cost/CostTap.java
+--- a/forge-game/src/main/java/forge/game/cost/CostTap.java
++++ b/forge-game/src/main/java/forge/game/cost/CostTap.java
+@@ -72,12 +72,18 @@
+     @Override
+     public boolean payAsDecided(Player payer, PaymentDecision decision, SpellAbility ability, final boolean effect) {
+         Card hostCard = ability.getHostCard();
+-        if (hostCard.tap(true, ability, payer)) {
++        CostPayment payment = CostPayment.forTapCost(payer, ability);
++        if (hostCard.tapForCost(ability, payer, payment)) {
+             final Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+             runParams.put(AbilityKey.Cards, new CardCollection(hostCard));
+-            payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
++            if (payment == null) {
++                payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
++            } else {
++                payment.runCostTrigger(TriggerType.TapAll, runParams);
++            }
++            return true;
+         }
+-        return true;
++        return payment == null;
+     }
+ 
+     public <T> T accept(ICostVisitor<T> visitor) {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostTapType.java b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+--- a/forge-game/src/main/java/forge/game/cost/CostTapType.java
++++ b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+@@ -25,9 +25,11 @@
+ import forge.game.trigger.TriggerType;
+ import forge.game.zone.ZoneType;
+ import forge.util.Lang;
+-import forge.util.TextUtil;
+-
++
++import java.util.HashMap;
++import java.util.HashSet;
+ import java.util.Map;
++import java.util.Set;
+ 
+ /**
+  * The Class CostTapType.
+@@ -142,50 +144,80 @@
+      */
+     @Override
+     public final boolean canPay(final SpellAbility ability, final Player payer, final boolean effect) {
+-        final Card source = ability.getHostCard();
+-
+-        String type = this.getType();
+-        boolean sameType = false;
+-
+-        if (type.equals("OriginalHost")) {
++        if (getType().equals("OriginalHost")) {
+             return ability.getOriginalHost().canTap();
+         }
+ 
+-        if (type.contains(".sharesCreatureTypeWith")) {
+-            sameType = true;
+-            type = TextUtil.fastReplace(type, ".sharesCreatureTypeWith", "");
+-        }
+-        boolean totalPower = false;
+-        String totalP = "";
+-        if (type.contains("+withTotalPowerGE")) {
+-            totalPower = true;
+-            totalP = type.split("withTotalPowerGE")[1];
+-            type = TextUtil.fastReplace(type, TextUtil.concatNoSpace("+withTotalPowerGE", totalP), "");
+-        }
+-
+-        CardCollection typeList = CardLists.getValidCards(payer.getCardsIn(ZoneType.Battlefield), type.split(";"), payer, source, ability);
+-
+-        if (!canTapSource) {
+-            typeList.remove(source);
+-        }
+-        typeList = CardLists.filter(typeList, ability.isCrew() ? CardPredicates.CAN_CREW : CardPredicates.CAN_TAP);
+-
+-        if (sameType) {
+-            for (final Card card : typeList) {
+-                if (CardLists.count(typeList, CardPredicates.sharesCreatureTypeWith(card)) > 1) {
+-                    return true;
++        CardCollection candidates = getTapCandidates(payer, ability);
++        if (requiresSharedCreatureType()) {
++            return chooseSharedTypeGroup(candidates, getAbilityAmount(ability)) != null;
++        }
++        int requiredPower = getRequiredPower();
++        if (requiredPower >= 0) {
++            return CardLists.getTotalPower(candidates, ability) >= requiredPower;
++        }
++        return candidates.size() >= getAbilityAmount(ability);
++    }
++
++    private static final String SHARED_TYPE = ".sharesCreatureTypeWith";
++    private static final String POWER_THRESHOLD = "+withTotalPowerGE";
++
++    public boolean requiresSharedCreatureType() {
++        return getType().contains(SHARED_TYPE);
++    }
++
++    /** A negative return value indicates that the cost counts cards instead of power. */
++    public int getRequiredPower() {
++        int marker = getType().indexOf(POWER_THRESHOLD);
++        return marker < 0 ? -1 : Integer.parseInt(getType().substring(marker + POWER_THRESHOLD.length()));
++    }
++
++    public String getTapTypes() {
++        String type = getType().replace(SHARED_TYPE, "");
++        int power = type.indexOf(POWER_THRESHOLD);
++        return power < 0 ? type : type.substring(0, power);
++    }
++
++    public CardCollection getTapCandidates(Player payer, SpellAbility ability) {
++        CardCollection candidates = new CardCollection(payer.getCardsIn(ZoneType.Battlefield));
++        candidates.removeIf(card -> !isCurrentTapSelection(card, payer, ability));
++        return candidates;
++    }
++
++    /** Return a group sharing a single creature type, using the caller's preferred card order. */
++    public static CardCollection chooseSharedTypeGroup(Iterable<Card> candidates, int amount) {
++        if (amount == 0) {
++            return new CardCollection();
++        }
++        Map<String, CardCollection> groups = new HashMap<>();
++        for (Card card : candidates) {
++            for (String type : card.getType().getCreatureTypes()) {
++                CardCollection group = groups.computeIfAbsent(type, ignored -> new CardCollection());
++                group.add(card);
++                if (group.size() == amount) {
++                    return group;
+                 }
+             }
+-            return false;
+-        }
+-
+-        if (totalPower) {
+-            final int i = Integer.parseInt(totalP);
+-            return CardLists.getTotalPower(typeList, ability) >= i;
+-        }
+-
+-        final int amount = this.getAbilityAmount(ability);
+-        return typeList.size() >= amount;
++        }
++        return null;
++    }
++
++    private boolean satisfiesSelection(CardCollectionView cards, SpellAbility ability) {
++        int requiredPower = getRequiredPower();
++        if (requiredPower >= 0) {
++            return CardLists.getTotalPower(cards, ability) >= requiredPower;
++        }
++        if (cards.size() != getAbilityAmount(ability)) {
++            return false;
++        }
++        if (!requiresSharedCreatureType() || cards.isEmpty()) {
++            return true;
++        }
++        Set<String> shared = new HashSet<>(cards.get(0).getType().getCreatureTypes());
++        for (Card card : cards) {
++            shared.retainAll(card.getType().getCreatureTypes());
++        }
++        return !shared.isEmpty();
+     }
+ 
+     /* (non-Javadoc)
+@@ -203,16 +235,79 @@
+     }
+ 
+     @Override
++    public boolean payAsDecided(Player payer, PaymentDecision decision, SpellAbility ability, boolean effect) {
++        CostPayment payment = CostPayment.forTapCost(payer, ability);
++        if (payment == null) {
++            return super.payAsDecided(payer, decision, ability, effect);
++        }
++        if (!satisfiesSelection(decision.cards, ability)) {
++            return false;
++        }
++        executePayment(payer, ability, decision.cards, effect);
++        if (getCardList().size() != decision.cards.size()) {
++            resetLists();
++            return false;
++        }
++        Map<Boolean, CardCollection> previousCards = copyPaidRow(ability, getHashForCardList());
++        Map<Boolean, CardCollection> previousLki = copyPaidRow(ability, getHashForLKIList());
++        payment.recordRefund(() -> {
++            restorePaidRow(ability, getHashForCardList(), previousCards);
++            restorePaidRow(ability, getHashForLKIList(), previousLki);
++        });
++        reportPaidCardsTo(ability);
++        return true;
++    }
++
++    private static Map<Boolean, CardCollection> copyPaidRow(SpellAbility ability, String key) {
++        Map<Boolean, CardCollection> previous = new HashMap<>();
++        ability.getPaidHash().row(key).forEach((intrinsic, cards) -> previous.put(intrinsic, new CardCollection(cards)));
++        return previous;
++    }
++
++    private static void restorePaidRow(SpellAbility ability, String key, Map<Boolean, CardCollection> previous) {
++        Map<Boolean, CardCollection> row = ability.getPaidHash().row(key);
++        row.clear();
++        row.putAll(previous);
++    }
++
++    @Override
+     protected CardCollectionView doListPayment(Player payer, SpellAbility ability, CardCollectionView targetCards, final boolean effect) {
++        CostPayment payment = CostPayment.forTapCost(payer, ability);
+         CardCollection tapped = new CardCollection();
+         for (Card c : targetCards) {
+-            if (c.tap(true, ability, payer)) tapped.add(c);
++            if (payment != null && !isCurrentTapSelection(c, payer, ability)) {
++                return tapped;
++            }
++            if (c.tapForCost(ability, payer, payment)) {
++                tapped.add(c);
++            } else if (payment != null) {
++                return tapped;
++            }
+         }
+ 
+         final Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+         runParams.put(AbilityKey.Cards, tapped);
+-        payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
+-        return targetCards;
++        if (payment == null) {
++            payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
++            return targetCards;
++        }
++        payment.runCostTrigger(TriggerType.TapAll, runParams);
++        return tapped;
++    }
++
++    private boolean isCurrentTapSelection(Card card, Player payer, SpellAbility ability) {
++        if (!card.isInPlay() || payer.getGame().getCardState(card) != card) {
++            return false;
++        }
++        if (getType().equals("OriginalHost")) {
++            return card == ability.getOriginalHost() && card.canTap();
++        }
++        if (card.getController() != payer || (!canTapSource && card == ability.getHostCard())) {
++            return false;
++        }
++        var canTap = ability.isCrew() ? CardPredicates.CAN_CREW : CardPredicates.CAN_TAP;
++        return canTap.test(card)
++                && CardPredicates.restriction(getTapTypes().split(";"), payer, ability.getHostCard(), ability).test(card);
+     }
+ 
+     /* (non-Javadoc)
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -538,7 +538,7 @@
+         if (payment != null) {
+             payment.markPaidPositiveLife();
+             int paid = toLose;
+-            payment.recordLifeRefund(() -> restorePaidLife(paid));
++            payment.recordRefund(() -> restorePaidLife(paid));
+         }
+         view.updateLife(this);
+         if (manaBurn) {
+@@ -567,7 +567,7 @@
+         if (payment == null) {
+             game.getTriggerHandler().runTrigger(type, params, false);
+         } else {
+-            payment.holdLifeTrigger(game.getTriggerHandler().holdPaymentTrigger(type, params));
++            payment.runCostTrigger(type, params);
+         }
+     }
+ 
+@@ -601,7 +601,7 @@
+     private boolean payLife(int lifePayment, SpellAbility cause, boolean effect, CostPayment payment) {
+         if (payment != null) {
+             int previousPaid = cause.getAmountLifePaid();
+-            payment.recordLifeRefund(() -> cause.setPaidLife(previousPaid));
++            payment.recordRefund(() -> cause.setPaidLife(previousPaid));
+         }
+         // fast check for pay zero life
+         if (lifePayment <= 0) {
+@@ -652,7 +652,7 @@
+                 runLifePaymentTrigger(TriggerType.LifeLostAll, runParams2, payment);
+             } else if (payment != null) {
+                 Map<Player, Integer> recordedLoss = lossMap;
+-                payment.recordLifeRefund(() -> {
++                payment.recordRefund(() -> {
+                     if (previousLoss == null) {
+                         recordedLoss.remove(this);
+                     } else {

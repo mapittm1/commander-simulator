@@ -17,6 +17,27 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Tap costs and group selection
+
+Weight of Conscience can activate with two Bears or a Bear and a Changeling.
+The regression fixtures check that the paid ability exiles the enchanted
+creature and that a pair with no common creature type is rejected.
+Mossbridge Troll checks a total-power cost at and below its threshold.
+Giant Ox can crew Renegade Freighter using toughness, and two one-power
+creatures can crew it using their combined power.
+
+The Wight of the Reliquary fixtures exercise recovery of the direct tap and
+the associated single-card and group tap triggers. A separate tap by another
+player and its trigger survive. Grove of the Guardian rejects a selected
+creature that leaves the battlefield or changes controllers during payment.
+If the Grove becomes unavailable after both creatures tap, the engine
+restores both taps and their prior payment records. See
+[tap payment evidence](../engine/tap_payment_evidence.json).
+
+The recovery cases cover AI nonmana tap costs. Human payment, costs paid
+during an effect, and reversal of tap costs inside mana abilities require
+separate validation.
+
 ## Failed activation recovery
 
 The Yawgmoth fixtures make a creature unavailable after life is paid. An
