@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reserve permanents for later tap costs when choosing mana sources, helper
+  taps, sacrifices, and inputs to mana filters.
+- Reselect a tap group if an earlier mana payment uses one of its original
+  members and a legal replacement is available.
+- Reverse the tap cost of a failed nested mana ability and release the tap
+  reservation created by that attempt.
+- Add 13 native and packaged regressions for combined mana and tap costs.
+
+
 - Choose a legal shared-type pair for Weight of Conscience and honor
   effective power or toughness when crewing a Vehicle.
 - Check that all creatures chosen for a grouped tap cost still qualify. If

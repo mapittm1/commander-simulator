@@ -1,0 +1,459 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -31,6 +31,7 @@
+     private final CardCollection tapped;
+ 
+     private CardCollectionView plannedSacrifices;
++    private CardCollectionView plannedTaps;
+ 
+     public AiCostDecision(Player ai0, SpellAbility sa, final boolean effect) {
+         this(ai0, sa, effect, false);
+@@ -467,6 +468,9 @@
+ 
+     @Override
+     public PaymentDecision visit(CostTapType cost) {
++        if (plannedTaps != null) {
++            return PaymentDecision.card(plannedTaps);
++        }
+         CardCollectionView totap;
+         int requiredPower = cost.getRequiredPower();
+         if (cost.requiresSharedCreatureType()) {
+@@ -485,6 +489,17 @@
+         }
+         tapped.addAll(totap);
+         return PaymentDecision.card(totap);
++    }
++
++    @Override
++    public PaymentDecision reconsiderTapPayment(CostTapType cost, PaymentDecision previous) {
++        tapped.removeAll(previous.cards);
++        return plannedTaps == null ? visit(cost) : null;
++    }
++
++    AiCostDecision withPlannedTaps(CardCollectionView cards) {
++        plannedTaps = cards;
++        return this;
+     }
+ 
+     AiCostDecision withPlannedSacrifices(CardCollectionView cards) {
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -295,7 +295,7 @@
+     }
+ 
+     public static SpellAbility chooseManaAbility(ManaCostBeingPaid cost, SpellAbility sa, Player ai, ManaCostShard toPay,
+-            Collection<SpellAbility> maList, boolean checkCosts) {
++            Collection<SpellAbility> maList, boolean checkCosts, boolean planTapGroups) {
+         Card saHost = sa.getHostCard();
+ 
+         // CastTotalManaSpent (AIPreference:ManaFrom$Type or AIManaPref$ Type)
+@@ -424,10 +424,11 @@
+ 
+             // these should come last since they reserve the paying cards
+             // (this means if a mana ability has both parts it doesn't currently undo reservations if the second part fails)
+-            if (!ComputerUtilCost.checkForManaSacrificeCost(ai, ma.getPayCosts(), ma, ma.isTrigger())) {
+-                continue;
+-            }
+-            if (!ComputerUtilCost.checkTapTypeCost(ai, ma.getPayCosts(), ma.getHostCard(), sa, AiCardMemory.getMemorySet(ai, MemorySet.PAYS_TAP_COST))) {
++            if (!planTapGroups && !ComputerUtilCost.checkForManaSacrificeCost(ai, ma.getPayCosts(), ma, ma.isTrigger())) {
++                continue;
++            }
++            if (!planTapGroups && !ComputerUtilCost.checkTapTypeCost(ai, ma.getPayCosts(), ma.getHostCard(), sa,
++                    AiCardMemory.getMemorySet(ai, MemorySet.PAYS_TAP_COST))) {
+                 continue;
+             }
+ 
+@@ -741,7 +742,11 @@
+         List<CostSacrifice> sacrifices = effect || manaPart == null ? List.of() : sa.getPayCosts().getCostParts().stream()
+                 .filter(CostSacrifice.class::isInstance).map(CostSacrifice.class::cast)
+                 .filter(part -> part.paymentOrder() > manaPart.paymentOrder()).toList();
++        List<CostTapType> tapGroups = effect || manaPart == null ? List.of() : sa.getPayCosts().getCostParts().stream()
++                .filter(CostTapType.class::isInstance).map(CostTapType.class::cast)
++                .filter(part -> part.paymentOrder() > manaPart.paymentOrder()).toList();
+         Set<Card> consumedManaSources = new HashSet<>();
++        Set<Card> projectedManaTaps = new HashSet<>();
+ 
+         // Loop over mana needed
+         while (!cost.isPaid()) {
+@@ -803,7 +808,8 @@
+                 }
+             }
+ 
+-            SpellAbility saPayment = saList.isEmpty() ? null : chooseManaAbility(cost, sa, ai, toPay, saList, checkPlayable || !test);
++            SpellAbility saPayment = saList.isEmpty() ? null : chooseManaAbility(cost, sa, ai, toPay, saList,
++                    checkPlayable || !test, !tapGroups.isEmpty());
+ 
+             if (saPayment != null && ComputerUtilCost.isSacrificeSelfCost(saPayment.getPayCosts()) && sa.isTargeting(saPayment.getHostCard())) {
+                 // not a good idea to sac a card that you're targeting with the SA you're paying for
+@@ -811,16 +817,11 @@
+                 continue;
+             }
+ 
+-            CardCollection manaSacrifices = null;
+-            if (saPayment != null && !sacrifices.isEmpty()) {
+-                CostSacrifice manaCost = saPayment.getPayCosts().getCostPartByType(CostSacrifice.class);
+-                if (manaCost != null) {
+-                    manaSacrifices = chooseManaSacrifices(saPayment, manaCost, sa, sacrifices, ai, consumedManaSources);
+-                    if (manaSacrifices == null) {
+-                        saExcludeList.add(saPayment);
+-                        continue;
+-                    }
+-                }
++            ManaResourcePlan resources = saPayment == null ? null : planManaResources(saPayment, sa, ai,
++                    sacrifices, tapGroups, projectedManaTaps, consumedManaSources);
++            if (saPayment != null && resources == null) {
++                saExcludeList.add(saPayment);
++                continue;
+             }
+ 
+             if (saPayment != null && "BlackLotus".equals(saPayment.getParam("AILogic")) && !SpecialCardAi.BlackLotus.consider(ai, sa, cost)) {
+@@ -877,19 +878,19 @@
+                 // from a source the remaining cost can spare, so that its cost payment doesn't grab a
+                 // land that's needed for a colored shard.
+                 if (!test && !prepayFilterManaAbility(cost, sa, ai, saPayment, toPay, sourcesForShards,
+-                        paymentList, effect, sacrifices, manaSacrifices)) {
++                        paymentList, effect, sacrifices, tapGroups, resources)) {
+                     saPayment.getManaPart().clearExpressChoice();
+                     saExcludeList.add(saPayment);
+                     continue;
+                 }
+             }
+ 
+-            paymentList.add(saPayment);
+-            if (saPayment.getPayCosts().hasTapCost()) {
+-                AiCardMemory.rememberCard(ai, saPayment.getHostCard(), MemorySet.PAYS_TAP_COST);
+-            }
++            CardCollection manaTaps = resources.taps();
++            CardCollection manaSacrifices = resources.sacrifices();
++            boolean newTapReservation = rememberManaTap(ai, saPayment);
+ 
+             if (test) {
++                paymentList.add(saPayment);
+                 // Check energy when testing
+                 CostPayEnergy energyCost = saPayment.getPayCosts().getCostEnergy();
+                 if (energyCost != null) {
+@@ -901,6 +902,15 @@
+                 }
+ 
+                 projectMana(saPayment, sa, ai, toPay, cost);
++                if (!tapGroups.isEmpty() && saPayment.getPayCosts().hasTapCost()) {
++                    projectedManaTaps.add(saPayment.getHostCard());
++                }
++                if (manaTaps != null) {
++                    CardCollection taps = manaTaps;
++                    projectedManaTaps.addAll(taps);
++                    sourcesForShards.values().removeIf(source ->
++                            source.getPayCosts().hasTapCost() && taps.contains(source.getHostCard()));
++                }
+                 if (manaSacrifices != null) {
+                     consumedManaSources.addAll(manaSacrifices);
+                     sourcesForShards.values().removeIf(source -> consumedManaSources.contains(source.getHostCard()));
+@@ -915,13 +925,15 @@
+             } else {
+                 final CostPayment pay = new CostPayment(saPayment.getPayCosts(), saPayment);
+                 AiCostDecision decision = new AiCostDecision(ai, saPayment, effect, true)
+-                        .withPlannedSacrifices(manaSacrifices);
++                        .withPlannedSacrifices(manaSacrifices).withPlannedTaps(manaTaps);
+                 if (!pay.payComputerCosts(decision)) {
++                    releaseFailedManaTap(ai, saPayment, newTapReservation);
+                     // saList can be a reordered copy, so exclude through the list that is applied on every pass
+                     saExcludeList.add(saPayment);
+                     continue;
+                 }
+ 
++                paymentList.add(saPayment);
+                 resolveManaAbility(saPayment, sa, cost, ai);
+                 // subtract mana from mana pool
+                 manapool.payManaFromAbility(sa, cost, saPayment);
+@@ -971,8 +983,101 @@
+         return paymentList;
+     }
+ 
++    private static boolean rememberManaTap(Player player, SpellAbility ability) {
++        Card source = ability.getHostCard();
++        if (!ability.getPayCosts().hasTapCost()
++                || AiCardMemory.isRememberedCard(player, source, MemorySet.PAYS_TAP_COST)) {
++            return false;
++        }
++        AiCardMemory.rememberCard(player, source, MemorySet.PAYS_TAP_COST);
++        return true;
++    }
++
++    private static void releaseFailedManaTap(Player player, SpellAbility ability, boolean newTapReservation) {
++        ability.getManaPart().clearExpressChoice();
++        if (newTapReservation) {
++            AiCardMemory.forgetCard(player, ability.getHostCard(), MemorySet.PAYS_TAP_COST);
++        }
++    }
++
++    private record ManaResourcePlan(CardCollection taps, CardCollection sacrifices) {
++        private static final ManaResourcePlan EMPTY = new ManaResourcePlan(null, null);
++    }
++
++    private static ManaResourcePlan planManaResources(SpellAbility manaAbility, SpellAbility payingFor, Player payer,
++            List<CostSacrifice> sacrificeCosts, List<CostTapType> tapGroups,
++            Set<Card> projectedTaps, Set<Card> consumed) {
++        if (sacrificeCosts.isEmpty() && tapGroups.isEmpty()) {
++            return ManaResourcePlan.EMPTY;
++        }
++        Set<Card> unavailableForTaps = new HashSet<>();
++        CardCollection manaTaps = null;
++        if (!tapGroups.isEmpty()) {
++            unavailableForTaps.addAll(projectedTaps);
++            unavailableForTaps.addAll(consumed);
++            if (payingFor.getPayCosts().hasTapCost()) {
++                unavailableForTaps.add(payingFor.getHostCard());
++            }
++            if (manaAbility.getPayCosts().hasTapCost()) {
++                unavailableForTaps.add(manaAbility.getHostCard());
++            }
++            if (!reservesTapGroups(payingFor, payer, tapGroups, unavailableForTaps)) {
++                return null;
++            }
++            CostTapType manaTapCost = manaAbility.getPayCosts().getCostPartByType(CostTapType.class);
++            if (manaTapCost != null) {
++                manaTaps = chooseManaTaps(manaAbility, manaTapCost, payingFor, tapGroups, payer, unavailableForTaps);
++                if (manaTaps == null) {
++                    return null;
++                }
++                unavailableForTaps.addAll(manaTaps);
++            }
++        }
++
++        CardCollection manaSacrifices = null;
++        if (!sacrificeCosts.isEmpty() || !tapGroups.isEmpty()) {
++            CostSacrifice manaCost = manaAbility.getPayCosts().getCostPartByType(CostSacrifice.class);
++            if (manaCost != null) {
++                manaSacrifices = chooseManaSacrifices(manaAbility, manaCost, payingFor, sacrificeCosts, payer,
++                        consumed, tapGroups, unavailableForTaps);
++                if (manaSacrifices == null) {
++                    return null;
++                }
++            }
++        }
++        return new ManaResourcePlan(manaTaps, manaSacrifices);
++    }
++
++    private static boolean reservesTapGroups(SpellAbility payingFor, Player payer, List<CostTapType> groups,
++            Set<Card> unavailable) {
++        return groups.stream().allMatch(group -> group.canPayExcluding(payingFor, payer, unavailable));
++    }
++
++    private static CardCollection chooseManaTaps(SpellAbility manaAbility, CostTapType manaTapCost,
++            SpellAbility payingFor, List<CostTapType> groups, Player payer, Set<Card> unavailable) {
++        int amount = manaTapCost.getAbilityAmount(manaAbility);
++        CardCollection candidates = manaTapCost.getTapCandidates(payer, manaAbility);
++        candidates.removeAll(unavailable);
++        CardLists.sortByPowerAsc(candidates);
++        Set<Card> used = new HashSet<>(unavailable);
++        CardCollection selected = new CardCollection();
++        for (Card candidate : candidates) {
++            if (selected.size() == amount) {
++                break;
++            }
++            used.add(candidate);
++            if (reservesTapGroups(payingFor, payer, groups, used)) {
++                selected.add(candidate);
++            } else {
++                used.remove(candidate);
++            }
++        }
++        return selected.size() == amount ? selected : null;
++    }
++
+     private static CardCollection chooseManaSacrifices(SpellAbility manaAbility, CostSacrifice manaCost,
+-            SpellAbility spell, List<CostSacrifice> spellCosts, Player payer, Set<Card> consumed) {
++            SpellAbility spell, List<CostSacrifice> spellCosts, Player payer, Set<Card> consumed,
++            List<CostTapType> tapGroups, Set<Card> unavailableForTaps) {
+         Card manaHost = manaAbility.getHostCard();
+         boolean distinctNames = manaCost.getType().contains("+WithDifferentNames");
+         CardCollection candidates;
+@@ -991,6 +1096,8 @@
+         CardCollection selected = new CardCollection();
+         Set<String> usedNames = new HashSet<>();
+         Set<Card> unavailable = new HashSet<>(consumed);
++        Set<Card> untappable = new HashSet<>(unavailableForTaps);
++        untappable.addAll(consumed);
+ 
+         // Spare the other available mana sources where possible.
+         candidates.sort(Comparator.comparing(card -> !card.getManaAbilities().isEmpty()));
+@@ -1002,11 +1109,16 @@
+                 continue;
+             }
+             unavailable.add(card);
+-            if (canReserveSacrifices(spell, spellCosts, payer, unavailable)) {
++            boolean addedTapExclusion = untappable.add(card);
++            if (canReserveSacrifices(spell, spellCosts, payer, unavailable)
++                    && reservesTapGroups(spell, payer, tapGroups, untappable)) {
+                 selected.add(card);
+                 usedNames.add(card.getName());
+             } else {
+                 unavailable.remove(card);
++                if (addedTapExclusion) {
++                    untappable.remove(card);
++                }
+             }
+         }
+         return selected.size() == amount ? selected : null;
+@@ -1014,6 +1126,9 @@
+ 
+     private static boolean canReserveSacrifices(SpellAbility spell, List<CostSacrifice> costs,
+             Player payer, Set<Card> unavailable) {
++        if (costs.isEmpty()) {
++            return true;
++        }
+         if (costs.size() == 1) {
+             return costs.get(0).canPayExcluding(spell, payer, false, unavailable);
+         }
+@@ -1162,7 +1277,7 @@
+     private static boolean prepayFilterManaAbility(final ManaCostBeingPaid cost, final SpellAbility sa, final Player ai,
+             final SpellAbility filter, final ManaCostShard toPay, final Multimap<ManaCostShard, SpellAbility> sourcesForShards,
+             final List<SpellAbility> paymentList, final boolean effect,
+-            List<CostSacrifice> sacrifices, CardCollection filterSacrifices) {
++            List<CostSacrifice> sacrifices, List<CostTapType> tapGroups, ManaResourcePlan filterPlan) {
+         final Card filterHost = filter.getHostCard();
+         final ManaPool manapool = ai.getManaPool();
+ 
+@@ -1172,7 +1287,11 @@
+ 
+         final ManaCost toActivate = getManaCostToActivate(filter);
+         final Set<SpellAbility> tried = new HashSet<>();
+-        Set<Card> reserved = filterSacrifices == null ? Set.of() : new HashSet<>(filterSacrifices);
++        Set<Card> reserved = filterPlan.sacrifices() == null ? Set.of() : new HashSet<>(filterPlan.sacrifices());
++        Set<Card> filterTaps = filterPlan.taps() == null ? new HashSet<>() : new HashSet<>(filterPlan.taps());
++        if (filter.getPayCosts().hasTapCost()) {
++            filterTaps.add(filterHost);
++        }
+         while (true) {
+             // what the floating mana leaves of the filter's cost; it stays in the pool to pay that cost
+             final ManaCostBeingPaid toFloat = new ManaCostBeingPaid(toActivate);
+@@ -1182,7 +1301,7 @@
+             }
+             final ManaCostShard shard = getNextShardToPay(toFloat, sourcesForShards);
+             SpellAbility chosen = null;
+-            CardCollection chosenSacrifices = null;
++            ManaResourcePlan chosenPlan = null;
+             for (final SpellAbility m : sourcesForShards.get(shard)) {
+                 final Card host = m.getHostCard();
+                 if (host.equals(filterHost) || getManaToActivate(m) > 0 || tried.contains(m)) {
+@@ -1206,12 +1325,9 @@
+                     }
+                 }
+                 if (!needed && canPayShardWithSpellAbility(shard, ai, m, filter, toFloat, true, toFloat.getXManaCostPaidByColor())) {
+-                    CostSacrifice manaCost = m.getPayCosts().getCostPartByType(CostSacrifice.class);
+-                    if (!sacrifices.isEmpty() && manaCost != null) {
+-                        chosenSacrifices = chooseManaSacrifices(m, manaCost, sa, sacrifices, ai, reserved);
+-                        if (chosenSacrifices == null) {
+-                            continue;
+-                        }
++                    chosenPlan = planManaResources(m, sa, ai, sacrifices, tapGroups, filterTaps, reserved);
++                    if (chosenPlan == null) {
++                        continue;
+                     }
+                     chosen = m;
+                     break;
+@@ -1222,21 +1338,17 @@
+             }
+             tried.add(chosen);
+ 
+-            if (chosen.getPayCosts().hasTapCost()) {
+-                AiCardMemory.rememberCard(ai, chosen.getHostCard(), MemorySet.PAYS_TAP_COST);
+-            }
++            boolean newTapReservation = rememberManaTap(ai, chosen);
+             AiCostDecision decision = new AiCostDecision(ai, chosen, effect, true)
+-                    .withPlannedSacrifices(chosenSacrifices);
++                    .withPlannedSacrifices(chosenPlan.sacrifices()).withPlannedTaps(chosenPlan.taps());
+             if (!new CostPayment(chosen.getPayCosts(), chosen).payComputerCosts(decision)) {
+-                if (chosen.getPayCosts().hasTapCost()) {
+-                    AiCardMemory.forgetCard(ai, chosen.getHostCard(), MemorySet.PAYS_TAP_COST);
+-                }
++                releaseFailedManaTap(ai, chosen, newTapReservation);
+                 continue;
+             }
+             resolveManaAbility(chosen, filter, new ManaCostBeingPaid(toActivate), ai);
+             paymentList.add(chosen);
+-            if (chosenSacrifices != null) {
+-                CardCollection consumed = chosenSacrifices;
++            if (chosenPlan.sacrifices() != null) {
++                CardCollection consumed = chosenPlan.sacrifices();
+                 sourcesForShards.values().removeIf(source -> consumed.contains(source.getHostCard()));
+             }
+             final SpellAbility used = chosen;
+diff --git a/forge-game/src/main/java/forge/game/cost/CostDecisionMakerBase.java b/forge-game/src/main/java/forge/game/cost/CostDecisionMakerBase.java
+--- a/forge-game/src/main/java/forge/game/cost/CostDecisionMakerBase.java
++++ b/forge-game/src/main/java/forge/game/cost/CostDecisionMakerBase.java
+@@ -18,6 +18,10 @@
+         source = source0;
+     }
+ 
++    public PaymentDecision reconsiderTapPayment(CostTapType cost, PaymentDecision previous) {
++        return previous;
++    }
++
+     public Player getPlayer() { return player; }
+     public abstract boolean paysRightAfterDecision();
+     public boolean isEffect() {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -66,7 +66,6 @@
+     public static CostPayment forTapCost(Player payer, SpellAbility cause) {
+         var entry = payer.getGame().costPaymentStack.peek();
+         return entry != null && (entry.cost() instanceof CostTap || entry.cost() instanceof CostTapType)
+-                && !cause.isManaAbility()
+                 ? activePayment(entry.payment(), cause) : null;
+     }
+ 
+@@ -318,6 +317,9 @@
+                         decision = part.accept(decisionMaker);
+                     }
+                     paidSacrifices++;
++                } else if (part instanceof CostTapType tapCost && !decisionMaker.isEffect()
++                        && !tapCost.isCurrentSelection(decision, ability, decisionMaker.getPlayer())) {
++                    decision = decisionMaker.reconsiderTapPayment(tapCost, decision);
+                 }
+                 if (decision == null || !part.payAsDecided(decisionMaker.getPlayer(), decision, this.ability, decisionMaker.isEffect())) {
+                     return false;
+diff --git a/forge-game/src/main/java/forge/game/cost/CostTapType.java b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+--- a/forge-game/src/main/java/forge/game/cost/CostTapType.java
++++ b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+@@ -144,11 +144,17 @@
+      */
+     @Override
+     public final boolean canPay(final SpellAbility ability, final Player payer, final boolean effect) {
++        return canPayExcluding(ability, payer, Set.of());
++    }
++
++    public boolean canPayExcluding(SpellAbility ability, Player payer, Set<Card> unavailable) {
+         if (getType().equals("OriginalHost")) {
+-            return ability.getOriginalHost().canTap();
++            Card host = ability.getOriginalHost();
++            return !unavailable.contains(host) && host.canTap();
+         }
+ 
+         CardCollection candidates = getTapCandidates(payer, ability);
++        candidates.removeAll(unavailable);
+         if (requiresSharedCreatureType()) {
+             return chooseSharedTypeGroup(candidates, getAbilityAmount(ability)) != null;
+         }
+@@ -202,6 +208,18 @@
+         return null;
+     }
+ 
++    public boolean isCurrentSelection(PaymentDecision decision, SpellAbility ability, Player payer) {
++        if (!satisfiesSelection(decision.cards, ability)) {
++            return false;
++        }
++        for (Card card : decision.cards) {
++            if (!isCurrentTapSelection(card, payer, ability)) {
++                return false;
++            }
++        }
++        return true;
++    }
++
+     private boolean satisfiesSelection(CardCollectionView cards, SpellAbility ability) {
+         int requiredPower = getRequiredPower();
+         if (requiredPower >= 0) {

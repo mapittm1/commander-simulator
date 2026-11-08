@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Mana planning now accounts for permanents needed for later tap costs,
+including when a mana ability taps or sacrifices another card or needs mana
+from a second source. See
+[combined mana and tap costs](docs/CARD_COVERAGE.md#combined-mana-and-tap-costs).
+
 The AI can activate Weight of Conscience with creatures that share a type,
 including a Changeling. It also counts the power or toughness the rules
 assign to a crew payment and restores eligible taps when a later cost fails.

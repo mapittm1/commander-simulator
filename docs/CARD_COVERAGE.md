@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Combined mana and tap costs
+
+Dune Diviner needs distinct Deserts when one supplies the mana and the other
+pays the tap cost. Grove of the Guardian reserves the creatures it needs
+while selecting mana from Avacyn's Pilgrim, Springleaf Drum, or Phyrexian
+Altar. The fixtures exercise both insufficient and sufficient resources.
+
+Eladamri, Korvecdal keeps its own tap cost separate from the creatures that
+fund mana. The filter fixture uses Ancient Tomb to pay for Selesnya Signet
+and leaves the two creatures available to tap. If Springleaf Drum loses its
+selected helper during payment, the failed activation reverses the Drum's
+tap, drops its reservation, and preserves the helper's separate exile.
+
+These checks cover selected AI costs and filters. General search across all
+multi-source and multi-cost payment orders and recovery of other nonmana
+costs still need verification. See
+[combined reservation evidence](../engine/combined_reservation_evidence.json).
+
 ## Tap costs and group selection
 
 Weight of Conscience can activate with two Bears or a Bear and a Changeling.
