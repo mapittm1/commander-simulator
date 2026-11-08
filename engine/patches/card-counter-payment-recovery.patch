@@ -1,0 +1,361 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -599,7 +599,7 @@
+                 if (stillToRemove <= removed) {
+                     break;
+                 }
+-                int thisRemove = Math.min(prefCard.getCounters(cType), stillToRemove);
++                int thisRemove = Math.min(availableCounters(table, prefCard, cType), stillToRemove - removed);
+                 if (thisRemove > 0) {
+                     removed += thisRemove;
+                     table.put(null, prefCard, cType, thisRemove);
+@@ -607,6 +607,10 @@
+             }
+         }
+         return removed;
++    }
++
++    private static int availableCounters(GameEntityCounterTable table, Card card, CounterType type) {
++        return card.canRemoveCounters(type) ? table.filterToRemove(card).count(type) : 0;
+     }
+ 
+     @Override
+@@ -664,11 +668,12 @@
+ 
+             for (final String ctr : counters) {
+                 CounterType ctype = CounterType.getType(ctr);
+-                // ctype == null means any type
+-                // any type is just used to return null for this
++                if (ctype == null) {
++                    continue;
++                }
+ 
+                 for (Card card : CardLists.filter(typeList, CardPredicates.hasCounter(ctype))) {
+-                    int thisRemove = Math.min(card.getCounters(ctype), c - toRemove);
++                    int thisRemove = Math.min(availableCounters(table, card, ctype), c - toRemove);
+                     if (thisRemove > 0) {
+                         toRemove += thisRemove;
+                         table.put(null, card, ctype, thisRemove);
+@@ -719,7 +724,7 @@
+             if (!useless.isEmpty()) {
+                 for (final Card crd : useless) {
+                     for (Multiset.Entry<CounterType> e : table.filterToRemove(crd).entrySet()) {
+-                        if (ComputerUtil.isUselessCounter(e.getElement(), crd)) {
++                        if (ComputerUtil.isUselessCounter(e.getElement(), crd) && crd.canRemoveCounters(e.getElement())) {
+                             int over = Math.min(e.getCount(), c - toRemove);
+                             if (over > 0) {
+                                 toRemove += over;
+@@ -758,7 +763,7 @@
+                 if (crd.hasSVar("MaxQuestEffect")) {
+                     e = Integer.parseInt(crd.getSVar("MaxQuestEffect"));
+                 }
+-                int over = Math.min(crd.getCounters(quest) - e, c - toRemove);
++                int over = Math.min(availableCounters(table, crd, quest) - e, c - toRemove);
+                 if (over > 0) {
+                     toRemove += over;
+                     table.put(null, crd, quest, over);
+@@ -781,7 +786,7 @@
+             // the amount of X should probably be tweaked for this
+             List<Card> withCtr = CardLists.filter(typeList, CardPredicates.hasCounter(cost.counter));
+             for (Card card : withCtr) {
+-                int thisRemove = Math.min(card.getCounters(cost.counter), c - toRemove);
++                int thisRemove = Math.min(availableCounters(table, card, cost.counter), c - toRemove);
+                 if (thisRemove > 0) {
+                     toRemove += thisRemove;
+                     table.put(null, card, cost.counter, thisRemove);
+@@ -789,23 +794,26 @@
+             }
+         }
+ 
+-        // Used to not return null
+-        // Special part for CostPriority Any
+-        if (c > toRemove && cost.counter == null && originalHost.hasSVar("AIRemoveCounterCostPriority") && "ANY".equalsIgnoreCase(originalHost.getSVar("AIRemoveCounterCostPriority"))) {
++        // Preferences above are optional. Complete the payment from other legal counters.
++        if (c > toRemove && cost.counter == null) {
+             for (Card card : typeList) {
+-                // TODO try not to remove to much positive counters from the same card
+                 for (Multiset.Entry<CounterType> e : table.filterToRemove(card).entrySet()) {
+-                    int thisRemove = Math.min(e.getCount(), c - toRemove);
+-                    if (thisRemove > 0) {
+-                        toRemove += thisRemove;
+-                        table.put(null, card, e.getElement(), thisRemove);
++                    if (!card.canRemoveCounters(e.getElement())) {
++                        continue;
+                     }
+-                }
+-            }
+-        }
+-
+-        // if table is empty, then no counter was removed
+-        return table.isEmpty() ? null : PaymentDecision.counters(table);
++                    int remaining = Math.min(e.getCount(), c - toRemove);
++                    if (remaining > 0) {
++                        toRemove += remaining;
++                        table.put(null, card, e.getElement(), remaining);
++                    }
++                }
++                if (toRemove == c) {
++                    break;
++                }
++            }
++        }
++
++        return toRemove == c ? PaymentDecision.counters(table) : null;
+     }
+ 
+     @Override
+diff --git a/forge-game/src/main/java/forge/game/Game.java b/forge-game/src/main/java/forge/game/Game.java
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -1422,8 +1422,10 @@
+         countersRemovedThisTurn.clear();
+     }
+ 
+-    public void addCounterRemovedThisTurn(CounterType cType, Card card, Integer value) {
+-        countersRemovedThisTurn.put(cType, Pair.of(CardCopyService.getLKICopy(card), value));
++    public Pair<GameEntity, Integer> addCounterRemovedThisTurn(CounterType type, Card card, Integer value) {
++        Pair<GameEntity, Integer> receipt = Pair.of(CardCopyService.getLKICopy(card), value);
++        countersRemovedThisTurn.put(type, receipt);
++        return receipt;
+     }
+     public Pair<GameEntity, Integer> addCounterRemovedThisTurn(CounterType type, Player player, Integer value) {
+         Pair<GameEntity, Integer> receipt = Pair.of(player, value);
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -1889,6 +1889,14 @@
+     }
+ 
+     public final int subtractCounter(final CounterType counterName, final int n, final Player remover, final boolean isDamage) {
++        return subtractCounter(counterName, n, remover, isDamage, null);
++    }
++
++    public final int subtractCounterForCost(CounterType counter, int amount, Player remover, CostPayment payment) {
++        return subtractCounter(counter, amount, remover, false, payment);
++    }
++
++    private int subtractCounter(CounterType counterName, int n, Player remover, boolean isDamage, CostPayment payment) {
+         int oldValue = getCounters(counterName);
+         int newValue = max(oldValue - n, 0);
+ 
+@@ -1934,7 +1942,15 @@
+         // Play the Subtract Counter sound
+         getGame().fireEvent(new GameEventCardCounters(this, counterName, oldValue, newValue));
+ 
+-        getGame().addCounterRemovedThisTurn(counterName, this, delta);
++        var receipt = game.addCounterRemovedThisTurn(counterName, this, delta);
++        if (payment != null) {
++            payment.recordRefund(() -> {
++                game.removeCounterRemovalReceipt(counterName, receipt);
++                if (game.getCardState(this) == this) {
++                    restoreCostCounters(counterName, delta);
++                }
++            });
++        }
+ 
+         // Run triggers
+         int curCounters = oldValue;
+@@ -1943,13 +1959,33 @@
+         runParams.put(AbilityKey.Player, remover);
+         for (int i = 0; i < delta && curCounters != 0; i++) {
+             runParams.put(AbilityKey.NewCounterAmount, --curCounters);
+-            getGame().getTriggerHandler().runTrigger(TriggerType.CounterRemoved, AbilityKey.newMap(runParams), false);
++            runCounterCostTrigger(TriggerType.CounterRemoved, AbilityKey.newMap(runParams), payment);
+         }
+         runParams.put(AbilityKey.CounterAmount, delta);
+         runParams.put(AbilityKey.NewCounterAmount, newValue);
+-        getGame().getTriggerHandler().runTrigger(TriggerType.CounterRemovedOnce, runParams, false);
++        runCounterCostTrigger(TriggerType.CounterRemovedOnce, runParams, payment);
+ 
+         return delta;
++    }
++
++    private void restoreCostCounters(CounterType type, int delta) {
++        int before = getCounters(type);
++        setCounters(type, before + delta);
++        if (createCounterStatic(type) || type.is(CounterEnumType.MANABOND) || type.isKeywordCounter()) {
++            updateKeywords();
++        }
++        view.updateCounters(this);
++        game.updateLastStateForCard(this);
++        game.fireEvent(new GameEventCardCounters(this, type, before, before + delta));
++        game.fireEvent(new GameEventCardStatsChanged(this));
++    }
++
++    private void runCounterCostTrigger(TriggerType type, Map<AbilityKey, Object> params, CostPayment payment) {
++        if (payment == null) {
++            game.getTriggerHandler().runTrigger(type, params, false);
++        } else {
++            payment.runCostTrigger(type, params);
++        }
+     }
+ 
+     @Override
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -107,6 +107,12 @@
+                 ? activePayment(entry.payment(), cause) : null;
+     }
+ 
++    public static CostPayment forCardCounterCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && (entry.cost() instanceof CostRemoveCounter || entry.cost() instanceof CostRemoveAnyCounter)
++                ? activePayment(entry.payment(), cause) : null;
++    }
++
+     public static CostPayment forDiscardCost(Player payer, SpellAbility cause) {
+         var entry = payer.getGame().costPaymentStack.peek();
+         return entry != null && entry.cost() instanceof CostDiscard ? activePayment(entry.payment(), cause) : null;
+diff --git a/forge-game/src/main/java/forge/game/cost/CostRemoveCounter.java b/forge-game/src/main/java/forge/game/cost/CostRemoveCounter.java
+--- a/forge-game/src/main/java/forge/game/cost/CostRemoveCounter.java
++++ b/forge-game/src/main/java/forge/game/cost/CostRemoveCounter.java
+@@ -23,6 +23,7 @@
+ import forge.game.GameEntity;
+ import forge.game.card.Card;
+ import forge.game.card.CardLists;
++import forge.game.card.CardPredicates;
+ import forge.game.card.CounterEnumType;
+ import forge.game.card.CounterType;
+ import forge.game.player.Player;
+@@ -33,6 +34,7 @@
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Optional;
++import java.util.function.Predicate;
+ 
+ /**
+  * The Class CostRemoveCounter.
+@@ -183,18 +185,41 @@
+ 
+     @Override
+     public boolean payAsDecided(Player ai, PaymentDecision decision, SpellAbility ability, final boolean effect) {
++        return payCounterTable(ai, decision, ability, card -> {
++            if (payCostFromSource()) {
++                return card == ability.getHostCard();
++            }
++            if (getType().equals("OriginalHost")) {
++                return card == ability.getOriginalHost();
++            }
++            return ai.getCardsIn(zone).contains(card) && (!card.isInPlay() || card.getController() == ai)
++                    && CardPredicates.restriction(getType().split(";"), ai, ability.getHostCard(), ability).test(card);
++        });
++    }
++
++    static boolean payCounterTable(Player payer, PaymentDecision decision, SpellAbility ability,
++            Predicate<Card> eligibleCard) {
++        CostPayment payment = CostPayment.forCardCounterCost(payer, ability);
+         int removed = 0;
+         for (Map.Entry<GameEntity, Multiset<CounterType>> e : decision.counterTable.row(Optional.empty()).entrySet()) {
+             for (Multiset.Entry<CounterType> v : e.getValue().entrySet()) {
+                 removed += v.getCount();
+-                e.getKey().subtractCounter(v.getElement(), v.getCount(), ai);
++                if (payment != null && e.getKey() instanceof Card card) {
++                    if (card.getGame().getCardState(card, null) != card || card.isPhasedOut() || !eligibleCard.test(card)
++                            || card.getCounters(v.getElement()) < v.getCount() || !card.canRemoveCounters(v.getElement())) {
++                        return false;
++                    }
++                    card.subtractCounterForCost(v.getElement(), v.getCount(), payer, payment);
++                } else {
++                    e.getKey().subtractCounter(v.getElement(), v.getCount(), payer);
++                }
+             }
+             if (e.getKey() instanceof Card c) {
+                 e.getKey().getGame().updateLastStateForCard(c);
+             }
+         }
+ 
+-        ability.setSVar("CostCountersRemoved", Integer.toString(removed));
++        ability.setCostCountersRemoved(removed, payment);
+         return true;
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/cost/CostRemoveAnyCounter.java b/forge-game/src/main/java/forge/game/cost/CostRemoveAnyCounter.java
+--- a/forge-game/src/main/java/forge/game/cost/CostRemoveAnyCounter.java
++++ b/forge-game/src/main/java/forge/game/cost/CostRemoveAnyCounter.java
+@@ -18,12 +18,12 @@
+ package forge.game.cost;
+ 
+ import forge.card.CardType;
+-import forge.game.GameEntity;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.card.Card;
+ import forge.game.card.CardCollection;
+ import forge.game.card.CardCollectionView;
+ import forge.game.card.CardLists;
++import forge.game.card.CardPredicates;
+ import forge.game.card.CounterType;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
+@@ -32,11 +32,7 @@
+ 
+ import java.util.Arrays;
+ import java.util.Collection;
+-import java.util.Map.Entry;
+-import java.util.Optional;
+ import java.util.stream.Collectors;
+-
+-import com.google.common.collect.Multiset;
+ 
+ /**
+  * The Class CostRemoveAnyCounter.
+@@ -133,19 +129,13 @@
+ 
+     @Override
+     public boolean payAsDecided(Player ai, PaymentDecision decision, SpellAbility ability, final boolean effect) {
+-        int removed = 0;
+-        for (Entry<GameEntity, Multiset<CounterType>> e : decision.counterTable.row(Optional.empty()).entrySet()) {
+-            for (Multiset.Entry<CounterType> v : e.getValue().entrySet()) {
+-                removed += v.getCount();
+-                e.getKey().subtractCounter(v.getElement(), v.getCount(), ai);
++        return CostRemoveCounter.payCounterTable(ai, decision, ability, card -> {
++            if (payCostFromSource()) {
++                return card == ability.getHostCard();
+             }
+-            if (e.getKey() instanceof Card c) {
+-                e.getKey().getGame().updateLastStateForCard(c);
+-            }
+-        }
+-
+-        ability.setSVar("CostCountersRemoved", Integer.toString(removed));
+-        return true;
++            return card.isInPlay() && card.getController() == ai
++                    && CardPredicates.restriction(getType().split(";"), ai, ability.getHostCard(), ability).test(card);
++        });
+     }
+ 
+     public String getDescriptiveType(boolean multiple) {
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -25,6 +25,7 @@
+ import com.google.common.base.Suppliers;
+ import forge.game.card.*;
+ import forge.game.cost.CostSacrifice;
++import forge.game.cost.CostPayment;
+ import forge.game.staticability.StaticAbilityCantBeCopied;
+ import forge.util.*;
+ import org.apache.commons.lang3.StringUtils;
+@@ -882,6 +883,21 @@
+         spentPhyrexian = amount;
+     }
+ 
++    public final void setCostCountersRemoved(int amount, CostPayment payment) {
++        String key = "CostCountersRemoved";
++        if (payment != null) {
++            String previous = sVars.get(key);
++            payment.recordRefund(() -> {
++                if (previous == null) {
++                    removeSVar(key);
++                } else {
++                    setSVar(key, previous);
++                }
++            });
++        }
++        setSVar(key, Integer.toString(amount));
++    }
++
+     public final int getAmountLifePaid() {
+         return this.paidLifeAmount;
+     }

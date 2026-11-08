@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Card-counter costs
+
+Axiom Engraver restores the oil counter used for a failed activation and
+preserves a separate counter removal that occurred during payment. The
+engine also rejects the activation if the required oil counter disappears
+before the counter cost is paid.
+
+Tayam, Luminous Enigma can pay with multiple creatures and with legal
+counters outside the AI's preferred type. The fixtures verify the exact
+three-counter payment, rejection after a creature changes controllers or
+loses its selected counter, and protection of stun counters under Fear of
+Sleep Paralysis. Chandra, Fire Artisan's successful loyalty payment still
+produces a seven-damage trigger. The fixture supplies the target.
+
+The tests cover selected AI payments from card counters. Other counter
+replacement effects and costs paid while resolving an effect still need
+verification. See [card-counter evidence](../engine/card_counter_evidence.json).
+
 ## Energy and discard recovery
 
 Era of Innovation returns six paid energy and removes its payment history

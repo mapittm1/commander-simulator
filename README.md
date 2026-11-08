@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+The AI checks the full cost when removing counters from one or more cards.
+If a later cost fails, it restores the counters used for that payment and
+preserves independent counter removals. See
+[card-counter costs](docs/CARD_COVERAGE.md#card-counter-costs).
+
 When a later cost fails, the AI restores paid energy and reversible discards.
 The engine returns cards from the graveyard or exile in the tested cases and
 keeps a card moved into a library by a replacement effect. See

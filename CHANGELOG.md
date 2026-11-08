@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Require an exact legal counter selection for Tayam and similar costs.
+  Use other legal counter types when the preferred types cannot pay.
+- Recheck the current permanent, controller, type, and counter availability
+  before payment. Restore counters and their payment records if a later
+  cost fails.
+- Add 10 native and packaged checks for card-counter payments, including
+  protected stun counters and Chandra's loyalty removal trigger.
+
+
 - Restore energy and remove the corresponding counter-removal record when a
   later payment fails. Preserve independent counter loss.
 - Reverse supported discard payments from the graveyard or exile, including
