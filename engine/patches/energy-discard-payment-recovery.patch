@@ -1,0 +1,538 @@
+diff --git a/forge-game/src/main/java/forge/game/Game.java b/forge-game/src/main/java/forge/game/Game.java
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -1425,8 +1425,14 @@
+     public void addCounterRemovedThisTurn(CounterType cType, Card card, Integer value) {
+         countersRemovedThisTurn.put(cType, Pair.of(CardCopyService.getLKICopy(card), value));
+     }
+-    public void addCounterRemovedThisTurn(CounterType cType, Player player, Integer value) {
+-        countersRemovedThisTurn.put(cType, Pair.of(player, value));
++    public Pair<GameEntity, Integer> addCounterRemovedThisTurn(CounterType type, Player player, Integer value) {
++        Pair<GameEntity, Integer> receipt = Pair.of(player, value);
++        countersRemovedThisTurn.put(type, receipt);
++        return receipt;
++    }
++
++    public void removeCounterRemovalReceipt(CounterType type, Pair<GameEntity, Integer> receipt) {
++        countersRemovedThisTurn.get(type).removeIf(entry -> entry == receipt);
+     }
+ 
+     public int getCounterRemovedThisTurn(CounterType cType, String valid, Card source, Player sourceController, CardTraitBase ctb) {
+diff --git a/forge-game/src/main/java/forge/game/GameAction.java b/forge-game/src/main/java/forge/game/GameAction.java
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -32,6 +32,7 @@
+ import forge.game.ability.ApiType;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.*;
++import forge.game.cost.CostPayment;
+ import forge.game.event.*;
+ import forge.game.extrahands.BackupPlanService;
+ import forge.game.keyword.Keyword;
+@@ -951,7 +952,13 @@
+         runParams.put(AbilityKey.CostStack, game.costPaymentStack);
+         runParams.put(AbilityKey.IndividualCostPaymentInstance, game.costPaymentStack.peek());
+ 
+-        game.getTriggerHandler().runTrigger(TriggerType.Exiled, runParams, false);
++        CostPayment discard = origin != null && origin.is(ZoneType.Hand) && copied.isInZone(ZoneType.Exile)
++                ? CostPayment.forPendingDiscard(game, c) : null;
++        if (discard == null) {
++            game.getTriggerHandler().runTrigger(TriggerType.Exiled, runParams, false);
++        } else {
++            discard.runCostTrigger(TriggerType.Exiled, runParams);
++        }
+ 
+         return copied;
+     }
+diff --git a/forge-game/src/main/java/forge/game/card/CardZoneTable.java b/forge-game/src/main/java/forge/game/card/CardZoneTable.java
+--- a/forge-game/src/main/java/forge/game/card/CardZoneTable.java
++++ b/forge-game/src/main/java/forge/game/card/CardZoneTable.java
+@@ -9,6 +9,7 @@
+ import com.google.common.collect.Table;
+ import forge.game.CardTraitBase;
+ import forge.game.Game;
++import forge.game.cost.CostPayment;
+ import forge.game.GameAction;
+ import forge.game.ability.AbilityKey;
+ import forge.game.player.PlayerCollection;
+@@ -98,6 +99,10 @@
+     }
+ 
+     public void triggerChangesZoneAll(final Game game, final SpellAbility cause) {
++        triggerChangesZoneAll(game, cause, null);
++    }
++
++    public void triggerChangesZoneAll(Game game, SpellAbility cause, CostPayment payment) {
+         triggerTokenCreatedOnce(game);
+         if (cause != null && cause.getReplacingObject(AbilityKey.InternalTriggerTable) == this) {
+             // will be handled by original "cause" instead
+@@ -131,7 +136,24 @@
+             final Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+             runParams.put(AbilityKey.Cards, new CardZoneTable(this));
+             runParams.put(AbilityKey.Cause, cause);
+-            game.getTriggerHandler().runTrigger(TriggerType.ChangesZoneAll, runParams, false);
++            if (payment == null) {
++                game.getTriggerHandler().runTrigger(TriggerType.ChangesZoneAll, runParams, false);
++            } else {
++                payment.runCostTrigger(TriggerType.ChangesZoneAll, runParams);
++                CardZoneTable retained = new CardZoneTable(lastStateBattlefield, lastStateGraveyard);
++                for (var cell : cellSet()) {
++                    for (Card card : cell.getValue()) {
++                        if (!payment.isReversibleDiscard(card)) {
++                            retained.put(cell.getRowKey(), cell.getColumnKey(), card);
++                        }
++                    }
++                }
++                if (!retained.isEmpty()) {
++                    Map<AbilityKey, Object> retainedParams = AbilityKey.newMap(runParams);
++                    retainedParams.put(AbilityKey.Cards, retained);
++                    payment.runRetainedCostTrigger(TriggerType.ChangesZoneAll, retainedParams);
++                }
++            }
+         }
+         final CardZoneTable untilTable = game.getUntilHostLeavesPlayTriggerList();
+         if (this != untilTable) {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostDiscard.java b/forge-game/src/main/java/forge/game/cost/CostDiscard.java
+--- a/forge-game/src/main/java/forge/game/cost/CostDiscard.java
++++ b/forge-game/src/main/java/forge/game/cost/CostDiscard.java
+@@ -211,7 +211,7 @@
+         }
+         // if this is caused by 118.12 it's also an effect
+         SpellAbility cause = targetCard.getGame().getStack().isResolving(ability.getHostCard()) ? ability : null;
+-        return payer.discard(targetCard, cause, effect, runParams);
++        return payer.discardForCost(targetCard, cause, effect, runParams, CostPayment.forDiscardCost(payer, ability));
+     }
+ 
+     /* (non-Javadoc)
+@@ -230,20 +230,48 @@
+         return visitor.visit(this);
+     }
+ 
++    @Override
++    public boolean payAsDecided(Player payer, PaymentDecision decision, SpellAbility ability, boolean effect) {
++        CostPayment payment = CostPayment.forDiscardCost(payer, ability);
++        if (payment == null) {
++            return super.payAsDecided(payer, decision, ability, effect);
++        }
++        executePayment(payer, ability, decision.cards, effect);
++        if (getCardList().size() != decision.cards.size()) {
++            resetLists();
++            return false;
++        }
++        reportPaidCardsTo(ability, payment);
++        return true;
++    }
++
+     protected void handleBeforePayment(Player ai, SpellAbility ability, CardCollectionView targetCards) {
+         discardedBefore = Lists.newArrayList(ai.getDiscardedThisTurn());
+     }
+ 
+     @Override
+     protected void handleChangeZoneTrigger(Player payer, SpellAbility ability, CardCollectionView targetCards) {
+-        super.handleChangeZoneTrigger(payer, ability, targetCards);
++        CostPayment payment = CostPayment.forDiscardCost(payer, ability);
++        if (!table.isEmpty()) {
++            table.triggerChangesZoneAll(payer.getGame(), ability, payment);
++        }
+ 
+         if (!cardList.isEmpty()) {
+             final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(payer);
+             runParams.put(AbilityKey.Cards, new CardCollection(cardList));
+             runParams.put(AbilityKey.Cause, ability);
+             runParams.put(AbilityKey.DiscardedBefore, discardedBefore);
+-            payer.getGame().getTriggerHandler().runTrigger(TriggerType.DiscardedAll, runParams, false);
++            if (payment == null) {
++                payer.getGame().getTriggerHandler().runTrigger(TriggerType.DiscardedAll, runParams, false);
++            } else {
++                payment.runCostTrigger(TriggerType.DiscardedAll, runParams);
++                CardCollection retained = CardLists.filter(cardList, card -> !payment.isReversibleDiscard(card));
++                if (!retained.isEmpty()) {
++                    Map<AbilityKey, Object> retainedParams = AbilityKey.newMap(runParams);
++                    retainedParams.put(AbilityKey.Cards, retained);
++                    payment.runRetainedCostTrigger(TriggerType.DiscardedAll, retainedParams);
++                }
++            }
+         }
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPartWithList.java b/forge-game/src/main/java/forge/game/cost/CostPartWithList.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPartWithList.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPartWithList.java
+@@ -21,6 +21,9 @@
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
+ 
++import java.util.HashMap;
++import java.util.Map;
++
+ /**
+  * The Class CostPartWithList.
+  */
+@@ -83,6 +86,28 @@
+         for (final Card card : cardList) {
+             sa.addCostToHashList(card, cardPaymentMethod, intrinsic);
+         }
++    }
++
++    protected final void reportPaidCardsTo(SpellAbility ability, CostPayment payment) {
++        Map<Boolean, CardCollection> previousCards = copyPaidRow(ability, getHashForCardList());
++        Map<Boolean, CardCollection> previousLki = copyPaidRow(ability, getHashForLKIList());
++        payment.recordRefund(() -> {
++            restorePaidRow(ability, getHashForCardList(), previousCards);
++            restorePaidRow(ability, getHashForLKIList(), previousLki);
++        });
++        reportPaidCardsTo(ability);
++    }
++
++    private static Map<Boolean, CardCollection> copyPaidRow(SpellAbility ability, String key) {
++        Map<Boolean, CardCollection> previous = new HashMap<>();
++        ability.getPaidHash().row(key).forEach((intrinsic, cards) -> previous.put(intrinsic, new CardCollection(cards)));
++        return previous;
++    }
++
++    private static void restorePaidRow(SpellAbility ability, String key, Map<Boolean, CardCollection> previous) {
++        Map<Boolean, CardCollection> row = ability.getPaidHash().row(key);
++        row.clear();
++        row.putAll(previous);
+     }
+ 
+     // public abstract List<Card> getValidCards();
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayEnergy.java b/forge-game/src/main/java/forge/game/cost/CostPayEnergy.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayEnergy.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayEnergy.java
+@@ -92,8 +92,13 @@
+ 
+     @Override
+     public boolean payAsDecided(Player ai, PaymentDecision decision, SpellAbility ability, final boolean effect) {
++        CostPayment payment = CostPayment.forEnergyCost(ai, ability);
++        if (payment != null) {
++            int previous = paidAmount;
++            payment.recordRefund(() -> paidAmount = previous);
++        }
+         paidAmount = decision.c;
+-        return ai.payEnergy(paidAmount, null);
++        return ai.payEnergyForCost(paidAmount, payment);
+     }
+ 
+     public <T> T accept(ICostVisitor<T> visitor) {
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -34,6 +34,8 @@
+ import org.apache.commons.lang3.tuple.Pair;
+ 
+ import java.util.ArrayList;
++import java.util.Collections;
++import java.util.IdentityHashMap;
+ import java.util.List;
+ import java.util.Map;
+ import java.util.Set;
+@@ -56,11 +58,63 @@
+     private List<TriggerWaiting> paymentTriggers;
+     private boolean paidPositiveLife;
+     private boolean tracksReversibleCosts;
++    private Card pendingDiscard;
++    private Set<Card> reversibleDiscards;
++    private List<TriggerWaiting> retainedPaymentTriggers;
++    private List<Runnable> committedPaymentEvents;
++
++    public void setPendingDiscard(Card card) {
++        pendingDiscard = card;
++    }
++
++    public static CostPayment forPendingDiscard(Game game, Card card) {
++        var entry = game.costPaymentStack.peek();
++        return entry != null && entry.payment().pendingDiscard == card ? entry.payment() : null;
++    }
++
++    public void recordReversibleDiscard(Card result, Card placedCard) {
++        if (reversibleDiscards == null) {
++            reversibleDiscards = Collections.newSetFromMap(new IdentityHashMap<>());
++        }
++        reversibleDiscards.add(result);
++        reversibleDiscards.add(placedCard);
++    }
++
++    public boolean isReversibleDiscard(Card card) {
++        return reversibleDiscards != null && reversibleDiscards.contains(card);
++    }
++
++    public void recordCommittedEvent(Runnable event) {
++        if (committedPaymentEvents == null) {
++            committedPaymentEvents = new ArrayList<>();
++        }
++        committedPaymentEvents.add(event);
++    }
++
++    public void runRetainedCostTrigger(TriggerType type, Map<AbilityKey, Object> params) {
++        TriggerWaiting trigger = ability.getHostCard().getGame().getTriggerHandler().holdPaymentTrigger(type, params);
++        if (trigger != null) {
++            if (retainedPaymentTriggers == null) {
++                retainedPaymentTriggers = new ArrayList<>();
++            }
++            retainedPaymentTriggers.add(trigger);
++        }
++    }
+ 
+     public static CostPayment forLifeCost(Player payer, SpellAbility cause) {
+         var entry = payer.getGame().costPaymentStack.peek();
+         return entry != null && (entry.cost() instanceof CostPayLife || entry.cost() instanceof CostPartMana)
+                 ? activePayment(entry.payment(), cause) : null;
++    }
++
++    public static CostPayment forDiscardCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && entry.cost() instanceof CostDiscard ? activePayment(entry.payment(), cause) : null;
++    }
++
++    public static CostPayment forEnergyCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && entry.cost() instanceof CostPayEnergy ? activePayment(entry.payment(), cause) : null;
+     }
+ 
+     public static CostPayment forTapCost(Player payer, SpellAbility cause) {
+@@ -238,6 +292,9 @@
+                 if (paidPositiveLife) {
+                     game.getStack().clearTriggerRepeats();
+                 }
++                if (committedPaymentEvents != null) {
++                    committedPaymentEvents.forEach(Runnable::run);
++                }
+                 paymentTriggers.forEach(game.getTriggerHandler()::commitPaymentTrigger);
+             }
+             return paid;
+@@ -248,7 +305,13 @@
+                 for (int i = paymentRefunds.size() - 1; i >= 0; i--) {
+                     paymentRefunds.get(i).run();
+                 }
+-            }
++                if (retainedPaymentTriggers != null) {
++                    retainedPaymentTriggers.forEach(decisionMaker.getPlayer().getGame().getTriggerHandler()::commitPaymentTrigger);
++                }
++            }
++            reversibleDiscards = null;
++            retainedPaymentTriggers = null;
++            committedPaymentEvents = null;
+             paymentRefunds = null;
+             paymentTriggers = null;
+             paidPositiveLife = false;
+diff --git a/forge-game/src/main/java/forge/game/cost/CostTapType.java b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+--- a/forge-game/src/main/java/forge/game/cost/CostTapType.java
++++ b/forge-game/src/main/java/forge/game/cost/CostTapType.java
+@@ -266,26 +266,8 @@
+             resetLists();
+             return false;
+         }
+-        Map<Boolean, CardCollection> previousCards = copyPaidRow(ability, getHashForCardList());
+-        Map<Boolean, CardCollection> previousLki = copyPaidRow(ability, getHashForLKIList());
+-        payment.recordRefund(() -> {
+-            restorePaidRow(ability, getHashForCardList(), previousCards);
+-            restorePaidRow(ability, getHashForLKIList(), previousLki);
+-        });
+-        reportPaidCardsTo(ability);
++        reportPaidCardsTo(ability, payment);
+         return true;
+-    }
+-
+-    private static Map<Boolean, CardCollection> copyPaidRow(SpellAbility ability, String key) {
+-        Map<Boolean, CardCollection> previous = new HashMap<>();
+-        ability.getPaidHash().row(key).forEach((intrinsic, cards) -> previous.put(intrinsic, new CardCollection(cards)));
+-        return previous;
+-    }
+-
+-    private static void restorePaidRow(SpellAbility ability, String key, Map<Boolean, CardCollection> previous) {
+-        Map<Boolean, CardCollection> row = ability.getPaidHash().row(key);
+-        row.clear();
+-        row.putAll(previous);
+     }
+ 
+     @Override
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -684,6 +684,16 @@
+             return true;
+ 
+         return canPayEnergy(energyPayment) && loseEnergy(energyPayment);
++    }
++
++    public final boolean payEnergyForCost(int amount, CostPayment payment) {
++        if (payment == null) {
++            return payEnergy(amount, null);
++        }
++        if (amount <= 0) {
++            return true;
++        }
++        return canPayEnergy(amount) && subtractCounter(CounterEnumType.ENERGY, amount, this, payment) == amount;
+     }
+ 
+     public final boolean canPayShards(final int shardPayment) {
+@@ -941,6 +951,10 @@
+ 
+     @Override
+     public int subtractCounter(CounterType counterName, int num, final Player remover) {
++        return subtractCounter(counterName, num, remover, null);
++    }
++
++    private int subtractCounter(CounterType counterName, int num, Player remover, CostPayment payment) {
+         int oldValue = getCounters(counterName);
+         int newValue = Math.max(oldValue - num, 0);
+ 
+@@ -949,7 +963,13 @@
+ 
+         setCounters(counterName, newValue, null, true);
+ 
+-        getGame().addCounterRemovedThisTurn(counterName, this, delta);
++        var receipt = game.addCounterRemovedThisTurn(counterName, this, delta);
++        if (payment != null) {
++            payment.recordRefund(() -> {
++                game.removeCounterRemovalReceipt(counterName, receipt);
++                setCounters(counterName, getCounters(counterName) + delta, null, true);
++            });
++        }
+ 
+         /* TODO Run triggers when something cares
+         int curCounters = oldValue;
+@@ -1488,36 +1508,94 @@
+     }
+ 
+     public final Card discard(final Card c, final SpellAbility sa, final boolean effect, Map<AbilityKey, Object> params) {
++        return discardForCost(c, sa, effect, params, null);
++    }
++
++    public final Card discardForCost(Card c, SpellAbility sa, boolean effect, Map<AbilityKey, Object> params,
++            CostPayment payment) {
+         if (!c.canBeDiscardedBy(sa, effect)) {
+             return null;
+         }
+ 
+-        discardedThisTurn.add(CardCopyService.getLKICopy(c));
++        Card discardReceipt = CardCopyService.getLKICopy(c);
++        discardedThisTurn.add(discardReceipt);
++        Zone hand = payment == null ? null : getZone(ZoneType.Hand);
++        int index = hand == null ? -1 : hand.getCards().indexOf(c);
++        boolean priorDiscarded = c.wasDiscarded();
+ 
+         params.put(AbilityKey.Discard, true);
+         params.put(AbilityKey.EffectOnly, effect);
+-        final Card newCard = game.getAction().moveToGraveyard(c, sa, params);
+-
+-        StringBuilder sb = new StringBuilder();
+-        sb.append(this).append(" discards ").append(c);
+-        //sb.append(" to the library");
+-        //sb.append(" with Madness");
+-        sb.append(".");
+-        // Play the Discard sound
+-        game.fireEvent(new GameEventAddLog(GameLogEntryType.DISCARD, sb.toString(), c));
++        if (index >= 0) {
++            payment.setPendingDiscard(c);
++        }
++        final Card newCard;
++        try {
++            newCard = game.getAction().moveToGraveyard(c, sa, params);
++        } finally {
++            if (index >= 0) {
++                payment.setPendingDiscard(null);
++            }
++        }
++        boolean track = index >= 0 && recordDiscardMovement(payment, c, newCard, hand, index, discardReceipt, priorDiscarded);
++        GameEventAddLog log = new GameEventAddLog(GameLogEntryType.DISCARD, this + " discards " + c + ".", c);
++        if (track) {
++            payment.recordCommittedEvent(() -> game.fireEvent(log));
++        } else {
++            game.fireEvent(log);
++        }
+ 
+         newCard.setDiscarded(true);
+ 
+         if (sa != null && sa.hasParam("RememberDiscarded")) {
+-            sa.getHostCard().addRemembered(newCard);
++            Card remembering = sa.getHostCard();
++            if (track && !remembering.isRemembered(newCard)) {
++                payment.recordRefund(() -> remembering.removeRemembered(newCard));
++            }
++            remembering.addRemembered(newCard);
+         }
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);
+         runParams.put(AbilityKey.Card, c);
+         runParams.put(AbilityKey.Cause, sa);
+         runParams.putAll(params);
+-        game.getTriggerHandler().runTrigger(TriggerType.Discarded, runParams, false);
+-
++        if (!track) {
++            game.getTriggerHandler().runTrigger(TriggerType.Discarded, runParams, false);
++        } else {
++            payment.runCostTrigger(TriggerType.Discarded, runParams);
++        }
+         return newCard;
++    }
++
++    private boolean recordDiscardMovement(CostPayment payment, Card original, Card result, Zone hand,
++            int index, Card discardReceipt, boolean priorDiscarded) {
++        Card placedCard = game.getCardState(result);
++        Zone placedZone = placedCard.getZone();
++        if (placedZone == null || !(placedZone.is(ZoneType.Graveyard) || placedZone.is(ZoneType.Exile))) {
++            return false;
++        }
++        var placement = game.getTriggerHandler().holdZoneChange(placedCard, placedZone.getZoneType());
++        if (placement == null) {
++            return false;
++        }
++        Card zoneReceipt = (Card) placement.getParams().get(AbilityKey.CardLKI);
++        payment.recordReversibleDiscard(result, placedCard);
++        payment.holdCostTrigger(placement);
++        payment.recordRefund(() -> {
++            if (game.getCardState(placedCard) != placedCard || !placedZone.contains(placedCard)) {
++                return;
++            }
++            discardedThisTurn.removeIf(card -> card == discardReceipt);
++            placedZone.removeEntryReceipt(ZoneType.Hand, zoneReceipt);
++            if (placedZone.is(ZoneType.Graveyard) && placedCard.isPermanent() && !placedCard.isToken()) {
++                Player owner = placedCard.getOwner();
++                owner.setDescended(owner.getDescended() - 1);
++            }
++            placedZone.remove(placedCard);
++            original.setDiscarded(priorDiscarded);
++            hand.add(original, Math.min(index, hand.size()), null, true);
++            game.getTriggerHandler().clearActiveTriggers(placedCard, null);
++            game.getTriggerHandler().registerActiveTrigger(original, false);
++        });
++        return true;
+     }
+ 
+     public final void addTokensCreatedThisTurn(Card token) {
+diff --git a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -201,11 +201,15 @@
+ 
+     /** Hold the zone-change event for a tentative cast while mana abilities are resolving. */
+     public TriggerWaiting holdCastPlacement(Card card) {
++        return holdZoneChange(card, ZoneType.Stack);
++    }
++
++    public TriggerWaiting holdZoneChange(Card card, ZoneType destination) {
+         for (int index = waitingTriggers.size() - 1; index >= 0; index--) {
+             TriggerWaiting waiting = waitingTriggers.get(index);
+             if (waiting.getMode() == TriggerType.ChangesZone
+                     && waiting.getParams().get(AbilityKey.Card) == card
+-                    && ZoneType.Stack.name().equals(waiting.getParams().get(AbilityKey.Destination))) {
++                    && destination.name().equals(waiting.getParams().get(AbilityKey.Destination))) {
+                 waitingTriggers.remove(index);
+                 if (waiting.getTriggers() == null) {
+                     collectWaitingTrigger(waiting);
+diff --git a/forge-game/src/main/java/forge/game/zone/Zone.java b/forge-game/src/main/java/forge/game/zone/Zone.java
+--- a/forge-game/src/main/java/forge/game/zone/Zone.java
++++ b/forge-game/src/main/java/forge/game/zone/Zone.java
+@@ -303,6 +303,11 @@
+         enteredFromThisTurn.put(lki, zt);
+     }
+ 
++    public void removeEntryReceipt(ZoneType origin, Card receipt) {
++        cardsAddedThisTurn.get(origin).removeIf(card -> card == receipt);
++        enteredFromThisTurn.entrySet().removeIf(entry -> entry.getKey() == receipt);
++    }
++
+     public void updateLKI(Card c) {
+         final ZoneType zt = enteredFromThisTurn.get(c);
+         if (zt == null) {

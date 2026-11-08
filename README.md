@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+When a later cost fails, the AI restores paid energy and reversible discards.
+The engine returns cards from the graveyard or exile in the tested cases and
+keeps a card moved into a library by a replacement effect. See
+[energy and discard recovery](docs/CARD_COVERAGE.md#energy-and-discard-recovery).
+
 Mana planning now accounts for permanents needed for later tap costs,
 including when a mana ability taps or sacrifices another card or needs mana
 from a second source. See

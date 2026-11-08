@@ -49,6 +49,9 @@ SOURCES = {
     "NestedTapManaOverlapProbeTest": "nested_tap_mana_overlap_test_sha256",
     "FilterTapManaOverlapProbeTest": "filter_tap_mana_overlap_test_sha256",
     "NestedManaRollbackProbeTest": "nested_mana_rollback_test_sha256",
+    "EnergyCostRecoveryProbeTest": "energy_cost_recovery_test_sha256",
+    "DiscardCostRecoveryProbeTest": "discard_cost_recovery_test_sha256",
+    "MixedDiscardRecoveryProbeTest": "mixed_discard_recovery_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -70,6 +73,12 @@ NATIVE_CLASSES = (
     "forge.ai.AiCostDecision",
     "forge.game.cost.Cost",
     "forge.game.cost.CostPayment",
+    "forge.game.GameAction",
+    "forge.game.card.CardZoneTable",
+    "forge.game.cost.CostDiscard",
+    "forge.game.cost.CostPartWithList",
+    "forge.game.cost.CostPayEnergy",
+    "forge.game.zone.Zone",
     "forge.game.cost.CostDecisionMakerBase",
     "forge.ai.ComputerUtilCost",
     "forge.game.cost.CostTap",

@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Restore energy and remove the corresponding counter-removal record when a
+  later payment fails. Preserve independent counter loss.
+- Reverse supported discard payments from the graveyard or exile, including
+  Madness and Rest in Peace, and restore the prior hand order.
+- Hold discard log entries and triggers until payment succeeds. In the
+  mixed Darksteel Colossus case, preserve the library move and the events
+  for the card that remains discarded.
+- Add 11 native and packaged tests for energy and discard recovery.
+
+
 - Reserve permanents for later tap costs when choosing mana sources, helper
   taps, sacrifices, and inputs to mana filters.
 - Reselect a tap group if an earlier mana payment uses one of its original

@@ -17,6 +17,29 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Energy and discard recovery
+
+Era of Innovation returns six paid energy and removes its payment history
+if the later sacrifice fails. A separate one-energy loss and its history
+survive. A successful activation spends six and draws three cards.
+
+Insolent Neonate returns an ordinary discard from the graveyard and a Madness
+discard from exile. The checks cover prior payment records, discard history,
+descend history, and another player's discard trigger.
+
+Plague Reaver exercises payments that discard two cards. Reversible cards
+return in their prior hand order. The checks cover ordinary and Madness
+discards in the same payment and cards exiled by Rest in Peace. When
+Darksteel Colossus is shuffled into its library, the engine retains that
+move and only records the card that remains discarded. The rule limits
+reversal of library moves and shuffles.
+[Comprehensive Rules, section 734](https://magic.wizards.com/en/rules).
+
+The tests cover selected discard replacements and non-effect AI payments.
+Other nonmana costs, replacements that perform additional actions, and human
+payment need separate checks. See
+[energy and discard evidence](../engine/energy_discard_evidence.json).
+
 ## Combined mana and tap costs
 
 Dune Diviner needs distinct Deserts when one supplies the mana and the other
