@@ -73,7 +73,7 @@ def connect(path=DEFAULT_DATABASE):
     return connection
 
 
-def store_card(connection, card):
+def store_card(connection, card, *, allow_token_reassignment: bool = False):
     """Upsert one Scryfall record inside the caller's transaction."""
     # Reversible cards have Oracle IDs on their faces rather than at the root.
     card_id = card.get("oracle_id") or card["id"]
@@ -108,10 +108,26 @@ def store_card(connection, card):
         "ON CONFLICT(card_id) DO UPDATE SET raw_json=excluded.raw_json",
         (card_id, json.dumps(card, ensure_ascii=False)),
     )
-    store_printing(connection, card)
+    store_printing(connection, card, allow_token_reassignment=allow_token_reassignment)
 
 
-def store_printing(connection, card):
+def _can_reassign_token_printing(connection, card) -> bool:
+    previous = connection.execute(
+        "SELECT raw_json FROM printings WHERE scryfall_id = ?", (card["id"],)
+    ).fetchone()
+    old = json.loads(previous["raw_json"])
+    return (
+        old.get("layout") == card.get("layout") == "token"
+        and old.get("legalities", {}).get("commander") == "not_legal"
+        and card.get("legalities", {}).get("commander") == "not_legal"
+        and all(
+            card.get(key) and old.get(key) == card[key]
+            for key in ("name", "set", "collector_number", "lang")
+        )
+    )
+
+
+def store_printing(connection, card, *, allow_token_reassignment: bool = False):
     """Enrich printing metadata without replacing current Oracle data or freshness."""
     card_id = card.get("oracle_id") or card["id"]
     current = connection.execute(
@@ -124,7 +140,13 @@ def store_printing(connection, card):
     previous = connection.execute(
         "SELECT card_id FROM printings WHERE scryfall_id = ?", (card["id"],)
     ).fetchone()
-    if previous is not None and previous["card_id"] != card_id:
+    if (
+        previous is not None
+        and previous["card_id"] != card_id
+        and not (
+            allow_token_reassignment and _can_reassign_token_printing(connection, card)
+        )
+    ):
         raise ValueError("An existing printing cannot change Oracle identity")
     connection.execute(
         """

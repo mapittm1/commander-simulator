@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Allow Scryfall bulk refresh to reassign a token printing when both identities
+  are ineligible for Commander decks and its printing details still match.
+  Preserve other printings and the prior Oracle identity.
+
+- Restore eligible permanents and tokens sacrificed during failed AI payments.
+  Preserve their prior battlefield state and suppress triggers from undone
+  sacrifices and equipment detachment.
+- Preserve independent exile events and a Blightsteel Colossus shuffle during a
+  mixed payment. Recheck grouped payments when a selected permanent disappears.
+- Add 14 native and packaged sacrifice cases covering ownership, tokens,
+  equipment, zone replacements, and grouped triggers.
+
 - Require an exact legal counter selection for Tayam and similar costs.
   Use other legal counter types when the preferred types cannot pay.
 - Recheck the current permanent, controller, type, and counter availability

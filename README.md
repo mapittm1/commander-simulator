@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+A failed AI payment restores supported sacrifices to the original battlefield
+object, including its counters, controller, and ordinary equipment. The engine
+preserves independent moves and sacrifices that were redirected into a library.
+See [sacrifice payments](docs/CARD_COVERAGE.md#sacrifice-payments).
+
 The AI checks the full cost when removing counters from one or more cards.
 If a later cost fails, it restores the counters used for that payment and
 preserves independent counter removals. See
@@ -333,6 +338,8 @@ PowerShell, prefix a quoted executable path with `&`.
 card identities with representative printings. It does not include every
 printing or translation. Use `sync --kind default_cards` for the default printing
 export or `sync --kind all_cards` for every printing/language; these are larger.
+A Scryfall bulk refresh can apply a corrected Oracle ID to an ineligible token
+printing while preserving its previous identity and other printings.
 Compressed JSON Lines and JSON-array exports are both supported.
 An existing export can be imported with `python commander_simulator.py import file.json`.
 

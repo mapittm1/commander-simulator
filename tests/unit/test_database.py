@@ -47,10 +47,10 @@ class CatalogTests(unittest.TestCase):
     def tearDown(self):
         self.connection.close()
 
-    def run_import(self, cards):
+    def run_import(self, cards, source="local"):
         path = self.root / "cards.json"
         path.write_text(json.dumps(cards), encoding="utf-8")
-        return import_bulk(self.connection, path)
+        return import_bulk(self.connection, path, source)
 
     def test_faces_and_reprints_share_identity(self):
         reprint = dict(self.card, id="printing-2")
@@ -72,6 +72,65 @@ class CatalogTests(unittest.TestCase):
             find_cards(self.connection, self.card["name"])[0]["oracle_text"],
             "Updated text",
         )
+
+    def test_scryfall_bulk_can_reassign_one_token_printing(self):
+        old = {
+            "id": "beast-printing",
+            "oracle_id": "trample-beast",
+            "name": "Beast",
+            "set": "ttrc",
+            "collector_number": "4",
+            "lang": "en",
+            "layout": "token",
+            "legalities": {"commander": "not_legal"},
+            "oracle_text": "Trample",
+        }
+        second_printing = dict(old, id="other-beast", collector_number="8")
+        self.run_import([old, second_printing])
+        corrected = dict(old, oracle_id="vanilla-beast", oracle_text="")
+
+        with self.assertRaisesRegex(ValueError, "cannot change Oracle identity"):
+            self.run_import([corrected])
+        self.assertEqual(catalog_stats(self.connection)["cards"], 1)
+        self.assertEqual(self.run_import([corrected], "oracle_cards"), 1)
+        rows = self.connection.execute(
+            "SELECT scryfall_id, card_id FROM printings ORDER BY scryfall_id"
+        )
+        self.assertEqual(
+            [tuple(row) for row in rows],
+            [("beast-printing", "vanilla-beast"), ("other-beast", "trample-beast")],
+        )
+        self.assertEqual(
+            self.connection.execute(
+                "SELECT oracle_text FROM cards WHERE card_id = 'trample-beast'"
+            ).fetchone()[0],
+            "Trample",
+        )
+
+    def test_scryfall_bulk_rejects_playable_card_or_printing_mismatch(self):
+        token = {
+            **self.card,
+            "set": "test",
+            "collector_number": "1",
+            "lang": "en",
+            "layout": "token",
+            "legalities": {"commander": "not_legal"},
+        }
+        self.run_import([token])
+        for changes in (
+            {"layout": "normal"},
+            {"legalities": {"commander": "legal"}},
+            {"collector_number": "2"},
+        ):
+            with self.subTest(changes=changes):
+                with self.assertRaisesRegex(
+                    ValueError, "cannot change Oracle identity"
+                ):
+                    self.run_import(
+                        [dict(token, oracle_id="card-2", **changes)], "oracle_cards"
+                    )
+        self.assertEqual(catalog_stats(self.connection)["cards"], 1)
+        self.assertEqual(catalog_stats(self.connection)["imports"], 1)
 
     def test_bad_record_rolls_back_whole_import(self):
         with self.assertRaises(KeyError):

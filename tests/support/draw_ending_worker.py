@@ -54,6 +54,7 @@ SOURCES = {
     "MixedDiscardRecoveryProbeTest": "mixed_discard_recovery_test_sha256",
     "CardCounterCostRecoveryProbeTest": "card_counter_recovery_test_sha256",
     "GroupedCounterCostProbeTest": "grouped_counter_cost_test_sha256",
+    "SacrificeCostRecoveryProbeTest": "sacrifice_cost_recovery_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -78,6 +79,7 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostRemoveCounter",
     "forge.game.cost.CostRemoveAnyCounter",
     "forge.game.GameAction",
+    "forge.game.GameEntity",
     "forge.game.card.CardZoneTable",
     "forge.game.cost.CostDiscard",
     "forge.game.cost.CostPartWithList",

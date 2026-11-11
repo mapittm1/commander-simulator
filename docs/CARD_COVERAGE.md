@@ -17,6 +17,36 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Sacrifice payments
+
+Demon's Herald restores the original creature after a later sacrifice becomes
+unavailable. The tests check tokens, counters, an opponent-owned creature,
+Grafted Wargear, and a sacrifice exiled by Rest in Peace. They also check that
+Soulherder receives the independent exile trigger and that Blightsteel Colossus
+stays in the library when an earlier sacrifice is reversed. See rule 734.1 in
+the [Comprehensive Rules](https://magic.wizards.com/en/rules).
+
+Feasting Troll King rejects an interrupted three-Food payment and restores the
+first Food. A successful payment consumes all three, makes one Squirrel through
+Camellia, and returns the Troll King from the graveyard.
+
+The fixtures exercise the AI activation path. Sacrifices involving combat,
+merged or face-down permanents, linked effects, and attachments with additional
+unattach actions still need verification. Human payments and effect costs
+retain their existing paths.
+
+## November 11 catalog refresh
+
+The refreshed Scryfall snapshot contains 32,643 identities marked legal for
+Commander. The pinned engine has exact script matches for 32,324. The remaining
+319 include 312 Star Trek starting-card identities and seven nonstarting meld
+results. These counts describe the local catalog and pinned script archive.
+
+The official Forge Star Trek source contains 311 of those starting-card names.
+Its remaining Saga uses a different spelling of the ellipsis. Integrating that
+source requires preserving the reviewed engine changes and exercising the new
+mechanics in play. See the [Forge release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
+
 ## Card-counter costs
 
 Axiom Engraver restores the oil counter used for a failed activation and

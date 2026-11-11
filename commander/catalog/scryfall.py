@@ -124,6 +124,7 @@ def download_bulk(destination, kind="oracle_cards"):
 def import_bulk(connection, path, source="local", updated_at=None):
     """Roll back the entire import on invalid input; repeat imports update records."""
     count = 0
+    allow_token_reassignment = source in {"oracle_cards", "default_cards", "all_cards"}
     with connection:
         path = Path(path)
         with path.open("rb") as raw:
@@ -136,7 +137,9 @@ def import_bulk(connection, path, source="local", updated_at=None):
             stream.seek(0)
             records = iter_cards(stream) if first == "[" else iter_json_lines(stream)
             for card in records:
-                store_card(connection, card)
+                store_card(
+                    connection, card, allow_token_reassignment=allow_token_reassignment
+                )
                 count += 1
         if not count:
             raise ValueError("Refusing to import an empty card catalog")

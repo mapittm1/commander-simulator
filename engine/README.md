@@ -47,7 +47,7 @@ A twenty-ninth preserves the fixed decision beneficiary, pending-stack planning
 and legal spell/ability target enumeration.
 A thirtieth adds bounded controlled-attack outcome planning under native attack
 constraints and the existing shared decision deadline.
-All thirty-four patches are pinned. No remote branch is used at build time.
+Every patch is pinned. No remote branch is used at build time.
 
 Download the two archives from the exact URLs in the recipe, install a trusted
 JDK 17+ and Java runtime, then run from the repository root:
@@ -63,7 +63,7 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-908 native sticker, chosen-color, companion, supplementary-copy, history,
+922 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
 forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary paid spell-control/retargeting, and tap selection, payment, and refund tests.

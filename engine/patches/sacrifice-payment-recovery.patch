@@ -1,0 +1,487 @@
+diff --git a/forge-game/src/main/java/forge/game/Game.java b/forge-game/src/main/java/forge/game/Game.java
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -305,6 +305,18 @@
+         }
+         return Objects.requireNonNullElse(changeZoneLKIInfo.get(c.getId(), c.getGameTimestamp()), c);
+     }
++    public final void restoreChangeZoneLKI(Card original, Card recorded, Card previous) {
++        int id = original.getId();
++        long timestamp = original.getGameTimestamp();
++        if (changeZoneLKIInfo.get(id, timestamp) == recorded) {
++            if (previous == original) {
++                changeZoneLKIInfo.remove(id, timestamp);
++            } else {
++                changeZoneLKIInfo.put(id, timestamp, previous);
++            }
++        }
++    }
++
+     public final void clearChangeZoneLKIInfo() {
+         changeZoneLKIInfo.clear();
+     }
+diff --git a/forge-game/src/main/java/forge/game/GameAction.java b/forge-game/src/main/java/forge/game/GameAction.java
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -50,6 +50,7 @@
+ import forge.game.staticability.StaticAbilityLayer;
+ import forge.game.staticability.StaticAbilityMode;
+ import forge.game.trigger.TriggerType;
++import forge.game.trigger.TriggerWaiting;
+ import forge.game.zone.PlayerZone;
+ import forge.game.zone.PlayerZoneBattlefield;
+ import forge.game.zone.Zone;
+@@ -541,7 +542,12 @@
+         if (fromBattlefield) {
+             game.addLeftBattlefieldThisTurn(lastKnownInfo);
+             // order here is important so it doesn't unattach cards that might have returned from UntilHostLeavesPlay
+-            unattachCardLeavingBattlefield(copied, c);
++            var sacrifice = pendingSacrifice;
++            if (sacrifice != null && sacrifice.original() == c && isReversibleSacrificeDestination(zoneTo)) {
++                copied.unAttachAllCards(c, sacrifice.moveTriggers());
++            } else {
++                unattachCardLeavingBattlefield(copied, c);
++            }
+             c.runLeavesPlayCommands();
+ 
+             if (copied.isTapped()) {
+@@ -620,7 +626,12 @@
+             if (params != null) {
+                 runParams2.putAll(params);
+             }
+-            game.getTriggerHandler().runTrigger(TriggerType.ChangesController, runParams2, false);
++            SacrificeMove sacrifice = pendingSacrifice;
++            if (sacrifice != null && sacrifice.original() == c && isReversibleSacrificeDestination(zoneTo)) {
++                captureSacrificeMoveTrigger(sacrifice, TriggerType.ChangesController, runParams2);
++            } else {
++                game.getTriggerHandler().runTrigger(TriggerType.ChangesController, runParams2, false);
++            }
+         }
+ 
+         if (zoneFrom == null) {
+@@ -954,7 +965,10 @@
+ 
+         CostPayment discard = origin != null && origin.is(ZoneType.Hand) && copied.isInZone(ZoneType.Exile)
+                 ? CostPayment.forPendingDiscard(game, c) : null;
+-        if (discard == null) {
++        var sacrifice = pendingSacrifice;
++        if (sacrifice != null && sacrifice.original() == c && copied.isInZone(ZoneType.Exile)) {
++            captureSacrificeMoveTrigger(sacrifice, TriggerType.Exiled, runParams);
++        } else if (discard == null) {
+             game.getTriggerHandler().runTrigger(TriggerType.Exiled, runParams, false);
+         } else {
+             discard.runCostTrigger(TriggerType.Exiled, runParams);
+@@ -2126,7 +2140,13 @@
+     }
+ 
+     public final CardCollection sacrifice(final Iterable<Card> list, final SpellAbility source, final boolean effect, Map<AbilityKey, Object> params) {
++        return sacrifice(list, source, effect, params, null);
++    }
++
++    public final CardCollection sacrifice(final Iterable<Card> list, final SpellAbility source, final boolean effect,
++            Map<AbilityKey, Object> params, CostPayment payment) {
+         Multimap<Player, Card> lki = MultimapBuilder.hashKeys().arrayListValues().build();
++        Multimap<Player, Card> retained = MultimapBuilder.hashKeys().arrayListValues().build();
+         final boolean showRevealDialog = source != null && source.hasParam("ShowSacrificedCards");
+ 
+         CardCollection result = new CardCollection();
+@@ -2140,12 +2160,20 @@
+             }
+ 
+             Card lkiCopy = ((CardCollection) params.get(AbilityKey.LastStateBattlefield)).get(c);
+-            c.getController().addSacrificedThisTurn(lkiCopy, source);
+-            lki.put(c.getController(), lkiCopy);
+-
+-            c.updateWasDestroyed(true);
+-
+-            Card changed = sacrificeDestroy(c, source, params);
++            Player controller = c.getController();
++            lki.put(controller, lkiCopy);
++            Card changed;
++            if (payment != null && !showRevealDialog && canRestoreSacrifice(c)) {
++                changed = sacrificeWithReceipt(c, lkiCopy, controller, source, params, payment);
++                if (changed == null || !payment.isReversiblePaymentMove(changed)) {
++                    retained.put(controller, lkiCopy);
++                }
++            } else {
++                controller.addSacrificedThisTurn(lkiCopy, source);
++                c.updateWasDestroyed(true);
++                changed = sacrificeDestroy(c, source, params);
++                retained.put(controller, lkiCopy);
++            }
+             if (changed != null) {
+                 result.add(changed);
+             }
+@@ -2158,8 +2186,117 @@
+             final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(e.getKey());
+             runParams.put(AbilityKey.Cards, new CardCollection(e.getValue()));
+             runParams.put(AbilityKey.Cause, source);
+-            game.getTriggerHandler().runTrigger(TriggerType.SacrificedOnce, runParams, false);
+-        }
++            if (payment == null) {
++                game.getTriggerHandler().runTrigger(TriggerType.SacrificedOnce, runParams, false);
++            } else {
++                payment.runCostTrigger(TriggerType.SacrificedOnce, runParams);
++                if (retained.containsKey(e.getKey())) {
++                    Map<AbilityKey, Object> retainedParams = AbilityKey.newMap(runParams);
++                    retainedParams.put(AbilityKey.Cards, new CardCollection(retained.get(e.getKey())));
++                    payment.runRetainedCostTrigger(TriggerType.SacrificedOnce, retainedParams);
++                }
++            }
++        }
++        return result;
++    }
++
++    private boolean canRestoreSacrifice(Card card) {
++        // These moves have battlefield relationships or follow-up actions outside this receipt.
++        return !card.isFaceDown() && !card.isStickered()
++                && !card.isAttachedToEntity() && !card.isPaired()
++                && card.getAllAttachedCards().stream().allMatch(Card::canRollbackEquipmentDetach)
++                && !card.hasMergedCard() && card.getMeldedWith() == null
++                && card.getExiledWith() == null && card.getLeavesPlayCommands().isEmpty()
++                && !card.hasEncodedCard() && !game.getPhaseHandler().inCombat();
++    }
++
++    private static boolean isReversibleSacrificeDestination(Zone zone) {
++        return zone != null && (zone.is(ZoneType.Graveyard) || zone.is(ZoneType.Exile));
++    }
++
++    private record SacrificeMove(Card original, List<TriggerWaiting> moveTriggers) {}
++
++    private SacrificeMove pendingSacrifice;
++
++    private void captureSacrificeMoveTrigger(SacrificeMove sacrifice, TriggerType type, Map<AbilityKey, Object> params) {
++        TriggerWaiting waiting = game.getTriggerHandler().holdPaymentTrigger(type, params);
++        if (waiting != null) {
++            sacrifice.moveTriggers().add(waiting);
++        }
++    }
++
++    private Card sacrificeWithReceipt(Card original, Card sacrificeReceipt, Player controller, SpellAbility source,
++            Map<AbilityKey, Object> params, CostPayment payment) {
++        Zone battlefield = original.getZone();
++        int index = battlefield.getCards(false).indexOf(original);
++        CardCollection equipment = new CardCollection(original.getAllAttachedCards());
++        boolean priorDestroyed = original.getView().wasDestroyed();
++        Card priorLki = game.getChangeZoneLKIInfo(original);
++        controller.getSacrificedThisTurn().add(sacrificeReceipt);
++        var triggers = game.getTriggerHandler();
++        var sacrificed = triggers.holdPaymentTrigger(TriggerType.Sacrificed,
++                controller.sacrificeTriggerParams(sacrificeReceipt, source));
++        original.updateWasDestroyed(true);
++        SacrificeMove previous = pendingSacrifice;
++        SacrificeMove move = new SacrificeMove(original, new ArrayList<>());
++        Card result;
++        pendingSacrifice = move;
++        try {
++            result = sacrificeDestroy(original, source, params);
++        } finally {
++            pendingSacrifice = previous;
++        }
++        Card placed = result == null ? null : game.getCardState(result);
++        Zone destination = placed == null ? null : placed.getZone();
++        var placement = isReversibleSacrificeDestination(destination) && placed != original
++                ? triggers.holdZoneChange(placed, destination.getZoneType()) : null;
++        if (placement == null) {
++            payment.holdRetainedCostTrigger(sacrificed);
++            move.moveTriggers().forEach(payment::holdRetainedCostTrigger);
++            controller.fireSacrificeEvent(sacrificeReceipt);
++            return result;
++        }
++
++        Card zoneReceipt = (Card) placement.getParams().get(AbilityKey.CardLKI);
++        payment.recordReversiblePaymentMove(result, placed);
++        payment.holdCostTrigger(sacrificed);
++        move.moveTriggers().forEach(payment::holdCostTrigger);
++        payment.holdCostTrigger(placement);
++        payment.recordCommittedEvent(() -> controller.fireSacrificeEvent(sacrificeReceipt));
++        payment.recordRefund(() -> {
++            Card current = game.getCardState(placed, null);
++            if (placed.isToken() ? current != null || placed.getZone() != destination
++                    : current != placed || !destination.contains(placed)) {
++                return;
++            }
++            controller.getSacrificedThisTurn().removeIf(card -> card == sacrificeReceipt);
++            game.getLeftBattlefieldThisTurn().removeIf(card -> card == zoneReceipt);
++            game.restoreChangeZoneLKI(original, zoneReceipt, priorLki);
++            destination.removeEntryReceipt(ZoneType.Battlefield, zoneReceipt);
++            if (destination.is(ZoneType.Graveyard) && placed.isPermanent() && !placed.isToken()) {
++                Player owner = placed.getOwner();
++                owner.setDescended(owner.getDescended() - 1);
++            }
++            destination.remove(placed);
++            original.updateWasDestroyed(priorDestroyed);
++            battlefield.add(original, Math.min(index, battlefield.size()), null, true);
++            for (Card item : equipment) {
++                if (game.getCardState(item, null) != item || !item.isInPlay()) {
++                    original.removeAttachedCard(item);
++                } else if (!item.isAttachedToEntity()) {
++                    item.setEntityAttachedTo(original);
++                    original.addAttachedCard(item);
++                } else if (item.getEntityAttachedTo() != original) {
++                    original.removeAttachedCard(item);
++                }
++            }
++            if (!equipment.isEmpty()) {
++                checkStaticAbilities(false);
++            }
++            game.updateLastStateForCard(original);
++            triggers.clearActiveTriggers(placed, null);
++            triggers.registerActiveTrigger(original, false);
++        });
+         return result;
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/GameEntity.java b/forge-game/src/main/java/forge/game/GameEntity.java
+--- a/forge-game/src/main/java/forge/game/GameEntity.java
++++ b/forge-game/src/main/java/forge/game/GameEntity.java
+@@ -44,6 +44,7 @@
+ import forge.game.spellability.SpellAbility;
+ import forge.game.staticability.StaticAbility;
+ import forge.game.staticability.StaticAbilityCantAttach;
++import forge.game.trigger.TriggerWaiting;
+ import forge.game.zone.ZoneType;
+ import forge.trackable.TrackableProperty;
+ import forge.util.Lang;
+@@ -218,8 +219,12 @@
+     }
+ 
+     public final void unAttachAllCards(Card old) {
++        unAttachAllCards(old, null);
++    }
++
++    public final void unAttachAllCards(Card old, List<TriggerWaiting> held) {
+         for (Card c : getAttachedCards()) {
+-            c.unattachFromEntity(this, old);
++            c.unattachFromEntity(this, old, held);
+         }
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -53,6 +53,7 @@
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerHandler;
+ import forge.game.trigger.TriggerType;
++import forge.game.trigger.TriggerWaiting;
+ import forge.game.zone.Zone;
+ import forge.game.zone.ZoneType;
+ import forge.item.IPaperCard;
+@@ -3647,6 +3648,10 @@
+     public final void addUntapCommand(final GameCommand c) {
+         untapCommandList.add(c);
+     }
++    public final boolean canRollbackEquipmentDetach() {
++        return isEquipment() && !isPhasedOut() && !isBestowed() && unattachCommandList.isEmpty();
++    }
++
+     public final void addUnattachCommand(final GameCommand c) {
+         unattachCommandList.add(c);
+     }
+@@ -4074,6 +4079,11 @@
+         unattachFromEntity(entity, entity);
+     }
+     public final void unattachFromEntity(final GameEntity entity, GameEntity old) {
++        unattachFromEntity(entity, old, null);
++    }
++
++    public final void unattachFromEntity(final GameEntity entity, GameEntity old,
++            List<TriggerWaiting> held) {
+         if (entityAttachedTo == null || !entityAttachedTo.equals(entity)) {
+             return;
+         }
+@@ -4093,7 +4103,14 @@
+         final Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+         runParams.put(AbilityKey.AttachSource, this);
+         runParams.put(AbilityKey.Object, old);
+-        getGame().getTriggerHandler().runTrigger(TriggerType.Unattached, runParams, false);
++        if (held == null) {
++            getGame().getTriggerHandler().runTrigger(TriggerType.Unattached, runParams, false);
++        } else {
++            var waiting = getGame().getTriggerHandler().holdPaymentTrigger(TriggerType.Unattached, runParams);
++            if (waiting != null) {
++                held.add(waiting);
++            }
++        }
+ 
+         runUnattachCommands();
+     }
+diff --git a/forge-game/src/main/java/forge/game/card/CardZoneTable.java b/forge-game/src/main/java/forge/game/card/CardZoneTable.java
+--- a/forge-game/src/main/java/forge/game/card/CardZoneTable.java
++++ b/forge-game/src/main/java/forge/game/card/CardZoneTable.java
+@@ -143,7 +143,7 @@
+                 CardZoneTable retained = new CardZoneTable(lastStateBattlefield, lastStateGraveyard);
+                 for (var cell : cellSet()) {
+                     for (Card card : cell.getValue()) {
+-                        if (!payment.isReversibleDiscard(card)) {
++                        if (!payment.isReversiblePaymentMove(card)) {
+                             retained.put(cell.getRowKey(), cell.getColumnKey(), card);
+                         }
+                     }
+diff --git a/forge-game/src/main/java/forge/game/cost/CostDiscard.java b/forge-game/src/main/java/forge/game/cost/CostDiscard.java
+--- a/forge-game/src/main/java/forge/game/cost/CostDiscard.java
++++ b/forge-game/src/main/java/forge/game/cost/CostDiscard.java
+@@ -265,7 +265,7 @@
+                 payer.getGame().getTriggerHandler().runTrigger(TriggerType.DiscardedAll, runParams, false);
+             } else {
+                 payment.runCostTrigger(TriggerType.DiscardedAll, runParams);
+-                CardCollection retained = CardLists.filter(cardList, card -> !payment.isReversibleDiscard(card));
++                CardCollection retained = CardLists.filter(cardList, card -> !payment.isReversiblePaymentMove(card));
+                 if (!retained.isEmpty()) {
+                     Map<AbilityKey, Object> retainedParams = AbilityKey.newMap(runParams);
+                     retainedParams.put(AbilityKey.Cards, retained);
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -59,7 +59,7 @@
+     private boolean paidPositiveLife;
+     private boolean tracksReversibleCosts;
+     private Card pendingDiscard;
+-    private Set<Card> reversibleDiscards;
++    private Set<Card> reversiblePaymentMoves;
+     private List<TriggerWaiting> retainedPaymentTriggers;
+     private List<Runnable> committedPaymentEvents;
+ 
+@@ -72,16 +72,16 @@
+         return entry != null && entry.payment().pendingDiscard == card ? entry.payment() : null;
+     }
+ 
+-    public void recordReversibleDiscard(Card result, Card placedCard) {
+-        if (reversibleDiscards == null) {
+-            reversibleDiscards = Collections.newSetFromMap(new IdentityHashMap<>());
+-        }
+-        reversibleDiscards.add(result);
+-        reversibleDiscards.add(placedCard);
+-    }
+-
+-    public boolean isReversibleDiscard(Card card) {
+-        return reversibleDiscards != null && reversibleDiscards.contains(card);
++    public void recordReversiblePaymentMove(Card result, Card placedCard) {
++        if (reversiblePaymentMoves == null) {
++            reversiblePaymentMoves = Collections.newSetFromMap(new IdentityHashMap<>());
++        }
++        reversiblePaymentMoves.add(result);
++        reversiblePaymentMoves.add(placedCard);
++    }
++
++    public boolean isReversiblePaymentMove(Card card) {
++        return reversiblePaymentMoves != null && reversiblePaymentMoves.contains(card);
+     }
+ 
+     public void recordCommittedEvent(Runnable event) {
+@@ -111,6 +111,21 @@
+         var entry = payer.getGame().costPaymentStack.peek();
+         return entry != null && (entry.cost() instanceof CostRemoveCounter || entry.cost() instanceof CostRemoveAnyCounter)
+                 ? activePayment(entry.payment(), cause) : null;
++    }
++
++    public static CostPayment forSacrificeCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && entry.cost() instanceof CostSacrifice ? activePayment(entry.payment(), cause) : null;
++    }
++
++    public void holdRetainedCostTrigger(TriggerWaiting trigger) {
++        if (trigger != null) {
++            paymentTriggers.add(trigger);
++            if (retainedPaymentTriggers == null) {
++                retainedPaymentTriggers = new ArrayList<>();
++            }
++            retainedPaymentTriggers.add(trigger);
++        }
+     }
+ 
+     public static CostPayment forDiscardCost(Player payer, SpellAbility cause) {
+@@ -315,7 +330,7 @@
+                     retainedPaymentTriggers.forEach(decisionMaker.getPlayer().getGame().getTriggerHandler()::commitPaymentTrigger);
+                 }
+             }
+-            reversibleDiscards = null;
++            reversiblePaymentMoves = null;
+             retainedPaymentTriggers = null;
+             committedPaymentEvents = null;
+             paymentRefunds = null;
+diff --git a/forge-game/src/main/java/forge/game/cost/CostSacrifice.java b/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
+--- a/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
++++ b/forge-game/src/main/java/forge/game/cost/CostSacrifice.java
+@@ -205,8 +205,20 @@
+ 
+     @Override
+     public boolean payAsDecided(Player payer, PaymentDecision decision, SpellAbility ability, boolean effect) {
+-        return selectedCardsAvailable(payer, decision, ability, effect)
+-                && super.payAsDecided(payer, decision, ability, effect);
++        if (!selectedCardsAvailable(payer, decision, ability, effect)) {
++            return false;
++        }
++        CostPayment payment = CostPayment.forSacrificeCost(payer, ability);
++        if (payment == null) {
++            return super.payAsDecided(payer, decision, ability, effect);
++        }
++        executePayment(payer, ability, decision.cards, effect);
++        if (getCardList().size() != decision.cards.size()) {
++            resetLists();
++            return false;
++        }
++        reportPaidCardsTo(ability, payment);
++        return true;
+     }
+ 
+     /** Allocate separate physical cards to all outstanding sacrifice requirements. */
+@@ -332,7 +344,15 @@
+         Map<AbilityKey, Object> moveParams = AbilityKey.newMap();
+         AbilityKey.addCardZoneTableParams(moveParams, table);
+ 
+-        return game.getAction().sacrifice(targetCards, ability, effect, moveParams);
++        return game.getAction().sacrifice(targetCards, ability, effect, moveParams,
++                CostPayment.forSacrificeCost(payer, ability));
++    }
++
++    @Override
++    protected void handleChangeZoneTrigger(Player payer, SpellAbility ability, CardCollectionView targetCards) {
++        if (!table.isEmpty()) {
++            table.triggerChangesZoneAll(payer.getGame(), ability, CostPayment.forSacrificeCost(payer, ability));
++        }
+     }
+ 
+     /* (non-Javadoc)
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1577,7 +1577,7 @@
+             return false;
+         }
+         Card zoneReceipt = (Card) placement.getParams().get(AbilityKey.CardLKI);
+-        payment.recordReversibleDiscard(result, placedCard);
++        payment.recordReversiblePaymentMove(result, placedCard);
+         payment.holdCostTrigger(placement);
+         payment.recordRefund(() -> {
+             if (game.getCardState(placedCard) != placedCard || !placedZone.contains(placedCard)) {
+@@ -2415,18 +2415,23 @@
+     }
+ 
+     public final void addSacrificedThisTurn(final Card cpy, final SpellAbility source) {
+-        // Play the Sacrifice sound
+-        game.fireEvent(new GameEventCardSacrificed(CardView.get(cpy)));
+-
++        fireSacrificeEvent(cpy);
+         sacrificedThisTurn.add(cpy);
+-
++        game.getTriggerHandler().runTrigger(TriggerType.Sacrificed, sacrificeTriggerParams(cpy, source), false);
++    }
++
++    public final void fireSacrificeEvent(Card sacrificed) {
++        game.fireEvent(new GameEventCardSacrificed(CardView.get(sacrificed)));
++    }
++
++    public final Map<AbilityKey, Object> sacrificeTriggerParams(Card cpy, SpellAbility source) {
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);
+         // use a copy that preserves last known information about the card (e.g. for Savra, Queen of the Golgari + Painter's Servant)
+         runParams.put(AbilityKey.Card, cpy);
+         runParams.put(AbilityKey.Cause, source);
+         runParams.put(AbilityKey.CostStack, game.costPaymentStack);
+         runParams.put(AbilityKey.IndividualCostPaymentInstance, game.costPaymentStack.peek());
+-        game.getTriggerHandler().runTrigger(TriggerType.Sacrificed, runParams, false);
++        return runParams;
+     }
+ 
+     public final List<Card> getSacrificedThisTurn() {
