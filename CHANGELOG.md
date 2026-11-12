@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Count dice retained after replacements and rerolls. Record modified results
+  and preserve independent dice history in AI previews and native snapshots.
+- Exercise a paid Monitor Monitor reroll during Circuits Act, Iron Mastiff's
+  highest roll in multiplayer combat, and the dice triggers for Ancient
+  Copper Dragon, Chira, Goblinson, and Resolute Veggiesaur. The Monitor Monitor
+  fixture supplies the optional choice that Forge's default AI declines.
+- Add native and packaged checks for Smell Fear, Hard Evidence, Kai Winn,
+  Adami, and Geist of Saint Traft with Holo-Engineer.
+- Verify 2,481 gameplay tests, 256 serialization tests, and 42 live integrations
+  with 903 subtests. A four-player CLI game with the Star Trek precons completed.
+
 - Reveal all five cards for Hit It! and keep its graveyard movement separate
   from mill. Exercise Station power, Federation mana, Battlefront discounts,
   hybrid Phyrexian mana, and selected flip and transform characteristics.

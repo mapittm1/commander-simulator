@@ -1,0 +1,167 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -140,6 +140,7 @@
+             newPlayer.setLifeGainedThisTurn(origPlayer.getLifeGainedThisTurn());
+             newPlayer.setCommitedCrimeThisTurn(origPlayer.getCommittedCrimeThisTurn());
+             newPlayer.setDilemmasFacedThisTurn(origPlayer.getDilemmasFacedThisTurn());
++            newPlayer.copyDiceHistoryFrom(origPlayer);
+             newPlayer.setLifeStartedThisTurnWith(origPlayer.getLifeStartedThisTurnWith());
+             newPlayer.setDamageReceivedThisTurn(origPlayer.getDamageReceivedThisTurn());
+             newPlayer.setLandsPlayedThisTurn(origPlayer.getLandsPlayedThisTurn());
+diff --git a/forge-game/src/main/java/forge/game/GameSnapshot.java b/forge-game/src/main/java/forge/game/GameSnapshot.java
+--- a/forge-game/src/main/java/forge/game/GameSnapshot.java
++++ b/forge-game/src/main/java/forge/game/GameSnapshot.java
+@@ -190,6 +190,7 @@
+         newPlayer.setSpellsCastLastTurn(origPlayer.getSpellsCastLastTurn());
+         newPlayer.setCommitedCrimeThisTurn(origPlayer.getCommittedCrimeThisTurn());
+         newPlayer.setDilemmasFacedThisTurn(origPlayer.getDilemmasFacedThisTurn());
++        newPlayer.copyDiceHistoryFrom(origPlayer);
+         newPlayer.setExpentThisTurn(origPlayer.getExpentThisTurn());
+         for (int j = 0; j < origPlayer.getSpellsCastThisTurn(); j++) {
+             newPlayer.addSpellCastThisTurn();
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java b/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
+@@ -261,7 +261,43 @@
+             } while (!vedalkenSwaps.isEmpty());
+         }
+ 
+-        //Notify of results
++        List<Integer> rolls = Lists.newArrayList();
++        int oddResults = 0;
++        int evenResults = 0;
++        int differentResults = 0;
++        int countMaxRolls = 0;
++        for (DieRollResult i : resultsList) {
++            int naturalRoll = i.getNaturalValue();
++            final int modifiedRoll = i.getModifiedValue() + modifier;
++
++            i.setModifiedValue(modifiedRoll);
++
++            if (!rolls.contains(modifiedRoll)) {
++                differentResults++;
++            }
++            rolls.add(modifiedRoll);
++            if (modifiedRoll % 2 == 0) {
++                evenResults++;
++            } else {
++                oddResults++;
++            }
++            if (naturalRoll == sides) {
++                countMaxRolls++;
++            }
++        }
++        if (sa != null) {
++            if (sa.hasParam("EvenOddResults")) {
++                sa.setSVar("EvenResults", Integer.toString(evenResults));
++                sa.setSVar("OddResults", Integer.toString(oddResults));
++            }
++            if (sa.hasParam("DifferentResults")) {
++                sa.setSVar("DifferentResults", Integer.toString(differentResults));
++            }
++            if (sa.hasParam("MaxRollsResults")) {
++                sa.setSVar("MaxRolls", Integer.toString(countMaxRolls));
++            }
++        }
++        // Notify after all modifiers so the displayed and recorded results agree.
+         if (amount > 0) {
+             StringBuilder sb = new StringBuilder();
+             String rollResults = StringUtils.join(getFinalResults(resultsList), ", ");
+@@ -271,50 +307,24 @@
+                 sb.append("\r\n").append(Localizer.getInstance().getMessage("lblIgnoredRolls",
+                         StringUtils.join(ignored, ", ")));
+             }
+-            if (hasBeenModified) {
++            if (hasBeenModified || modifier != 0) {
+                 sb.append("\r\n").append(Localizer.getInstance().getMessage("lblNaturalRolls",
+                         StringUtils.join(getNaturalResults(resultsList), ", ")));
+             }
+             player.getGame().getAction().notifyOfValue(sa, player, sb.toString(), null);
+-            player.addDieRollThisTurn(getFinalResults(resultsList));
+-        }
+-
+-        List<Integer> rolls = Lists.newArrayList();
+-        int oddResults = 0;
+-        int evenResults = 0;
+-        int differentResults = 0;
+-        int countMaxRolls = 0;
+-        for (DieRollResult i : resultsList) {
+-            int naturalRoll = i.getNaturalValue();
+-            final int modifiedRoll = i.getModifiedValue() + modifier;
+-
+-            i.setModifiedValue(modifiedRoll);
+-
+-            if (!rolls.contains(modifiedRoll)) {
+-                differentResults++;
+-            }
+-            rolls.add(modifiedRoll);
+-            if (modifiedRoll % 2 == 0) {
+-                evenResults++;
+-            } else {
+-                oddResults++;
+-            }
+-            if (naturalRoll == sides) {
+-                countMaxRolls++;
+-            }
+-        }
+-        if (sa != null) {
+-            if (sa.hasParam("EvenOddResults")) {
+-                sa.setSVar("EvenResults", Integer.toString(evenResults));
+-                sa.setSVar("OddResults", Integer.toString(oddResults));
+-            }
+-            if (sa.hasParam("DifferentResults")) {
+-                sa.setSVar("DifferentResults", Integer.toString(differentResults));
+-            }
+-            if (sa.hasParam("MaxRollsResults")) {
+-                sa.setSVar("MaxRolls", Integer.toString(countMaxRolls));
+-            }
+-        }
++        }
++
++        if (resultsList.isEmpty()) {
++            return 0;
++        }
++
++        // Ignored and replaced physical rolls never count as game events.
++        final int priorRolls = player.getNumRollsThisTurn();
++        for (int index = 0; index < resultsList.size(); index++) {
++            player.roll();
++        }
++        player.addDieRollThisTurn(getFinalResults(resultsList));
++
+         SpellAbility sourceSA = sa != null ? sa.getRootAbility() : null;
+         int rollNum = 1;
+         for (DieRollResult roll : resultsList) {
+@@ -323,7 +333,7 @@
+             runParams.put(AbilityKey.Result, roll.getModifiedValue());
+             runParams.put(AbilityKey.NaturalResult, roll.getNaturalValue());
+             runParams.put(AbilityKey.RolledToVisitAttractions, toVisitAttractions);
+-            runParams.put(AbilityKey.Number, player.getNumRollsThisTurn() - amount + rollNum);
++            runParams.put(AbilityKey.Number, priorRolls + rollNum);
+             runParams.put(AbilityKey.SourceSA, sourceSA);
+             player.getGame().getTriggerHandler().runTrigger(TriggerType.RolledDie, runParams, false);
+             rollNum++;
+@@ -429,7 +439,6 @@
+         for (int i = 0; i < amount; i++) {
+             int roll = MyRandom.getRandom().nextInt(sides) + 1;
+             player.getGame().fireEvent(new GameEventRollDie(sides, roll));
+-            player.roll();
+             naturalRolls.add(roll);
+             rolled.add(roll);
+         }
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -4244,6 +4244,11 @@
+         committedCrimeThisTurn = v;
+     }
+ 
++    public void copyDiceHistoryFrom(Player original) {
++        numRollsThisTurn = original.numRollsThisTurn;
++        diceRollsThisTurn = new ArrayList<>(original.diceRollsThisTurn);
++    }
++
+     public List<Integer> getDiceRollsThisTurn() {
+         return diceRollsThisTurn;
+     }

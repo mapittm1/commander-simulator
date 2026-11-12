@@ -35,6 +35,22 @@ merged or face-down permanents, linked effects, and attachments with additional
 unattach actions still need verification. Human payments and effect costs
 retain their existing paths.
 
+## Dice history and rerolls
+
+Ancient Copper Dragon's retained d20 determines its Treasures after
+Barbarian Class ignores the lower roll. Chira, All In and The Space Family
+Goblinson each trigger once in that scenario. The ignored die cannot grant
+Goblinson trample. Iron Mastiff keeps only the highest roll when different
+opponents are attacked and applies its 10–19 result to its defending player.
+
+A controlled Monitor Monitor decision rerolls two matching dice from Circuits
+Act. The fixture pays the actual mana cost, applies Barbarian Class again,
+creates two Clown Robot tokens from two distinct final results, and verifies
+one third-roll trigger from Resolute Veggiesaur. The default AI currently
+declines Monitor Monitor's optional reroll. Diviner's Portent verifies that
+both forms of game copy retain the modified result and can change their dice
+histories independently.
+
 ## November 11 catalog refresh
 
 The refreshed Scryfall snapshot contains 32,643 identities marked legal for

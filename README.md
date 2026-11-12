@@ -19,6 +19,14 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Dice interactions count retained rolls, carry the final results into AI
+previews and game snapshots, and keep the copied history independent. Native
+tests cover Ancient Copper Dragon, Circuits Act, Iron Mastiff, and Diviner's
+Portent. The Monitor Monitor test supplies the optional reroll decision and
+uses the engine to pay its mana cost. Forge's default AI still declines that
+reroll. The pinned build passed 1,007 focused native tests and 255 packaged
+checks. See [dice history and rerolls](docs/CARD_COVERAGE.md#dice-history-and-rerolls).
+
 The Star Trek engine includes the reviewed alias for All Good Things... and
 checks that the Saga's exiled cards share one common card type. The reviewed
 Dilemma change preserves prior turn history when a cast is canceled and counts
