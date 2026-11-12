@@ -87,6 +87,17 @@ resolution and a change of controller, and creates no Dilemma after all
 modes are exhausted. See the
 [Star Trek release notes](https://magic.wizards.com/en/news/feature/star-trek-release-notes).
 
+Hit It! reveals its top five cards to every opponent, even if none are lands.
+Its chosen land enters tapped, and the other cards move to the graveyard
+without triggering Zellix. The fix follows the
+[official Hit It! Oracle clarification](https://magic.wizards.com/en/news/feature/star-trek-release-notes).
+
+Additional native cases cover Station using the tapped creature's current or
+last known power, Federation excluding Borg and duplicate types, and Battlefront
+counting an attacked opponent who later lost. A script-characteristic comparison
+prompted actual paid cases for Lukka, Lost Order of Jarkeld, Sasaya and Arlinn.
+Those fixtures exercise selected characteristics and gameplay transitions.
+
 Full rules and AI coverage remain open.
 
 A landless Vintage replay showed that Flat Monte Carlo can offer and score

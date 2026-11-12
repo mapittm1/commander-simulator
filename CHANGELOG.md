@@ -6,6 +6,10 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reveal all five cards for Hit It! and keep its graveyard movement separate
+  from mill. Exercise Station power, Federation mana, Battlefront discounts,
+  hybrid Phyrexian mana, and selected flip and transform characteristics.
+
 - Preserve the original defender when Kira Nerys modifies an entry that already
   specifies one. Ninjutsu still enters tapped if that defender has left the game.
 - Verify actual Beam me up resolution and interruption, simultaneous Assimilate

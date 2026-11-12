@@ -59,6 +59,11 @@ SOURCES = {
     "StarTrekDilemmaProbeTest": "star_trek_dilemma_test_sha256",
     "StarTrekBeamResolutionTest": "star_trek_beam_resolution_test_sha256",
     "StarTrekCombatEntryTest": "star_trek_combat_entry_test_sha256",
+    "CardCharacteristicDiscrepancyTest": "card_characteristic_discrepancy_test_sha256",
+    "StarTrekBattlefrontTest": "star_trek_battlefront_test_sha256",
+    "StarTrekFederationTest": "star_trek_federation_test_sha256",
+    "StarTrekRevealTest": "star_trek_reveal_test_sha256",
+    "StarTrekStationTest": "star_trek_station_test_sha256",
     "StarTrekKobayashiTest": "star_trek_kobayashi_test_sha256",
     "StarTrekAssimilateProbeTest": "star_trek_assimilate_test_sha256",
 }
@@ -110,6 +115,9 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.ChangeZoneEffect",
     "forge.game.combat.Combat",
     "forge.game.replacement.ReplacementHandler",
+    "forge.game.ability.effects.DigEffect",
+    "forge.game.ability.effects.CountersPutEffect",
+    "forge.game.card.CardFactoryUtil",
 )
 
 

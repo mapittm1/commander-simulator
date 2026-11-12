@@ -147,6 +147,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/star-trek-saga-common-card-type.patch",
                 "engine/patches/star-trek-dilemma-cast.patch",
                 "engine/patches/star-trek-combat-entry.patch",
+                "engine/patches/star-trek-hit-it-reveal.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -226,6 +227,11 @@ def _verify_inputs(args, recipe):
         "StarTrekDilemmaProbeTest.java": "star_trek_dilemma_test_sha256",
         "StarTrekBeamResolutionTest.java": "star_trek_beam_resolution_test_sha256",
         "StarTrekCombatEntryTest.java": "star_trek_combat_entry_test_sha256",
+        "CardCharacteristicDiscrepancyTest.java": "card_characteristic_discrepancy_test_sha256",
+        "StarTrekBattlefrontTest.java": "star_trek_battlefront_test_sha256",
+        "StarTrekFederationTest.java": "star_trek_federation_test_sha256",
+        "StarTrekRevealTest.java": "star_trek_reveal_test_sha256",
+        "StarTrekStationTest.java": "star_trek_station_test_sha256",
         "StarTrekKobayashiTest.java": "star_trek_kobayashi_test_sha256",
         "StarTrekAssimilateProbeTest.java": "star_trek_assimilate_test_sha256",
     }
@@ -252,6 +258,7 @@ def _verify_inputs(args, recipe):
         "d/divine_intervention.txt",
         "o/overabundance.txt",
         "a/all_good_things.txt",
+        "h/hit_it.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -532,6 +539,11 @@ def _patch_source(source, run, recipe):
         "StarTrekDilemmaProbeTest.java",
         "StarTrekBeamResolutionTest.java",
         "StarTrekCombatEntryTest.java",
+        "CardCharacteristicDiscrepancyTest.java",
+        "StarTrekBattlefrontTest.java",
+        "StarTrekFederationTest.java",
+        "StarTrekRevealTest.java",
+        "StarTrekStationTest.java",
         "StarTrekKobayashiTest.java",
         "StarTrekAssimilateProbeTest.java",
     ):
@@ -586,7 +598,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,ManaSacrificeTest,BeamMeUpTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,CardCharacteristicDiscrepancyTest,StarTrekBattlefrontTest,StarTrekFederationTest,StarTrekRevealTest,StarTrekStationTest,ManaSacrificeTest,BeamMeUpTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),
