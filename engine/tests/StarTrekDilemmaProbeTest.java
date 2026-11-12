@@ -353,4 +353,54 @@ public class StarTrekDilemmaProbeTest extends AITest {
         setup.game.getStack().resolveStack();
         assertEquals(opponent.getLife(), life - 4);
     }
+
+    @Test
+    public void siskoCountsCounteredCastAndIgnoresUnpaidCast() {
+        Setup setup = setup();
+        Card sisko = addCardToZone("Captain Benjamin Sisko", setup.actor, ZoneType.Battlefield);
+        addCardToZone("Mountain", setup.actor, ZoneType.Battlefield);
+        addCardToZone("Plains", setup.actor, ZoneType.Battlefield);
+        Player opponent = setup.game.getPlayers().get(1);
+        addCardToZone("Island", opponent, ZoneType.Battlefield);
+        addCardToZone("Island", opponent, ZoneType.Battlefield);
+        Card counter = addCardToZone("Counterspell", opponent, ZoneType.Hand);
+        setup.game.getAction().checkStaticAbilities();
+        setup.game.getTriggerHandler().resetActiveTriggers();
+
+        SpellAbility paid = charm(setup);
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(setup.actor, paid, null));
+        setup.collectTriggers();
+        assertEquals(setup.game.getStack().size(), 2);
+        setup.game.getStack().resolveStack();
+        assertSameCard(setup.game.getStack().peekAbility().getHostCard(), paid.getHostCard());
+        SpellAbility answer = counter.getFirstSpellAbility();
+        answer.setActivatingPlayer(opponent);
+        answer.getTargets().add(setup.game.getStack().peekAbility());
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent, answer, null));
+        setup.game.getStack().resolveStack();
+        assertTrue(setup.game.getStack().isEmpty());
+        assertTrue(setup.game.getCardState(paid.getHostCard()).isInZone(ZoneType.Graveyard));
+
+        SpellAbility unpaid = charm(setup);
+        assertFalse(ComputerUtil.handlePlayingSpellAbility(setup.actor, unpaid, null));
+        assertTrue(setup.game.getCardState(unpaid.getHostCard()).isInZone(ZoneType.Hand));
+        assertEquals(setup.actor.getDilemmasFacedThisTurn(), 1);
+
+        setup.game.getPhaseHandler().devModeSet(PhaseType.END_OF_TURN, setup.actor, 1);
+        setup.game.getTriggerHandler().resetActiveTriggers();
+        setup.game.getTriggerHandler().runTrigger(TriggerType.Phase, AbilityKey.mapFromPlayer(setup.actor), false);
+        setup.collectTriggers();
+        assertEquals(setup.game.getStack().size(), 1);
+        assertSameCard(setup.game.getStack().peekAbility().getHostCard(), sisko);
+        setup.game.getStack().resolveStack();
+        List<Card> officers = setup.actor.getCardsIn(ZoneType.Battlefield).stream()
+                .filter(card -> card.isToken() && card.getType().hasCreatureType("Officer")).toList();
+        assertEquals(officers.size(), 1);
+        assertEquals(officers.get(0).getNetPower(), 1);
+        assertEquals(officers.get(0).getNetToughness(), 1);
+    }
+
+    private static void assertSameCard(Card actual, Card expected) {
+        assertEquals(actual.getId(), expected.getId());
+    }
 }

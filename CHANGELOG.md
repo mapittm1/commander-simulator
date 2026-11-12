@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the original defender when Kira Nerys modifies an entry that already
+  specifies one. Ninjutsu still enters tapped if that defender has left the game.
+- Verify actual Beam me up resolution and interruption, simultaneous Assimilate
+  entries, Sisko's Dilemma payoff, and Kobayashi Maru mode history.
+
 - Restore Dilemma history after canceled modal casts and count a completed
   entwine or free modal cast once. Verify modal triggers, random-mode Treasure
   creation, and selected Assimilate control and zone changes.

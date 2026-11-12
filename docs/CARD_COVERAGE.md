@@ -71,7 +71,23 @@ Forge's normal AI declined that cast in the same position. See
 Assimilate cases cover a Dryad Arbor that retains Forest and returns to its
 owner when The Best of Both Worlds reaches chapter III, a graveyard creature
 entering as an artifact in time for Reckless Fireweaver, and Grafdigger's Cage
-preventing the entry. Full rules and AI coverage remain open.
+preventing the entry. Assimilate the Wounded returns three creatures from
+opposing graveyards in one artifact-entry event.
+
+Kira Nerys's replacement applies to her controller's creature while that player
+controls an attacker. Momentary Blink checks the defender choice and absence
+of a declared-attack trigger. Kaalia and ninjutsu keep their specified defender.
+If that defender has left the game, their entrant stays tapped and out of combat.
+Open Communications pays the full Beam me up cost, returns its creature, and
+goes to exile on resolution, after Counterspell, and after Reprieve.
+
+Captain Benjamin Sisko counts a completed cast that was countered and ignores
+an unpaid cast. Kobayashi Maru retains a spent Hail mode through a failed
+resolution and a change of controller, and creates no Dilemma after all
+modes are exhausted. See the
+[Star Trek release notes](https://magic.wizards.com/en/news/feature/star-trek-release-notes).
+
+Full rules and AI coverage remain open.
 
 A landless Vintage replay showed that Flat Monte Carlo can offer and score
 Mishra's Bauble, then pass because the improvement falls below its configured

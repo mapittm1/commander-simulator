@@ -57,6 +57,9 @@ SOURCES = {
     "SacrificeCostRecoveryProbeTest": "sacrifice_cost_recovery_test_sha256",
     "StarTrekSagaProbeTest": "star_trek_saga_test_sha256",
     "StarTrekDilemmaProbeTest": "star_trek_dilemma_test_sha256",
+    "StarTrekBeamResolutionTest": "star_trek_beam_resolution_test_sha256",
+    "StarTrekCombatEntryTest": "star_trek_combat_entry_test_sha256",
+    "StarTrekKobayashiTest": "star_trek_kobayashi_test_sha256",
     "StarTrekAssimilateProbeTest": "star_trek_assimilate_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
@@ -103,6 +106,10 @@ NATIVE_CLASSES = (
     "forge.game.player.PlaySpellAbility",
     "forge.game.trigger.TriggerFacesDilemma",
     "forge.game.zone.MagicStack",
+    "forge.game.ability.SpellAbilityEffect",
+    "forge.game.ability.effects.ChangeZoneEffect",
+    "forge.game.combat.Combat",
+    "forge.game.replacement.ReplacementHandler",
 )
 
 

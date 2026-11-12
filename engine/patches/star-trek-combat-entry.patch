@@ -1,0 +1,95 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -769,6 +769,24 @@
+         }
+     }
+ 
++    // CR 508.4e: an unrestricted replacement must preserve the original entry's attack instruction.
++    private static boolean defersToOriginalCombatEntry(SpellAbility ability, String attacking) {
++        if (!ability.isReplacementAbility() || !"True".equalsIgnoreCase(attacking)) {
++            return false;
++        }
++        SpellAbility cause = ability;
++        Set<SpellAbility> seen = Collections.newSetFromMap(new IdentityHashMap<>());
++        while (cause.isReplacementAbility() && seen.add(cause)
++                && cause.getReplacingObject(AbilityKey.OriginalParams) instanceof Map<?, ?> original
++                && original.get(AbilityKey.Cause) instanceof SpellAbility previous) {
++            if (previous.isNinjutsu() || previous.hasParam("Attacking") || previous.hasParam("TokenAttacking")) {
++                return true;
++            }
++            cause = previous;
++        }
++        return false;
++    }
++
+     protected static boolean addToCombat(Card c, SpellAbility sa, String attackingParam, String blockingParam) {
+         final Card host = sa.getHostCard();
+         final Game game = host.getGame();
+@@ -779,8 +797,9 @@
+         final Combat combat = game.getCombat();
+ 
+         // CR 506.3b
+-        if (sa.hasParam(attackingParam) && combat.getAttackingPlayer().sharesTeamWith(c.getController())) {
+-            String attacking = sa.getParam(attackingParam);
++        String attacking = sa.getParam(attackingParam);
++        if (attacking != null && combat.getAttackingPlayer().sharesTeamWith(c.getController())
++                && !defersToOriginalCombatEntry(sa, attacking)) {
+ 
+             GameEntity defender = null;
+             FCollection<GameEntity> defs = new FCollection<>();
+@@ -792,10 +811,15 @@
+                 defs.addAll(AbilityUtils.getDefinedEntities(sa.hasParam("ForEach") ? c : host, attacking.split(" & "), sa));
+             }
+ 
+-            Map<String, Object> params = Maps.newHashMap();
+-            params.put("Attacker", c);
+-            defender = sa.getActivatingPlayer().getController().chooseSingleEntityForEffect(defs, sa,
+-                    Localizer.getInstance().getMessage("lblChooseDefenderToAttackWithCard", c.getTranslatedName()), false, params);
++            defs.retainAll(combat.getDefenders());
++            if (defs.size() == 1) {
++                defender = defs.getFirst();
++            } else if (!defs.isEmpty()) {
++                Map<String, Object> params = Maps.newHashMap();
++                params.put("Attacker", c);
++                defender = c.getController().getController().chooseSingleEntityForEffect(defs, sa,
++                        Localizer.getInstance().getMessage("lblChooseDefenderToAttackWithCard", c.getTranslatedName()), false, params);
++            }
+ 
+             if (defender != null && !combat.getAttackersOf(defender).contains(c)) {
+                 // we might be reselecting
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
+@@ -11,6 +11,7 @@
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.*;
++import forge.game.combat.Combat;
+ import forge.game.event.GameEventAddLog;
+ import forge.game.event.GameEventCombatChanged;
+ import forge.game.keyword.Keyword;
+@@ -703,13 +704,17 @@
+                 if (addToCombat(movedCard, sa, "Attacking", "Blocking")) {
+                     combatChanged = true;
+                 }
+-                if (sa.isNinjutsu()) {
+-                    // Ninjutsu need to get the Defender of the Returned Creature
++                if (sa.isNinjutsu() && movedCard.isInPlay() && movedCard.isCreature() && game.getPhaseHandler().inCombat()) {
++                    // CR 508.4b and 702.49c: the original defender must still be able to be attacked.
+                     final Card returned = sa.getPaidList("Returned", true).getFirst();
+-                    final GameEntity defender = game.getCombat().getDefenderByAttacker(returned);
+-                    game.getCombat().addAttacker(movedCard, defender);
+-                    game.getCombat().getBandOfAttacker(movedCard).setBlocked(false);
+-                    combatChanged = true;
++                    final Combat combat = game.getCombat();
++                    final GameEntity defender = combat.getDefenderByAttacker(returned);
++                    combat.initConstraints();
++                    if (defender != null && combat.getDefenders().contains(defender)) {
++                        combat.addAttacker(movedCard, defender);
++                        combat.getBandOfAttacker(movedCard).setBlocked(false);
++                        combatChanged = true;
++                    }
+                 }
+ 
+                 if (sa.hasParam("AttachAfter") && movedCard.isAttachment()) {

@@ -13,6 +13,7 @@ import forge.game.card.CounterEnumType;
 import forge.game.phase.PhaseType;
 import forge.game.player.Player;
 import forge.game.player.RegisteredPlayer;
+import forge.game.spellability.SpellAbility;
 import forge.game.trigger.TriggerType;
 import forge.game.zone.ZoneType;
 import java.util.ArrayList;
@@ -141,5 +142,50 @@ public class StarTrekAssimilateProbeTest extends AITest {
         assertTrue(bear.getController() == pod.opponent);
         assertFalse(bear.isArtifact());
         assertEquals(bear.getCounters(CounterEnumType.P1P1), 0);
+    }
+
+    @Test
+    public void assimilatingFromThreeOpponentsCreatesOneBatchedArtifactTrigger() {
+        Pod pod = pod(PhaseType.MAIN1);
+        Card witness = addCardToZone("Ingenious Artillerist", pod.actor, ZoneType.Battlefield);
+        for (int index = 0; index < 3; index++) {
+            addCardToZone("Swamp", pod.actor, ZoneType.Battlefield);
+        }
+        Card spellCard = addCardToZone("Assimilate the Wounded", pod.actor, ZoneType.Hand);
+        Card ineligible = addCardToZone("Silvercoat Lion", pod.opponent, ZoneType.Graveyard);
+        List<Player> opponents = new ArrayList<>(pod.actor.getOpponents());
+        List<Card> targets = new ArrayList<>();
+        for (Player opponent : opponents) {
+            Card creature = addCardToZone("Grizzly Bears", opponent, ZoneType.Battlefield);
+            targets.add(pod.game.getAction().moveToGraveyard(creature, null));
+        }
+        pod.stabilize();
+        List<Integer> before = opponents.stream().map(Player::getLife).toList();
+
+        SpellAbility spell = spellCard.getFirstSpellAbility();
+        spell.setActivatingPlayer(pod.actor);
+        assertFalse(spell.canTarget(ineligible));
+        for (Card target : targets) {
+            assertTrue(spell.canTarget(target));
+            spell.getTargets().add(target);
+        }
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(pod.actor, spell, null));
+        assertEquals(pod.game.getStack().size(), 1);
+        pod.game.getStack().resolveStack();
+        for (int index = 0; index < targets.size(); index++) {
+            Card creature = pod.game.getCardState(targets.get(index));
+            assertTrue(creature.isInPlay() && creature.isArtifact());
+            assertTrue(creature.getOwner() == opponents.get(index) && creature.getController() == pod.actor);
+            assertTrue(creature.getType().hasCreatureType("Borg"));
+            assertEquals(creature.getCounters(CounterEnumType.P1P1), 1);
+        }
+        assertTrue(ineligible.isInZone(ZoneType.Graveyard));
+        pod.collectTriggers();
+        assertEquals(pod.game.getStack().size(), 1);
+        assertTrue(pod.game.getStack().peekAbility().getHostCard() == witness);
+        pod.game.getStack().resolveStack();
+        for (int index = 0; index < opponents.size(); index++) {
+            assertEquals(opponents.get(index).getLife(), before.get(index).intValue() - 3);
+        }
     }
 }
