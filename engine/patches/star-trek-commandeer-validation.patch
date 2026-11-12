@@ -1,0 +1,43 @@
+diff --git a/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java b/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
+--- a/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
++++ b/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
+@@ -71,9 +71,11 @@
+         final Player p = deal(BESEECH_STORM);
+         for (final String name : new String[] { "Gitaxian Probe", "Vampiric Tutor", "Mishra's Bauble", "Urza's Bauble",
+                 "Demonic Consultation", "Merchant Scroll", "Prismatic Ending", "Mindbreak Trap", "Manifold Key",
+-                "Lion's Eye Diamond", "Doomsday", "Goblin Welder", "Commandeer", "Flash", "Nethergoyf" }) {
++                "Lion's Eye Diamond", "Doomsday", "Goblin Welder", "Flash", "Nethergoyf" }) {
+             AssertJUnit.assertTrue(name, ComputerUtilCard.isCardRemAIDeck(addCardToZone(name, p, ZoneType.Hand)));
+         }
++        AssertJUnit.assertFalse("Commandeer uses the reviewed spell-control implementation",
++                ComputerUtilCard.isCardRemAIDeck(addCardToZone("Commandeer", p, ZoneType.Hand)));
+         for (final String name : new String[] { "Gitaxian Probe", "Vampiric Tutor", "Mishra's Bauble", "Urza's Bauble",
+                 "Demonic Consultation" }) {
+             final Card c = addCardToZone(name, p, ZoneType.Hand);
+@@ -119,7 +121,7 @@
+         final Player p = deal(OATH);
+         final String[] kept = { "Gitaxian Probe", "Mishra's Bauble", "Urza's Bauble", "Vampiric Tutor",
+                 "Demonic Consultation", "Merchant Scroll", "Manifold Key", "Goblin Welder", "Doomsday" };
+-        final String[] left = { "Prismatic Ending", "Mindbreak Trap", "Commandeer", "Flash", "Nethergoyf" };
++        final String[] left = { "Prismatic Ending", "Mindbreak Trap", "Flash", "Nethergoyf" };
+         try {
+             forge.card.CardAiHints.setKeptForFlatMc(AiCardLists::isFlatMcPlayable);
+             for (final String name : kept) {
+@@ -130,6 +132,8 @@
+                 AssertJUnit.assertFalse(name + " is not played by Flat MC and stays out of AI decks",
+                         forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS.test(addCardToZone(name, p, ZoneType.Hand).getRules()));
+             }
++            AssertJUnit.assertTrue("Commandeer is eligible for AI decks with the reviewed script",
++                    forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS.test(addCardToZone("Commandeer", p, ZoneType.Hand).getRules()));
+             // AI:RemoveDeck:Random: the fast mana, tutors and combo pieces Flat MC plays are kept, the prison pieces are not
+             for (final String name : new String[] { "Mana Crypt", "Mox Opal", "Time Vault", "Demonic Tutor", "Tinker" }) {
+                 AssertJUnit.assertTrue(name + " should be kept in random decks while Flat MC is on",
+@@ -142,6 +146,8 @@
+             forge.card.CardAiHints.setKeptForFlatMc(null); // Flat MC off
+             AssertJUnit.assertFalse("with Flat MC off nothing is kept", forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS
+                     .test(addCardToZone("Gitaxian Probe", p, ZoneType.Hand).getRules()));
++            AssertJUnit.assertTrue("Commandeer remains eligible with Flat MC off",
++                    forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS.test(addCardToZone("Commandeer", p, ZoneType.Hand).getRules()));
+         } finally {
+             forge.card.CardAiHints.setKeptForFlatMc(null);
+         }

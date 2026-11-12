@@ -1,6 +1,6 @@
 # Card support and evidence
 
-The sticker-capable runtime uses the official Forge source snapshot
+The earlier sticker-capable runtime used the official Forge source snapshot
 [`3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76`](https://github.com/Card-Forge/forge/commit/3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76),
 the reviewed Wicker Picker implementation from
 [upstream PR 12129](https://github.com/Card-Forge/forge/pull/12129) at immutable
@@ -38,14 +38,32 @@ retain their existing paths.
 ## November 11 catalog refresh
 
 The refreshed Scryfall snapshot contains 32,643 identities marked legal for
-Commander. The pinned engine has exact script matches for 32,324. The remaining
-319 include 312 Star Trek starting-card identities and seven nonstarting meld
-results. These counts describe the local catalog and pinned script archive.
+Commander. The previous package matched 32,324 and lacked 312 Star Trek
+starting-card identities. The Star Trek package constructed all 32,636 starting
+cards. The seven remaining catalog identities are nonstarting meld results.
 
-The official Forge Star Trek source contains 311 of those starting-card names.
-Its remaining Saga uses a different spelling of the ellipsis. Integrating that
-source requires preserving the reviewed engine changes and exercising the new
-mechanics in play. See the [Forge release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
+The Forge 2.0.16 Star Trek source contains 311 of those starting-card names.
+The Saga uses a different spelling of the ellipsis. The engine adapter binds
+that alias to the exact Oracle ID and packaged script. The build carries forward
+the reviewed Wicker Picker script and the existing Ratonhnhaké꞉ton identity review.
+See the [Forge release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
+
+All Good Things... checks whether the cards it exiled share a single card type
+when chapter IV resolves. Native fixtures cover zero and one linked card, a
+shared artifact type, and three cards whose overlapping types never occur on
+all three. See the [Star Trek release notes](https://magic.wizards.com/en/news/feature/star-trek-release-notes).
+
+An isolated CLI game imported and validated Forge's copies of the four Star
+Trek Commander precons. It ran to completion at seed 42 and produced a
+diagnostics report with 39 turn markers and 40 recorded casts. See the
+[Star Trek Commander decklists](https://magic.wizards.com/en/news/announcements/star-trek-commander-decklists).
+
+Forge 2.0.16 also adds bounded Flat Monte Carlo settings to the Cautious AI
+profile. The live suite exercises selected decisions under the packaged engine.
+The modal probes exposed a dilemma history rollback issue and a missing entwine
+count. Fixes are under separate verification. A landless Vintage replay also
+showed that Flat Monte Carlo can offer and score Mishra's Bauble, then pass
+because the improvement falls below its configured threshold.
 
 ## Card-counter costs
 

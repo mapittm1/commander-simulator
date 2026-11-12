@@ -3,7 +3,12 @@
 Forge is GPL-licensed. See [LICENSE.Forge](LICENSE.Forge). This directory retains
 the source modifications and regression source used by the reviewed Commander
 engine. The unmodified source is pinned by commit and archive SHA-256 in
-[`sticker_recipe.json`](sticker_recipe.json); the Wicker Picker patch is pinned
+[`sticker_recipe.json`](sticker_recipe.json). The Star Trek recipe applies a port
+of the reviewed changes to Forge 2.0.16, followed by the Saga common-card-type
+fix. The earlier patch files and engine locks preserve the history of those
+changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
+
+In the earlier recipe, the Wicker Picker patch was pinned
 to an immutable upstream pull-request head. Local regression fixes are a second
 patch, applied after the upstream patch. Two further patches preserve chosen
 commander colors through native/AI state and refresh companion pregame types.
@@ -63,7 +68,7 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-922 native sticker, chosen-color, companion, supplementary-copy, history,
+954 native sticker, chosen-color, companion, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
 forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary paid spell-control/retargeting, and tap selection, payment, and refund tests.
@@ -84,6 +89,11 @@ python commander_simulator.py engine-check --engine-config BUILD_DIRECTORY/engin
 python commander_simulator.py engine-card-probe --engine-config BUILD_DIRECTORY/engine-config.json
 python commander_simulator.py engine-interactions --engine-config BUILD_DIRECTORY/engine-config.json
 ```
+
+For broader native validation, apply
+[the Commandeer test adaptation](patches/star-trek-commandeer-validation.patch)
+to a copy of the extracted source. It checks that Commandeer remains eligible
+for AI decks after the reviewed spell-control changes. The patch changes two upstream test methods to enforce this policy.
 
 Also run the opt-in engine/CLI integration tests with that candidate selected in
 the local `config/engine_config.json`. The build output config uses paths relative

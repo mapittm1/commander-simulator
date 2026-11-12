@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Port the reviewed Commander engine changes to Forge's Star Trek release.
+- Match All Good Things... by Oracle ID and verify its final chapter against
+  empty exile, a single card, a common type, and overlapping pairs with no
+  type shared by every card.
+- Preserve legal Altar payments when the planner must reserve other
+  permanents for later sacrifice or tap costs.
+
 - Allow Scryfall bulk refresh to reassign a token printing when both identities
   are ineligible for Commander decks and its printing details still match.
   Preserve other printings and the prior Oracle identity.

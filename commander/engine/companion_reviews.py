@@ -18,7 +18,7 @@ FIELDS = {
 
 def condition_review(plan):
     """Return only an identity/archive/Oracle-bound review, including registry hash."""
-    data, digest = read_hashed_json(REVIEWS_PATH, 16384)
+    data, digest = read_hashed_json(REVIEWS_PATH, 32 * 1024)
     reviews = data.get("reviews")
     if (
         not isinstance(data.get("schema_version"), int)

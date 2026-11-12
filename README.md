@@ -19,6 +19,10 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+The Star Trek engine includes the reviewed alias for All Good Things... and
+checks that the Saga's exiled cards share one common card type. See the
+[Star Trek catalog and rules checks](docs/CARD_COVERAGE.md#november-11-catalog-refresh).
+
 A failed AI payment restores supported sacrifices to the original battlefield
 object, including its counters, controller, and ordinary equipment. The engine
 preserves independent moves and sacrifices that were redirected into a library.
