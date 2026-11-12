@@ -64,6 +64,8 @@ SOURCES = {
     "StarTrekFederationTest": "star_trek_federation_test_sha256",
     "StarTrekRevealTest": "star_trek_reveal_test_sha256",
     "CommanderDiceReplacementTest": "commander_dice_replacement_test_sha256",
+    "CommanderOptionalDiePaymentTest": "commander_optional_die_payment_test_sha256",
+    "CommanderExploreTest": "commander_explore_test_sha256",
     "ProliferateFightAndInvestigateTest": "proliferate_fight_investigate_test_sha256",
     "StarTrekHoloEngineerTest": "star_trek_holo_engineer_test_sha256",
     "StarTrekNamedAbilityTest": "star_trek_named_ability_test_sha256",
@@ -124,6 +126,7 @@ NATIVE_CLASSES = (
     "forge.game.card.CardFactoryUtil",
     "forge.game.GameSnapshot",
     "forge.game.ability.effects.RollDiceEffect",
+    "forge.game.ability.effects.ExploreEffect",
     "forge.game.trigger.TriggerRolledDie",
 )
 

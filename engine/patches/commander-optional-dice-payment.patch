@@ -1,0 +1,45 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java b/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RollDiceEffect.java
+@@ -171,6 +171,8 @@
+                 naturalRolls.addAll(rerolls);
+                 activationsThisTurn += 1;
+                 c.setSVar("ModsThisTurn", "Number$" + activationsThisTurn);
++                canRerollDice = getRerollCards(player, monitorKeyword);
++            } else {
+                 canRerollDice.remove(c);
+             }
+         }
+@@ -184,9 +186,12 @@
+         boolean hasBeenModified = false;
+ 
+         if (!canIncrementDice.isEmpty()) {
++            List<Integer> modifiableRolls = new ArrayList<>(naturalRolls);
+             do {
+-                rollToModify = player.getController().chooseRollToModify(naturalRolls);
++                rollToModify = player.getController().chooseRollToModify(modifiableRolls);
+                 if (rollToModify == null) {break;}
++                // Each die offers each eligible modifier once, even when payment is declined.
++                modifiableRolls.remove(rollToModify);
+ 
+                 boolean modified = false;
+                 DieRollResult dieResult = new DieRollResult(rollToModify, rollToModify);
+@@ -211,8 +216,8 @@
+                         rollToModify += increment;
+                         activationsThisTurn += 1;
+                         c.setSVar("ModsThisTurn", "Number$" + activationsThisTurn);
+-                        canIncrementThisRoll.remove(c);
+                     }
++                    canIncrementThisRoll.remove(c);
+                 } while (!canIncrementThisRoll.isEmpty());
+                 if (modified) {
+                     dieResult.setModifiedValue(rollToModify);
+@@ -220,7 +225,7 @@
+                     hasBeenModified = true;
+                 }
+                 canIncrementDice = getIncrementCards(player, xenoKeyword, nightShiftKeyword);
+-            } while (!naturalRolls.isEmpty() && !canIncrementDice.isEmpty());
++            } while (!modifiableRolls.isEmpty() && !canIncrementDice.isEmpty());
+         }
+ 
+         // finish roll list

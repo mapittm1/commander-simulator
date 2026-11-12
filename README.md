@@ -19,6 +19,13 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Declining an optional dice payment lets the original result resolve and leaves
+the ability available for later rolls. Tests cover Monitor Monitor and Night
+Shift of the Living Dead. Explore tests cover Jadelight Ranger and Captain
+Kathryn Janeway, including an empty library and a creature that left the
+battlefield before its explore effect resolved. The pinned build passed 1,013
+focused native tests and 261 checks against the packaged JAR.
+
 Dice interactions count retained rolls, carry the final results into AI
 previews and game snapshots, and keep the copied history independent. Native
 tests cover Ancient Copper Dragon, Circuits Act, Iron Mastiff, and Diviner's

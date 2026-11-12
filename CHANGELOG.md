@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Finish resolving dice after a declined Monitor Monitor or Night Shift of the
+  Living Dead payment. A successful Night Shift payment changes the result and
+  can trigger its Zombie ability.
+- Verify Jadelight Ranger exploring twice and Captain Kathryn Janeway's explore
+  trigger after the creature leaves the battlefield.
+- Verify 2,487 gameplay tests, 256 serialization tests, and 42 live integration
+  tests with 909 subtests.
+
 - Count dice retained after replacements and rerolls. Record modified results
   and preserve independent dice history in AI previews and native snapshots.
 - Exercise a paid Monitor Monitor reroll during Circuits Act, Iron Mastiff's
