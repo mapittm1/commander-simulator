@@ -56,6 +56,8 @@ SOURCES = {
     "GroupedCounterCostProbeTest": "grouped_counter_cost_test_sha256",
     "SacrificeCostRecoveryProbeTest": "sacrifice_cost_recovery_test_sha256",
     "StarTrekSagaProbeTest": "star_trek_saga_test_sha256",
+    "StarTrekDilemmaProbeTest": "star_trek_dilemma_test_sha256",
+    "StarTrekAssimilateProbeTest": "star_trek_assimilate_test_sha256",
 }
 TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -96,6 +98,11 @@ NATIVE_CLASSES = (
     "forge.game.spellability.SpellAbility",
     "forge.game.cost.CostSacrifice",
     "forge.ai.simulation.GameCopier",
+    "forge.game.ability.effects.AssimilateEffect",
+    "forge.game.ability.effects.CharmEffect",
+    "forge.game.player.PlaySpellAbility",
+    "forge.game.trigger.TriggerFacesDilemma",
+    "forge.game.zone.MagicStack",
 )
 
 

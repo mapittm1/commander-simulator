@@ -1,0 +1,234 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -127,7 +127,7 @@
+ 
+         sa = GameActionUtil.addExtraKeywordCost(sa);
+ 
+-        if (sa.getApi() == ApiType.Charm && !CharmEffect.makeChoices(sa)) {
++        if (sa.getApi() == ApiType.Charm && !CharmEffect.makeChoices(sa, true)) {
+             // 603.3c If no mode is chosen, the ability is removed from the stack.
+             abandonCast(game, sa, hz, movedToStack, new CostPayment(sa.getPayCosts(), sa));
+             return false;
+@@ -178,6 +178,7 @@
+      */
+     private static Card abandonCast(final Game game, final SpellAbility sa, final Zone fromZone,
+                                     final boolean movedToStack, final CostPayment pay) {
++        sa.rollbackDilemma();
+         pay.refundPayment();
+         final Card onStack = sa.getHostCard();
+         if (movedToStack && fromZone != null && onStack != null && onStack.isInZone(ZoneType.Stack)) {
+@@ -284,8 +285,9 @@
+         final Cost cost = sa.getPayCosts();
+         final CostPayment pay = new CostPayment(cost, sa);
+ 
+-        // do this after card got added to stack
+-        if (!sa.checkRestrictions(ai)) {
++        // Triggered modal abilities are prepared by the controller before this entry point.
++        boolean choseModes = !movedSpell || sa.getApi() != ApiType.Charm || CharmEffect.prepareCastModes(sa);
++        if (!choseModes || !sa.checkRestrictions(ai)) {
+             if (movedSpell) {
+                 GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
+             } else {
+@@ -295,6 +297,7 @@
+         }
+ 
+         if (pay.payComputerCosts(new AiCostDecision(ai, sa, false))) {
++            sa.commitDilemma();
+             game.getTriggerHandler().commitCastPlacement(placement);
+             game.getStack().add(sa);
+             return true;
+diff --git a/forge-game/src/main/java/forge/game/GameActionUtil.java b/forge-game/src/main/java/forge/game/GameActionUtil.java
+--- a/forge-game/src/main/java/forge/game/GameActionUtil.java
++++ b/forge-game/src/main/java/forge/game/GameActionUtil.java
+@@ -968,6 +968,7 @@
+         final Game game = ability.getActivatingPlayer().getGame();
+ 
+         if (game.restoreGameState()) {
++            ability.clearDilemmaAfterSnapshotRestore();
+             // If we're able to restore the whole game state when rolling back an ability don't try to manually roll back
+             System.out.println("Restored state from snapshot! Rolled back: " + ability.getHostCard().getName() + " - " + ability.getActivatingPlayer());
+ 
+@@ -982,6 +983,7 @@
+     /** Restore the source card and refundable costs without clearing unrelated queued work. */
+     public static void restoreUnpaidCast(SpellAbility ability, Zone fromZone, int zonePosition,
+             CostPayment payment, Card oldCard) {
++        ability.rollbackDilemma();
+         if (fromZone != null && !fromZone.is(ZoneType.None)) { // and not a copy
+             // add back to where it came from, hopefully old state
+             // skip GameAction
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/CharmEffect.java b/forge-game/src/main/java/forge/game/ability/effects/CharmEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/CharmEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/CharmEffect.java
+@@ -205,20 +205,36 @@
+         return "";
+     }
+ 
+-    private static void faceDilemma(final Player chooser, final boolean random) {
+-        chooser.incDilemmasFacedThisTurn();
++    private static void faceDilemma(SpellAbility ability, Player chooser, boolean random, boolean tentative) {
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(chooser);
+         if (random) {
+             runParams.put(AbilityKey.Random, true);
+         }
+-        // Modes are chosen while casting/activating, before costs are paid and before the stack is frozen.
+-        // Hold the trigger as waiting so it only goes on the stack once the spell/ability was actually put on
+-        // the stack (unfreezeStack runs waiting triggers); if the player backs out, GameActionUtil.rollbackAbility
+-        // clears the waiting triggers so "whenever you face a dilemma" doesn't fire for a cancelled cast.
+-        chooser.getGame().getTriggerHandler().runTrigger(TriggerType.FacesDilemma, runParams, true);
++        if (tentative && !ability.isTrigger()) {
++            ability.stageDilemma(chooser, runParams);
++        } else {
++            chooser.incDilemmasFacedThisTurn();
++            chooser.getGame().getTriggerHandler().runTrigger(TriggerType.FacesDilemma, runParams, true);
++        }
++    }
++
++    /** Preserve an announced modal chain and its targets when an AI casts from an effect. */
++    public static boolean prepareCastModes(SpellAbility spell) {
++        // A random or opponent choice must happen during the cast itself.
++        if (spell.getSubAbility() == null || spell.hasParam("Random") || spell.hasParam("Chooser")) {
++            return makeChoices(spell, true);
++        }
++        if (!spell.isCopied()) {
++            faceDilemma(spell, spell.getActivatingPlayer(), false, true);
++        }
++        return true;
+     }
+ 
+     public static boolean makeChoices(SpellAbility sa) {
++        return makeChoices(sa, false);
++    }
++
++    public static boolean makeChoices(SpellAbility sa, boolean tentative) {
+         // CR 700.2g
+         if (sa.isCopied()) {
+             return true;
+@@ -232,6 +248,9 @@
+         // Entwine does use all Choices
+         if (sa.isEntwine()) {
+             chainAbilities(sa, choices);
++            if (!choices.isEmpty()) {
++                faceDilemma(sa, sa.getActivatingPlayer(), false, tentative);
++            }
+             return true;
+         }
+ 
+@@ -266,7 +285,7 @@
+                 List<AbilitySub> randomChosen = Aggregates.random(choices, num);
+                 chainAbilities(sa, randomChosen);
+                 if (!randomChosen.isEmpty()) {
+-                    faceDilemma(activator, true);
++                    faceDilemma(sa, activator, true, tentative);
+                 }
+                 return true;
+             }
+@@ -288,7 +307,7 @@
+         chainAbilities(sa, chosen);
+ 
+         if (chosen != null && !chosen.isEmpty()) {
+-            faceDilemma(chooser, false);
++            faceDilemma(sa, chooser, false, tentative);
+         }
+ 
+         // trigger without chosen modes are removed from stack
+diff --git a/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java b/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
+--- a/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
++++ b/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
+@@ -598,7 +598,7 @@
+                         return false;
+                     }
+                 }
+-                if (!CharmEffect.makeChoices(ability)) {
++                if (!CharmEffect.makeChoices(ability, true)) {
+                     game.clearTopLibsCast(ability);
+                     // CR 603.3c If no mode is chosen, the ability is removed from the stack.
+                     return false;
+@@ -717,6 +717,7 @@
+             player.getAchievementTracker().onSpellAbilityPlayed(ability);
+ 
+             if (skipStack) {
++                ability.commitDilemma();
+                 AbilityUtils.resolve(ability);
+                 // Should unfreeze stack (but if it was a RE with a cause better to let it be handled by that)
+                 if (!ability.isReplacementAbility()) {
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -64,6 +64,7 @@
+ import forge.game.staticability.StaticAbilityMustTarget;
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerType;
++import forge.game.trigger.TriggerWaiting;
+ import forge.game.trigger.WrappedAbility;
+ import forge.game.zone.ZoneType;
+ 
+@@ -1003,6 +1004,57 @@
+     public Map<AbilityKey, Object> getTriggeringObjects() {
+         return triggeringObjects;
+     }
++
++    private static final class PendingDilemma {
++        private final Player chooser;
++        private final TriggerWaiting trigger;
++        private boolean settled;
++
++        private PendingDilemma(Player chooser, TriggerWaiting trigger) {
++            this.chooser = chooser;
++            this.trigger = trigger;
++        }
++    }
++
++    private transient PendingDilemma pendingDilemma;
++
++    public void stageDilemma(Player chooser, Map<AbilityKey, Object> params) {
++        rollbackDilemma();
++        chooser.incDilemmasFacedThisTurn();
++        TriggerWaiting trigger = chooser.getGame().getTriggerHandler()
++                .holdPaymentTrigger(TriggerType.FacesDilemma, params);
++        pendingDilemma = new PendingDilemma(chooser, trigger);
++    }
++
++    public void commitDilemma() {
++        PendingDilemma recorded = settleDilemma();
++        if (recorded != null && recorded.trigger != null) {
++            recorded.chooser.getGame().getTriggerHandler().commitPaymentTrigger(recorded.trigger);
++        }
++    }
++
++    public void rollbackDilemma() {
++        PendingDilemma recorded = settleDilemma();
++        if (recorded != null) {
++            recorded.chooser.setDilemmasFacedThisTurn(recorded.chooser.getDilemmasFacedThisTurn() - 1);
++        }
++    }
++
++    public void clearDilemmaAfterSnapshotRestore() {
++        settleDilemma();
++    }
++
++    private PendingDilemma settleDilemma() {
++        PendingDilemma recorded = pendingDilemma;
++        pendingDilemma = null;
++        // Same-game cast copies can share the receipt. A simulated game may never settle it.
++        if (recorded == null || recorded.settled || recorded.chooser.getGame() != getHostCard().getGame()) {
++            return null;
++        }
++        recorded.settled = true;
++        return recorded;
++    }
++
+     public void setTriggeringObjects(final Map<AbilityKey, Object> triggeredObjects) {
+         triggeringObjects = AbilityKey.newMap(triggeredObjects);
+     }
+diff --git a/forge-game/src/main/java/forge/game/zone/MagicStack.java b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+--- a/forge-game/src/main/java/forge/game/zone/MagicStack.java
++++ b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+@@ -137,6 +137,7 @@
+     }
+ 
+     public final void addAndUnfreeze(final SpellAbility ability) {
++        ability.commitDilemma();
+         final Card source = ability.getHostCard();
+ 
+         // if the ability is a spell, but not a copied spell and its not already

@@ -20,7 +20,9 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 ## Card coverage
 
 The Star Trek engine includes the reviewed alias for All Good Things... and
-checks that the Saga's exiled cards share one common card type. See the
+checks that the Saga's exiled cards share one common card type. The reviewed
+Dilemma change preserves prior turn history when a cast is canceled and counts
+entwine and accepted free casts once. See the
 [Star Trek catalog and rules checks](docs/CARD_COVERAGE.md#november-11-catalog-refresh).
 
 A failed AI payment restores supported sacrifices to the original battlefield

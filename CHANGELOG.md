@@ -6,6 +6,9 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Restore Dilemma history after canceled modal casts and count a completed
+  entwine or free modal cast once. Verify modal triggers, random-mode Treasure
+  creation, and selected Assimilate control and zone changes.
 - Port the reviewed Commander engine changes to Forge's Star Trek release.
 - Match All Good Things... by Oracle ID and verify its final chapter against
   empty exile, a single card, a common type, and overlapping pairs with no

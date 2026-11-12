@@ -5,7 +5,7 @@ the source modifications and regression source used by the reviewed Commander
 engine. The unmodified source is pinned by commit and archive SHA-256 in
 [`sticker_recipe.json`](sticker_recipe.json). The Star Trek recipe applies a port
 of the reviewed changes to Forge 2.0.16, followed by the Saga common-card-type
-fix. The earlier patch files and engine locks preserve the history of those
+and Dilemma cast fixes. The earlier patch files and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
 In the earlier recipe, the Wicker Picker patch was pinned
@@ -68,7 +68,7 @@ JDK 17+ and Java runtime, then run from the repository root:
 The tool checks source, Maven, patch and regression-source hashes before building.
 It extracts into a fresh generated directory under `data/engine-builds/`, rejects
 archive traversal/symlinks and bounds extracted member counts and sizes. It runs
-954 native sticker, chosen-color, companion, supplementary-copy, history,
+969 native tests covering Dilemma, Assimilate, stickers, chosen color, companions, supplementary-copy, history,
 damage, participant, starting-life, paid-stack, cast-form, usage-history,
 temporal-state, delayed-trigger, turn/phase-schedule and conditional-cleanup, animation, temporary-copy, protection, keyword-restoration, power-exchange,
 forced-blocking, prevention-shield, Ring, text-edit, Reconfigure and mana-keyword, host-return, temporary-effect, regeneration, Detain, control-age, player-control, decision/response, controlled-attack, primary-control, resolver-boundary paid spell-control/retargeting, and tap selection, payment, and refund tests.

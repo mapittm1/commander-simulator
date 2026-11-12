@@ -60,10 +60,22 @@ diagnostics report with 39 turn markers and 40 recorded casts. See the
 
 Forge 2.0.16 also adds bounded Flat Monte Carlo settings to the Cautious AI
 profile. The live suite exercises selected decisions under the packaged engine.
-The modal probes exposed a dilemma history rollback issue and a missing entwine
-count. Fixes are under separate verification. A landless Vintage replay also
-showed that Flat Monte Carlo can offer and score Mishra's Bauble, then pass
-because the improvement falls below its configured threshold.
+Dilemma regression cases cover an unpaid cast, target-selection cancellation,
+preservation of a previous dilemma, and single settlement through spell-ability
+copies. A completed entwine counts once. A modal enters trigger and random
+upkeep modes produce the expected counters, including Chira's tapped Treasure.
+The Cascade fixture supplies an accepted legal card choice, mode and target.
+Forge's normal AI declined that cast in the same position. See
+[Wizards' Star Trek mechanics](https://magic.wizards.com/en/news/feature/star-trek-mechanics).
+
+Assimilate cases cover a Dryad Arbor that retains Forest and returns to its
+owner when The Best of Both Worlds reaches chapter III, a graveyard creature
+entering as an artifact in time for Reckless Fireweaver, and Grafdigger's Cage
+preventing the entry. Full rules and AI coverage remain open.
+
+A landless Vintage replay showed that Flat Monte Carlo can offer and score
+Mishra's Bauble, then pass because the improvement falls below its configured
+threshold.
 
 ## Card-counter costs
 
