@@ -1,0 +1,19 @@
+diff --git a/forge-game/src/main/java/forge/game/GameSnapshot.java b/forge-game/src/main/java/forge/game/GameSnapshot.java
+--- a/forge-game/src/main/java/forge/game/GameSnapshot.java
++++ b/forge-game/src/main/java/forge/game/GameSnapshot.java
+@@ -54,7 +54,6 @@
+         GameRules currentRules = origGame.getRules();
+         Match newMatch = new Match(currentRules, newPlayers, origGame.getView().getTitle());
+         newGame = new Game(newPlayers, currentRules, newMatch);
+-        newGame.copyTurnOrderFrom(origGame);
+         restore = false;
+         assignGameState(origGame, newGame, includeStack);
+         //System.out.println("Storing game state with timestamp of :" + origGame.getTimestamp());
+@@ -286,6 +285,7 @@
+     }
+ 
+     public void copyGameState(Game fromGame, Game toGame) {
++        toGame.copyTurnOrderFrom(fromGame);
+         toGame.setAge(fromGame.getAge());
+         toGame.dangerouslySetTimestamp(fromGame.getTimestamp());
+         if (!restore) {

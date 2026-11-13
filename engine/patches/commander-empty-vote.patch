@@ -1,0 +1,21 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/VoteEffect.java b/forge-game/src/main/java/forge/game/ability/effects/VoteEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/VoteEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/VoteEffect.java
+@@ -70,7 +70,7 @@
+             String param = other ? "Player" : sa.getParam("VotePlayer");
+             voteType.addAll(AbilityUtils.getDefinedPlayers(host, param, sa));
+         }
+-        if (voteType.isEmpty()) {
++        if (voteType.isEmpty() && !sa.hasParam("UpTo")) {
+             return;
+         }
+ 
+@@ -84,7 +84,7 @@
+         Player voter = game.getControlVote();
+ 
+         for (final Player p : tgtPlayers) {
+-            if (!p.isInGame()) {
++            if (!p.isInGame() || voteType.isEmpty()) {
+                 continue;
+             }
+             final List<Object> voteOpts = Lists.newArrayList(voteType);

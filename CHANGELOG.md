@@ -6,6 +6,10 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Resolve Vault 11's no-vote draw when there are no eligible creatures.
+- Make Círdan's permanent placement optional for each player with no votes.
+- Restore the saved turn direction when applying a snapshot to an existing game.
+
 - Apply Commander's outside-the-game rule to Learn while preserving its
   discard-and-draw option and Retriever Phoenix replacement.
 - Preserve Aeon Engine's reversed turn order in AI previews and snapshots.

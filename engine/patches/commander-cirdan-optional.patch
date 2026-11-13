@@ -1,0 +1,10 @@
+diff --git a/forge-gui/res/cardsfolder/c/cirdan_the_shipwright.txt b/forge-gui/res/cardsfolder/c/cirdan_the_shipwright.txt
+--- a/forge-gui/res/cardsfolder/c/cirdan_the_shipwright.txt
++++ b/forge-gui/res/cardsfolder/c/cirdan_the_shipwright.txt
+@@ -9,5 +9,5 @@
+ SVar:DBRepeatDraw:DB$ RepeatEach | RepeatPlayers$ Player | RepeatSubAbility$ DBDraw | AmountFromVotes$ True | SubAbility$ DBRepeatPut
+ SVar:DBDraw:DB$ Draw | Defined$ Remembered | NumCards$ Votes
+ SVar:DBRepeatPut:DB$ RepeatEach | RepeatPlayers$ Player | RepeatSubAbility$ DBChangeZone | AmountFromVotes$ True | SubAbility$ DBChangeZone
+-SVar:DBChangeZone:DB$ ChangeZone | DefinedPlayer$ Remembered | ConditionCheckSVar$ Votes | ConditionSVarCompare$ EQ0 | ChangeType$ Permanent | Origin$ Hand | Destination$ Battlefield
++SVar:DBChangeZone:DB$ ChangeZone | DefinedPlayer$ Remembered | ConditionCheckSVar$ Votes | ConditionSVarCompare$ EQ0 | Optional$ True | ChangeType$ Permanent | Origin$ Hand | Destination$ Battlefield
+ Oracle:Vigilance\nSecret council — Whenever Círdan the Shipwright enters or attacks, each player secretly votes for a player, then those votes are revealed. Each player draws a card for each vote they received. Each player who received no votes may put a permanent card from their hand onto the battlefield.

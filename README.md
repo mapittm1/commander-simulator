@@ -19,6 +19,10 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Vault 11 draws for each player when no creature receives a vote. Players who
+receive no votes from Círdan may decline to put a permanent onto the
+battlefield. Restoring a snapshot also restores Aeon Engine's turn direction.
+
 Learn offers discard-and-draw in Commander and honors Retriever Phoenix's
 replacement effect. Aeon Engine's reversed turn order survives AI previews
 and game snapshots. Secret votes stay hidden from later voters until the

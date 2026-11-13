@@ -33,22 +33,30 @@ public class CommanderReverseTurnOrderTest extends AITest {
         verifyCopy(false);
     }
 
+    @Test
+    public void restoringSnapshotRestoresTheReversedDirection() {
+        Game game = newGame();
+        Player actor = game.getPlayers().get(0);
+        Player clockwise = game.getPlayers().get(1);
+        Player counterclockwise = game.getPlayers().get(3);
+        reverseWithAeonEngine(game, actor);
+        assertEquals(game.getNextPlayerAfter(actor), counterclockwise);
+
+        GameSnapshot snapshot = new GameSnapshot(game);
+        snapshot.makeCopy();
+        game.resetTurnOrder();
+        assertEquals(game.getNextPlayerAfter(actor), clockwise);
+        snapshot.restoreGameState(game);
+        assertEquals(game.getNextPlayerAfter(actor), counterclockwise);
+    }
+
     private void verifyCopy(boolean aiCopy) {
         Game game = newGame();
         Player actor = game.getPlayers().get(0);
         Player nextClockwise = game.getPlayers().get(1);
         Player nextCounterclockwise = game.getPlayers().get(3);
         assertEquals(game.getNextPlayerAfter(actor), nextClockwise);
-        Card engine = addCardToZone("Aeon Engine", actor, ZoneType.Battlefield);
-        SpellAbility ability = engine.getSpellAbilities().stream()
-                .filter(SpellAbility::isActivatedAbility).findFirst().orElseThrow();
-        ability.setActivatingPlayer(actor);
-        game.getAction().checkStateEffects(true);
-        assertFalse(engine.isTapped());
-        assertTrue(ComputerUtil.playStack(ability, actor, game));
-        assertTrue(game.getCardState(engine).isInZone(ZoneType.Exile));
-        assertEquals(game.getNextPlayerAfter(actor), nextClockwise);
-        game.getStack().resolveStack();
+        reverseWithAeonEngine(game, actor);
         assertEquals(game.getNextPlayerAfter(actor), nextCounterclockwise);
 
         Game copy = aiCopy ? new GameCopier(game).withStack(true).makeCopy() : new GameSnapshot(game).makeCopy();
@@ -57,6 +65,18 @@ public class CommanderReverseTurnOrderTest extends AITest {
         copy.reverseTurnOrder();
         assertEquals(copy.getNextPlayerAfter(copiedActor).getId(), nextClockwise.getId());
         assertEquals(game.getNextPlayerAfter(actor), nextCounterclockwise);
+    }
+
+    private void reverseWithAeonEngine(Game game, Player actor) {
+        Card engine = addCardToZone("Aeon Engine", actor, ZoneType.Battlefield);
+        SpellAbility ability = engine.getSpellAbilities().stream()
+                .filter(SpellAbility::isActivatedAbility).findFirst().orElseThrow();
+        ability.setActivatingPlayer(actor);
+        game.getAction().checkStateEffects(true);
+        assertFalse(engine.isTapped());
+        assertTrue(ComputerUtil.playStack(ability, actor, game));
+        assertTrue(game.getCardState(engine).isInZone(ZoneType.Exile));
+        game.getStack().resolveStack();
     }
 
     private Game newGame() {
