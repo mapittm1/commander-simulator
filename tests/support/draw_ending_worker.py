@@ -68,6 +68,10 @@ SOURCES = {
     "CommanderExploreTest": "commander_explore_test_sha256",
     "CommanderDiscoverTest": "commander_discover_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
+    "CommanderLearnTest": "commander_learn_test_sha256",
+    "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",
+    "CommanderSecretVoteTest": "commander_secret_vote_test_sha256",
+    "CommanderTimeTravelTest": "commander_time_travel_test_sha256",
     "ProliferateFightAndInvestigateTest": "proliferate_fight_investigate_test_sha256",
     "StarTrekHoloEngineerTest": "star_trek_holo_engineer_test_sha256",
     "StarTrekNamedAbilityTest": "star_trek_named_ability_test_sha256",
@@ -131,6 +135,10 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.ExploreEffect",
     "forge.game.ability.effects.DiscoverEffect",
     "forge.game.ability.effects.VillainousChoiceEffect",
+    "forge.game.ability.effects.LearnEffect",
+    "forge.game.ability.effects.ReverseTurnOrderEffect",
+    "forge.game.ability.effects.VoteEffect",
+    "forge.game.ability.effects.TimeTravelEffect",
     "forge.game.trigger.TriggerRolledDie",
 )
 

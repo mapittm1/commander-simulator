@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Apply Commander's outside-the-game rule to Learn while preserving its
+  discard-and-draw option and Retriever Phoenix replacement.
+- Preserve Aeon Engine's reversed turn order in AI previews and snapshots.
+- Hide prior secret ballots from voting controllers until all votes are cast.
+- Add tests for time travel, including the last time counter on a suspended
+  card and a game with no eligible objects.
+
 - Resolve each villainous choice before prompting for the next one, including
   choices added by The Valeyard. Use active-player-first turn order.
 - Verify 1,021 focused native tests, 269 packaged checks, 2,495 gameplay

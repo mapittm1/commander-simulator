@@ -1,0 +1,27 @@
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -4191,8 +4191,13 @@
+             return;
+         }
+ 
++        boolean canChooseLesson = !isControlled()
++                && game.getRules().getGameType() != GameType.Commander
++                && !game.getRules().hasAppliedVariant(GameType.Commander);
++        List<ZoneType> origins = canChooseLesson ? List.of(ZoneType.Sideboard, ZoneType.Hand)
++                : List.of(ZoneType.Hand);
+         CardCollection list = new CardCollection();
+-        if (!isControlled()) {
++        if (canChooseLesson) {
+             list.addAll(CardLists.getType(getZone(ZoneType.Sideboard), "Lesson"));
+         }
+         list.addAll(getZone(ZoneType.Hand));
+@@ -4200,7 +4205,7 @@
+             return;
+         }
+ 
+-        Card c = getController().chooseSingleCardForZoneChange(ZoneType.Hand, List.of(ZoneType.Sideboard, ZoneType.Hand),
++        Card c = getController().chooseSingleCardForZoneChange(ZoneType.Hand, origins,
+                 sa, list, null, Localizer.getInstance().getMessage("lblLearnALesson"), true, this);
+         if (c == null) {
+             return;

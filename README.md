@@ -19,6 +19,12 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Learn offers discard-and-draw in Commander and honors Retriever Phoenix's
+replacement effect. Aeon Engine's reversed turn order survives AI previews
+and game snapshots. Secret votes stay hidden from later voters until the
+reveal. Time travel checks cover eligible objects and suspend after the last
+time counter is removed.
+
 Villainous choices resolve in turn order. With The Valeyard in play, each
 choice resolves before the same player chooses again. The native tests use
 Ensnared by the Mara to check that damage is visible at the next prompt and
