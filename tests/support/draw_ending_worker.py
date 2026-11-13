@@ -17,6 +17,7 @@ from commander.engine.forge_config import file_hash, jvm_library, read_settings
 from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
 from commander.engine.native_runtime import _environment, require_bridge
 from tests.support.native_receipts import write_test_receipts
+from tools.build_sticker_engine import PRIORITY_PACKAGE, PRIORITY_TESTS
 
 COMPILER_FLAGS = (
     "-version",
@@ -76,6 +77,8 @@ SOURCES = {
     "CommanderTransformHistoryTest": "commander_transform_history_test_sha256",
     "CommanderSnapshotTransformStackTest": "commander_snapshot_stack_test_sha256",
     "CommanderOracleCorrectionsTest": "commander_oracle_corrections_test_sha256",
+    "CommanderTemptCopyTest": "commander_tempt_copy_test_sha256",
+    "CommanderConditionalManaTest": "commander_conditional_mana_test_sha256",
     "CommanderSecretVoteTest": "commander_secret_vote_test_sha256",
     "CommanderEmptyVoteTest": "commander_empty_vote_test_sha256",
     "CommanderPublicVoteTest": "commander_public_vote_test_sha256",
@@ -88,7 +91,9 @@ SOURCES = {
     "StarTrekKobayashiTest": "star_trek_kobayashi_test_sha256",
     "StarTrekAssimilateProbeTest": "star_trek_assimilate_test_sha256",
 }
-TEST_CLASSES = tuple(f"forge.ai.{name}" for name in SOURCES if name != "AITest")
+TEST_CLASSES = tuple(
+    f"forge.ai.{name}" for name in SOURCES if name != "AITest"
+) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
     "forge.ai.ComputerUtilMana",
     "forge.ai.simulation.OnePlaySafetyChecker",
@@ -152,6 +157,8 @@ NATIVE_CLASSES = (
     "forge.game.spellability.SpellAbilityStackInstance",
     "forge.game.spellability.SpellAbilitySnapshot",
     "forge.game.ability.effects.CounterEffect",
+    "forge.game.ability.effects.CopySpellAbilityEffect",
+    "forge.game.ability.effects.RepeatEachEffect",
     "forge.game.phase.PhaseHandler",
     "forge.game.ability.effects.VoteEffect",
     "forge.game.ability.effects.TimeTravelEffect",
@@ -167,6 +174,11 @@ def _inputs():
     for source, key in zip(sources, SOURCES.values()):
         if file_hash(source) != recipe[key]:
             raise ValueError("Reviewed packaged rules source changed")
+    for name in ("PriorityTestBase", *PRIORITY_TESTS):
+        source = PROJECT / "engine/tests" / f"{name}.java"
+        if file_hash(source) != recipe["upstream_priority_tests"][name]:
+            raise ValueError("Reviewed packaged priority source changed")
+        sources.append(source)
     dependency = recipe["packaged_testng"]
     expected = "data/engine-builds/m2/org/testng/testng/7.10.2/testng-7.10.2.jar"
     if dependency["path"] != expected:
@@ -280,7 +292,11 @@ def main() -> None:
             raise ValueError(
                 "Rules tests did not load production classes from the packaged JAR"
             )
-    for name in ("forge.ai.AITest", *TEST_CLASSES):
+    for name in (
+        "forge.ai.AITest",
+        PRIORITY_PACKAGE + "PriorityTestBase",
+        *TEST_CLASSES,
+    ):
         if not _origin(java, name).samefile(output):
             raise ValueError(
                 "Rules test classes did not load from the isolated compilation"

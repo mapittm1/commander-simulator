@@ -1,0 +1,192 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -294,6 +294,17 @@
+         }
+     }
+ 
++    private static SpellAbility getUncounterableManaAbility(Card source, SpellAbility paidFor) {
++        for (SpellAbility ability : source.getManaAbilities()) {
++            AbilityManaPart mana = activeManaAbilityPart(ability).getManaPart();
++            if (mana != null && mana.isAnyMana() && mana.cannotCounterPaidWith(paidFor)
++                    && mana.meetsManaRestrictions(paidFor)) {
++                return ability;
++            }
++        }
++        return null;
++    }
++
+     public static SpellAbility chooseManaAbility(ManaCostBeingPaid cost, SpellAbility sa, Player ai, ManaCostShard toPay,
+             Collection<SpellAbility> maList, boolean checkCosts, boolean planTapGroups, boolean reservesLaterCosts) {
+         Card saHost = sa.getHostCard();
+@@ -346,6 +357,13 @@
+             }
+         }
+ 
++        if (toPay == ManaCostShard.COLORLESS && cost.getUnpaidShards().contains(ManaCostShard.GENERIC)) {
++            // Preserve a source's uncounterable mana for a generic shard when possible.
++            List<SpellAbility> ordered = Lists.newArrayList(maList);
++            ordered.sort(Comparator.comparing(mana -> getUncounterableManaAbility(mana.getHostCard(), sa) != null));
++            maList = ordered;
++        }
++
+         for (final SpellAbility ma : maList) {
+             // this rarely seems like a good idea
+             if (ma.getHostCard() == saHost) {
+@@ -399,22 +417,12 @@
+ 
+             SpellAbility paymentChoice = ma;
+ 
+-            // Exception: when paying generic mana with Cavern of Souls, prefer the colored mana producing ability
+-            // to attempt to make the spell uncounterable when possible.
+-            if (ComputerUtilAbility.getAbilitySourceName(ma).equals("Cavern of Souls")
+-                    && saHost.getType().hasCreatureType(ma.getHostCard().getChosenType())) {
+-                if (toPay == ManaCostShard.COLORLESS && cost.getUnpaidShards().contains(ManaCostShard.GENERIC)) {
+-                    // Deprioritize Cavern of Souls, try to pay generic mana with it instead to use the NoCounter ability
+-                    continue;
+-                } else if (toPay == ManaCostShard.GENERIC || toPay == ManaCostShard.X) {
+-                    for (SpellAbility ab : maList) {
+-                        if (ab.isManaAbility() && ab.getManaPart().isAnyMana() && ab.hasParam("AddsNoCounter")) {
+-                            if (!ab.getHostCard().isTapped()) {
+-                                paymentChoice = ab;
+-                                break;
+-                            }
+-                        }
+-                    }
++            if (toPay == ManaCostShard.GENERIC || toPay == ManaCostShard.X) {
++                SpellAbility uncounterable = getUncounterableManaAbility(ma.getHostCard(), sa);
++                if (uncounterable != null
++                        && canPayShardWithSpellAbility(toPay, ai, uncounterable, sa, cost, checkCosts,
++                                cost.getXManaCostPaidByColor())) {
++                    paymentChoice = uncounterable;
+                 }
+             }
+ 
+@@ -543,7 +551,7 @@
+     private static void payProjectedMana(ManaCostBeingPaid cost, Player payer, SpellAbility payingFor,
+             SpellAbility source, String produced, int multiplier) {
+         Card host = source.getHostCard();
+-        AbilityManaPart part = source.getManaPart();
++        AbilityManaPart part = activeManaAbilityPart(source).getManaPart();
+         if (part == null || !part.meetsManaRestrictions(payingFor)) {
+             return;
+         }
+@@ -896,7 +904,7 @@
+                 // land that's needed for a colored shard.
+                 if (!test && !prepayFilterManaAbility(cost, sa, ai, saPayment, toPay, sourcesForShards,
+                         paymentList, effect, sacrifices, tapGroups, resources)) {
+-                    saPayment.getManaPart().clearExpressChoice();
++                    clearManaExpressChoices(saPayment);
+                     saExcludeList.add(saPayment);
+                     continue;
+                 }
+@@ -1014,7 +1022,7 @@
+     }
+ 
+     private static void releaseFailedManaTap(Player player, SpellAbility ability, boolean newTapReservation) {
+-        ability.getManaPart().clearExpressChoice();
++        clearManaExpressChoices(ability);
+         if (newTapReservation) {
+             AiCardMemory.forgetCard(player, ability.getHostCard(), MemorySet.PAYS_TAP_COST);
+         }
+@@ -1266,15 +1274,36 @@
+         return list;
+     }
+ 
++    // Conditional alternatives such as Gemstone Caverns produce mana in a sub-ability.
++    private static SpellAbility activeManaAbilityPart(SpellAbility ability) {
++        if (ability.getSubAbility() != null) {
++            for (SpellAbility part = ability; part != null; part = part.getSubAbility()) {
++                if (part.getManaPart() != null && part.metConditions()) {
++                    return part;
++                }
++            }
++        }
++        return ability;
++    }
++
++    private static void clearManaExpressChoices(SpellAbility ability) {
++        for (SpellAbility part = ability; part != null; part = part.getSubAbility()) {
++            if (part.getManaPart() != null) {
++                part.getManaPart().clearExpressChoice();
++            }
++        }
++    }
++
+     private static int producedColors(final SpellAbility ma) {
+-        final AbilityManaPart mp = ma.getManaPart();
++        final SpellAbility part = activeManaAbilityPart(ma);
++        final AbilityManaPart mp = part.getManaPart();
+         if (mp == null) {
+             return 0;
+         }
+         final Set<String> reflected = CardUtil.getReflectableManaColors(ma);
+         int mask = 0;
+         for (final byte c : MagicColor.WUBRG) {
+-            if (mp.canProduce(MagicColor.toShortString(c), ma) || reflected.contains(MagicColor.toLongString(c))) {
++            if (mp.canProduce(MagicColor.toShortString(c), part) || reflected.contains(MagicColor.toLongString(c))) {
+                 mask |= c;
+             }
+         }
+@@ -1283,7 +1312,7 @@
+ 
+     private static void resetPayment(List<SpellAbility> payments) {
+         for (SpellAbility sa : payments) {
+-            sa.getManaPart().clearExpressChoice();
++            clearManaExpressChoices(sa);
+         }
+     }
+ 
+@@ -1513,8 +1542,9 @@
+             return false;
+         }
+ 
+-        AbilityManaPart m = ma.getManaPart();
+-        if (!m.meetsManaRestrictions(sa)) {
++        final SpellAbility part = activeManaAbilityPart(ma);
++        final AbilityManaPart m = part.getManaPart();
++        if (m == null || !m.meetsManaRestrictions(sa)) {
+             return false;
+         }
+ 
+@@ -1530,7 +1560,7 @@
+         }
+ 
+         if (m.isComboMana()) {
+-            for (String s : m.getComboColors(ma).split(" ")) {
++            for (String s : m.getComboColors(part).split(" ")) {
+                 if (toPay == ManaCostShard.COLORED_X && !ManaCostBeingPaid.canColoredXShardBePaidByColor(s, xManaCostPaidByColor)) {
+                     continue;
+                 }
+@@ -1541,19 +1571,19 @@
+ 
+                 if (ai.getManaPool().canPayForShardWithColor(toPay, ManaAtom.fromName(s))) {
+                     // usually we'll want to produce color that matches the shard
+-                    ColorSet shared = ColorSet.fromMask(toPay.getColorMask()).getSharedColors(ColorSet.fromNames(m.getComboColors(ma).split(" ")));
++                    ColorSet shared = ColorSet.fromMask(toPay.getColorMask()).getSharedColors(ColorSet.fromNames(m.getComboColors(part).split(" ")));
+                     // but other effects might still lead to a more permissive payment
+                     if (!shared.isColorless()) {
+                         m.setExpressChoice(shared.iterator().next().getShortName());
+                     }
+-                    setComboManaChoice(ai, ma, cost);
++                    setComboManaChoice(ai, part, cost);
+                     return true;
+                 }
+             }
+             return false;
+         }
+ 
+-        if (ma.getApi() == ApiType.ManaReflected) {
++        if (part.getApi() == ApiType.ManaReflected) {
+             Set<String> reflected = CardUtil.getReflectableManaColors(ma);
+ 
+             for (byte c : MagicColor.WUBRGC) {
+@@ -1578,7 +1608,7 @@
+         }
+ 
+         if (toPay == ManaCostShard.COLORED_X) {
+-            for (String s : m.mana(ma).split(" ")) {
++            for (String s : m.mana(part).split(" ")) {
+                 if (ManaCostBeingPaid.canColoredXShardBePaidByColor(s, xManaCostPaidByColor)) {
+                     return true;
+                 }

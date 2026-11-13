@@ -1,0 +1,351 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -266,6 +266,7 @@
+         }
+ 
+         final Card source = sa.getHostCard();
++        final int waitingMark = game.getTriggerHandler().getWaitingTriggerCount();
+ 
+         Zone fromZone = game.getZoneOf(source);
+         int zonePosition = 0;
+@@ -300,7 +301,7 @@
+             if (movedSpell) {
+                 GameActionUtil.restoreUnpaidCast(sa, fromZone, zonePosition, pay, source);
+             } else {
+-                GameActionUtil.rollbackAbility(sa, fromZone, zonePosition, pay, source);
++                GameActionUtil.rollbackAbility(sa, fromZone, zonePosition, pay, source, waitingMark);
+             }
+             return false;
+         }
+diff --git a/forge-game/src/main/java/forge/game/GameActionUtil.java b/forge-game/src/main/java/forge/game/GameActionUtil.java
+--- a/forge-game/src/main/java/forge/game/GameActionUtil.java
++++ b/forge-game/src/main/java/forge/game/GameActionUtil.java
+@@ -963,7 +963,8 @@
+         return completeList;
+     }
+ 
+-    public static void rollbackAbility(SpellAbility ability, final Zone fromZone, final int zonePosition, CostPayment payment, Card oldCard) {
++    public static void rollbackAbility(SpellAbility ability, final Zone fromZone, final int zonePosition, CostPayment payment, Card oldCard,
++            final int waitingMark) {
+         // cancel ability during target choosing
+         final Game game = ability.getActivatingPlayer().getGame();
+ 
+@@ -977,7 +978,7 @@
+ 
+         restoreUnpaidCast(ability, fromZone, zonePosition, payment, oldCard);
+         game.getStack().clearFrozen();
+-        game.getTriggerHandler().clearWaitingTriggers();
++        game.getTriggerHandler().clearWaitingTriggersFrom(waitingMark);
+     }
+ 
+     /** Restore the source card and refundable costs without clearing unrelated queued work. */
+diff --git a/forge-game/src/main/java/forge/game/GameState.java b/forge-game/src/main/java/forge/game/GameState.java
+--- a/forge-game/src/main/java/forge/game/GameState.java
++++ b/forge-game/src/main/java/forge/game/GameState.java
+@@ -957,13 +957,19 @@
+     }
+ 
+     private void handleAddSAsToStack(final Game game) {
++        Player lastActivator = null;
+         for (int i = 0; i < playerStates.size(); i++) {
+             if (playerStates.get(i).putOnStack != null) {
+                 String[] spellList = TextUtil.split(playerStates.get(i).putOnStack, ';');
+                 for (String spell : spellList) {
+                     precastSpellFromCard(spell, game.getPlayers().get(i), game, true);
+-                }
+-            }
++                    lastActivator = game.getPlayers().get(i);
++                }
++            }
++        }
++        // the player who put the last spell on the stack starts with priority, as if they had just cast it (CR 117.3c)
++        if (lastActivator != null) {
++            game.getPhaseHandler().setPriority(lastActivator);
+         }
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/CopySpellAbilityEffect.java b/forge-game/src/main/java/forge/game/ability/effects/CopySpellAbilityEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/CopySpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/CopySpellAbilityEffect.java
+@@ -80,6 +80,8 @@
+         }
+ 
+         List<Player> controllers = AbilityUtils.getDefinedPlayers(card, sa.getParam("Controller"), sa);
++        // CR 405.3: copies put on the stack at the same time go on in APNAP order, the active player's lowest
++        sortAPNAP(sa, controllers);
+ 
+         boolean isOptional = sa.hasParam("Optional");
+ 
+@@ -153,9 +155,6 @@
+                 } else {
+                     for (int i = 0; i < amount; i++) {
+                         SpellAbility copy = CardFactory.copySpellAbilityAndPossiblyHost(sa, chosenSA, controller);
+-                        if (sa.hasParam("IgnoreFreeze")) {
+-                            copy.putParam("IgnoreFreeze", "True");
+-                        }
+                         if (sa.hasParam("MayChooseTarget")) {
+                             copy.setMayChooseNewTargets(true);
+                         }
+diff --git a/forge-game/src/main/java/forge/game/card/CardFactoryUtil.java b/forge-game/src/main/java/forge/game/card/CardFactoryUtil.java
+--- a/forge-game/src/main/java/forge/game/card/CardFactoryUtil.java
++++ b/forge-game/src/main/java/forge/game/card/CardFactoryUtil.java
+@@ -915,7 +915,7 @@
+             inst.addTrigger(parsedTrigger);
+         } else if (keyword.equals("Demonstrate")) {
+             final String trigScript = "Mode$ SpellCast | ValidCard$ Card.Self | TriggerZones$ Stack | TriggerDescription$ Demonstrate (" + inst.getReminderText() + ")";
+-            final String youCopyStr = "DB$ CopySpellAbility | Defined$ TriggeredSpellAbility | MayChooseTarget$ True | Optional$ True | RememberCopies$ True | IgnoreFreeze$ True";
++            final String youCopyStr = "DB$ CopySpellAbility | Defined$ TriggeredSpellAbility | MayChooseTarget$ True | Optional$ True | RememberCopies$ True";
+             final String chooseOppStr = "DB$ ChoosePlayer | Defined$ You | Choices$ Player.Opponent | ConditionDefined$ Remembered | ConditionPresent$ Spell";
+             final String oppCopyStr = "DB$ CopySpellAbility | Controller$ ChosenPlayer | Defined$ TriggeredSpellAbility | MayChooseTarget$ True | ConditionDefined$ Remembered | ConditionPresent$ Spell";
+             final String cleanupStr = "DB$ Cleanup | ClearRemembered$ True | ClearChosenPlayer$ True";
+diff --git a/forge-game/src/main/java/forge/game/phase/PhaseHandler.java b/forge-game/src/main/java/forge/game/phase/PhaseHandler.java
+--- a/forge-game/src/main/java/forge/game/phase/PhaseHandler.java
++++ b/forge-game/src/main/java/forge/game/phase/PhaseHandler.java
+@@ -508,15 +508,20 @@
+         game.getStack().unfreezeStack();
+ 
+         // CR 514.3a
+-        if (phase == PhaseType.CLEANUP && (!game.getStack().isEmpty() || game.getStack().hasSimultaneousStackEntries())) {
++        if (phase == PhaseType.CLEANUP && game.getStack().hasSimultaneousStackEntries()) {
+             bRepeatCleanup = true;
+             givePriorityToPlayer = true;
+         }
+     }
+ 
+     private void onPhaseEnd() {
++        onPhaseEnd(true);
++    }
++
++    private void onPhaseEnd(final boolean priorityWasGiven) {
+         // If the Stack isn't empty why is nextPhase being called?
+-        if (!game.getStack().isEmpty()) {
++        // (a step in which nobody received priority may end with objects on the stack: CR 502.4, CR 725.1f)
++        if (priorityWasGiven && !game.getStack().isEmpty()) {
+             throw new IllegalStateException("Phase.nextPhase() is called, but Stack isn't empty.");
+         }
+ 
+@@ -1271,7 +1276,8 @@
+             nobodyPassed = pPlayerPriority.hasLost() && pFirstPriority == nextPlayer;
+         }
+         if (pFirstPriority == nextPlayer && !nobodyPassed) {
+-            if (game.getStack().isEmpty()) {
++            final boolean priorityWasGiven = givePriorityToPlayer;
++            if (game.getStack().isEmpty() || !priorityWasGiven) {
+                 if (playerTurn.hasLost()) {
+                     setPriority(game.getNextPlayerAfter(playerTurn));
+                 } else {
+@@ -1279,7 +1285,7 @@
+                 }
+ 
+                 givePriorityToPlayer = true;
+-                onPhaseEnd();
++                onPhaseEnd(priorityWasGiven);
+                 advanceToNextPhase();
+                 onPhaseBegin();
+             }
+diff --git a/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java b/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
+--- a/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
++++ b/forge-game/src/main/java/forge/game/player/PlaySpellAbility.java
+@@ -582,6 +582,7 @@
+         final Player player = ability.getActivatingPlayer();
+         final Game game = player.getGame();
+         boolean refreeze = game.getStack().isFrozen();
++        final int waitingMark = game.getTriggerHandler().getWaitingTriggerCount();
+ 
+         if (!skipStack) {
+             if (!refreeze) {
+@@ -691,13 +692,13 @@
+             if (ability.isTrigger()) {
+                 // Only roll back triggers if they were not paid for
+                 if (game.EXPERIMENTAL_RESTORE_SNAPSHOT && preCostRequisites) {
+-                    GameActionUtil.rollbackAbility(ability, fromZone, zonePosition, payment, c);
++                    GameActionUtil.rollbackAbility(ability, fromZone, zonePosition, payment, c, waitingMark);
+                 } else {
+                     // If precost requsities failed, then there probably isn't anything to refund during experimental
+                     payment.refundPayment();
+                 }
+             } else {
+-                GameActionUtil.rollbackAbility(ability, fromZone, zonePosition, payment, c);
++                GameActionUtil.rollbackAbility(ability, fromZone, zonePosition, payment, c, waitingMark);
+             }
+ 
+             if (!refreeze) {
+diff --git a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -409,6 +409,17 @@
+         return checkStatics;
+     }
+ 
++    public int getWaitingTriggerCount() {
++        return waitingTriggers.size();
++    }
++
++    /** Clears the triggers that started waiting after {@code mark} (from {@link #getWaitingTriggerCount()}). */
++    public void clearWaitingTriggersFrom(final int mark) {
++        if (mark >= 0 && mark < waitingTriggers.size()) {
++            waitingTriggers.subList(mark, waitingTriggers.size()).clear();
++        }
++    }
++
+     public void clearWaitingTriggers() {
+         waitingTriggers.clear();
+     }
+diff --git a/forge-game/src/main/java/forge/game/zone/MagicStack.java b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+--- a/forge-game/src/main/java/forge/game/zone/MagicStack.java
++++ b/forge-game/src/main/java/forge/game/zone/MagicStack.java
+@@ -70,7 +70,6 @@
+ 
+     // They don't provide a LIFO queue, so had to use a deque
+     private final Deque<SpellAbilityStackInstance> stack = new LinkedBlockingDeque<>();
+-    private final Stack<SpellAbilityStackInstance> frozenStack = new Stack<>();
+     private final Stack<SpellAbility> undoStack = new Stack<>();
+     private Player undoStackOwner;
+ 
+@@ -114,7 +113,6 @@
+         curResolving = null;
+         triggerRepeats.clear();
+         illegalAdditions.clear();
+-        frozenStack.clear();
+         clearUndoStack();
+         clear();
+     }
+@@ -168,11 +166,6 @@
+         frozen = false;
+         primaryAbility = null;
+ 
+-        // Add all Frozen Abilities onto the stack
+-        while (!frozenStack.isEmpty()) {
+-            final SpellAbilityStackInstance si = frozenStack.pop();
+-            add(si.getSpellAbility(), si);
+-        }
+         // Add all waiting triggers onto the stack
+         game.getTriggerHandler().resetActiveTriggers();
+         game.getTriggerHandler().runWaitingTriggers();
+@@ -181,7 +174,6 @@
+     public final void clearFrozen() {
+         // TODO: frozen triggered abilities and undoable costs have nasty consequences
+         frozen = false;
+-        frozenStack.clear();
+     }
+ 
+     public final boolean isResolving() {
+@@ -310,12 +302,6 @@
+             }
+         }
+ 
+-        if (frozen && !sp.hasParam("IgnoreFreeze") && !sp.isCastFromPlayEffect()) {
+-            si = new SpellAbilityStackInstance(sp, id);
+-            frozenStack.push(si);
+-            return;
+-        }
+-
+         if (sp.isAbility() && !sp.isCopied() && !sp.isTrigger()) {
+             addAbilityActivatedThisTurn(sp);
+         }
+@@ -343,13 +329,6 @@
+         }
+         distinctSources += sources.size();
+         if (distinctSources > maxDistinctSources) maxDistinctSources = distinctSources;
+-
+-        // 2012-07-21 the following comparison needs to move below the pushes but somehow screws up priority
+-        // When it's down there. That makes absolutely no sense to me, so i'm putting it back for now
+-        if (!(sp.isTrigger() || (sp instanceof AbilityStatic))) {
+-            // when something is added we need to setPriority
+-            game.getPhaseHandler().setPriority(sp.getActivatingPlayer());
+-        }
+ 
+         sp.getHostCard().getGame().getAction().checkStaticAbilities(false);
+         sp.getHostCard().getGame().getTriggerHandler().resetActiveTriggers();
+@@ -795,10 +774,6 @@
+         unfreezeStack();
+         sa.resetOnceResolved();
+ 
+-        if (sa.getApi() != ApiType.EndTurn) {
+-            game.getPhaseHandler().onStackResolved();
+-        }
+-
+         curResolving = null;
+     }
+ 
+@@ -897,7 +872,6 @@
+ 
+     public final void remove(final SpellAbilityStackInstance si) {
+         stack.remove(si);
+-        frozenStack.remove(si);
+         game.updateStackForView();
+         game.fireEvent(new GameEventSpellRemovedFromStack(SpellAbilityView.get(si.getSpellAbility())));
+     }
+@@ -1036,12 +1010,6 @@
+             }
+         }
+ 
+-        for (final SpellAbilityStackInstance sasi : frozenStack) {
+-            if (sasi.isStateTrigger(triggerID)) {
+-                return true;
+-            }
+-        }
+-
+         for (final SpellAbility sa : simultaneousStackEntryList) {
+             if (sa.getSourceTrigger() == triggerID) {
+                 return true;
+@@ -1134,7 +1102,7 @@
+ 
+     @Override
+     public String toString() {
+-        return TextUtil.concatNoSpace(simultaneousStackEntryList.toString(),"==", frozenStack.toString(), "==", stack.toString());
++        return TextUtil.concatNoSpace(simultaneousStackEntryList.toString(),"==", stack.toString());
+     }
+ 
+     static protected boolean commitCrimeCheck(Player p, Iterable<TargetChoices> chosenTargets) {
+@@ -1164,9 +1132,6 @@
+         stack.clear();
+         for (SpellAbilityStackInstance entry : includeEntries ? original.stack : java.util.List.<SpellAbilityStackInstance>of())
+             stack.addLast(SpellAbilityStackInstance.copyForSnapshot(entry, context.copy(entry.getSpellAbility())));
+-        frozenStack.clear();
+-        for (SpellAbilityStackInstance entry : includeEntries ? original.frozenStack : java.util.List.<SpellAbilityStackInstance>of())
+-            frozenStack.add(SpellAbilityStackInstance.copyForSnapshot(entry, context.copy(entry.getSpellAbility())));
+         simultaneousStackEntryList.clear();
+         for (SpellAbility value : includeEntries ? original.simultaneousStackEntryList : java.util.List.<SpellAbility>of()) simultaneousStackEntryList.add(context.copy(value));
+         thisTurnCast.clear();
+diff --git a/forge-gui/res/cardsfolder/c/chefs_kiss.txt b/forge-gui/res/cardsfolder/c/chefs_kiss.txt
+--- a/forge-gui/res/cardsfolder/c/chefs_kiss.txt
++++ b/forge-gui/res/cardsfolder/c/chefs_kiss.txt
+@@ -2,7 +2,7 @@
+ ManaCost:1 R R
+ Types:Instant
+ A:SP$ ControlSpell | ValidTgts$ Card | TgtPrompt$ Select target spell that targets only a single permanent or player | TargetType$ Spell.numTargets EQ1 | TargetValidTargeting$ Permanent.inRealZoneBattlefield,Player | Mode$ Gain | RememberTargets$ True | SubAbility$ DBCopy | StackDescription$ SpellDescription | SpellDescription$ Gain control of target spell that targets only a single permanent or player. Copy it, then reselect the targets at random for the spell and the copy. The new targets can't be you or a permanent you control.
+-SVar:DBCopy:DB$ CopySpellAbility | Defined$ Targeted | RememberCopies$ True | SubAbility$ DBChangeTargets | IgnoreFreeze$ True | StackDescription$ None
++SVar:DBCopy:DB$ CopySpellAbility | Defined$ Targeted | RememberCopies$ True | SubAbility$ DBChangeTargets | StackDescription$ None
+ SVar:DBChangeTargets:DB$ ChangeTargets | Defined$ Remembered | RandomTarget$ True | RandomTargetRestriction$ Player.Other,Permanent.YouDontCtrl | SubAbility$ DBCleanup
+ SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True
+ Oracle:Gain control of target spell that targets only a single permanent or player. Copy it, then reselect the targets at random for the spell and the copy. The new targets can't be you or a permanent you control.
+diff --git a/forge-gui/res/cardsfolder/u/ulalek_fused_atrocity.txt b/forge-gui/res/cardsfolder/u/ulalek_fused_atrocity.txt
+--- a/forge-gui/res/cardsfolder/u/ulalek_fused_atrocity.txt
++++ b/forge-gui/res/cardsfolder/u/ulalek_fused_atrocity.txt
+@@ -4,6 +4,6 @@
+ PT:2/5
+ K:Devoid
+ T:Mode$ SpellCast | ValidCard$ Card.Eldrazi | ValidActivatingPlayer$ You | Execute$ TrigCopySpell | TriggerZones$ Battlefield | TriggerDescription$ Whenever you cast an Eldrazi spell, you may pay {C}{C}. If you do, copy all spells you control, then copy all other activated and triggered abilities you control. You may choose new targets for the copies. (Mana abilities can't be copied.)
+-SVar:TrigCopySpell:AB$ CopySpellAbility | Cost$ C C | Defined$ ValidStack Spell.YouCtrl | MayChooseTarget$ True | IgnoreFreeze$ True | SubAbility$ TrigCopyAbilities
+-SVar:TrigCopyAbilities:DB$ CopySpellAbility | Defined$ ValidStack Ability.YouCtrl+otherAbility | MayChooseTarget$ True | IgnoreFreeze$ True
++SVar:TrigCopySpell:AB$ CopySpellAbility | Cost$ C C | Defined$ ValidStack Spell.YouCtrl | MayChooseTarget$ True | SubAbility$ TrigCopyAbilities
++SVar:TrigCopyAbilities:DB$ CopySpellAbility | Defined$ ValidStack Ability.YouCtrl+otherAbility | MayChooseTarget$ True
+ Oracle:Devoid\nWhenever you cast an Eldrazi spell, you may pay {C}{C}. If you do, copy all spells you control, then copy all other activated and triggered abilities you control. You may choose new targets for the copies. (Mana abilities can't be copied.)
+diff --git a/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java b/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java
+--- a/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java
++++ b/forge-gui/src/main/java/forge/player/PlayerControllerHuman.java
+@@ -3546,7 +3546,12 @@
+                                 // controlled by chosen player.
+                                 sa.setActivatingPlayer(p);
+                                 sa.setCastFromPlayEffect(true);
++                                final int stackSize = getGame().getStack().size();
+                                 PlaySpellAbility.playSaWithoutPayingManaCost(PlayerControllerHuman.this, sa, true);
++                                if (getGame().getStack().size() > stackSize) {
++                                    // as if p had just cast it: everyone gets to respond before it resolves (CR 117.3c)
++                                    getGame().getPhaseHandler().setPriority(p);
++                                }
+                             }
+                             // playSa could fire some triggers
+                             getGame().getStack().addAllTriggeredAbilitiesToStack();

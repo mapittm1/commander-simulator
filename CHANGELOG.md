@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct priority when resolving spells, copying spells and ending the turn.
+- Preserve Tempt with Mayhem’s spell target and copy order.
+- Fix mana payment with Gemstone Caverns, Cavern of Souls, and Delighted Halfling.
+
+
 - Exclude Vault 13: Dweller's Journey from its own first chapter's targets.
 - Count Wizards controlled by all players when resolving Ixidor's Will.
 - Preserve queued abilities and paid spell targets when restoring a snapshot.

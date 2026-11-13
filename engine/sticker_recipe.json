@@ -87,14 +87,26 @@
     {
       "path": "engine/patches/commander-oracle-corrections.patch",
       "sha256": "80498babb482a3fa3454440c1e400dff2f8211688673546f3e2a96b7e68cd0c1"
+    },
+    {
+      "path": "engine/patches/commander-priority.patch",
+      "sha256": "034b42f0388faaed9ea7e41d88a7cfaaf2fa357b508cebe84b2a150405788bb3"
+    },
+    {
+      "path": "engine/patches/commander-tempt-copy.patch",
+      "sha256": "4efa7c21835e366c446bdcc5a3522fc994b096888bdbbd6fc912524a36771b49"
+    },
+    {
+      "path": "engine/patches/commander-conditional-mana.patch",
+      "sha256": "a1ddde079132cd7002397a55fc93eddc2e295e35ca6d4742861434761db69c0c"
     }
   ],
   "test_sha256": "c0af95496b1e1764ac1e5bdb0f97d4246220cbc33f5e547c26a01c1d793839b0",
   "patch_source": "https://github.com/Card-Forge/forge/pull/12129",
   "patch_commit": "470d983bea1dd40b06ea81c6e061b4b14c31f933",
   "commander_color_test_sha256": "d7e05a0ad8abba97ef16b38fb2f6316a738be7d135e124aac09dffd6ce8e90c1",
-  "native_test_count": 1047,
-  "runtime_version": "2.0.16-583714b-reviewed-snapshot-oracle",
+  "native_test_count": 1077,
+  "runtime_version": "2.0.16-583714b-reviewed-priority-mana",
   "capabilities": [
     "sticker_kicker",
     "explicit_commander_colors",
@@ -156,7 +168,10 @@
     "h/hit_it.txt",
     "c/cirdan_the_shipwright.txt",
     "i/ixidors_will.txt",
-    "v/vault_13_dwellers_journey.txt"
+    "v/vault_13_dwellers_journey.txt",
+    "c/chefs_kiss.txt",
+    "u/ulalek_fused_atrocity.txt",
+    "t/tempt_with_mayhem.txt"
   ],
   "companion_pregame_test_sha256": "c1407e3f50c3dcd7b89157ac253682d647a45356d3e86a17fb3e090a0894b799",
   "supplementary_copy_test_sha256": "9cae83e69d32413c5f98755ea052a5d724581d9e88877154fe26f8289ef211e4",
@@ -261,5 +276,18 @@
   "commander_incubate_test_sha256": "34ae0b7cb226146e914279f102ebc2a58c7e5ee8ac98914caaca9f4287d0aa1d",
   "commander_transform_history_test_sha256": "8c9acdc0d9332234775743394d57f38ca84375ff24d27d6dab3b90eb14decb8e",
   "commander_snapshot_stack_test_sha256": "aa9fbc3584949abe724655f55f7f52060435667752ade1abb1cea99a1619bcf0",
-  "commander_oracle_corrections_test_sha256": "3e9b041f7741febd94d748eea2949c59b13b276dc7a1e77bd9b8936391ad9b5a"
+  "commander_oracle_corrections_test_sha256": "3e9b041f7741febd94d748eea2949c59b13b276dc7a1e77bd9b8936391ad9b5a",
+  "commander_tempt_copy_test_sha256": "ec83c730b64eb5abec88f3c5b3de75cd591270170cf63826aedb0adf9b5266d8",
+  "commander_conditional_mana_test_sha256": "c22109854edff268dfa3abd88212ae04d8cacf8edfa8f4625fa5387ef7809295",
+  "upstream_priority_tests": {
+    "CancelledCastDuringResolutionTest": "8210e54523f9c63cfd8717ebc11142494335091656ea195e279613b438bba8b6",
+    "CastDuringResolutionPriorityTest": "3e32a4d6f73c1a2f41641b978722f2455cc5b560dda638504f8ef4cf21bafd53",
+    "CopyOrderOnStackTest": "ac78b6484a21ef67b8a3e4527195ce02061855b562cede7920ff5812df5239a4",
+    "EndTurnCleanupPriorityTest": "248b54a488f3f89e52473d2dbeb915348a97c5d90ad3329c7256a15772ea94cd",
+    "ManaAbilityCastPriorityTest": "b37fab0388ddb48eda554facb3c24da2b2a39f5230fa031c35f3fb69bf8dcb69",
+    "PriorityTestBase": "c9dbc04a406157cd4c3f2329e042060b2aa8ad29b5cdd5276df5a64d45f7b2d9",
+    "StateBasedActionCastPriorityTest": "886b5b83b47a5c01007ead0224141908e6363acd8b92a21c763ee09dec6d6dec",
+    "TurnBasedActionCastPriorityTest": "c481c55ad63052a9e21188a7b887cffcb39aef93cb0ebf2019d4ff72b43f5383",
+    "UntapStepCastTest": "a5e3bdfe07ba735eaa45c5329f406f3eba196591d578f5e538696bf35da1cc91"
+  }
 }

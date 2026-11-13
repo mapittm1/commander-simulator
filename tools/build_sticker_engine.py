@@ -25,6 +25,18 @@ from commander.engine.forge_engine import _environment
 from commander.engine.interactions.suite import read_hashed_json, write_bounded_json
 from commander.engine.printing_resources import edition_fingerprint
 
+PRIORITY_TESTS = (
+    "CancelledCastDuringResolutionTest",
+    "CastDuringResolutionPriorityTest",
+    "CopyOrderOnStackTest",
+    "EndTurnCleanupPriorityTest",
+    "ManaAbilityCastPriorityTest",
+    "StateBasedActionCastPriorityTest",
+    "TurnBasedActionCastPriorityTest",
+    "UntapStepCastTest",
+)
+PRIORITY_PACKAGE = "forge.gamesimulationtests.priority."
+
 
 def main():
     """Create a fresh build directory and preserve all compiler/test evidence."""
@@ -77,6 +89,14 @@ def main():
             indent=2,
         )
     )
+
+
+def _verify_priority_fixtures(priority_tests):
+    if set(priority_tests) != {"PriorityTestBase", *PRIORITY_TESTS}:
+        raise ValueError("Unexpected upstream priority regression registry")
+    for name, digest in priority_tests.items():
+        if file_hash(PROJECT / "engine/tests" / f"{name}.java") != digest:
+            raise ValueError(f"Native priority fixture {name} changed")
 
 
 def _verify_inputs(args, recipe):
@@ -163,6 +183,9 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-transform-copy.patch",
                 "engine/patches/commander-snapshot-stack.patch",
                 "engine/patches/commander-oracle-corrections.patch",
+                "engine/patches/commander-priority.patch",
+                "engine/patches/commander-tempt-copy.patch",
+                "engine/patches/commander-conditional-mana.patch",
             }
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
@@ -259,6 +282,8 @@ def _verify_inputs(args, recipe):
         "CommanderTransformHistoryTest.java": "commander_transform_history_test_sha256",
         "CommanderSnapshotTransformStackTest.java": "commander_snapshot_stack_test_sha256",
         "CommanderOracleCorrectionsTest.java": "commander_oracle_corrections_test_sha256",
+        "CommanderTemptCopyTest.java": "commander_tempt_copy_test_sha256",
+        "CommanderConditionalManaTest.java": "commander_conditional_mana_test_sha256",
         "CommanderSecretVoteTest.java": "commander_secret_vote_test_sha256",
         "CommanderEmptyVoteTest.java": "commander_empty_vote_test_sha256",
         "CommanderPublicVoteTest.java": "commander_public_vote_test_sha256",
@@ -276,6 +301,7 @@ def _verify_inputs(args, recipe):
             raise ValueError(
                 f"Native regression source {filename} changed; review the recipe"
             )
+    _verify_priority_fixtures(recipe["upstream_priority_tests"])
     if recipe["card_overrides"] != [
         "w/wicker_picker.txt",
         "t/the_prismatic_piper.txt",
@@ -298,6 +324,9 @@ def _verify_inputs(args, recipe):
         "c/cirdan_the_shipwright.txt",
         "i/ixidors_will.txt",
         "v/vault_13_dwellers_journey.txt",
+        "c/chefs_kiss.txt",
+        "u/ulalek_fused_atrocity.txt",
+        "t/tempt_with_mayhem.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -364,6 +393,13 @@ def _patch_source(source, run, recipe):
             run,
             f"patch-{index}-apply",
         )
+    priority_dir = (
+        source / "forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority"
+    )
+    priority_dir.mkdir(parents=True, exist_ok=True)
+    for name in recipe["upstream_priority_tests"]:
+        fixture = f"{name}.java"
+        shutil.copyfile(PROJECT / "engine/tests" / fixture, priority_dir / fixture)
     pom = source / "forge-gui-desktop/pom.xml"
     text = pom.read_text(encoding="utf-8")
     if text.count("<headerType>gui</headerType>") != 1:
@@ -595,6 +631,8 @@ def _patch_source(source, run, recipe):
         "CommanderTransformHistoryTest.java",
         "CommanderSnapshotTransformStackTest.java",
         "CommanderOracleCorrectionsTest.java",
+        "CommanderTemptCopyTest.java",
+        "CommanderConditionalManaTest.java",
         "CommanderSecretVoteTest.java",
         "CommanderEmptyVoteTest.java",
         "CommanderPublicVoteTest.java",
@@ -658,7 +696,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,CardCharacteristicDiscrepancyTest,StarTrekBattlefrontTest,StarTrekFederationTest,StarTrekRevealTest,StarTrekStationTest,CommanderDiceReplacementTest,CommanderOptionalDiePaymentTest,CommanderExploreTest,CommanderDiscoverTest,CommanderVillainousChoiceTest,CommanderLearnTest,CommanderReverseTurnOrderTest,CommanderExtraTurnDirectionTest,CommanderEndTurnTest,CommanderIncubateTest,CommanderTransformHistoryTest,CommanderSnapshotTransformStackTest,CommanderOracleCorrectionsTest,CommanderSecretVoteTest,CommanderEmptyVoteTest,CommanderPublicVoteTest,CommanderCirdanTest,CommanderTimeTravelTest,ProliferateFightAndInvestigateTest,StarTrekHoloEngineerTest,StarTrekNamedAbilityTest,ManaSacrificeTest,BeamMeUpTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,CardCharacteristicDiscrepancyTest,StarTrekBattlefrontTest,StarTrekFederationTest,StarTrekRevealTest,StarTrekStationTest,CommanderDiceReplacementTest,CommanderOptionalDiePaymentTest,CommanderExploreTest,CommanderDiscoverTest,CommanderVillainousChoiceTest,CommanderLearnTest,CommanderReverseTurnOrderTest,CommanderExtraTurnDirectionTest,CommanderEndTurnTest,CommanderIncubateTest,CommanderTransformHistoryTest,CommanderSnapshotTransformStackTest,CommanderOracleCorrectionsTest,CommanderTemptCopyTest,CommanderConditionalManaTest,forge.gamesimulationtests.priority.*Test,CommanderSecretVoteTest,CommanderEmptyVoteTest,CommanderPublicVoteTest,CommanderCirdanTest,CommanderTimeTravelTest,ProliferateFightAndInvestigateTest,StarTrekHoloEngineerTest,StarTrekNamedAbilityTest,ManaSacrificeTest,BeamMeUpTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

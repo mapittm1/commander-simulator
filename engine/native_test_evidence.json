@@ -1,11 +1,11 @@
 {
   "scope": "Selected non-UI native gameplay and card/deck serialization regressions; not all-card rules certification",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "fe859ff4c700a7f83f45ec43e80f28aaa8e53f1521b473857a874a3882be6449",
+  "recipe_sha256": "6522da03d5ad9ae5b8869b43675fb14274bfe56e7a381e032fc860c18647c6a1",
   "suites": {
     "gameplay": {
-      "total": 2521,
-      "passed": 2521,
+      "total": 2551,
+      "passed": 2551,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -23,6 +23,7 @@
         "forge.ai.CloneDurationGameCopyTest",
         "forge.ai.CommanderCirdanTest",
         "forge.ai.CommanderColorChoiceTest",
+        "forge.ai.CommanderConditionalManaTest",
         "forge.ai.CommanderDiceReplacementTest",
         "forge.ai.CommanderDiscoverTest",
         "forge.ai.CommanderEmptyVoteTest",
@@ -37,6 +38,7 @@
         "forge.ai.CommanderReverseTurnOrderTest",
         "forge.ai.CommanderSecretVoteTest",
         "forge.ai.CommanderSnapshotTransformStackTest",
+        "forge.ai.CommanderTemptCopyTest",
         "forge.ai.CommanderTimeTravelTest",
         "forge.ai.CommanderTransformHistoryTest",
         "forge.ai.CommanderVillainousChoiceTest",
@@ -231,18 +233,26 @@
         "forge.game.spellability.CastFromOwnZoneTest",
         "forge.game.spellability.GrantedCastTest",
         "forge.game.trigger.MandatoryLoopTest",
-        "forge.game.trigger.SimultaneousEntryTriggerTest"
+        "forge.game.trigger.SimultaneousEntryTriggerTest",
+        "forge.gamesimulationtests.priority.CancelledCastDuringResolutionTest",
+        "forge.gamesimulationtests.priority.CastDuringResolutionPriorityTest",
+        "forge.gamesimulationtests.priority.CopyOrderOnStackTest",
+        "forge.gamesimulationtests.priority.EndTurnCleanupPriorityTest",
+        "forge.gamesimulationtests.priority.ManaAbilityCastPriorityTest",
+        "forge.gamesimulationtests.priority.StateBasedActionCastPriorityTest",
+        "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
+        "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 223,
+      "selected_classes": 233,
       "process": {
         "status": "finished",
-        "bytes": 149416,
+        "bytes": 149283,
         "returncode": 0,
-        "elapsed_seconds": 238.906
+        "elapsed_seconds": 232.828
       },
-      "local_run_id": "native-gameplay-e7e4adfae43b491a85f07fd5fd882d87",
-      "testng_results_sha256": "da095dc086a4d41916e707adf88504b374b939c968b70588437efeda572e0ece",
-      "log_sha256": "e88dafd814fe191c410bff17b1fb089775bdbde0a33d918c352b71d64f9ccad0"
+      "local_run_id": "native-gameplay-d70dada3069d4b1c80bb7618a3b7071a",
+      "testng_results_sha256": "706884d8d3c2a968a182b614da117369b5ca2418c9512b7f1677258ed7893caf",
+      "log_sha256": "ef9625474ceff8f198c117742585d24de74a769d909a3b9c0ec97899a660efc1"
     },
     "serialization": {
       "total": 256,
@@ -270,13 +280,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 30227,
+        "bytes": 30140,
         "returncode": 0,
-        "elapsed_seconds": 134.75
+        "elapsed_seconds": 127.297
       },
-      "local_run_id": "native-serialization-9c664beb136d4d07a0d2630e17808c4b",
-      "testng_results_sha256": "258f843a4e68c3f024ae301d1f6775ea1f6ae7ec2c46fe3df0b677b14a8ce3bd",
-      "log_sha256": "9f06a72be4f93e299053c5460e21e4a054050e145cf7ddcfa11ca78c33122892"
+      "local_run_id": "native-serialization-d1242fe451eb48ebb6ccb03ce930e831",
+      "testng_results_sha256": "c1c52c6ba44fc429843e0f3ea5ff3cf6363d4a49c9da93e28213b3a380a1b8e8",
+      "log_sha256": "2217003e83f329ad11ca15257e33400d9bc62025e23bda00837eaa4d81e4062c"
     }
   },
   "evidence_note": "Raw reports remain ignored local data under each recorded run ID."

@@ -19,6 +19,13 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Spells and copies created during resolution preserve priority and stack order.
+Tempt with Mayhem copies the selected spell in turn order. Mana planning uses
+Gemstone Caverns’ luck counter and can spend Cavern of Souls’ colorless mana
+when it is required. Delighted Halfling can protect a legendary spell when its
+mana pays a generic cost.
+
+
 Vault 13: Dweller's Journey excludes itself from chapter I targets. Ixidor's
 Will counts Wizards controlled by every player when determining its payment.
 Forge's experimental snapshot preserves queued abilities and the paid spell
