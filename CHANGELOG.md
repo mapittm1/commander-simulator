@@ -6,6 +6,10 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Exclude Vault 13: Dweller's Journey from its own first chapter's targets.
+- Count Wizards controlled by all players when resolving Ixidor's Will.
+- Preserve queued abilities and paid spell targets when restoring a snapshot.
+
 - Preserve Incubator token faces and counters when copying game state.
 - Preserve transformation history in AI previews and restored snapshots.
 

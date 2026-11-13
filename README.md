@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Vault 13: Dweller's Journey excludes itself from chapter I targets. Ixidor's
+Will counts Wizards controlled by every player when determining its payment.
+Forge's experimental snapshot preserves queued abilities and the paid spell
+and target references in a Counterspell response.
+
 Incubator tokens retain their two faces and +1/+1 counters in copied games.
 AI previews preserve transformation history so Homicidal Brute can return to
 Civilized Scholar when its queued end-step trigger resolves. Restoring a
