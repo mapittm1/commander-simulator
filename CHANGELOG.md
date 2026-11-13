@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Resume normal play from the last normal player after Aeon Engine reverses
+  turn order during an extra turn. Keep pending extra turns in order.
+- Verify that ending a turn clears earlier triggers and allows exile triggers
+  created during the process to resolve in cleanup.
+
 - Resolve Vault 11's no-vote draw when there are no eligible creatures.
 - Make Círdan's permanent placement optional for each player with no votes.
 - Restore the saved turn direction when applying a snapshot to an existing game.

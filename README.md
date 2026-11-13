@@ -19,6 +19,10 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Aeon Engine now resumes the normal turn sequence in the new direction after
+pending extra turns. Tests also check Day's Undoing, Time Stop, and The War
+Doctor's exile trigger during cleanup.
+
 Vault 11 draws for each player when no creature receives a vote. Players who
 receive no votes from Círdan may decline to put a permanent onto the
 battlefield. Restoring a snapshot also restores Aeon Engine's turn direction.
