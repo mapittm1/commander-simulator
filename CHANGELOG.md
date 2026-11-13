@@ -6,6 +6,9 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Let the AI pay for Ulalek’s copy trigger and exclude the resolving trigger
+  from the abilities it copies.
+
 - Correct priority when resolving spells, copying spells and ending the turn.
 - Preserve Tempt with Mayhem’s spell target and copy order.
 - Fix mana payment with Gemstone Caverns, Cavern of Souls, and Delighted Halfling.

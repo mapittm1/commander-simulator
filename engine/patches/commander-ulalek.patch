@@ -1,0 +1,38 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+@@ -125,9 +125,10 @@
+             return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
+         }
+ 
+-        // the AI copies its own abilities if it has enough mana to still pay for other spells in its hand afterward
+-        if ("TriggeredSpellAbility".equals(sa.getParam("Defined"))) {
+-            for (SpellAbility copied : AbilityUtils.getDefinedSpellAbilities(sa.getHostCard(), "TriggeredSpellAbility", sa)) {
++        // Preserve mana for affordable hand spells unless a copy has a usable effect.
++        String defined = sa.getParam("Defined");
++        if ("TriggeredSpellAbility".equals(defined) || "ValidStack Spell.YouCtrl".equals(defined)) {
++            for (SpellAbility copied : AbilityUtils.getDefinedSpellAbilities(sa.getHostCard(), defined, sa)) {
+                 if (copied.getActivatingPlayer() != null && copied.getActivatingPlayer().equals(aiPlayer)
+                         && !copied.isManaAbility() && copied.getApi() != ApiType.CopySpellAbility
+                         && !(SpellApiToAi.Converter.get(copied.getApi()) instanceof CannotPlayAi)
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbilityProperty.java b/forge-game/src/main/java/forge/game/spellability/SpellAbilityProperty.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilityProperty.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilityProperty.java
+@@ -299,7 +299,16 @@
+             }
+             if (spellAbility instanceof SpellAbility) {
+                 SpellAbility sourceSpell = (SpellAbility) spellAbility;
+-                if (sa.getRootAbility().equals(sourceSpell.getRootAbility())) {
++                SpellAbility candidateRoot = sa.getRootAbility();
++                SpellAbility sourceRoot = sourceSpell.getRootAbility();
++                // A resolving trigger's sub-abilities refer to its delegate while the stack holds its wrapper.
++                if (candidateRoot instanceof forge.game.trigger.WrappedAbility wrapper) {
++                    candidateRoot = wrapper.getWrappedAbility().getRootAbility();
++                }
++                if (sourceRoot instanceof forge.game.trigger.WrappedAbility wrapper) {
++                    sourceRoot = wrapper.getWrappedAbility().getRootAbility();
++                }
++                if (candidateRoot.equals(sourceRoot)) {
+                     return false;
+                 }
+             }

@@ -19,6 +19,9 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Ulalek can pay two colorless mana to copy its controller’s spells and other
+abilities. Tests verify copy order and exclude the resolving trigger itself.
+
 Spells and copies created during resolution preserve priority and stack order.
 Tempt with Mayhem copies the selected spell in turn order. Mana planning uses
 Gemstone Caverns’ luck counter and can spend Cavern of Souls’ colorless mana
