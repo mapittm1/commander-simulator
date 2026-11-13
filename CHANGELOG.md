@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Resolve each villainous choice before prompting for the next one, including
+  choices added by The Valeyard. Use active-player-first turn order.
+- Verify 1,021 focused native tests, 269 packaged checks, 2,495 gameplay
+  tests, and 256 serialization tests.
+
 - Place the explore counter before asking whether to keep a revealed nonland
   card on top of the library or put it into the graveyard.
 - Put a discovered card into hand when its cast cannot be completed. Reject

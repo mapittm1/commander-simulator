@@ -67,6 +67,7 @@ SOURCES = {
     "CommanderOptionalDiePaymentTest": "commander_optional_die_payment_test_sha256",
     "CommanderExploreTest": "commander_explore_test_sha256",
     "CommanderDiscoverTest": "commander_discover_test_sha256",
+    "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "ProliferateFightAndInvestigateTest": "proliferate_fight_investigate_test_sha256",
     "StarTrekHoloEngineerTest": "star_trek_holo_engineer_test_sha256",
     "StarTrekNamedAbilityTest": "star_trek_named_ability_test_sha256",
@@ -129,6 +130,7 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.RollDiceEffect",
     "forge.game.ability.effects.ExploreEffect",
     "forge.game.ability.effects.DiscoverEffect",
+    "forge.game.ability.effects.VillainousChoiceEffect",
     "forge.game.trigger.TriggerRolledDie",
 )
 

@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Villainous choices resolve in turn order. With The Valeyard in play, each
+choice resolves before the same player chooses again. The native tests use
+Ensnared by the Mara to check that damage is visible at the next prompt and
+that each choice exiles the expected cards.
+
 Explore places the +1/+1 counter before the player decides where to leave a
 revealed nonland card. Discover puts an uncastable card into hand. Native
 checks cover Jadelight Ranger, Captain Kathryn Janeway, and Geological Appraiser,
