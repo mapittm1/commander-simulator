@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Explore places the +1/+1 counter before the player decides where to leave a
+revealed nonland card. Discover puts an uncastable card into hand. Native
+checks cover Jadelight Ranger, Captain Kathryn Janeway, and Geological Appraiser,
+including free casts with legal targets and cards with unpayable costs.
+
 Declining an optional dice payment lets the original result resolve and leaves
 the ability available for later rolls. Tests cover Monitor Monitor and Night
 Shift of the Living Dead. Explore tests cover Jadelight Ranger and Captain

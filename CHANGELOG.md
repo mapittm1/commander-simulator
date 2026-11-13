@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Place the explore counter before asking whether to keep a revealed nonland
+  card on top of the library or put it into the graveyard.
+- Put a discovered card into hand when its cast cannot be completed. Reject
+  effect-driven AI casts missing required targets and restore the card before
+  applying Discover's fallback.
+
 - Finish resolving dice after a declined Monitor Monitor or Night Shift of the
   Living Dead payment. A successful Night Shift payment changes the result and
   can trigger its Zombie ability.

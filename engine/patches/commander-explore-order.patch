@@ -1,0 +1,72 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ExploreEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ExploreEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ExploreEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ExploreEffect.java
+@@ -67,44 +67,44 @@
+                     continue;
+                 }
+ 
+-                GameEntityCounterTable table = new GameEntityCounterTable();
+                 Map<AbilityKey, Object> moveParams = AbilityKey.newMap();
+                 final CardZoneTable triggerList = AbilityKey.addCardZoneTableParams(moveParams, sa);
+-
+-                // revealed land card
+-                boolean revealedLand = false;
+                 CardCollection top = pl.getTopXCardsFromLibrary(1);
+-                if (!top.isEmpty()) {
++                Card revealed = top.isEmpty() ? null : top.getFirst();
++                if (revealed != null) {
+                     game.getAction().reveal(top, pl, false,
+                             Localizer.getInstance().getMessage("lblRevealedForExplore") + " - ");
+-                    final Card r = top.getFirst();
+-                    if (r.isLand()) {
+-                        game.getAction().moveTo(ZoneType.Hand, r, sa, moveParams);
+-                        revealedLand = true;
+-                    } else {
++                }
++
++                if (revealed != null && revealed.isLand()) {
++                    game.getAction().moveTo(ZoneType.Hand, revealed, sa, moveParams);
++                } else {
++                    // Finish the counter placement before offering the nonland choice.
++                    Card explorer = game.getCardState(c);
++                    if (explorer.isInPlay() && explorer.equalsWithGameTimestamp(c)) {
++                        GameEntityCounterTable table = new GameEntityCounterTable();
++                        explorer.addCounter(CounterEnumType.P1P1, 1, pl, table);
++                        table.replaceCounterEffect(game, sa);
++                    }
++
++                    if (revealed != null) {
+                         Map<String, Object> params = Maps.newHashMap();
+-                        params.put("RevealedCard", r);
++                        params.put("RevealedCard", revealed);
+                         if (pl.getController().confirmAction(sa, null,
+                                 Localizer.getInstance().getMessage("lblPutThisCardToYourGraveyard",
+-                                        r.getTranslatedName()), r, params))
+-                            game.getAction().moveTo(ZoneType.Graveyard, r, sa, moveParams);
+-                    }
+-                }
+-                if (!revealedLand) {
+-                    // need to get newest game state to check if it is still on the battlefield
+-                    // and the timestamp didn't change
+-                    Card gamec = game.getCardState(c);
+-                    if (gamec.isInPlay() && gamec.equalsWithGameTimestamp(c)) {
+-                        c.addCounter(CounterEnumType.P1P1, 1, pl, table);
++                                        revealed.getTranslatedName()), revealed, params)) {
++                            game.getAction().moveTo(ZoneType.Graveyard, revealed, sa, moveParams);
++                        }
+                     }
+                 }
+ 
+-                // a creature does explore even if it isn't on the battlefield anymore
++                // A creature can explore after leaving the battlefield.
+                 pl.addExploredThisTurn();
+                 final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(c);
+-                if (!top.isEmpty()) runParams.put(AbilityKey.Explored, top.getFirst());
++                if (revealed != null) {
++                    runParams.put(AbilityKey.Explored, revealed);
++                }
+                 game.getTriggerHandler().runTrigger(TriggerType.Explores, runParams, false);
+-                table.replaceCounterEffect(game, sa);
+                 triggerList.triggerChangesZoneAll(game, sa);
+             }
+         }

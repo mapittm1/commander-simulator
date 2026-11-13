@@ -35,6 +35,11 @@ public class CommanderExploreTest extends AITest {
             public boolean confirmAction(SpellAbility ability, PlayerActionConfirmMode mode,
                     String message, List<String> options, Card card, Map<String, Object> params) {
                 if (params != null && params.containsKey("RevealedCard")) {
+                    Card ranger = actor.getCardsIn(ZoneType.Battlefield).stream()
+                            .filter(permanent -> permanent.getName().equals("Jadelight Ranger"))
+                            .findFirst().orElseThrow();
+                    assertEquals(ranger.getCounters(CounterEnumType.P1P1), offered.size() + 1,
+                            "The counter is placed before the nonland choice");
                     offered.add(card);
                     return false;
                 }
@@ -68,6 +73,36 @@ public class CommanderExploreTest extends AITest {
         assertEquals(actor.getNumExploredThisTurn(), 1);
         assertTrue(actor.getCardsIn(ZoneType.Hand).contains(land));
         assertTrue(game.getCardState(bear).isInZone(ZoneType.Graveyard));
+    }
+
+    @Test
+    public void janewayExploresUsingCurrentControllerAfterControlChanges() {
+        Game game = newGameWithForests();
+        Player actor = game.getPlayers().get(0);
+        Player opponent = game.getPlayers().get(1);
+        Card originalControllerLand = addCardToZone("Plains", actor, ZoneType.Library);
+        Card currentControllerLand = addCardToZone("Island", opponent, ZoneType.Library);
+        Card janeway = addCardToZone("Captain Kathryn Janeway", actor, ZoneType.Battlefield);
+        for (int index = 0; index < 4; index++) {
+            addCardToZone("Island", opponent, ZoneType.Battlefield);
+        }
+
+        Card bear = castCreature(game, actor, "Grizzly Bears");
+        assertSame(game.getStack().peekAbility().getHostCard(), janeway);
+        Card ray = addCardToZone("Ray of Command", opponent, ZoneType.Hand);
+        SpellAbility spell = ray.getFirstSpellAbility();
+        spell.setActivatingPlayer(opponent);
+        spell.getTargets().add(game.getCardState(bear));
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent, spell, null));
+        game.getStack().resolveStack();
+        assertSame(game.getCardState(bear).getController(), opponent);
+        assertSame(game.getStack().peekAbility().getHostCard(), janeway);
+        game.getStack().resolveStack();
+
+        assertEquals(actor.getNumExploredThisTurn(), 0);
+        assertEquals(opponent.getNumExploredThisTurn(), 1);
+        assertSame(actor.getCardsIn(ZoneType.Library).getFirst(), originalControllerLand);
+        assertTrue(opponent.getCardsIn(ZoneType.Hand).contains(currentControllerLand));
     }
 
     @Test
