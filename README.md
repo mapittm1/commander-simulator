@@ -19,6 +19,11 @@ Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 
 ## Card coverage
 
+Incubator tokens retain their two faces and +1/+1 counters in copied games.
+AI previews preserve transformation history so Homicidal Brute can return to
+Civilized Scholar when its queued end-step trigger resolves. Restoring a
+game snapshot restores the saved counters and transformation history.
+
 Aeon Engine now resumes the normal turn sequence in the new direction after
 pending extra turns. Tests also check Day's Undoing, Time Stop, and The War
 Doctor's exile trigger during cleanup.

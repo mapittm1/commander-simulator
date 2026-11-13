@@ -6,6 +6,9 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve Incubator token faces and counters when copying game state.
+- Preserve transformation history in AI previews and restored snapshots.
+
 - Resume normal play from the last normal player after Aeon Engine reverses
   turn order during an extra turn. Keep pending extra turns in order.
 - Verify that ending a turn clears earlier triggers and allows exile triggers
