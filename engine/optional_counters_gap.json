@@ -1,0 +1,132 @@
+{
+  "status": "confirmed_rules_failure_pending_fix",
+  "cards": [
+    "Nykthos Paragon",
+    "Solemnity",
+    "Vorinclex, Monstrous Raider"
+  ],
+  "observation": "An optional Nykthos counter placement under Solemnity consumes the once-per-turn allowance. A later life gain after paid removal of Solemnity cannot place counters. Ordinary, declined and counters-replaced-with-zero controls pass.",
+  "baseline_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-carpet-mana",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "2f0bb89902a888ee2e48b7767e4aa5db94b39bf0e3fd4f59d4d7617b4c5cfffa",
+    "cards_sha256": "7006dc14e6df0ff5fd82773a5dbaa7da310ad0ecf588bff7bdc532313c68dc14",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "46ebaade558357dc79490514c531a379b583cff3dd785c8f756399f0e59f2181",
+    "native_tests": {
+      "total": 1177,
+      "passed": 1177,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "d5c90ee3a3ee6aaa3aa7d5004141bdd64b931e82fec950efbefca7254e8aea37",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "baseline_engine_lock_sha256": "69339dd3e29fe3fbedd4930c170ba743da93cde04787e33fbdd90478df714e7f",
+  "production_sources_equal_after_line_ending_normalization": 2155,
+  "test_source": "engine/pending/CommanderOptionalCountersTest.java",
+  "test_source_sha256": "989f922b9238be8792f756d887b034b4696754e1b7e8a3e74c241341d63a60e5",
+  "baseline": {
+    "counts": {
+      "total": 4,
+      "passed": 3,
+      "failed": 1,
+      "skipped": 0
+    },
+    "report_sha256": "394073ac800de78577a3edf234c3b2714240e9bc8d79b361528947cff6f1262f",
+    "log_sha256": "3884ddf3963463b80b7c623e78cc8e114a30f66480fd89df74b59470934d1e26",
+    "failing_methods": [
+      "solemnityPreservesTheOptionalCounterAction"
+    ]
+  },
+  "prototype": {
+    "status": "source_only_passed_pending_expanded_counter_rules_and_release",
+    "patch": "engine/patches/pending-commander-optional-counters.patch",
+    "patch_sha256": "be7ff4365783bae06b01e531415ff06c3c5eb70c6dd15b7e11103ac4a72820d1",
+    "fixed": {
+      "counts": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "b6d377db5bd1ee6437ea156031749e21e975f810d1672872d36518574637337e",
+      "log_sha256": "ac073edc633c924b4ca91c3dcf62dd50be2f10fd28adaaaf6d040f2028a75499",
+      "failing_methods": []
+    },
+    "selected_native_matrix": {
+      "counts": {
+        "total": 1181,
+        "passed": 1181,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "eceefa6f01cba945918dfae0193b7d539ab9f1c5e277becee6a273c35ac4cc65",
+      "log_sha256": "23ae6ee61f87a371eab039a3d3a78c867f74c0a90b294f19195061dcb3a22267",
+      "failing_methods": []
+    },
+    "changed_production_sources": [
+      "forge-game/src/main/java/forge/game/ability/effects/CountersPutAllEffect.java"
+    ],
+    "test_source_comparison": "One existing native test source differs from the sealed baseline: AutoPaymentTest, which the executable selection guard verifies is excluded. The new counter fixture is bound by test_source_sha256."
+  },
+  "remaining_work": [
+    "mixed eligibility, absent recipients and zero initial counter amounts",
+    "alternate placers, multiple counter groups and compound effects",
+    "copied games, countered triggers and native turn-reset controls",
+    "packaged build, broader gameplay, live/catalog gates and activation"
+  ],
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+    "https://www.magic.wizards.com/en/news/feature/hour-devastation-release-notes-2017-06-30",
+    "https://magic.wizards.com/en/news/feature/modern-horizons-2-release-notes-2021-06-04"
+  ],
+  "scope": "Four controlled partial-state witnesses with supplied battlefield/optional decisions and native paid Grizzly Bears and Anguished Unmaking. Essence Warden provides mandatory life gain. Prohibited counter choices are distinguished from legal Vorinclex replacements with zero counters. Not all counter placement, mixed-recipient, card or AI certification. No candidate fix is included in the active recipe."
+}

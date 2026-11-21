@@ -6,6 +6,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Track positive native mana additions for explicitly flagged abilities, using
+  existing per-ability turn history instead of counting parent/child resolutions.
+  Carpet of Flowers retains its later trigger after adding zero, records a legal
+  replacement addition, and stays used after the pool is drained. Its script flag
+  changes; Oracle text is unchanged. Other abilities retain their normal counters.
+- Expand mana history coverage to twelve cases: three fail in the preceding
+  engine while nine controls pass. The corrected candidate passes all twelve,
+  including native paid counterspells, copied triggers, False Dawn, independent
+  game copies, and native cleanup/extra-turn/replacement-expiry hooks.
+- Activate the reviewed mana runtime after 1,177 selected native tests,
+  425 packaged cases, 2,651 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,073 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The catalog constructs 32,636 starting
+  identities and classifies seven nonstarting meld results separately. Rebind
+  alias and companion reviews only after verifying their scripts are unchanged.
+- Preserve the separate Nykthos Paragon/Solemnity counter-placement failure and
+  source-only prototype (four focused and 1,181 selected native cases pass),
+  excluded from this runtime pending wider validation.
+- Keep AGENTS.md local and ignored while continuing to follow its rules. Its
+  tracking removal was committed separately; the local bytes were preserved.
+
 - Preserve optional battlefield-copy allowances when no eligible choice remains.
   Calix can make a later legal copy after an impossible earlier choice. The generic
   effect query checks the same native eligibility filter used by resolution and

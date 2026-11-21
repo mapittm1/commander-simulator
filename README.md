@@ -62,13 +62,24 @@ All 103 focused and neighboring cases pass. See the
 These are partial-state witnesses with supplied decisions and native damage/casts;
 complete copy, token, combat and AI coverage remain open.
 
-**Known rules gap:** Carpet of Flowers can suppress its second-main-phase trigger
-when the first trigger added zero mana. A three-case native probe reproduces the
-failure while ordinary-mana and declined-choice controls pass. A source-only
-prototype passes all three cases and a 1,168-case selected native matrix, but still
-needs replacement, countered-trigger, snapshot and packaged-release validation.
-See the [failure record](engine/carpet_mana_gap.json) and
-[pending patch](engine/patches/pending-commander-carpet-mana.patch).
+Carpet of Flowers now records a use only after mana is actually added, rather than
+when its parent or child ability resolves. Adding zero leaves the later main-phase
+trigger available; draining mana after a positive addition does not reopen it.
+Twelve controlled cases cover native paid Harrow, countered and copied triggers,
+False Dawn's replacement, independent copied-game history, and native cleanup,
+extra turns and replacement expiry. See the
+[resolved failure record](engine/carpet_mana_gap.json).
+The generic marker reuses existing snapshot-aware per-ability history. Only the
+Carpet script flag changes; its Oracle text is unchanged. Initial phase events and
+decisions are supplied; complete mana, combat and AI coverage remain open.
+
+**Known rules gap:** Nykthos Paragon can spend its optional counter-placement
+allowance while Solemnity prohibits all placements. Ordinary, declined and
+Vorinclex replacement controls distinguish the prohibited action from a legal
+choice whose counters are replaced with zero. See the
+[failure record](engine/optional_counters_gap.json). The separate source-only
+prototype passes four focused cases and a 1,181-case selected native matrix, but
+still needs wider counter-rule and packaged-release validation.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -84,14 +95,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,165 selected native tests, 413 packaged
-rules cases, 2,639 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,061 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,177 selected native tests, 425 packaged
+rules cases, 2,651 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,073 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/optional_copy_evidence.json).
+See the [validation and activation evidence](engine/carpet_mana_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

@@ -1,0 +1,43 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/CountersPutAllEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/CountersPutAllEffect.java
+@@ -14,6 +14,40 @@
+ import forge.util.Lang;
+ 
+ public class CountersPutAllEffect extends SpellAbilityEffect  {
++
++    @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        if (!sa.hasParam("ValidCards") || !sa.hasParam("CounterType") || sa.getSubAbility() != null
++                || sa.hasParam("UnlessCost") || sa.hasParam("Placer") || sa.hasParam("AmountByChosenMap")
++                || sa.hasParam("ValidCards2") || sa.hasParam("CounterType2") || sa.hasParam("CounterNum2")) {
++            return true;
++        }
++        final Card host = sa.getHostCard();
++        final Player activator = sa.getActivatingPlayer();
++        final CounterType type = CounterType.getType(sa.getParam("CounterType"));
++        final int amount = AbilityUtils.calculateAmount(host, sa.getParamOrDefault("CounterNum", "1"), sa);
++        if (type == null || amount <= 0) {
++            return true;
++        }
++        final ZoneType zone = sa.hasParam("ValidZone")
++                ? ZoneType.smartValueOf(sa.getParam("ValidZone")) : ZoneType.Battlefield;
++        CardCollectionView cards = CardLists.getValidCards(activator.getGame().getCardsIn(zone),
++                sa.getParam("ValidCards"), activator, host, sa);
++        if (sa.usesTargeting()) {
++            final Player target = sa.getTargets().getFirstTargetedPlayer();
++            if (target == null) {
++                return true;
++            }
++            cards = CardLists.filterControlledBy(cards, target);
++        }
++        // Match native admission; replacements are applied only during actual placement.
++        for (Card card : cards) {
++            if (card.canReceiveCounters(type, null)) {
++                return true;
++            }
++        }
++        return false;
++    }
+ 
+     @Override
+     protected String getStackDescription(SpellAbility sa) {

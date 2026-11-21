@@ -1,143 +1,151 @@
 {
-  "status": "confirmed_rules_failure_pending_fix",
-  "cards": [
-    "Carpet of Flowers"
-  ],
-  "observation": "A supplied first-main-phase trigger that adds zero mana consumes the script ResolvedLimit. After a paid native Harrow puts an Island under the target opponents control, the supplied second-main-phase trigger is suppressed and adds no mana.",
-  "expected_behavior_basis": "Inference from the Oracle condition: adding zero does not satisfy having added mana with this ability. The official release notes confirm that the targeted ability uses the stack and calculates X at resolution.",
-  "baseline_engine": {
-    "forge_version": "2.0.16-583714b-reviewed-optional-copy",
-    "capabilities": [
-      "sticker_kicker",
-      "explicit_commander_colors",
-      "native_companion_pregame",
-      "supplementary_ai_zones",
-      "sticker_snapshot_state",
-      "historical_lki_state",
-      "damage_history_state",
-      "participant_snapshot_state",
-      "starting_life_snapshot",
-      "stack_snapshot_state",
-      "cast_form_snapshot",
-      "usage_snapshot_state",
-      "scheduled_snapshot_state",
-      "delayed_trigger_snapshot",
-      "turn_schedule_snapshot",
-      "conditional_cleanup_snapshot",
-      "animation_snapshot_state",
-      "copy_frame_expiration",
-      "protection_expiration",
-      "keyword_exchange_expiration",
-      "blocking_prevention_snapshot",
-      "ring_text_snapshot",
-      "attachment_mana_cleanup",
-      "host_bound_return_snapshot",
-      "effect_cleanup_regeneration",
-      "detain_control_age_snapshot",
-      "player_control_snapshot",
-      "decision_beneficiary_planning",
-      "controlled_attack_planning",
-      "primary_control_future_planning",
-      "paid_spell_control_retargeting",
-      "composed_spell_control",
-      "cast_provenance_records",
-      "paid_mass_counter_planning",
-      "paid_exchange_pile_planning",
-      "divine_intervention_counter_trigger",
-      "expired_mana_reservation_isolation",
-      "hybrid_safety_paired_random_isolation"
-    ],
-    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
-    "jar_sha256": "bc9ac4c56504bb481afbc485562d423d8e03fc02f269d1477e8fe17e8ea01ce2",
-    "cards_sha256": "79d4863bb75865543acb2bf43f878cb60ad5b5b8ab0fbd8892b105e606ae92b5",
-    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
-    "recipe_sha256": "2548a0fdd46d305ed8b5aa7293202d932b502bbc54996b1ac2428d99c7bbbddd",
-    "native_tests": {
-      "total": 1165,
-      "passed": 1165,
-      "failed": 0,
-      "skipped": 0
-    },
-    "build_log_sha256": "90c4df4aefd93f7356442114b993ee30b52504daf3e624c43fa335599f6bf1c0",
-    "edition_resources": {
-      "files": 686,
-      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
-    },
-    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
-    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
-    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
-  },
-  "baseline_engine_lock_sha256": "d256d3bdd5dfa53e5d19c904a5f8f9c995976af71b44b0c9e82150e4a73b57f3",
-  "production_sources_equal_after_line_ending_normalization": 2155,
-  "script": {
-    "path": "c/carpet_of_flowers.txt",
-    "sha256": "60357b5a358f6ba2e16e486282cbebd53fe53e1e07390fa065b6e78d933613d4"
-  },
-  "test_source": "engine/pending/CommanderCarpetManaTest.java",
-  "test_source_sha256": "1d09c2a55f959c5569928771e31d69ca661536a33477afec364d4aa557f05674",
+  "status": "resolved_by_reviewed_runtime",
   "baseline": {
-    "counts": {
-      "total": 3,
-      "passed": 2,
-      "failed": 1,
-      "skipped": 0
+    "status": "confirmed_rules_failure_pending_fix",
+    "cards": [
+      "Carpet of Flowers"
+    ],
+    "observation": "A supplied first-main-phase trigger that adds zero mana consumes the script ResolvedLimit. After a paid native Harrow puts an Island under the target opponents control, the supplied second-main-phase trigger is suppressed and adds no mana.",
+    "expected_behavior_basis": "Inference from the Oracle condition: adding zero does not satisfy having added mana with this ability. The official release notes confirm that the targeted ability uses the stack and calculates X at resolution.",
+    "baseline_engine": {
+      "forge_version": "2.0.16-583714b-reviewed-optional-copy",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "bc9ac4c56504bb481afbc485562d423d8e03fc02f269d1477e8fe17e8ea01ce2",
+      "cards_sha256": "79d4863bb75865543acb2bf43f878cb60ad5b5b8ab0fbd8892b105e606ae92b5",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "2548a0fdd46d305ed8b5aa7293202d932b502bbc54996b1ac2428d99c7bbbddd",
+      "native_tests": {
+        "total": 1165,
+        "passed": 1165,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "90c4df4aefd93f7356442114b993ee30b52504daf3e624c43fa335599f6bf1c0",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
     },
-    "report_sha256": "3cb2089f680381f13e69abfd8917da76f5197e3b72053f3fe161dd92dedac142",
-    "log_sha256": "7ceb1757f9a0a2f3e3fe6902d85cc070e269c3e3a910cee221006084266199af",
-    "failing_methods": [
-      "addingZeroLeavesTheSecondMainPhaseAvailable"
-    ]
-  },
-  "remaining_work": [
-    "replacement, countered-trigger and snapshot controls",
-    "broader gameplay and packaged-runtime checks",
-    "reproducible candidate build, live/catalog gates and activation"
-  ],
-  "rules_sources": [
-    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
-    "https://media.wizards.com/2025/downloads/FIN_Release_Notes_3O87RLY5EO/EN_FIN_Release_Notes_2025_1_15.pdf"
-  ],
-  "scope": "Three four-player partial-state witnesses with supplied main-phase preconditions, target and confirm decisions. Harrow pays native mana and a land sacrifice, searches a two-basic library and resolves before the second phase event. One failure and ordinary/decline controls; not full turn progression, mana-replacement, card or AI certification. No candidate fix is included in the active recipe.",
-  "prototype": {
-    "status": "source_only_passed_pending_wider_rules_and_release_validation",
-    "patch": "engine/patches/pending-commander-carpet-mana.patch",
-    "patch_sha256": "717cbc7649fab377344eaea42273ef79a92682dd217b5a279473d537a1f8471b",
-    "fixed": {
+    "baseline_engine_lock_sha256": "d256d3bdd5dfa53e5d19c904a5f8f9c995976af71b44b0c9e82150e4a73b57f3",
+    "production_sources_equal_after_line_ending_normalization": 2155,
+    "script": {
+      "path": "c/carpet_of_flowers.txt",
+      "sha256": "60357b5a358f6ba2e16e486282cbebd53fe53e1e07390fa065b6e78d933613d4"
+    },
+    "test_source": "engine/pending/CommanderCarpetManaTest.java",
+    "test_source_sha256": "1d09c2a55f959c5569928771e31d69ca661536a33477afec364d4aa557f05674",
+    "baseline": {
       "counts": {
         "total": 3,
-        "passed": 3,
-        "failed": 0,
+        "passed": 2,
+        "failed": 1,
         "skipped": 0
       },
-      "report_sha256": "df9a561b0f04998ee576b40b5229d64d31e5c09884e319991371b01e9f00d4e7",
-      "log_sha256": "4798a815c9c068e616355ff4b072c4563c45089d870fef32921daf935f5a242d",
-      "failing_methods": []
+      "report_sha256": "3cb2089f680381f13e69abfd8917da76f5197e3b72053f3fe161dd92dedac142",
+      "log_sha256": "7ceb1757f9a0a2f3e3fe6902d85cc070e269c3e3a910cee221006084266199af",
+      "failing_methods": [
+        "addingZeroLeavesTheSecondMainPhaseAvailable"
+      ]
     },
-    "selected_native_matrix": {
-      "counts": {
-        "total": 1168,
-        "passed": 1168,
-        "failed": 0,
-        "skipped": 0
+    "remaining_work": [
+      "replacement, countered-trigger and snapshot controls",
+      "broader gameplay and packaged-runtime checks",
+      "reproducible candidate build, live/catalog gates and activation"
+    ],
+    "rules_sources": [
+      "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+      "https://media.wizards.com/2025/downloads/FIN_Release_Notes_3O87RLY5EO/EN_FIN_Release_Notes_2025_1_15.pdf"
+    ],
+    "scope": "Three four-player partial-state witnesses with supplied main-phase preconditions, target and confirm decisions. Harrow pays native mana and a land sacrifice, searches a two-basic library and resolves before the second phase event. One failure and ordinary/decline controls; not full turn progression, mana-replacement, card or AI certification. No candidate fix is included in the active recipe.",
+    "prototype": {
+      "status": "source_only_passed_pending_wider_rules_and_release_validation",
+      "patch": "engine/patches/pending-commander-carpet-mana.patch",
+      "patch_sha256": "717cbc7649fab377344eaea42273ef79a92682dd217b5a279473d537a1f8471b",
+      "fixed": {
+        "counts": {
+          "total": 3,
+          "passed": 3,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "df9a561b0f04998ee576b40b5229d64d31e5c09884e319991371b01e9f00d4e7",
+        "log_sha256": "4798a815c9c068e616355ff4b072c4563c45089d870fef32921daf935f5a242d",
+        "failing_methods": []
       },
-      "report_sha256": "f80eec6d9fcf8f1b0226518bf2e6f4628c948d4e679251181162d8b0df148666",
-      "log_sha256": "b7c8083598afd3e9a2c05e0d1b64f5191091b7af7bca5622c1832c1c96d933eb",
-      "failing_methods": []
-    },
-    "changed_production_sources": [
-      "forge-game/src/main/java/forge/game/ability/AbilityUtils.java",
-      "forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java"
-    ],
-    "changed_card_scripts": [
-      {
-        "path": "c/carpet_of_flowers.txt",
-        "before_sha256": "60357b5a358f6ba2e16e486282cbebd53fe53e1e07390fa065b6e78d933613d4",
-        "after_sha256": "47b24fba75689352c42aaa71ea733498d5d57a11245c93106fcdf44e9b57053d",
-        "oracle_text_unchanged": true
-      }
-    ],
-    "test_source_comparison": "364 existing native test sources compared with the sealed baseline: only AutoPaymentTest differs, and the executable runner verifies that it is excluded from this fixed native selection. The added Carpet fixture is byte-matched to test_source_sha256.",
-    "design": "An explicit root-ability flag defers its per-turn usage marker until native mana production adds a positive multiset to its activators pool. Child resolutions do not consume that marker. Reuses existing snapshot-aware history without adding a new mutable field."
-  }
+      "selected_native_matrix": {
+        "counts": {
+          "total": 1168,
+          "passed": 1168,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "f80eec6d9fcf8f1b0226518bf2e6f4628c948d4e679251181162d8b0df148666",
+        "log_sha256": "b7c8083598afd3e9a2c05e0d1b64f5191091b7af7bca5622c1832c1c96d933eb",
+        "failing_methods": []
+      },
+      "changed_production_sources": [
+        "forge-game/src/main/java/forge/game/ability/AbilityUtils.java",
+        "forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java"
+      ],
+      "changed_card_scripts": [
+        {
+          "path": "c/carpet_of_flowers.txt",
+          "before_sha256": "60357b5a358f6ba2e16e486282cbebd53fe53e1e07390fa065b6e78d933613d4",
+          "after_sha256": "47b24fba75689352c42aaa71ea733498d5d57a11245c93106fcdf44e9b57053d",
+          "oracle_text_unchanged": true
+        }
+      ],
+      "test_source_comparison": "364 existing native test sources compared with the sealed baseline: only AutoPaymentTest differs, and the executable runner verifies that it is excluded from this fixed native selection. The added Carpet fixture is byte-matched to test_source_sha256.",
+      "design": "An explicit root-ability flag defers its per-turn usage marker until native mana production adds a positive multiset to its activators pool. Child resolutions do not consume that marker. Reuses existing snapshot-aware history without adding a new mutable field."
+    }
+  },
+  "baseline_source_commit": "2cac2ad1f34eefb1de8e6cb19d9f3c7183bec212",
+  "test_source": "engine/tests/CommanderCarpetManaTest.java",
+  "test_source_sha256": "e4293ad67967511ccf2660c3d2299fcc8e9e35f53c879b8e4af54450267cb6d3",
+  "resolution_evidence": "engine/carpet_mana_evidence.json",
+  "scope": "Explicitly tracked mana triggers mark usage after actual positive mana production rather than ordinary root/child resolution. Selected zero, replacement, copied-trigger, copied-world and native cleanup cases are corrected. This is not complete mana, card or AI certification."
 }

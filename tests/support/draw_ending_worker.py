@@ -88,6 +88,7 @@ SOURCES = {
     "CommanderOptionalLifeGainTest": "commander_optional_life_gain_test_sha256",
     "CommanderOptionalDrawTest": "commander_optional_draw_test_sha256",
     "CommanderOptionalCopyTest": "commander_optional_copy_test_sha256",
+    "CommanderCarpetManaTest": "commander_carpet_mana_test_sha256",
     "CommanderSecretVoteTest": "commander_secret_vote_test_sha256",
     "CommanderEmptyVoteTest": "commander_empty_vote_test_sha256",
     "CommanderPublicVoteTest": "commander_public_vote_test_sha256",
