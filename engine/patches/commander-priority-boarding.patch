@@ -1,12 +1,13 @@
 --- a/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
 +++ b/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
-@@ -17,6 +17,36 @@
+@@ -17,6 +17,37 @@
  import forge.util.Localizer;
  
  public class PeekAndRevealEffect extends SpellAbilityEffect {
 +
 +    @Override
 +    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        // Compound effects declare whether revealing is their optional primary action.
 +        if (!sa.hasParam("NoPeek") || sa.hasParam("NoReveal") || sa.hasParam("RevealOptional")
 +                || sa.hasParam("UnlessCost")
 +                || (sa.getSubAbility() != null && !sa.hasParam("OptionalPrimaryReveal"))) {
@@ -46,8 +47,8 @@
 -SVar:TrigReveal:DB$ PeekAndReveal | NoPeek$ True | ImprintRevealed$ True | SubAbility$ DBExile
 -SVar:DBExile:DB$ ChangeZone | ConditionDefined$ Imprinted | ConditionPresent$ Card.cmcLTX | Optional$ True | Defined$ Imprinted | RememberChanged$ True | Origin$ Library | Destination$ Exile | SubAbility$ DBEffect
 +SVar:TrigReveal:DB$ PeekAndReveal | NoPeek$ True | ImprintRevealed$ True | OptionalPrimaryReveal$ True | SubAbility$ DBImmediateTrigger
-+SVar:DBImmediateTrigger:DB$ ImmediateTrigger | ConditionDefined$ Imprinted | ConditionPresent$ Card.cmcLTX | RememberObjects$ Imprinted | Execute$ DBExile | SubAbility$ DBCleanup | TriggerDescription$ Whenever you reveal a card with mana value less than the result this way, you may exile it. If you do, you may play it this turn.
-+SVar:DBExile:DB$ ChangeZone | Optional$ True | Defined$ DelayTriggerRemembered | RememberChanged$ True | Origin$ Library | Destination$ Exile | SubAbility$ DBEffect
++SVar:DBImmediateTrigger:DB$ ImmediateTrigger | ConditionDefined$ Imprinted | ConditionPresent$ Card.cmcLTX | RememberObjects$ ImprintedLKI | Execute$ DBExile | SubAbility$ DBCleanup | TriggerDescription$ Whenever you reveal a card with mana value less than the result this way, you may exile it. If you do, you may play it this turn.
++SVar:DBExile:DB$ ChangeZone | Optional$ True | Defined$ DelayTriggerRememberedLKI | RememberChanged$ True | Origin$ Library | Destination$ Exile | SubAbility$ DBEffect
  SVar:DBEffect:DB$ Effect | StaticAbilities$ STPlay | RememberObjects$ Remembered | SubAbility$ DBCleanup
  SVar:STPlay:Mode$ Continuous | MayPlay$ True | Affected$ Card.IsRemembered | AffectedZone$ Exile | Description$ You may play this card this turn.
  SVar:DBCleanup:DB$ Cleanup | ClearRemembered$ True | ClearImprinted$ True

@@ -6,6 +6,31 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record Emet-Selch's separate prohibited/declined cast-history failure, with two
+  failing cases and two passing controls. Preserve an explicit actual-cast marker
+  prototype that passes four focused and 1,231 selected native cases. Keep it
+  excluded from the active recipe pending wider casting, payment, replacement
+  and release validation. The candidate script flag retains Oracle text.
+
+- Expose Priority Boarding's reflexive exile trigger separately so players can
+  respond or counter it. Preserve its reveal allowance when no card can be
+  revealed. Add a generic guarded reveal-admission query with an explicit primary
+  reveal marker for compound effects. Oracle text is unchanged.
+- Retain the revealed object's last-known identity instead of following its current
+  state. The earlier prototype failed draw-away and library-return cases; both
+  pass after correcting its remembered-object selectors. Expand coverage to
+  eighteen cases, including native library responses, source removal, copied games,
+  queued/copied triggers, declined choices, mana-value equality and native cleanup,
+  extra turns and temporary play permission expiry. The preceding runtime fails
+  eight cases and passes ten controls; the corrected candidate passes all eighteen.
+- Activate the reveal runtime after 1,227 selected native tests, 475 packaged cases,
+  2,701 broader gameplay tests, 256 serialization tests, 42 live tests / 1,123
+  subtests and the Python quality gate (416 offline tests / 520 subtests).
+  The catalog constructs 32,636 starting identities and separately classifies seven
+  nonstarting meld results. Rebind alias and companion reviews only after verifying
+  their unchanged scripts. Preserve the original failure/prototype evidence and
+  retire byte-verified pending copies. Complete rules and AI coverage remain open.
+
 - Record separate Priority Boarding reflexive-timing and empty-library reveal
   failures. Three of six native cases fail while three controls pass. Preserve a
   source-only prototype that passes all six and 1,215 selected native cases,

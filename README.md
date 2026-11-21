@@ -96,12 +96,27 @@ See the [resolved failure record](engine/optional_x_gap.json).
 These tests supply initial states and decisions; complete X, card and default-AI
 correctness remain open. No card scripts change.
 
-**Known rules gaps:** Priority Boarding currently performs the exile inside its
-reveal instead of exposing the separate reflexive trigger, and an impossible
-empty-library reveal consumes its turn allowance. Three of six native cases fail;
-three controls pass. A source-only prototype passes all six and a 1,215-case
-selected native matrix. It remains outside the active runtime pending wider
-reveal and packaged checks. See the [failure record](engine/priority_boarding_gap.json).
+Priority Boarding now exposes a separate, counterable reflexive exile trigger.
+An impossible empty-library reveal preserves the once-per-turn allowance. The
+trigger remembers the revealed object's last-known identity: it can still exile
+that card after another card moves on top, but cannot follow it through a draw
+or a trip out of and back into the library. Eighteen controlled cases cover
+native paid responses, declined choices, equal mana value, queued rolls, copied
+triggers, independent game copies and real cleanup/extra-turn permission expiry.
+Eight cases fail in the preceding runtime; all eighteen pass with the correction.
+The earlier prototype failed two added identity cases and was revised.
+See the [resolved failure record](engine/priority_boarding_gap.json).
+Only Priority Boarding's script changes; Oracle text is unchanged. Alias and
+companion reviews were rebound after verifying their scripts are unchanged.
+These are supplied-state rules witnesses; complete reveal, dice, card and default-AI
+correctness remain open.
+
+**Known rules gap:** Emet-Selch consumes its optional-cast allowance when a
+restriction prohibits casting or the later cast dialog is declined. Two of four
+native cases fail; actual-cast and outer-trigger-decline controls pass. A separate
+source-only marker prototype passes all four and a 1,231-case selected native
+matrix. It remains outside the active runtime pending wider casting, cost,
+replacement and packaged checks. See the [failure record](engine/optional_play_gap.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -117,14 +132,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,209 selected native tests, 457 packaged
-rules cases, 2,683 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,105 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,227 selected native tests, 475 packaged
+rules cases, 2,701 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,123 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/optional_x_evidence.json).
+See the [validation and activation evidence](engine/priority_boarding_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.
