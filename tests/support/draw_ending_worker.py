@@ -73,6 +73,8 @@ SOURCES = {
     "CommanderDiscoverVehicleTest": "commander_discover_vehicle_test_sha256",
     "CommanderDiscoverCastFormsTest": "commander_discover_cast_forms_test_sha256",
     "CommanderDiscoverTaxTest": "commander_discover_tax_test_sha256",
+    "CommanderDiscoverSacrificeTest": "commander_discover_sacrifice_test_sha256",
+    "CommanderSwitchBlockAiTest": "commander_switch_block_ai_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "CommanderLearnTest": "commander_learn_test_sha256",
     "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",
@@ -115,6 +117,8 @@ TEST_CLASSES = tuple(
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
     "forge.ai.ComputerUtilMana",
+    "forge.ai.SpellApiToAi",
+    "forge.ai.ability.SwitchBlockAi",
     "forge.ai.simulation.OnePlaySafetyChecker",
     "forge.game.Game",
     "forge.game.card.Card",

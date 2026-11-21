@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Implement a shared `SwitchBlock` AI handler using bounded paid native forecasts.
+  General Jarkeld and Sorrow's Path can select beneficial swaps and reject harmful,
+  self-lethal or ineffective actions in the tested scenarios. Remove only their
+  obsolete All-AI exclusion hints; preserve random-deck exclusions and Oracle text.
+- Preserve live-card block histories through the existing last-known-state mapper
+  when copying games. Sorrow's Path previously paid its simulated tap trigger but
+  its copied effect could not find the attackers, so its forecast lost the benefit.
+  Test independent copied records and pending tap-trigger/swap snapshots.
+- Verify twenty-two combat cases: baseline nine failures and thirteen controls,
+  corrected twenty-two passes. Cover native costs/damage, actual choices and
+  refusals in three modes, illegal flying cross-blocks and original-state isolation.
+  General Jarkeld's full-mode choice already worked in the baseline.
+- Promote ten unchanged sacrifice-cost witnesses into native and packaged tests.
+  Activate after 1,309 selected native tests, 557 packaged cases, 2,783 broader
+  gameplay tests, 256 serialization tests, 42 live tests / 1,205 subtests, the
+  refreshed catalog construction probe, and the Python quality gate (416 offline
+  tests / 520 subtests). Rebind alias/companion reviews only after unchanged-script
+  verification. These checks do not certify full card, combat or optimal-AI support.
+
 - Record a directly verified packaged `SwitchBlock` AI registry gap: the root
   ability used by General Jarkeld and Sorrow's Path selects `CannotPlayAi` and
   returns `CantPlayAi`. Separate this handler finding from unverified combat and

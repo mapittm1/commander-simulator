@@ -166,15 +166,27 @@ unchanged fixture moved into active tests. Earlier [source-only tax evidence](en
 retains its historical path; see the [packaged tax evidence](engine/discover_tax_packaged_evidence.json)
 for current Java 17 results.
 
-Ten additional source-only sacrifice tests pass for Village Rites and Shard Volley:
-payment before draw, prohibited casts, land versus nonland costs under Yasharn,
-and graveyard movement replaced by exile. These remain outside selected and
-packaged totals. See the [source-only sacrifice evidence](engine/discover_sacrifice_evidence.json).
+Ten sacrifice tests now run in the trusted native and packaged suites for Village
+Rites and Shard Volley: payment before draw, prohibited casts, land versus nonland
+costs under Yasharn, and graveyard movement replaced by exile. The unchanged
+fixture moved into active tests. Earlier [source-only evidence](engine/discover_sacrifice_evidence.json)
+retains its historical path; current packaged outcomes are in the
+[combat AI release evidence](engine/switch_block_ai_evidence.json).
 
-A direct packaged registry check found an AI handler gap for `SwitchBlock`, used
-by General Jarkeld and Sorrow's Path. It selects the rejecting `CannotPlayAi`
-fallback. Native combat and planner behavior still need validation before a
-fix; this does not establish a rules-effect failure. See the [AI handler finding](engine/switch_block_ai_gap.json).
+`SwitchBlock` now has a generic AI handler using bounded paid native forecasts.
+Copies retain block records as independent last-known-state graphs, so Sorrow's
+Path's forecast includes both its tap-trigger damage and its actual reblocking.
+The two scripts remove only obsolete All-AI exclusion hints; random-deck exclusions,
+Oracle text and the default AI profile are unchanged. Unchanged alias and companion
+scripts were verified before binding their reviews to the new card archive.
+
+Twenty-two supplied-state combat cases cover native paid swaps and damage,
+actual choices and harmful-action refusals in heuristic/hybrid/full modes,
+independent copied histories, pending tap triggers and illegal flying cross-blocks.
+The baseline fails nine cases and passes thirteen controls; the correction passes
+all twenty-two. General Jarkeld's full-mode case already passes in the baseline.
+This resolves the [recorded handler and snapshot gap](engine/switch_block_ai_gap.json)
+in the tested scope; full combat, card and optimal-AI correctness remain open.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -190,19 +202,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,277 selected native tests and 525 packaged
-rules cases. The Python quality gate passed 416 offline tests with 520 subtests.
-For this test-only promotion, all 2,155 production sources, 18,033 packaged classes,
-card resources and default AI configuration were verified unchanged. See the
-[current validation evidence](engine/discover_tax_packaged_evidence.json).
-
-The earlier runtime passed 2,727 broader gameplay tests, 256 serialization tests,
-and 42 live integration tests with 1,149 subtests. Its catalog probe constructed
-32,636 starting-card identities; the seven other identities are nonstarting meld
-results. Those broader, live and catalog checks were not rerun for this test-only
-promotion; their [prior evidence](engine/discover_scalar_evidence.json) and the
-byte-equivalence audit are retained separately. Native receipts use class-qualified
-method names. These checks do not establish complete card or AI correctness.
+The current reviewed runtime passed 1,309 selected native tests, 557 packaged
+rules cases, 2,783 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,205 subtests. The Python quality gate passed 416 offline
+tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
+identities; its seven other identities are nonstarting meld results. Construction
+parses native abilities and is not proof of every interaction. Native receipts use
+class-qualified method names. See the [validation and activation evidence](engine/switch_block_ai_evidence.json).
+Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

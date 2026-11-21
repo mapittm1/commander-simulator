@@ -1,108 +1,122 @@
 {
-  "status": "confirmed_ai_handler_gap_pending_combat_validation",
-  "reference_engine": {
-    "forge_version": "2.0.16-583714b-reviewed-discover-tax",
-    "capabilities": [
-      "sticker_kicker",
-      "explicit_commander_colors",
-      "native_companion_pregame",
-      "supplementary_ai_zones",
-      "sticker_snapshot_state",
-      "historical_lki_state",
-      "damage_history_state",
-      "participant_snapshot_state",
-      "starting_life_snapshot",
-      "stack_snapshot_state",
-      "cast_form_snapshot",
-      "usage_snapshot_state",
-      "scheduled_snapshot_state",
-      "delayed_trigger_snapshot",
-      "turn_schedule_snapshot",
-      "conditional_cleanup_snapshot",
-      "animation_snapshot_state",
-      "copy_frame_expiration",
-      "protection_expiration",
-      "keyword_exchange_expiration",
-      "blocking_prevention_snapshot",
-      "ring_text_snapshot",
-      "attachment_mana_cleanup",
-      "host_bound_return_snapshot",
-      "effect_cleanup_regeneration",
-      "detain_control_age_snapshot",
-      "player_control_snapshot",
-      "decision_beneficiary_planning",
-      "controlled_attack_planning",
-      "primary_control_future_planning",
-      "paid_spell_control_retargeting",
-      "composed_spell_control",
-      "cast_provenance_records",
-      "paid_mass_counter_planning",
-      "paid_exchange_pile_planning",
-      "divine_intervention_counter_trigger",
-      "expired_mana_reservation_isolation",
-      "hybrid_safety_paired_random_isolation"
+  "status": "resolved_by_reviewed_runtime",
+  "baseline": {
+    "status": "confirmed_ai_handler_gap_pending_combat_validation",
+    "reference_engine": {
+      "forge_version": "2.0.16-583714b-reviewed-discover-tax",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "4fef6f6719ffdaf17230591842e767fa26bf6c867c04a8e981f5086af9c14fe7",
+      "cards_sha256": "b73031714afafc02ac6293f3c33ec8888324f49a6a8b334424d8b1051a000d11",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "f026f9d703cb47588d6f6398c212262709b32fbadf0ce01d173d56051de7f138",
+      "native_tests": {
+        "total": 1277,
+        "passed": 1277,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "e25b1d0b3889266e55fe15cfe54c7ec853b26218f0b4d3fb31c2d7cb1e4e79ea",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "native_registry_probe": {
+      "runtime": "Java17 packaged JAR",
+      "api": "SwitchBlock",
+      "handler": "forge.ai.ability.CannotPlayAi",
+      "decision": "CantPlayAi",
+      "willing_to_play": false,
+      "control_api": "Discover",
+      "control_handler": "forge.ai.ability.DiscoverAi",
+      "handler_origin": "verified packaged JAR",
+      "receipt_sha256": "9476037abdc33b1c8fc733e9c986aea2dac45a9142a8e588f393dda82f7525a2",
+      "log_sha256": "289fb5f20e434d289a619ca634a2f94210c0743a6528daee0fd039149790f891",
+      "probe_source_sha256": "4e4996fed3549dab8b9b5ca8d1692c8241a82d4cc7230df73cd25701dcc9ee69"
+    },
+    "cards_with_root_api": [
+      {
+        "name": "General Jarkeld",
+        "oracle_id": "64df77f6-4f7e-442a-971c-8ad3f7d1c979",
+        "script_path": "g/general_jarkeld.txt",
+        "script_sha256": "b23092a8578faaa5053a68e9b1b6d73107b22b3e3742bb06ecadb2fe56ae2516",
+        "root_ability_api": "SwitchBlock"
+      },
+      {
+        "name": "Sorrow's Path",
+        "oracle_id": "5419eae0-3c12-4748-9cf8-d927752e527e",
+        "script_path": "s/sorrows_path.txt",
+        "script_sha256": "ae8e775929cbce8d316a4ac3c70198195cad73d4dafd756c5ff1bb5862d22be1",
+        "root_ability_api": "SwitchBlock"
+      }
     ],
-    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
-    "jar_sha256": "4fef6f6719ffdaf17230591842e767fa26bf6c867c04a8e981f5086af9c14fe7",
-    "cards_sha256": "b73031714afafc02ac6293f3c33ec8888324f49a6a8b334424d8b1051a000d11",
-    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
-    "recipe_sha256": "f026f9d703cb47588d6f6398c212262709b32fbadf0ce01d173d56051de7f138",
-    "native_tests": {
-      "total": 1277,
-      "passed": 1277,
-      "failed": 0,
-      "skipped": 0
-    },
-    "build_log_sha256": "e25b1d0b3889266e55fe15cfe54c7ec853b26218f0b4d3fb31c2d7cb1e4e79ea",
-    "edition_resources": {
-      "files": 686,
-      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
-    },
-    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
-    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
-    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    "source_locations": [
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
+      "forge-ai/src/main/java/forge/ai/ability/CannotPlayAi.java",
+      "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+    ],
+    "scope": "Direct packaged registry/handler check. No actual combat or simulation planner was exercised. Confirm General Jarkeld and Sorrow's Path behavior with native combat witnesses before implementing a fix.",
+    "interpretation": "The runtime lacks a dedicated SwitchBlock AI handler and uses a rejecting fallback. This is a handler-coverage finding, not proof that the rules effect is incorrect or that every simulation mode skips these cards. The ChangeCombatants TODO was only a lead: both cards already have SwitchBlock rules scripts.",
+    "local_research": "data/development/commander-switch-block-ai-release",
+    "remaining_work": [
+      "Native combat witnesses with General Jarkeld and Sorrow's Path",
+      "Verify heuristic, hybrid and full planner admission and actual decisions",
+      "Implement generic targeting/scoring only after behavioral baseline and rules review"
+    ]
   },
-  "native_registry_probe": {
-    "runtime": "Java17 packaged JAR",
-    "api": "SwitchBlock",
-    "handler": "forge.ai.ability.CannotPlayAi",
-    "decision": "CantPlayAi",
-    "willing_to_play": false,
-    "control_api": "Discover",
-    "control_handler": "forge.ai.ability.DiscoverAi",
-    "handler_origin": "verified packaged JAR",
-    "receipt_sha256": "9476037abdc33b1c8fc733e9c986aea2dac45a9142a8e588f393dda82f7525a2",
-    "log_sha256": "289fb5f20e434d289a619ca634a2f94210c0743a6528daee0fd039149790f891",
-    "probe_source_sha256": "4e4996fed3549dab8b9b5ca8d1692c8241a82d4cc7230df73cd25701dcc9ee69"
+  "baseline_sha256": "b9ea0f85b5c6161abaece13ce236f4a647421b8b61179425871cad4e1a3b024e",
+  "behavioral_baseline_counts": {
+    "total": 22,
+    "passed": 13,
+    "failed": 9,
+    "skipped": 0
   },
-  "cards_with_root_api": [
-    {
-      "name": "General Jarkeld",
-      "oracle_id": "64df77f6-4f7e-442a-971c-8ad3f7d1c979",
-      "script_path": "g/general_jarkeld.txt",
-      "script_sha256": "b23092a8578faaa5053a68e9b1b6d73107b22b3e3742bb06ecadb2fe56ae2516",
-      "root_ability_api": "SwitchBlock"
-    },
-    {
-      "name": "Sorrow's Path",
-      "oracle_id": "5419eae0-3c12-4748-9cf8-d927752e527e",
-      "script_path": "s/sorrows_path.txt",
-      "script_sha256": "ae8e775929cbce8d316a4ac3c70198195cad73d4dafd756c5ff1bb5862d22be1",
-      "root_ability_api": "SwitchBlock"
-    }
-  ],
-  "source_locations": [
-    "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
-    "forge-ai/src/main/java/forge/ai/ability/CannotPlayAi.java",
-    "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
-  ],
-  "scope": "Direct packaged registry/handler check. No actual combat or simulation planner was exercised. Confirm General Jarkeld and Sorrow's Path behavior with native combat witnesses before implementing a fix.",
-  "interpretation": "The runtime lacks a dedicated SwitchBlock AI handler and uses a rejecting fallback. This is a handler-coverage finding, not proof that the rules effect is incorrect or that every simulation mode skips these cards. The ChangeCombatants TODO was only a lead: both cards already have SwitchBlock rules scripts.",
-  "local_research": "data/development/commander-switch-block-ai-release",
-  "remaining_work": [
-    "Native combat witnesses with General Jarkeld and Sorrow's Path",
-    "Verify heuristic, hybrid and full planner admission and actual decisions",
-    "Implement generic targeting/scoring only after behavioral baseline and rules review"
-  ]
+  "test_source": "engine/tests/CommanderSwitchBlockAiTest.java",
+  "test_source_sha256": "922dda2b5ad48ce9e3a2cf59742e09c8852e3c12da6dead49e1cf8badc98c217",
+  "resolution_evidence": "engine/switch_block_ai_evidence.json",
+  "scope": "22 supplied-state four-player witnesses: native paid swaps and combat damage, AI admission and actual picks/refusals in heuristic/hybrid/full modes, copy independence and pending tap-trigger snapshots, and illegal flying cross-blocks. Baseline General full picker already passes; no all-mode failure claim. Source execution uses JDK19 and is not packaged JRE17 evidence."
 }
