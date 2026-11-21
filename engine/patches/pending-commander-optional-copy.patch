@@ -1,0 +1,22 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/CopyPermanentEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/CopyPermanentEffect.java
+@@ -35,6 +35,19 @@
+ public class CopyPermanentEffect extends TokenEffectBase {
+ 
+     @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        // Only the simple battlefield-choice form is queried here.
++        if (!sa.hasParam("Choices") || sa.getSubAbility() != null || sa.hasParam("Defined")
++                || sa.hasParam("DefinedName") || sa.hasParam("ValidSupportedCopy")
++                || sa.hasParam("RandomCopied") || sa.hasParam("WithDifferentNames")) {
++            return true;
++        }
++        Card host = sa.getHostCard();
++        return !CardLists.getValidCards(host.getGame().getCardsIn(ZoneType.Battlefield),
++                sa.getParam("Choices"), sa.getActivatingPlayer(), host, sa).isEmpty();
++    }
++
++    @Override
+     protected String getStackDescription(SpellAbility sa) {
+         if (sa.hasParam("Populate")) {
+             return "Populate. (Create a token that's a copy of a creature token you control.)";

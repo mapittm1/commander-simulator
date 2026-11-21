@@ -1,0 +1,43 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/DrawEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DrawEffect.java
+@@ -18,6 +18,25 @@
+ import forge.util.Localizer;
+ 
+ public class DrawEffect extends SpellAbilityEffect {
++
++    @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        if (sa.hasParam("UnlessCost") || sa.hasParam("Upto")
++                || (sa.getSubAbility() != null && !"Draw".equals(sa.getParam("OptionalAction")))) {
++            return true;
++        }
++        int amount = sa.hasParam("NumCards")
++                ? AbilityUtils.calculateAmount(sa.getHostCard(), sa.getParam("NumCards"), sa) : 1;
++        List<Player> players = getTargetPlayersWithDuplicates(true, "Defined", sa);
++        // The entire optional amount must be legal; library size is not a prohibition.
++        for (Player player : Sets.newLinkedHashSet(players)) {
++            if (player.isInGame() && player.canDraw(amount * Collections.frequency(players, player))) {
++                return true;
++            }
++        }
++        return false;
++    }
++
+ 
+     @Override
+     public boolean movesCardToOrFromLibrary(final SpellAbility sa) {
+--- a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
++++ b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+@@ -455,7 +455,11 @@
+         }
+ 
+         if (decider != null) {
+-            if (sa.getApi() != null && !sa.getApi().getSpellEffect().canChooseOptionalAction(sa)) {
++            // Choosing to pay a trigger cost is distinct from choosing its later effect.
++            boolean optionalEffect = regtrig.hasParam("OptionalDecider")
++                    && (!sa.hasParam("Cost") || "0".equals(sa.getParam("Cost")));
++            if (optionalEffect && sa.getApi() != null
++                    && !sa.getApi().getSpellEffect().canChooseOptionalAction(sa)) {
+                 return;
+             }
+             if (!decider.isInGame()) {

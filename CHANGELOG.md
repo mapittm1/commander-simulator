@@ -6,6 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct optional draws under Narset and Spirit of the Labyrinth: preserve the
+  once-per-turn action when drawing is prohibited, including an optional two-card
+  draw when only one card could be drawn. Keep independent trigger cost choices
+  available, including Tymna's life payment when its draw is prohibited. Ordinary,
+  replaced, empty-library, declined and countered draw controls retain their behavior.
+- Expand the draw regression suite to twelve cases. The preceding engine fails
+  four and passes eight controls; the corrected candidate passes all twelve and
+  all 91 focused/neighboring tests. The original five-case prototype failed three
+  expanded cases, so its partial-draw and trigger-cost handling were revised.
+- Activate the reviewed optional-draw runtime after 1,153 selected native tests,
+  401 packaged cases, 2,627 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,049 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The unchanged card archive constructs 32,636
+  starting identities with seven nonstarting meld results classified separately.
+  Preserve the original pending failure record and retire its byte-verified copies.
+  These checks establish selected behavior, not complete card or AI correctness.
+- Record the separate Calix optional-copy gap: one failing baseline and two
+  passing controls. A source-only prototype passes three focused and 91 neighboring
+  cases; keep it excluded from the active recipe pending wider copy validation.
+
 - Preserve optional life-gain allowances under prohibitions while retaining legal
   replacement effects and independent reveal choices. Identify Skyfisher Spider's
   optional primary gain before its conditional exile. Keep Uro's attack gain/draw

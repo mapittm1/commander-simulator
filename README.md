@@ -41,25 +41,21 @@ See the [resolved failure record](engine/optional_life_gain_gap.json).
 These are partial-state rules witnesses with supplied decisions and preconditions;
 full card, cost, and AI coverage remain open.
 
-**Known rules gap:** Chekov and McCoy's optional draw can incorrectly consume
-the turn's allowance under Narset or Spirit of the Labyrinth. A separate source-only candidate
-passes five focused cases and 79 neighboring cases; wider and packaged validation
-remain pending. See the [failure record](engine/optional_draw_gap.json) and
-[pending patch](engine/patches/pending-commander-optional-draw.patch).
+Simple optional single- and multi-card draws now preserve their once-per-turn allowance
+when a prohibition makes the entire optional draw illegal. Replacement draws,
+declined and countered triggers, and empty-library loss retain their native behavior.
+Choosing to pay a trigger cost remains independent of the resulting draw: Tymna
+can still pay life when Narset prohibits drawing. Twelve controlled draw cases
+and 91 focused/neighboring cases pass. See the
+[resolved failure record](engine/optional_draw_gap.json).
+These tests use supplied states and decisions. Compound draw effects need separate
+coverage; full rules and AI coverage remain open.
 
-Simple targeted optional moves now consult a shared effect-level availability
-query before asking the player or using a once-per-turn allowance. Riveteers
-Ascendancy keeps its return available while movement is prohibited. Fourteen
-controlled cases distinguish prohibitions, replacement effects, declining,
-countered triggers, lost targets and zone round-trips. They also cover Krile
-and Puca returning cards to hand, a mixed multi-target return, and Deep Gnome
-Terramancer's legal search when its later land move is prohibited.
-
-The query leaves searches and compound actions to their existing resolution;
-other effect types still need dedicated availability checks and rules witnesses.
-Targets and decisions in these fixtures are supplied; they do not certify AI
-strategy. The [failure and resolution record](engine/targeted_return_gap.json)
-contains the baseline and validation scope.
+**Known rules gap:** Calix, Guided by Fate can consume its optional copy allowance
+with no eligible nonlegendary enchantment. A source-only prototype passes three
+focused cases and 91 neighbors, but needs wider token/copy and packaged validation.
+See the [failure record](engine/optional_copy_gap.json) and
+[pending patch](engine/patches/pending-commander-optional-copy.patch).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -75,14 +71,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,141 selected native tests, 389 packaged
-rules cases, 2,615 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,037 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,153 selected native tests, 401 packaged
+rules cases, 2,627 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,049 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/optional_life_gain_evidence.json).
+See the [validation and activation evidence](engine/optional_draw_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.
