@@ -6,6 +6,28 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record separate Priority Boarding reflexive-timing and empty-library reveal
+  failures. Three of six native cases fail while three controls pass. Preserve a
+  source-only prototype that passes all six and 1,215 selected native cases,
+  excluded from this runtime pending wider reveal and release validation. Its
+  script change retains Oracle text and uses existing reflexive-trigger support.
+
+- Preserve simple optional X-changing allowances when the referenced spell or
+  ability is no longer on the stack. Skip mutation of absent stack abilities while
+  retaining mandatory changes and same-value choices. No card scripts change.
+- Expand coverage to sixteen cases: four fail in the preceding engine and twelve
+  controls pass; all sixteen pass with the correction. Cover native paid spells
+  and activations, counterspells, source removal/return, copied triggers, remanded
+  and recast spell identity, independent game copies, native cleanup/extra turns,
+  and mandatory Unbound Flourishing doubling.
+- Activate the X-interaction runtime after 1,209 selected native tests,
+  457 packaged cases, 2,683 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,105 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The unchanged card archive constructs 32,636
+  starting identities and separately classifies seven nonstarting meld results.
+  Preserve the original failure/prototype record and retire byte-verified pending
+  copies. Complete rules and AI correctness remain unproven.
+
 - Record the separate Glava absent-spell failure: one failing baseline and three
   passing controls, with native paid spells and actual stack targets. A source-only
   generic prototype passes four focused and 1,197 selected native cases. Keep it

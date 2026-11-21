@@ -85,11 +85,23 @@ previous engine; all sixteen pass with the correction. See the
 These are partial-state witnesses with supplied decisions and native paid spells;
 compound counter effects, complete card behavior and default-AI correctness remain open.
 
-**Known rules gap:** Glava can spend its optional X-changing allowance after the
-original spell has been countered. A later X spell then misses the choice. Three
-controls pass; the source-only prototype passes all four cases and a 1,197-case
-selected native matrix. It remains excluded from the active runtime pending wider
-X-rule and packaged validation. See the [failure record](engine/optional_x_gap.json).
+Simple optional X changes now preserve their once-per-turn allowance when the
+referenced spell or activated ability has left the stack. Glava can choose X=5
+for a later spell after an earlier one is countered. A copied old trigger cannot
+follow a remanded card into a new casting. Sixteen controlled cases also cover
+same-value choices, source removal and return, copied triggers, independent game
+copies, native extra-turn cleanup, and mandatory Unbound Flourishing doubling.
+Four cases fail in the previous engine; all sixteen pass with the correction.
+See the [resolved failure record](engine/optional_x_gap.json).
+These tests supply initial states and decisions; complete X, card and default-AI
+correctness remain open. No card scripts change.
+
+**Known rules gaps:** Priority Boarding currently performs the exile inside its
+reveal instead of exposing the separate reflexive trigger, and an impossible
+empty-library reveal consumes its turn allowance. Three of six native cases fail;
+three controls pass. A source-only prototype passes all six and a 1,215-case
+selected native matrix. It remains outside the active runtime pending wider
+reveal and packaged checks. See the [failure record](engine/priority_boarding_gap.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -105,14 +117,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,193 selected native tests, 441 packaged
-rules cases, 2,667 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,089 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,209 selected native tests, 457 packaged
+rules cases, 2,683 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,105 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/optional_counters_evidence.json).
+See the [validation and activation evidence](engine/optional_x_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

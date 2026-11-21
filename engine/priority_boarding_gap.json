@@ -1,0 +1,146 @@
+{
+  "status": "confirmed_rules_failure_pending_fix",
+  "cards": [
+    "Priority Boarding",
+    "Component Pouch",
+    "Disallow",
+    "Dramatic Reversal",
+    "Elixir of Immortality"
+  ],
+  "observation": "Priority Boarding exiles a revealed card inline rather than exposing the reflexive trigger, preventing a paid counterspell response to the exile choice. An empty-library optional reveal also consumes the turn allowance, suppressing a later roll after native Elixir refills the library. Accepted reveal, declined reveal and countered-reveal controls pass.",
+  "baseline_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-optional-x",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "78f97405124d5158d8c60f0a4397696eeb591e2fee64cee22ab455a78f0165d6",
+    "cards_sha256": "7006dc14e6df0ff5fd82773a5dbaa7da310ad0ecf588bff7bdc532313c68dc14",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "d77befb762db9169622410272d898d57a4fe3bd9bd94df8abc2ad7fa0655a55b",
+    "native_tests": {
+      "total": 1209,
+      "passed": 1209,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "6ce3deda4594afffe29f6bfec1ea52fe6a6924066e3c35652ac02df4d4a4f953",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "baseline_engine_lock_sha256": "bc3be67fc335e74e5baec1ba8638fe4512e1b35195f9501ee4943602d19002f6",
+  "production_sources_equal_after_line_ending_normalization": 2155,
+  "baseline_card_scripts_compared": 34466,
+  "test_source": "engine/pending/CommanderPriorityBoardingTest.java",
+  "test_source_sha256": "f1ac0f6564064d07a9b9f0b09ad549416961e944af549ca0cf986fb778e8c4e6",
+  "baseline": {
+    "counts": {
+      "total": 6,
+      "passed": 3,
+      "failed": 3,
+      "skipped": 0
+    },
+    "report_sha256": "a0a1708d4b9086af64bca8b2db91c7f2ae083876389cda6edf9b62fcefbd478c",
+    "log_sha256": "8d8a17db0e4dca85e6143a8debffee5b749038e6159f24cada75c8e13474dd94",
+    "failing_methods": [
+      "anEmptyLibraryDoesNotConsumeTheRevealAllowance",
+      "counteringTheExileKeepsTheCardAndUsesTheRevealAllowance",
+      "exileWaitsForASeparateReflexiveTrigger"
+    ]
+  },
+  "prototype": {
+    "status": "source_only_not_activated",
+    "patch": "engine/patches/pending-commander-priority-boarding.patch",
+    "patch_sha256": "45f6a650cfc98213a18e6fa3d8a11a4855f75e6a9022897468651bca7041903f",
+    "fixed": {
+      "counts": {
+        "total": 6,
+        "passed": 6,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "e8500b17ffa470f18c871be12beba8c688d95f89c5006ff15520d5bdff95d354",
+      "log_sha256": "49d1ab319a7c50336228d1f98e92a66e374d56288a2860c2d1d119e58c37cf05",
+      "failing_methods": []
+    },
+    "selected_native_matrix": {
+      "counts": {
+        "total": 1215,
+        "passed": 1215,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "5bdea5cad4c0bbe8f382d71dcede20c2d8a789fe88c78d949a63dc787d74e595",
+      "log_sha256": "a5f15f2f91d69e44dbe31f2137852061a43e155b11bf6054f5551037cafc4993",
+      "failing_methods": []
+    },
+    "changed_production_sources": [
+      "forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java"
+    ],
+    "changed_card_scripts": [
+      "forge-gui/res/cardsfolder/p/priority_boarding.txt"
+    ],
+    "oracle_text": "unchanged",
+    "test_source_comparison": "The exploratory AutoPaymentTest differs from the sealed build and is excluded from this selected matrix. The six-case fixture is bound above; production differs only by PeekAndRevealEffect plus the Priority Boarding script."
+  },
+  "research_notes": [
+    "The initial five-case setup used AI-selected Twiddle; two untap setup checks failed. The corrected baseline uses native Dramatic Reversal and passes the three controls.",
+    "An initial reflexive prototype used an unsupported remembered-object selector. Its failed receipts were retained; the corrected five-case timing prototype passes.",
+    "The timing-only prototype fails the added empty-library witness. The final prototype adds a conservative generic NoPeek reveal-admission query and an explicit primary-reveal script marker."
+  ],
+  "remaining_work": [
+    "reveal and exile decline choices, multiple queued rolls and mana-value boundaries",
+    "source removal, card identity, library responses and independent copied games",
+    "native cleanup, temporary play permissions and extra turns",
+    "other optional reveal patterns and compound effects",
+    "packaged build, broader gameplay, live/catalog gates and activation"
+  ],
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+    "https://magic.wizards.com/en/news/feature/unfinity-release-notes-2022-10-07"
+  ],
+  "scope": "Six partial-state four-player witnesses with supplied battlefield and optional decisions. Native paid Component Pouch rolls, Disallow, Dramatic Reversal and Elixir resolution are used. Forest mana value zero makes eligibility independent of die result; the empty-library test checks a later trigger after refill. Reflexive timing follows rule 603.12; impossible reveal admission is inferred from 608.2d. This is not complete reveal, dice, card or AI certification. The prototype is excluded from the active recipe."
+}
