@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a separate text-change AI gap with twelve source-native witnesses: six
+  supplied-word rules controls pass; direct admission and actual picker checks fail
+  in six cases. Keep the fixture pending and outside passing runtime totals.
+
+- Implement a generic Empower AI handler using bounded paid native outcomes.
+  Correct its generated description to name loyalty counters. Verify twenty-four
+  supplied-state cases spanning all five root-ability cards: baseline fifteen
+  controls pass and nine cases fail; the correction passes all twenty-four.
+  Native costs, replacements and harmful-action refusals are included.
+- Activate the reviewed Empower engine after 1,333 selected native tests, 581
+  packaged cases, 2,807 broader gameplay tests, 256 serialization tests, 42 live
+  tests / 1,229 subtests and the refreshed catalog probe pass. The Python quality
+  gate passes 416 offline tests / 520 subtests. Audit two modified Java sources
+  and one new handler; card resources and the default AI profile are unchanged.
+  Optional-trigger, complete card and optimal-AI behavior remain unverified.
+
 - Implement a shared `SwitchBlock` AI handler using bounded paid native forecasts.
   General Jarkeld and Sorrow's Path can select beneficial swaps and reject harmful,
   self-lethal or ineffective actions in the tested scenarios. Remove only their

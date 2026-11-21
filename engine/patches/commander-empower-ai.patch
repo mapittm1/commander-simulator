@@ -1,0 +1,65 @@
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -91,6 +91,7 @@
+             .put(ApiType.EachDamage, DamageEachAi.class)
+             .put(ApiType.Earthbend, EarthbendAi.class)
+             .put(ApiType.Effect, EffectAi.class)
++            .put(ApiType.Empower, EmpowerAi.class)
+             .put(ApiType.Encode, EncodeAi.class)
+             .put(ApiType.Endure, EndureAi.class)
+             .put(ApiType.EndCombatPhase, EndTurnAi.class)
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/EmpowerEffect.java b/forge-game/src/main/java/forge/game/ability/effects/EmpowerEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/EmpowerEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/EmpowerEffect.java
+@@ -35,9 +35,8 @@
+ 
+         sb.append(type).append(" ").append(amount).append(" (Put ");
+ 
+-        sb.append(Lang.nounWithNumeral(amount, "+1/+1 counter"));
++        sb.append(Lang.nounWithNumeral(amount, "loyalty counter"));
+ 
+-        // TODO fix reminder after CR
+         sb.append(" on a ").append(type).append(" token you control.");
+         sb.append(" If you don't control one, first create a blue ").append(type).append(" planeswalker token with \"-1: Surveil 1.\" and \"-3: Draw a card.\")");
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/ability/EmpowerAi.java b/forge-ai/src/main/java/forge/ai/ability/EmpowerAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/EmpowerAi.java
+@@ -0,0 +1,35 @@
++package forge.ai.ability;
++
++import com.google.common.collect.Iterables;
++import forge.ai.AiAbilityDecision;
++import forge.ai.ComputerUtilCard;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.game.card.Card;
++import forge.game.card.CardLists;
++import forge.game.card.CardPredicates;
++import forge.game.card.CounterEnumType;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import java.util.Map;
++
++/** Evaluate paid empower outcomes with native token and counter replacements. */
++public final class EmpowerAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    protected Card chooseSingleCard(Player actor, SpellAbility action, Iterable<Card> options,
++            boolean optional, Player targetedPlayer, Map<String, Object> params) {
++        Iterable<Card> eligible = CardLists.filter(options,
++                CardPredicates.canReceiveCounters(CounterEnumType.LOYALTY));
++        return ComputerUtilCard.getBestAI(Iterables.isEmpty(eligible) ? options : eligible);
++    }
++}

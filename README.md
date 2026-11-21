@@ -188,6 +188,24 @@ all twenty-two. General Jarkeld's full-mode case already passes in the baseline.
 This resolves the [recorded handler and snapshot gap](engine/switch_block_ai_gap.json)
 in the tested scope; full combat, card and optimal-AI correctness remain open.
 
+Empower now has a generic paid-outcome AI handler; its native stack description
+correctly names loyalty counters. Twenty-four native and packaged cases cover the
+five root-ability cards, real mana/exile/tap/loyalty payments, token creation and
+reuse, replacement effects, harmful-action refusals, copied pending resolution and
+generated descriptions. The identical baseline passes fifteen controls and fails
+nine cases; the correction passes all twenty-four. The full-mode beneficial choice
+already passes in the baseline. Card scripts and the default AI profile are unchanged.
+See the [native comparison](engine/empower_ai_native_evidence.json) and
+[packaged validation and activation](engine/empower_ai_evidence.json).
+Complete Empower, optional-trigger, card and optimal-AI correctness remain unverified.
+
+A separate source-native text-change investigation has six passing rules controls
+and six AI admission/selection failures, including actual choices in all three modes.
+Supplied-word native controls succeed; AI cases use the default controller.
+These twelve tests remain pending and are outside the passing runtime totals.
+See the [text-change AI finding](engine/change_text_ai_gap.json). Useful word-choice
+planning and the separate face-down inspection handler still need validation.
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -202,13 +220,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,309 selected native tests, 557 packaged
-rules cases, 2,783 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,205 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,333 selected native tests, 581 packaged
+rules cases, 2,807 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,229 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/switch_block_ai_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/empower_ai_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
