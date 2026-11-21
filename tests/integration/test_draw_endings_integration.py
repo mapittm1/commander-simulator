@@ -35,15 +35,15 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 357},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 371},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 357)
+        self.assertEqual(len({row["method"] for row in methods}), 371)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
-            summary["counts"], {"total": 357, "passed": 357, "failed": 0, "skipped": 0}
+            summary["counts"], {"total": 371, "passed": 371, "failed": 0, "skipped": 0}
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (

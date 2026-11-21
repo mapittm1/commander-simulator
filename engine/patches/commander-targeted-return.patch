@@ -1,0 +1,70 @@
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -43,6 +43,16 @@
+ public abstract class SpellAbilityEffect {
+ 
+     public void resolve(SpellAbility sa) {}
++
++    /**
++     * Query known prohibitions before choosing an optional action (CR 608.2d).
++     * This must not execute replacements, prompt players, or mutate game state.
++     * Effects with no dedicated availability query retain their normal resolution.
++     */
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        return true;
++    }
++
+ 
+     /**
+      * CR 605.1a: an activated ability is not a mana ability if its cost or effect moves any
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
+@@ -38,6 +38,36 @@
+ public class ChangeZoneEffect extends SpellAbilityEffect {
+ 
+     @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        // Searches and compound actions can be legal even when a later move is not.
++        if (!sa.usesTargeting() || sa.isHidden() || sa.getSubAbility() != null
++                || !sa.hasParam("Origin") || !sa.hasParam("Destination")
++                || sa.hasParam("Defined") || sa.hasParam("ThisDefinedAndTgts")
++                || sa.hasParam("DestinationAlternative") || sa.hasParam("UnlessCost")
++                || !Iterables.isEmpty(sa.getTargets().getTargetPlayers())) {
++            return true;
++        }
++        CardCollectionView targets = sa.getTargets().getTargetCards();
++        if (targets.isEmpty()) {
++            return true;
++        }
++        final Game game = sa.getActivatingPlayer().getGame();
++        final ZoneType destination = ZoneType.smartValueOf(sa.getParam("Destination"));
++        final List<ZoneType> origins = ZoneType.listValueOf(sa.getParam("Origin"));
++        for (Card previous : targets) {
++            Card current = game.getCardState(previous, null);
++            if (current != null && previous.equalsWithGameTimestamp(current)
++                    && !current.isPhasedOut() && current.getZone() != null
++                    && origins.contains(current.getZone().getZoneType())
++                    && !GameActionUtil.isZoneChangePrevented(current, destination, sa)) {
++                return true;
++            }
++        }
++        return false;
++    }
++
++
++    @Override
+     public boolean movesCardToOrFromLibrary(final SpellAbility sa) {
+         return zoneParamIsLibrary(sa, "Origin") || zoneParamIsLibrary(sa, "Destination");
+     }
+--- a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
++++ b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+@@ -455,6 +455,9 @@
+         }
+ 
+         if (decider != null) {
++            if (sa.getApi() != null && !sa.getApi().getSpellEffect().canChooseOptionalAction(sa)) {
++                return;
++            }
+             if (!decider.isInGame()) {
+                 decider = SpellAbilityEffect.getNewChooser(sa, decider);
+             }

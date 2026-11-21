@@ -1,0 +1,151 @@
+{
+  "status": "resolved_by_reviewed_runtime",
+  "baseline": {
+    "status": "confirmed_rules_failure_pending_fix",
+    "cards": [
+      "Riveteers Ascendancy"
+    ],
+    "observation": "A prohibited optional targeted return is offered and incorrectly uses the once-per-turn action. Removing the prohibition does not restore the action for a later sacrifice.",
+    "baseline_engine": {
+      "forge_version": "2.0.16-583714b-reviewed-prevented-return",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "4dfc4c3a19a5ca33131a1af4a6c0bf084465119a12f73e636ce9c80160cb740e",
+      "cards_sha256": "0f4e18094cb170d4e0238b2d33def6f1df63cb5a54de02d7acfda5c0791ff8ca",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "c40ab3fed076baf866db5c31046b528fdf976395825d74b389d035aa7e2af46c",
+      "native_tests": {
+        "total": 1109,
+        "passed": 1109,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "958282c08f6062bf496d397a8ed07823c73dc27daa6dc3633b85df5083b37898",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "baseline_source_commit": "ec85a3cd3c3fb63ff49e2bee30c732a2bb02a2ae",
+    "production_sources_equal_after_line_ending_normalization": 2155,
+    "test_source": "engine/tests/CommanderTargetedReturnTest.java",
+    "test_source_sha256": "7b0296c294ad3770a627c23b3d773a713ad8d77884eacc71c34a8226f3c28602",
+    "baseline": {
+      "counts": {
+        "total": 14,
+        "passed": 10,
+        "failed": 4,
+        "skipped": 0
+      },
+      "report_sha256": "f24253fcb232be8c28a86645ec614b99ba950f832f60370e9db9f40f5d0e935c",
+      "log_sha256": "77329ad85de6d1ad2b1bca1ca5c4b6763f7850d5fd59297ab41346ff5e3c63bf",
+      "failing_methods": [
+        "aProhibitedTargetedReturnPreservesTheAllowance",
+        "kunorosPreservesTheTargetedReturn",
+        "runestonePreservesTheTargetedReturn",
+        "soullessJailerPreservesTheTargetedReturn"
+      ]
+    },
+    "prototype": {
+      "status": "focused_passed_pending_packaged_validation",
+      "patch": "engine/patches/commander-targeted-return.patch",
+      "patch_sha256": "12d3deefc0e7bc6fc446d2bc97e0e19bfe5243e130cdb7ed1a81f9d60d7669ac",
+      "fixed": {
+        "counts": {
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "9f12ffc734d90de471b6c8609585c1d2bb4b2d68aefdb0e6ac005ef13151fa31",
+        "log_sha256": "818689eae462f5d367ff85864e3a288cbdca357239f51ba88d4f399569c0fe54",
+        "report_selection": {
+          "class": "forge.ai.CommanderTargetedReturnTest",
+          "methods": [
+            "aLibrarySearchStillUsesItsAllowanceWhenThePutIsProhibited",
+            "aMixedTargetedReturnCanMoveTheUnprohibitedCreature",
+            "aProhibitedTargetedReturnPreservesTheAllowance",
+            "aReplacedTargetedReturnUsesTheAllowance",
+            "aTargetThatLeavesAndReturnsDoesNotResolveAsTheOldObject",
+            "anOrdinaryTargetedReturnUsesTheAllowance",
+            "counteringTheTriggerPreservesTheAllowance",
+            "decliningTheTargetedReturnPreservesTheAllowance",
+            "exilingTheOnlyTargetPreservesTheAllowance",
+            "krileReturnsToHandThroughGrafdiggersCageAndUsesItsAllowance",
+            "kunorosPreservesTheTargetedReturn",
+            "pucaReturnsToHandThroughGrafdiggersCageAndUsesItsAllowance",
+            "runestonePreservesTheTargetedReturn",
+            "soullessJailerPreservesTheTargetedReturn"
+          ]
+        }
+      },
+      "neighboring_matrix": {
+        "counts": {
+          "total": 41,
+          "passed": 41,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "9f12ffc734d90de471b6c8609585c1d2bb4b2d68aefdb0e6ac005ef13151fa31",
+        "log_sha256": "818689eae462f5d367ff85864e3a288cbdca357239f51ba88d4f399569c0fe54"
+      }
+    },
+    "rules_sources": [
+      "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf"
+    ],
+    "rules": [
+      "603.2h",
+      "608.2b",
+      "608.2d"
+    ],
+    "scope": "Four-player partial-state native witnesses for simple targeted optional moves. Targets, priority preconditions, counters, setup zones and optional decisions are supplied. Native payment, sacrifice, removal, stack resolution, target zone-roundtrips, life loss, searching and mixed movement execute. Composite effects and default AI strategy are not certified."
+  },
+  "baseline_source_commit": "ec85a3cd3c3fb63ff49e2bee30c732a2bb02a2ae",
+  "test_source": "engine/tests/CommanderTargetedReturnTest.java",
+  "test_source_sha256": "7b0296c294ad3770a627c23b3d773a713ad8d77884eacc71c34a8226f3c28602",
+  "resolution_evidence": "engine/targeted_return_evidence.json",
+  "scope": "Selected simple targeted optional moves and once-per-turn allowances are corrected. Searches, replacement controls, mixed targets, countering and lost targets have selected native witnesses. This is not all-card or default-AI strategy certification."
+}

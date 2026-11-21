@@ -84,6 +84,7 @@ SOURCES = {
     "CommanderReaperLimitTest": "commander_reaper_limit_test_sha256",
     "CommanderRinoaReturnTest": "commander_rinoa_return_test_sha256",
     "CommanderPreventedReturnTest": "commander_prevented_return_test_sha256",
+    "CommanderTargetedReturnTest": "commander_targeted_return_test_sha256",
     "CommanderSecretVoteTest": "commander_secret_vote_test_sha256",
     "CommanderEmptyVoteTest": "commander_empty_vote_test_sha256",
     "CommanderPublicVoteTest": "commander_public_vote_test_sha256",

@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Check simple targeted optional moves through a shared, side-effect-free effect
+  query. Riveteers Ascendancy preserves its once-per-turn return when movement is
+  prohibited. Fourteen native cases also cover replacement controls, declining,
+  countered triggers, lost targets, zone round-trips, hand returns, a mixed
+  multi-target return, and a library search whose later move is prohibited.
+  Card scripts and the card archive are unchanged. Searches and compound actions
+  retain their existing resolution; other effect families remain separate work.
+- Record the separate Ancient Cornucopia life-gain prohibition gap. The baseline
+  fails both Erebos/Tibalt cases and passes ordinary-gain and Rain of Gore controls.
+  Preserve a source-only candidate that passes all four cases and 41 neighbors;
+  it remains excluded from the active recipe pending wider validation.
+- Activate the reviewed targeted-return runtime after 1,123 selected native tests,
+  371 packaged cases, 2,597 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,019 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The catalog probe constructed 32,636
+  starting-card identities and classified seven nonstarting meld results.
+  Preserve the baseline's four failures and ten passing controls in the
+  resolution evidence; all 41 targeted and neighboring native checks passed.
+
 - Activate the reviewed return-prohibition runtime after 1,109 selected native
   tests, 357 packaged rules cases, 2,583 broader gameplay tests, 256 serialization
   tests, 42 live tests / 1,005 subtests, and the Python quality gate

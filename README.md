@@ -27,6 +27,26 @@ difference.
 
 ## Card coverage
 
+Simple targeted optional moves now consult a shared effect-level availability
+query before asking the player or using a once-per-turn allowance. Riveteers
+Ascendancy keeps its return available while movement is prohibited. Fourteen
+controlled cases distinguish prohibitions, replacement effects, declining,
+countered triggers, lost targets and zone round-trips. They also cover Krile
+and Puca returning cards to hand, a mixed multi-target return, and Deep Gnome
+Terramancer's legal search when its later land move is prohibited.
+
+The query leaves searches and compound actions to their existing resolution;
+other effect types still need dedicated availability checks and rules witnesses.
+Targets and decisions in these fixtures are supplied; they do not certify AI
+strategy. The [failure and resolution record](engine/targeted_return_gap.json)
+contains the baseline and validation scope.
+
+**Known rules gap:** Ancient Cornucopia can incorrectly consume its optional
+life-gain action while Erebos or Tibalt prevents life gain. A separate source-only
+prototype passes four focused cases and 41 neighboring cases; broader and packaged
+validation remain pending. See the [failure record](engine/optional_life_gain_gap.json)
+and [pending patch](engine/patches/pending-commander-optional-life.patch).
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -41,14 +61,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,109 selected native tests, 357 packaged
-rules cases, 2,583 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,005 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,123 selected native tests, 371 packaged
+rules cases, 2,597 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,019 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/prevented_return_evidence.json).
+See the [validation and activation evidence](engine/targeted_return_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.
