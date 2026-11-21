@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a directly verified packaged `SwitchBlock` AI registry gap: the root
+  ability used by General Jarkeld and Sorrow's Path selects `CannotPlayAi` and
+  returns `CantPlayAi`. Separate this handler finding from unverified combat and
+  simulation-planner behavior; native combat witnesses are the next step.
+- Preserve ten passing source-only discover sacrifice witnesses for payment
+  timing, draw timing, casting prohibitions, land versus nonland sacrifice under
+  Yasharn, and exile replacement. Keep them outside selected and packaged counts.
+- Promote eight unchanged discover tax witnesses into trusted native and Java 17
+  packaged regressions. Activate after 1,277 selected native tests, 525 packaged
+  cases and the Python quality gate (416 offline tests / 520 subtests). All 2,155
+  production sources, 18,033 packaged classes, card resources and default AI
+  configuration remain verified unchanged. Previous broad/live/catalog receipts
+  retain their original scope and were not rerun for this test-only promotion.
+
 - Preserve eight further passing source-only discover cost witnesses for payable
   and unpayable Thalia, Trinisphere and Damping Sphere costs, actual mana payment
   and combined cost ordering. Exclude the initial Checkstyle-stopped run and stale

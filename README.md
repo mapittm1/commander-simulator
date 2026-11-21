@@ -159,11 +159,22 @@ pending spell. Their unchanged source moved into active tests; the earlier
 its historical path. See the [packaged casting evidence](engine/discover_cast_forms_packaged_evidence.json)
 for current Java 17 results.
 
-Eight additional source-only discover cost tests pass for Thalia, Trinisphere
-and Damping Sphere: payable and unpayable costs, actual mana consumption, and
-combined cost increases before the minimum-cost check. These cases found no
-rules failure and remain outside selected and packaged totals. See the
-[source-only tax evidence](engine/discover_tax_evidence.json).
+Eight discover cost tests now run in the trusted native and packaged suites:
+Thalia, Trinisphere and Damping Sphere, payable and unpayable costs, actual mana
+consumption, and combined cost increases before the minimum-cost check. The
+unchanged fixture moved into active tests. Earlier [source-only tax evidence](engine/discover_tax_evidence.json)
+retains its historical path; see the [packaged tax evidence](engine/discover_tax_packaged_evidence.json)
+for current Java 17 results.
+
+Ten additional source-only sacrifice tests pass for Village Rites and Shard Volley:
+payment before draw, prohibited casts, land versus nonland costs under Yasharn,
+and graveyard movement replaced by exile. These remain outside selected and
+packaged totals. See the [source-only sacrifice evidence](engine/discover_sacrifice_evidence.json).
+
+A direct packaged registry check found an AI handler gap for `SwitchBlock`, used
+by General Jarkeld and Sorrow's Path. It selects the rejecting `CannotPlayAi`
+fallback. Native combat and planner behavior still need validation before a
+fix; this does not establish a rules-effect failure. See the [AI handler finding](engine/switch_block_ai_gap.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -179,11 +190,11 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,269 selected native tests and 517 packaged
+The current reviewed runtime passed 1,277 selected native tests and 525 packaged
 rules cases. The Python quality gate passed 416 offline tests with 520 subtests.
 For this test-only promotion, all 2,155 production sources, 18,033 packaged classes,
 card resources and default AI configuration were verified unchanged. See the
-[current validation evidence](engine/discover_cast_forms_packaged_evidence.json).
+[current validation evidence](engine/discover_tax_packaged_evidence.json).
 
 The earlier runtime passed 2,727 broader gameplay tests, 256 serialization tests,
 and 42 live integration tests with 1,149 subtests. Its catalog probe constructed

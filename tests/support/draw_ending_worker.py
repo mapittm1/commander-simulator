@@ -72,6 +72,7 @@ SOURCES = {
     "CommanderDiscoverScalarTest": "commander_discover_scalar_test_sha256",
     "CommanderDiscoverVehicleTest": "commander_discover_vehicle_test_sha256",
     "CommanderDiscoverCastFormsTest": "commander_discover_cast_forms_test_sha256",
+    "CommanderDiscoverTaxTest": "commander_discover_tax_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "CommanderLearnTest": "commander_learn_test_sha256",
     "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",
