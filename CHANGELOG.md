@@ -6,6 +6,28 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record the separate Glava absent-spell failure: one failing baseline and three
+  passing controls, with native paid spells and actual stack targets. A source-only
+  generic prototype passes four focused and 1,197 selected native cases. Keep it
+  excluded from the active recipe pending wider X-interaction and release checks.
+
+- Preserve simple optional counter-placement allowances when every recipient is
+  prohibited from receiving counters. Keep mixed groups, replacement effects and
+  independent counter-removal costs on their native resolution paths. No card
+  scripts or alias/companion reviews change.
+- Expand counter coverage to sixteen controlled cases: five fail in the preceding
+  runtime and eleven controls pass; all sixteen pass with the correction. Cover
+  Nykthos Paragon, Leonardo and Guiding Hydra, native response timing, copied
+  triggers, game copies, extra-turn cleanup and source death during cost payment.
+  The empty-group expectation is inferred from impossible optional action rules.
+- Activate the counter-placement runtime after 1,193 selected native tests,
+  441 packaged cases, 2,667 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,089 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The unchanged archive constructs 32,636
+  starting identities and separately classifies seven nonstarting meld results.
+  Preserve the original failure/prototype record and retire byte-verified pending
+  copies. Complete rules and AI correctness remain unproven.
+
 - Track positive native mana additions for explicitly flagged abilities, using
   existing per-ability turn history instead of counting parent/child resolutions.
   Carpet of Flowers retains its later trigger after adding zero, records a legal

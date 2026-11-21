@@ -73,13 +73,23 @@ The generic marker reuses existing snapshot-aware per-ability history. Only the
 Carpet script flag changes; its Oracle text is unchanged. Initial phase events and
 decisions are supplied; complete mana, combat and AI coverage remain open.
 
-**Known rules gap:** Nykthos Paragon can spend its optional counter-placement
-allowance while Solemnity prohibits all placements. Ordinary, declined and
-Vorinclex replacement controls distinguish the prohibited action from a legal
-choice whose counters are replaced with zero. See the
-[failure record](engine/optional_counters_gap.json). The separate source-only
-prototype passes four focused cases and a 1,181-case selected native matrix, but
-still needs wider counter-rule and packaged-release validation.
+Simple optional counter placements now preserve their once-per-turn allowance
+when no eligible recipient can receive counters. Nykthos Paragon and Leonardo can
+place counters after Solemnity leaves. Mixed groups still receive the counters
+that can be placed, and a legal placement replaced with zero uses the allowance.
+Sixteen controlled cases also cover native responses, copied triggers, independent
+game copies, extra-turn cleanup, and Guiding Hydra's independent counter-removal
+payment, including a payment that causes its source to die. Five cases fail in the
+previous engine; all sixteen pass with the correction. See the
+[resolved failure record](engine/optional_counters_gap.json).
+These are partial-state witnesses with supplied decisions and native paid spells;
+compound counter effects, complete card behavior and default-AI correctness remain open.
+
+**Known rules gap:** Glava can spend its optional X-changing allowance after the
+original spell has been countered. A later X spell then misses the choice. Three
+controls pass; the source-only prototype passes all four cases and a 1,197-case
+selected native matrix. It remains excluded from the active runtime pending wider
+X-rule and packaged validation. See the [failure record](engine/optional_x_gap.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -95,14 +105,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,177 selected native tests, 425 packaged
-rules cases, 2,651 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,073 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,193 selected native tests, 441 packaged
+rules cases, 2,667 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,089 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/carpet_mana_evidence.json).
+See the [validation and activation evidence](engine/optional_counters_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

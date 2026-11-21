@@ -1,0 +1,33 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeXEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeXEffect.java
+@@ -7,6 +7,20 @@
+ import forge.game.spellability.SpellAbility;
+ 
+ public class ChangeXEffect extends SpellAbilityEffect {
++    @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        if (sa.getSubAbility() != null || sa.hasParam("UnlessCost")) {
++            return true;
++        }
++        for (SpellAbility target : getTargetSpells(sa)) {
++            if (sa.getHostCard().getGame().getStack().getInstanceMatchingSpellAbilityID(target) != null
++                    && target.getXManaCostPaid() != null) {
++                return true;
++            }
++        }
++        return false;
++    }
++
+ 
+     /* (non-Javadoc)
+      * @see forge.card.ability.SpellAbilityEffect#resolve(forge.card.spellability.SpellAbility)
+@@ -18,6 +32,9 @@
+         final List<SpellAbility> sas = getTargetSpells(sa);
+ 
+         for (final SpellAbility tgtSA : sas) {
++            if (sa.getHostCard().getGame().getStack().getInstanceMatchingSpellAbilityID(tgtSA) == null) {
++                continue;
++            }
+             int value = AbilityUtils.calculateAmount(sa.getHostCard(), sa.getParam("Value"), sa);
+             // for Unbound Flourishing, can't go over SpellAbilityStackInstances because the x is in cast SA copy
+             SpellAbility castSA = tgtSA.getHostCard().getCastSA();
