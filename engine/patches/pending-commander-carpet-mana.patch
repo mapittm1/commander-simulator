@@ -1,0 +1,40 @@
+--- a/forge-game/src/main/java/forge/game/ability/AbilityUtils.java
++++ b/forge-game/src/main/java/forge/game/ability/AbilityUtils.java
+@@ -1317,7 +1317,9 @@
+         resolvePreAbilities(sa, game);
+ 
+         // count times ability resolves this turn
+-        if (!sa.isWrapper() && sa.isAbility()) {
++        // Some triggers are used only when their resolution actually adds mana.
++        if (!sa.isWrapper() && sa.isAbility()
++                && !sa.getRootAbility().hasParam("TrackManaAddedThisTurn")) {
+             final Card host = sa.getHostCard();
+             if (host != null) {
+                 host.addAbilityResolved(sa);
+--- a/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java
++++ b/forge-game/src/main/java/forge/game/spellability/AbilityManaPart.java
+@@ -218,6 +218,13 @@
+ 
+         manaPool.addMana(this.lastManaProduced);
+ 
++        // Reuse the snapshot-aware per-ability marker only after a positive addition.
++        if (root != null && root.hasParam("TrackManaAddedThisTurn")
++                && player.equals(root.getActivatingPlayer()) && !this.lastManaProduced.isEmpty()
++                && source.getAbilityResolvedThisTurnActivators(root).count(player) == 0) {
++            source.addAbilityResolved(root);
++        }
++
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromCard(source);
+         runParams.put(AbilityKey.Player, player);
+         runParams.put(AbilityKey.Produced, afterReplace);
+--- a/forge-gui/res/cardsfolder/c/carpet_of_flowers.txt
++++ b/forge-gui/res/cardsfolder/c/carpet_of_flowers.txt
+@@ -2,7 +2,7 @@
+ ManaCost:G
+ Types:Enchantment
+ T:Mode$ Phase | Phase$ Main1,Main2 | ValidPlayer$ You | OptionalDecider$ You | TriggerZones$ Battlefield | Execute$ TrigMana | ResolvedLimit$ 1 | TriggerDescription$ At the beginning of each of your main phases, if you haven't added mana with this ability this turn, you may add X mana of any one color, where X is the number of Islands target opponent controls.
+-SVar:TrigMana:DB$ Pump | ValidTgts$ Opponent | IsCurse$ True | SubAbility$ DBMana
++SVar:TrigMana:DB$ Pump | ValidTgts$ Opponent | IsCurse$ True | SubAbility$ DBMana | TrackManaAddedThisTurn$ True
+ SVar:DBMana:DB$ Mana | Amount$ NumManaMax | Produced$ Any
+ SVar:NumManaMax:Count$Valid Island.TargetedPlayerCtrl
+ AI:RemoveDeck:All

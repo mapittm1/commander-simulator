@@ -6,6 +6,28 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve optional battlefield-copy allowances when no eligible choice remains.
+  Calix can make a later legal copy after an impossible earlier choice. The generic
+  effect query checks the same native eligibility filter used by resolution and
+  avoids guessing about defined, random or compound copy forms. No card scripts change.
+- Expand copy coverage to twelve controlled cases: four fail in the preceding
+  engine and eight controls pass. All twelve pass with the correction, along with
+  103 focused/neighboring tests. Controls include native paid removal/counterspells,
+  token doubling/redirection and last-known copies after the source leaves play.
+- Activate the reviewed optional-copy runtime after 1,165 selected native tests,
+  413 packaged cases, 2,639 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,061 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The unchanged card archive constructs 32,636
+  starting identities; seven nonstarting meld results remain separately classified.
+  Normalize the active patch to LF for reproducible application and preserve the
+  original CRLF research patch in history. Retire byte-verified pending copies.
+  Complete rules and default-AI correctness remain unproven.
+- Record the separate Carpet of Flowers zero-mana history failure with two passing
+  controls. A native paid Harrow changes the target opponent from zero to one Island
+  between supplied main-phase events. Preserve a source-only prototype that passes
+  three focused and 1,168 selected native checks, excluded from this runtime
+  pending wider mana-history and release validation.
+
 - Correct optional draws under Narset and Spirit of the Labyrinth: preserve the
   once-per-turn action when drawing is prohibited, including an optional two-card
   draw when only one card could be drawn. Keep independent trigger cost choices

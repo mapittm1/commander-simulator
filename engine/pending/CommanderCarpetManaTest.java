@@ -6,10 +6,9 @@ import forge.game.GameRules;
 import forge.game.GameStage;
 import forge.game.GameType;
 import forge.game.Match;
-import forge.game.GameEntityCounterTable;
-import forge.game.card.CardDamageTable;
 import forge.game.card.Card;
-import forge.game.card.CounterEnumType;
+import forge.game.ability.AbilityKey;
+import forge.game.trigger.TriggerType;
 import forge.game.phase.PhaseType;
 import forge.game.player.Player;
 import forge.game.player.RegisteredPlayer;
@@ -19,97 +18,100 @@ import forge.game.zone.ZoneType;
 import java.util.ArrayList;
 import java.util.List;
 import org.testng.annotations.Test;
+
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
-/** Research witnesses with supplied decisions and native payment/draw resolution. */
-public class CommanderOptionalCopyTest extends AITest {
+/** Partial-state main-phase witnesses with supplied targets and native mana/cost resolution. */
+public class CommanderCarpetManaTest extends AITest {
     @Test
-    public void noEligibleEnchantmentPreservesTheCopyAction() {
-        Pod pod = pod(null, false, false, "Calix, Guided by Fate");
-        damage(pod);
-        assertEquals(anthems(pod), 0);
-        addCardToZone("Glorious Anthem", pod.actor, ZoneType.Battlefield);
-        pod.game.getTriggerHandler().resetActiveTriggers();
-        damage(pod);
-        assertEquals(anthems(pod), 2, "The later eligible copy remains available");
-        damage(pod);
-        assertEquals(anthems(pod), 2);
+    public void addingZeroLeavesTheSecondMainPhaseAvailable() {
+        Pod pod = pod(false);
+        phase(pod, PhaseType.MAIN1);
+        assertEquals(pod.actor.getManaPool().totalMana(), 0);
+        assertEquals(pod.prompts[0], 1);
+        harrow(pod);
+        phase(pod, PhaseType.MAIN2);
+        assertEquals(pod.actor.getManaPool().totalMana(), 1,
+                "Adding zero mana did not use the turn's addition");
     }
 
     @Test
-    public void anEligibleCopyUsesTheAction() {
-        Pod pod = pod(null, false, false, "Calix, Guided by Fate");
-        addCardToZone("Glorious Anthem", pod.actor, ZoneType.Battlefield);
-        pod.game.getTriggerHandler().resetActiveTriggers();
-        damage(pod);
-        assertEquals(anthems(pod), 2);
-        damage(pod);
-        assertEquals(anthems(pod), 2);
+    public void addingManaPreventsASecondAddition() {
+        Pod pod = pod(true);
+        phase(pod, PhaseType.MAIN1);
+        assertEquals(pod.actor.getManaPool().totalMana(), 1);
+        int before = pod.actor.getManaPool().totalMana();
+        phase(pod, PhaseType.MAIN2);
+        assertEquals(pod.actor.getManaPool().totalMana(), before);
+        assertEquals(pod.prompts[0], 1);
     }
 
     @Test
-    public void decliningPreservesTheCopyAction() {
-        Pod pod = pod(null, false, false, "Calix, Guided by Fate");
-        addCardToZone("Glorious Anthem", pod.actor, ZoneType.Battlefield);
-        pod.game.getTriggerHandler().resetActiveTriggers();
+    public void decliningLeavesTheSecondMainPhaseAvailable() {
+        Pod pod = pod(true);
         pod.decline[0] = true;
-        damage(pod);
-        assertEquals(anthems(pod), 1);
+        phase(pod, PhaseType.MAIN1);
+        assertEquals(pod.actor.getManaPool().totalMana(), 0);
         pod.decline[0] = false;
-        damage(pod);
-        assertEquals(anthems(pod), 2);
+        phase(pod, PhaseType.MAIN2);
+        assertEquals(pod.actor.getManaPool().totalMana(), 1);
+        assertEquals(pod.prompts[0], 2);
     }
 
-    private long anthems(Pod pod) {
-        return pod.actor.getCardsIn(ZoneType.Battlefield).stream()
-                .filter(card -> card.getName().equals("Glorious Anthem")).count();
-    }
-
-    private void damage(Pod pod) {
+    private void phase(Pod pod, PhaseType phase) {
+        pod.game.getPhaseHandler().devModeSet(phase, pod.actor, 2);
+        pod.game.getTriggerHandler().resetActiveTriggers();
         pod.game.copyLastState();
-        CardDamageTable dealt = new CardDamageTable();
-        dealt.put(pod.host, pod.game.getPlayers().get(1), 1);
-        pod.game.getAction().dealDamage(true, dealt, new CardDamageTable(), new GameEntityCounterTable(), null);
+        pod.game.getTriggerHandler().runTrigger(TriggerType.Phase, AbilityKey.mapFromPlayer(pod.actor), false);
         settle(pod.game);
     }
 
-    private Pod pod(String blockerName, boolean emptyLibrary) {
-        return pod(blockerName, emptyLibrary, !emptyLibrary, "Chekov and McCoy");
+    private void harrow(Pod pod) {
+        SpellAbility spell = addCardToZone("Harrow", pod.opponent, ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(pod.opponent);
+        pod.game.copyLastState();
+        assertTrue(ComputerUtil.playStack(spell, pod.opponent, pod.game));
+        settle(pod.game);
+        assertEquals(pod.opponent.getCardsIn(ZoneType.Battlefield).stream()
+                .filter(card -> card.getType().hasSubtype("Island")).count(), 1);
+        assertEquals(pod.game.getCardState(spell.getHostCard()).getZone().getZoneType(), ZoneType.Graveyard);
     }
 
-    private Pod pod(String blockerName, boolean emptyLibrary, boolean primeDraw, String hostName) {
+    private Pod pod(boolean initialIsland) {
         List<RegisteredPlayer> seats = new ArrayList<>();
         for (int seat = 0; seat < 4; seat++) {
             seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("seat" + seat, null)));
         }
         GameRules rules = new GameRules(GameType.Commander);
-        Game game = new Game(seats, rules, new Match(rules, seats, "Optional copy"));
+        Game game = new Game(seats, rules, new Match(rules, seats, "Carpet mana"));
         game.setNoGUIUser();
         game.setAge(GameStage.Play);
         Player actor = game.getPlayers().get(0);
+        Player opponent = game.getPlayers().get(1);
         game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);
         for (Player player : game.getPlayers()) {
-            for (int index = 0; index < (emptyLibrary && player.equals(actor) ? 0 : 8); index++) {
+            if (player.equals(opponent)) {
+                addCardToZone("Island", player, ZoneType.Library);
                 addCardToZone("Forest", player, ZoneType.Library);
+            } else {
+                for (int index = 0; index < 8; index++) {
+                    addCardToZone("Forest", player, ZoneType.Library);
+                }
             }
+        }
+        for (int index = 0; index < 3; index++) {
+            addCardToZone("Forest", opponent, ZoneType.Battlefield);
+        }
+        if (initialIsland) {
+            addCardToZone("Island", opponent, ZoneType.Battlefield);
         }
         for (String name : List.of("Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Forest", "Swamp", "Plains", "Plains", "Island")) {
             addCardToZone(name, actor, ZoneType.Battlefield);
         }
-        Card blocker = blockerName == null ? null : addCardToZone(blockerName, game.getPlayers().get(2), ZoneType.Battlefield);
-        if (blocker != null && blocker.isPlaneswalker()) {
-            blocker.setCounters(CounterEnumType.LOYALTY, 5);
-        }
         game.getAction().checkStateEffects(true);
         game.getTriggerHandler().resetActiveTriggers();
-        if (primeDraw && !emptyLibrary) {
-            SpellAbility opt = addCardToZone("Opt", actor, ZoneType.Hand).getFirstSpellAbility();
-            opt.setActivatingPlayer(actor);
-            assertTrue(ComputerUtil.playStack(opt, actor, game));
-            settle(game);
-        }
-        Card host = addCardToZone(hostName, actor, ZoneType.Battlefield);
+        Card host = addCardToZone("Carpet of Flowers", actor, ZoneType.Battlefield);
         int[] prompts = {0};
         boolean[] decline = {false};
         actor.dangerouslySetController(new PlayerControllerAi(game, actor, actor.getLobbyPlayer()) {
@@ -117,6 +119,11 @@ public class CommanderOptionalCopyTest extends AITest {
             public void orderAndPlaySimultaneousSa(List<SpellAbility> abilities) {
                 for (SpellAbility ability : abilities) {
                     if (ability.getHostCard().getId() == host.getId()) {
+                        if (ability.usesTargeting()) {
+                            ability.resetTargets();
+                            assertTrue(ability.canTarget(opponent));
+                            ability.getTargets().add(opponent);
+                        }
                         assertTrue(ComputerUtil.playStack(ability, actor, game));
                     } else {
                         super.orderAndPlaySimultaneousSa(List.of(ability));
@@ -135,16 +142,7 @@ public class CommanderOptionalCopyTest extends AITest {
         game.getAction().checkStateEffects(true);
         game.getTriggerHandler().resetActiveTriggers();
         game.copyLastState();
-        return new Pod(game, actor, host, blocker, prompts, decline);
-    }
-
-    private void counter(Pod pod) {
-        SpellAbility veil = addCardToZone("Snakeskin Veil", pod.actor, ZoneType.Hand).getFirstSpellAbility();
-        veil.setActivatingPlayer(pod.actor);
-        pod.game.copyLastState();
-        veil.getTargets().add(pod.game.getCardState(pod.host));
-        assertTrue(ComputerUtil.playStack(veil, pod.actor, pod.game));
-        settle(pod.game);
+        return new Pod(game, actor, opponent, host, prompts, decline);
     }
 
     private void queue(Game game) {
@@ -165,5 +163,5 @@ public class CommanderOptionalCopyTest extends AITest {
         }
         assertTrue(game.getStack().isEmpty());
     }
-    private record Pod(Game game, Player actor, Card host, Card blocker, int[] prompts, boolean[] decline) {}
+    private record Pod(Game game, Player actor, Player opponent, Card host, int[] prompts, boolean[] decline) {}
 }

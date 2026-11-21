@@ -51,11 +51,24 @@ and 91 focused/neighboring cases pass. See the
 These tests use supplied states and decisions. Compound draw effects need separate
 coverage; full rules and AI coverage remain open.
 
-**Known rules gap:** Calix, Guided by Fate can consume its optional copy allowance
-with no eligible nonlegendary enchantment. A source-only prototype passes three
-focused cases and 91 neighbors, but needs wider token/copy and packaged validation.
-See the [failure record](engine/optional_copy_gap.json) and
-[pending patch](engine/patches/pending-commander-optional-copy.patch).
+Simple optional battlefield-copy choices preserve their once-per-turn allowance
+when no eligible object remains at resolution. Calix can copy an eligible
+enchantment after an earlier impossible choice. Opponent-controlled and nonenchantment
+objects do not qualify. Twelve controlled cases also cover removal before
+resolution, declined and countered triggers, noncombat damage, token doubling,
+Crafty Cutpurse redirection, and legal last-known copies from departed sources.
+All 103 focused and neighboring cases pass. See the
+[resolved failure record](engine/optional_copy_gap.json).
+These are partial-state witnesses with supplied decisions and native damage/casts;
+complete copy, token, combat and AI coverage remain open.
+
+**Known rules gap:** Carpet of Flowers can suppress its second-main-phase trigger
+when the first trigger added zero mana. A three-case native probe reproduces the
+failure while ordinary-mana and declined-choice controls pass. A source-only
+prototype passes all three cases and a 1,168-case selected native matrix, but still
+needs replacement, countered-trigger, snapshot and packaged-release validation.
+See the [failure record](engine/carpet_mana_gap.json) and
+[pending patch](engine/patches/pending-commander-carpet-mana.patch).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -71,14 +84,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,153 selected native tests, 401 packaged
-rules cases, 2,627 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,049 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,165 selected native tests, 413 packaged
+rules cases, 2,639 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,061 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/optional_draw_evidence.json).
+See the [validation and activation evidence](engine/optional_copy_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.
