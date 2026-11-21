@@ -6,12 +6,34 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed Rinoa runtime after 1,093 selected native tests,
+  341 packaged rules cases, 2,567 broader gameplay tests, 256 serialization
+  tests, 42 live tests / 989 subtests, and the Python quality gate
+  (407 offline tests / 511 subtests). The catalog probe constructed 32,636
+  starting-card identities and classified seven nonstarting meld results.
+- Identify native test methods by class and method name. Add an offline
+  regression that preserves same-named methods across classes and retains
+  passing, failing, and skipped outcomes without reducing expected totals.
+- Record the separate Grafdigger's Cage return-prohibition gap for Rinoa and
+  The Reaper. Preserve its pending correction: the preceding source fails
+  both Cage cases and passes both Containment Priest controls; the prototype
+  passes all fifteen selected cases. Mixed grouped returns and the wider
+  native/packaged/live checks remain to be validated before activating it.
+
+
+- Correct Rinoa, Angel Wing’s queued return to retain the graveyard objects
+  from the death event, including simultaneous deaths and cards that leave and
+  later return to the graveyard.
+- Copy resident ability definitions and usage records through the snapshot
+  identity map so restoring a game preserves both unused and spent returns.
+
 - Activate the reviewed Reaper runtime after 1,084 selected native tests,
   332 packaged rules cases, 2,558 broader gameplay tests, 256 serialization
   tests, 42 live integration tests / 980 subtests, and the full Python quality
   gate (406 offline tests / 511 subtests). The catalog probe constructed 32,636
   starting-card identities and classified seven nonstarting meld results.
-  Preserve the separate known Rinoa failure; these totals do not certify all cards.
+  Preserve the then-known Rinoa failure, resolved by the Rinoa update above;
+  these totals do not certify all cards.
 
 
 - Record a confirmed Rinoa, Angel Wing rules gap: its return effect can move

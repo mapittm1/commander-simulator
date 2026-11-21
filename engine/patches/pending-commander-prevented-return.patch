@@ -1,0 +1,133 @@
+--- a/forge-game/src/main/java/forge/game/GameActionUtil.java
++++ b/forge-game/src/main/java/forge/game/GameActionUtil.java
+@@ -25,6 +25,7 @@
+ import forge.card.GamePieceType;
+ import forge.card.mana.ManaCost;
+ import forge.game.ability.AbilityFactory;
++import forge.game.ability.AbilityKey;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.ApiType;
+ import forge.game.ability.SpellAbilityEffect;
+@@ -42,6 +43,7 @@
+ import forge.game.replacement.ReplacementEffect;
+ import forge.game.replacement.ReplacementHandler;
+ import forge.game.replacement.ReplacementLayer;
++import forge.game.replacement.ReplacementType;
+ import forge.game.spellability.*;
+ import forge.game.staticability.StaticAbility;
+ import forge.game.staticability.StaticAbilityAlternativeCost;
+@@ -67,6 +69,24 @@
+  * @version $Id$
+  */
+ public final class GameActionUtil {
++    /** Query only prohibitions; effects that replace a legal move remain allowed. */
++    public static boolean isZoneChangePrevented(Card card, ZoneType destination, SpellAbility cause) {
++        if (destination == null || card.getZone() == null) {
++            return false;
++        }
++        Map<AbilityKey, Object> parameters = AbilityKey.mapFromAffected(card);
++        parameters.put(AbilityKey.CardLKI, card);
++        parameters.put(AbilityKey.Origin, card.getZone().getZoneType());
++        parameters.put(AbilityKey.Destination, destination);
++        parameters.put(AbilityKey.Cause, cause);
++        parameters.put(AbilityKey.StackSa, cause);
++        parameters.put(AbilityKey.EffectOnly, true);
++        GameEntityCounterTable counters = new GameEntityCounterTable();
++        parameters.put(AbilityKey.CounterTable, counters);
++        parameters.put(AbilityKey.CounterMap, counters.column(card));
++        return card.getGame().getReplacementHandler().cantHappenCheck(ReplacementType.Moved, parameters);
++    }
++
+ 
+     private GameActionUtil() {
+         throw new AssertionError();
+--- a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
++++ b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+@@ -8,6 +8,7 @@
+ 
+ import forge.card.mana.ManaCost;
+ import forge.game.Game;
++import forge.game.GameActionUtil;
+ import forge.game.GameEntityCounterTable;
+ import forge.game.ability.AbilityKey;
+ import forge.game.ability.ApiType;
+@@ -431,9 +432,7 @@
+             if (!(triggeringCard instanceof Card previous)) {
+                 return;
+             }
+-            Card current = game.getCardState(previous, null);
+-            // A card that left the zone is a different object even if it later returns.
+-            if (current == null || !previous.equalsWithGameTimestamp(current) || !current.isInZone(zone)) {
++            if (!isTriggeringCardAvailable(previous, game, zone)) {
+                 return;
+             }
+         }
+@@ -444,12 +443,9 @@
+             boolean available = false;
+             if (triggeringCards instanceof Iterable<?> previousCards) {
+                 for (Object value : previousCards) {
+-                    if (value instanceof Card previous) {
+-                        Card current = game.getCardState(previous, null);
+-                        if (current != null && previous.equalsWithGameTimestamp(current) && current.isInZone(zone)) {
+-                            available = true;
+-                            break;
+-                        }
++                    if (value instanceof Card previous && isTriggeringCardAvailable(previous, game, zone)) {
++                        available = true;
++                        break;
+                     }
+                 }
+             }
+@@ -468,6 +464,18 @@
+         }
+ 
+         resumeAfterOptionalDecision(true);
++    }
++
++    private boolean isTriggeringCardAvailable(Card previous, Game game, ZoneType origin) {
++        Card current = game.getCardState(previous, null);
++        if (current == null || !previous.equalsWithGameTimestamp(current) || !current.isInZone(origin)) {
++            return false;
++        }
++        if (!getTrigger().hasParam("RequireTriggeringCardDestination")) {
++            return true;
++        }
++        ZoneType destination = ZoneType.smartValueOf(getTrigger().getParam("RequireTriggeringCardDestination"));
++        return !GameActionUtil.isZoneChangePrevented(current, destination, sa);
+     }
+ 
+     /** Continue the already-checked body without asking the optional decision again. */
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeZoneEffect.java
+@@ -1014,6 +1014,11 @@
+                         fetchList.add(gameCard);
+                     }
+                 }
++                if (sa.getTrigger() != null && sa.getTrigger().hasParam("RequireTriggeringCardDestination")) {
++                    // Optional returns cannot offer a card whose move is prohibited.
++                    final ZoneType requiredDestination = destination;
++                    fetchList.removeIf(card -> GameActionUtil.isZoneChangePrevented(card, requiredDestination, sa));
++                }
+                 if (!sa.hasParam("ChangeNum")) {
+                     changeNum = fetchList.size();
+                 }
+--- a/forge-gui/res/cardsfolder/r/rinoa_angel_wing.txt
++++ b/forge-gui/res/cardsfolder/r/rinoa_angel_wing.txt
+@@ -4,6 +4,6 @@
+ PT:2/4
+ T:Mode$ Phase | Phase$ BeginCombat | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigPumpAll | TriggerDescription$ At the beginning of combat on your turn, creatures you control with flying get +1/+1 and gain vigilance until end of turn.
+ SVar:TrigPumpAll:DB$ PumpAll | ValidCards$ Creature.YouCtrl+withFlying | NumAtt$ +1 | NumDef$ +1 | KW$ Vigilance
+-T:Mode$ ChangesZoneAll | ValidCards$ Creature.attacking+YouCtrl | Origin$ Battlefield | Destination$ Graveyard | TriggerZones$ Battlefield | OptionalDecider$ You | ResolvedLimit$ 1 | RequireTriggeringCardsInZone$ Graveyard | Execute$ TrigChangeZone | TriggerDescription$ Whenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
++T:Mode$ ChangesZoneAll | ValidCards$ Creature.attacking+YouCtrl | Origin$ Battlefield | Destination$ Graveyard | TriggerZones$ Battlefield | OptionalDecider$ You | ResolvedLimit$ 1 | RequireTriggeringCardsInZone$ Graveyard | RequireTriggeringCardDestination$ Battlefield | Execute$ TrigChangeZone | TriggerDescription$ Whenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
+ SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | ChangeNum$ 1 | Destination$ Battlefield | Hidden$ True | Tapped$ True | ChooseFromDefined$ TriggeredNewCardsLKICopy | Mandatory$ True | WithCountersType$ Flying
+ Oracle:At the beginning of combat on your turn, creatures you control with flying get +1/+1 and gain vigilance until end of turn.\nWhenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
+--- a/forge-gui/res/cardsfolder/t/the_reaper_king_no_more.txt
++++ b/forge-gui/res/cardsfolder/t/the_reaper_king_no_more.txt
+@@ -4,6 +4,6 @@
+ PT:3/3
+ T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigPutCounter | TriggerDescription$ When CARDNAME enters, put a -1/-1 counter on each of up to two target creatures.
+ SVar:TrigPutCounter:DB$ PutCounter | CounterType$ M1M1 | CounterNum$ 1 | TargetMin$ 0 | TargetMax$ 2 | ValidTgts$ Creature | TgtPrompt$ Select up to two target creatures.
+-T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Creature.OppCtrl+counters_GE1_M1M1 | TriggerZones$ Battlefield | Execute$ TrigRevive | ResolvedLimit$ 1 | OptionalDecider$ You | RequireTriggeringCardInZone$ Graveyard | TriggerDescription$ Whenever a creature an opponent controls with a -1/-1 counter on it dies, you may put that card onto the battlefield under your control. Do this only once each turn.
++T:Mode$ ChangesZone | Origin$ Battlefield | Destination$ Graveyard | ValidCard$ Creature.OppCtrl+counters_GE1_M1M1 | TriggerZones$ Battlefield | Execute$ TrigRevive | ResolvedLimit$ 1 | OptionalDecider$ You | RequireTriggeringCardInZone$ Graveyard | RequireTriggeringCardDestination$ Battlefield | TriggerDescription$ Whenever a creature an opponent controls with a -1/-1 counter on it dies, you may put that card onto the battlefield under your control. Do this only once each turn.
+ SVar:TrigRevive:DB$ ChangeZone | Origin$ Graveyard | Destination$ Battlefield | GainControl$ True | Defined$ TriggeredNewCardLKICopy
+ Oracle:When The Reaper, King No More enters, put a -1/-1 counter on each of up to two target creatures.\nWhenever a creature an opponent controls with a -1/-1 counter on it dies, you may put that card onto the battlefield under your control. Do this only once each turn.

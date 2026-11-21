@@ -1,0 +1,111 @@
+{
+  "status": "confirmed_rules_failure_pending_fix",
+  "cards": [
+    "The Reaper, King No More",
+    "Rinoa, Angel Wing"
+  ],
+  "observation": "Grafdigger's Cage prevents the first return. After Disenchant removes the Cage, a second eligible creature dies, but the once-per-turn return has incorrectly been consumed.",
+  "candidate_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-rinoa-return",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "d46c74a46231ea15e08e1504aa9a2f5778cf097fc8988ca07033c2052b982ca4",
+    "cards_sha256": "caafd2cf28f6fc1324a4ca0c7b0e4ccd69d5375b904b9ceefb16fe48d713020c",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "002bd811b7f3fb4c4c5d3daba47e48e0e7282699a3497974f7c7f4326e851258",
+    "native_tests": {
+      "total": 1093,
+      "passed": 1093,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "fc21018d72e6ece05fe67c2613f911ab90779043b40c1ece24ee653435370f42",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "test_source": "engine/pending/CommanderPreventedReturnTest.java",
+  "test_source_sha256": "db2c819087a883d00687d6d25d6f2a32c17e23897b0265307802df9249382b30",
+  "baseline": {
+    "counts": {
+      "total": 4,
+      "passed": 2,
+      "failed": 2,
+      "skipped": 0
+    },
+    "report_sha256": "647097603a869edd28151fbf9cdc2060a71dc1d415b7120453f8aff28ba92eb8",
+    "log_sha256": "6302be55248b73aba2bf915d7fee58747e4079099ac5e57b8a5459f113dab8ca",
+    "passing_controls": "Containment Priest replaces a legal return, which uses the once-per-turn action.",
+    "baseline_production_sources_equal_after_line_ending_normalization": 2155
+  },
+  "prototype": {
+    "status": "focused_passed_pending_packaged_validation",
+    "patch": "engine/patches/pending-commander-prevented-return.patch",
+    "patch_sha256": "3c217d6547b4ef2f77129a5393eb1ecaeb7f7d4ad34a2ecb70d0adf47205f368",
+    "fixed_counts": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "return_cases": 4,
+    "neighboring_rinoa_reaper_controls": 11,
+    "report_sha256": "eeb1dfda4e29171db4db571609bee120dff9f950889fe591132b8dae3985b271",
+    "log_sha256": "c8b6205e0dbfa9a6dbded18ec7b30058be50807ed5089fbe673f0922f93559bc",
+    "remaining_validation": [
+      "mixed eligible and prohibited grouped returns",
+      "full native matrix",
+      "packaged runtime",
+      "live integration",
+      "catalog construction"
+    ]
+  },
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf"
+  ],
+  "scope": "Partial-state native rules witnesses with supplied optional choices and paid Cut Down, Disenchant, and Doom Blade. The pending patch is excluded from the active recipe. It does not establish complete rules or AI coverage."
+}

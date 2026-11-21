@@ -20,20 +20,27 @@ The quality gate skips generated and archived folders before walking their files
 
 ## Card coverage
 
-**Known rules gap:** Rinoa, Angel Wing can incorrectly return a dead attacker
-after Ghost Vacuum has exiled it. This is a confirmed native failure, and its
-correction is pending. See the [regression evidence](engine/rinoa_return_gap.json)
-and [pending test](engine/pending/CommanderRinoaReturnTest.java).
-A passing selected test suite does not establish full card or AI coverage.
+Rinoa's queued return retains the graveyard objects from the death event.
+It cannot follow a card through exile and back. Tests cover simultaneous deaths,
+tapped entry, a flying counter, and used and unused return allowances in copied
+and restored games. The [initial failure record](engine/rinoa_return_gap.json)
+now links to the expanded regression and its resolution.
 
-The current reviewed runtime passed 1,084 selected native tests, 332 packaged
-rules cases, 2,558 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 980 subtests. The refreshed catalog probe constructed
+**Known rules gap:** Grafdigger's Cage can incorrectly consume Rinoa's or
+The Reaper's return allowance while preventing the return. A separate candidate
+passes focused checks, including Containment Priest controls, and awaits wider
+validation. See the [gap and prototype evidence](engine/prevented_return_gap.json)
+and [pending patch](engine/patches/pending-commander-prevented-return.patch).
+Full card and AI coverage remain open.
+
+The current reviewed runtime passed 1,093 selected native tests, 341 packaged
+rules cases, 2,567 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 989 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
-results. The Python quality gate passed 406 offline tests with 511 subtests.
-See the [validation and activation evidence](engine/reaper_limit_evidence.json).
-
-
+results. The Python quality gate passed 407 offline tests with 511 subtests.
+Native receipts use class-qualified method names to distinguish matching names
+in different test classes.
+See the [validation and activation evidence](engine/rinoa_return_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

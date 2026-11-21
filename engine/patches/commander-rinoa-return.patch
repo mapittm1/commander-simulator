@@ -1,0 +1,738 @@
+--- a/forge-game/src/main/java/forge/game/ability/AbilityKey.java
++++ b/forge-game/src/main/java/forge/game/ability/AbilityKey.java
+@@ -1,229 +1,230 @@
+-package forge.game.ability;
+-
+-import forge.game.GameEntity;
+-import forge.game.card.Card;
+-import forge.game.card.CardZoneTable;
+-import forge.game.player.Player;
+-import forge.game.spellability.SpellAbility;
+-
+-import java.util.EnumMap;
+-import java.util.Map;
+-
+-/**
+- * Keys for Ability parameter maps.
+- */
+-public enum AbilityKey {
+-    AbilityMana("AbilityMana"),
+-    Activator("Activator"),
+-    Affected("Affected"),
+-    AllVotes("AllVotes"),
+-    Amount("Amount"),
+-    AttachSource("AttachSource"),
+-    AttachTarget("AttachTarget"),
+-    Attacked("Attacked"),
+-    Attacker("Attacker"),
+-    Attackers("Attackers"),
+-    AttackingPlayer("AttackingPlayer"),
+-    AttackedTarget("AttackedTarget"),
+-    OneOfAttackingTeam("OneOfAttackingTeam"),
+-    Blocker("Blocker"),
+-    Blockers("Blockers"),
+-    CanReveal("CanReveal"),
+-    Card("Card"),
+-    CardState("CardState"),
+-    Cards("Cards"),
+-    CardsFiltered("CardsFiltered"),
+-    CardLKI("CardLKI"),
+-    Cause("Cause"),
+-    Causer("Causer"),
+-    Championed("Championed"),
+-    ClassLevel("ClassLevel"),
+-    CostStack("CostStack"),
+-    CounterAmount("CounterAmount"),
+-    CounterNum("CounterNum"),
+-    CounterMap("CounterMap"),
+-    CounterTable("CounterTable"),
+-    CounterType("CounterType"),
+-    Crew("Crew"),
+-    CumulativeUpkeepPaid("CumulativeUpkeepPaid"),
+-    CurrentCastSpells("CurrentCastSpells"),
+-    CurrentStormCount("CurrentStormCount"),
+-    Cycling("Cycling"),
+-    DamageAmount("DamageAmount"),
+-    DamageMap("DamageMap"),
+-    DamageSource("DamageSource"),
+-    DamageSources("DamageSources"),
+-    DamageTarget("DamageTarget"),
+-    DamageTargets("DamageTargets"),
+-    Defender("Defender"),
+-    Defenders("Defenders"),
+-    DefendingPlayer("DefendingPlayer"),
+-    Destination("Destination"),
+-    Devoured("Devoured"),
+-    DicePTExchanges("DicePTExchanges"),
+-    Discard("Discard"),
+-    DiscardedBefore("DiscardedBefore"),
+-    DividedShieldAmount("DividedShieldAmount"),
+-    EchoPaid("EchoPaid"),
+-    EffectOnly("EffectOnly"),
+-    Enlisted("Enlisted"),
+-    Exploited("Exploited"),
+-    Explored("Explored"),
+-    Explorer("Explorer"),
+-    ExtraDraws("ExtraDraws"),
+-    ExtraTurn("ExtraTurn"),
+-    Fighter("Fighter"),
+-    Fighters("Fighters"),
+-    FirstTime("FirstTime"),
+-    Fizzle("Fizzle"),
+-    FoundSearchingLibrary("FoundSearchingLibrary"),
+-    Ignore("Ignore"),
+-    IgnoreChosen("IgnoreChosen"),
+-    IsCombat("IsCombat"), // TODO confirm that this and IsCombatDamage can be merged
+-    IsCombatDamage("IsCombatDamage"),
+-    IsDamage("IsDamage"),
+-    IndividualCostPaymentInstance("IndividualCostPaymentInstance"),
+-    LastStateBattlefield("LastStateBattlefield"),
+-    LastStateGraveyard("LastStateGraveyard"),
+-    LifeAmount("LifeAmount"), //TODO confirm that this and LifeGained can be merged
+-    LifeGained("LifeGained"),
+-    LoseReason("LoseReason"),
+-    Map("Map"),
+-    Mana("Mana"),
+-    MergedCards("MergedCards"),
+-    Mode("Mode"),
+-    NaturalResult("NaturalResult"),
+-    NewCard("NewCard"),
+-    NewCounterAmount("NewCounterAmount"),
+-    NoPreventDamage("NoPreventDamage"),
+-    Num("Num"),
+-    Number("Number"),
+-    Object("Object"),
+-    Objects("Objects"),
+-    OpponentVotedDiff("OpponentVotedDiff"),
+-    OpponentVotedSame("OpponentVotedSame"),
+-    OtherAttackers("OtherAttackers"),
+-    Origin("Origin"),
+-    OriginalController("OriginalController"),
+-    OriginalDefender("OriginalDefender"),
+-    OriginalParams("OriginalParams"),
+-    PayingMana("PayingMana"),
+-    Phase("Phase"),
+-    Player("Player"),
+-    PreventedAmount("PreventedAmount"),
+-    Produced("Produced"),
+-    Random("Random"),
+-    Regeneration("Regeneration"),
+-    ReplacementEffect("ReplacementEffect"),
+-    ReplacementResult("ReplacementResult"),
+-    ReplacementResultMap("ReplacementResultMap"),
+-    Result("Result"),
+-    RolledToVisitAttractions("RolledToVisitAttractions"),
+-    RoomName("RoomName"),
+-    Scheme("Scheme"),
+-    ScryBottom("ScryBottom"),
+-    ScryNum("ScryNum"),
+-    Sides("Sides"),
+-    Source("Source"),
+-    Sources("Sources"),
+-    SourceSA("SourceSA"),
+-    SpellAbility("SpellAbility"),
+-    SpellAbilityTargets("SpellAbilityTargets"),
+-    StackSa("StackSa"),
+-    StickerKind("StickerKind"),
+-    SurveilNum("SurveilNum"),
+-    Target("Target"),
+-    Targets("Targets"),
+-    Token("Token"),
+-    TokenNum("TokenNum"),
+-    Valiant("Valiant"),
+-    Won("Won"),
+-
+-    // below shared across different Replacements, don't reuse
+-    InternalTriggerTable("InternalTriggerTable"),
+-    SimultaneousETB("SimultaneousETB"); // for CR 614.13c
+-
+-    private String key;
+-
+-    AbilityKey(String key) {
+-        this.key = key;
+-    }
+-
+-    @Override
+-    public String toString() {
+-        return key;
+-    }
+-
+-    /**
+-     * @param s A string that would be output from toString
+-     * @return the corresponding key if there is one or null otherwise
+-     */
+-    public static AbilityKey fromString(String s) {
+-        for (AbilityKey k : values()) {
+-            if (k.toString().equalsIgnoreCase(s)) {
+-                return k;
+-            }
+-        }
+-        return null;
+-    }
+-
+-    public static <V> EnumMap<AbilityKey, V> newMap() {
+-        return new EnumMap<>(AbilityKey.class);
+-    }
+-
+-    public static <V> EnumMap<AbilityKey, V> newMap(Map<AbilityKey, V> map) {
+-        // The EnumMap constructor throws IllegalArgumentException if the map is empty.
+-        if (map.isEmpty()) {
+-            return newMap();
+-        }
+-        return new EnumMap<>(map);
+-    }
+-
+-    /** Copies the given keys that are present in from */
+-    public static void copyKeys(final Map<AbilityKey, Object> from, final Map<AbilityKey, Object> to, final AbilityKey... keys) {
+-        for (AbilityKey key : keys) {
+-            if (from.containsKey(key)) {
+-                to.put(key, from.get(key));
+-            }
+-        }
+-    }
+-
+-    public static Map<AbilityKey, Object> mapFromCard(Card card) {
+-        final Map<AbilityKey, Object> runParams = newMap();
+-
+-        runParams.put(Card, card);
+-        return runParams;
+-    }
+-
+-    public static Map<AbilityKey, Object> mapFromPlayer(Player player) {
+-        final Map<AbilityKey, Object> runParams = newMap();
+-
+-        runParams.put(Player, player);
+-        return runParams;
+-    }
+-
+-    public static Map<AbilityKey, Object> mapFromAffected(GameEntity gameEntity) {
+-        final Map<AbilityKey, Object> runParams = newMap();
+-
+-        runParams.put(Affected, gameEntity);
+-        return runParams;
+-    }
+-
+-    public static Map<AbilityKey, Object> mapFromPIMap(Map<Player, Integer> map) {
+-        final Map<AbilityKey, Object> runParams = newMap();
+-
+-        runParams.put(Map, map);
+-        return runParams;
+-    }
+-
+-    public static CardZoneTable addCardZoneTableParams(Map<AbilityKey, Object> params, SpellAbility sa) {
+-        CardZoneTable table = CardZoneTable.getSimultaneousInstance(sa);
+-        addCardZoneTableParams(params, table);
+-        return table;
+-    }
+-    public static void addCardZoneTableParams(Map<AbilityKey, Object> params, CardZoneTable table) {
+-        params.put(AbilityKey.LastStateBattlefield, table.getLastStateBattlefield());
+-        params.put(AbilityKey.LastStateGraveyard, table.getLastStateGraveyard());
+-        params.put(AbilityKey.InternalTriggerTable, table);
+-    }
+-}
++package forge.game.ability;
++
++import forge.game.GameEntity;
++import forge.game.card.Card;
++import forge.game.card.CardZoneTable;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++
++import java.util.EnumMap;
++import java.util.Map;
++
++/**
++ * Keys for Ability parameter maps.
++ */
++public enum AbilityKey {
++    AbilityMana("AbilityMana"),
++    Activator("Activator"),
++    Affected("Affected"),
++    AllVotes("AllVotes"),
++    Amount("Amount"),
++    AttachSource("AttachSource"),
++    AttachTarget("AttachTarget"),
++    Attacked("Attacked"),
++    Attacker("Attacker"),
++    Attackers("Attackers"),
++    AttackingPlayer("AttackingPlayer"),
++    AttackedTarget("AttackedTarget"),
++    OneOfAttackingTeam("OneOfAttackingTeam"),
++    Blocker("Blocker"),
++    Blockers("Blockers"),
++    CanReveal("CanReveal"),
++    Card("Card"),
++    CardState("CardState"),
++    Cards("Cards"),
++    CardsFiltered("CardsFiltered"),
++    CardLKI("CardLKI"),
++    Cause("Cause"),
++    Causer("Causer"),
++    Championed("Championed"),
++    ClassLevel("ClassLevel"),
++    CostStack("CostStack"),
++    CounterAmount("CounterAmount"),
++    CounterNum("CounterNum"),
++    CounterMap("CounterMap"),
++    CounterTable("CounterTable"),
++    CounterType("CounterType"),
++    Crew("Crew"),
++    CumulativeUpkeepPaid("CumulativeUpkeepPaid"),
++    CurrentCastSpells("CurrentCastSpells"),
++    CurrentStormCount("CurrentStormCount"),
++    Cycling("Cycling"),
++    DamageAmount("DamageAmount"),
++    DamageMap("DamageMap"),
++    DamageSource("DamageSource"),
++    DamageSources("DamageSources"),
++    DamageTarget("DamageTarget"),
++    DamageTargets("DamageTargets"),
++    Defender("Defender"),
++    Defenders("Defenders"),
++    DefendingPlayer("DefendingPlayer"),
++    Destination("Destination"),
++    Devoured("Devoured"),
++    DicePTExchanges("DicePTExchanges"),
++    Discard("Discard"),
++    DiscardedBefore("DiscardedBefore"),
++    DividedShieldAmount("DividedShieldAmount"),
++    EchoPaid("EchoPaid"),
++    EffectOnly("EffectOnly"),
++    Enlisted("Enlisted"),
++    Exploited("Exploited"),
++    Explored("Explored"),
++    Explorer("Explorer"),
++    ExtraDraws("ExtraDraws"),
++    ExtraTurn("ExtraTurn"),
++    Fighter("Fighter"),
++    Fighters("Fighters"),
++    FirstTime("FirstTime"),
++    Fizzle("Fizzle"),
++    FoundSearchingLibrary("FoundSearchingLibrary"),
++    Ignore("Ignore"),
++    IgnoreChosen("IgnoreChosen"),
++    IsCombat("IsCombat"), // TODO confirm that this and IsCombatDamage can be merged
++    IsCombatDamage("IsCombatDamage"),
++    IsDamage("IsDamage"),
++    IndividualCostPaymentInstance("IndividualCostPaymentInstance"),
++    LastStateBattlefield("LastStateBattlefield"),
++    LastStateGraveyard("LastStateGraveyard"),
++    LifeAmount("LifeAmount"), //TODO confirm that this and LifeGained can be merged
++    LifeGained("LifeGained"),
++    LoseReason("LoseReason"),
++    Map("Map"),
++    Mana("Mana"),
++    MergedCards("MergedCards"),
++    Mode("Mode"),
++    NaturalResult("NaturalResult"),
++    NewCard("NewCard"),
++    NewCards("NewCards"),
++    NewCounterAmount("NewCounterAmount"),
++    NoPreventDamage("NoPreventDamage"),
++    Num("Num"),
++    Number("Number"),
++    Object("Object"),
++    Objects("Objects"),
++    OpponentVotedDiff("OpponentVotedDiff"),
++    OpponentVotedSame("OpponentVotedSame"),
++    OtherAttackers("OtherAttackers"),
++    Origin("Origin"),
++    OriginalController("OriginalController"),
++    OriginalDefender("OriginalDefender"),
++    OriginalParams("OriginalParams"),
++    PayingMana("PayingMana"),
++    Phase("Phase"),
++    Player("Player"),
++    PreventedAmount("PreventedAmount"),
++    Produced("Produced"),
++    Random("Random"),
++    Regeneration("Regeneration"),
++    ReplacementEffect("ReplacementEffect"),
++    ReplacementResult("ReplacementResult"),
++    ReplacementResultMap("ReplacementResultMap"),
++    Result("Result"),
++    RolledToVisitAttractions("RolledToVisitAttractions"),
++    RoomName("RoomName"),
++    Scheme("Scheme"),
++    ScryBottom("ScryBottom"),
++    ScryNum("ScryNum"),
++    Sides("Sides"),
++    Source("Source"),
++    Sources("Sources"),
++    SourceSA("SourceSA"),
++    SpellAbility("SpellAbility"),
++    SpellAbilityTargets("SpellAbilityTargets"),
++    StackSa("StackSa"),
++    StickerKind("StickerKind"),
++    SurveilNum("SurveilNum"),
++    Target("Target"),
++    Targets("Targets"),
++    Token("Token"),
++    TokenNum("TokenNum"),
++    Valiant("Valiant"),
++    Won("Won"),
++
++    // below shared across different Replacements, don't reuse
++    InternalTriggerTable("InternalTriggerTable"),
++    SimultaneousETB("SimultaneousETB"); // for CR 614.13c
++
++    private String key;
++
++    AbilityKey(String key) {
++        this.key = key;
++    }
++
++    @Override
++    public String toString() {
++        return key;
++    }
++
++    /**
++     * @param s A string that would be output from toString
++     * @return the corresponding key if there is one or null otherwise
++     */
++    public static AbilityKey fromString(String s) {
++        for (AbilityKey k : values()) {
++            if (k.toString().equalsIgnoreCase(s)) {
++                return k;
++            }
++        }
++        return null;
++    }
++
++    public static <V> EnumMap<AbilityKey, V> newMap() {
++        return new EnumMap<>(AbilityKey.class);
++    }
++
++    public static <V> EnumMap<AbilityKey, V> newMap(Map<AbilityKey, V> map) {
++        // The EnumMap constructor throws IllegalArgumentException if the map is empty.
++        if (map.isEmpty()) {
++            return newMap();
++        }
++        return new EnumMap<>(map);
++    }
++
++    /** Copies the given keys that are present in from */
++    public static void copyKeys(final Map<AbilityKey, Object> from, final Map<AbilityKey, Object> to, final AbilityKey... keys) {
++        for (AbilityKey key : keys) {
++            if (from.containsKey(key)) {
++                to.put(key, from.get(key));
++            }
++        }
++    }
++
++    public static Map<AbilityKey, Object> mapFromCard(Card card) {
++        final Map<AbilityKey, Object> runParams = newMap();
++
++        runParams.put(Card, card);
++        return runParams;
++    }
++
++    public static Map<AbilityKey, Object> mapFromPlayer(Player player) {
++        final Map<AbilityKey, Object> runParams = newMap();
++
++        runParams.put(Player, player);
++        return runParams;
++    }
++
++    public static Map<AbilityKey, Object> mapFromAffected(GameEntity gameEntity) {
++        final Map<AbilityKey, Object> runParams = newMap();
++
++        runParams.put(Affected, gameEntity);
++        return runParams;
++    }
++
++    public static Map<AbilityKey, Object> mapFromPIMap(Map<Player, Integer> map) {
++        final Map<AbilityKey, Object> runParams = newMap();
++
++        runParams.put(Map, map);
++        return runParams;
++    }
++
++    public static CardZoneTable addCardZoneTableParams(Map<AbilityKey, Object> params, SpellAbility sa) {
++        CardZoneTable table = CardZoneTable.getSimultaneousInstance(sa);
++        addCardZoneTableParams(params, table);
++        return table;
++    }
++    public static void addCardZoneTableParams(Map<AbilityKey, Object> params, CardZoneTable table) {
++        params.put(AbilityKey.LastStateBattlefield, table.getLastStateBattlefield());
++        params.put(AbilityKey.LastStateGraveyard, table.getLastStateGraveyard());
++        params.put(AbilityKey.InternalTriggerTable, table);
++    }
++}
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerChangesZoneAll.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerChangesZoneAll.java
+@@ -1,90 +1,103 @@
+-package forge.game.trigger;
+-
+-import java.util.List;
+-import java.util.Map;
+-
+-import forge.game.ability.AbilityKey;
+-import forge.game.ability.AbilityUtils;
+-import forge.game.card.Card;
+-import forge.game.card.CardCollection;
+-import forge.game.card.CardUtil;
+-import forge.game.card.CardZoneTable;
+-import forge.game.spellability.SpellAbility;
+-import forge.game.zone.ZoneType;
+-import forge.util.Expressions;
+-import forge.util.Localizer;
+-
+-public class TriggerChangesZoneAll extends Trigger {
+-
+-    public TriggerChangesZoneAll(Map<String, String> params, Card host, boolean intrinsic) {
+-        super(params, host, intrinsic);
+-    }
+-
+-    @Override
+-    public boolean performTest(Map<AbilityKey, Object> runParams) {
+-        final CardZoneTable table = (CardZoneTable) runParams.get(AbilityKey.Cards);
+-
+-        // leaves the GY trigger look back in time
+-        if (getActiveZone().contains(ZoneType.Battlefield) && "Graveyard".equals(getParam("Origin"))
+-                && !table.getLastStateBattlefield().contains(getHostCard())) {
+-            return false;
+-        }
+-
+-        if (hasParam("FirstTime")) {
+-            // currently only for Crawling Sensation
+-            List<Card> entered = CardUtil.getThisTurnEntered(ZoneType.smartValueOf(getParam("Destination")), null, getParam("ValidCards"), getHostCard(), this, getHostCard().getController());
+-            entered.removeAll(filterCards(table));
+-            if (!entered.isEmpty()) {
+-                return false;
+-            }
+-        }
+-
+-        if (!matchesValidParam("ValidCause", runParams.get(AbilityKey.Cause))) {
+-            return false;
+-        }
+-
+-        if (hasParam("ValidAmount")) {
+-            int right = AbilityUtils.calculateAmount(hostCard, getParam("ValidAmount").substring(2), this);
+-            if (!Expressions.compare(this.filterCards(table).size(), getParam("ValidAmount").substring(0, 2), right)) {
+-                return false;
+-            }
+-        }
+-
+-        return !filterCards(table).isEmpty();
+-    }
+-
+-    @Override
+-    public void setTriggeringObjects(Map<AbilityKey, Object> objects, Map<AbilityKey, Object> runParams) {
+-        final CardZoneTable table = (CardZoneTable) runParams.get(AbilityKey.Cards);
+-
+-        CardCollection allCards = this.filterCards(table);
+-
+-        objects.put(AbilityKey.Cards, allCards);
+-        objects.put(AbilityKey.Amount, allCards.size());
+-        AbilityKey.copyKeys(runParams, objects, AbilityKey.Cause);
+-    }
+-
+-    @Override
+-    public String getImportantStackObjects(SpellAbility sa) {
+-        StringBuilder sb = new StringBuilder();
+-        sb.append(Localizer.getInstance().getMessage("lblAmount")).append(": ").append(sa.getTriggeringObject(AbilityKey.Amount));
+-        return sb.toString();
+-    }
+-
+-    private CardCollection filterCards(CardZoneTable table) {
+-        List<ZoneType> destination = null;
+-        List<ZoneType> origin = null;
+-
+-        if (hasParam("Destination") && !getParam("Destination").equals("Any")) {
+-            destination = ZoneType.listValueOf(getParam("Destination"));
+-        }
+-
+-        if (hasParam("Origin") && !getParam("Origin").equals("Any")) {
+-            origin = ZoneType.listValueOf(getParam("Origin"));
+-        }
+-
+-        final String valid = this.getParam("ValidCards");
+-
+-        return table.filterCards(origin, destination, valid, getHostCard(), this);
+-    }
+-}
++package forge.game.trigger;
++
++import java.util.List;
++import java.util.Map;
++
++import forge.game.ability.AbilityKey;
++import forge.game.ability.AbilityUtils;
++import forge.game.card.Card;
++import forge.game.card.CardCollection;
++import forge.game.card.CardUtil;
++import forge.game.card.CardZoneTable;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.Expressions;
++import forge.util.Localizer;
++
++public class TriggerChangesZoneAll extends Trigger {
++
++    public TriggerChangesZoneAll(Map<String, String> params, Card host, boolean intrinsic) {
++        super(params, host, intrinsic);
++    }
++
++    @Override
++    public boolean performTest(Map<AbilityKey, Object> runParams) {
++        final CardZoneTable table = (CardZoneTable) runParams.get(AbilityKey.Cards);
++
++        // leaves the GY trigger look back in time
++        if (getActiveZone().contains(ZoneType.Battlefield) && "Graveyard".equals(getParam("Origin"))
++                && !table.getLastStateBattlefield().contains(getHostCard())) {
++            return false;
++        }
++
++        if (hasParam("FirstTime")) {
++            // currently only for Crawling Sensation
++            List<Card> entered = CardUtil.getThisTurnEntered(ZoneType.smartValueOf(getParam("Destination")), null, getParam("ValidCards"), getHostCard(), this, getHostCard().getController());
++            entered.removeAll(filterCards(table));
++            if (!entered.isEmpty()) {
++                return false;
++            }
++        }
++
++        if (!matchesValidParam("ValidCause", runParams.get(AbilityKey.Cause))) {
++            return false;
++        }
++
++        if (hasParam("ValidAmount")) {
++            int right = AbilityUtils.calculateAmount(hostCard, getParam("ValidAmount").substring(2), this);
++            if (!Expressions.compare(this.filterCards(table).size(), getParam("ValidAmount").substring(0, 2), right)) {
++                return false;
++            }
++        }
++
++        return !filterCards(table).isEmpty();
++    }
++
++    @Override
++    public void setTriggeringObjects(Map<AbilityKey, Object> objects, Map<AbilityKey, Object> runParams) {
++        final CardZoneTable table = (CardZoneTable) runParams.get(AbilityKey.Cards);
++
++        CardCollection allCards = this.filterCards(table);
++
++        objects.put(AbilityKey.Cards, allCards);
++        CardCollection newCards = new CardCollection();
++        List<ZoneType> origins = zones("Origin");
++        List<ZoneType> destinations = zones("Destination");
++        for (var cell : table.cellSet()) {
++            if (origins != null && !origins.contains(cell.getRowKey())
++                    || destinations != null && !destinations.contains(cell.getColumnKey())) {
++                continue;
++            }
++            for (Card moved : cell.getValue()) {
++                if (allCards.contains(moved)) {
++                    newCards.add(moved);
++                }
++            }
++        }
++        // Keep destination objects separate from the battlefield LKI used for matching.
++        objects.put(AbilityKey.NewCards, newCards);
++        objects.put(AbilityKey.Amount, allCards.size());
++        AbilityKey.copyKeys(runParams, objects, AbilityKey.Cause);
++    }
++
++    @Override
++    public String getImportantStackObjects(SpellAbility sa) {
++        StringBuilder sb = new StringBuilder();
++        sb.append(Localizer.getInstance().getMessage("lblAmount")).append(": ").append(sa.getTriggeringObject(AbilityKey.Amount));
++        return sb.toString();
++    }
++
++    private List<ZoneType> zones(String parameter) {
++        return hasParam(parameter) && !"Any".equals(getParam(parameter))
++                ? ZoneType.listValueOf(getParam(parameter)) : null;
++    }
++
++    private CardCollection filterCards(CardZoneTable table) {
++        List<ZoneType> destination = zones("Destination");
++        List<ZoneType> origin = zones("Origin");
++
++        final String valid = this.getParam("ValidCards");
++
++        return table.filterCards(origin, destination, valid, getHostCard(), this);
++    }
++}
+--- a/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
++++ b/forge-game/src/main/java/forge/game/trigger/WrappedAbility.java
+@@ -438,6 +438,26 @@
+             }
+         }
+ 
++        if (regtrig.hasParam("RequireTriggeringCardsInZone")) {
++            ZoneType zone = ZoneType.smartValueOf(regtrig.getParam("RequireTriggeringCardsInZone"));
++            Object triggeringCards = sa.getTriggeringObject(AbilityKey.NewCards);
++            boolean available = false;
++            if (triggeringCards instanceof Iterable<?> previousCards) {
++                for (Object value : previousCards) {
++                    if (value instanceof Card previous) {
++                        Card current = game.getCardState(previous, null);
++                        if (current != null && previous.equalsWithGameTimestamp(current) && current.isInZone(zone)) {
++                            available = true;
++                            break;
++                        }
++                    }
++                }
++            }
++            if (!available) {
++                return;
++            }
++        }
++
+         if (decider != null) {
+             if (!decider.isInGame()) {
+                 decider = SpellAbilityEffect.getNewChooser(sa, decider);
+--- a/forge-game/src/main/java/forge/game/GameSnapshot.java
++++ b/forge-game/src/main/java/forge/game/GameSnapshot.java
+@@ -151,6 +151,8 @@
+ //        toGame.getTriggerHandler().resetActiveTriggers();
+ 
+         SpellAbilitySnapshot stackState = new SpellAbilitySnapshot(gameObjectMap);
++        copySnapshotUsageAndTraits(fromGame, toGame, stackState);
++        toGame.getTriggerHandler().resetActiveTriggers();
+         toGame.getStack().restoreSnapshotFrom(fromGame.getStack(), stackState, includeStack);
+ 
+         if (restore) {
+@@ -166,6 +168,28 @@
+             //System.out.println("RESTORED");
+         }
+ 
++    }
++
++    private void copySnapshotUsageAndTraits(Game fromGame, Game toGame, SpellAbilitySnapshot context) {
++        CardCollectionView cards = getCardsToCopy(fromGame);
++        for (Card original : cards) {
++            findBy(toGame, original).copySnapshotCastFormFrom(original);
++        }
++        for (Card original : cards) {
++            findBy(toGame, original).bindSnapshotStatesFrom(original, context);
++        }
++        for (Card original : cards) {
++            findBy(toGame, original).copySnapshotTraitsFrom(original, context);
++        }
++        for (Card original : cards) {
++            Card target = findBy(toGame, original);
++            target.copySnapshotCastFormReferencesFrom(original, context);
++            target.copySnapshotGrantCachesFrom(original, context);
++        }
++        // Resident traits and queued abilities must share the same usage identities.
++        for (Card original : cards) {
++            findBy(toGame, original).copySnapshotUsageFrom(original, context);
++        }
+     }
+ 
+     public void assignPlayerState(Player origPlayer, Player newPlayer) {
+--- a/forge-gui/res/cardsfolder/r/rinoa_angel_wing.txt
++++ b/forge-gui/res/cardsfolder/r/rinoa_angel_wing.txt
+@@ -4,6 +4,6 @@
+ PT:2/4
+ T:Mode$ Phase | Phase$ BeginCombat | ValidPlayer$ You | TriggerZones$ Battlefield | Execute$ TrigPumpAll | TriggerDescription$ At the beginning of combat on your turn, creatures you control with flying get +1/+1 and gain vigilance until end of turn.
+ SVar:TrigPumpAll:DB$ PumpAll | ValidCards$ Creature.YouCtrl+withFlying | NumAtt$ +1 | NumDef$ +1 | KW$ Vigilance
+-T:Mode$ ChangesZoneAll | ValidCards$ Creature.attacking+YouCtrl | Origin$ Battlefield | Destination$ Graveyard | TriggerZones$ Battlefield | OptionalDecider$ You | ResolvedLimit$ 1 | Execute$ TrigChangeZone | TriggerDescription$ Whenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
+-SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | ChangeNum$ 1 | Destination$ Battlefield | Hidden$ True | Tapped$ True | ChooseFromDefined$ TriggeredCards | Mandatory$ True | WithCountersType$ Flying
++T:Mode$ ChangesZoneAll | ValidCards$ Creature.attacking+YouCtrl | Origin$ Battlefield | Destination$ Graveyard | TriggerZones$ Battlefield | OptionalDecider$ You | ResolvedLimit$ 1 | RequireTriggeringCardsInZone$ Graveyard | Execute$ TrigChangeZone | TriggerDescription$ Whenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
++SVar:TrigChangeZone:DB$ ChangeZone | Origin$ Graveyard | ChangeNum$ 1 | Destination$ Battlefield | Hidden$ True | Tapped$ True | ChooseFromDefined$ TriggeredNewCardsLKICopy | Mandatory$ True | WithCountersType$ Flying
+ Oracle:At the beginning of combat on your turn, creatures you control with flying get +1/+1 and gain vigilance until end of turn.\nWhenever one or more attacking creatures you control die, you may return one of them to the battlefield tapped under its owner's control with a flying counter on it. Do this only once each turn.
