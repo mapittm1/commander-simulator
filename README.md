@@ -20,6 +20,29 @@ The quality gate skips generated and archived folders before walking their files
 
 ## Card coverage
 
+**Known rules gap:** Rinoa, Angel Wing can incorrectly return a dead attacker
+after Ghost Vacuum has exiled it. This is a confirmed native failure, and its
+correction is pending. See the [regression evidence](engine/rinoa_return_gap.json)
+and [pending test](engine/pending/CommanderRinoaReturnTest.java).
+A passing selected test suite does not establish full card or AI coverage.
+
+The current reviewed runtime passed 1,084 selected native tests, 332 packaged
+rules cases, 2,558 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 980 subtests. The refreshed catalog probe constructed
+32,636 starting-card identities; its seven other identities are nonstarting meld
+results. The Python quality gate passed 406 offline tests with 511 subtests.
+See the [validation and activation evidence](engine/reaper_limit_evidence.json).
+
+
+
+The Reaper, King No More keeps its once-per-turn return available if the first
+return is declined or the dead creature is exiled before the trigger resolves.
+A successful return uses the allowance for that turn. This follows
+[Comprehensive Rules 603.2h](https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf).
+Native checks also cover Roaming Throne creating distinct Ulalek triggers:
+one resolving trigger may copy another trigger from the same permanent.
+
+
 Ulalek can pay two colorless mana to copy its controller’s spells and other
 abilities. Tests verify copy order and exclude the resolving trigger itself.
 If an opponent counters the Eldrazi spell, Ulalek can still copy an eligible
@@ -70,7 +93,7 @@ Declining an optional dice payment lets the original result resolve and leaves
 the ability available for later rolls. Tests cover Monitor Monitor and Night
 Shift of the Living Dead. Explore tests cover Jadelight Ranger and Captain
 Kathryn Janeway, including an empty library and a creature that left the
-battlefield before its explore effect resolved. The pinned build passed 1,013
+battlefield before its explore effect resolved. That earlier build passed 1,013
 focused native tests and 261 checks against the packaged JAR.
 
 Dice interactions count retained rolls, carry the final results into AI
@@ -78,7 +101,7 @@ previews and game snapshots, and keep the copied history independent. Native
 tests cover Ancient Copper Dragon, Circuits Act, Iron Mastiff, and Diviner's
 Portent. The Monitor Monitor test supplies the optional reroll decision and
 uses the engine to pay its mana cost. Forge's default AI still declines that
-reroll. The pinned build passed 1,007 focused native tests and 255 packaged
+reroll. That earlier build passed 1,007 focused native tests and 255 packaged
 checks. See [dice history and rerolls](docs/CARD_COVERAGE.md#dice-history-and-rerolls).
 
 The Star Trek engine includes the reviewed alias for All Good Things... and

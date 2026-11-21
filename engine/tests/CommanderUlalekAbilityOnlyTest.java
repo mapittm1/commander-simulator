@@ -105,6 +105,41 @@ public class CommanderUlalekAbilityOnlyTest extends AITest {
         assertEquals(tappedAfter, tappedBefore, "There is nothing legal to copy");
     }
 
+    @Test
+    public void ulalekCopiesASeparateTriggerFromTheSamePermanent() {
+        Game game = newGame();
+        Player actor = game.getPlayers().get(0);
+        Card ulalek = addCardToZone("Ulalek, Fused Atrocity", actor, ZoneType.Battlefield);
+        Card throne = addCardToZone("Roaming Throne", actor, ZoneType.Battlefield);
+        throne.setChosenType("Eldrazi");
+        for (int index = 0; index < 4; index++) {
+            addCardToZone("Wastes", actor, ZoneType.Battlefield);
+        }
+        game.getAction().checkStateEffects(true);
+        game.getTriggerHandler().resetActiveTriggers();
+
+        cast(game, actor, "Eldrazi Mimic");
+        game.getTriggerHandler().runWaitingTriggers();
+        game.getStack().addAllTriggeredAbilitiesToStack();
+        assertEquals(game.getStack().size(), 3);
+        SpellAbility resolving = game.getStack().peekAbility();
+        var entries = game.getStack().iterator();
+        entries.next();
+        SpellAbility other = entries.next().getSpellAbility();
+        assertEquals(resolving.getHostCard(), ulalek);
+        assertEquals(other.getHostCard(), ulalek);
+        assertTrue(!resolving.equals(other));
+
+        game.getStack().resolveStack();
+
+        assertEquals(game.getStack().size(), 4);
+        SpellAbility copy = game.getStack().peekAbility();
+        assertTrue(copy.isCopied());
+        assertEquals(copy.getHostCard(), ulalek);
+        assertTrue(!copy.isSpell());
+        assertEquals(actor.getCardsIn(ZoneType.Battlefield).stream().filter(Card::isTapped).count(), 4L);
+    }
+
     private void cast(Game game, Player player, String name) {
         Card card = addCardToZone(name, player, ZoneType.Hand);
         SpellAbility ability = card.getFirstSpellAbility();

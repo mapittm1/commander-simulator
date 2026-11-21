@@ -6,6 +6,31 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed Reaper runtime after 1,084 selected native tests,
+  332 packaged rules cases, 2,558 broader gameplay tests, 256 serialization
+  tests, 42 live integration tests / 980 subtests, and the full Python quality
+  gate (406 offline tests / 511 subtests). The catalog probe constructed 32,636
+  starting-card identities and classified seven nonstarting meld results.
+  Preserve the separate known Rinoa failure; these totals do not certify all cards.
+
+
+- Record a confirmed Rinoa, Angel Wing rules gap: its return effect can move
+  an attacker from exile after Ghost Vacuum removes it from the graveyard.
+  Preserve the failing native witness and passing decline control separately
+  from the passing engine recipe.
+
+
+- Refresh the local catalog from the November 20 Scryfall Oracle export after
+  the prior snapshot failed the freshness gate. Preserve the failed validation
+  attempt and a database backup; rerun admission and gameplay validation.
+
+- Preserve The Reaper, King No More's once-per-turn return when a dead creature
+  is exiled before the trigger resolves. Verify that declining the first
+  return preserves the allowance and a successful return prevents another.
+- Verify that Ulalek can copy a separate trigger from the same permanent
+  when Roaming Throne makes its cast ability trigger twice.
+
+
 - Prune generated and archived folders before discovering Python source for the
   quality gate, keeping engine builds out of the traversal.
 
