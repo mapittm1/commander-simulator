@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed return-prohibition runtime after 1,109 selected native
+  tests, 357 packaged rules cases, 2,583 broader gameplay tests, 256 serialization
+  tests, 42 live tests / 1,005 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The catalog probe constructed 32,636
+  starting-card identities and classified seven nonstarting meld results.
+  Preserve the original pending failure record inside its resolved evidence;
+  promote the reviewed patch and expanded regression into the active build.
+- Check shared optional-return availability against native movement prohibitions.
+  Preserve the once-per-turn allowance when the move is forbidden, filter mixed
+  legal/forbidden return choices, and retain Containment Priest replacement
+  behavior. Sixteen controlled cases cover five prohibition cards, two return
+  abilities, and mixed creature/land deaths.
+- Store companion wording reviews by exact engine card-archive checksum. Preserve
+  all 34 existing reviews across 17 archive files, retain the 32 KiB / 32-entry
+  read bounds for each file, reject redirected paths and mismatched archives, and
+  bind cached approvals to both policy and selected-file bytes. Legacy bounded
+  registries remain readable.
+
+
 - Activate the reviewed Rinoa runtime after 1,093 selected native tests,
   341 packaged rules cases, 2,567 broader gameplay tests, 256 serialization
   tests, 42 live tests / 989 subtests, and the Python quality gate
@@ -14,11 +33,12 @@ Historical entries below summarize verified Git milestones, not release versions
 - Identify native test methods by class and method name. Add an offline
   regression that preserves same-named methods across classes and retains
   passing, failing, and skipped outcomes without reducing expected totals.
-- Record the separate Grafdigger's Cage return-prohibition gap for Rinoa and
+- Previously recorded the separate Grafdigger's Cage return-prohibition gap for Rinoa and
   The Reaper. Preserve its pending correction: the preceding source fails
   both Cage cases and passes both Containment Priest controls; the prototype
   passes all fifteen selected cases. Mixed grouped returns and the wider
-  native/packaged/live checks remain to be validated before activating it.
+  native/packaged/live checks were pending at that milestone and are now
+  validated by the activation above.
 
 
 - Correct Rinoa, Angel Wing’s queued return to retain the graveyard objects

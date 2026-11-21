@@ -18,6 +18,13 @@ by `COMMANDER_JAVAC`).
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
 The quality gate skips generated and archived folders before walking their files.
 
+Companion wording reviews use an exact archive checksum to select a bounded
+file under `config/companion_condition_reviews/`. The policy file and selected
+review file both contribute to the approval digest. Other engine archives do not
+need to be loaded, and a missing or malformed review cannot approve a wording
+difference.
+
+
 ## Card coverage
 
 Rinoa's queued return retains the graveyard objects from the death event.
@@ -26,21 +33,22 @@ tapped entry, a flying counter, and used and unused return allowances in copied
 and restored games. The [initial failure record](engine/rinoa_return_gap.json)
 now links to the expanded regression and its resolution.
 
-**Known rules gap:** Grafdigger's Cage can incorrectly consume Rinoa's or
-The Reaper's return allowance while preventing the return. A separate candidate
-passes focused checks, including Containment Priest controls, and awaits wider
-validation. See the [gap and prototype evidence](engine/prevented_return_gap.json)
-and [pending patch](engine/patches/pending-commander-prevented-return.patch).
+Optional return choices now check movement prohibitions before using a
+once-per-turn allowance. Tests cover Grafdigger's Cage, Kunoros, Soulless Jailer,
+Weathered Runestone, and Worms of the Earth, including mixed creature/land choices.
+Containment Priest still replaces an otherwise legal return and uses its allowance.
+The shared rules checks are generic; card scripts declare the required destination.
+See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,093 selected native tests, 341 packaged
-rules cases, 2,567 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 989 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,109 selected native tests, 357 packaged
+rules cases, 2,583 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,005 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
-results. The Python quality gate passed 407 offline tests with 511 subtests.
+results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/rinoa_return_evidence.json).
+See the [validation and activation evidence](engine/prevented_return_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

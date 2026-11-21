@@ -1,5 +1,6 @@
 """Exact display-wording reviews; no approximate companion condition matching."""
 
+import hashlib
 import re
 
 from commander.engine.interactions.suite import read_hashed_json
@@ -16,9 +17,50 @@ FIELDS = {
 }
 
 
+def _load_review_registry(archive_hash: str) -> tuple[dict | None, str, bool]:
+    """Read only the selected archive's bounded reviews, or a legacy registry."""
+    if not isinstance(archive_hash, str) or not re.fullmatch(
+        r"[a-f0-9]{64}", archive_hash
+    ):
+        raise ValueError("Companion review requires an exact archive checksum")
+    if REVIEWS_PATH.is_symlink():
+        raise ValueError("Companion review policy must not be a symbolic link")
+    data, digest = read_hashed_json(REVIEWS_PATH, 32 * 1024)
+    if not isinstance(data, dict):
+        raise ValueError("Invalid companion condition review registry")
+    if (
+        isinstance(data.get("schema_version"), int)
+        and not isinstance(data.get("schema_version"), bool)
+        and data["schema_version"] == 2
+    ):
+        if data != {"schema_version": 2, "layout": "per_archive"}:
+            raise ValueError("Invalid companion review archive policy")
+        directory = REVIEWS_PATH.with_suffix("")
+        path = directory / f"{archive_hash}.json"
+        if (
+            directory.is_symlink()
+            or path.is_symlink()
+            or directory.resolve().parent != REVIEWS_PATH.parent.resolve()
+            or path.resolve().parent != directory.resolve()
+        ):
+            raise ValueError("Companion review archive path is redirected")
+        if not path.exists():
+            return None, digest, True
+        data, archive_digest = read_hashed_json(path, 32 * 1024)
+        digest = hashlib.sha256(
+            f"{digest}:{archive_digest}".encode("ascii")
+        ).hexdigest()
+        return data, digest, True
+    return data, digest, False
+
+
 def condition_review(plan):
     """Return only an identity/archive/Oracle-bound review, including registry hash."""
-    data, digest = read_hashed_json(REVIEWS_PATH, 32 * 1024)
+    data, digest, archive_scoped = _load_review_registry(plan["engine"]["cards_sha256"])
+    if data is None:
+        return None
+    if not isinstance(data, dict):
+        raise ValueError("Invalid companion condition review registry")
     reviews = data.get("reviews")
     if (
         not isinstance(data.get("schema_version"), int)
@@ -57,6 +99,8 @@ def condition_review(plan):
             raise ValueError(
                 "Companion review requires exact Oracle identity and archive checksum"
             )
+        if archive_scoped and review["cards_sha256"] != plan["engine"]["cards_sha256"]:
+            raise ValueError("Companion review belongs to a different engine archive")
         key = (review["oracle_id"], review["cards_sha256"])
         if key in seen:
             raise ValueError("Duplicate companion condition review identity")
