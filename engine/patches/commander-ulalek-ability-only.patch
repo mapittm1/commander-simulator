@@ -1,0 +1,19 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/CopySpellAbilityAi.java
+@@ -128,7 +128,14 @@
+         // Preserve mana for affordable hand spells unless a copy has a usable effect.
+         String defined = sa.getParam("Defined");
+         if ("TriggeredSpellAbility".equals(defined) || "ValidStack Spell.YouCtrl".equals(defined)) {
+-            for (SpellAbility copied : AbilityUtils.getDefinedSpellAbilities(sa.getHostCard(), defined, sa)) {
++            List<SpellAbility> candidates = new ArrayList<>(
++                    AbilityUtils.getDefinedSpellAbilities(sa.getHostCard(), defined, sa));
++            for (SpellAbility part = sa.getSubAbility(); part != null; part = part.getSubAbility()) {
++                if (part.getApi() == ApiType.CopySpellAbility && part.hasParam("Defined")) {
++                    candidates.addAll(AbilityUtils.getDefinedSpellAbilities(sa.getHostCard(), part.getParam("Defined"), part));
++                }
++            }
++            for (SpellAbility copied : candidates) {
+                 if (copied.getActivatingPlayer() != null && copied.getActivatingPlayer().equals(aiPlayer)
+                         && !copied.isManaAbility() && copied.getApi() != ApiType.CopySpellAbility
+                         && !(SpellApiToAi.Converter.get(copied.getApi()) instanceof CannotPlayAi)

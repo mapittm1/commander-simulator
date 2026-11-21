@@ -80,6 +80,7 @@ SOURCES = {
     "CommanderTemptCopyTest": "commander_tempt_copy_test_sha256",
     "CommanderConditionalManaTest": "commander_conditional_mana_test_sha256",
     "CommanderUlalekTest": "commander_ulalek_test_sha256",
+    "CommanderUlalekAbilityOnlyTest": "commander_ulalek_ability_only_test_sha256",
     "CommanderSecretVoteTest": "commander_secret_vote_test_sha256",
     "CommanderEmptyVoteTest": "commander_empty_vote_test_sha256",
     "CommanderPublicVoteTest": "commander_public_vote_test_sha256",

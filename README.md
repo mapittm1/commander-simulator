@@ -16,11 +16,14 @@ optional native bridge and a trusted Java 17+ runtime. Controlled interaction
 tests also require a JDK 17+ compiler (`javac` on PATH, or an executable selected
 by `COMMANDER_JAVAC`).
 Development/testing uses Python 3.12 and the pinned requirements-dev.txt tools.
+The quality gate skips generated and archived folders before walking their files.
 
 ## Card coverage
 
 Ulalek can pay two colorless mana to copy its controller’s spells and other
 abilities. Tests verify copy order and exclude the resolving trigger itself.
+If an opponent counters the Eldrazi spell, Ulalek can still copy an eligible
+ability on the stack.
 
 Spells and copies created during resolution preserve priority and stack order.
 Tempt with Mayhem copies the selected spell in turn order. Mana planning uses

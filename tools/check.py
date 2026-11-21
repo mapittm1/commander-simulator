@@ -1,6 +1,7 @@
 """Run the same quality gate locally and in CI; --fix formats source first."""
 
 import argparse
+import os
 
 # Only fixed quality-tool commands are executed.
 import subprocess  # nosec B404
@@ -10,6 +11,19 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 
 
+def _source_files(project_root: Path) -> list[str]:
+    """Collect Python source without traversing generated or archived trees."""
+    excluded = {".git", ".venv", "data", "__pycache__"}
+    source_files = []
+    for directory, subdirectories, filenames in os.walk(project_root):
+        subdirectories[:] = [name for name in subdirectories if name not in excluded]
+        for name in filenames:
+            if name.endswith(".py"):
+                path = Path(directory) / name
+                source_files.append(str(path.relative_to(project_root)))
+    return sorted(source_files)
+
+
 def main() -> None:
     """Stop at the first failing formatter, linter, security check, or test."""
     parser = argparse.ArgumentParser(description=__doc__)
@@ -17,12 +31,7 @@ def main() -> None:
         "--fix", action="store_true", help="Apply isort and Black first"
     )
     args = parser.parse_args()
-    excluded = {".git", ".venv", "data", "__pycache__"}
-    source_files = sorted(
-        str(path.relative_to(PROJECT_ROOT))
-        for path in PROJECT_ROOT.rglob("*.py")
-        if not excluded.intersection(path.relative_to(PROJECT_ROOT).parts)
-    )
+    source_files = _source_files(PROJECT_ROOT)
     sort_options = [] if args.fix else ["--check-only", "--diff"]
     format_options = [] if args.fix else ["--check", "--diff"]
     commands = [

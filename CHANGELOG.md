@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Prune generated and archived folders before discovering Python source for the
+  quality gate, keeping engine builds out of the traversal.
+
+- Let Ulalek’s AI consider eligible abilities after the Eldrazi spell is
+  countered, and verify that it declines when only an uncopyable spell remains.
+
 - Let the AI pay for Ulalek’s copy trigger and exclude the resolving trigger
   from the abilities it copies.
 
