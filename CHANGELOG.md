@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve eight further passing source-only discover casting witnesses for
+  casting restrictions, modal/adventure limits, split-card values, adventure exile,
+  and excluded fuse/aftermath forms. Use native paid entry and a pending Lightning
+  Bolt for the Failure half. Keep these outside selected and packaged totals.
+
+- Promote the eight unchanged Imposter Mech / Pantlaza vehicle witnesses from
+  pending source validation into the trusted native build and packaged Java 17
+  matrix. Cover crew, uncrewed zero toughness, departure, copied-game independence
+  and native crew expiry after Time Stop.
+- Activate the test-only vehicle build after 1,261 selected native tests, 509
+  packaged cases and the Python quality gate (416 offline tests / 520 subtests).
+  Verify all 2,155 production sources, 18,033 packaged classes, card resources and
+  default AI configuration unchanged. Preserve previous broader/live/catalog
+  receipts with their original scope rather than relabeling them as rerun checks.
+
 - Preserve eight additional passing source-only Imposter Mech / Pantlaza witnesses
   for crew, zero toughness, departure, copied-game independence and native expiry.
   They found no failure in that scope and remain outside selected, packaged and

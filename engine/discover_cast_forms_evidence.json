@@ -1,0 +1,205 @@
+{
+  "status": "source_only_validation_passed_pending_packaged_regression",
+  "reference_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-discover-vehicle",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "17a68071df16859af34fdde6ea48de752bd22627487e51064ac9a567af59eac4",
+    "cards_sha256": "b73031714afafc02ac6293f3c33ec8888324f49a6a8b334424d8b1051a000d11",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "46ce0127280b6a8d6ada6cb05cfb716e9e1bd5f31f63c23a9c09bf95fdc5fba1",
+    "native_tests": {
+      "total": 1261,
+      "passed": 1261,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "fe5a00afa02caf10b9df547f9b7b101c467de153f6e072b0d22cfeb3b2834fa9",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "reference_build": "data/engine-builds/7e8889430d414c8e851af6bc1363c0cb",
+  "production_sources_verified": 2155,
+  "production_source_manifest_sha256": "7c841158649b42ebd4ba8b972c70eea3b7007294d90b26caac82a184184494e3",
+  "source_comparison": "All production sources text-equal to the sealed vehicle-promotion build. Native execution used JDK19 Maven; it is not a packaged JAR/JRE17 receipt.",
+  "test_source": "engine/pending/CommanderDiscoverCastFormsTest.java",
+  "test_source_sha256": "44edd15f3a896d939bda3f3fc5826d93380925647c450c60a45df9b96c09cf32",
+  "native_counts": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.aDiscoveredSplitCardCastsOnlyTheChosenHalf",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.aLegalAdventureUsesItsOwnManaValueAndExilesOnResolution",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.aSplitCardWithTooHighACombinedValueIsSkipped",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.anAftermathHalfIsNotOfferedFromExile",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.brambleDoesNotOfferTheHigherManaValueAdventure",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.cageAllowsACreatureCastFromExile",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.drannithPutsTheUncastCardInHand",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverCastFormsTest.valkiDoesNotOfferTheHigherManaValueBackFace",
+      "status": "PASS"
+    }
+  ],
+  "report_sha256": "4257386d38b401394bf3bfa6f57e092f98f0b0260b41d308664304151e909894",
+  "log_sha256": "8bba10dd560e28b7df1aad646f60340d4a903d53a89feeeaa3f9021b364798c2",
+  "local_research": "data/development/commander-discover-cast-forms-release",
+  "local_research_run": "clean8-baseline",
+  "cards": [
+    {
+      "engine_name": "Geological Appraiser",
+      "catalog_name": "Geological Appraiser",
+      "oracle_id": "a0a1cd2b-ed7c-4cce-8497-4873e1e5e3df",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Drannith Magistrate",
+      "catalog_name": "Drannith Magistrate",
+      "oracle_id": "aadd10d0-6dd0-4bdc-8d93-ff08e29a5863",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Sol Ring",
+      "catalog_name": "Sol Ring",
+      "oracle_id": "6ad8011d-3471-4369-9d68-b264cc027487",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Grafdigger's Cage",
+      "catalog_name": "Grafdigger's Cage",
+      "oracle_id": "753cb2b2-24ce-484f-a2d0-be6fd2c67ebd",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Grizzly Bears",
+      "catalog_name": "Grizzly Bears",
+      "oracle_id": "14c8f55d-d177-4c25-a931-ebeb9e6062a0",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Valki, God of Lies",
+      "catalog_name": "Valki, God of Lies // Tibalt, Cosmic Impostor",
+      "oracle_id": "907ae517-22d5-4ac7-bc3a-3f4d5eaeeb57",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Bramble Familiar",
+      "catalog_name": "Bramble Familiar // Fetch Quest",
+      "oracle_id": "68f36dfa-bbd2-4860-b09b-37e35136be72",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Wear // Tear",
+      "catalog_name": "Wear // Tear",
+      "oracle_id": "9842734c-1eac-4509-a731-4c22017ae586",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Brazen Borrower",
+      "catalog_name": "Brazen Borrower // Petty Theft",
+      "oracle_id": "c7b044c3-3cfa-407e-bf20-2875e8e04b7b",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Discovery // Dispersal",
+      "catalog_name": "Discovery // Dispersal",
+      "oracle_id": "8f1c1bd6-8420-4de2-81f4-5faa419da301",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Vedalken Orrery",
+      "catalog_name": "Vedalken Orrery",
+      "oracle_id": "60d640a4-032b-4279-ac75-8f200ca776fb",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Lightning Bolt",
+      "catalog_name": "Lightning Bolt",
+      "oracle_id": "4457ed35-7c10-48c8-9776-456485fdf070",
+      "commander_legality": "legal"
+    },
+    {
+      "engine_name": "Failure // Comply",
+      "catalog_name": "Failure // Comply",
+      "oracle_id": "ed8184f8-f6a7-4f97-9f4e-bf72077af754",
+      "commander_legality": "legal"
+    }
+  ],
+  "rules_sources": [
+    "https://magic.wizards.com/en/news/feature/the-lost-caverns-of-ixalan-release-notes",
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf"
+  ],
+  "scope": "Eight supplied-state four-player native witnesses with paid Appraiser entry. Cover Drannith refusal to hand, Cage allowing casting from exile, higher-cost modal and adventure forms excluded, chosen split-half spell value, adventure exile and bounce, combined split mana value for library discovery, fuse excluded and aftermath excluded from exile. The last case pays for Lightning Bolt and flashes Appraiser with Vedalken Orrery; the legal Failure half returns that pending spell without damage. Target choices, library order and spell-form choices are supplied. No production failure found in these eight cases. Full casting, alternative costs, card and default-AI correctness remain unverified.",
+  "remaining_work": [
+    "Register these witnesses in trusted native and packaged regression suites",
+    "Broader alternate and additional costs, zone replacements and controller changes"
+  ]
+}

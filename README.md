@@ -142,12 +142,20 @@ DiscoverEffect implementation changes; card scripts and AI configuration are
 unchanged. See the [resolved failure record](engine/discover_scalar_gap.json).
 Complete discover, casting, card and default-AI correctness remain open.
 
-Eight further source-only tests pass for Imposter Mech copying Pantlaza: uncrewed
-zero toughness, crew before resolution, last known values after Disenchant,
-independent copied worlds and native crew expiry after Time Stop. These are
-separate from all selected, packaged and live totals below and still need packaged
-regression integration.
-See the [source-only vehicle evidence](engine/discover_vehicle_evidence.json).
+Eight Imposter Mech / Pantlaza tests now run in the trusted native and packaged
+suites: uncrewed zero toughness, crew before resolution, last known values after
+Disenchant, independent copied worlds and native crew expiry after Time Stop.
+The fixture moved from pending to active tests without byte changes. The earlier
+[source-only vehicle evidence](engine/discover_vehicle_evidence.json) retains its
+historical path; see the [packaged promotion evidence](engine/discover_vehicle_packaged_evidence.json)
+for the current test location and Java 17 results.
+
+Eight additional source-only discover casting tests pass: Drannith and Cage,
+modal and adventure limits, chosen split-half mana value, adventure exile,
+combined split-card value, and excluded fuse/aftermath forms. A native Lightning
+Bolt and a flashed Appraiser exercise Failure with an actual pending spell.
+These cases found no rules failure and remain outside current selected and
+packaged counts. See the [source-only casting evidence](engine/discover_cast_forms_evidence.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -163,14 +171,19 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,253 selected native tests, 501 packaged
-rules cases, 2,727 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,149 subtests. The refreshed catalog probe constructed
-32,636 starting-card identities; its seven other identities are nonstarting meld
-results. The Python quality gate passed 416 offline tests with 520 subtests.
-Native receipts use class-qualified method names to distinguish matching names
-in different test classes.
-See the [validation and activation evidence](engine/discover_scalar_evidence.json).
+The current reviewed runtime passed 1,261 selected native tests and 509 packaged
+rules cases. The Python quality gate passed 416 offline tests with 520 subtests.
+For this test-only promotion, all 2,155 production sources, 18,033 packaged classes,
+card resources and default AI configuration were verified unchanged. See the
+[current validation evidence](engine/discover_vehicle_packaged_evidence.json).
+
+The preceding runtime passed 2,727 broader gameplay tests, 256 serialization tests,
+and 42 live integration tests with 1,149 subtests. Its catalog probe constructed
+32,636 starting-card identities; the seven other identities are nonstarting meld
+results. Those broader, live and catalog checks were not rerun for this test-only
+promotion; their [prior evidence](engine/discover_scalar_evidence.json) and the
+byte-equivalence audit are retained separately. Native receipts use class-qualified
+method names. These checks do not establish complete card or AI correctness.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.
