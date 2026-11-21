@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve eight further passing source-only discover cost witnesses for payable
+  and unpayable Thalia, Trinisphere and Damping Sphere costs, actual mana payment
+  and combined cost ordering. Exclude the initial Checkstyle-stopped run and stale
+  unrelated reports. These cases remain outside selected and packaged totals.
+
+- Promote eight unchanged discover casting-form witnesses into trusted native and
+  packaged Java 17 tests. Cover exile restrictions, modal/adventure spell limits,
+  split mana values, adventure resolution, and excluded fuse/aftermath forms.
+- Activate the test-only casting build after 1,269 selected native tests, 517
+  packaged cases and the Python quality gate (416 offline tests / 520 subtests).
+  Verify all 2,155 production sources, 18,033 packaged classes, card resources and
+  default AI configuration unchanged. Earlier broader/live/catalog receipts retain
+  their original scope and were not rerun for this test-only promotion.
+
 - Preserve eight further passing source-only discover casting witnesses for
   casting restrictions, modal/adventure limits, split-card values, adventure exile,
   and excluded fuse/aftermath forms. Use native paid entry and a pending Lightning

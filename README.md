@@ -150,12 +150,20 @@ The fixture moved from pending to active tests without byte changes. The earlier
 historical path; see the [packaged promotion evidence](engine/discover_vehicle_packaged_evidence.json)
 for the current test location and Java 17 results.
 
-Eight additional source-only discover casting tests pass: Drannith and Cage,
-modal and adventure limits, chosen split-half mana value, adventure exile,
-combined split-card value, and excluded fuse/aftermath forms. A native Lightning
-Bolt and a flashed Appraiser exercise Failure with an actual pending spell.
-These cases found no rules failure and remain outside current selected and
-packaged counts. See the [source-only casting evidence](engine/discover_cast_forms_evidence.json).
+Eight discover casting tests now run in the trusted native and packaged suites:
+Drannith and Cage, modal and adventure limits, chosen split-half mana value,
+adventure exile, combined split-card value, and excluded fuse/aftermath forms.
+A native Lightning Bolt and a flashed Appraiser exercise Failure with an actual
+pending spell. Their unchanged source moved into active tests; the earlier
+[source-only casting evidence](engine/discover_cast_forms_evidence.json) retains
+its historical path. See the [packaged casting evidence](engine/discover_cast_forms_packaged_evidence.json)
+for current Java 17 results.
+
+Eight additional source-only discover cost tests pass for Thalia, Trinisphere
+and Damping Sphere: payable and unpayable costs, actual mana consumption, and
+combined cost increases before the minimum-cost check. These cases found no
+rules failure and remain outside selected and packaged totals. See the
+[source-only tax evidence](engine/discover_tax_evidence.json).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -171,13 +179,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,261 selected native tests and 509 packaged
+The current reviewed runtime passed 1,269 selected native tests and 517 packaged
 rules cases. The Python quality gate passed 416 offline tests with 520 subtests.
 For this test-only promotion, all 2,155 production sources, 18,033 packaged classes,
 card resources and default AI configuration were verified unchanged. See the
-[current validation evidence](engine/discover_vehicle_packaged_evidence.json).
+[current validation evidence](engine/discover_cast_forms_packaged_evidence.json).
 
-The preceding runtime passed 2,727 broader gameplay tests, 256 serialization tests,
+The earlier runtime passed 2,727 broader gameplay tests, 256 serialization tests,
 and 42 live integration tests with 1,149 subtests. Its catalog probe constructed
 32,636 starting-card identities; the seven other identities are nonstarting meld
 results. Those broader, live and catalog checks were not rerun for this test-only
