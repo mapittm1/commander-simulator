@@ -1,0 +1,148 @@
+{
+  "status": "resolved_by_reviewed_runtime",
+  "baseline": {
+    "status": "confirmed_rules_failure_source_fix_pending_packaged_validation",
+    "baseline_engine": {
+      "forge_version": "2.0.16-583714b-reviewed-discover-lki",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "6d3d6eabe8e6d51ed62df68bdbf3af59bfa3de4ceb2174f91852d961dd16b97f",
+      "cards_sha256": "b73031714afafc02ac6293f3c33ec8888324f49a6a8b334424d8b1051a000d11",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "d9642d4f19d119f1867b24f4d8881378e9cbc12efe6090ddc6a55eca879a9315",
+      "native_tests": {
+        "total": 1249,
+        "passed": 1249,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "93cf63880fec764d71d84824705c91fc3823f1ad52cb10f9ddf15fe45cca41b5",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "production_change": "forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java",
+    "baseline": {
+      "counts": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.copiedNegativeLastKnownToughnessRemainsIndependent",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.copiedZeroLastKnownToughnessRemainsIndependent",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.negativeLastKnownToughnessDiscoversAZeroManaCard",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.zeroLastKnownToughnessDiscoversAZeroManaCard",
+          "status": "PASS"
+        }
+      ],
+      "report_sha256": "4498f3a8b6c13b3d75d8539b592760c1d85b1d42dfa4fc643e907154c21d7a6b",
+      "log_sha256": "b5b7152615844fdee2bed19eb7e1b6107f6995f7f07fdfa6c1b73524a514cfbd"
+    },
+    "source_only_fixed": {
+      "counts": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.copiedNegativeLastKnownToughnessRemainsIndependent",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.copiedZeroLastKnownToughnessRemainsIndependent",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.negativeLastKnownToughnessDiscoversAZeroManaCard",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderDiscoverScalarTest.zeroLastKnownToughnessDiscoversAZeroManaCard",
+          "status": "PASS"
+        }
+      ],
+      "report_sha256": "40a1f9557024636862ce82d7e5285f08a2cfee2ede193377f951ae6904547598",
+      "log_sha256": "71d99d75e6d09fee1c332b6cbeda6c98fa541d39e919154dc842355834ae8275"
+    },
+    "test_source": "engine/pending/CommanderDiscoverScalarTest.java",
+    "test_source_sha256": "802d8df669cfa8430b7596008f5dda562a136107c882ce067b91eb2012f42321",
+    "patch": "engine/patches/pending-commander-discover-scalar.patch",
+    "patch_sha256": "35bc465c7cf20747b051b0addc2964fae6d07f5aced01932fbb91cd8e6cc824c",
+    "rules_sources": [
+      "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+      "https://magic.wizards.com/en/news/feature/the-lost-caverns-of-ixalan-release-notes"
+    ],
+    "rules_interpretation": "Inference from CR 107.1b and 701.57a plus Pantlaza release notes: the discover action result calculated from negative last battlefield toughness uses zero. The negative toughness itself must remain available to other calculations. This correction normalizes only the DiscoverEffect action number.",
+    "reproduction": "Paid Pantlaza entry followed by paid Grasp of Darkness (zero toughness control) or Dismember (negative toughness), native state-based actions, and discover-to-hand. Both negative cases fail in baseline including an independent copied game. Zero controls pass. The source-only correction passes all four.",
+    "scope": "Four partial-state four-player native witnesses with supplied mana sources, library order, response targets and discover-to-hand choices. Native JDK19 source execution, not packaged JAR/JRE17 execution. The initial probe omitted a native state-based-action check; its four precondition failures were excluded after the harness correction.",
+    "source_audit_sha256": "dfe37cbbf8468dfdb4f7692572d4e31b8819bcfbec1cbdd4016a9473bbb1df2d",
+    "local_research": "data/development/commander-discover-scalar-release",
+    "remaining_work": [
+      "Expand scalar and casting controls",
+      "Run selected, packaged, broader and live regression gates for the production change",
+      "Activate only after final build and catalog validation"
+    ]
+  },
+  "test_source": "engine/tests/CommanderDiscoverScalarTest.java",
+  "test_source_sha256": "802d8df669cfa8430b7596008f5dda562a136107c882ce067b91eb2012f42321",
+  "resolution_evidence": "engine/discover_scalar_evidence.json",
+  "scope": "Normalize only the discover action result at zero. Preserve negative toughness for other calculations. Four scalar and six last-known-information witnesses pass in the packaged runtime; broader card and AI correctness remains unverified."
+}

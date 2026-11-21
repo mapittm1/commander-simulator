@@ -1,0 +1,13 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java b/forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/DiscoverEffect.java
+@@ -51,7 +51,8 @@
+         final PlayerCollection players = getDefinedPlayersOrTargeted(sa);
+ 
+         // Exile cards from the top of your library until you exile a nonland card with <N> mana value or less.
+-        final int num = AbilityUtils.calculateAmount(host, sa.getParamOrDefault("Num", "1"), sa);
++        // CR 107.1b: normalize the result of this effect, not the underlying toughness.
++        final int num = Math.max(0, AbilityUtils.calculateAmount(host, sa.getParamOrDefault("Num", "1"), sa));
+ 
+         for (final Player p : players) {
+             if (p == null || !p.isInGame()) return;

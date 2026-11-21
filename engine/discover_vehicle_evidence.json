@@ -1,0 +1,64 @@
+{
+  "status": "source_only_validation_passed_pending_packaged_regression",
+  "test_source": "engine/pending/CommanderDiscoverVehicleTest.java",
+  "test_source_sha256": "684a70b91bd0d337a1ed0a7f554c4bfce17b91e9ea1322b453846294b807d761",
+  "native_counts": {
+    "total": 8,
+    "passed": 8,
+    "failed": 0,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.aDepartedCrewedCopyRetainsCreatureToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.aDepartedUncrewedCopyRetainsZeroToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.anUncrewedCopyUsesZeroToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.copiedCrewedDepartureKeepsItsLastCreatureToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.crewingACopyDoesNotChangeTheOriginalDiscoverNumber",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.crewingBeforeDiscoverUsesCreatureToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.originalCrewAndDepartureDoNotChangeAnUncrewedCopy",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverVehicleTest.originalTurnEndingDoesNotExpireCrewInTheCopiedGame",
+      "status": "PASS"
+    }
+  ],
+  "report_sha256": "7d567788e5dc87a538bb9e9786a49025c4a426f88dcd4b0f7fa5d42cbbbcc9a7",
+  "log_sha256": "b61952a3458dd83a477b2246bcc433a98dcafb9638fee2d3595193d94d06a3a4",
+  "local_research": "data/development/commander-discover-vehicle-release",
+  "reference_build": "data/engine-builds/940aa21525764b9bb98523813c8f727b",
+  "production_sources_verified": 2155,
+  "source_comparison": "All production sources text-equal to the sealed discover-scalar candidate. Source execution used JDK19; this is not packaged JAR/JRE17 evidence.",
+  "scope": "Eight controlled four-player partial-state witnesses. Native paid Imposter Mech copies an opposing Pantlaza using supplied copy and discover-to-hand choices. Covers uncrewed zero toughness, native crew before resolution, last battlefield values after paid Disenchant before/after crewing, independent crew and departure in copied worlds, and native Time Stop expiring crew in the original while its copy still discovers four. Mana sources, library order and crew material are supplied. These eight source-only cases found no rules failure; full vehicle, copy, discover and default-AI correctness remain unverified.",
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+    "https://magic.wizards.com/en/news/feature/the-lost-caverns-of-ixalan-release-notes"
+  ],
+  "remaining_work": [
+    "Integrate into the trusted native build and packaged runtime matrix",
+    "Broader copy, animation expiry and zone-change controls"
+  ],
+  "local_research_run": "clean8-baseline",
+  "previous_four_case_evidence_sha256": "18ce205c99beb6dd14e6d81b7eb14ef8a6c4896615b37622ad717d186f937b05",
+  "fixture_cleanup": "Removed unused copied helpers and reused the native Disenchant helper. All eight unchanged class-qualified test methods passed again.",
+  "previous_eight_case_evidence_sha256": "4ef5ff6bc9fb7007588cfe9617ba6ed97d51993f67d4b7171fc21b76a120f1c9"
+}

@@ -68,6 +68,8 @@ SOURCES = {
     "CommanderOptionalDiePaymentTest": "commander_optional_die_payment_test_sha256",
     "CommanderExploreTest": "commander_explore_test_sha256",
     "CommanderDiscoverTest": "commander_discover_test_sha256",
+    "CommanderDiscoverLkiTest": "commander_discover_lki_test_sha256",
+    "CommanderDiscoverScalarTest": "commander_discover_scalar_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "CommanderLearnTest": "commander_learn_test_sha256",
     "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",

@@ -6,6 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve eight additional passing source-only Imposter Mech / Pantlaza witnesses
+  for crew, zero toughness, departure, copied-game independence and native expiry.
+  They found no failure in that scope and remain outside selected, packaged and
+  live counts.
+- Promote six unchanged Pantlaza last-known-toughness witnesses from pending source
+  validation into the trusted native build and packaged Java 17 regression suite.
+  Preserve earlier source-only evidence and its historical path. The test-only
+  promotion verified all 18,033 packaged classes and 2,155 production sources
+  unchanged before the separately reviewed gameplay correction.
+- Normalize a negative discover action result to zero under CR 107.1b without
+  changing negative toughness for other calculations. Native paid Grasp of Darkness
+  and Dismember distinguish zero controls from the two reproduced negative-value
+  failures, including copied games. The correction passes all four witnesses.
+  No card script or AI configuration changes are required.
+- Activate the discover correction after 1,253 selected native tests, 501 packaged
+  rules cases, 2,727 broader gameplay tests, 256 serialization tests, 42 live tests
+  with 1,149 subtests, and the refreshed catalog construction probe. The Python
+  quality gate passes 416 offline tests with 520 subtests. These checks do not
+  certify full discover, casting, card or AI correctness.
+
 - Preserve six additional source-only Pantlaza toughness/discover witnesses, including
   source departure, later responses, copied games and Time Stop in the original
   world. All six pass with no failure found in that scope. Keep their pending
