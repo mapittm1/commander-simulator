@@ -1,142 +1,150 @@
 {
-  "status": "confirmed_rules_failure_pending_fix",
-  "cards": [
-    "Emet-Selch of the Third Seat",
-    "Teferi, Time Raveler",
-    "Lightning Bolt",
-    "Shock",
-    "Anguished Unmaking"
-  ],
-  "observation": "A prohibited graveyard cast under Teferi, or declining the native cast dialog after accepting the outer trigger, consumes Emet-Selch's once-per-turn allowance even though no spell was cast. Removing Teferi or accepting a later cast cannot use the expected later opportunity. An actual cast and declining the outer trigger controls pass.",
-  "baseline_engine": {
-    "forge_version": "2.0.16-583714b-reviewed-priority-boarding",
-    "capabilities": [
-      "sticker_kicker",
-      "explicit_commander_colors",
-      "native_companion_pregame",
-      "supplementary_ai_zones",
-      "sticker_snapshot_state",
-      "historical_lki_state",
-      "damage_history_state",
-      "participant_snapshot_state",
-      "starting_life_snapshot",
-      "stack_snapshot_state",
-      "cast_form_snapshot",
-      "usage_snapshot_state",
-      "scheduled_snapshot_state",
-      "delayed_trigger_snapshot",
-      "turn_schedule_snapshot",
-      "conditional_cleanup_snapshot",
-      "animation_snapshot_state",
-      "copy_frame_expiration",
-      "protection_expiration",
-      "keyword_exchange_expiration",
-      "blocking_prevention_snapshot",
-      "ring_text_snapshot",
-      "attachment_mana_cleanup",
-      "host_bound_return_snapshot",
-      "effect_cleanup_regeneration",
-      "detain_control_age_snapshot",
-      "player_control_snapshot",
-      "decision_beneficiary_planning",
-      "controlled_attack_planning",
-      "primary_control_future_planning",
-      "paid_spell_control_retargeting",
-      "composed_spell_control",
-      "cast_provenance_records",
-      "paid_mass_counter_planning",
-      "paid_exchange_pile_planning",
-      "divine_intervention_counter_trigger",
-      "expired_mana_reservation_isolation",
-      "hybrid_safety_paired_random_isolation"
-    ],
-    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
-    "jar_sha256": "61df2471bdb1b412093caafa841436db71c4a5f64062bc36c73db4c9d54a2beb",
-    "cards_sha256": "95c352c7a1f15fa77c1c508bdb3f9a00d001df046f5c17273b0b9eb972dccb78",
-    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
-    "recipe_sha256": "198918a4887d119b8d740a5067992fb7841043c7a2289749e4c36cfc486da90a",
-    "native_tests": {
-      "total": 1227,
-      "passed": 1227,
-      "failed": 0,
-      "skipped": 0
-    },
-    "build_log_sha256": "daf4590444aff0c5a80703fe0ef7542574bd6952ff353b612fcbd1a0c3ad2c18",
-    "edition_resources": {
-      "files": 686,
-      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
-    },
-    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
-    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
-    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
-  },
-  "baseline_engine_lock_sha256": "0cb9d2f352c21c905ef4de9dbad13c817b5aa7f2cc27e5fb62f50464c31fdf6b",
-  "production_sources_equal_after_line_ending_normalization": 2155,
-  "baseline_card_scripts_compared": 34466,
-  "test_source": "engine/pending/CommanderOptionalPlayTest.java",
-  "test_source_sha256": "32b5ad24cfa2d497d27211f6306de6da977516c9d9f1f97b47d1c97687d36fe4",
+  "status": "resolved_by_reviewed_runtime",
   "baseline": {
-    "counts": {
-      "total": 4,
-      "passed": 2,
-      "failed": 2,
-      "skipped": 0
+    "status": "confirmed_rules_failure_pending_fix",
+    "cards": [
+      "Emet-Selch of the Third Seat",
+      "Teferi, Time Raveler",
+      "Lightning Bolt",
+      "Shock",
+      "Anguished Unmaking"
+    ],
+    "observation": "A prohibited graveyard cast under Teferi, or declining the native cast dialog after accepting the outer trigger, consumes Emet-Selch's once-per-turn allowance even though no spell was cast. Removing Teferi or accepting a later cast cannot use the expected later opportunity. An actual cast and declining the outer trigger controls pass.",
+    "baseline_engine": {
+      "forge_version": "2.0.16-583714b-reviewed-priority-boarding",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "61df2471bdb1b412093caafa841436db71c4a5f64062bc36c73db4c9d54a2beb",
+      "cards_sha256": "95c352c7a1f15fa77c1c508bdb3f9a00d001df046f5c17273b0b9eb972dccb78",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "198918a4887d119b8d740a5067992fb7841043c7a2289749e4c36cfc486da90a",
+      "native_tests": {
+        "total": 1227,
+        "passed": 1227,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "daf4590444aff0c5a80703fe0ef7542574bd6952ff353b612fcbd1a0c3ad2c18",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
     },
-    "report_sha256": "f089e5511124e599efd795ea7729843e0fb2cd77662d7faeb7709792d23a8cca",
-    "log_sha256": "ee6852aa6b33e37b26e62f9048760888060165eda177aef06508c5c9a1afb150",
-    "failing_methods": [
-      "decliningTheCastDialogPreservesTheAllowance",
-      "teferisCastingRestrictionPreservesALaterLegalCast"
-    ]
-  },
-  "prototype": {
-    "status": "source_only_not_activated",
-    "patch": "engine/patches/pending-commander-optional-play.patch",
-    "patch_sha256": "8e2f41a534b300bd9fdf8c87b2b3c7142fba89735a0bc898009ab40371f2eeec",
-    "fixed": {
+    "baseline_engine_lock_sha256": "0cb9d2f352c21c905ef4de9dbad13c817b5aa7f2cc27e5fb62f50464c31fdf6b",
+    "production_sources_equal_after_line_ending_normalization": 2155,
+    "baseline_card_scripts_compared": 34466,
+    "test_source": "engine/pending/CommanderOptionalPlayTest.java",
+    "test_source_sha256": "32b5ad24cfa2d497d27211f6306de6da977516c9d9f1f97b47d1c97687d36fe4",
+    "baseline": {
       "counts": {
         "total": 4,
-        "passed": 4,
-        "failed": 0,
+        "passed": 2,
+        "failed": 2,
         "skipped": 0
       },
-      "report_sha256": "be64214969f5052598b7938ad68cd849e4504e7d45fd63f83713140b53a5c4b0",
-      "log_sha256": "27fb4766cc5bcd8a25df4e41cd8aa3b873b677c61c90badb2a234dbbf4f89d89",
-      "failing_methods": []
+      "report_sha256": "f089e5511124e599efd795ea7729843e0fb2cd77662d7faeb7709792d23a8cca",
+      "log_sha256": "ee6852aa6b33e37b26e62f9048760888060165eda177aef06508c5c9a1afb150",
+      "failing_methods": [
+        "decliningTheCastDialogPreservesTheAllowance",
+        "teferisCastingRestrictionPreservesALaterLegalCast"
+      ]
     },
-    "selected_native_matrix": {
-      "counts": {
-        "total": 1231,
-        "passed": 1231,
-        "failed": 0,
-        "skipped": 0
+    "prototype": {
+      "status": "source_only_not_activated",
+      "patch": "engine/patches/pending-commander-optional-play.patch",
+      "patch_sha256": "8e2f41a534b300bd9fdf8c87b2b3c7142fba89735a0bc898009ab40371f2eeec",
+      "fixed": {
+        "counts": {
+          "total": 4,
+          "passed": 4,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "be64214969f5052598b7938ad68cd849e4504e7d45fd63f83713140b53a5c4b0",
+        "log_sha256": "27fb4766cc5bcd8a25df4e41cd8aa3b873b677c61c90badb2a234dbbf4f89d89",
+        "failing_methods": []
       },
-      "report_sha256": "c94f35e5d457542d0a90897b1e160cbc858c4aff8916c0e4f3a8076356c2993e",
-      "log_sha256": "bf92994df81c75831692cbd9dbd17687ab14b2aae10af2730d3968b785b0566e",
-      "failing_methods": []
+      "selected_native_matrix": {
+        "counts": {
+          "total": 1231,
+          "passed": 1231,
+          "failed": 0,
+          "skipped": 0
+        },
+        "report_sha256": "c94f35e5d457542d0a90897b1e160cbc858c4aff8916c0e4f3a8076356c2993e",
+        "log_sha256": "bf92994df81c75831692cbd9dbd17687ab14b2aae10af2730d3968b785b0566e",
+        "failing_methods": []
+      },
+      "changed_production_sources": [
+        "forge-game/src/main/java/forge/game/ability/AbilityUtils.java",
+        "forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java"
+      ],
+      "changed_card_scripts": [
+        "forge-gui/res/cardsfolder/e/emet_selch_of_the_third_seat.txt"
+      ],
+      "oracle_text": "unchanged",
+      "approach": "An explicit TrackSpellsCastThisTurn root marker uses existing snapshot-aware per-ability history. Ordinary parent/child resolution increments are skipped for that marker; successful native spell casting records its use once. Other abilities retain normal counting.",
+      "test_source_comparison": "The exploratory AutoPaymentTest differs from the sealed build and is excluded from this selected matrix. The recorded four-case source is bound above; later ignored research may extend it."
     },
-    "changed_production_sources": [
-      "forge-game/src/main/java/forge/game/ability/AbilityUtils.java",
-      "forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java"
+    "remaining_work": [
+      "payable choices, cast-admission checks and canceled-cast replacement cleanup",
+      "countered spells/triggers, actual payment failure and alternative costs",
+      "copied triggers, independent game copies, source movement and native cleanup",
+      "other optional Play effects, lands, multiple cards and compound effects",
+      "packaged build, broader gameplay, live/catalog gates and activation"
     ],
-    "changed_card_scripts": [
-      "forge-gui/res/cardsfolder/e/emet_selch_of_the_third_seat.txt"
+    "rules_sources": [
+      "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+      "https://magic.wizards.com/en/news/feature/ravnica-remastered-release-notes"
     ],
-    "oracle_text": "unchanged",
-    "approach": "An explicit TrackSpellsCastThisTurn root marker uses existing snapshot-aware per-ability history. Ordinary parent/child resolution increments are skipped for that marker; successful native spell casting records its use once. Other abilities retain normal counting.",
-    "test_source_comparison": "The exploratory AutoPaymentTest differs from the sealed build and is excluded from this selected matrix. The recorded four-case source is bound above; later ignored research may extend it."
+    "scope": "Four four-player partial-state witnesses with supplied battlefield/loyalty, graveyard target, spell targets and optional decisions. Uses native paid Shock and Anguished Unmaking, native casting-legality filtering and actual paid Lightning Bolt from the Play effect. The declined cast callback supplies a player choice; it does not substitute a resolved spell. Expectations follow actual-action once-per-turn and casting-restriction rules. Not all casting, cost, replacement, card or AI certification. The prototype is excluded from the active recipe."
   },
-  "remaining_work": [
-    "payable choices, cast-admission checks and canceled-cast replacement cleanup",
-    "countered spells/triggers, actual payment failure and alternative costs",
-    "copied triggers, independent game copies, source movement and native cleanup",
-    "other optional Play effects, lands, multiple cards and compound effects",
-    "packaged build, broader gameplay, live/catalog gates and activation"
-  ],
-  "rules_sources": [
-    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
-    "https://magic.wizards.com/en/news/feature/ravnica-remastered-release-notes"
-  ],
-  "scope": "Four four-player partial-state witnesses with supplied battlefield/loyalty, graveyard target, spell targets and optional decisions. Uses native paid Shock and Anguished Unmaking, native casting-legality filtering and actual paid Lightning Bolt from the Play effect. The declined cast callback supplies a player choice; it does not substitute a resolved spell. Expectations follow actual-action once-per-turn and casting-restriction rules. Not all casting, cost, replacement, card or AI certification. The prototype is excluded from the active recipe."
+  "baseline_source_commit": "d145fe6af87b5827343bc8b7e4ab7542cf086827",
+  "test_source": "engine/tests/CommanderOptionalPlayTest.java",
+  "test_source_sha256": "19cb5b5cd04e8f564e19d9abdad71504585f8f1f322ef780a57ac25cbd255d6d",
+  "resolution_evidence": "engine/optional_play_evidence.json",
+  "scope": "Declared actual-cast actions use existing per-ability history only after native casting succeeds. Declined, prohibited and failed casts preserve the allowance. PlayEffect rolls back prepared effects for canceled or failed callbacks. Sixteen witnesses include native costs, countering, copied games, source movement and cleanup. This is not complete casting, alternative-cost, card or AI certification."
 }

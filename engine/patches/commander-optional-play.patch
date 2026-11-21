@@ -15,10 +15,21 @@
                  host.addAbilityResolved(sa);
 --- a/forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java
 +++ b/forge-game/src/main/java/forge/game/ability/effects/PlayEffect.java
-@@ -458,6 +458,13 @@
+@@ -457,7 +457,23 @@
+                 tgtSA.setManaCostBeingPaid(new ManaCostBeingPaid(tgtSA.getPayCosts().getCostMana().getManaCostFor(tgtSA)));
              }
  
-             if (controller.getController().playSaFromPlayEffect(tgtSA)) {
+-            if (controller.getController().playSaFromPlayEffect(tgtSA)) {
++            boolean playedSuccessfully = false;
++            try {
++                playedSuccessfully = controller.getController().playSaFromPlayEffect(tgtSA);
++            } finally {
++                if (!playedSuccessfully) {
++                    // A canceled dialog must release effects prepared before casting was offered.
++                    tgtSA.rollback();
++                }
++            }
++            if (playedSuccessfully) {
 +                final SpellAbility trackedRoot = sa.getRootAbility();
 +                // Count a declared cast action after native casting succeeds, even if the spell is later countered.
 +                if (trackedRoot.hasParam("TrackSpellsCastThisTurn")

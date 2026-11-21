@@ -111,12 +111,27 @@ companion reviews were rebound after verifying their scripts are unchanged.
 These are supplied-state rules witnesses; complete reveal, dice, card and default-AI
 correctness remain open.
 
-**Known rules gap:** Emet-Selch consumes its optional-cast allowance when a
-restriction prohibits casting or the later cast dialog is declined. Two of four
-native cases fail; actual-cast and outer-trigger-decline controls pass. A separate
-source-only marker prototype passes all four and a 1,231-case selected native
-matrix. It remains outside the active runtime pending wider casting, cost,
-replacement and packaged checks. See the [failure record](engine/optional_play_gap.json).
+Declared optional casts now use their once-per-turn allowance only after native
+casting succeeds. Emet-Selch retains a later opportunity after a casting restriction,
+a declined cast dialog or failed payment. Countering a spell after it was cast
+does not refund that use. PlayEffect rolls back effects prepared for a canceled
+or failed cast, including the previously retained graveyard-exile replacement.
+Sixteen controlled cases cover native mana and sacrifice costs, prohibitions,
+counterspells, source movement, independent copied games and native extra-turn
+cleanup. The preceding runtime fails seven cases and passes nine controls; all
+sixteen pass with the correction. The earlier prototype failed the added
+cancellation-cleanup check and was revised. See the
+[resolved failure record](engine/optional_play_gap.json).
+Only Emet-Selch's script flag changes; Oracle text is unchanged. Existing alias
+and companion scripts were verified unchanged before review rebinding.
+These are supplied-state witnesses; complete casting, alternative-payment,
+card and default-AI correctness remain open.
+
+Six additional source-only discover witnesses pass for Pantlaza: resolution-time
+and last battlefield toughness, later responses, copied games and original-turn
+ending. They found no failure in those cases and are separate from the packaged,
+selected and live totals below. See the [source-only evidence](engine/discover_lki_evidence.json).
+They still need packaging; complete discover/card/AI coverage remains open.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -132,14 +147,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,227 selected native tests, 475 packaged
-rules cases, 2,701 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,123 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,243 selected native tests, 491 packaged
+rules cases, 2,717 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,139 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/priority_boarding_evidence.json).
+See the [validation and activation evidence](engine/optional_play_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

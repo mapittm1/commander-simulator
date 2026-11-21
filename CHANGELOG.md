@@ -6,6 +6,30 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve six additional source-only Pantlaza toughness/discover witnesses, including
+  source departure, later responses, copied games and Time Stop in the original
+  world. All six pass with no failure found in that scope. Keep their pending
+  fixture and evidence separate from selected/packaged/live release counts until
+  packaged regression integration. No new production change is inferred from them.
+
+- Track declared optional cast actions after native casting succeeds, using existing
+  per-ability turn history. Prohibited, declined and failed casts preserve the
+  opportunity; countering an already cast spell does not refund it. Emet-Selch's
+  script declares the marker; Oracle text is unchanged.
+- Roll back effects prepared by PlayEffect when its cast callback declines or fails.
+  The earlier prototype left an exile replacement after cancellation; the corrected
+  sixteen-case suite passes cancellation cleanup and copying afterward. Cover native
+  mana and sacrifice payments, restrictions, counterspells, copied pending casts,
+  independent history, source movement and real cleanup/extra turns. The preceding
+  runtime fails seven cases and passes nine controls; the correction passes all sixteen.
+- Activate the cast-history runtime after 1,243 selected native tests, 491 packaged
+  cases, 2,717 broader gameplay tests, 256 serialization tests, 42 live tests / 1,139
+  subtests and the Python quality gate (416 offline tests / 520 subtests).
+  The catalog constructs 32,636 starting identities and separately classifies seven
+  nonstarting meld results. Rebind unchanged alias/companion scripts to the new
+  archive, preserve the original failure/prototype evidence and retire byte-verified
+  pending copies. Complete rules and AI coverage remain open.
+
 - Record Emet-Selch's separate prohibited/declined cast-history failure, with two
   failing cases and two passing controls. Preserve an explicit actual-cast marker
   prototype that passes four focused and 1,231 selected native cases. Keep it

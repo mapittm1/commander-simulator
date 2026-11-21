@@ -1,0 +1,117 @@
+{
+  "status": "source_only_validation_passed_pending_packaged_regression",
+  "card": "Pantlaza, Sun-Favored",
+  "oracle_id": "b828ba28-e98d-498b-9ab4-d4aa7143e407",
+  "reference_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-optional-play",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "aa65f5d4f258cedacd5d7f1bada1aac91ee29c577f8cc64896635bdb6c42305d",
+    "cards_sha256": "b73031714afafc02ac6293f3c33ec8888324f49a6a8b334424d8b1051a000d11",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "50e65b0ec8550fd39ac9dc0e7dbe470ebfb377073d9991c3bd0ee6db5b3c802c",
+    "native_tests": {
+      "total": 1243,
+      "passed": 1243,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "8690b984de509c9af9cda863e870b14122753b70eca2ed6d7d8cb02c71489ad8",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "execution_scope": "Native JDK 19 Maven tests against 2,155 production sources verified text-equal to the sealed candidate. This is not a packaged-JAR/JRE17 execution receipt and is not included in its selected, packaged or live totals.",
+  "test_source": "engine/pending/CommanderDiscoverLkiTest.java",
+  "test_source_sha256": "d16378668b0eadc5c7f7fa16dcefcf7ab1d81dd79439c49c82db5587470354d3",
+  "native_counts": {
+    "total": 6,
+    "passed": 6,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_methods": [
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.aDepartedDinosaurUsesItsLastBattlefieldToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.aLaterResponseDoesNotReplaceTheLastKnownToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.aResponseChangesTheToughnessUsedAtResolution",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.copiedGamesRetainTheDepartedCreaturesLastKnownToughness",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.endingTheOriginalTurnDoesNotChangeTheCopiedLastKnownValue",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscoverLkiTest.unchangedToughnessFindsTheFourManaCard",
+      "status": "PASS"
+    }
+  ],
+  "report_sha256": "e55b26d93194f958fce77ac4736353444aaf921d98c7c28b58977579926cd6ef",
+  "log_sha256": "dc289e8097a0d3eee077fdf93742301ca25cde3cdbe27ed61aceb8223800d965",
+  "local_run": "data/development/commander-discover-lki-release/expanded6-baseline",
+  "script_path": "p/pantlaza_sun_favored.txt",
+  "source_script_sha256": "db993903ca7e44a1aca89e1b1204099ecd0462f7c7c1f94fbaec51f3940fc77b",
+  "rules_sources": [
+    "https://magic.wizards.com/en/news/feature/the-lost-caverns-of-ixalan-release-notes",
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf"
+  ],
+  "scope": "Six four-player partial-state witnesses with supplied library order and discover-to-hand decisions. Uses native paid Pantlaza entry, Giant Growth, Murder, Lightning Bolt and Time Stop. Covers current resolution-time toughness, last battlefield toughness after departure, later responses and independent copied games when the original turn ends. These six cases found no rules failure. Negative discover values, all discover forms and full card/AI correctness remain unverified.",
+  "remaining_work": [
+    "package these witnesses in the trusted regression matrix",
+    "broader discover variants, object changes and scalar boundaries"
+  ]
+}
