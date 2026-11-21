@@ -6,6 +6,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve optional life-gain allowances under prohibitions while retaining legal
+  replacement effects and independent reveal choices. Identify Skyfisher Spider's
+  optional primary gain before its conditional exile. Keep Uro's attack gain/draw
+  mandatory while allowing the land to be declined. Oracle text is unchanged.
+- Capture held sacrifice-cost zone changes using the pre-move trigger snapshot,
+  then restore the live registry. A sacrificed creature's own death trigger is
+  retained even when the paid spell is countered. Eighteen expanded cases pass;
+  the preceding engine fails seven and passes eleven controls. All 79 focused,
+  neighboring and rollback checks pass.
+- Record the separate Chekov and McCoy draw-prohibition gap. The baseline fails
+  both prohibition cases and passes ordinary, replacement and empty-library draw
+  controls. Preserve a source-only candidate that passes all five cases and 79
+  neighbors, excluded from the active recipe pending wider validation.
+- Activate the reviewed optional-life runtime after 1,141 selected native tests,
+  389 packaged cases, 2,615 broader gameplay tests, 256 serialization tests,
+  42 live tests / 1,037 subtests, and the Python quality gate
+  (416 offline tests / 520 subtests). The catalog probe constructed 32,636
+  starting-card identities and classified seven nonstarting meld results.
+  Retire the byte-verified pending copies while preserving their original failure
+  record and source commit in the resolution evidence.
+
 - Check simple targeted optional moves through a shared, side-effect-free effect
   query. Riveteers Ascendancy preserves its once-per-turn return when movement is
   prohibited. Fourteen native cases also cover replacement controls, declining,

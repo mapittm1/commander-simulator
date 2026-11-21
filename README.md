@@ -27,6 +27,26 @@ difference.
 
 ## Card coverage
 
+Optional life-gain actions now preserve their once-per-turn allowance while life
+gain is prohibited. Controls distinguish ordinary gains and gains replaced by life
+loss. A legal reveal remains available even when its resulting gain is prohibited.
+Skyfisher Spider's conditional exile requires a legal optional gain; Uro's attack
+still draws a card when life gain is prohibited and the optional land is declined.
+
+Held sacrifice-cost events capture leaving creatures' triggers from the event's
+pre-move snapshot. Their death triggers survive even if the paid spell is later
+countered. Eighteen controlled cases cover these behaviors; 79 focused and
+neighboring checks also cover existing cost rollback and grouped costs.
+See the [resolved failure record](engine/optional_life_gain_gap.json).
+These are partial-state rules witnesses with supplied decisions and preconditions;
+full card, cost, and AI coverage remain open.
+
+**Known rules gap:** Chekov and McCoy's optional draw can incorrectly consume
+the turn's allowance under Narset or Spirit of the Labyrinth. A separate source-only candidate
+passes five focused cases and 79 neighboring cases; wider and packaged validation
+remain pending. See the [failure record](engine/optional_draw_gap.json) and
+[pending patch](engine/patches/pending-commander-optional-draw.patch).
+
 Simple targeted optional moves now consult a shared effect-level availability
 query before asking the player or using a once-per-turn allowance. Riveteers
 Ascendancy keeps its return available while movement is prohibited. Fourteen
@@ -40,12 +60,6 @@ other effect types still need dedicated availability checks and rules witnesses.
 Targets and decisions in these fixtures are supplied; they do not certify AI
 strategy. The [failure and resolution record](engine/targeted_return_gap.json)
 contains the baseline and validation scope.
-
-**Known rules gap:** Ancient Cornucopia can incorrectly consume its optional
-life-gain action while Erebos or Tibalt prevents life gain. A separate source-only
-prototype passes four focused cases and 41 neighboring cases; broader and packaged
-validation remain pending. See the [failure record](engine/optional_life_gain_gap.json)
-and [pending patch](engine/patches/pending-commander-optional-life.patch).
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -61,14 +75,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,123 selected native tests, 371 packaged
-rules cases, 2,597 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,019 subtests. The refreshed catalog probe constructed
+The current reviewed runtime passed 1,141 selected native tests, 389 packaged
+rules cases, 2,615 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,037 subtests. The refreshed catalog probe constructed
 32,636 starting-card identities; its seven other identities are nonstarting meld
 results. The Python quality gate passed 416 offline tests with 520 subtests.
 Native receipts use class-qualified method names to distinguish matching names
 in different test classes.
-See the [validation and activation evidence](engine/targeted_return_evidence.json).
+See the [validation and activation evidence](engine/optional_life_gain_evidence.json).
 
 The Reaper, King No More keeps its once-per-turn return available if the first
 return is declined or the dead creature is exiled before the trigger resolves.

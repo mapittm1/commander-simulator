@@ -1,0 +1,85 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/LifeGainEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/LifeGainEffect.java
+@@ -14,6 +14,22 @@
+ import com.google.common.collect.Sets;
+ 
+ public class LifeGainEffect extends SpellAbilityEffect {
++
++    @Override
++    public boolean canChooseOptionalAction(final SpellAbility sa) {
++        // A reveal/payment or an independent later action may still be legal.
++        if (sa.hasParam("UnlessCost") || (sa.getSubAbility() != null
++                && !"GainLife".equals(sa.getParam("OptionalAction")))) {
++            return true;
++        }
++        for (Player player : getDefinedPlayersOrTargeted(sa)) {
++            if (player.isInGame() && player.canGainLife()) {
++                return true;
++            }
++        }
++        return false;
++    }
++
+ 
+     /* (non-Javadoc)
+      * @see forge.game.ability.SpellAbilityEffect#getStackDescription(forge.game.spellability.SpellAbility)
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -213,12 +213,34 @@
+                     && destination.name().equals(waiting.getParams().get(AbilityKey.Destination))) {
+                 waitingTriggers.remove(index);
+                 if (waiting.getTriggers() == null) {
+-                    collectWaitingTrigger(waiting);
++                    collectHeldZoneChange(waiting);
+                 }
+                 return waiting;
+             }
+         }
+         return null;
++    }
++
++    /** Retained sacrifice-cost moves need the same look-back view as ordinary moves. */
++    private void collectHeldZoneChange(TriggerWaiting waiting) {
++        Object before = waiting.getParams().get(AbilityKey.LastStateBattlefield);
++        if (!ZoneType.Battlefield.name().equals(waiting.getParams().get(AbilityKey.Origin))
++                || !(before instanceof CardCollectionView battlefield)) {
++            collectWaitingTrigger(waiting);
++            return;
++        }
++        // Capture the event without changing the live trigger registry or running effects.
++        List<Trigger> current = new ArrayList<>(activeTriggers);
++        try {
++            resetActiveTriggers(false, battlefield);
++            for (Card card : battlefield) {
++                registerActiveLTBTrigger(card);
++            }
++            collectWaitingTrigger(waiting);
++        } finally {
++            activeTriggers.clear();
++            activeTriggers.addAll(current);
++        }
+     }
+ 
+     public void commitCastPlacement(TriggerWaiting waiting) {
+--- a/forge-gui/res/cardsfolder/s/skyfisher_spider.txt
++++ b/forge-gui/res/cardsfolder/s/skyfisher_spider.txt
+@@ -7,7 +7,7 @@
+ SVar:TrigSac:AB$ ImmediateTrigger | Cost$ Sac<1/Creature.Other/another creature> | Execute$ TrigDestroy
+ SVar:TrigDestroy:DB$ Destroy | ValidTgts$ Permanent.nonLand | TgtPrompt$ Select target nonland permanent
+ T:Mode$ ChangesZone | ValidCard$ Card.Self | Origin$ Battlefield | Destination$ Graveyard | Execute$ TrigGainLife | OptionalDecider$ TriggeredCardController | TriggerDescription$ When CARDNAME dies, you may gain 1 life for each creature card in your graveyard. If you do, exile CARDNAME from your graveyard.
+-SVar:TrigGainLife:DB$ GainLife | LifeAmount$ X | SubAbility$ TrigExile
++SVar:TrigGainLife:DB$ GainLife | OptionalAction$ GainLife | LifeAmount$ X | SubAbility$ TrigExile
+ SVar:TrigExile:DB$ ChangeZone | Origin$ Graveyard | Destination$ Exile | Defined$ TriggeredNewCardLKICopy
+ SVar:X:Count$ValidGraveyard Creature.YouOwn
+ DeckHints:Ability$Graveyard|Mill|Dredge|Sacrifice
+--- a/forge-gui/res/cardsfolder/u/uro_titan_of_natures_wrath.txt
++++ b/forge-gui/res/cardsfolder/u/uro_titan_of_natures_wrath.txt
+@@ -5,7 +5,7 @@
+ T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigSac | TriggerDescription$ When NICKNAME enters, sacrifice it unless it escaped.
+ SVar:TrigSac:DB$ Sacrifice | SacValid$ Self | ConditionNotPresent$ Card.Self+escaped
+ T:Mode$ ChangesZone | Origin$ Any | Destination$ Battlefield | ValidCard$ Card.Self | Execute$ TrigGainLife | TriggerDescription$ When NICKNAME enters or attacks, you gain 3 life and draw a card, then you may put a land card from your hand onto the battlefield.
+-T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigGainLife | TriggerZones$ Battlefield | OptionalDecider$ You | Secondary$ True | TriggerDescription$ When NICKNAME enters or attacks, you gain 3 life and draw a card, then you may put a land card from your hand onto the battlefield.
++T:Mode$ Attacks | ValidCard$ Card.Self | Execute$ TrigGainLife | TriggerZones$ Battlefield | Secondary$ True | TriggerDescription$ When NICKNAME enters or attacks, you gain 3 life and draw a card, then you may put a land card from your hand onto the battlefield.
+ SVar:TrigGainLife:DB$ GainLife | LifeAmount$ 3 | SubAbility$ DBDraw
+ SVar:DBDraw:DB$ Draw | Defined$ You | SubAbility$ DBLand
+ SVar:DBLand:DB$ ChangeZone | Origin$ Hand | Destination$ Battlefield | ChangeType$ Land | ChangeNum$ 1
