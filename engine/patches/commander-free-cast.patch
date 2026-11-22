@@ -1,0 +1,136 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/PlayAi.java b/forge-ai/src/main/java/forge/ai/ability/PlayAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/PlayAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/PlayAi.java
+@@ -2,6 +2,7 @@
+ 
+ import forge.ai.*;
+ import forge.ai.simulation.ComboPlan;
++import forge.ai.simulation.GameSimulator;
+ import forge.card.CardStateName;
+ import forge.card.CardTypeView;
+ import forge.game.Game;
+@@ -193,6 +194,7 @@
+                     return true;
+                 }
+                 Spell spell = (Spell) s;
++                if (sa.hasParam("CopyCard")) GameSimulator.markCopiedCastFromEffect(spell);
+                 if (params != null && params.containsKey("CMCLimit")) {
+                     Integer cmcLimit = (Integer) params.get("CMCLimit");
+                     if (spell.getPayCosts().getTotalMana().getCMC() > cmcLimit)
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+@@ -6,6 +6,10 @@
+ import forge.ai.PlayerControllerAi;
+ import forge.ai.simulation.GameStateEvaluator.Score;
+ import forge.game.Game;
++import forge.card.GamePieceType;
++import forge.game.zone.Zone;
++import forge.game.zone.ZoneType;
++import forge.game.ability.AbilityUtils;
+ import forge.util.AITimeoutTracker;
+ import forge.game.card.Card;
+ import forge.game.phase.PhaseType;
+@@ -17,6 +21,7 @@
+ 
+ public class GameSimulator {
+     public static boolean COPY_STACK = false;
++    private static final String COPIED_CAST_FROM_EFFECT = "AICopiedCastFromEffect";
+     final private SimulationController controller;
+     private GameCopier copier;
+     private Game simGame;
+@@ -225,16 +230,48 @@
+         }
+     }
+ 
++    /** Mark a temporary candidate whose granting effect casts a card copy, not the source card. */
++    public static void markCopiedCastFromEffect(SpellAbility action) {
++        action.setPlannedAiChoice(COPIED_CAST_FROM_EFFECT, "True");
++    }
++
++    private Card temporaryCastCopy(Card source) {
++        Card result = Card.fromPaperCard(source.getPaperCard(), aiPlayer);
++        result.setGamePieceType(GamePieceType.TOKEN);
++        Card copiedFrom = source.isToken() ? source.getCopiedPermanent() : source;
++        if (copiedFrom != null) result.setCopiedPermanent(copier.find(copiedFrom));
++        Zone original = source.getZone();
++        Zone zone;
++        if (original == null) {
++            zone = aiPlayer.getZone(ZoneType.None);
++        } else if (original.getPlayer() == null) {
++            zone = simGame.getStackZone();
++        } else {
++            zone = copier.find(original.getPlayer()).getZone(original.getZoneType());
++        }
++        result.setZone(zone);
++        zone.add(result);
++        return result;
++    }
++
+     private SpellAbility findSaInSimGame(final SpellAbility sa) {
+         // is already an ability from sim game
+         if (sa.getHostCard().getGame().equals(this.simGame)) {
+             return sa;
+         }
+         Card origHostCard = sa.getHostCard();
+-        Card hostCard = copier.find(origHostCard);
++        // Copies offered during resolution may not yet be registered game objects.
++        // Build that cast object only in the simulation; the encoded/exiled source stays put.
++        boolean copiedByEffect = "True".equals(sa.getPlannedAiChoice(COPIED_CAST_FROM_EFFECT));
++        Card hostCard = sa.isCastFromPlayEffect() && (origHostCard.isToken() || copiedByEffect)
++                ? temporaryCastCopy(origHostCard) : copier.find(origHostCard);
+         String desc = sa.getDescription();
+ 
+-        SpellAbility result = saMatcher(hostCard.getAllPossibleAbilities(aiPlayer, true), desc);
++        // An effect may grant a cast that is unavailable through ordinary zone/timing rules.
++        Iterable<SpellAbility> candidates = sa.isCastFromPlayEffect()
++                ? AbilityUtils.getSpellsFromPlayEffect(hostCard, aiPlayer, sa.getCardStateName(), false, null)
++                : hostCard.getAllPossibleAbilities(aiPlayer, true);
++        SpellAbility result = saMatcher(candidates, desc);
+ 
+         if (result == null && Boolean.getBoolean("flatmc.trace")) {
+             System.err.println("[sim] no match for: " + desc + " in " + hostCard.getAllPossibleAbilities(aiPlayer, true) + " / unfiltered "
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -26,7 +26,7 @@
+     public static AiAbilityDecision choose(Player actor, SpellAbility action,
+             Function<SpellAbility, List<SpellAbility>> variants) {
+         if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
+-                || actor.getGame().getStack().isResolving()) {
++                || (actor.getGame().getStack().isResolving() && !action.isCastFromPlayEffect())) {
+             return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+         }
+         ASSESSING.set(true);
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java b/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
+@@ -133,6 +133,11 @@
+                     continue;
+                 }
+                 if (c.getSpellAbilities().size() != existingTarget.getSpellAbilities().size()) {
++                    continue;
++                }
++                // Same-name permanents can have different effective rules text.
++                if (!c.getChangedTextColorWords().equals(existingTarget.getChangedTextColorWords())
++                        || !c.getChangedTextTypeWords().equals(existingTarget.getChangedTextTypeWords())) {
+                     continue;
+                 }
+                 // Note: This doesn't just do equals() on the types because a) it doesn't exist and b) if
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -1513,10 +1513,9 @@
+             return null; // the ability was not copyable, e.g. a Suspend SA may get here
+         }
+         newSA.setPayCosts(newSA.getPayCosts().copyWithNoMana());
+-        // currently needed by AI
+-        if (!newSA.hasParam("WithoutManaCost")) {
+-            newSA.mapParams.put("WithoutManaCost", "True");
+-        }
++        // The cost modifier must survive later ability/choice copies, not just text-state copies.
++        newSA.mapParams.put("WithoutManaCost", "True");
++        newSA.originalMapParams.put("WithoutManaCost", "True");
+         newSA.setDescription(newSA.getDescription() + " (without paying its mana cost)");
+ 
+         return newSA;

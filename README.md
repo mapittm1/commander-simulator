@@ -405,6 +405,21 @@ reviewed runtime. See the [validation and activation](engine/cipher_casting_evid
 Scripted card selection isolates these rules paths from normal AI admission;
 wider compositions and complete card correctness remain unproven.
 
+Generic free-casting corrections pass 333 selected source-native checks,
+including 26 new cases for normal pilots, cost-waiver preservation, distinct text
+states, copy/original identity, taxes and casting restrictions. Copies offered
+before they are registered in a game zone are covered separately. See the
+[source comparison](engine/free_cast_native_evidence.json). The reviewed build
+passes 1,559 selected native tests, separate packaged families of 781 and 26 cases,
+3,033 broader gameplay tests, 256 serialization tests and 43 live tests with
+1,455 subtests. All 457 frozen inputs remain unchanged. The card archive changes
+only Trait Doctoring's All-AI exclusion; its Random hint and Oracle instructions
+remain unchanged. Identity reviews retain both old and new archive bindings.
+The new family keeps the normal 90-second worker limit. Shared execution sources
+are checked for changes and retained in bounded process receipts. See the
+[validation and activation](engine/free_cast_evidence.json). These selected checks
+do not establish full card compositions, AI strategy coverage or rules correctness.
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -419,13 +434,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,533 selected native tests, 781 packaged
-rules cases, 3,007 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,429 subtests. The Python quality gate passed 416 offline
-tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
+The current reviewed runtime passed 1,559 selected native tests, packaged
+families of 781 and 26 rules cases, 3,033 broader gameplay tests, 256 serialization
+tests, and 43 live integration tests with 1,455 subtests. The Python quality gate
+passed 420 offline tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/cipher_casting_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/free_cast_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

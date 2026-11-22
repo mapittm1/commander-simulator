@@ -2,10 +2,12 @@
 
 import importlib
 import sys
+from pathlib import Path
 
 from commander.engine.engine_process import ProcessLimits, run_bounded
 from commander.engine.forge_config import file_hash, read_settings
 from commander.engine.interactions.native_bridge import initialize_native_engine
+from commander.engine.interactions.suite import write_bounded_json
 from commander.engine.native_runtime import (
     _engine_profile,
     _environment,
@@ -14,9 +16,16 @@ from commander.engine.native_runtime import (
 )
 
 
-def run_test_worker(settings, run, worker, log_name):
+def run_test_worker(
+    settings,
+    run: Path,
+    worker: Path,
+    log_name: str,
+    support_sources: tuple[Path, ...] = (),
+):
     """Retain source identity and use the normal isolated engine profile lifecycle."""
     before = file_hash(worker)
+    support_hashes = {str(path): file_hash(path) for path in support_sources}
     with _engine_profile(settings, run):
         process = run_bounded(
             [sys.executable, "-I", str(worker), str(run)],
@@ -26,6 +35,13 @@ def run_test_worker(settings, run, worker, log_name):
         )
     if file_hash(worker) != before:
         raise ValueError("Fixed native test worker changed during execution")
+    if any(file_hash(Path(path)) != digest for path, digest in support_hashes.items()):
+        raise ValueError("Fixed native test support source changed during execution")
+    process["support_source_hashes"] = support_hashes
+    if support_sources:
+        write_bounded_json(
+            run / "rules-process.json", {"process": process, "worker_sha256": before}
+        )
     return process, before
 
 

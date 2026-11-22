@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Resolve generic free-casting behavior for preserved mana-waiver modifiers, native
+  effect permissions, simulated copies that retain their original card, and
+  target pruning that distinguishes effective text. Pass 333 selected source
+  checks, including 26 new cases; remove only Trait Doctoring's All-AI exclusion,
+  retaining its Random hint and Oracle instructions. Activate only after 1,559
+  selected native tests, separate 781/26 packaged families, 3,033 broader gameplay
+  tests, 256 serialization tests and 43 live tests with 1,455 subtests pass.
+  Preserve all 457 frozen inputs and catalog construction of 32,636 starting
+  identities with seven nonstarting meld exclusions. Retain the old identity
+  reviews while binding unchanged aliases and companion conditions to the new
+  archive. Complete card/AI/rules correctness remains unproven.
+- Add a separate bounded packaged-native family and a shared runner, preserving
+  the existing 781 cases and 90-second worker limit. Detect changes to shared
+  Python execution sources as well as the worker entry point.
+
 - Add nine controlled cipher-casting regressions for real copy resolution,
   countering, decline followed by later casting, repeated hits, changed
   controllers and temporary noncreature encoders, with copied-game controls.

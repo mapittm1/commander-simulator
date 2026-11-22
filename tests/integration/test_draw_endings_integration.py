@@ -12,6 +12,7 @@ from commander.paths import PROJECT_ROOT
 from tests.support.draw_ending_worker import _compile, _inputs
 from tests.support.native_receipts import read_test_receipts
 from tests.support.native_worker import run_test_worker
+from tests.support.packaged_rules import SUPPORT_SOURCES
 
 pytestmark = pytest.mark.integration
 
@@ -29,7 +30,9 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         run = create_run()
         _compile(settings, run, *_inputs())
         worker = PROJECT_ROOT / "tests/support/draw_ending_worker.py"
-        process, _ = run_test_worker(settings, run, worker, "draw-ending-worker.log")
+        process, _ = run_test_worker(
+            settings, run, worker, "draw-ending-worker.log", SUPPORT_SOURCES
+        )
         self.assertEqual(process["returncode"], 0, process)
         rows = read_test_receipts(
             settings,
