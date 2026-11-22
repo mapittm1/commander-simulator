@@ -1,0 +1,62 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java b/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/ChangeTextEffect.java
+@@ -98,7 +98,7 @@
+             changedTypeWordNew = null;
+         }
+ 
+-        final List<Card> tgts = getCardsfromTargets(sa);
++        final List<Card> tgts = getTextTargets(sa);
+         for (final Card c : tgts) {
+             if (changedColorWordOriginal != null && changedColorWordNew != null) {
+                 c.addChangedTextColorWord(changedColorWordOriginal, changedColorWordNew, timestamp, 0);
+@@ -149,7 +149,7 @@
+         final StringBuilder sb = new StringBuilder();
+         sb.append("Change the text of ");
+ 
+-        final List<Card> tgts = getCardsfromTargets(sa);
++        final List<Card> tgts = getTextTargets(sa);
+         for (final Card c : tgts) {
+             sb.append(c).append(" ");
+         }
+@@ -220,6 +220,18 @@
+         return sb.toString();
+     }
+ 
++
++    /** Resolve a text effect's explicit parent target, including spells on the stack. */
++    public static List<Card> getTextTargets(final SpellAbility action) {
++        if (!action.usesTargeting() && "ParentTarget".equals(action.getParam("Defined"))) {
++            for (SpellAbility parent = action.getParent(); parent != null; parent = parent.getParent()) {
++                if (parent.getTargets().isTargetingAnyCard() || parent.getTargets().isTargetingAnySpell()) {
++                    return getCardsfromTargets(parent);
++                }
++            }
++        }
++        return getCardsfromTargets(action);
++    }
+ 
+     private static final class WordExpiration implements forge.game.SnapshotCommand {
+         private static final long serialVersionUID = 1L;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+@@ -163,6 +163,9 @@
+     }
+ 
+     private static List<Card> targetCards(SpellAbility action) {
++        if (action.getApi() == ApiType.ChangeText && "ParentTarget".equals(action.getParam("Defined"))) {
++            return forge.game.ability.effects.ChangeTextEffect.getTextTargets(action);
++        }
+         List<Card> cards = new ArrayList<>(action.getTargets().getTargetCards());
+         for (SpellAbility spell : action.getTargets().getTargetSpells()) {
+             cards.add(spell.getHostCard());
+diff --git a/forge-gui/res/cardsfolder/c/crystal_spray.txt b/forge-gui/res/cardsfolder/c/crystal_spray.txt
+--- a/forge-gui/res/cardsfolder/c/crystal_spray.txt
++++ b/forge-gui/res/cardsfolder/c/crystal_spray.txt
+@@ -6,5 +6,4 @@
+ SVar:ChangeType:DB$ ChangeText | Defined$ ParentTarget | ChangeTypeWord$ ChooseBasicLandType ChooseBasicLandType | SubAbility$ DBDraw | SpellDescription$ Change type
+ SVar:DBDraw:DB$ Draw
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target spell or permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.\nDraw a card.

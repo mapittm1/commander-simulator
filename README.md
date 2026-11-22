@@ -357,6 +357,25 @@ construction does not establish rules correctness. See the
 [validation and activation](engine/look_positions_evidence.json). AI admission,
 information-spending policy and complete card correctness remain unproven.
 
+Shared parent-text handling passes 273 selected source-native checks, including
+29 real Crystal Spray scenarios. Their identical packaged baseline passes fifteen
+controls and fails fourteen cases. Modal child effects now use the same parent
+card/spell target lookup during resolution and AI word planning. Tests cover both
+word modes on permanents and pending spells, paid card draws, invalid targets,
+draw restrictions, cast triggers, expiration and independent copied games.
+Only Crystal Spray's All-AI hint is removed; Oracle text, its Random hint and
+Default.ai are unchanged. A retained 269/273 draft used an incorrect opponent-land
+expectation: native traces show the AI destroys four Mountains, preserving its
+own three Islands. Corrected checks assert the actual word map and all four victims.
+See the [source comparison](engine/parent_text_native_evidence.json). The reviewed
+runtime passes 1,499 selected native tests, 747 packaged interaction cases,
+2,973 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,395 subtests. All 441 frozen inputs remain unchanged. The construction probe
+loads 32,636 starting identities and excludes seven nonstarting meld results;
+construction is not rules certification. See the
+[validation and activation](engine/parent_text_evidence.json). Full card and AI
+correctness remain unproven.
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -371,13 +390,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,470 selected native tests, 718 packaged
-rules cases, 2,944 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,366 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,499 selected native tests, 747 packaged
+rules cases, 2,973 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,395 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/look_positions_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/parent_text_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

@@ -55,14 +55,15 @@ References:
 
 ## Simulation engine
 
-Evaluate Forge as an external process behind a Python adapter. Forge documents
-headless multiplayer Commander simulation, broad card support, and known AI
-weaknesses, especially for combo/control strategies. Release 2.0.15 is installed
-locally behind a single-game adapter with pinned JAR/script hashes, current
-legality/bracket gates, explicit revisions, script coverage checks, bounded
-execution, raw logs, and conservative result parsing. A real four-player diagnostic
-using simple legal fixtures completed successfully. This does not validate the
-entire card catalog or establish AI proficiency for every strategy.
+The Python adapter uses a locally reviewed Forge 2.0.16 build with pinned JAR,
+card resources, source patches and runtime hashes. Legality and bracket gates,
+explicit deck revisions, bounded execution, raw logs and conservative result
+parsing precede reported results. Real four-player fixtures and selected native
+rules checks run separately from offline Python tests. See [README.md](../README.md)
+for the currently selected build and its validation evidence; a staged candidate
+is not selected permanently until its required runtime checks pass. Selected
+checks do not establish complete card correctness or AI proficiency for every
+strategy.
 
 Do not silently substitute unsupported cards. Report failed games and unsupported
 cards separately from wins/losses. Keep engine version and deck snapshots with
@@ -71,12 +72,13 @@ draws/timeouts, and report uncertainty and strategy coverage with win rates.
 AI match results measure performance against that engine's pilots; they are not
 a calibrated estimate of performance against human pods.
 
-Catalog-wide immutable coverage audits now quantify exact script/export matches
-and gaps by format-legality scope. Explicit engine-declared Universes Within
-aliases are supported. Missing matches still include in-game-only faces and do
-not establish the count of unsupported playable cards. Oracle conformance and
-AI competence remain unverified; source acquisition and card-interaction testing
-are still needed before comprehensive support can be claimed.
+Catalog-wide coverage audits quantify exact script/export matches against a
+frozen format-legality snapshot. The reviewed construction probe loads 32,636
+starting identities; seven other catalog identities are nonstarting meld results.
+Oracle-ID and script-hash reviews bind the supported spelling aliases to each
+exact card archive. Construction proves loading and ability parsing, not rules
+correctness. Continue testing native interactions and AI decisions before claiming
+comprehensive support; distinguish the two when reporting evidence.
 
 References:
 - https://github.com/Card-Forge/forge/wiki/AI
@@ -121,17 +123,18 @@ saved reports. See [QUICKSTART.md](QUICKSTART.md). Opponents are explicitly
 provided; the benchmark acquisition and web UI milestones remain pending.
 Backend code, tests, config, examples, and docs are grouped into folders.
 
-The current rules-testing milestone adds frozen support-gap triage and a limited
-live all-Forest regression pod. Copied-face indexing removes 20 false gaps; the
-latest local audit has 101 unmatched Commander-format records, with 47 requiring
-investigation after excluding 54 confirmed supplementary/meld-result objects.
-One meld role remains uncertain; the spelling discrepancy now has an explicit
-Oracle-ID/hash-bound review and a live export/cast/trigger/token regression.
-Three log witnesses cover commander tax, an attack trigger's combat effect, and
-positive-life commander-damage loss. These do not establish full rules correctness.
-Next engine work: resolve the meld printing-role discrepancy, then build controlled
-fixtures for stack priority, targeted removal, replacement effects, zone changes,
-and combos before expanding strategy-level diagnostics or claiming broad support.
+The earlier 101-unmatched-record audit and meld-role investigation are historical.
+The current reviewed catalog probe and its nonstarting meld exclusions are recorded
+in the runtime evidence linked from [README.md](../README.md). Keep the earlier
+findings and their resolutions as provenance rather than treating those counts
+as the current backlog.
+
+Native regressions now cover selected stack, payment and restoration paths,
+replacement effects, zone changes, copied games, private information and text
+changes. Continue closing concrete failures with reproducible before/after cases.
+Remaining work includes unverified card compositions, cipher and information-use
+policies, representative combos and wider rules/AI coverage. A script match or a
+completed game does not resolve those requirements.
 
 1. Card catalog: implemented, populated, tested.
 2. Backend legality and deck import: CLI validation and a mandatory save gate
@@ -139,10 +142,13 @@ and combos before expanding strategy-level diagnostics or claiming broad support
    See BACKEND_REQUIREMENTS.md for supported scope, freshness policy, and remaining
    mechanics. Establish backend services before building a UI.
 3. Opponent acquisition: verify source/ranking method, import and audit 50 lists.
-4. Forge integration: install a pinned version, validate deck exports, run a real
-   four-player match, and verify result parsing against logs.
-5. Batch runner: opponent/seat rotation, persisted runs, per-match results,
-   uncertainty, coverage, timeout and failure accounting.
+4. Forge integration: pinned runtime installation, validated exports, real
+   four-player execution and conservative result parsing are implemented. Continue
+   interaction and AI validation against each exact candidate build.
+5. Batch runner: fixed-pod execution, rotating seats, bounded resumable chunks and
+   persisted attempt/results accounting are implemented, with a 100,000-game cap.
+   Opponent scheduling, crash recovery, uncertainty and causal diagnostics remain
+   pending; see [BACKEND_REQUIREMENTS.md](BACKEND_REQUIREMENTS.md).
 6. User interface: deck upload, bracket selection, opponent preview, simulation
    progress, downloadable results, and replay/log inspection.
 

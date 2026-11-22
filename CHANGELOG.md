@@ -6,6 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reconcile the project plan with the pinned Forge 2.0.16 runtime, current
+  construction evidence and implemented fixed-pod batches. Keep historical gap
+  counts separate from pending card/AI coverage, scheduling and diagnostics.
+
+- Resolve modal text changes against parent card or spell targets through a
+  shared lookup used by native effects and AI word variants/signatures. Review
+  only Crystal Spray's All-AI hint; preserve Oracle text and all other AI flags.
+- Pass 273 selected source-native checks including 29 paid real-card scenarios.
+  Their identical packaged baseline passes 15 controls and fails 14 cases. Cover
+  both word modes on permanents and stack spells, draws and draw restrictions,
+  invalid targets, cast triggers, expiration and copied-game independence.
+- Preserve the 269/273 draft and native traces that exposed an incorrect test
+  expectation: the AI destroys four opposing Mountains instead of one Swamp.
+  Corrected tests assert the word map and actual victims. Activate the reviewed
+  build only after 1,499 selected native tests, 747 packaged interaction cases,
+  2,973 broader gameplay tests, 256 serialization tests and 42 live tests with
+  1,395 subtests pass. Preserve all 441 frozen inputs and the 32,636-identity
+  construction probe with seven nonstarting meld exclusions. Full card and AI
+  correctness remain unproven.
+
 - Track explicitly disclosed absolute library positions through the generic
   LookAt handler. Restrict positional disclosure to exact top/bottom qualifiers;
   preserve private recipients and avoid inferences from identity-only, filtered
