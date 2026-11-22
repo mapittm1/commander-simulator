@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct shared choice-context copying across all zones and native last-known
+  information. Preserve mapped players/cards/groups, independent containers and
+  public presentation separately from secret rules values. Pass 502 source cases
+  with 32 new contracts after preserving the original four failures and expanded
+  24 failing contracts with five controls. Include real paid Persecute resolution,
+  hidden/revealed choices, eliminated players and historical/self-reference cases.
+  Full card/rules/strategy correctness remains open.
+- Activate the reviewed choice-context build after 1,728 selected native tests,
+  separate 781/65/130 packaged families, 3,202 broader gameplay tests, 256 serialization
+  tests and 44 live tests with 1,624 subtests pass. Verify all 482 frozen inputs and
+  catalog construction of 32,636 starting identities with seven nonstarting meld
+  exclusions. Three production sources and five packaged classes change; no classes
+  are added or removed. Card scripts, AI hints and the default profile are unchanged.
+  Preserve original failed expectations and reproduction sources in the resolved
+  choice-copy gap report. Full card, rules and strategy correctness remain unproven.
+
 - Record an adjacent open choice-copy gap: four focused checks fail for stack
   colors, named cards and chosen-player state, including a native Persecute
   resolution checkpoint. Its supplied native outcome control passes. Preserve

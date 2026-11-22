@@ -1,0 +1,111 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -290,7 +290,7 @@
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+         }
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+-            entry.getValue().copySnapshotNumberFrom(entry.getKey());
++            entry.getValue().copySnapshotChoicesFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRegenerationFrom(entry.getKey());
+@@ -610,26 +610,12 @@
+             if (!counters.isEmpty()) {
+                 newCard.setCounters(HashMultiset.create(counters));
+             }
+-            if (c.hasChosenPlayer()) {
+-                newCard.setChosenPlayer(playerMap.get(c.getChosenPlayer()));
+-            }
+-            if (c.hasChosenColor()) {
+-                newCard.setChosenColors(Lists.newArrayList(c.getChosenColors()));
+-            }
+-            if (c.hasNamedCard()) {
+-                newCard.setNamedCards(Lists.newArrayList(c.getNamedCards()));
+-            }
+ 
+             newCard.setSprocket(c.getSprocket());
+ 
+             newCard.setSVars(c.getSVars());
+             newCard.copyChangedSVarsFrom(c);
+         }
+-
+-        // A resolving spell can choose a type before a later effect requests a copy.
+-        // These choices belong to the card in every zone, including the stack.
+-        if (c.hasChosenType()) newCard.setChosenType(c.getChosenType());
+-        if (c.hasChosenType2()) newCard.setChosenType2(c.getChosenType2());
+ 
+         newCard.copySnapshotCastFormFrom(c);
+ 
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8694,6 +8694,47 @@
+         view.updateController(this);
+     }
+ 
++    /** Copy announced choices after entity maps exist, preserving their public presentation. */
++    public void copySnapshotChoicesFrom(Card original, IEntityMap map) {
++        chosenType = original.chosenType;
++        chosenType2 = original.chosenType2;
++        chosenCommanderColor = original.chosenCommanderColor;
++        chosenColors = copyChoiceStrings(original.chosenColors);
++        chosenName = copyChoiceStrings(original.chosenName);
++        chosenPlayer = map.map(original.chosenPlayer);
++        chosenEvenOdd = original.chosenEvenOdd;
++        chosenDirection = original.chosenDirection;
++        chosenMode = original.chosenMode;
++        chosenSector = original.chosenSector;
++        chosenCards = original.chosenCards == null ? null : map.mapCollection(original.getChosenCards());
++        chosenMap = Maps.newHashMap();
++        for (Map.Entry<Player, CardCollection> entry : original.chosenMap.entrySet()) {
++            chosenMap.put(map.map(entry.getKey()), entry.getValue() == null ? null : map.mapCollection(entry.getValue()));
++        }
++        copySnapshotNumberFrom(original);
++
++        // A secret change can leave an older public choice visible. Copy that view separately.
++        view.set(TrackableProperty.ChosenType, original.view.getChosenType());
++        view.set(TrackableProperty.ChosenType2, original.view.getChosenType2());
++        List<String> publicColors = original.view.getChosenColors();
++        view.set(TrackableProperty.ChosenColors, publicColors == original.chosenColors
++                ? chosenColors : copyChoiceStrings(publicColors));
++        List<String> publicNames = original.view.getNamedCard();
++        view.set(TrackableProperty.NamedCard, publicNames == original.chosenName
++                ? chosenName : copyChoiceStrings(publicNames));
++        forge.game.player.PlayerView publicPlayer = original.view.getChosenPlayer();
++        Player presented = publicPlayer == null ? null : original.getGame().getPlayer(publicPlayer.getId());
++        view.set(TrackableProperty.ChosenPlayer, forge.game.player.PlayerView.get(map.map(presented)));
++        view.set(TrackableProperty.ChosenDirection, original.view.getChosenDirection());
++        view.set(TrackableProperty.ChosenEvenOdd, original.view.getChosenEvenOdd());
++        view.set(TrackableProperty.ChosenMode, original.view.getChosenMode());
++        view.set(TrackableProperty.ChosenCards, chosenCards == null ? null : CardView.getCollection(chosenCards));
++    }
++
++    private static List<String> copyChoiceStrings(List<String> values) {
++        return values == null ? null : Lists.newArrayList(values);
++    }
++
+     /** Preserve the rules value and its existing public/secret presentation independently. */
+     public void copySnapshotNumberFrom(Card original) {
+         chosenNumber = original.chosenNumber;
+diff --git a/forge-game/src/main/java/forge/game/card/CardCopyService.java b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -453,16 +453,7 @@
+ 
+         newCopy.addRemembered(historyMap == null ? copyFrom.getRemembered() : historyObjects(copyFrom.getRemembered(), cachedMap));
+         newCopy.addImprintedCards(historyMap == null ? copyFrom.getImprintedCards() : historyCards(copyFrom.getImprintedCards(), cachedMap));
+-        newCopy.setChosenCards(historyMap == null ? copyFrom.getChosenCards() : historyCards(copyFrom.getChosenCards(), cachedMap));
+-
+-        newCopy.setChosenType(copyFrom.getChosenType());
+-        newCopy.setChosenType2(copyFrom.getChosenType2());
+-        newCopy.setNamedCards(Lists.newArrayList(copyFrom.getNamedCards()));
+-        newCopy.setChosenColors(Lists.newArrayList(copyFrom.getChosenColors()));
+-        if (copyFrom.hasChosenNumber()) {
+-            newCopy.setChosenNumber(copyFrom.getChosenNumber());
+-        }
+-        newCopy.setChosenEvenOdd(copyFrom.getChosenEvenOdd());
++        newCopy.copySnapshotChoicesFrom(copyFrom, historyGraph(cachedMap));
+ 
+         // for getReplacementList (run after setChangedCardKeywords for caching)
+         newCopy.setStoredKeywords(copyFrom.getStoredKeywords(), true);

@@ -26,6 +26,7 @@ SOURCES = {
     "CommanderChainedUntapTest": "commander_chained_untap_test_sha256",
     "CommanderMassTapTest": "commander_mass_tap_test_sha256",
     "CommanderMassTapChosenTypeTest": "commander_mass_tap_chosen_type_test_sha256",
+    "CommanderChoiceContextTest": "commander_choice_context_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest": "commander_repeated_discard_entrypoint_test_sha256",
 }
 TEST_CLASSES = tuple("forge.ai." + name for name in SOURCES if name != "AITest")
@@ -62,6 +63,9 @@ NATIVE_CLASSES = (
     "forge.ai.simulation.TextChangeChoices",
     "forge.game.ability.effects.TapOrUntapAllEffect",
     "forge.game.ability.effects.ChooseTypeEffect",
+    "forge.game.card.CardCopyService",
+    "forge.game.card.CardView",
+    "forge.game.spellability.SpellAbilitySnapshot",
 )
 FAMILY = RuleFamily(
     TEST_CLASSES, ("forge.ai.AITest",), NATIVE_CLASSES, "untap.json", "untap"

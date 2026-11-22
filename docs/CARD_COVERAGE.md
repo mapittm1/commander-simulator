@@ -17,6 +17,43 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Announced choices and copied context
+
+The reviewed runtime preserves announced choices in every copied zone and native
+last-known information. A shared routine copies type/type2, commander color,
+colors, names, number, player, parity, direction, mode, sector, selected cards and
+player-keyed card groups. Player and card references map into the copied world;
+historical and self-referencing selections retain their correct identities.
+Mutable choice containers are independent of the original game.
+
+Rules values and public presentation are copied separately. A secret choice can
+retain an older public value until revealed. Revealing a type or player in the
+copy does not reveal it in the original. Color/name view aliases are retained
+inside a card when the original used them, without sharing mutable containers
+between games. Native last-known information uses the same copying contract.
+
+The previous reviewed runtime passed the supplied paid Persecute outcome control
+but failed four copy checks, including losing its chosen color at the native
+mid-resolution reveal checkpoint. Expanded baseline tests passed five controls
+and failed 24 contracts. These are failed contracts, not 24 distinct card bugs.
+The reviewed correction passes all 32 new contracts and retains the earlier 470
+source checks. Real paid Persecute resolution complements structural tests for
+all-zone choices, eliminated players, secret/reveal lifecycles and reference
+mapping. Supplied choices do not establish autonomous strategic selection.
+
+The fresh build passes 1,728 selected native cases. Separate packaged families
+of 781, 65 and 130 cases pass twice, including the complete live integration run
+of 44 tests with 1,624 subtests. Broader gameplay and serialization runs pass
+3,202 and 256 cases respectively. The audit confines changes to three production
+sources and five packaged classes, with no added or removed classes. Card data,
+AI hints and the default profile remain unchanged. All 482 implementation inputs
+remain frozen through validation. Catalog construction still covers 32,636
+starting identities with seven nonstarting meld exclusions; this is not proof of
+every interaction. See the [source comparison](../engine/choice_context_native_evidence.json),
+[activation evidence](../engine/choice_context_evidence.json), and
+[resolved gap with original reproductions](../engine/spell_choice_copy_gap.json).
+Full card rules, all compositions and multiplayer strategy remain unverified.
+
 ## Mass tap and untap choices
 
 The reviewed shared mass tap/untap policy replaces an outright AI rejection with
@@ -60,8 +97,9 @@ Paid variants cover explicit nonrandom Card-type domains up to 32 options and
 128 complete combinations. Oversized domains keep native policy rather than
 searching only a prefix. Existing paid outcome, immediate-alternative, deadline,
 heap and worker limits are unchanged. Thirty-two new contracts plus 438 retained
-source cases pass. The packaged untap family now contains 98 cases and retains
-all earlier single-target, discard-payment and preview-cache checks. Run it with
+source cases pass. The mass-tap milestone expanded the packaged untap family to
+98 cases, retaining all earlier single-target, discard-payment and preview-cache
+checks. The choice-context correction above expands it to 130. Run it with
 `COMMANDER_ENGINE_INTEGRATION=1` and a configured JDK compiler using
 `.venv/Scripts/python.exe -m pytest -q -s tests/integration/test_untap_integration.py`.
 See the [source comparison](../engine/mass_tap_native_evidence.json) and
@@ -69,13 +107,13 @@ See the [source comparison](../engine/mass_tap_native_evidence.json) and
 states do not establish complete card compositions, arbitrary choice optimization,
 multiplayer strategy or full rules coverage.
 
-Other spell-choice state remains open. Five follow-up probes against this same
-reviewed engine have one passing supplied Persecute outcome control and four copy
-failures: colors, names and chosen-player state are lost from stack cards,
-including the color at an actual Persecute resolution checkpoint. See the
-[open gap and exact reproduction sources](../engine/spell_choice_copy_gap.json).
-These failures are outside the 32 passing mass-tap contracts and remain the next
-copy-state correction.
+Five follow-up probes against the mass-tap runtime had one passing supplied
+Persecute outcome control and four copy failures: colors, names and chosen-player
+state were lost from stack cards, including the color at an actual Persecute
+resolution checkpoint. The shared choice-context correction above resolves
+these failures. The [resolved gap](../engine/spell_choice_copy_gap.json) preserves
+exact original reproduction sources and distinguishes those failures from the
+32 passing mass-tap contracts.
 
 ## Activated discard payments
 

@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+Shared choice-context copying preserves announced values, copied-world
+references and public/secret presentation across zones and native last-known
+information. The original four copy failures and the expanded 24 failed contracts
+pass in the reviewed runtime. All 502 source checks pass with 32 new contracts,
+retaining the earlier 470. Independent containers, historical and self-referencing
+choices, secret reveal lifecycles and native Persecute resolution are covered.
+See the [source evidence](engine/choice_context_native_evidence.json),
+[packaged validation](engine/choice_context_evidence.json), and
+[resolved gap](engine/spell_choice_copy_gap.json). Full card and AI correctness
+remain open.
+
 Generic mass tap/untap planning compares paid type and direction choices and
 replays ordered player-target roles. Unplanned mass effects use isolated native
 local projections. Chosen type/type2 state survives copies in every zone,
@@ -37,8 +48,9 @@ Card scripts and AI hints are unchanged. See the
 [source evidence](engine/mass_tap_native_evidence.json),
 [packaged validation](engine/mass_tap_evidence.json), and
 [coverage limits](docs/CARD_COVERAGE.md#mass-tap-and-untap-choices).
-Four additional spell-choice copy checks currently fail; see the
-[open copy-state gap](engine/spell_choice_copy_gap.json). Full card and AI
+Four additional spell-choice copy failures were subsequently resolved by the
+shared choice-context correction above; their original reproductions remain in
+the [resolved copy-state gap](engine/spell_choice_copy_gap.json). Full card and AI
 correctness remain open.
 
 Generic activated-discard planning compares legal single-card payments and
@@ -497,14 +509,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,696 selected native tests, packaged
-families of 781, 65 and 98 rules cases, 3,170 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,592 subtests. All 480 frozen inputs
+The current reviewed runtime passed 1,728 selected native tests, packaged
+families of 781, 65 and 130 rules cases, 3,202 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,624 subtests. All 482 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/mass_tap_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/choice_context_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
