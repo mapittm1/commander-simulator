@@ -27,6 +27,19 @@ difference.
 
 ## Card coverage
 
+Tap/untap AI choices now honor native per-target controller defaults. Paid untaps
+can enable an immediate follow-up, including two unique Hidden Strings targets.
+The planner compares against plays already available and defers when its bounded
+comparison is incomplete. Preview caches release projected games and preserve
+live cache values across nested, failed and concurrent previews. All 398 source
+checks pass, including 26 new interaction and cache contracts. Heuristic/hybrid
+paid-cast controls supply the source action; full-pilot witnesses select both
+the untap and its follow-up. Card scripts and AI hints are unchanged. See the
+[source evidence](engine/untap_native_evidence.json),
+[packaged validation](engine/untap_evidence.json), and
+[coverage limits](docs/CARD_COVERAGE.md#tap-and-untap-decisions).
+Full card and AI correctness remain open.
+
 Runtime cost modifiers and nested expressions now survive ability copies and
 previews, including pre-grant hand-spell assessments and colored reductions.
 Native play-effect resolution and AI admission share modifier setup and use spell
@@ -458,14 +471,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,598 selected native tests, packaged
-families of 781 and 65 rules cases, 3,072 broader gameplay tests, 256 serialization
-tests, and 43 live integration tests with 1,494 subtests. All 467 frozen inputs
+The current reviewed runtime passed 1,624 selected native tests, packaged
+families of 781, 65 and 26 rules cases, 3,098 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,520 subtests. All 473 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/cost_modifier_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/untap_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

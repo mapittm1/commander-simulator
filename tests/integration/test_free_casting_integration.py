@@ -10,7 +10,7 @@ from commander.engine.forge_config import read_settings
 from commander.engine.native_runtime import create_run
 from commander.paths import PROJECT_ROOT
 from tests.support.free_casting_worker import NATIVE_CLASSES, reviewed_inputs
-from tests.support.native_receipts import read_test_receipts
+from tests.support.native_receipts import assert_rule_summary, read_test_receipts
 from tests.support.native_worker import run_test_worker
 from tests.support.packaged_rules import SUPPORT_SOURCES, compile_rules
 
@@ -48,17 +48,5 @@ class FreeCastingIntegrationTests(unittest.TestCase):
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
-        self.assertEqual(
-            summary["counts"], {"total": 65, "passed": 65, "failed": 0, "skipped": 0}
-        )
-        for key in (
-            "testng_status",
-            "configuration_failures",
-            "configuration_skips",
-            "partial_successes",
-        ):
-            self.assertEqual(summary[key], 0)
-        self.assertEqual(
-            set(summary["production_classes_from_packaged_jar"]), set(NATIVE_CLASSES)
-        )
+        assert_rule_summary(self, summary, 65, NATIVE_CLASSES)
         print(json.dumps({"free_casting_run": run.name}), flush=True)

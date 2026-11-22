@@ -1,0 +1,197 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCache.java b/forge-ai/src/main/java/forge/ai/AiCache.java
+--- a/forge-ai/src/main/java/forge/ai/AiCache.java
++++ b/forge-ai/src/main/java/forge/ai/AiCache.java
+@@ -15,6 +15,25 @@
+     // stores result + args as vector
+     private final static Multimap<String, List<Object>> dataMap = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
+ 
++    private static final ThreadLocal<Multimap<String, List<Object>>> previewCache = new ThreadLocal<>();
++
++    /** Keep projected game references out of the live decision cache, even on failed previews. */
++    public static <T> T withIsolatedCache(Supplier<T> action) {
++        Multimap<String, List<Object>> previous = previewCache.get();
++        previewCache.set(ArrayListMultimap.create());
++        try {
++            return action.get();
++        } finally {
++            if (previous == null) previewCache.remove();
++            else previewCache.set(previous);
++        }
++    }
++
++    private static Multimap<String, List<Object>> activeCache() {
++        Multimap<String, List<Object>> scoped = previewCache.get();
++        return scoped == null ? dataMap : scoped;
++    }
++
+     public static boolean identity(Object a, Object b) {
+         return a == b;
+     }
+@@ -24,7 +43,7 @@
+     // for that you can pass Functions that compare the args
+     public static <T> T getCached(String key, Supplier<T> func, List<BiFunction<Object, Object, Boolean>> argsCheck, Object... args) {
+         // TODO would like a good strategy to derive default key, but there's no clean way to obtain the method name
+-        for (List<Object> cached : Lists.newArrayList(dataMap.get(key))) {
++        for (List<Object> cached : Lists.newArrayList(activeCache().get(key))) {
+             boolean hit = true;
+             for (int i = 0; i < args.length; i++) {
+                 BiFunction<Object, Object, Boolean> checker = argsCheck == null ? Object::equals : argsCheck.get(i);
+@@ -40,13 +59,13 @@
+         T result = func.get();
+         List<Object> cached = Lists.newArrayList(result);
+         cached.addAll(Arrays.asList(args));
+-        dataMap.put(key, cached);
++        activeCache().put(key, cached);
+         return result;
+     }
+ 
+     // TODO add different scopes + staleness indicator
+     public static void clear() {
+-        dataMap.clear();
++        activeCache().clear();
+     }
+ 
+ }
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -1179,7 +1179,7 @@
+     @Override
+     public boolean chooseBinary(SpellAbility sa, String question, BinaryChoiceType kindOfChoice, Boolean defaultVal) {
+         switch (kindOfChoice) {
+-            case TapOrUntap: return true;
++            case TapOrUntap: return defaultVal == null || defaultVal;
+             case UntapOrLeaveTapped:
+                 Card source = sa.getHostCard();
+                 if (source != null && source.hasSVar("AIUntapPreference")) {
+diff --git a/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAi.java b/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAi.java
+@@ -2,6 +2,7 @@
+ 
+ import forge.ai.AiAbilityDecision;
+ import forge.ai.AiPlayDecision;
++import forge.ai.simulation.PaidOutcomePlanner;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.card.Card;
+ import forge.game.player.Player;
+@@ -9,11 +10,20 @@
+ 
+ public class TapOrUntapAi extends TapAiBase {
+ 
++    @Override
++    public AiAbilityDecision chkDrawback(Player ai, SpellAbility sa) {
++        AiAbilityDecision planned = PaidOutcomePlanner.chooseWithFollowup(ai, sa.getRootAbility());
++        return planned.willingToPlay() ? planned : super.chkDrawback(ai, sa);
++    }
++
+     /* (non-Javadoc)
+      * @see forge.card.abilityfactory.SpellAiLogic#canPlayAI(forge.game.player.Player, java.util.Map, forge.card.spellability.SpellAbility)
+      */
+     @Override
+     protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        AiAbilityDecision planned = PaidOutcomePlanner.chooseWithFollowup(ai, sa.getRootAbility());
++        if (planned.willingToPlay()) return planned;
++
+         final Card source = sa.getHostCard();
+ 
+         if (!sa.usesTargeting()) {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -1,6 +1,7 @@
+ package forge.ai.simulation;
+ 
+ import forge.ai.AiAbilityDecision;
++import forge.ai.AiCache;
+ import forge.ai.AiPlayDecision;
+ import forge.game.player.Player;
+ import forge.game.spellability.AbilitySub;
+@@ -16,6 +17,7 @@
+     private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
+     private static final long[] SEEDS = {0L, 4096L};
+     private static final int MAX_TARGET_CHOICES = 128;
++    private static final int MAX_FOLLOWUP_ACTIONS = 32;
+ 
+     private PaidOutcomePlanner() { }
+ 
+@@ -25,27 +27,62 @@
+ 
+     public static AiAbilityDecision choose(Player actor, SpellAbility action,
+             Function<SpellAbility, List<SpellAbility>> variants) {
++        return choose(actor, action, variants, false);
++    }
++
++    /** Compare a paid action plus one follow-up against the best immediate play without it. */
++    public static AiAbilityDecision chooseWithFollowup(Player actor, SpellAbility action) {
++        return choose(actor, action, candidate -> List.of(candidate), true);
++    }
++
++    private static AiAbilityDecision choose(Player actor, SpellAbility action,
++            Function<SpellAbility, List<SpellAbility>> variants, boolean followup) {
+         if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
+                 || (actor.getGame().getStack().isResolving() && !action.isCastFromPlayEffect())) {
+             return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+         }
+         ASSESSING.set(true);
+         try {
+-            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action, variants));
++            return AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(0L),
++                    () -> assess(actor, action, variants, followup)));
+         } finally {
+             ASSESSING.remove();
+         }
+     }
+ 
++    private static GameStateEvaluator.Score bestImmediateAlternative(Player actor,
++            GameStateEvaluator.Score initial) {
++        GameSimulator copy = new GameSimulator(new SimulationController(initial, 0), actor.getGame(), actor, null);
++        Player projectedActor = copy.getGameCopier().find(actor);
++        SpellAbilityPicker picker = new SpellAbilityPicker(projectedActor);
++        List<SpellAbility> candidates = picker.getCandidateSpellsAndAbilities();
++        // A truncated baseline must never credit an already available play to the setup action.
++        if (candidates.size() > MAX_FOLLOWUP_ACTIONS) return null;
++        SimulationController controller = new SimulationController(initial, 0);
++        GameStateEvaluator.Score best = initial;
++        for (int i = 0; i < candidates.size(); i++) {
++            AITimeoutTracker.check();
++            final int index = i;
++            GameStateEvaluator.Score score = AiCache.withIsolatedCache(
++                    () -> picker.evaluateSa(controller, null, candidates, index));
++            if (score.value > best.value && score.availableValue > initial.availableValue) best = score;
++        }
++        return best;
++    }
++
+     private static AiAbilityDecision assess(Player actor, SpellAbility action,
+-            Function<SpellAbility, List<SpellAbility>> variants) {
++            Function<SpellAbility, List<SpellAbility>> variants, boolean followup) {
+         GameStateEvaluator.Score[] baseline = new GameStateEvaluator.Score[SEEDS.length];
+         long baselineValue = 0;
+         long baselineAvailable = 0;
+         for (int i = 0; i < SEEDS.length; i++) {
+             final long seed = SEEDS[i];
+             baseline[i] = MyRandom.withRandom(new Random(seed),
+-                    () -> GameSimulator.scoreForDecision(actor.getGame(), actor));
++                    () -> {
++                        GameStateEvaluator.Score initial = GameSimulator.scoreForDecision(actor.getGame(), actor);
++                        return followup ? bestImmediateAlternative(actor, initial) : initial;
++                    });
++            if (baseline[i] == null) return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+             baselineValue += baseline[i].value;
+             baselineAvailable += baseline[i].availableValue;
+         }
+@@ -69,10 +106,10 @@
+                     for (int i = 0; i < SEEDS.length; i++) {
+                         final long seed = SEEDS[i];
+                         final GameStateEvaluator.Score start = baseline[i];
+-                        GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
+-                            GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
++                        GameStateEvaluator.Score result = AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(seed), () -> {
++                            GameSimulator simulator = new GameSimulator(new SimulationController(start, followup ? 1 : 0), actor.getGame(), actor, null);
+                             return simulator.simulateSpellAbility(variant);
+-                        });
++                        }));
+                         if (result.value == Integer.MIN_VALUE) {
+                             complete = false;
+                             break;

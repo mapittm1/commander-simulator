@@ -1,6 +1,7 @@
 """Hash-bound receipt I/O for fixed native witnesses; uploads never select names."""
 
 from pathlib import Path
+from unittest import TestCase
 
 from commander.engine.forge_config import EngineSettings, file_hash, read_settings
 from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
@@ -73,3 +74,23 @@ def assert_paid_outcome(case, row):
         before = row["before"]["cards"][tag]
         case.assertEqual((card["id"], card["owner"]), (before["id"], before["owner"]))
     return True
+
+
+def assert_rule_summary(
+    case: TestCase, summary: dict, count: int, native_classes: tuple[str, ...]
+) -> None:
+    """Require complete native results, successful setup, and the exact packaged class origins."""
+    case.assertEqual(
+        summary["counts"],
+        {"total": count, "passed": count, "failed": 0, "skipped": 0},
+    )
+    for key in (
+        "testng_status",
+        "configuration_failures",
+        "configuration_skips",
+        "partial_successes",
+    ):
+        case.assertEqual(summary[key], 0)
+    case.assertEqual(
+        set(summary["production_classes_from_packaged_jar"]), set(native_classes)
+    )

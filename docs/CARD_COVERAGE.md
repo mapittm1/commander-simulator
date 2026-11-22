@@ -17,6 +17,43 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Tap and untap decisions
+
+The reviewed untap correction honors the native default for each target: untap
+a permanent controlled by the choosing player and tap one controlled by another.
+Supplied-choice controls separately check actual untapping, stun counters, Stasis,
+Wake Thrasher's controller, and a target that leaves and returns as a new object.
+
+Paid planning compares an untap plus one immediate follow-up against the plays
+already available. Full-pilot witnesses cast Twiddle before Hellrider and use two
+distinct Hidden Strings targets before Rorix Bladewing. Separate shared-API controls
+pay and resolve the setup and follow-up under heuristic and hybrid profiles;
+those controls supply the source action rather than proving autonomous selection.
+Unchanged card exclusion hints can still affect the broader pilot.
+
+Already available follow-ups and insufficient or unavailable mana cannot justify
+wasting an untap. The comparison evaluates at most 32 legal immediate alternatives
+and 128 setup target outcomes under the existing AI deadline. An oversized baseline
+defers the comparison; it does not declare the untap beneficial from partial data.
+That bound control uses distinctly named copies of Opt to avoid hand-name
+deduplication. It tests search completeness, not new Oracle card identities.
+
+Preview caches have independent nested lifetimes and restore live values after
+success, failure, clearing and simultaneous work on different threads. Scoped
+paid outcomes release copied-game references instead of adding them to the live
+AI cache. The failed pre-correction heap-exhaustion run is preserved separately;
+heap and ordinary worker time limits were not increased.
+
+All 26 focused contracts, 372 retained source cases and the independent packaged
+and broader suites pass. Run the focused family with the reviewed engine and
+`COMMANDER_ENGINE_INTEGRATION=1` using
+`.venv/Scripts/python.exe -m pytest -q -s tests/integration/test_untap_integration.py`.
+A configured JDK compiler is required. See the
+[source comparison](../engine/untap_native_evidence.json) and
+[activation evidence](../engine/untap_evidence.json). These controlled partial
+states do not certify all card compositions, arbitrary binary-choice optimization,
+complete multiplayer strategy or full rules coverage.
+
 ## Sacrifice payments
 
 Demon's Herald restores the original creature after a later sacrifice becomes

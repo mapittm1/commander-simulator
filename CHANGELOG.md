@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic tap/untap choices and paid one-follow-up planning, preserving
+  unique chained targets and rejecting wasted or unaffordable untaps. Defer
+  incomplete alternative searches instead of claiming an improvement. Isolate
+  preview cache lifetimes to release projected games and preserve live decisions.
+  Pass 398 source tests with 26 new interaction, payment, profile, search-bound and
+  cache contracts. Preserve the reproduced heap exhaustion and partial-comparison
+  failure separately. Centralize shared packaged receipt assertions.
+- Activate the reviewed untap build after 1,624 selected native tests, separate
+  781/65/26 packaged families, 3,098 broader gameplay tests, 256 serialization tests
+  and 44 live tests with 1,520 subtests pass. Verify all 473 frozen inputs and
+  catalog construction of 32,636 starting identities with seven nonstarting meld
+  exclusions. Exactly four production sources/classes change; card scripts,
+  AI hints, identity reviews and the default profile are unchanged. Full card,
+  rules and strategy correctness remain unproven.
+
 - Preserve runtime cost modifiers and nested expressions across ability copies,
   previews and pre-grant hand-spell assessments. Share native play-effect modifier
   setup and apply casting-cost rules during AI admission. Classify generated hand
