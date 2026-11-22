@@ -1,0 +1,23 @@
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8702,6 +8702,8 @@
+         chosenColors = copyChoiceStrings(original.chosenColors);
+         chosenName = copyChoiceStrings(original.chosenName);
+         chosenPlayer = map.map(original.chosenPlayer);
++        // Gift is public, but its recipient must belong to the copied world.
++        setPromisedGift(map.map(original.promisedGift));
+         chosenEvenOdd = original.chosenEvenOdd;
+         chosenDirection = original.chosenDirection;
+         chosenMode = original.chosenMode;
+diff --git a/forge-game/src/main/java/forge/game/card/CardCopyService.java b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -420,7 +420,6 @@
+         newCopy.copySnapshotRegenerationFrom(copyFrom);
+         newCopy.copySnapshotDetainFrom(copyFrom, historyMap);
+         newCopy.setSolved(copyFrom.isSolved());
+-        newCopy.setPromisedGift(copyFrom.getPromisedGift());
+         newCopy.setSaddled(copyFrom.isSaddled());
+         if (newCopy.isSaddled()) newCopy.setSaddledByThisTurn(historyMap == null ? copyFrom.getSaddledByThisTurn() : new CardCollection(historyCards(copyFrom.getSaddledByThisTurn(), cachedMap)));
+         if (copyFrom.isSuspected()) {

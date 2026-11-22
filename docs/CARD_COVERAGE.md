@@ -17,23 +17,48 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Open Gift-recipient context gap
+## Gift recipients and copied resolution
 
-Eleven follow-up probes against the reviewed choice-context runtime pass three
-controls and fail eight contracts. Promised Gift recipients are lost in copied
-hand, stack, battlefield, graveyard, exile and library cards. A historical chosen
-card keeps a reference to an original-world recipient. A copied Into the Flood
-Maw Gift effect creates no Fish for the intended copied recipient.
+The reviewed runtime maps public Gift recipients through the shared snapshot
+routine after entity maps exist. Native last-known information uses that same
+path. The earlier direct copy of the original player reference is removed.
+All 524 focused source checks pass, retaining 502 and adding 22 contracts.
 
-The supplied native Gift payment and token-effect control creates a tapped Fish
-for the chosen opponent. Same-game last-known information and an unpromised Gift
-also pass. These controls do not establish full casting, targeting or autonomous
-Gift choices. The copied-effect failure does not establish that a live original
-player was mutated. Eight failed contracts are not eight distinct card bugs.
+The original reviewed-runtime baseline passes three controls and fails eight
+contracts. The expanded baseline passes eight controls and fails fourteen
+contracts, including native paid copied spell outcomes. These are failed contracts,
+not fourteen distinct card bugs. Six zone copies, real Gift-permanent history,
+departed players and nested copies now retain the appropriate recipient and
+public presentation without keeping references to earlier copied worlds.
 
-No production correction is included yet. The 32 passing choice-context contracts
-below do not cover these additional Gift failures. See the
-[gap report and exact reproduction sources](../engine/gift_context_gap.json).
+Scrapshooter witnesses use native optional Gift payment and its enters trigger.
+A copied paid spell gives its copied recipient one card without changing the
+original hand, library or pending spell. Into the Flood Maw gives its copied
+recipient a tapped Fish and returns a noncreature target. Unpromised variants
+retain their ordinary behavior. Countered permanents and instants keep their
+costs paid without giving a Gift. The fixtures select the spell and optional-cost
+variant explicitly; native payment selects a recipient. This does not establish
+autonomous casting strategy or optimal recipient selection.
+
+The original Long River Lurker cases explicitly assign raw metadata: that card
+has no printed Gift ability. Additional Scrapshooter witnesses test an actual
+Gift permanent. An intermediate 524-case phase had two fixture failures because
+its paid-resolution copies omitted executable stack entries. Explicit stack
+copying and stack-entry assertions correct that setup; production code did not
+change. The failed phase, exact inputs and correction remain preserved separately.
+
+The fresh build passes 1,750 selected native cases. Packaged families of 781, 65
+and 152 pass independently and again in the full run of 44 integration tests with
+1,646 subtests. Broader gameplay and serialization runs pass 3,224 and 256 cases.
+The audit confines changes to two production sources/classes, with no added or
+removed classes. All 484 implementation inputs remain frozen through validation;
+card scripts, AI hints and the default profile are unchanged. Catalog construction
+covers 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source comparison](../engine/gift_context_native_evidence.json),
+[activation evidence](../engine/gift_context_evidence.json), and
+[resolved gap with original reproductions](../engine/gift_context_gap.json).
+These controlled checks and construction results do not certify full card rules,
+arbitrary compositions or multiplayer strategy.
 
 ## Announced choices and copied context
 
@@ -59,13 +84,13 @@ source checks. Real paid Persecute resolution complements structural tests for
 all-zone choices, eliminated players, secret/reveal lifecycles and reference
 mapping. Supplied choices do not establish autonomous strategic selection.
 
-The fresh build passes 1,728 selected native cases. Separate packaged families
+The choice-context milestone passed 1,728 selected native cases. Separate packaged families
 of 781, 65 and 130 cases pass twice, including the complete live integration run
 of 44 tests with 1,624 subtests. Broader gameplay and serialization runs pass
 3,202 and 256 cases respectively. The audit confines changes to three production
 sources and five packaged classes, with no added or removed classes. Card data,
-AI hints and the default profile remain unchanged. All 482 implementation inputs
-remain frozen through validation. Catalog construction still covers 32,636
+AI hints and the default profile remained unchanged. All 482 implementation inputs
+remained frozen through that validation. Catalog construction still covers 32,636
 starting identities with seven nonstarting meld exclusions; this is not proof of
 every interaction. See the [source comparison](../engine/choice_context_native_evidence.json),
 [activation evidence](../engine/choice_context_evidence.json), and

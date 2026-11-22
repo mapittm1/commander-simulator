@@ -27,11 +27,16 @@ difference.
 
 ## Card coverage
 
-Gift-recipient copying remains an open gap. Eleven new native probes have three
-passing controls and eight failed contracts, including a copied Gift effect that
-creates no Fish for its intended copied recipient. See the
-[exact failures and reproductions](engine/gift_context_gap.json). These failures
-are separate from the passing choice-context checks below.
+Generic Gift-context copying maps recipients into copied games and historical
+state through the shared snapshot routine. All 524 source checks pass with 22 new
+contracts, including paid Scrapshooter and Into the Flood Maw resolution, countered
+spells, departed recipients and independent nested copies. The original eight and
+expanded fourteen failed contracts now pass in the reviewed runtime. Their exact
+reproductions and a corrected stackless-fixture setup remain preserved separately.
+See the [source comparison](engine/gift_context_native_evidence.json),
+[packaged validation](engine/gift_context_evidence.json), and
+[resolved Gift gap](engine/gift_context_gap.json). Full card and AI correctness
+remain open.
 
 Shared choice-context copying preserves announced values, copied-world
 references and public/secret presentation across zones and native last-known
@@ -515,14 +520,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,728 selected native tests, packaged
-families of 781, 65 and 130 rules cases, 3,202 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,624 subtests. All 482 frozen inputs
+The current reviewed runtime passed 1,750 selected native tests, packaged
+families of 781, 65 and 152 rules cases, 3,224 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,646 subtests. All 484 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/choice_context_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/gift_context_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

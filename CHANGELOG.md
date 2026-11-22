@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic Gift-recipient copying through the shared card snapshot after
+  entity maps exist, including native last-known information. Pass 524 source cases
+  with 22 new contracts and real paid permanent/instant Gift witnesses. Preserve
+  the original eight and expanded fourteen failed contracts, eight expanded
+  controls and the explicit-stack fixture correction separately. Clarify that
+  Long River Lurker baseline cases are raw metadata, not printed Gift abilities.
+- Activate the reviewed Gift-context build after 1,750 selected native tests,
+  separate 781/65/152 packaged families, 3,224 broader gameplay tests, 256 serialization
+  tests and 44 live tests with 1,646 subtests pass. Verify all 484 frozen inputs and
+  construction of 32,636 starting identities with seven nonstarting meld exclusions.
+  Exactly two production sources/classes change, with no added or removed classes.
+  Card scripts, AI hints and the default profile remain unchanged. Preserve the
+  original failed expectations and reproductions in the resolved Gift gap report.
+  Full card, rules and strategy correctness remains unproven.
+
 - Record a separate Gift-recipient copy gap against the reviewed choice-context
   runtime: six copied zones lose the recipient, a historical reference retains an
   original-world player, and a copied native Gift effect creates no Fish for its
