@@ -1,0 +1,1138 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtil.java b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtil.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtil.java
+@@ -127,7 +127,10 @@
+ 
+         sa = GameActionUtil.addExtraKeywordCost(sa);
+ 
+-        if (sa.getApi() == ApiType.Charm && !CharmEffect.makeChoices(sa, true)) {
++        // A selected entwined plan already contains its deterministic modes and targets.
++        boolean modesReady = sa.getApi() != ApiType.Charm || (sa.isEntwine() && sa.getSubAbility() != null
++                ? CharmEffect.prepareCastModes(sa) : CharmEffect.makeChoices(sa, true));
++        if (!modesReady) {
+             // 603.3c If no mode is chosen, the ability is removed from the stack.
+             abandonCast(game, sa, hz, movedToStack, new CostPayment(sa.getPayCosts(), sa));
+             return false;
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -795,6 +795,15 @@
+ 
+     @Override
+     public String chooseSomeType(String kindOfType, SpellAbility sa, Collection<String> validTypes, boolean isOptional) {
++        if (sa.getApi() == ApiType.ChangeText && sa.getHostCard().getGame().getStack().isResolving()) {
++            List<String> options = new ArrayList<>(validTypes);
++            String word = getAi().getSimulationPicker() == null ? null
++                    : getAi().getSimulationPicker().chooseTextWord(sa, options, false);
++            if (word == null) word = forge.ai.simulation.TextChangeChoices.consumeFullWord(sa, options);
++            if (word != null) return word;
++        }
++        String planned = forge.ai.simulation.TextChangeChoices.plannedType(sa, validTypes);
++        if (planned != null) return planned;
+         String chosen = ComputerUtil.chooseSomeType(player, kindOfType, sa, validTypes);
+         if (StringUtils.isBlank(chosen) && !validTypes.isEmpty()) {
+             chosen = validTypes.iterator().next();
+@@ -1232,6 +1241,15 @@
+ 
+     @Override
+     public byte chooseColor(String message, SpellAbility sa, ColorSet colors) {
++        if (sa.getApi() == ApiType.ChangeText && sa.getHostCard().getGame().getStack().isResolving()) {
++            List<String> options = colors.stream().map(c -> forge.util.TextUtil.capitalize(c.getName())).collect(Collectors.toList());
++            String word = getAi().getSimulationPicker() == null ? null
++                    : getAi().getSimulationPicker().chooseTextWord(sa, options, true);
++            if (word == null) word = forge.ai.simulation.TextChangeChoices.consumeFullWord(sa, options);
++            if (word != null) return MagicColor.fromName(word);
++        }
++        Byte planned = forge.ai.simulation.TextChangeChoices.plannedColor(sa, colors);
++        if (planned != null) return planned;
+         if (colors.countColors() < 2) {
+             return Iterables.getFirst(colors, MagicColor.Color.WHITE).getColorMask();
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -45,6 +45,7 @@
+             .put(ApiType.ChangeCombatants, ChangeCombatantsAi.class)
+             .put(ApiType.ChangeSpeed, AlwaysPlayAi.class)
+             .put(ApiType.ChangeTargets, ChangeTargetsAi.class)
++            .put(ApiType.ChangeText, ChangeTextAi.class)
+             .put(ApiType.ChangeX, AlwaysPlayAi.class)
+             .put(ApiType.ChangeZone, ChangeZoneAi.class)
+             .put(ApiType.ChangeZoneAll, ChangeZoneAllAi.class)
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ChangeTextAi.java b/forge-ai/src/main/java/forge/ai/ability/ChangeTextAi.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/ChangeTextAi.java
+@@ -0,0 +1,18 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.ai.simulation.TextChangeChoices;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++
++/** Compare legal targets and replacement words through complete paid native outcomes. */
++public final class ChangeTextAi extends SpellAbilityAi {
++    @Override protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility(), TextChangeChoices::variants);
++    }
++    @Override public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility(), TextChangeChoices::variants);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameSimulator.java
+@@ -59,7 +59,7 @@
+ 
+         aiPlayer = copier.find(origAiPlayer);
+         evaluationPlayer = copier.find(originalBeneficiary);
+-        eval = new GameStateEvaluator();
++        eval = this.controller.evaluatorFor(origGame, originalBeneficiary);
+ 
+         origLines = new ArrayList<>();
+         debugLines = origLines;
+@@ -72,7 +72,7 @@
+         }
+ 
+         if (!origGame.getStack().isEmpty() && !origGame.getStack().isResolving()) {
+-            origScore = scoreForDecision(origGame, origAiPlayer);
++            origScore = scoreForDecision(origGame, origAiPlayer, eval);
+         }
+ 
+         debugPrint = false;
+@@ -96,7 +96,7 @@
+ 
+         aiPlayer = copier.find(origAiPlayer);
+         evaluationPlayer = copier.find(originalBeneficiary);
+-        eval = new GameStateEvaluator();
++        eval = this.controller.evaluatorFor(origGame, originalBeneficiary);
+         origLines = new ArrayList<>();
+     }
+ 
+@@ -111,7 +111,7 @@
+ 
+         aiPlayer = copier.find(origAiPlayer);
+         evaluationPlayer = copier.find(originalBeneficiary);
+-        eval = new GameStateEvaluator();
++        eval = this.controller.evaluatorFor(origGame, originalBeneficiary);
+         origLines = new ArrayList<>();
+     }
+ 
+@@ -143,8 +143,12 @@
+ 
+     /** Value passing priority to the current stack, from this decision's captured beneficiary. */
+     public static Score scoreForDecision(Game game, Player actor) {
++        return scoreForDecision(game, actor,
++                GameStateEvaluator.forDecision(game, DecisionPerspective.beneficiary(actor)));
++    }
++
++    static Score scoreForDecision(Game game, Player actor, GameStateEvaluator evaluator) {
+         Player beneficiary = DecisionPerspective.beneficiary(actor);
+-        GameStateEvaluator evaluator = new GameStateEvaluator();
+         if (game.getStack().isEmpty() || game.getStack().isResolving()) {
+             return evaluator.getScoreForGameState(game, beneficiary);
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+@@ -5,6 +5,7 @@
+ import forge.card.mana.ManaAtom;
+ import forge.game.Game;
+ import forge.game.card.Card;
++import forge.game.card.CardCopyService;
+ import forge.game.card.CounterEnumType;
+ import forge.game.cost.CostSacrifice;
+ import forge.game.phase.PhaseType;
+@@ -15,7 +16,9 @@
+ import forge.game.zone.ZoneType;
+ 
+ import java.util.Arrays;
++import java.util.HashMap;
+ import java.util.HashSet;
++import java.util.Map;
+ import java.util.Set;
+ 
+ import static java.lang.Math.max;
+@@ -24,6 +27,32 @@
+ public class GameStateEvaluator {
+     private boolean debugging = false;
+     private SimulationCreatureEvaluator eval = new SimulationCreatureEvaluator();
++
++    // Stable card IDs keep one immutable context across related preview copies.
++    private final Map<Integer, Integer> responsePermanentValues;
++
++    public GameStateEvaluator() {
++        this(Map.of());
++    }
++
++    private GameStateEvaluator(Map<Integer, Integer> responsePermanentValues) {
++        this.responsePermanentValues = Map.copyOf(responsePermanentValues);
++    }
++
++    static GameStateEvaluator forDecision(Game game, Player beneficiary) {
++        if (game.getStack().isEmpty() || game.getStack().isResolving()) {
++            return new GameStateEvaluator();
++        }
++        Map<Integer, Integer> existing = new HashMap<>();
++        Map<Integer, Card> snapshots = new HashMap<>();
++        GameStateEvaluator reference = new GameStateEvaluator();
++        for (Card card : beneficiary.getCardsIn(ZoneType.Battlefield)) {
++            // Private LKI abilities keep reference valuation from changing live mana actors.
++            Card snapshot = CardCopyService.getLKICopy(card, snapshots);
++            existing.put(card.getId(), reference.evalCard(game, beneficiary, snapshot));
++        }
++        return new GameStateEvaluator(existing);
++    }
+ 
+     public void setDebugging(boolean debugging) {
+         this.debugging = debugging;
+@@ -189,10 +218,14 @@
+             }
+             int value = evalCard(game, aiPlayer, c);
+             int availableValue = value;
+-            // To make the AI hold-off on playing creatures before MAIN2 if they give no other benefits,
+-            // keep track of the score while treating summon sick creatures as having a value of 0.
+-            if (phasedOut || (gamePhase.isBefore(PhaseType.MAIN2) && c.isSick() && c.getController() == aiPlayer)) {
++            // Response previews credit retained value for sick creatures, without
++            // treating extra temporary stats as an immediately usable resource.
++            if (phasedOut) {
+                 availableValue = 0;
++            } else if (gamePhase.isBefore(PhaseType.MAIN2) && c.isSick()
++                    && c.getController() == aiPlayer) {
++                Integer retained = responsePermanentValues.get(c.getId());
++                availableValue = retained == null ? 0 : min(value, retained);
+             }
+             String str = cardToString(c);
+             // A DonateMe permanent owned by the AI is intentionally harmful to the opponent who now controls it.
+@@ -347,7 +380,7 @@
+     public static class Score {
+         /** Long-term value, including permanents guaranteed to phase in normally. */
+         public final int value;
+-        /** Value currently available for mana, abilities, and the next combat. */
++        /** Timing value; response previews retain the value of existing permanents. */
+         public final int availableValue;
+         
+         public Score(int value) {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -8,6 +8,8 @@
+ import forge.util.AITimeoutTracker;
+ import forge.util.MyRandom;
+ import java.util.Random;
++import java.util.List;
++import java.util.function.Function;
+ 
+ /** Bounded paired native paid outcomes for complete spells and activated abilities. */
+ public final class PaidOutcomePlanner {
+@@ -18,19 +20,25 @@
+     private PaidOutcomePlanner() { }
+ 
+     public static AiAbilityDecision choose(Player actor, SpellAbility action) {
++        return choose(actor, action, candidate -> List.of(candidate));
++    }
++
++    public static AiAbilityDecision choose(Player actor, SpellAbility action,
++            Function<SpellAbility, List<SpellAbility>> variants) {
+         if (ASSESSING.get() || action instanceof AbilitySub || action.isTrigger()
+                 || actor.getGame().getStack().isResolving()) {
+             return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+         }
+         ASSESSING.set(true);
+         try {
+-            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action));
++            return MyRandom.withRandom(new Random(0L), () -> assess(actor, action, variants));
+         } finally {
+             ASSESSING.remove();
+         }
+     }
+ 
+-    private static AiAbilityDecision assess(Player actor, SpellAbility action) {
++    private static AiAbilityDecision assess(Player actor, SpellAbility action,
++            Function<SpellAbility, List<SpellAbility>> variants) {
+         GameStateEvaluator.Score[] baseline = new GameStateEvaluator.Score[SEEDS.length];
+         long baselineValue = 0;
+         long baselineAvailable = 0;
+@@ -46,29 +54,35 @@
+         SpellAbility best = null;
+         long bestValue = baselineValue;
+         // An untargeted action has one empty target combination, not zero choices.
++        int outcomes = 0;
++        targetLoop:
+         for (int choice = 0; choice < MAX_TARGET_CHOICES
+                 && (selector.hasTargeting() ? selector.selectNextTargets() : choice == 0); choice++) {
+             AITimeoutTracker.check();
+-            long value = 0;
+-            long available = 0;
+-            boolean complete = true;
+-            for (int i = 0; i < SEEDS.length; i++) {
+-                final long seed = SEEDS[i];
+-                final GameStateEvaluator.Score start = baseline[i];
+-                GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
+-                    GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
+-                    return simulator.simulateSpellAbility(trial);
+-                });
+-                if (result.value == Integer.MIN_VALUE) {
+-                    complete = false;
+-                    break;
++            for (SpellAbility variant : variants.apply(trial)) {
++                if (outcomes++ == MAX_TARGET_CHOICES) break targetLoop;
++                AITimeoutTracker.check();
++                long value = 0;
++                long available = 0;
++                boolean complete = true;
++                for (int i = 0; i < SEEDS.length; i++) {
++                    final long seed = SEEDS[i];
++                    final GameStateEvaluator.Score start = baseline[i];
++                    GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
++                        GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
++                        return simulator.simulateSpellAbility(variant);
++                    });
++                    if (result.value == Integer.MIN_VALUE) {
++                        complete = false;
++                        break;
++                    }
++                    value += result.value;
++                    available += result.availableValue;
+                 }
+-                value += result.value;
+-                available += result.availableValue;
+-            }
+-            if (complete && value > bestValue && available > baselineAvailable) {
+-                best = trial.copy();
+-                bestValue = value;
++                if (complete && value > bestValue && available > baselineAvailable) {
++                    best = variant.copy();
++                    bestValue = value;
++                }
+             }
+         }
+         if (best == null) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/Plan.java b/forge-ai/src/main/java/forge/ai/simulation/Plan.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/Plan.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/Plan.java
+@@ -104,6 +104,7 @@
+         Integer xMana;
+         MultiTargetSelector.Targets targets;
+         List<String> choices;
++        List<String> textWords;
+         int[] modes;
+         String modesStr; // for human pretty-print consumption only
+ 
+@@ -118,6 +119,14 @@
+             this.prevDecision = prevDecision;
+             this.saRef = null;
+             this.targets = targets;
++        }
++
++        public Decision(Score initialScore, Decision prevDecision, String word) {
++            this.initialScore = initialScore;
++            this.prevDecision = prevDecision;
++            this.saRef = null;
++            this.textWords = new ArrayList<>();
++            this.textWords.add(word);
+         }
+ 
+         public Decision(Score initialScore, Decision prevDecision, Card choice) {
+@@ -153,6 +162,7 @@
+             if (targets != null) {
+                 sb.append(" (targets: ").append(targets).append(")");
+             }
++            if (textWords != null) sb.append(" (text words: ").append(Joiner.on(", ").join(textWords)).append(")");
+             if (choices != null) {
+                 sb.append(" (chosen: ").append(Joiner.on(", ").join(choices)).append(")");
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+@@ -1,6 +1,7 @@
+ package forge.ai.simulation;
+ 
+ import forge.ai.simulation.GameStateEvaluator.Score;
++import forge.game.Game;
+ import forge.game.GameObject;
+ import forge.game.card.Card;
+ import forge.game.player.Player;
+@@ -15,6 +16,7 @@
+     private static final int DEFAULT_MAX_DEPTH = 3;
+ 
+     private final int maxDepth;
++    private GameStateEvaluator decisionEvaluator;
+     private List<Plan.Decision> currentStack;
+     private List<Score> scoreStack;
+     private List<GameSimulator> simulatorStack;
+@@ -52,6 +54,18 @@
+         currentStack = new ArrayList<>();
+     }
+     
++    GameStateEvaluator evaluatorFor(Game game, Player beneficiary) {
++        if (decisionEvaluator == null) {
++            decisionEvaluator = GameStateEvaluator.forDecision(game, beneficiary);
++        }
++        return decisionEvaluator;
++    }
++
++    Score scoreForDecision(Game game, Player actor) {
++        return GameSimulator.scoreForDecision(game, actor,
++                evaluatorFor(game, DecisionPerspective.beneficiary(actor)));
++    }
++
+     private int getRecursionDepth() {
+         return scoreStack.size() - 1;
+     }
+@@ -73,6 +87,10 @@
+ 
+     public void evaluateSpellAbility(List<SpellAbility> saList, int saIndex) {
+         currentStack.add(new Plan.Decision(getCurrentScore(), getLastDecision(), new Plan.SpellAbilityRef(saList, saIndex)));
++    }
++
++    public void evaluateTextWord(String word) {
++        currentStack.add(new Plan.Decision(getCurrentScore(), getLastDecision(), word));
+     }
+ 
+     public void evaluateCardChoice(Card choice) {
+@@ -141,6 +159,10 @@
+                     to.choices = new ArrayList<>();
+                 }
+                 to.choices.addAll(d.choices);
++            } else if (d.textWords != null) {
++                Plan.Decision to = sequence.get(writeIndex - 1);
++                if (to.textWords == null) to.textWords = new ArrayList<>();
++                to.textWords.addAll(d.textWords);
+             } else if (d.modes != null) {
+                 sequence.get(writeIndex - 1).modes = d.modes;
+                 sequence.get(writeIndex - 1).modesStr = d.modesStr;
+@@ -153,6 +175,7 @@
+     private Plan.Decision getLastMergedDecision() {
+         MultiTargetSelector.Targets targets = null;
+         List<String> choices = new ArrayList<>();
++        List<String> textWords = new ArrayList<>();
+         int[] modes = null;
+         String modesStr = null;
+ 
+@@ -163,6 +186,8 @@
+             } else if (d.choices != null) {
+                 // Since we're iterating backwards, add to the front.
+                 choices.addAll(0, d.choices);
++            } else if (d.textWords != null) {
++                textWords.addAll(0, d.textWords);
+             } else if (d.modes != null) {
+                 modes = d.modes;
+                 modesStr = d.modesStr;
+@@ -177,6 +202,7 @@
+         }
+         merged.modes = modes;
+         merged.modesStr = modesStr;
++        if (!textWords.isEmpty()) merged.textWords = textWords;
+         merged.xMana = d.xMana;
+         return merged;
+     }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+@@ -43,6 +43,7 @@
+                 sourceAbility != null && destinationAbility != null;
+                 sourceAbility = sourceAbility.getSubAbility(),
+                         destinationAbility = destinationAbility.getSubAbility()) {
++            TextChangeChoices.copyPlan(sourceAbility, destinationAbility);
+             if (!sourceAbility.usesTargeting()) {
+                 continue;
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
+@@ -13,6 +13,7 @@
+ 
+ public class SpellAbilityChoicesIterator {
+     private final SimulationController controller;
++    private SpellAbility textRoot;
+ 
+     private Iterator<int[]> modeIterator;
+     private int[] selectedModes;
+@@ -94,6 +95,26 @@
+         return modes;
+     }
+ 
++    public boolean acceptsTextRoot(SpellAbility action) {
++        SpellAbility root = action.getRootAbility();
++        return textRoot != null && root.getHostCard().getId() == textRoot.getHostCard().getId()
++                && root.getApi() == textRoot.getApi() && root.isTrigger() == textRoot.isTrigger();
++    }
++
++    public String chooseTextWord(List<String> options) {
++        if (options.isEmpty()) throw new IllegalArgumentException("No legal text word choices");
++        cpIndex++;
++        if (cpIndex >= choicePoints.size()) choicePoints.add(new ChoicePoint());
++        ChoicePoint point = choicePoints.get(cpIndex);
++        point.numChoices = options.size();
++        String selected = options.get(point.nextChoice);
++        if (cpIndex >= incrementedCpIndex) {
++            controller.evaluateTextWord(selected);
++            evalDepth++;
++        }
++        return selected;
++    }
++
+     public Card chooseCard(CardCollection fetchList) {
+         cpIndex++;
+         if (cpIndex >= choicePoints.size()) {
+@@ -119,6 +140,7 @@
+     }
+ 
+     public void chooseTargets(SpellAbility sa, GameSimulator simulator) {
++        textRoot = sa.getRootAbility();
+         // Note: Can't just keep a TargetSelector object cached because it's
+         // responsible for setting state on a SA and the SA object changes each
+         // time since it's a different simulation.
+@@ -187,6 +209,8 @@
+                 doneEvaluating(choicePoints.get(i).bestScoreForChoice);
+             }
+             choicePoints.clear();
++            // A new target/mode starts a new choice prefix, including multiple word choices.
++            incrementedCpIndex = 0;
+         }
+         if (cachedTargetScores != null) {
+             pushTarget = true;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+@@ -114,7 +114,8 @@
+             plan = null;
+             planBeneficiary = beneficiary;
+         }
+-        Score origGameScore = GameSimulator.scoreForDecision(game, player);
++        Score origGameScore = controller == null ? GameSimulator.scoreForDecision(game, player)
++                : controller.scoreForDecision(game, player);
+         List<SpellAbility> candidateSAs = getCandidateSpellsAndAbilities();
+         if (controller != null) {
+             // This is a recursion during a higher-level simulation. Just return the head of the best
+@@ -132,15 +133,43 @@
+     }
+ 
+     private Plan formulatePlanWithPhase(Score origGameScore, List<SpellAbility> candidateSAs, PhaseType phase) {
+-        SimulationController controller = new SimulationController(origGameScore);
+-        try {
+-            SpellAbility sa = chooseSpellAbilityToPlayImpl(controller, candidateSAs, origGameScore, phase);
+-            return sa == null ? null : controller.getBestPlan();
+-        } catch (AITimeoutTracker.Expired expired) {
+-            // Retain a fully scored branch; getPlannedSpellAbility still revalidates
+-            // its original score, ability identity, modes, and legal targets.
+-            return controller.getBestCompletedPlan();
+-        }
++        long key = AITimeoutTracker.key(game.getId(), player.getId());
++        long fallback = java.util.concurrent.TimeUnit.SECONDS.toNanos(game.getAITimeout());
++        long deadline = System.nanoTime() + AITimeoutTracker.remainingNanos(key, fallback);
++        Plan bestPlan = null;
++        Score highestScore = origGameScore;
++        for (int index = 0; index < candidateSAs.size(); index++) {
++            long remaining = Math.min(deadline - System.nanoTime(), AITimeoutTracker.remainingNanos());
++            if (remaining <= 0) break;
++            try {
++                AITimeoutTracker.check();
++            } catch (AITimeoutTracker.Expired expired) {
++                break;
++            }
++            // An expensive first action must leave time to inspect other legal actions.
++            // Each candidate owns its controller, so interrupted branches cannot leak into the next one.
++            long share = remaining / (candidateSAs.size() - index);
++            Object limit = AITimeoutTracker.arm(System.nanoTime() + share, false);
++            SimulationController controller = new SimulationController(origGameScore);
++            Score candidateScore;
++            Plan candidatePlan;
++            try {
++                candidateScore = evaluateSa(controller, phase, candidateSAs, index);
++                candidatePlan = candidateScore.value > origGameScore.value ? controller.getBestPlan() : null;
++            } catch (AITimeoutTracker.Expired expired) {
++                candidateScore = controller.getBestScore();
++                candidatePlan = controller.getBestCompletedPlan();
++            } finally {
++                AITimeoutTracker.disarm(limit);
++            }
++            if (candidateScore.value > highestScore.value) {
++                highestScore = candidateScore;
++                bestPlan = candidatePlan;
++            }
++        }
++        this.bestScore = highestScore;
++        // Preserve the policy of saving mana when the best gain is unavailable until later.
++        return highestScore.availableValue > origGameScore.availableValue ? bestPlan : null;
+     }
+ 
+     private void printPlan(Plan plan, String intro) {
+@@ -254,6 +283,12 @@
+             printPlannedActionFailure(decision, "Couldn't find spell/ability!");
+             return null;
+         }
++        // Entwine selects all modes without calling the modal-choice controller.
++        // Rebuild that deterministic chain before replaying its recorded target indices.
++        if (sa.getApi() == ApiType.Charm && sa.isEntwine() && sa.getSubAbility() == null) {
++            forge.game.ability.effects.CharmEffect.chainAbilities(sa,
++                    forge.game.ability.effects.CharmEffect.makePossibleOptions(sa));
++        }
+         // If modes != null, targeting will be done in chooseModeForAbility().
+         if (decision.modes == null && decision.targets != null) {
+             MultiTargetSelector selector = new MultiTargetSelector(sa, null);
+@@ -265,6 +300,11 @@
+         if (decision.xMana != null) {
+             sa.setXManaCostPaid(decision.xMana);
+         }
++        if (!TextChangeChoices.stageFullWords(sa, decision.textWords)) {
++            printPlannedActionFailure(decision, "Word choice budget exceeded");
++            return null;
++        }
++        TextChangeChoices.installWords(sa, decision.textWords);
+         print("Planned decision " + plan.getNextDecisionIndex() + ": " + decision);
+         return sa;
+     }
+@@ -402,6 +442,11 @@
+         });
+     }
+ 
++    public String chooseTextWord(SpellAbility action, List<String> options, boolean color) {
++        return interceptor == null || !interceptor.acceptsTextRoot(action) ? null
++                : interceptor.chooseTextWord(TextChangeChoices.resolutionOptions(action, options, color));
++    }
++
+     public List<AbilitySub> chooseModeForAbility(SpellAbility sa, List<AbilitySub> choices, int min, int num, boolean allowRepeat) {
+         if (interceptor != null) {
+             return interceptor.chooseModesForAbility(sa, choices, min, num, allowRepeat);
+@@ -417,6 +462,7 @@
+                     return null;
+                 }
+             }
++            TextChangeChoices.bindFullTargets(sa, plannedModes);
+             return plannedModes;
+         }
+         return null;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+@@ -0,0 +1,431 @@
++package forge.ai.simulation;
++
++import forge.card.CardType;
++import forge.card.ColorSet;
++import forge.card.MagicColor;
++import forge.game.ability.AbilityUtils;
++import forge.game.ability.ApiType;
++import forge.game.card.Card;
++import forge.game.keyword.KeywordInterface;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.AITimeoutTracker;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.Collections;
++import java.util.LinkedHashSet;
++import java.util.List;
++import java.util.Locale;
++import java.util.Map;
++import java.util.Set;
++import java.util.regex.Matcher;
++import java.util.regex.Pattern;
++
++/** Legal text-word variants and replay through native resolution callbacks. */
++public final class TextChangeChoices {
++    private static final String COLOR_FROM = "AITextColorFrom";
++    private static final String COLOR_TO = "AITextColorTo";
++    private static final String TYPE_FROM = "AITextTypeFrom";
++    private static final String TYPE_TO = "AITextTypeTo";
++    private static final String DECIDER = "AITextDecider";
++    private static final String TARGETS = "AITextTargets";
++    private static final List<String> KEYS = List.of(
++            COLOR_FROM, COLOR_TO, TYPE_FROM, TYPE_TO, DECIDER, TARGETS);
++    private static final List<String> COLORS = List.of("White", "Blue", "Black", "Red", "Green");
++    private static final List<String> PARAMETERS = List.of("ChangeColorWord", "ChangeTypeWord");
++    private static final int MAX_VARIANTS = 128;
++    private static final int MAX_VISIBLE_CARDS = 512;
++    private static final String FULL_OWNER = "AITextFullOwner";
++    private static final String FULL_TARGETS = "AITextFullTargets";
++    private static final String FULL_COUNT = "AITextFullCount";
++    private static final String FULL_POSITION = "AITextFullPosition";
++    private static final String FULL_WORD = "AITextFullWord";
++
++
++    private TextChangeChoices() { }
++
++    public static List<SpellAbility> variants(SpellAbility targeted) {
++        List<SpellAbility> result = new ArrayList<>();
++        for (Words color : pairs(targeted, "ChangeColorWord", true)) {
++            for (Words type : pairs(targeted, "ChangeTypeWord", false)) {
++                AITimeoutTracker.check();
++                SpellAbility variant = targeted.copy();
++                clearFullWords(variant);
++                for (String key : KEYS) {
++                    variant.clearPlannedAiChoice(key);
++                }
++                bind(variant, targeted);
++                if (color != null) {
++                    setWords(variant, true, color.from, color.to);
++                }
++                if (type != null) {
++                    setWords(variant, false, type.from, type.to);
++                }
++                result.add(variant);
++                if (result.size() == MAX_VARIANTS) {
++                    return result;
++                }
++            }
++        }
++        return result;
++    }
++
++    private static List<Words> pairs(SpellAbility action, String parameter, boolean color) {
++        if (!action.hasParam(parameter)) {
++            return Collections.singletonList(null);
++        }
++        String[] spec = action.getParam(parameter).split(" ");
++        if (spec.length != 2) {
++            return List.of();
++        }
++        Collection<String> original = domain(spec[0], color);
++        Collection<String> replacement = domain(spec[1], color);
++        boolean creatureReplacement = !color && spec[1].equals("ChooseCreatureType");
++        Set<String> relevant = creatureReplacement ? relevantTypes(action) : Set.of();
++        Set<String> forbidden = new LinkedHashSet<>();
++        if (!color && action.hasParam("ForbiddenNewTypes")) {
++            forbidden.addAll(List.of(action.getParam("ForbiddenNewTypes").split(",")));
++        }
++        List<Words> result = new ArrayList<>();
++        for (String from : original) {
++            AITimeoutTracker.check();
++            if (spec[0].startsWith("Choose") && !appearsInTargets(action, from)) {
++                continue;
++            }
++            for (String to : replacement) {
++                if (!legalPair(spec[1], from, to, forbidden)) {
++                    continue;
++                }
++                if (creatureReplacement && !relevant.contains(to)) {
++                    continue;
++                }
++                result.add(new Words(from, to));
++                if (result.size() == MAX_VARIANTS) {
++                    return result;
++                }
++            }
++        }
++        // A legal no-effect choice can still make casting useful through native triggers.
++        if (result.isEmpty()) {
++            for (String from : original) {
++                for (String to : replacement) {
++                    if (legalPair(spec[1], from, to, forbidden)) {
++                        return List.of(new Words(from, to));
++                    }
++                }
++            }
++        }
++        return result;
++    }
++
++    private static boolean legalPair(String replacementSpec, String from, String to, Set<String> forbidden) {
++        return (!from.equals(to) || !replacementSpec.startsWith("Choose")) && !forbidden.contains(to);
++    }
++
++    private static Collection<String> domain(String spec, boolean color) {
++        if (color && spec.equals("Choose")) {
++            return COLORS;
++        }
++        if (spec.equals("ChooseBasicLandType")) {
++            return CardType.getBasicTypes();
++        }
++        if (spec.equals("ChooseCreatureType")) {
++            return CardType.Constant.CREATURE_TYPES;
++        }
++        return List.of(spec);
++    }
++
++    private static boolean appearsInTargets(SpellAbility action, String word) {
++        Pattern pattern = wordPattern(word);
++        for (Card target : targetCards(action)) {
++            if (!target.isFaceDown() && pattern.matcher(visibleText(target)).find()) {
++                return true;
++            }
++        }
++        return false;
++    }
++
++    private static List<Card> targetCards(SpellAbility action) {
++        List<Card> cards = new ArrayList<>(action.getTargets().getTargetCards());
++        for (SpellAbility spell : action.getTargets().getTargetSpells()) {
++            cards.add(spell.getHostCard());
++        }
++        if (cards.isEmpty() && action.getApi() == ApiType.ChangeText && action.hasParam("Defined")) {
++            cards.addAll(AbilityUtils.getDefinedCards(action.getHostCard(), action.getParam("Defined"), action));
++        }
++        return cards;
++    }
++
++    private static String targetSignature(SpellAbility action) {
++        List<String> identities = new ArrayList<>();
++        for (Card card : targetCards(action)) {
++            identities.add(card.getId() + ":" + card.getGameTimestamp());
++        }
++        Collections.sort(identities);
++        return String.join(",", identities);
++    }
++
++    private static Set<String> relevantTypes(SpellAbility action) {
++        List<String> visible = new ArrayList<>();
++        for (Card card : action.getActivatingPlayer().getGame().getCardsInGame()) {
++            AITimeoutTracker.check();
++            boolean visibleZone = card.isInZone(ZoneType.Battlefield) || card.isInZone(ZoneType.Stack)
++                    || (card.isInZone(ZoneType.Hand) && card.getOwner() == action.getActivatingPlayer());
++            if (card.isFaceDown() || !visibleZone) {
++                continue;
++            }
++            if (visible.size() == MAX_VISIBLE_CARDS) {
++                break;
++            }
++            visible.add(visibleText(card));
++        }
++        Set<String> result = new LinkedHashSet<>();
++        for (String type : CardType.Constant.CREATURE_TYPES) {
++            AITimeoutTracker.check();
++            Pattern pattern = wordPattern(type);
++            for (String text : visible) {
++                if (pattern.matcher(text).find()) {
++                    result.add(type);
++                    break;
++                }
++            }
++        }
++        return result;
++    }
++
++    private static String visibleText(Card card) {
++        String oracle = card.getOracleText();
++        if (oracle != null) {
++            // Printed irregular plurals need the current word before subsequent choices.
++            // Native keyword/type encodings are singular and remain handled below.
++            for (Map.Entry<String, String> change : card.getChangedTextTypeWords().entrySet()) {
++                String plural = CardType.getPluralType(change.getKey());
++                if (!plural.equals(change.getKey())) {
++                    String replacement = CardType.getPluralType(change.getValue());
++                    oracle = boundedWordPattern(Pattern.quote(plural)).matcher(oracle)
++                            .replaceAll("$1" + Matcher.quoteReplacement(replacement));
++                }
++            }
++        }
++        StringBuilder text = new StringBuilder(oracle == null ? "" : oracle).append(' ').append(card.getType());
++        for (KeywordInterface keyword : card.getKeywords()) {
++            text.append(' ').append(keyword.getOriginal());
++        }
++        return AbilityUtils.applyKeywordTextChangeEffects(text.toString(),
++                card.getChangedTextColorWords(), card.getChangedTextTypeWords());
++    }
++
++    private static Pattern wordPattern(String word) {
++        String alternatives = Pattern.quote(word);
++        String plural = CardType.getPluralType(word);
++        if (!plural.equals(word)) {
++            alternatives += "|" + Pattern.quote(plural);
++        }
++        return boundedWordPattern(alternatives);
++    }
++
++    private static Pattern boundedWordPattern(String alternatives) {
++        // Keep compound types whole while recognizing rules words such as nonblack.
++        return Pattern.compile("(?i)(?<![\\p{L}\\p{N}_-])(non-?)?(?:"
++                + alternatives + ")(?![\\p{L}\\p{N}_-])");
++    }
++
++    public static List<String> resolutionOptions(SpellAbility action, List<String> legal, boolean color) {
++        String[] spec = action.getParam(color ? "ChangeColorWord" : "ChangeTypeWord").split(" ");
++        if (spec.length != 2) {
++            return List.copyOf(legal);
++        }
++        Collection<String> first = domain(spec[0], color);
++        boolean original = spec[0].startsWith("Choose")
++                && first.size() == legal.size() && first.containsAll(legal);
++        boolean creatureReplacement = !color && !original && spec[1].equals("ChooseCreatureType");
++        Set<String> relevant = creatureReplacement ? relevantTypes(action) : Set.of();
++        List<String> result = new ArrayList<>();
++        for (String word : legal) {
++            if (original && !appearsInTargets(action, word)) {
++                continue;
++            }
++            if (creatureReplacement && !relevant.contains(word)) {
++                continue;
++            }
++            result.add(word);
++            if (result.size() == MAX_VARIANTS) {
++                break;
++            }
++        }
++        return result.isEmpty() && !legal.isEmpty() ? List.of(legal.get(0)) : result;
++    }
++
++    public static void installWords(SpellAbility action, List<String> words) {
++        if (words == null || action.getActivatingPlayer() == null) {
++            return;
++        }
++        int expected = 0;
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            if (part.getApi() != ApiType.ChangeText) {
++                continue;
++            }
++            for (String parameter : PARAMETERS) {
++                if (part.hasParam(parameter)) {
++                    for (String spec : part.getParam(parameter).split(" ")) {
++                        if (spec.startsWith("Choose")) {
++                            expected++;
++                        }
++                    }
++                }
++            }
++        }
++        if (expected != words.size()) {
++            return;
++        }
++        int index = 0;
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            if (part.getApi() != ApiType.ChangeText) {
++                continue;
++            }
++            bind(part, part);
++            for (String parameter : PARAMETERS) {
++                if (!part.hasParam(parameter)) {
++                    continue;
++                }
++                String[] spec = part.getParam(parameter).split(" ");
++                String from = spec[0].startsWith("Choose") ? words.get(index++) : spec[0];
++                String to = spec[1].startsWith("Choose") ? words.get(index++) : spec[1];
++                setWords(part, parameter.equals("ChangeColorWord"), from, to);
++            }
++        }
++    }
++
++    private static void bind(SpellAbility destination, SpellAbility source) {
++        destination.setPlannedAiChoice(DECIDER, String.valueOf(source.getActivatingPlayer().getId()));
++        destination.setPlannedAiChoice(TARGETS, targetSignature(source));
++    }
++
++    private static void setWords(SpellAbility action, boolean color, String from, String to) {
++        action.setPlannedAiChoice(color ? COLOR_FROM : TYPE_FROM, from);
++        action.setPlannedAiChoice(color ? COLOR_TO : TYPE_TO, to);
++    }
++
++    public static Byte plannedColor(SpellAbility action, ColorSet options) {
++        if (!plannedForActor(action) || action.getPlannedAiChoice(COLOR_FROM) == null
++                || action.getPlannedAiChoice(COLOR_TO) == null) {
++            return null;
++        }
++        byte from = MagicColor.fromName(action.getPlannedAiChoice(COLOR_FROM).toLowerCase(Locale.ROOT));
++        byte to = MagicColor.fromName(action.getPlannedAiChoice(COLOR_TO).toLowerCase(Locale.ROOT));
++        if (from != 0 && (options.getColor() & from) != 0) {
++            return from;
++        }
++        return to != 0 && (options.getColor() & to) != 0 ? to : null;
++    }
++
++    public static String plannedType(SpellAbility action, Collection<String> options) {
++        if (!plannedForActor(action) || action.getPlannedAiChoice(TYPE_FROM) == null
++                || action.getPlannedAiChoice(TYPE_TO) == null) {
++            return null;
++        }
++        String from = action.getPlannedAiChoice(TYPE_FROM), to = action.getPlannedAiChoice(TYPE_TO);
++        if (options.contains(from)) {
++            return from;
++        }
++        return options.contains(to) ? to : null;
++    }
++
++    private static boolean plannedForActor(SpellAbility action) {
++        return action.getApi() == ApiType.ChangeText && action.getActivatingPlayer() != null
++                && action.getHostCard().getGame().getStack().isResolving()
++                && String.valueOf(action.getActivatingPlayer().getId()).equals(action.getPlannedAiChoice(DECIDER))
++                && targetSignature(action).equals(action.getPlannedAiChoice(TARGETS));
++    }
++
++    private static int fullNumber(SpellAbility action, String key) {
++        String value = action.getPlannedAiChoice(key);
++        if (value == null) return 0;
++        try {
++            int result = Integer.parseInt(value);
++            return result >= 0 && result <= MAX_VARIANTS ? result : -1;
++        } catch (NumberFormatException invalid) {
++            return -1;
++        }
++    }
++
++    private static void clearFullWords(SpellAbility action) {
++        int count = fullNumber(action, FULL_COUNT);
++        for (int i = 0; i < Math.max(0, count); i++) action.clearPlannedAiChoice(FULL_WORD + i);
++        for (String key : List.of(FULL_OWNER, FULL_TARGETS, FULL_COUNT, FULL_POSITION)) action.clearPlannedAiChoice(key);
++    }
++
++    public static boolean stageFullWords(SpellAbility root, List<String> words) {
++        clearFullWords(root);
++        if (words == null || words.isEmpty()) return true;
++        if (words.size() > MAX_VARIANTS || root.getActivatingPlayer() == null) return false;
++        root.setPlannedAiChoice(FULL_OWNER, String.valueOf(root.getActivatingPlayer().getId()));
++        root.setPlannedAiChoice(FULL_TARGETS, fullTargetSignature(root, List.of()));
++        root.setPlannedAiChoice(FULL_COUNT, String.valueOf(words.size()));
++        root.setPlannedAiChoice(FULL_POSITION, "0");
++        for (int i = 0; i < words.size(); i++) root.setPlannedAiChoice(FULL_WORD + i, words.get(i));
++        return true;
++    }
++
++    private static String fullTargetSignature(SpellAbility root, List<? extends SpellAbility> modes) {
++        Set<String> identities = new java.util.TreeSet<>();
++        List<SpellAbility> chains = new ArrayList<>();
++        chains.add(root); chains.addAll(modes);
++        for (SpellAbility chain : chains) {
++            for (SpellAbility part = chain; part != null; part = part.getSubAbility()) {
++                for (Card card : targetCards(part)) identities.add(card.getId() + ":" + card.getGameTimestamp());
++            }
++        }
++        return String.join(",", identities);
++    }
++
++    public static void bindFullTargets(SpellAbility root, List<? extends SpellAbility> modes) {
++        if (fullNumber(root, FULL_COUNT) > 0)
++            root.setPlannedAiChoice(FULL_TARGETS, fullTargetSignature(root, modes));
++    }
++
++    public static String consumeFullWord(SpellAbility action, List<String> legal) {
++        SpellAbility root = action.getRootAbility();
++        if (!action.getHostCard().getGame().getStack().isResolving() || action.getActivatingPlayer() == null
++                || !String.valueOf(action.getActivatingPlayer().getId()).equals(root.getPlannedAiChoice(FULL_OWNER))
++                || !fullTargetSignature(root, List.of()).equals(root.getPlannedAiChoice(FULL_TARGETS))) return null;
++        int count = fullNumber(root, FULL_COUNT), position = fullNumber(root, FULL_POSITION);
++        if (count <= 0 || position < 0 || position >= count) return null;
++        String word = root.getPlannedAiChoice(FULL_WORD + position);
++        if (!legal.contains(word)) {
++            clearFullWords(root);
++            return null;
++        }
++        root.setPlannedAiChoice(FULL_POSITION, String.valueOf(position + 1));
++        return word;
++    }
++
++    private static void copyFullWords(SpellAbility source, SpellAbility destination) {
++        clearFullWords(destination);
++        int count = fullNumber(source, FULL_COUNT);
++        if (count <= 0) return;
++        for (String key : List.of(FULL_OWNER, FULL_TARGETS, FULL_COUNT, FULL_POSITION)) {
++            String value = source.getPlannedAiChoice(key);
++            if (value != null) destination.setPlannedAiChoice(key, value);
++        }
++        for (int i = 0; i < count; i++) {
++            String value = source.getPlannedAiChoice(FULL_WORD + i);
++            if (value != null) destination.setPlannedAiChoice(FULL_WORD + i, value);
++        }
++    }
++
++    static void copyPlan(SpellAbility source, SpellAbility destination) {
++        copyFullWords(source, destination);
++        if (source.getApi() != ApiType.ChangeText || destination.getApi() != ApiType.ChangeText) {
++            return;
++        }
++        for (String key : KEYS) {
++            destination.clearPlannedAiChoice(key);
++            if (source.getPlannedAiChoice(key) != null) {
++                destination.setPlannedAiChoice(key, source.getPlannedAiChoice(key));
++            }
++        }
++    }
++
++    private record Words(String from, String to) { }
++}
+diff --git a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbility.java
+@@ -139,6 +139,10 @@
+     private EnumMap<AbilityKey, Object> replacingObjects = AbilityKey.newMap();
+     private Supplier<List<String>> pipsToReduce = Suppliers.memoize(ArrayList::new);
+     private List<AbilitySub> chosenList = null;
++    // AI plans are not rules text; immutable values survive ability and snapshot copies.
++    private Map<String, String> plannedAiChoices = Map.of();
++
++
+     private Supplier<CardCollection> tappedForConvoke = Suppliers.memoize(CardCollection::new);
+     private Card sacrificedAsOffering;
+     private Card sacrificedAsEmerge;
+@@ -1236,6 +1240,25 @@
+         view.updateDescription(this); //description changes when sub-abilities change
+     }
+ 
++    /** Return internal AI metadata without treating it as editable rules text. */
++    public String getPlannedAiChoice(String key) {
++        return plannedAiChoices.get(key);
++    }
++    public void setPlannedAiChoice(String key, String value) {
++        Map<String, String> updated = new HashMap<>(plannedAiChoices);
++        updated.put(key, value);
++        plannedAiChoices = Map.copyOf(updated);
++    }
++    public void clearPlannedAiChoice(String key) {
++        if (!plannedAiChoices.containsKey(key)) {
++            return;
++        }
++        Map<String, String> updated = new HashMap<>(plannedAiChoices);
++        updated.remove(key);
++        plannedAiChoices = Map.copyOf(updated);
++    }
++
++
+     public Map<String, SpellAbility> getAdditionalAbilities() {
+         return additionalAbilities;
+     }
+@@ -1316,6 +1339,7 @@
+ 
+     /** Restore state without the resets required by an in-game spell-copy effect. */
+     void copySnapshotFieldsTo(SpellAbility target, SpellAbilitySnapshot context) {
++        target.plannedAiChoices = plannedAiChoices; // Immutable: later changes replace, never mutate, the map.
+         target.hostCard = context.map(getHostCard());
+         target.copySnapshotTextFrom(this, context);
+         target.activatingPlayer = context.map(activatingPlayer);
+diff --git a/forge-gui/res/cardsfolder/a/alter_reality.txt b/forge-gui/res/cardsfolder/a/alter_reality.txt
+--- a/forge-gui/res/cardsfolder/a/alter_reality.txt
++++ b/forge-gui/res/cardsfolder/a/alter_reality.txt
+@@ -4,5 +4,4 @@
+ K:Flashback:1 U
+ A:SP$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | Duration$ Permanent | ChangeColorWord$ Choose Choose | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one color word with another. (This effect lasts indefinitely.)
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target spell or permanent by replacing all instances of one color word with another. (This effect lasts indefinitely.)\nFlashback {1}{U} (You may cast this card from your graveyard for its flashback cost. Then exile it.)
+diff --git a/forge-gui/res/cardsfolder/b/balduvian_shaman.txt b/forge-gui/res/cardsfolder/b/balduvian_shaman.txt
+--- a/forge-gui/res/cardsfolder/b/balduvian_shaman.txt
++++ b/forge-gui/res/cardsfolder/b/balduvian_shaman.txt
+@@ -5,5 +5,4 @@
+ A:AB$ ChangeText | Cost$ T | ValidTgts$ Enchantment.YouCtrl+White+withoutCumulative upkeep | TgtPrompt$ Choose target white enchantment you control that doesn't have cumulative upkeep | ChangeColorWord$ Choose Choose | Duration$ Permanent | SubAbility$ DBCumUpkeep | SpellDescription$ Change the text of target white enchantment you control that doesn't have cumulative upkeep by replacing all instances of one color word with another. (For example, you may change "black creatures can't attack" to "blue creatures can't attack.") That enchantment gains "Cumulative upkeep {1}." (At the beginning of its controller's upkeep, that player puts an age counter on it, then sacrifices it unless they pay its upkeep cost for each age counter on it.)
+ SVar:DBCumUpkeep:DB$ Pump | Defined$ ParentTarget | KW$ Cumulative upkeep:1 | Duration$ Permanent
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:{T}: Change the text of target white enchantment you control that doesn't have cumulative upkeep by replacing all instances of one color word with another. (For example, you may change "black creatures can't attack" to "blue creatures can't attack.") That enchantment gains "Cumulative upkeep {1}." (At the beginning of its controller's upkeep, that player puts an age counter on it, then sacrifices it unless they pay its upkeep cost for each age counter on it.)
+diff --git a/forge-gui/res/cardsfolder/g/glamerdye.txt b/forge-gui/res/cardsfolder/g/glamerdye.txt
+--- a/forge-gui/res/cardsfolder/g/glamerdye.txt
++++ b/forge-gui/res/cardsfolder/g/glamerdye.txt
+@@ -4,5 +4,4 @@
+ K:Retrace
+ A:SP$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | ChangeColorWord$ Choose Choose | Duration$ Permanent | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one color word with another.
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target spell or permanent by replacing all instances of one color word with another.\nRetrace (You may cast this card from your graveyard by discarding a land card in addition to paying its other costs.)
+diff --git a/forge-gui/res/cardsfolder/m/magical_hack.txt b/forge-gui/res/cardsfolder/m/magical_hack.txt
+--- a/forge-gui/res/cardsfolder/m/magical_hack.txt
++++ b/forge-gui/res/cardsfolder/m/magical_hack.txt
+@@ -3,5 +3,4 @@
+ Types:Instant
+ A:SP$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | ChangeTypeWord$ ChooseBasicLandType ChooseBasicLandType | Duration$ Permanent | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one basic land type with another. (For example, you may change "swampwalk" to "plainswalk." This effect lasts indefinitely.)
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target spell or permanent by replacing all instances of one basic land type with another. (For example, you may change "swampwalk" to "plainswalk." This effect lasts indefinitely.)
+diff --git a/forge-gui/res/cardsfolder/s/sleight_of_mind.txt b/forge-gui/res/cardsfolder/s/sleight_of_mind.txt
+--- a/forge-gui/res/cardsfolder/s/sleight_of_mind.txt
++++ b/forge-gui/res/cardsfolder/s/sleight_of_mind.txt
+@@ -3,5 +3,4 @@
+ Types:Instant
+ A:SP$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | Duration$ Permanent | ChangeColorWord$ Choose Choose | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one color word with another. (For example, you may change "target black spell" to "target blue spell." This effect lasts indefinitely.)
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target spell or permanent by replacing all instances of one color word with another. (For example, you may change "target black spell" to "target blue spell." This effect lasts indefinitely.)

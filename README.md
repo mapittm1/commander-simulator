@@ -199,12 +199,52 @@ See the [native comparison](engine/empower_ai_native_evidence.json) and
 [packaged validation and activation](engine/empower_ai_evidence.json).
 Complete Empower, optional-trigger, card and optimal-AI correctness remain unverified.
 
-A separate source-native text-change investigation has six passing rules controls
-and six AI admission/selection failures, including actual choices in all three modes.
-Supplied-word native controls succeed; AI cases use the default controller.
-These twelve tests remain pending and are outside the passing runtime totals.
-See the [text-change AI finding](engine/change_text_ai_gap.json). Useful word-choice
-planning and the separate face-down inspection handler still need validation.
+Generic text-choice planning evaluates legal targets and replacement words through
+paid native outcomes. Immutable AI choices remain separate from rules text and are
+scoped to their activator and target incarnation. Full simulation records word
+choices separately from card choices and resets multi-choice prefixes between targets.
+Five root-card scripts remove only All-AI exclusion hints; Oracle text and random-deck
+hints are unchanged.
+
+The root fixture has thirty-three cases spanning six cards, paid combat survival,
+three-mode choices/refusals and counterspell responses, copied pending resolution,
+forbidden types, random isolation and useful cast triggers. Five composition cases
+add Whim of Volrath, Mind Bend and Spectral Shift in full simulation, copied pending
+modal resolution, and an explicitly supplied entwined cast with four native word
+prompts and four mana paid. All thirty-eight source-native cases pass; the identical
+baseline passes fourteen controls and fails twenty-four cases. Scope checks first prove replay works during
+resolution, then reject changed actors and targets; outside-resolution prompts retain
+ordinary choices. Earlier weak-action and premature-casting expectations retain
+paid decline and instant-deferral controls.
+
+The earlier 1,366-test candidate was rejected before activation: three composed
+spells cast without replaying their useful words. The revision carries bounded word
+transcripts across runtime child selection and copies, rebuilds deterministic entwined
+mode chains before replaying their targets, and preserves those announced targets
+at cast time. A target-ordering experiment was removed after diagnostics identified
+the actual cast-chain mismatch.
+
+The follow-up source-native suite passes fifty-four cases. Sixteen additional
+cases cover creature/land plurals, negated color words, current irregular-plural
+text, actual three-mode responses and timing controls. Against the earlier held
+packaged build, six controls pass and ten cases fail. Response previews retain
+established permanent value, capped at the original valuation so an unusable
+temporary pump creates no immediate benefit. Reference values use private LKI
+snapshots. Candidate-local thinking budgets preserve completed scored results.
+
+A later 1,386-test build passed its source/resource audit, then an additional
+packaged timing probe passed fifteen cases and failed the temporary-pump control.
+It remains held. The corrected runtime passes 1,387 selected native tests and its
+source/resource audit, 635 packaged rules cases, 2,861 broader gameplay tests,
+256 serialization tests, and 42 live tests with 1,283 subtests. All 422 frozen inputs
+remained unchanged. Catalog construction covers 32,636 starting identities and
+excludes seven nonstarting meld results. See the
+[native comparison and held predecessors](engine/text_choice_native_evidence.json)
+and [packaged validation and activation](engine/text_choices_evidence.json).
+The earlier [twelve-case finding](engine/change_text_ai_gap.json) remains historical.
+Supplied entwine costs do not prove optimal optional-cost selection. Composite
+heuristic/hybrid support, full text-change/card correctness, face-down visibility
+and optimal AI remain unverified.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -220,13 +260,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,333 selected native tests, 581 packaged
-rules cases, 2,807 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,229 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,387 selected native tests, 635 packaged
+rules cases, 2,861 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,283 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/empower_ai_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/text_choices_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

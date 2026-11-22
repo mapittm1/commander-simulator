@@ -76,6 +76,9 @@ SOURCES = {
     "CommanderDiscoverSacrificeTest": "commander_discover_sacrifice_test_sha256",
     "CommanderSwitchBlockAiTest": "commander_switch_block_ai_test_sha256",
     "CommanderEmpowerAiTest": "commander_empower_ai_test_sha256",
+    "CommanderChangeTextAiTest": "commander_change_text_ai_test_sha256",
+    "CommanderTextCompositionTest": "commander_text_composition_test_sha256",
+    "CommanderPluralTextTest": "commander_plural_text_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "CommanderLearnTest": "commander_learn_test_sha256",
     "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",
@@ -117,6 +120,16 @@ TEST_CLASSES = tuple(
     f"forge.ai.{name}" for name in SOURCES if name != "AITest"
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
+    "forge.ai.PlayerControllerAi",
+    "forge.ai.simulation.PaidOutcomePlanner",
+    "forge.ai.simulation.Plan",
+    "forge.ai.simulation.SimulationController",
+    "forge.ai.simulation.GameStateEvaluator",
+    "forge.ai.simulation.SpellAbilityChoiceCopier",
+    "forge.ai.simulation.SpellAbilityChoicesIterator",
+    "forge.ai.simulation.SpellAbilityPicker",
+    "forge.ai.ability.ChangeTextAi",
+    "forge.ai.simulation.TextChangeChoices",
     "forge.ai.ComputerUtilMana",
     "forge.ai.SpellApiToAi",
     "forge.ai.ability.SwitchBlockAi",

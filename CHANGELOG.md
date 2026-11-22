@@ -6,9 +6,58 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
-- Record a separate text-change AI gap with twelve source-native witnesses: six
-  supplied-word rules controls pass; direct admission and actual picker checks fail
-  in six cases. Keep the fixture pending and outside passing runtime totals.
+- Cap retained sick-creature value during response previews at its original value.
+  Protect an established creature without treating an unusable temporary pump as
+  immediately valuable. Use private LKI snapshots for reference valuation.
+- Pass fifty-four source-native cases. The identical sixteen-case earlier packaged
+  baseline passes six controls and fails ten cases. Preserve the intermediate
+  1,386-test build and audit as held evidence after its additional timing failure.
+  Activate the corrected build after 1,387 selected native tests, its source/resource
+  audit, 635 packaged cases, 2,861 broader gameplay tests, 256 serialization tests,
+  and 42 live tests with 1,283 subtests pass. All 422 frozen inputs remain unchanged;
+  catalog construction covers 32,636 starting identities and seven nonstarting meld
+  results. The earlier candidate builds remain held and retain their evidence.
+
+- Correct generic word-choice filtering for creature/land plurals, negated words
+  and current text after an irregular-plural rewrite. Preserve whole compound types.
+- Retain established-permanent value during response previews, including protection
+  of a summoning-sick creature. Keep ordinary and new-creature timing controls and
+  one evaluator context across nested previews.
+- Share full-simulation time across independent root candidates, preserving scored
+  completed branches and the policy against spending mana on unavailable-only gains.
+- Pass fifty-three source-native text-change cases, including fifteen new lexical,
+  three-mode play and timing witnesses. Their identical packaged baseline passes
+  five controls and fails ten cases. Keep the prior 38-case comparison separate.
+- Hold the earlier predecessor despite its passing packaged/live/catalog gates.
+  The intermediate 1,386-test revision passed its selected tests and audit, then
+  remained held after the additional temporary-pump timing regression failed.
+
+- Add a text-choice candidate using generic legal word/target variants, bounded
+  paid native forecasts and immutable choice replay across ability/game copies.
+  Keep plans separate from rules text and bind them to the activator and targets.
+- Preserve full-mode words through runtime child choices, modal spells and copied
+  pending stacks. Rebuild deterministic entwined mode chains before replaying
+  targets and preserve announced entwined targets at native cast time.
+- Verify thirty-eight source-native cases: thirty-three root witnesses and five
+  composition cases, including four native prompts and four mana paid for a
+  supplied entwined cast. Strengthen actor/target checks with successful replay
+  controls inside resolution. Preserve decline and instant-deferral controls.
+- Reject the earlier 1,366-test candidate after three composition failures before
+  activation. The revised trusted build passes 1,371 selected native tests and its
+  source/resource audit, 619 packaged cases, 2,845 broader gameplay cases,
+  256 serialization tests, 42 live tests with 1,267 subtests and catalog validation.
+  Keep that earlier revision held after a native control confirms a plural-word AI
+  pruning gap; the corrected revision is validated above. Its identical source-native
+  baseline passed fourteen controls and failed twenty-four cases. Supplied entwine
+  costs do not prove optimal cost selection.
+- Five root-card scripts remove only obsolete All-AI hints. Preserve Oracle text,
+  random-deck hints. Preserve the original twelve-case gap as historical evidence,
+  with explicit corrected test expectations and limits on the resolved scope.
+
+- Preserve the initial twelve-case text-change finding: six supplied-word controls
+  passed and six admission/picker expectations failed. The expanded tested fixtures
+  now live under engine/tests, with the original finding and corrected expectations
+  retained in the resolved gap record.
 
 - Implement a generic Empower AI handler using bounded paid native outcomes.
   Correct its generated description to name loyalty counters. Verify twenty-four
