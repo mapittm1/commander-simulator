@@ -1,0 +1,328 @@
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -837,6 +837,18 @@
+ 
+     @Override
+     public String chooseSomeType(String kindOfType, SpellAbility sa, Collection<String> validTypes, boolean isOptional) {
++        if (forge.ai.simulation.MassTapChoices.supportsType(sa) && sa.getActivatingPlayer() == player
++                && sa.getHostCard().getGame().getStack().isResolving()) {
++            List<String> types = new ArrayList<>(validTypes);
++            List<String> tokens = forge.ai.simulation.MassTapChoices.typeTokens(sa, types);
++            if (!tokens.isEmpty()) {
++                String selected = getAi().getSimulationPicker() == null ? null
++                        : getAi().getSimulationPicker().chooseTextMode(sa, tokens);
++                if (selected == null) selected = forge.ai.simulation.TextChangeChoices.consumeFullWord(sa, tokens);
++                int index = tokens.indexOf(selected);
++                if (index >= 0) return types.get(index);
++            }
++        }
+         if (sa.getApi() == ApiType.ChangeText && sa.getHostCard().getGame().getStack().isResolving()) {
+             List<String> options = new ArrayList<>(validTypes);
+             String word = getAi().getSimulationPicker() == null ? null
+@@ -1179,7 +1191,19 @@
+     @Override
+     public boolean chooseBinary(SpellAbility sa, String question, BinaryChoiceType kindOfChoice, Boolean defaultVal) {
+         switch (kindOfChoice) {
+-            case TapOrUntap: return defaultVal == null || defaultVal;
++            case TapOrUntap:
++                if (sa.getApi() == ApiType.TapOrUntapAll) {
++                    List<String> options = forge.ai.simulation.MassTapChoices.directionTokens(sa);
++                    if (!options.isEmpty()) {
++                        String selected = getAi().getSimulationPicker() == null ? null
++                                : getAi().getSimulationPicker().chooseTextMode(sa, options);
++                        if (selected == null) selected = forge.ai.simulation.TextChangeChoices.consumeFullWord(sa, options);
++                        if (selected != null) return selected.equals(options.get(0));
++                    }
++                    Boolean chosen = forge.ai.simulation.MassTapChoices.chooseDirection(player, sa);
++                    if (chosen != null) return chosen;
++                }
++                return defaultVal == null || defaultVal;
+             case UntapOrLeaveTapped:
+                 Card source = sa.getHostCard();
+                 if (source != null && source.hasSVar("AIUntapPreference")) {
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ChooseTypeAi.java b/forge-ai/src/main/java/forge/ai/ability/ChooseTypeAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/ChooseTypeAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/ChooseTypeAi.java
+@@ -21,6 +21,10 @@
+ public class ChooseTypeAi extends SpellAbilityAi {
+     @Override
+     protected AiAbilityDecision canPlay(Player aiPlayer, SpellAbility sa) {
++        if (forge.ai.simulation.MassTapChoices.supportsType(sa)) {
++            return forge.ai.simulation.PaidOutcomePlanner.chooseWithFollowup(aiPlayer, sa.getRootAbility(),
++                    forge.ai.simulation.MassTapChoices::variants);
++        }
+         String aiLogic = sa.getParamOrDefault("AILogic", "");
+ 
+         if (aiLogic.isEmpty()) {
+diff --git a/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAllAi.java b/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAllAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAllAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/TapOrUntapAllAi.java
+@@ -3,23 +3,26 @@
+ import forge.ai.AiAbilityDecision;
+ import forge.ai.AiPlayDecision;
+ import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.MassTapChoices;
++import forge.ai.simulation.PaidOutcomePlanner;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
+ 
+-/** 
+- * TODO: Write javadoc for this type.
+- *
+- */
++/** Assess complete paid mass tap/untap outcomes; mandatory triggers retain native resolution. */
+ public class TapOrUntapAllAi extends SpellAbilityAi {
+-
+-    /* (non-Javadoc)
+-     * @see forge.card.abilityfactory.SpellAiLogic#canPlayAI(forge.game.player.Player, forge.card.spellability.SpellAbility)
+-     */
+     @Override
+-    protected AiAbilityDecision canPlay(Player aiPlayer, SpellAbility sa) {
+-        // Only Turnabout currently uses this, it's hardcoded to always return false
+-        // Looks like Faces of the Past could also use this
+-        return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.chooseWithFollowup(actor, action.getRootAbility(), MassTapChoices::variants);
+     }
+ 
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.chooseWithFollowup(actor, action.getRootAbility(), MassTapChoices::variants);
++    }
++
++    @Override
++    protected AiAbilityDecision doTriggerNoCost(Player actor, SpellAbility action, boolean mandatory) {
++        if (!action.usesTargeting() && mandatory) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        return super.doTriggerNoCost(actor, action, mandatory);
++    }
+ }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -613,12 +613,6 @@
+             if (c.hasChosenPlayer()) {
+                 newCard.setChosenPlayer(playerMap.get(c.getChosenPlayer()));
+             }
+-            if (c.hasChosenType()) {
+-                newCard.setChosenType(c.getChosenType());
+-            }
+-            if (c.hasChosenType2()) {
+-                newCard.setChosenType2(c.getChosenType2());
+-            }
+             if (c.hasChosenColor()) {
+                 newCard.setChosenColors(Lists.newArrayList(c.getChosenColors()));
+             }
+@@ -631,6 +625,11 @@
+             newCard.setSVars(c.getSVars());
+             newCard.copyChangedSVarsFrom(c);
+         }
++
++        // A resolving spell can choose a type before a later effect requests a copy.
++        // These choices belong to the card in every zone, including the stack.
++        if (c.hasChosenType()) newCard.setChosenType(c.getChosenType());
++        if (c.hasChosenType2()) newCard.setChosenType2(c.getChosenType2());
+ 
+         newCard.copySnapshotCastFormFrom(c);
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/MassTapChoices.java b/forge-ai/src/main/java/forge/ai/simulation/MassTapChoices.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/MassTapChoices.java
+@@ -0,0 +1,148 @@
++package forge.ai.simulation;
++
++import forge.ai.AiCache;
++import forge.ai.ComputerUtilCard;
++import forge.game.Game;
++import forge.game.ability.ApiType;
++import forge.game.card.Card;
++import forge.game.card.CardCollection;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.AITimeoutTracker;
++import forge.util.MyRandom;
++import java.util.ArrayList;
++import java.util.Collection;
++import java.util.List;
++import java.util.Random;
++
++/** Native mass-tap choices, bounded paid variants and paired local resolution policy. */
++public final class MassTapChoices {
++    private static final int MAX_TYPES = 32;
++    private static final int MAX_VARIANTS = 128;
++    private static final ThreadLocal<Boolean> ASSESSING = ThreadLocal.withInitial(() -> false);
++    private static final ThreadLocal<Branch> FORCED = new ThreadLocal<>();
++    private record Branch(SpellAbility action, boolean tap) { }
++    private record Outcome(long value, long available, long resources) { }
++    private MassTapChoices() { }
++
++    private static int position(SpellAbility action) {
++        int index = 0;
++        for (SpellAbility part = action.getRootAbility(); part != null; part = part.getSubAbility(), index++) {
++            if (part == action) return index;
++        }
++        return -1;
++    }
++
++    public static boolean supportsType(SpellAbility action) {
++        if (action.getApi() != ApiType.ChooseType || !"Card".equals(action.getParam("Type"))
++                || !action.hasParam("ValidTypes") || action.hasParam("AtRandom") || action.hasParam("Note")
++                || action.hasParam("Secretly") || action.hasParam("ChooseType2")) return false;
++        for (SpellAbility part = action.getSubAbility(); part != null; part = part.getSubAbility()) {
++            if (part.getApi() == ApiType.TapOrUntapAll) return true;
++        }
++        return false;
++    }
++
++    public static List<String> typeTokens(SpellAbility action, Collection<String> options) {
++        int index = position(action);
++        if (!supportsType(action) || index < 0 || options.isEmpty() || options.size() > MAX_TYPES) return List.of();
++        List<String> result = new ArrayList<>();
++        for (String type : options) result.add("mass-type:" + index + ":" + type);
++        return result;
++    }
++
++    public static List<String> directionTokens(SpellAbility action) {
++        int index = position(action);
++        return action.getApi() != ApiType.TapOrUntapAll || index < 0 ? List.of()
++                : List.of("mass-direction:" + index + ":tap", "mass-direction:" + index + ":untap");
++    }
++
++    /** An oversized domain retains native policy instead of silently searching a prefix. */
++    public static List<SpellAbility> variants(SpellAbility action) {
++        List<List<String>> sequences = new ArrayList<>(); sequences.add(List.of());
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            List<String> options;
++            if (supportsType(part)) {
++                List<String> types = new ArrayList<>(List.of(part.getParam("ValidTypes").split(",")));
++                if (part.hasParam("InvalidTypes")) types.removeAll(List.of(part.getParam("InvalidTypes").split(",")));
++                options = typeTokens(part, types);
++                if (options.isEmpty()) return List.of(action);
++            } else if (part.getApi() == ApiType.TapOrUntapAll) {
++                options = directionTokens(part);
++            } else {
++                // Other resolution-time choices belong to their existing native policy.
++                return List.of(action);
++            }
++            if (options.isEmpty() || sequences.size() * options.size() > MAX_VARIANTS) return List.of(action);
++            List<List<String>> next = new ArrayList<>();
++            for (List<String> prefix : sequences) for (String option : options) {
++                AITimeoutTracker.check();
++                List<String> sequence = new ArrayList<>(prefix); sequence.add(option); next.add(sequence);
++            }
++            sequences = next;
++        }
++        List<SpellAbility> result = new ArrayList<>();
++        for (List<String> sequence : sequences) {
++            SpellAbility candidate = action.copy();
++            if (TextChangeChoices.stageFullWords(candidate, sequence)) result.add(candidate);
++        }
++        return result;
++    }
++
++    /** Project only the not-yet-applied mass effect, never replay an already resolving parent. */
++    public static Boolean chooseDirection(Player actor, SpellAbility action) {
++        if (action.getApi() != ApiType.TapOrUntapAll) return null;
++        Branch forced = FORCED.get();
++        if (forced != null && forced.action == action) return forced.tap;
++        if (ASSESSING.get()) return null;
++        ASSESSING.set(true);
++        try {
++            Outcome tap = project(actor, action, true), untap = project(actor, action, false);
++            if (tap.value != untap.value) return tap.value > untap.value;
++            if (tap.available != untap.available) return tap.available > untap.available;
++            return tap.resources >= untap.resources;
++        } finally {
++            ASSESSING.remove();
++        }
++    }
++
++    private static Outcome project(Player actor, SpellAbility action, boolean tap) {
++        long value = 0, available = 0, resources = 0;
++        for (long seed : new long[]{0L, 4096L}) {
++            AITimeoutTracker.check();
++            Outcome result = AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(seed), () -> {
++                GameCopier copier = new GameCopier(actor.getGame());
++                Game game = copier.makeCopy(null, actor);
++                Player copiedActor = copier.find(actor), beneficiary = copier.find(DecisionPerspective.beneficiary(actor));
++                SpellAbility copied = copier.find(action);
++                Branch previous = FORCED.get(); FORCED.set(new Branch(copied, tap));
++                try {
++                    copied.getApi().getSpellEffect().resolve(copied);
++                } finally {
++                    if (previous == null) FORCED.remove(); else FORCED.set(previous);
++                }
++                Player resolver = copiedActor.getWeakestOpponent();
++                GameSimulator.resolveStack(game, resolver == null ? copiedActor : resolver);
++                GameStateEvaluator.Score score = new GameStateEvaluator().getScoreForGameState(game, beneficiary);
++                return new Outcome(score.value, score.availableValue, untappedResources(game, beneficiary));
++            }));
++            value += result.value; available += result.available; resources += result.resources;
++        }
++        return new Outcome(value, available, resources);
++    }
++
++    /** Tie-break only: retaining usable public permanents is preferable when native scores agree. */
++    private static long untappedResources(Game game, Player beneficiary) {
++        long total = 0;
++        for (Card card : game.getCardsIn(ZoneType.Battlefield)) {
++            AITimeoutTracker.check();
++            if (card.isTapped() || card.isPhasedOut() || !(card.isCreature() || card.isLand() || card.isArtifact())) continue;
++            int value = Math.max(1, card.isCreature() ? ComputerUtilCard.evaluateCreature(card)
++                    : ComputerUtilCard.evaluatePermanentList(new CardCollection(card)));
++            boolean friendly = card.getController() == beneficiary || beneficiary.getAllies().contains(card.getController());
++            total += friendly ? value : -value;
++        }
++        return total;
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -33,6 +33,11 @@
+     /** Compare a paid action plus one follow-up against the best immediate play without it. */
+     public static AiAbilityDecision chooseWithFollowup(Player actor, SpellAbility action) {
+         return choose(actor, action, candidate -> List.of(candidate), true);
++    }
++
++    public static AiAbilityDecision chooseWithFollowup(Player actor, SpellAbility action,
++            Function<SpellAbility, List<SpellAbility>> variants) {
++        return choose(actor, action, variants, true);
+     }
+ 
+     private static AiAbilityDecision choose(Player actor, SpellAbility action,
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+@@ -391,12 +391,25 @@
+         Set<String> identities = new java.util.TreeSet<>();
+         List<SpellAbility> chains = new ArrayList<>();
+         chains.add(root); chains.addAll(modes);
++        List<SpellAbility> parts = new ArrayList<>();
++        Set<SpellAbility> seen = Collections.newSetFromMap(new java.util.IdentityHashMap<>());
+         for (SpellAbility chain : chains) {
+             for (SpellAbility part = chain; part != null; part = part.getSubAbility()) {
+-                for (Card card : targetCards(part)) identities.add(card.getId() + ":" + card.getGameTimestamp());
+-            }
+-        }
+-        return String.join(",", identities);
++                if (seen.add(part)) parts.add(part);
++            }
++        }
++        List<String> playerRoles = new ArrayList<>();
++        for (int index = 0; index < parts.size(); index++) {
++            SpellAbility part = parts.get(index);
++            for (Card card : targetCards(part)) identities.add(card.getId() + ":" + card.getGameTimestamp());
++            int targetIndex = 0;
++            for (forge.game.GameObject target : part.getTargets()) {
++                if (target instanceof forge.game.player.Player player)
++                    playerRoles.add(index + ":" + targetIndex + ":" + player.getId());
++                targetIndex++;
++            }
++        }
++        return String.join(",", identities) + "|players:" + String.join(",", playerRoles);
+     }
+ 
+     public static void bindFullTargets(SpellAbility root, List<? extends SpellAbility> modes) {

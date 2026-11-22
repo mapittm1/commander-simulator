@@ -6,6 +6,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record an adjacent open choice-copy gap: four focused checks fail for stack
+  colors, named cards and chosen-player state, including a native Persecute
+  resolution checkpoint. Its supplied native outcome control passes. Preserve
+  exact reproduction sources and keep these failures separate from the passing
+  mass-tap regression suites.
+
+- Add generic paid mass tap/untap type and direction planning, ordered
+  player-role replay and local native branch choices. Preserve chosen type/type2
+  state across all copied zones, including resolving spells. Pass 470 source
+  cases with 32 new contracts, including countered/unaffordable costs, changed
+  types, copied streams, six-zone state isolation and repeated discard payments.
+  Preserve six reviewed-runtime failures, nine controls and fixture corrections
+  separately. Fix the introduced player-role binding defect.
+- Activate the reviewed mass-tap build after 1,696 selected native tests, separate
+  781/65/98 packaged families, 3,170 broader gameplay tests, 256 serialization tests
+  and 44 live tests with 1,592 subtests pass. Verify all 480 frozen inputs and
+  catalog construction of 32,636 starting identities with seven nonstarting meld
+  exclusions. Six production sources change and one helper is added; card scripts,
+  AI hints, identity reviews and the default profile are unchanged. Full card,
+  rules and strategy correctness remain unproven.
+
 - Add generic activated single-card discard planning and full simulation
   choice replay. Validate the chosen card through native cost approval and payment,
   copy identities independently and reject stale actors, targets, timestamps and

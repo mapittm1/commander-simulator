@@ -1,16 +1,16 @@
 {
   "scope": "Selected non-UI native gameplay and card/deck serialization regressions; not all-card rules certification",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "0d6bd28ba91a0c07e0895e806047aef17cb84f4bbc3c0d77040dc9c39f830005",
+  "recipe_sha256": "bb7c6f6a6e2ae930cdc2299b3c933850d6f16fe79a7d2e9ba7931a59e1b403e8",
   "test_only_policies": {
     "engine/patches/star-trek-commandeer-validation.patch": "2acafd29317c738cbe0e15ca9fb84aa6030520de266a8a447b54a2f645edbb91",
     "engine/patches/bauble-ai-classification-validation.patch": "1015d713605580e97c9d137481d533d20c6fe140d0d063a0f5fac104c691f4f4"
   },
-  "frozen_inputs_sha256": "d53002c64c4bb9594f35c3de199ee359f02993284b1b34a0c0ad9262647e3b03",
+  "frozen_inputs_sha256": "37126bfee21c4814c41c163c1eb08a59dcbcd4d365cec3646c9fee8cba227e32",
   "suites": {
     "gameplay": {
-      "total": 3138,
-      "passed": 3138,
+      "total": 3170,
+      "passed": 3170,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -66,6 +66,8 @@
         "forge.ai.CommanderLearnTest",
         "forge.ai.CommanderLibraryLookAtPositionTest",
         "forge.ai.CommanderLookAtCoverageTest",
+        "forge.ai.CommanderMassTapChosenTypeTest",
+        "forge.ai.CommanderMassTapTest",
         "forge.ai.CommanderModalTextCoverageTest",
         "forge.ai.CommanderOptionalCopyTest",
         "forge.ai.CommanderOptionalCountersTest",
@@ -82,6 +84,7 @@
         "forge.ai.CommanderPublicVoteTest",
         "forge.ai.CommanderRaisedCastCostTest",
         "forge.ai.CommanderReaperLimitTest",
+        "forge.ai.CommanderRepeatedDiscardEntrypointTest",
         "forge.ai.CommanderReverseTurnOrderTest",
         "forge.ai.CommanderRinoaReturnTest",
         "forge.ai.CommanderSecretVoteTest",
@@ -305,16 +308,16 @@
         "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
         "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 290,
+      "selected_classes": 293,
       "process": {
         "status": "finished",
-        "bytes": 165150,
+        "bytes": 172668,
         "returncode": 0,
-        "elapsed_seconds": 247.484
+        "elapsed_seconds": 282.844
       },
-      "local_run_id": "native-gameplay-2ccbfd3d8fd64814bd3cb256a0a56887",
-      "testng_results_sha256": "d70ebf23983f92074d187606c61b641d882c7c6e1ea4c61de6aa6f8be8ea412b",
-      "log_sha256": "83fd90a9e4ff6a91206887f2bc63fc47f927e66c7511e98b822eda89568f41db"
+      "local_run_id": "native-gameplay-e4c5316d6e12499c83566e0be5e13848",
+      "testng_results_sha256": "a94d7aa0a641be8b2d706cf9ddb2dc1dcd9dc7422da94d8978608f378e9c1bd4",
+      "log_sha256": "55275a2d7ecfac4f0a427b5fb1d902a866e30abf8567fa546a5149619b1afe08"
     },
     "serialization": {
       "total": 256,
@@ -342,13 +345,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 30348,
+        "bytes": 29939,
         "returncode": 0,
-        "elapsed_seconds": 95.516
+        "elapsed_seconds": 102.984
       },
-      "local_run_id": "native-serialization-c2642fb80c8142b09b4daa7244a8b9d5",
-      "testng_results_sha256": "a4b3f4c3f6a9e49ec0083533a5fe944e36a8a1ca3a36aa10719709abe5ff2ca2",
-      "log_sha256": "aec3b1be2decf7b859d4ff3dfd65f6605e9d44ba251f15828983ff5be79fe26b"
+      "local_run_id": "native-serialization-85b2cf6a06494a1ab03d6427267f67c6",
+      "testng_results_sha256": "de0f3b2299448e6c059568d617f77eaafe28c816ff0307b852fe147a6b7d21de",
+      "log_sha256": "416e0aec458b315c2ffdf25fbcd67fb474f4f70bf4b47d9cc48662b1b6f9c597"
     }
   },
   "evidence_note": "Raw reports remain ignored local data under each recorded run ID."

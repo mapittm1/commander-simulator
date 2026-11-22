@@ -1,0 +1,146 @@
+{
+  "status": "confirmed_copy_state_failure_pending_fix",
+  "scope": "Follow-up after the mass-tap correction: colors, named cards and chosen-player state on stack-zone cards. Four failed copy checks and one passing supplied native Persecute control; not part of the 32 passing mass-tap contracts.",
+  "baseline_build": "b0352c03d78d4ec2a5319e99d1615167",
+  "baseline_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-mass-tap",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "e9b1739363b27c7f837ec3fcb68589a48da9f21e4beca3b2d4dacbd425eda40a",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "bb7c6f6a6e2ae930cdc2299b3c933850d6f16fe79a7d2e9ba7931a59e1b403e8",
+    "native_tests": {
+      "total": 1696,
+      "passed": 1696,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "7b2f91425c323203dd0bc8c4c2a6c615c5017238d9c3bf87a8738a394baeb418",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 5,
+    "passed": 1,
+    "failed": 4,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderSpellChoiceCopyResearchTest.aChosenPlayerOnAStackCardMapsIntoTheCopiedGame",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellChoiceCopyResearchTest.colorsOnAStackCardSurviveTheCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellChoiceCopyResearchTest.namedCardsOnAStackCardSurviveTheCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellChoiceCopyResearchTest.persecutesChosenColorSurvivesAMidResolutionCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellChoiceCopyResearchTest.suppliedPersecuteDiscardsOnlyTheChosenColor",
+      "status": "PASS"
+    }
+  ],
+  "failed_expectations": [
+    {
+      "method": "aChosenPlayerOnAStackCardMapsIntoTheCopiedGame",
+      "message": "expected object to not be null"
+    },
+    {
+      "method": "colorsOnAStackCardSurviveTheCopy",
+      "message": "Expected iterator returned more elements than the actual iterator."
+    },
+    {
+      "method": "namedCardsOnAStackCardSurviveTheCopy",
+      "message": "lists don't have the same size expected [1] but found [0]"
+    },
+    {
+      "method": "persecutesChosenColorSurvivesAMidResolutionCopy",
+      "message": "A resolving spell's chosen color must survive a game copy: Expected iterator returned more elements than the actual iterator."
+    }
+  ],
+  "engine_cases": [
+    "Actual paid Persecute reveals and discards the supplied Blue cards while retaining Green cards.",
+    "At that real resolution checkpoint, a copied Persecute loses its chosen color.",
+    "Separate raw stack-state contracts lose chosen colors, names and a chosen-player reference. The latter is explicit state, not added Persecute wording."
+  ],
+  "evidence_sha256": "ea94880d46ab9fa34aab740ca65477fc125b21cd01eaf838022e70ed2db5cbc0",
+  "report_sha256": "6f13d9dea140b5d7ae445b0983144d443c810b62cae727344110fe46ac331089",
+  "process": {
+    "status": "finished",
+    "bytes": 3534,
+    "returncode": 0,
+    "elapsed_seconds": 12.516
+  },
+  "local_raw_run": "data/development/commander-spell-choice-context-research/packaged-spell-choice5-baseline",
+  "reproduction": {
+    "fixture": {
+      "local_path": "data/development/commander-spell-choice-context-research/packaged-spell-choice5-baseline/input-snapshots/CommanderSpellChoiceCopyResearchTest.java",
+      "sha256": "925807ffdb0d1ef5cda32738b777d3a41ce68ba2ca48845da7695929ac700639",
+      "source": "package forge.ai;\r\n\r\nimport forge.card.ColorSet;\r\nimport forge.card.MagicColor;\r\nimport forge.deck.Deck;\r\nimport forge.game.Game;\r\nimport forge.game.GameRules;\r\nimport forge.game.GameStage;\r\nimport forge.game.GameType;\r\nimport forge.game.Match;\r\nimport forge.game.card.Card;\r\nimport forge.game.card.CardCollectionView;\r\nimport forge.game.phase.PhaseType;\r\nimport forge.game.player.Player;\r\nimport forge.game.player.RegisteredPlayer;\r\nimport forge.game.spellability.SpellAbility;\r\nimport forge.game.zone.ZoneType;\r\nimport java.util.ArrayList;\r\nimport java.util.List;\r\nimport org.testng.annotations.Test;\r\nimport static org.testng.Assert.*;\r\n\r\n/** Follow-up research: non-type choices on resolving spells and raw stack card state. */\r\npublic class CommanderSpellChoiceCopyResearchTest extends AITest {\r\n    @Test public void colorsOnAStackCardSurviveTheCopy() {\r\n        Pod pod = pod(); Card card = stackCard(pod, \"Persecute\"); card.setChosenColors(List.of(\"Blue\"));\r\n        forge.ai.simulation.GameCopier copier = new forge.ai.simulation.GameCopier(pod.game);\r\n        Game game = copier.makeCopy(null, pod.actor); Card copy = copier.find(card);\r\n        assertSame(copy.getGame(), game); assertTrue(card.hasChosenColor());\r\n        assertEquals(copy.getChosenColors(), card.getChosenColors());\r\n    }\r\n    @Test public void namedCardsOnAStackCardSurviveTheCopy() {\r\n        Pod pod = pod(); Card card = stackCard(pod, \"Demonic Consultation\"); card.setNamedCards(List.of(\"Forest\"));\r\n        forge.ai.simulation.GameCopier copier = new forge.ai.simulation.GameCopier(pod.game);\r\n        copier.makeCopy(null, pod.actor); Card copy = copier.find(card);\r\n        assertTrue(card.hasNamedCard()); assertEquals(copy.getNamedCards(), card.getNamedCards());\r\n    }\r\n    /** Explicit raw state contract, not an added printed Persecute ability. */\r\n    @Test public void aChosenPlayerOnAStackCardMapsIntoTheCopiedGame() {\r\n        Pod pod = pod(); Card card = stackCard(pod, \"Persecute\"); card.setChosenPlayer(pod.enemy);\r\n        forge.ai.simulation.GameCopier copier = new forge.ai.simulation.GameCopier(pod.game);\r\n        Game game = copier.makeCopy(null, pod.actor); Player chosen = copier.find(card).getChosenPlayer();\r\n        assertNotNull(chosen); assertNotSame(chosen, pod.enemy); assertSame(chosen.getGame(), game);\r\n        assertSame(chosen, copier.find(pod.enemy));\r\n    }\r\n    @Test public void suppliedPersecuteDiscardsOnlyTheChosenColor() { persecute(false); }\r\n    @Test public void persecutesChosenColorSurvivesAMidResolutionCopy() { persecute(true); }\r\n\r\n    private void persecute(boolean inspectCopy) {\r\n        Pod pod = pod(); Card spell = addCardToZone(\"Persecute\", pod.actor, ZoneType.Hand);\r\n        Card blue = addCardToZone(\"Counterspell\", pod.enemy, ZoneType.Hand);\r\n        Card green = addCardToZone(\"Grizzly Bears\", pod.enemy, ZoneType.Hand);\r\n        SpellAbility action = spell.getFirstSpellAbility(); action.setActivatingPlayer(pod.actor);\r\n        action.getSubAbility().getTargets().add(pod.enemy);\r\n        boolean[] observed = {false}; AiController brain = ((PlayerControllerAi) pod.actor.getController()).getAi();\r\n        PlayerControllerAi controller = new PlayerControllerAi(pod.game, pod.actor, pod.actor.getLobbyPlayer()) {\r\n            @Override public AiController getAi() { return brain; }\r\n            @Override public ColorSet chooseColors(String message, SpellAbility choice, int min, int max, ColorSet options) {\r\n                assertTrue((options.getColor() & MagicColor.BLUE) != 0); return ColorSet.fromMask(MagicColor.BLUE);\r\n            }\r\n            @Override public void reveal(CardCollectionView cards, ZoneType zone, Player owner, String prefix, boolean suffix) {\r\n                if (zone == ZoneType.Hand && owner == pod.enemy && pod.game.getStack().isResolving()) {\r\n                    observed[0] = true; Card source = action.getHostCard();\r\n                    assertTrue(source.isInZone(ZoneType.Stack)); assertTrue(source.hasChosenColor());\r\n                    if (inspectCopy) {\r\n                        forge.ai.simulation.GameCopier copier = new forge.ai.simulation.GameCopier(pod.game);\r\n                        copier.makeCopy(null, pod.actor);\r\n                        assertEquals(copier.find(source).getChosenColors(), source.getChosenColors(),\r\n                                \"A resolving spell's chosen color must survive a game copy\");\r\n                    }\r\n                }\r\n                super.reveal(cards, zone, owner, prefix, suffix);\r\n            }\r\n        };\r\n        pod.actor.runWithController(() -> {\r\n            assertTrue(ComputerUtil.handlePlayingSpellAbility(pod.actor, action, null)); settle(pod.game);\r\n        }, controller);\r\n        assertTrue(observed[0]); assertTrue(pod.game.getCardState(blue).isInZone(ZoneType.Graveyard));\r\n        assertTrue(green.isInZone(ZoneType.Hand)); assertTrue(pod.game.getCardState(spell).isInZone(ZoneType.Graveyard));\r\n        assertEquals(pod.actor.getSpellsCastThisTurn(), 1);\r\n        assertTrue(pod.actor.getLandsInPlay().stream().allMatch(Card::isTapped));\r\n    }\r\n    private Card stackCard(Pod pod, String name) {\r\n        Card card = addCardToZone(name, pod.actor, ZoneType.Hand);\r\n        pod.actor.getZone(ZoneType.Hand).remove(card); pod.game.getStackZone().add(card); return card;\r\n    }\r\n    private Pod pod() {\r\n        List<RegisteredPlayer> seats = new ArrayList<>();\r\n        for (int i = 0; i < 4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi(\"choice-context-\" + i, null)));\r\n        GameRules rules = new GameRules(GameType.Commander);\r\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Spell choice context copying\"));\r\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\r\n        for (Player player : game.getPlayers()) for (int i = 0; i < 8; i++) addCardToZone(\"Forest\", player, ZoneType.Library);\r\n        for (int i = 0; i < 4; i++) addCardToZone(\"Swamp\", actor, ZoneType.Battlefield);\r\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2); game.getAction().checkStateEffects(true);\r\n        game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\r\n        return new Pod(game, actor, game.getPlayers().get(1));\r\n    }\r\n    private void settle(Game game) {\r\n        for (int i = 0; i < 40; i++) {\r\n            game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\r\n            game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\r\n            if (game.getStack().isEmpty()) return; game.getStack().resolveStack();\r\n        }\r\n        throw new AssertionError(\"Choice context stack did not settle\");\r\n    }\r\n    private record Pod(Game game, Player actor, Player enemy) { }\r\n}\r\n"
+    },
+    "runner": {
+      "local_path": "data/development/commander-spell-choice-context-research/packaged-spell-choice5-baseline/input-snapshots/run_baseline.py",
+      "sha256": "475080ffd73f300834a57e7bbac04edd934a947b7cd544194a47f8c8693be816",
+      "source": "from pathlib import Path\r\nimport hashlib\r\nimport importlib\r\nimport json\r\nimport os\r\nimport sys\r\n\r\nROOT = Path(__file__).resolve().parents[3]\r\nsys.path.insert(0, str(ROOT))\r\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\r\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\r\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\r\nfrom tests.support import draw_ending_worker as rules\r\n\r\nWORK = Path(__file__).resolve().parent\r\nBUILD = ROOT / 'data/engine-builds/b0352c03d78d4ec2a5319e99d1615167'\r\nTEST_CLASS = 'forge.ai.CommanderSpellChoiceCopyResearchTest'\r\nFIXTURE = WORK / 'CommanderSpellChoiceCopyResearchTest.java'\r\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect')))\r\n\r\n\r\ndef sources():\r\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\r\n    base = ROOT / 'engine/tests/AITest.java'\r\n    dependency = ROOT / recipe['packaged_testng']['path']\r\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\r\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\r\n    return [base, FIXTURE], dependency\r\n\r\n\r\ndef worker(run):\r\n    settings = read_settings(BUILD / 'engine-config.json')\r\n    engine = settings.verify()\r\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\r\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\r\n    output = run / 'rules-classes'\r\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\r\n                                   for path in output.rglob('*.class')}\r\n    _, dependency = sources()\r\n    require_bridge()\r\n    java = importlib.import_module('jpype')\r\n    archive = settings.home / engine['jar_name']\r\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\r\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\r\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\r\n    for name in NATIVE_ORIGINS:\r\n        assert rules._origin(java, name).samefile(archive), name\r\n    for name in ('forge.ai.AITest', TEST_CLASS):\r\n        assert rules._origin(java, name).samefile(output), name\r\n    runner = java.JClass('org.testng.TestNG')()\r\n    listener = java.JClass('org.testng.TestListenerAdapter')()\r\n    runner.addListener(listener)\r\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\r\n    runner.setOutputDirectory(str(run / 'reports'))\r\n    runner.setUseDefaultListeners(True)\r\n    runner.run()\r\n    counts, methods = rules._results(listener)\r\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\r\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\r\n              'engine': engine, 'counts': counts, 'methods': methods,\r\n              'testng_status': int(runner.getStatus()),\r\n              'configuration_failures': len(listener.getConfigurationFailures()),\r\n              'configuration_skips': len(listener.getConfigurationSkips()),\r\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\r\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\r\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\r\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\r\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\r\n    java.shutdownJVM()\r\n\r\n\r\ndef parent():\r\n    settings = read_settings(BUILD / 'engine-config.json')\r\n    settings.verify()\r\n    run = WORK / 'packaged-spell-choice5-baseline'\r\n    run.mkdir()\r\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\r\n    selected, dependency = sources()\r\n    rules._compile(settings, run, selected, dependency)\r\n    with _engine_profile(settings, run):\r\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\r\n                             settings.home, run / 'native.log',\r\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\r\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\r\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\r\n    record = json.loads((run / 'evidence.json').read_bytes())\r\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\r\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\r\n\r\n\r\nif __name__ == '__main__':\r\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\r\n        target = Path(sys.argv[2]).resolve(strict=True)\r\n        assert target.parent == WORK and target.name == 'packaged-spell-choice5-baseline'\r\n        worker(target)\r\n    else:\r\n        assert len(sys.argv) == 1\r\n        parent()\r\n"
+    },
+    "note": "Preserved trusted maintenance sources use this local pinned build/JDK and cached TestNG. A new checkout must prepare its reviewed engine and point the runner at that exact build before reproducing; no uploaded definitions execute."
+  },
+  "limits": [
+    "The Persecute outcome control supplies the color and checks actual native payment/resolution; it is not an autonomous AI strategy witness.",
+    "Three raw metadata cases and one actual resolution-copy case do not quantify all affected cards.",
+    "The reviewed mass-tap selected suites pass; these additional failures remain open. Full card/rules/strategy correctness is not certified."
+  ]
+}

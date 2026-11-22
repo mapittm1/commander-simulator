@@ -17,6 +17,66 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Mass tap and untap choices
+
+The reviewed shared mass tap/untap policy replaces an outright AI rejection with
+paid native outcome planning. Turnabout can choose a legal type and direction,
+recover its caster's lands after payment and enable Rorix Bladewing. A full-pilot
+witness selects and pays for both spells. Separate shared-API controls test
+admission; they do not establish autonomous heuristic/hybrid discovery. Existing
+card exclusion hints remain unchanged.
+
+Resolution-time type and direction choices use the existing ordered replay
+stream. Namespaced tokens are checked against current legal callback options,
+with actor and ordered player-target roles bound to the stream. A changed actor,
+changed player target, invalid type token or swapped player roles cannot reuse
+the old choice. Copies consume their own stream without changing the original.
+The two-node target-role case is a structural contract, not additional Turnabout
+Oracle text.
+
+Chosen type and secondary type now survive native copies of cards in every zone.
+An independent reviewed-runtime failure demonstrates a resolving Turnabout losing
+its chosen Land type before the correction. Six separate zone contracts also
+check both fields and independent mutation in the copy. Secondary choices in
+those fixtures are explicit raw state, not new printed card abilities.
+
+Actual native controls cover paid Turnabout, countered costs, unaffordable setup
+rejection, already available follow-ups, one stun replacement without suppressing
+other untaps, and player hexproof gained after casting. An artifact creature
+untaps once, and Wake Thrasher receives the corresponding native events.
+Mycosynth Lattice added before resolution changes which permanents match the
+chosen type. Faces of the Past controls retain the dead creature's shared-type
+resolution and distinguish supplied choices from the ordinary AI direction.
+
+Unplanned mass-direction decisions project the not-yet-applied native effect and
+resulting triggers in isolated copied games, without replaying the resolving
+parent. They compare paired seeds 0 and 4096. A public untapped-permanent resource
+tie-break applies only when native value and availability scores agree. This is a
+local policy; it does not certify every unfinished parent suffix or multi-turn
+combo. Nested mass choices retain native fallback. The two samples are not an
+exhaustive probability model.
+
+Paid variants cover explicit nonrandom Card-type domains up to 32 options and
+128 complete combinations. Oversized domains keep native policy rather than
+searching only a prefix. Existing paid outcome, immediate-alternative, deadline,
+heap and worker limits are unchanged. Thirty-two new contracts plus 438 retained
+source cases pass. The packaged untap family now contains 98 cases and retains
+all earlier single-target, discard-payment and preview-cache checks. Run it with
+`COMMANDER_ENGINE_INTEGRATION=1` and a configured JDK compiler using
+`.venv/Scripts/python.exe -m pytest -q -s tests/integration/test_untap_integration.py`.
+See the [source comparison](../engine/mass_tap_native_evidence.json) and
+[activation evidence](../engine/mass_tap_evidence.json). These selected controlled
+states do not establish complete card compositions, arbitrary choice optimization,
+multiplayer strategy or full rules coverage.
+
+Other spell-choice state remains open. Five follow-up probes against this same
+reviewed engine have one passing supplied Persecute outcome control and four copy
+failures: colors, names and chosen-player state are lost from stack cards,
+including the color at an actual Persecute resolution checkpoint. See the
+[open gap and exact reproduction sources](../engine/spell_choice_copy_gap.json).
+These failures are outside the 32 passing mass-tap contracts and remain the next
+copy-state correction.
+
 ## Activated discard payments
 
 The reviewed planner can choose which card pays an activated ability's single
