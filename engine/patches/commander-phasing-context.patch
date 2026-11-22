@@ -1,0 +1,73 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -291,6 +291,8 @@
+         }
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+             entry.getValue().copySnapshotChoicesFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotPhasingFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotImprintedFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRegenerationFrom(entry.getKey());
+@@ -352,14 +354,14 @@
+         }
+ 
+         for (ZoneType zone : ZONES) {
+-            for (Card card : origGame.getCardsIn(zone)) {
++            for (Card card : origGame.getCardsIncludePhasingIn(zone)) {
+                 addCard(newGame, zone, card, aiPlayer);
+             }
+             // TODO CardsAddedThisTurn is now messed up
+         }
+         gameObjectMap = new CopiedGameObjectMap(newGame);
+ 
+-        for (Card card : origGame.getCardsIn(ZoneType.Battlefield)) {
++        for (Card card : origGame.getCardsIncludePhasingIn(ZoneType.Battlefield)) {
+             Card otherCard = cardMap.get(card);
+             otherCard.setGameTimestamp(card.getGameTimestamp());
+             otherCard.setLayerTimestamp(card.getLayerTimestamp());
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8694,6 +8694,19 @@
+         view.updateController(this);
+     }
+ 
++    /** Map imprint references and their public view without sharing mutable containers. */
++    public void copySnapshotImprintedFrom(Card original, IEntityMap map) {
++        imprintedCards = original.imprintedCards == null ? null : map.mapCollection(original.imprintedCards);
++        view.set(TrackableProperty.ImprintedCards, imprintedCards == null ? null : CardView.getCollection(imprintedCards));
++    }
++
++    /** Preserve phasing state without performing a phase action or emitting its events. */
++    public void copySnapshotPhasingFrom(Card original, IEntityMap map) {
++        setPhasedOut(map.map(original.phasedOut));
++        directlyPhasedOut = original.directlyPhasedOut;
++        wontPhaseInNormal = original.wontPhaseInNormal;
++    }
++
+     /** Copy announced choices after entity maps exist, preserving their public presentation. */
+     public void copySnapshotChoicesFrom(Card original, IEntityMap map) {
+         chosenType = original.chosenType;
+diff --git a/forge-game/src/main/java/forge/game/card/CardCopyService.java b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -408,7 +408,7 @@
+         newCopy.setCounters(HashMultiset.create(copyFrom.getCounters()));
+ 
+         newCopy.setColor(copyFrom.getColor());
+-        newCopy.setPhasedOut(copyFrom.getPhasedOut());
++        newCopy.copySnapshotPhasingFrom(copyFrom, historyGraph(cachedMap));
+         newCopy.setTapped(copyFrom.isTapped());
+         newCopy.setSickness(copyFrom.isFirstTurnControlled());
+         newCopy.setTributed(copyFrom.isTributed());
+@@ -451,7 +451,7 @@
+         newCopy.setPerpetual(copyFrom, false);
+ 
+         newCopy.addRemembered(historyMap == null ? copyFrom.getRemembered() : historyObjects(copyFrom.getRemembered(), cachedMap));
+-        newCopy.addImprintedCards(historyMap == null ? copyFrom.getImprintedCards() : historyCards(copyFrom.getImprintedCards(), cachedMap));
++        newCopy.copySnapshotImprintedFrom(copyFrom, historyGraph(cachedMap));
+         newCopy.copySnapshotChoicesFrom(copyFrom, historyGraph(cachedMap));
+ 
+         // for getReplacementList (run after setChangedCardKeywords for caching)

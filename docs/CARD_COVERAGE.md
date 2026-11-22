@@ -17,24 +17,55 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Open copied-phasing lookup gap
+## Phased physical state and imprint references
 
-Eight probes against the reviewed Gift runtime pass three controls and fail five
-copy contracts. Native paid Slip Out the Back gives the creature its counter and
-phases it out without changing its battlefield zone or timestamp. Same-game
-last-known information and the corrected unphased copy control also pass.
+The reviewed runtime enumerates physical cards with the native API that includes
+phased-out permanents, including the battlefield relationship pass. Shared Card
+snapshot routines map the phase owner, direct-phasing designation and normal
+phase-in suppression flag in copied games and native last-known information.
+Restoration copies state without replaying a phase action or its rules events.
+Ordinary gameplay queries retain their native filtering of phased-out cards.
 
-All five failures stop at a copied-state lookup that cannot map the phased-out
-creature. The subsequent phase-owner, public-view, nested-copy and native phase-in
-assertions are not reached and remain unverified. Five failed contracts are not
-five distinct card bugs. An initial control incorrectly assumed the native direct-
-phasing designation defaults false while unphased; comparing the native original
-corrects that fixture. Both runs and their exact inputs remain preserved.
+All 549 focused source checks pass, retaining 524 and adding 25. The original
+corrected eight-case reviewed-runtime baseline has three passing controls and
+five failed lookups. The expanded baseline passes five controls and fails twenty
+contracts. These are failed contracts, not twenty distinct card bugs. The initial
+unphased control assumed an incorrect default direct-phasing designation; its
+correction and both original runs remain preserved.
 
-No production correction is included yet. These are supplied actions on partial
-registrations, not autonomous strategy witnesses. Indirect attachment phasing,
-suppressed normal phase-in and Battle protector history remain separate follow-up
-requirements. See the [gap report and exact reproductions](../engine/phasing_context_gap.json).
+The first532 source checks fixed lookup and flags. Expanded544 testing then
+exposed a copied Out of Time whose creatures did not return after removal. An
+isolated 549-case phase retained 543 passes and demonstrated six failures caused by
+missing imprint references, including the effect's imprinted host and Chrome Mox
+mana. Shared imprint restoration now maps physical, historical and self references
+and public views into independent containers. All six isolated failures pass.
+
+Native witnesses cover paid Slip Out the Back, the proper player's untap phasing,
+indirect Bonesplitter attachment, token survival and a phased Lord of Atlantis
+remaining inactive until phase-in. Paid Out of Time suppresses ordinary phase-in;
+paid Disenchant in the copy returns both remembered creatures without changing
+the original game. A copied Chrome Mox with a legal green imprint pays for an
+actual Elvish Mystic. Copy mutation does not change original imprint containers
+or views.
+
+Spells and targets are supplied. Equipment attachment and the legal Mox imprint
+are explicit preconditions; the fixtures do not cast or autonomously choose
+those setup actions. Historical/self imprints on Sol Ring and the Grizzly Bears
+remembered-card case are explicit metadata, not added printed abilities. Native
+untap phasing invokes its rules routine directly; these selected controls do not
+certify every replacement, control-transfer, phasing or imprint composition.
+
+The fresh build passes 1,775 selected native cases. Packaged families of 781, 65
+and 177 pass independently and again in the full run of 44 integration tests with
+1,671 subtests. Broader gameplay and serialization pass 3,249 and 256 cases. Three
+production sources and six packaged classes change, with no added or removed
+classes. All 486 implementation inputs remain frozen through validation. Card
+scripts, AI hints and the default profile are unchanged. Catalog construction
+covers 32,636 starting identities with seven nonstarting meld exclusions; loading
+is not rules certification. See the [source comparison](../engine/phasing_context_native_evidence.json),
+[activation evidence](../engine/phasing_context_evidence.json), and
+[resolved gap with original reproductions](../engine/phasing_context_gap.json).
+Full card, rules and multiplayer strategy correctness remain unverified.
 
 ## Gift recipients and copied resolution
 
@@ -66,12 +97,12 @@ its paid-resolution copies omitted executable stack entries. Explicit stack
 copying and stack-entry assertions correct that setup; production code did not
 change. The failed phase, exact inputs and correction remain preserved separately.
 
-The fresh build passes 1,750 selected native cases. Packaged families of 781, 65
+The Gift-context milestone passed 1,750 selected native cases. Packaged families of 781, 65
 and 152 pass independently and again in the full run of 44 integration tests with
 1,646 subtests. Broader gameplay and serialization runs pass 3,224 and 256 cases.
 The audit confines changes to two production sources/classes, with no added or
-removed classes. All 484 implementation inputs remain frozen through validation;
-card scripts, AI hints and the default profile are unchanged. Catalog construction
+removed classes. All 484 implementation inputs remained frozen through that validation;
+card scripts, AI hints and the default profile were unchanged. Catalog construction
 covers 32,636 starting identities with seven nonstarting meld exclusions.
 See the [source comparison](../engine/gift_context_native_evidence.json),
 [activation evidence](../engine/gift_context_evidence.json), and

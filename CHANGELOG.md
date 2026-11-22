@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct shared phasing and imprint snapshots: include phased-out physical
+  cards/attachments, map phase owners and direct/suppression flags, and restore
+  imprinted references/public views without sharing containers. Pass 549 source
+  cases with 25 new contracts. Preserve the initial 532-case success, expanded Out of
+  Time failure and six isolated imprint failures before their generic correction.
+  Include paid native phasing, untap, Out of Time/Disenchant, token/static-source
+  and Chrome Mox mana witnesses; document explicit metadata/setup limits.
+- Activate the reviewed phasing/imprint build after 1,775 selected native tests,
+  separate 781/65/177 packaged families, 3,249 broader gameplay tests, 256 serialization
+  tests and 44 live tests with 1,671 subtests pass. Verify all 486 frozen inputs and
+  construction of 32,636 starting identities with seven nonstarting meld exclusions.
+  Three production sources and six packaged classes change; no classes are added
+  or removed. Card scripts, AI hints and the default profile remain unchanged.
+  Preserve original failed expectations and reproductions in the resolved gap.
+  Full card, rules and strategy correctness remains unproven.
+
 - Record a copied-phasing lookup gap after real paid Slip Out the Back: five
   contracts cannot map the phased-out creature. Preserve three passing controls,
   exact reproduction sources, raw report hashes and an initial native-default

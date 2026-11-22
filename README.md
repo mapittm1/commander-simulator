@@ -27,11 +27,15 @@ difference.
 
 ## Card coverage
 
-Copied phasing state has an open lookup gap. Eight native probes have three
-passing controls and five failures when mapping a creature phased out by paid
-Slip Out the Back. Later phase-in assertions are not reached. See the
-[exact failures and reproductions](engine/phasing_context_gap.json). These checks
-are separate from the passing Gift-context validation below.
+Generic phasing/imprint snapshots preserve phased-out physical cards and their
+attachments, mapped phase owners, direct/suppressed phase-in flags and imprinted
+references/public views. All 549 source checks pass with 25 new contracts,
+including native untap, Out of Time/Disenchant, tokens, static abilities and copied
+Chrome Mox mana. Intermediate failures isolate missing imprints after lookup was
+corrected. See the [source comparison](engine/phasing_context_native_evidence.json),
+[packaged validation](engine/phasing_context_evidence.json), and
+[resolved phasing gap](engine/phasing_context_gap.json). Full card and AI
+correctness remain open.
 
 Generic Gift-context copying maps recipients into copied games and historical
 state through the shared snapshot routine. All 524 source checks pass with 22 new
@@ -526,14 +530,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,750 selected native tests, packaged
-families of 781, 65 and 152 rules cases, 3,224 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,646 subtests. All 484 frozen inputs
+The current reviewed runtime passed 1,775 selected native tests, packaged
+families of 781, 65 and 177 rules cases, 3,249 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,671 subtests. All 486 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/gift_context_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/phasing_context_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
