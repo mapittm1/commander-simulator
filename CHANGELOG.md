@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic Battle-protector restoration in copied games and native LKI,
+  replacing the battlefield-only path with shared mapped references/public views.
+  Pass 566 source tests with 17 Battle contracts. Preserve the original three and
+  expanded nine old-runtime failures, including native Portent Tracker adding
+  rather than removing a defense counter with historical target metadata.
+  Cover paid activations, Stifle, copied pending entry, departed protectors,
+  nested history and mutation isolation. Supplied actions and metadata do not
+  certify autonomous strategy or complete combat.
+- Activate the reviewed Battle-protector build after 1,792 selected native tests,
+  independent 781/65/194 packaged families, 3,266 broader gameplay tests, 256
+  serialization tests and 44 live tests with 1,688 subtests pass. Verify all 488
+  frozen inputs and construction of 32,636 starting identities with seven
+  nonstarting meld exclusions. Three production sources and six packaged classes
+  change; none are added or removed. Card scripts, AI hints and the default
+  profile are unchanged. Full card, rules and strategy correctness remains open.
+
 - Record a historical Battle-protector gap after real paid Invasion of Gobakhan:
   native LKI and copied historical records lose the protector, and the native
   OppProtect predicate changes. Preserve three failed contracts, three passing

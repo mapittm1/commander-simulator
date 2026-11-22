@@ -1,0 +1,47 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -291,6 +291,7 @@
+         }
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+             entry.getValue().copySnapshotChoicesFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotProtectorFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotPhasingFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotImprintedFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+@@ -558,9 +559,6 @@
+             zoneOwner = playerMap.get(c.getController());
+             newCard.setController(zoneOwner, 0);
+ 
+-            if (c.isBattle()) {
+-                newCard.setProtectingPlayer(playerMap.get(c.getProtectingPlayer()));
+-            }
+ 
+             newCard.setCameUnderControlSinceLastUpkeep(c.cameUnderControlSinceLastUpkeep());
+ 
+diff --git a/forge-game/src/main/java/forge/game/card/Card.java b/forge-game/src/main/java/forge/game/card/Card.java
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8694,6 +8694,11 @@
+         view.updateController(this);
+     }
+ 
++    /** Preserve a designated protector in the appropriate live or historical snapshot world. */
++    public void copySnapshotProtectorFrom(Card original, IEntityMap map) {
++        setProtectingPlayer(map.map(original.protectingPlayer));
++    }
++
+     /** Map imprint references and their public view without sharing mutable containers. */
+     public void copySnapshotImprintedFrom(Card original, IEntityMap map) {
+         imprintedCards = original.imprintedCards == null ? null : map.mapCollection(original.imprintedCards);
+diff --git a/forge-game/src/main/java/forge/game/card/CardCopyService.java b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -409,6 +409,7 @@
+ 
+         newCopy.setColor(copyFrom.getColor());
+         newCopy.copySnapshotPhasingFrom(copyFrom, historyGraph(cachedMap));
++        newCopy.copySnapshotProtectorFrom(copyFrom, historyGraph(cachedMap));
+         newCopy.setTapped(copyFrom.isTapped());
+         newCopy.setSickness(copyFrom.isFirstTurnControlled());
+         newCopy.setTributed(copyFrom.isTributed());

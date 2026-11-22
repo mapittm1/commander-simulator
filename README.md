@@ -27,11 +27,17 @@ difference.
 
 ## Card coverage
 
-Historical Battle protector state remains an open gap. Six native probes have
-three passing controls and three failures: native LKI loses the protector, a
-historical copied reference has none, and the native opponent-protector predicate
-changes. See the [exact failures and reproductions](engine/battle_protector_gap.json).
-These checks are separate from the passing phasing/imprint validation below.
+Shared Battle-protector snapshots preserve live and historical protector references
+and public views in copied games and native LKI. All 566 source tests pass, with
+17 Battle contracts. The original three and expanded nine old-runtime failures
+are resolved, including Portent Tracker adding a counter where it should remove
+one when given historical target metadata. Native paid activations, Stifle and
+copied pending entry complement structural history controls. See the
+[source comparison](engine/battle_protector_native_evidence.json),
+[packaged validation](engine/battle_protector_evidence.json), and
+[resolved gap with original reproductions](engine/battle_protector_gap.json).
+Supplied actions and metadata do not certify autonomous strategy or complete combat.
+Full card, rules and AI correctness remain open.
 
 Generic phasing/imprint snapshots preserve phased-out physical cards and their
 attachments, mapped phase owners, direct/suppressed phase-in flags and imprinted
@@ -536,14 +542,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,775 selected native tests, packaged
-families of 781, 65 and 177 rules cases, 3,249 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,671 subtests. All 486 frozen inputs
+The current reviewed runtime passed 1,792 selected native tests, packaged
+families of 781, 65 and 194 rules cases, 3,266 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,688 subtests. All 488 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/phasing_context_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/battle_protector_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

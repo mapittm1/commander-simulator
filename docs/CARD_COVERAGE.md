@@ -17,23 +17,44 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Open historical Battle-protector gap
+## Historical Battle-protector snapshots
 
-Six probes against the reviewed phasing/imprint runtime pass three controls and
-fail three contracts. Real paid Invasion of Gobakhan establishes an actual native
-opponent protector, defense and public view. Its live battlefield copy retains
-the mapped protector. Ordinary nonbattle last-known information remains unprotected.
+The reviewed runtime restores the designated protector through one
+shared mapped snapshot method, used by copied games and native last-known
+information. It replaces the separate battlefield-only assignment and updates the
+public view without replaying a protector choice. Live, historical and null
+protector states stay in the appropriate game world.
 
-Native Battle LKI loses its protector, a historical chosen-card copy has none,
-and the native Battle.OppProtect predicate changes from true to false on LKI.
-Later public-view and copied-world identity assertions are not reached. Three
-failed contracts are not three distinct card bugs.
+All 566 focused source tests pass, retaining 549 and adding 17. The original
+six-case old-runtime baseline passes three controls and fails three contracts;
+the expanded baseline passes eight controls and fails nine contracts. These are
+contracts, not nine distinct card bugs. In the old runtime, native Portent Tracker
+with same-incarnation historical target metadata adds a defense counter where an
+opponent protector requires removal. The candidate removes it, including after
+copying a pending paid activation. Native self-protected add-counter and Stifle
+controls retain their behavior and paid tap costs.
 
-No production correction is included yet. The spell is supplied, while the engine
-chooses its protector. The chosen-card history is explicit metadata, not a printed
-Grizzly Bears ability. Predicate loss is not a complete combat, attack-admission,
-damage or defeat-trigger witness. See the
-[gap report and exact reproductions](../engine/battle_protector_gap.json).
+A paid Invasion of Gobakhan establishes an engine-chosen legal opponent protector
+and three defense counters. Further cases check copied pending Battle entry,
+departed protectors, independent public views, nested historical copies and
+mutation isolation. These are partial multiplayer Commander fixtures with supplied
+spell choices, targets and board preconditions. Historical target records exercise
+the native resolution/copy APIs; this does not assert that normal player targeting
+produces LKI records. Chosen-card storage and replacement designation are explicit
+metadata, not printed Grizzly Bears or Battle abilities.
+
+The fresh build passes 1,792 selected native tests. Independent packaged families
+of 781, 65 and 194 pass separately and again in 44 live integration tests with
+1,688 subtests. Broader gameplay and serialization pass 3,266 and 256 tests. All
+488 implementation inputs stay frozen throughout validation. Three production
+sources and six packaged classes change, with no additions or removals. Card
+scripts, AI hints and the default profile remain unchanged. Catalog construction
+covers 32,636 starting identities with seven nonstarting meld exclusions; loading
+does not certify rules. Complete combat, attack admission, defeat triggers,
+autonomous strategy and all card compositions remain unverified. See the
+[source comparison and exact baseline reproductions](../engine/battle_protector_native_evidence.json),
+[activation evidence](../engine/battle_protector_evidence.json), and
+[resolved gap preserving the original report](../engine/battle_protector_gap.json).
 
 ## Phased physical state and imprint references
 

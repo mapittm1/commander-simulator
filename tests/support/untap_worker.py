@@ -29,6 +29,7 @@ SOURCES = {
     "CommanderChoiceContextTest": "commander_choice_context_test_sha256",
     "CommanderGiftContextTest": "commander_gift_context_test_sha256",
     "CommanderPhasingContextTest": "commander_phasing_context_test_sha256",
+    "CommanderBattleProtectorTest": "commander_battle_protector_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest": "commander_repeated_discard_entrypoint_test_sha256",
 }
 TEST_CLASSES = tuple("forge.ai." + name for name in SOURCES if name != "AITest")
@@ -82,6 +83,9 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.DestroyEffect",
     "forge.game.ability.effects.ManaReflectedEffect",
     "forge.game.card.CounterEnumType",
+    "forge.game.ability.effects.CountersPutOrRemoveEffect",
+    "forge.game.card.CardProperty",
+    "forge.game.GameAction",
 )
 FAMILY = RuleFamily(
     TEST_CLASSES, ("forge.ai.AITest",), NATIVE_CLASSES, "untap.json", "untap"
