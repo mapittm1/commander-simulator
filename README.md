@@ -33,7 +33,10 @@ assignment. These are internal snapshot checkpoints, not player priority windows
 autonomous gameplay impact is unmeasured. See the
 [exact reproductions](engine/damage_assignment_snapshot_gap.json). All 644 focused
 source checks now pass with an isolated correction, including sixteen new snapshot/paid-trigger controls.
-Fresh packaged/full validation remains pending; the selected runtime is unchanged.
+The fresh build also passes 1,870 selected native tests, separate packaged families
+of 781/65/194/78 cases, 3,344 broader gameplay tests and 256 serialization tests.
+See the [packaged evidence](engine/damage_assignment_snapshot_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime is unchanged.
 
 The reviewed runtime corrects damage assignment after an attacked planeswalker
 leaves combat: trample over planeswalkers no longer reserves a damage point for

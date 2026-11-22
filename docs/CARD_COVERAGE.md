@@ -38,6 +38,13 @@ is unchanged. See [exact failures and inputs](../engine/damage_assignment_snapsh
 and [source evidence](../engine/damage_assignment_snapshot_native_evidence.json).
 Full card, rules and AI correctness remain open.
 
+The assigned-damage candidate also passes 1,870 selected native tests and
+independent packaged families of 781/65/194/78 cases, plus 3,344 broader gameplay
+and 256 serialization tests. All 496 implementation inputs remain frozen;
+the Battle family verifies 25 production class origins. See the
+[packaged evidence](../engine/damage_assignment_snapshot_packaged_evidence.json).
+Full live validation and activation remain pending.
+
 ## Removed planeswalker damage assignment
 
 The reviewed runtime preserves departed defender type and protector context in

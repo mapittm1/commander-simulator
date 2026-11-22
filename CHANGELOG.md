@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the assigned-damage candidate with 1,870 selected native tests,
+  retaining all 1,854 prior methods and adding 16. Independent packaged families
+  pass 781/65/194/78 cases; broader gameplay/serialization pass 3,344/256.
+  Only Combat.class changes; card scripts and default AI remain unchanged.
+  Verify 496 frozen inputs and 25 Battle-family production class origins.
+  Full live validation and runtime activation remain pending.
+
 - Correct internal assigned-damage snapshots in source by excluding absent
   defender stand-ins from damage recipients. Pass 644 focused checks, retaining 628
   plus 16 new contracts; the 78-case Battle family retains 62 prior methods. The
