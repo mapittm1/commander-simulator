@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Confirm a removed-planeswalker trample-assignment gap: the 28-case baseline
+  passes 24 and fails four native/copied blocked/unblocked player-damage
+  contracts. Preserve exact fixtures, drivers, report hashes and finished process
+  receipts. Eight paid-equip Jitte controls pass; no extra damage-trigger defect
+  is claimed. The selected runtime remains unchanged pending correction gates.
+
 - Correct first-strike assignment history in combat snapshots: map live
   combatants into copied physical cards and departed incarnations through the
   native historical-card copier, with independent containers. Pass 600 source

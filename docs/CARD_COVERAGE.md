@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Removed planeswalker assignment gap
+
+A 28-case native baseline passes 24 and fails four player-damage contracts.
+After paid Beast Within removes an attacked planeswalker, Thrasta assigns one
+point to a stand-in for the departed target. Its former controller therefore
+takes one less damage, both with and without a real blocker, in native and copied
+combat. Live-target, countered-removal, ordinary-trample and removed-Battle
+controls pass. Eight additional paid-equip Jitte controls pass, so these probes
+do not establish a phantom combat-damage trigger defect.
+
+[Rule 702.19e](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf)
+permits player damage after a planeswalker leaves combat, with lethal assignment
+to actual blockers still required. The missing planeswalker requires no damage.
+The exact [baseline evidence](../engine/removed_defender_gap.json) preserves all
+three runs and inputs. Mature attackers, blocker declarations and starting
+loyalty are supplied preconditions. This is not autonomous strategy coverage.
+An isolated candidate is being tested; the selected runtime is unchanged.
+
 ## First-strike history in copied combat
 
 The reviewed runtime preserves which combatants already assigned first-strike

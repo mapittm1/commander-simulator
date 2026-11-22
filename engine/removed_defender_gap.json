@@ -1,0 +1,584 @@
+{
+  "status": "confirmed_removed_planeswalker_assignment_gap_pending_fix",
+  "baseline_commit": "8a154c4ce242a50e6f0ea962fe5756e16a18748b",
+  "baseline_build": "f50791ba39ae44a188cc1dd0bbf55afe",
+  "scope": "Trample over planeswalkers reserves one damage for a removed planeswalker stand-in. Four expanded contracts fail: native and copied, blocked and unblocked. They describe one assignment defect, not four separate card bugs. Eight paid-equip Jitte event controls pass; no phantom damage-trigger defect is claimed.",
+  "rules": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf",
+    "effective": "2026-09-25",
+    "sections": [
+      "506.4c",
+      "702.19c",
+      "702.19e",
+      "702.19f"
+    ]
+  },
+  "baselines": {
+    "packaged-removed-defender8-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-combat-strike",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "d77058ded0e594bcae15313993b6493d418e213a40bc7856b32fae468f7cbad0",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "a53a52cef799c5434b41adcecc81eec1bd6c74c07cb40f1790398d5434d7e3fe",
+          "native_tests": {
+            "total": 1826,
+            "passed": 1826,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "9fe8bf6e3e0582df2a1b748e1e8a3887cdeaf02019a37a58ec5afec7e38a44b9",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 8,
+          "passed": 6,
+          "failed": 2,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.copiedOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.nativeOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderBaselineTest.nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-removed-defender-research\\CommanderRemovedDefenderBaselineTest.java": "3a270de9d40b6f1229b92d8b64221c6ad48ecc1970e60602df4d822527cc9021"
+        },
+        "production_origins_verified": 125,
+        "report_sha256": "b40eced2d0f4921cd95ed7140827a7319683bb0602a49b1537e3555c54c1f6cd",
+        "failures": [
+          "java.lang.AssertionError: Only trample over a departed planeswalker may damage its former controller; a departed Battle never redirects damage: Lists differ at element [1]: 33 != 34 expected [33] but found [34]",
+          "java.lang.AssertionError: Only trample over a departed planeswalker may damage its former controller; a departed Battle never redirects damage: Lists differ at element [1]: 33 != 34 expected [33] but found [34]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3564,
+        "returncode": 0,
+        "elapsed_seconds": 14.0
+      },
+      "native_log_sha256": "50177ae90826e1845b1bd73fd196f34f17433cc7a05a0b7b503c235e65d96568",
+      "preserved_inputs": {
+        "CommanderRemovedDefenderBaselineTest.java": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender8-baseline/input-snapshots/CommanderRemovedDefenderBaselineTest.java",
+          "sha256": "3a270de9d40b6f1229b92d8b64221c6ad48ecc1970e60602df4d822527cc9021",
+          "content": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** CR506.4c and702.19e removed-defender damage witnesses; legal setup/actions are supplied. */\npublic class CommanderRemovedDefenderBaselineTest extends AITest {\n    @Test public void nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { removed(false,false,false); }\n    @Test public void copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { removed(false,false,true); }\n    @Test public void nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { removed(true,false,false); }\n    @Test public void copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { removed(true,false,true); }\n    @Test public void nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { removed(false,true,false); }\n    @Test public void copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { removed(false,true,true); }\n    @Test public void nativeOverPlaneswalkersStillDamagesARemovedWalkersController() { removed(true,true,false); }\n    @Test public void copiedOverPlaneswalkersStillDamagesARemovedWalkersController() { removed(true,true,true); }\n\n    private void removed(boolean walker,boolean overPlaneswalkers,boolean copied) {\n        Board board=board();Player opponent=board.battle.getProtectingPlayer();Card defender=board.battle;\n        if(walker) {\n            defender=addCardToZone(\"Jace, the Mind Sculptor\",opponent,ZoneType.Battlefield);\n            defender.setCounters(CounterEnumType.LOYALTY,3);\n        }\n        Attack attack=attackDefender(board,overPlaneswalkers?\"Thrasta, Tempest's Roar\":\"Colossal Dreadmaw\",defender);\n        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        for(int index=0;index<3;index++)addCardToZone(\"Forest\",opponent,ZoneType.Battlefield);\n        SpellAbility removal=addCardToZone(\"Beast Within\",opponent,ZoneType.Hand).getFirstSpellAbility();\n        removal.setActivatingPlayer(opponent);removal.getTargets().add(defender);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent,removal,null));settle(board.game);\n        assertEquals(removal.getPayingMana().size(),3);assertTrue(board.game.getCardState(defender).isInZone(ZoneType.Graveyard));\n        assertTrue(attack.combat.isAttacking(attack.attacker));assertTrue(attack.combat.isUnblocked(attack.attacker));\n        Game game=board.game;Player actor=board.actor,target=opponent;Card attacker=attack.attacker;\n        if(copied) {\n            GameCopier copier=new GameCopier(board.game).withStack(true);game=copier.makeCopy(null,board.actor);\n            actor=copier.find(board.actor);target=copier.find(opponent);attacker=copier.find(attack.attacker);\n            assertTrue(game.getCombat().isAttacking(attacker));assertTrue(game.getCombat().isUnblocked(attacker));\n        }\n        damage(game,game.getCombat(),actor);settle(game);\n        List<Integer> expected=new ArrayList<>(initial);\n        if(walker&&overPlaneswalkers)expected.set(game.getPlayers().indexOf(target),target.getStartingLife()-power);\n        assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,\n                \"Only trample over a departed planeswalker may damage its former controller; a departed Battle never redirects damage\");\n        assertTrue(attacker.isInZone(ZoneType.Battlefield));\n        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,\"Copy damage cannot change original player life\");\n    }\n\n    /** Mature, unblocked attacks and a loyalty-three walker are explicit legal state preconditions. */\n    private Attack attackDefender(Board board,String name,Card defender) {\n        Card attacker=addCardToZone(name,board.actor,ZoneType.Battlefield);attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS,board.actor,3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(defender));assertTrue(CombatUtil.canAttack(attacker,defender));\n        Combat combat=new Combat(board.actor);board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker,defender);attacker.setTapped(true);CombatUtil.checkDeclaredAttacker(board.game,attacker,combat,true);\n        combat.setBlocked(attacker,false);return new Attack(attacker,combat);\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n"
+        },
+        "run_baseline.py": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender8-baseline/input-snapshots/run_baseline.py",
+          "sha256": "3a14ab2bf32947993526cbbe411d409fc6f74462576c177da3fe37138f52ce58",
+          "content": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/f50791ba39ae44a188cc1dd0bbf55afe'\nTEST_CLASS = 'forge.ai.CommanderRemovedDefenderBaselineTest'\nFIXTURE = WORK / 'CommanderRemovedDefenderBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-removed-defender8-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-removed-defender8-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n"
+        }
+      }
+    },
+    "packaged-removed-defender20-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-combat-strike",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "d77058ded0e594bcae15313993b6493d418e213a40bc7856b32fae468f7cbad0",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "a53a52cef799c5434b41adcecc81eec1bd6c74c07cb40f1790398d5434d7e3fe",
+          "native_tests": {
+            "total": 1826,
+            "passed": 1826,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "9fe8bf6e3e0582df2a1b748e1e8a3887cdeaf02019a37a58ec5afec7e38a44b9",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 20,
+          "passed": 16,
+          "failed": 4,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderExpandedBaselineTest.nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-removed-defender-research\\CommanderRemovedDefenderExpandedBaselineTest.java": "825fa56b7723b6718005bbeee997cee2aa79a88de3ed8e1f018ec537342ee069"
+        },
+        "production_origins_verified": 125,
+        "report_sha256": "62fbacd5861d0e91b3e4be79ab854a9ca7e777c0ec806db3637e4f60af300998",
+        "failures": [
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 35 != 36 expected [35] but found [36]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 33 != 34 expected [33] but found [34]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 35 != 36 expected [35] but found [36]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 33 != 34 expected [33] but found [34]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 8658,
+        "returncode": 0,
+        "elapsed_seconds": 15.265
+      },
+      "native_log_sha256": "879d20d65c1b0a50b85f20e0046ce1a94d492dd4c3458c6ac13cabf4ce336408",
+      "preserved_inputs": {
+        "CommanderRemovedDefenderExpandedBaselineTest.java": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender20-baseline/input-snapshots/CommanderRemovedDefenderExpandedBaselineTest.java",
+          "sha256": "825fa56b7723b6718005bbeee997cee2aa79a88de3ed8e1f018ec537342ee069",
+          "content": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Removed/live defender and countered-removal controls; setup, attacks and responses are supplied. */\npublic class CommanderRemovedDefenderExpandedBaselineTest extends AITest {\n    @Test public void nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,false,true,false,false); }\n    @Test public void copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,true,true,false,false); }\n    @Test public void nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,false,true,false,false); }\n    @Test public void copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,true,true,false,false); }\n    @Test public void nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,false,true,false,false); }\n    @Test public void copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,true,true,false,false); }\n    @Test public void nativeOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,false,true,false,false); }\n    @Test public void copiedOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,true,true,false,false); }\n    @Test public void nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,false,false,false,false); }\n    @Test public void copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,true,false,false,false); }\n    @Test public void nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,false,false,false,false); }\n    @Test public void copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,true,false,false,false); }\n    @Test public void nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,false,false,false,false); }\n    @Test public void copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,true,false,false,false); }\n    @Test public void nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,false,true,true,false); }\n    @Test public void copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,true,true,true,false); }\n    @Test public void nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,false,true,true,false); }\n    @Test public void copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,true,true,true,false); }\n    @Test public void nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,false,true,false,true); }\n    @Test public void copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,true,true,false,true); }\n\n    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered) {\n        Board board=board();Player opponent=board.battle.getProtectingPlayer();Card defender=board.battle;\n        if(walker) {\n            defender=addCardToZone(\"Jace, the Mind Sculptor\",opponent,ZoneType.Battlefield);\n            defender.setCounters(CounterEnumType.LOYALTY,3);\n        }\n        Attack attack=attackDefender(board,overPlaneswalkers?\"Thrasta, Tempest's Roar\":\"Colossal Dreadmaw\",defender);\n        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        Card blocker=null;\n        if(blocked) {\n            blocker=addCardToZone(\"Grizzly Bears\",opponent,ZoneType.Battlefield);\n            assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));attack.combat.addBlocker(attack.attacker,blocker);\n            attack.combat.setBlocked(attack.attacker,true);attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();\n        }\n        if(remove) {\n            for(int index=0;index<3;index++)addCardToZone(\"Forest\",opponent,ZoneType.Battlefield);\n            SpellAbility removal=addCardToZone(\"Beast Within\",opponent,ZoneType.Hand).getFirstSpellAbility();\n            removal.setActivatingPlayer(opponent);removal.getTargets().add(defender);\n            assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent,removal,null));assertEquals(removal.getPayingMana().size(),3);\n            if(countered) {\n                for(int index=0;index<2;index++)addCardToZone(\"Island\",board.actor,ZoneType.Battlefield);\n                SpellAbility counter=addCardToZone(\"Counterspell\",board.actor,ZoneType.Hand).getFirstSpellAbility();\n                counter.setActivatingPlayer(board.actor);counter.getTargets().add(board.game.getStack().peekAbility());\n                assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,counter,null));assertEquals(counter.getPayingMana().size(),2);\n                assertEquals(board.game.getStack().size(),2);\n            } else {\n                settle(board.game);assertTrue(board.game.getCardState(defender).isInZone(ZoneType.Graveyard));\n            }\n        }\n        assertTrue(attack.combat.isAttacking(attack.attacker));assertEquals(attack.combat.isBlocked(attack.attacker),blocked);\n        Game game=board.game;Player actor=board.actor,target=opponent;Card attacker=attack.attacker;\n        Card targetCard=board.game.getCardState(defender),targetBlocker=blocker;\n        if(copied) {\n            GameCopier copier=new GameCopier(board.game).withStack(true);game=copier.makeCopy(null,board.actor);\n            actor=copier.find(board.actor);target=copier.find(opponent);attacker=copier.find(attack.attacker);\n            targetCard=copier.find(targetCard);targetBlocker=copier.find(blocker);\n            assertTrue(game.getCombat().isAttacking(attacker));assertEquals(game.getCombat().isBlocked(attacker),blocked);\n        }\n        if(countered)settle(game);\n        boolean live=!remove||countered;\n        assertEquals(game.getCardState(targetCard).isInZone(ZoneType.Battlefield),live);\n        assertEquals(attacker.getNetPower(),power);assertEquals(attacker.getNetCombatDamage(),power);\n        Card recipient=(Card)game.getCombat().getDefenderByAttacker(attacker);\n        System.out.println(\"REMOVED_DEFENDER before: walker=\"+walker+\"; over=\"+overPlaneswalkers+\"; copy=\"+copied+\"; live=\"+live+\"; blocked=\"+blocked\n                +\"; name=\"+recipient.getName()+\"; id=\"+recipient.getId()+\"; zone=\"+recipient.getZone()+\"; battle=\"+recipient.isBattle()+\"; pw=\"+recipient.isPlaneswalker()\n                +\"; loyalty=\"+recipient.getCounters(CounterEnumType.LOYALTY)+\"; toughness=\"+recipient.getNetToughness()+\"; damage=\"+attacker.getNetCombatDamage());\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);\n        assertTrue(game.getCombat().assignCombatDamage(false));\n        System.out.println(\"REMOVED_DEFENDER assigned: defender=\"+recipient.getAssignedDamageMap().values().stream().mapToInt(Integer::intValue).sum());\n        game.getCombat().dealAssignedDamage();settle(game);\n        List<Integer> expected=new ArrayList<>(initial);\n        if(walker&&overPlaneswalkers) {\n            int index=game.getPlayers().indexOf(target);int required=(live?3:0)+(blocked?2:0);\n            expected.set(index,initial.get(index)-Math.max(0,power-required));\n        }\n        assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,\n                \"A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment\");\n        assertTrue(attacker.isInZone(ZoneType.Battlefield));\n        if(blocked)assertTrue(game.getCardState(targetBlocker).isInZone(ZoneType.Graveyard));\n        if(live) {\n            if(walker)assertTrue(game.getCardState(targetCard).isInZone(ZoneType.Graveyard));\n            else assertArray(game,targetCard);\n        }\n        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,\"Copy damage cannot change original player life\");\n    }\n\n    /** Mature attacks, a loyalty-three walker and blocker declaration are supplied legal state preconditions. */\n    private Attack attackDefender(Board board,String name,Card defender) {\n        Card attacker=addCardToZone(name,board.actor,ZoneType.Battlefield);attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS,board.actor,3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(defender));assertTrue(CombatUtil.canAttack(attacker,defender));\n        Combat combat=new Combat(board.actor);board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker,defender);attacker.setTapped(true);CombatUtil.checkDeclaredAttacker(board.game,attacker,combat,true);\n        combat.setBlocked(attacker,false);return new Attack(attacker,combat);\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n"
+        },
+        "run_expanded_baseline.py": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender20-baseline/input-snapshots/run_expanded_baseline.py",
+          "sha256": "ecb27cbd20c9c5e61cbb5cc399d0762734a388dc790c1d63192ed0de1ae0e00b",
+          "content": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/f50791ba39ae44a188cc1dd0bbf55afe'\nTEST_CLASS = 'forge.ai.CommanderRemovedDefenderExpandedBaselineTest'\nFIXTURE = WORK / 'CommanderRemovedDefenderExpandedBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-removed-defender20-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-removed-defender20-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n"
+        }
+      }
+    },
+    "packaged-removed-defender28-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-combat-strike",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "d77058ded0e594bcae15313993b6493d418e213a40bc7856b32fae468f7cbad0",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "a53a52cef799c5434b41adcecc81eec1bd6c74c07cb40f1790398d5434d7e3fe",
+          "native_tests": {
+            "total": 1826,
+            "passed": 1826,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "9fe8bf6e3e0582df2a1b748e1e8a3887cdeaf02019a37a58ec5afec7e38a44b9",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 28,
+          "passed": 24,
+          "failed": 4,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedJitteGetsNoCountersForAnAbsentBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedJitteTriggersForLegalOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeJitteGetsNoCountersForAnAbsentBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeJitteTriggersForLegalOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeOverPlaneswalkersStillDamagesARemovedWalkersController",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderRemovedDefenderJitteBaselineTest.nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-removed-defender-research\\CommanderRemovedDefenderJitteBaselineTest.java": "1807f0c686f5a19f42f70b8674606e933d8cb904b874602231a8bc86af0424bd"
+        },
+        "production_origins_verified": 125,
+        "report_sha256": "e51faf565525e1d322a0c60a47716f18b085e2d36e3796b324c83cebd1d4ec75",
+        "failures": [
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 35 != 36 expected [35] but found [36]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 33 != 34 expected [33] but found [34]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 35 != 36 expected [35] but found [36]",
+          "java.lang.AssertionError: A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment: Lists differ at element [1]: 33 != 34 expected [33] but found [34]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 10414,
+        "returncode": 0,
+        "elapsed_seconds": 16.157
+      },
+      "native_log_sha256": "075bad6208535d3f2e2d4cd005fc763e5f87fda56e187da01c7944d75a530d54",
+      "preserved_inputs": {
+        "CommanderRemovedDefenderJitteBaselineTest.java": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender28-baseline/input-snapshots/CommanderRemovedDefenderJitteBaselineTest.java",
+          "sha256": "1807f0c686f5a19f42f70b8674606e933d8cb904b874602231a8bc86af0424bd",
+          "content": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Removed/live defender and countered-removal controls; setup, attacks and responses are supplied. */\npublic class CommanderRemovedDefenderJitteBaselineTest extends AITest {\n    @Test public void nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,false,true,false,false); }\n    @Test public void copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,true,true,false,false); }\n    @Test public void nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,false,true,false,false); }\n    @Test public void copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,true,true,false,false); }\n    @Test public void nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,false,true,false,false); }\n    @Test public void copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,true,true,false,false); }\n    @Test public void nativeOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,false,true,false,false); }\n    @Test public void copiedOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,true,true,false,false); }\n    @Test public void nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,false,false,false,false); }\n    @Test public void copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,true,false,false,false); }\n    @Test public void nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,false,false,false,false); }\n    @Test public void copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,true,false,false,false); }\n    @Test public void nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,false,false,false,false); }\n    @Test public void copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,true,false,false,false); }\n    @Test public void nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,false,true,true,false); }\n    @Test public void copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,true,true,true,false); }\n    @Test public void nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,false,true,true,false); }\n    @Test public void copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,true,true,true,false); }\n    @Test public void nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,false,true,false,true); }\n    @Test public void copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,true,true,false,true); }\n\n    @Test public void nativeJitteGetsNoCountersForAnAbsentBattle() { scenario(false,false,false,true,false,false,true); }\n    @Test public void copiedJitteGetsNoCountersForAnAbsentBattle() { scenario(false,false,true,true,false,false,true); }\n    @Test public void nativeJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample() { scenario(true,false,false,true,false,false,true); }\n    @Test public void copiedJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample() { scenario(true,false,true,true,false,false,true); }\n    @Test public void nativeJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle() { scenario(false,true,false,true,false,false,true); }\n    @Test public void copiedJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle() { scenario(false,true,true,true,false,false,true); }\n    @Test public void nativeJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,false,true,false,false,true); }\n    @Test public void copiedJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,true,true,false,false,true); }\n\n    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered) {\n        scenario(walker,overPlaneswalkers,copied,remove,blocked,countered,false);\n    }\n\n    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered,boolean withJitte) {\n        Board board=board();Player opponent=board.battle.getProtectingPlayer();Card defender=board.battle;\n        if(walker) {\n            defender=addCardToZone(\"Jace, the Mind Sculptor\",opponent,ZoneType.Battlefield);\n            defender.setCounters(CounterEnumType.LOYALTY,3);\n        }\n        Card jitte=withJitte?addCardToZone(\"Umezawa's Jitte\",board.actor,ZoneType.Battlefield):null;\n        Attack attack=attackDefender(board,overPlaneswalkers?\"Thrasta, Tempest's Roar\":\"Colossal Dreadmaw\",defender,jitte);\n        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        Card blocker=null;\n        if(blocked) {\n            blocker=addCardToZone(\"Grizzly Bears\",opponent,ZoneType.Battlefield);\n            assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));attack.combat.addBlocker(attack.attacker,blocker);\n            attack.combat.setBlocked(attack.attacker,true);attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();\n        }\n        if(remove) {\n            for(int index=0;index<3;index++)addCardToZone(\"Forest\",opponent,ZoneType.Battlefield);\n            SpellAbility removal=addCardToZone(\"Beast Within\",opponent,ZoneType.Hand).getFirstSpellAbility();\n            removal.setActivatingPlayer(opponent);removal.getTargets().add(defender);\n            assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent,removal,null));assertEquals(removal.getPayingMana().size(),3);\n            if(countered) {\n                for(int index=0;index<2;index++)addCardToZone(\"Island\",board.actor,ZoneType.Battlefield);\n                SpellAbility counter=addCardToZone(\"Counterspell\",board.actor,ZoneType.Hand).getFirstSpellAbility();\n                counter.setActivatingPlayer(board.actor);counter.getTargets().add(board.game.getStack().peekAbility());\n                assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,counter,null));assertEquals(counter.getPayingMana().size(),2);\n                assertEquals(board.game.getStack().size(),2);\n            } else {\n                settle(board.game);assertTrue(board.game.getCardState(defender).isInZone(ZoneType.Graveyard));\n            }\n        }\n        assertTrue(attack.combat.isAttacking(attack.attacker));assertEquals(attack.combat.isBlocked(attack.attacker),blocked);\n        Game game=board.game;Player actor=board.actor,target=opponent;Card attacker=attack.attacker;\n        Card targetCard=board.game.getCardState(defender),targetBlocker=blocker,targetJitte=jitte;\n        if(copied) {\n            GameCopier copier=new GameCopier(board.game).withStack(true);game=copier.makeCopy(null,board.actor);\n            actor=copier.find(board.actor);target=copier.find(opponent);attacker=copier.find(attack.attacker);\n            targetCard=copier.find(targetCard);targetBlocker=copier.find(blocker);targetJitte=copier.find(jitte);\n            assertTrue(game.getCombat().isAttacking(attacker));assertEquals(game.getCombat().isBlocked(attacker),blocked);\n        }\n        if(countered)settle(game);\n        boolean live=!remove||countered;\n        assertEquals(game.getCardState(targetCard).isInZone(ZoneType.Battlefield),live);\n        assertEquals(attacker.getNetPower(),power);assertEquals(attacker.getNetCombatDamage(),power);\n        Card recipient=(Card)game.getCombat().getDefenderByAttacker(attacker);\n        System.out.println(\"REMOVED_DEFENDER before: walker=\"+walker+\"; over=\"+overPlaneswalkers+\"; copy=\"+copied+\"; live=\"+live+\"; blocked=\"+blocked\n                +\"; name=\"+recipient.getName()+\"; id=\"+recipient.getId()+\"; zone=\"+recipient.getZone()+\"; battle=\"+recipient.isBattle()+\"; pw=\"+recipient.isPlaneswalker()\n                +\"; loyalty=\"+recipient.getCounters(CounterEnumType.LOYALTY)+\"; toughness=\"+recipient.getNetToughness()+\"; damage=\"+attacker.getNetCombatDamage());\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);\n        assertTrue(game.getCombat().assignCombatDamage(false));\n        System.out.println(\"REMOVED_DEFENDER assigned: defender=\"+recipient.getAssignedDamageMap().values().stream().mapToInt(Integer::intValue).sum());\n        game.getCombat().dealAssignedDamage();settle(game);\n        List<Integer> expected=new ArrayList<>(initial);\n        if(walker&&overPlaneswalkers) {\n            int index=game.getPlayers().indexOf(target);int required=(live?3:0)+(blocked?2:0);\n            expected.set(index,initial.get(index)-Math.max(0,power-required));\n        }\n        if(withJitte)assertEquals(targetJitte.getCounters(CounterEnumType.CHARGE),walker&&overPlaneswalkers?2:0,\"Jitte counts actual combat damage, not assignment to a removed-target stand-in\");\n        if(!withJitte)assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,\n                \"A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment\");\n        assertTrue(attacker.isInZone(ZoneType.Battlefield));\n        if(blocked)assertTrue(game.getCardState(targetBlocker).isInZone(ZoneType.Graveyard));\n        if(live) {\n            if(walker)assertTrue(game.getCardState(targetCard).isInZone(ZoneType.Graveyard));\n            else assertArray(game,targetCard);\n        }\n        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,\"Copy damage cannot change original player life\");\n    }\n\n    /** Mature attacks, a loyalty-three walker and blocker declaration are supplied legal state preconditions. */\n    private Attack attackDefender(Board board,String name,Card defender,Card jitte) {\n        Card attacker=addCardToZone(name,board.actor,ZoneType.Battlefield);attacker.setSickness(false);\n        if(jitte!=null) {\n            for(int index=0;index<2;index++)addCardToZone(\"Plains\",board.actor,ZoneType.Battlefield);\n            SpellAbility equip=jitte.getSpellAbilities().stream().filter(SpellAbility::isEquip).findFirst().orElseThrow();\n            equip.setActivatingPlayer(board.actor);equip.getTargets().add(attacker);assertTrue(equip.canPlay());\n            assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,equip,null));settle(board.game);\n            assertEquals(equip.getPayingMana().size(),2);assertSame(jitte.getEntityAttachedTo(),attacker);\n            assertEquals(jitte.getCounters(CounterEnumType.CHARGE),0);\n        }\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS,board.actor,3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(defender));assertTrue(CombatUtil.canAttack(attacker,defender));\n        Combat combat=new Combat(board.actor);board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker,defender);attacker.setTapped(true);CombatUtil.checkDeclaredAttacker(board.game,attacker,combat,true);\n        combat.setBlocked(attacker,false);return new Attack(attacker,combat);\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n"
+        },
+        "run_jitte_baseline.py": {
+          "path": "data/development/commander-removed-defender-research/packaged-removed-defender28-baseline/input-snapshots/run_jitte_baseline.py",
+          "sha256": "df30268124c08684000d262a370845c20a39a43eb266cbd7bacd84aca249feb8",
+          "content": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/f50791ba39ae44a188cc1dd0bbf55afe'\nTEST_CLASS = 'forge.ai.CommanderRemovedDefenderJitteBaselineTest'\nFIXTURE = WORK / 'CommanderRemovedDefenderJitteBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-removed-defender28-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-removed-defender28-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n"
+        }
+      }
+    }
+  },
+  "limits": [
+    "Fixture supplies mature attackers, defender choices, blocker declarations and three starting loyalty counters; not autonomous strategy validation.",
+    "Native paid Beast Within, Counterspell and Jitte equip exercise selected resolution/cost paths.",
+    "The selected runtime remains unchanged; candidate validation and full card/rules/AI correctness remain open."
+  ]
+}

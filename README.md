@@ -27,6 +27,14 @@ difference.
 
 ## Card coverage
 
+The selected runtime has a confirmed removed-planeswalker damage-assignment gap.
+Trample over planeswalkers reserves one damage for the departed target, reducing
+player damage by one in native and copied, blocked and unblocked combat.
+The expanded 28-case baseline passes 24 controls and fails those four contracts;
+all eight paid-equip Jitte trigger controls pass. See the
+[exact reproductions](engine/removed_defender_gap.json). An isolated correction
+is under validation; the selected runtime is unchanged.
+
 First-strike assignment history now survives copied combat, including live and
 historical departed combatants in independent collections. All 600 source checks
 pass. The 34-case Battle family retains ten cases and adds 24 boundaries covering
