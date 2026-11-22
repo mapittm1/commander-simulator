@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+Gift-recipient copying remains an open gap. Eleven new native probes have three
+passing controls and eight failed contracts, including a copied Gift effect that
+creates no Fish for its intended copied recipient. See the
+[exact failures and reproductions](engine/gift_context_gap.json). These failures
+are separate from the passing choice-context checks below.
+
 Shared choice-context copying preserves announced values, copied-world
 references and public/secret presentation across zones and native last-known
 information. The original four copy failures and the expanded 24 failed contracts

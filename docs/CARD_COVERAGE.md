@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Open Gift-recipient context gap
+
+Eleven follow-up probes against the reviewed choice-context runtime pass three
+controls and fail eight contracts. Promised Gift recipients are lost in copied
+hand, stack, battlefield, graveyard, exile and library cards. A historical chosen
+card keeps a reference to an original-world recipient. A copied Into the Flood
+Maw Gift effect creates no Fish for the intended copied recipient.
+
+The supplied native Gift payment and token-effect control creates a tapped Fish
+for the chosen opponent. Same-game last-known information and an unpromised Gift
+also pass. These controls do not establish full casting, targeting or autonomous
+Gift choices. The copied-effect failure does not establish that a live original
+player was mutated. Eight failed contracts are not eight distinct card bugs.
+
+No production correction is included yet. The 32 passing choice-context contracts
+below do not cover these additional Gift failures. See the
+[gap report and exact reproduction sources](../engine/gift_context_gap.json).
+
 ## Announced choices and copied context
 
 The reviewed runtime preserves announced choices in every copied zone and native

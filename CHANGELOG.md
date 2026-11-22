@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a separate Gift-recipient copy gap against the reviewed choice-context
+  runtime: six copied zones lose the recipient, a historical reference retains an
+  original-world player, and a copied native Gift effect creates no Fish for its
+  copied recipient. Preserve all eight failed contracts, three passing controls,
+  exact reproduction sources and raw report hashes. The supplied native payment
+  and effect control does not establish full casting or autonomous AI choices.
+  No Gift-context production correction is included yet.
+
 - Correct shared choice-context copying across all zones and native last-known
   information. Preserve mapped players/cards/groups, independent containers and
   public presentation separately from secret rules values. Pass 502 source cases
