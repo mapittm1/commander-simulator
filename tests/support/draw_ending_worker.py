@@ -85,6 +85,7 @@ SOURCES = {
     "CommanderCrystalSprayTest": "commander_crystal_spray_test_sha256",
     "CommanderCrystalSprayRulesTest": "commander_crystal_spray_rules_test_sha256",
     "CommanderCrystalSprayStackTest": "commander_crystal_spray_stack_test_sha256",
+    "CommanderTraitDoctoringRulesTest": "commander_trait_doctoring_rules_test_sha256",
     "CommanderBaubleCoverageTest": "commander_bauble_coverage_test_sha256",
     "CommanderVintageOpeningReplayTest": "commander_vintage_opening_test_sha256",
     "CommanderCompositeModeCoverageTest": "commander_composite_mode_test_sha256",
@@ -136,6 +137,7 @@ TEST_CLASSES = tuple(
 NATIVE_CLASSES = (
     "forge.game.ability.effects.LookAtEffect",
     "forge.game.ability.effects.ChangeTextEffect",
+    "forge.game.ability.effects.EncodeEffect",
     "forge.ai.AiController",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",

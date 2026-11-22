@@ -1,0 +1,16 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -379,6 +379,12 @@
+             if (card.isPaired()) {
+                 otherCard.setPairedWith(cardMap.get(card.getPairedWith()));
+             }
++            // Cipher links must use copied objects before their static abilities are recalculated.
++            for (Card encoded : card.getEncodedCards()) {
++                Card copiedEncoded = gameObjectMap.map(encoded);
++                otherCard.addEncodedCard(copiedEncoded);
++                copiedEncoded.setEncodingCard(otherCard);
++            }
+             if (card.getCopiedPermanent() != null) {
+                 // TODO would it be safe to simply reuse the prototype?
+                 otherCard.setCopiedPermanent(new CardCopyService(card.getCopiedPermanent()).copyCard(false));

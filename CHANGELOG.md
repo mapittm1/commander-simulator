@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Copy both ends of encoded relationships before recalculating static abilities.
+  The generic GameCopier correction preserves cipher combat triggers for one or
+  multiple encoded cards without changing card scripts or AI restrictions.
+- Pass 298 selected source-native checks, including 25 paid cipher/timing/lifetime
+  cases. Their identical packaged baseline passes 20 controls and fails five
+  copied-state cases. Cover zone roundtrips and copied mutation independence.
+  Preserve the passing 296-case proof before the stronger independence controls.
+- Activate the reviewed cipher-link build only after 1,524 selected native tests,
+  772 packaged interaction cases, 2,998 broader gameplay tests, 256 serialization
+  tests and 42 live tests with 1,420 subtests pass. Preserve all 443 frozen inputs
+  and the 32,636-identity construction probe with seven nonstarting meld exclusions.
+  Cipher-copy casting, further compositions, AI admission and full card correctness
+  remain unproven.
+
 - Reconcile the project plan with the pinned Forge 2.0.16 runtime, current
   construction evidence and implemented fixed-pod batches. Keep historical gap
   counts separate from pending card/AI coverage, scheduling and diagnostics.
