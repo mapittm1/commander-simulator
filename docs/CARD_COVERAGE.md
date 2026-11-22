@@ -33,7 +33,10 @@ to actual blockers still required. The missing planeswalker requires no damage.
 The exact [baseline evidence](../engine/removed_defender_gap.json) preserves all
 three runs and inputs. Mature attackers, blocker declarations and starting
 loyalty are supplied preconditions. This is not autonomous strategy coverage.
-An isolated candidate is being tested; the selected runtime is unchanged.
+The candidate passes all 628 focused source checks, retaining 600 and adding 28.
+The 62-case Battle family retains all 34 prior methods. Only Combat.java changes
+in production. A fresh packaged engine is under validation; the selected runtime
+is unchanged. See the [source evidence](../engine/removed_defender_native_evidence.json).
 
 ## First-strike history in copied combat
 

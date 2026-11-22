@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct removed-planeswalker assignment in source: preserve departed defender
+  type/protector context and exclude the missing planeswalker from lethal damage
+  recipients. Pass 628 focused source checks, retaining 600 plus 28 new contracts.
+  Keep all 34 prior Battle methods in the expanded 62-case family. Fresh packaged
+  and full validation remain pending; the selected engine is unchanged.
+
 - Confirm a removed-planeswalker trample-assignment gap: the 28-case baseline
   passes 24 and fails four native/copied blocked/unblocked player-damage
   contracts. Preserve exact fixtures, drivers, report hashes and finished process

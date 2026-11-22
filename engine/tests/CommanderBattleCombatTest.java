@@ -377,6 +377,129 @@ public class CommanderBattleCombatTest extends AITest {
     }
 
 
+
+    @Test public void nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,false,true,false,false); }
+    @Test public void copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage() { scenario(false,false,true,true,false,false); }
+    @Test public void nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,false,true,false,false); }
+    @Test public void copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController() { scenario(true,false,true,true,false,false); }
+    @Test public void nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,false,true,false,false); }
+    @Test public void copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle() { scenario(false,true,true,true,false,false); }
+    @Test public void nativeOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,false,true,false,false); }
+    @Test public void copiedOverPlaneswalkersStillDamagesARemovedWalkersController() { scenario(true,true,true,true,false,false); }
+    @Test public void nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,false,false,false,false); }
+    @Test public void copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage() { scenario(false,true,true,false,false,false); }
+    @Test public void nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,false,false,false,false); }
+    @Test public void copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover() { scenario(true,true,true,false,false,false); }
+    @Test public void nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,false,false,false,false); }
+    @Test public void copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer() { scenario(true,false,true,false,false,false); }
+    @Test public void nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,false,true,true,false); }
+    @Test public void copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer() { scenario(true,true,true,true,true,false); }
+    @Test public void nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,false,true,true,false); }
+    @Test public void copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer() { scenario(false,true,true,true,true,false); }
+    @Test public void nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,false,true,false,true); }
+    @Test public void copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement() { scenario(true,true,true,true,false,true); }
+
+    @Test public void nativeJitteGetsNoCountersForAnAbsentBattle() { scenario(false,false,false,true,false,false,true); }
+    @Test public void copiedJitteGetsNoCountersForAnAbsentBattle() { scenario(false,false,true,true,false,false,true); }
+    @Test public void nativeJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample() { scenario(true,false,false,true,false,false,true); }
+    @Test public void copiedJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample() { scenario(true,false,true,true,false,false,true); }
+    @Test public void nativeJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle() { scenario(false,true,false,true,false,false,true); }
+    @Test public void copiedJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle() { scenario(false,true,true,true,false,false,true); }
+    @Test public void nativeJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,false,true,false,false,true); }
+    @Test public void copiedJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,true,true,false,false,true); }
+
+    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered) {
+        scenario(walker,overPlaneswalkers,copied,remove,blocked,countered,false);
+    }
+
+    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered,boolean withJitte) {
+        Board board=board();Player opponent=board.battle.getProtectingPlayer();Card defender=board.battle;
+        if(walker) {
+            defender=addCardToZone("Jace, the Mind Sculptor",opponent,ZoneType.Battlefield);
+            defender.setCounters(CounterEnumType.LOYALTY,3);
+        }
+        Card jitte=withJitte?addCardToZone("Umezawa's Jitte",board.actor,ZoneType.Battlefield):null;
+        Attack attack=attackDefender(board,overPlaneswalkers?"Thrasta, Tempest's Roar":"Colossal Dreadmaw",defender,jitte);
+        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();
+        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);
+        Card blocker=null;
+        if(blocked) {
+            blocker=addCardToZone("Grizzly Bears",opponent,ZoneType.Battlefield);
+            assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));attack.combat.addBlocker(attack.attacker,blocker);
+            attack.combat.setBlocked(attack.attacker,true);attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();
+        }
+        if(remove) {
+            for(int index=0;index<3;index++)addCardToZone("Forest",opponent,ZoneType.Battlefield);
+            SpellAbility removal=addCardToZone("Beast Within",opponent,ZoneType.Hand).getFirstSpellAbility();
+            removal.setActivatingPlayer(opponent);removal.getTargets().add(defender);
+            assertTrue(ComputerUtil.handlePlayingSpellAbility(opponent,removal,null));assertEquals(removal.getPayingMana().size(),3);
+            if(countered) {
+                for(int index=0;index<2;index++)addCardToZone("Island",board.actor,ZoneType.Battlefield);
+                SpellAbility counter=addCardToZone("Counterspell",board.actor,ZoneType.Hand).getFirstSpellAbility();
+                counter.setActivatingPlayer(board.actor);counter.getTargets().add(board.game.getStack().peekAbility());
+                assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,counter,null));assertEquals(counter.getPayingMana().size(),2);
+                assertEquals(board.game.getStack().size(),2);
+            } else {
+                settle(board.game);assertTrue(board.game.getCardState(defender).isInZone(ZoneType.Graveyard));
+            }
+        }
+        assertTrue(attack.combat.isAttacking(attack.attacker));assertEquals(attack.combat.isBlocked(attack.attacker),blocked);
+        Game game=board.game;Player actor=board.actor,target=opponent;Card attacker=attack.attacker;
+        Card targetCard=board.game.getCardState(defender),targetBlocker=blocker,targetJitte=jitte;
+        if(copied) {
+            GameCopier copier=new GameCopier(board.game).withStack(true);game=copier.makeCopy(null,board.actor);
+            actor=copier.find(board.actor);target=copier.find(opponent);attacker=copier.find(attack.attacker);
+            targetCard=copier.find(targetCard);targetBlocker=copier.find(blocker);targetJitte=copier.find(jitte);
+            assertTrue(game.getCombat().isAttacking(attacker));assertEquals(game.getCombat().isBlocked(attacker),blocked);
+        }
+        if(countered)settle(game);
+        boolean live=!remove||countered;
+        assertEquals(game.getCardState(targetCard).isInZone(ZoneType.Battlefield),live);
+        assertEquals(attacker.getNetPower(),power);assertEquals(attacker.getNetCombatDamage(),power);
+        Card recipient=(Card)game.getCombat().getDefenderByAttacker(attacker);
+        System.out.println("REMOVED_DEFENDER before: walker="+walker+"; over="+overPlaneswalkers+"; copy="+copied+"; live="+live+"; blocked="+blocked
+                +"; name="+recipient.getName()+"; id="+recipient.getId()+"; zone="+recipient.getZone()+"; battle="+recipient.isBattle()+"; pw="+recipient.isPlaneswalker()
+                +"; loyalty="+recipient.getCounters(CounterEnumType.LOYALTY)+"; toughness="+recipient.getNetToughness()+"; damage="+attacker.getNetCombatDamage());
+        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);
+        assertTrue(game.getCombat().assignCombatDamage(false));
+        System.out.println("REMOVED_DEFENDER assigned: defender="+recipient.getAssignedDamageMap().values().stream().mapToInt(Integer::intValue).sum());
+        game.getCombat().dealAssignedDamage();settle(game);
+        List<Integer> expected=new ArrayList<>(initial);
+        if(walker&&overPlaneswalkers) {
+            int index=game.getPlayers().indexOf(target);int required=(live?3:0)+(blocked?2:0);
+            expected.set(index,initial.get(index)-Math.max(0,power-required));
+        }
+        if(withJitte)assertEquals(targetJitte.getCounters(CounterEnumType.CHARGE),walker&&overPlaneswalkers?2:0,"Jitte counts actual combat damage, not assignment to a removed-target stand-in");
+        if(!withJitte)assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,
+                "A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment");
+        assertTrue(attacker.isInZone(ZoneType.Battlefield));
+        if(blocked)assertTrue(game.getCardState(targetBlocker).isInZone(ZoneType.Graveyard));
+        if(live) {
+            if(walker)assertTrue(game.getCardState(targetCard).isInZone(ZoneType.Graveyard));
+            else assertArray(game,targetCard);
+        }
+        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,"Copy damage cannot change original player life");
+    }
+
+    /** Mature attacks, a loyalty-three walker and blocker declaration are supplied legal state preconditions. */
+    private Attack attackDefender(Board board,String name,Card defender,Card jitte) {
+        Card attacker=addCardToZone(name,board.actor,ZoneType.Battlefield);attacker.setSickness(false);
+        if(jitte!=null) {
+            for(int index=0;index<2;index++)addCardToZone("Plains",board.actor,ZoneType.Battlefield);
+            SpellAbility equip=jitte.getSpellAbilities().stream().filter(SpellAbility::isEquip).findFirst().orElseThrow();
+            equip.setActivatingPlayer(board.actor);equip.getTargets().add(attacker);assertTrue(equip.canPlay());
+            assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,equip,null));settle(board.game);
+            assertEquals(equip.getPayingMana().size(),2);assertSame(jitte.getEntityAttachedTo(),attacker);
+            assertEquals(jitte.getCounters(CounterEnumType.CHARGE),0);
+        }
+        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS,board.actor,3);
+        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(defender));assertTrue(CombatUtil.canAttack(attacker,defender));
+        Combat combat=new Combat(board.actor);board.game.getPhaseHandler().setCombat(combat);
+        combat.addAttacker(attacker,defender);attacker.setTapped(true);CombatUtil.checkDeclaredAttacker(board.game,attacker,combat,true);
+        combat.setBlocked(attacker,false);return new Attack(attacker,combat);
+    }
+
+
     /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */
     private Attack attack(Board board, String name) {
         Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);

@@ -1,0 +1,39 @@
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -96,6 +96,8 @@
+                 // in no zone, so it cannot be mapped, but the creatures attacking it stay in combat in the copy too
+                 final Card fake = new Card(-1, map.getGame());
+                 fake.setName(defender.getName());
++                fake.getCurrentState().setType(new forge.card.CardType(((Card) defender).getType()));
++                fake.setProtectingPlayer(map.map(((Card) defender).getProtectingPlayer()));
+                 fake.setController(map.map(((Card) defender).getController()), 0);
+                 attackedByBands.get().put(fake, newBand);
+             } else {
+@@ -660,6 +662,8 @@
+                     // Rule 506.4c workaround to keep creatures in combat
+                     Card fake = new Card(-1, c.getGame());
+                     fake.setName("<Nothing>");
++                    fake.getCurrentState().setType(new forge.card.CardType(c.getType()));
++                    fake.setProtectingPlayer(c.getProtectingPlayer());
+                     fake.setController(c.getController(), 0);
+                     attackerBuffer.put(fake, abDef);
+                 }
+@@ -881,10 +885,14 @@
+             assignedDamage = true;
+             // If the Attacker is unblocked, or it's a trampler and has 0 blockers, deal damage to defender
+             if (defender instanceof Card && !((Card) defender).isBattle() && attacker.hasKeyword("Trample:Planeswalker")) {
+-                if (orderedBlockers == null || orderedBlockers.isEmpty()) {
+-                    orderedBlockers = new CardCollection((Card) defender);
+-                } else {
+-                    orderedBlockers.add((Card) defender);
++                // A departed planeswalker is no longer a damage recipient (rule 702.19e).
++                // Real blockers still require lethal damage before damage can reach its controller.
++                if (((Card) defender).getId() != -1) {
++                    if (orderedBlockers == null || orderedBlockers.isEmpty()) {
++                        orderedBlockers = new CardCollection((Card) defender);
++                    } else {
++                        orderedBlockers.add((Card) defender);
++                    }
+                 }
+                 defender = getDefenderPlayerByAttacker(attacker);
+             }
