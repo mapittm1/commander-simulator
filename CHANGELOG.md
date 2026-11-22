@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a historical Battle-protector gap after real paid Invasion of Gobakhan:
+  native LKI and copied historical records lose the protector, and the native
+  OppProtect predicate changes. Preserve three failed contracts, three passing
+  controls, exact reproductions and raw report hashes. This does not establish
+  complete combat or defeat-trigger behavior; no production correction is included yet.
+
 - Correct shared phasing and imprint snapshots: include phased-out physical
   cards/attachments, map phase owners and direct/suppression flags, and restore
   imprinted references/public views without sharing containers. Pass 549 source

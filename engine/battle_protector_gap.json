@@ -1,0 +1,174 @@
+{
+  "status": "confirmed_historical_protector_failure_pending_fix",
+  "scope": "A real paid Invasion of Gobakhan establishes a legal native opponent protector and three defense counters. Live copied Battles retain a mapped protector, but same-game native last-known information and a copied historical chosen-card record lose it. Native Battle.OppProtect evaluation on LKI changes from true to false. Three failed contracts are not three distinct card bugs.",
+  "baseline_commit": "1fed6621b8d7ab254571c057a99e0b8f923d42cb",
+  "baseline_build": "1f184ed22c1d4641840e1ecad59e322a",
+  "baseline_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-phasing-context",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "d4be3697c486966be992475a9e7377a2b1f2c71476f9ce30fe46fe79f5b99367",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "a04123debfdbf0bc77c030a4af858cd33b5627177579584b28f7c2856ce9c65f",
+    "native_tests": {
+      "total": 1775,
+      "passed": 1775,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "e6d22aaea6ad8b6ad907138d79b97cd44d06a84ffb0efd1d39df067e07cb4265",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 6,
+    "passed": 3,
+    "failed": 3,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.aHistoricalBattleProtectorMapsIntoTheCopiedWorld",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.aLiveCopiedBattleRetainsItsMappedProtector",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.nativeOpponentProtectorPropertyRemainsTrueOnLastKnownInformation",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.ordinaryNonbattleHistoryDoesNotAcquireAProtector",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.paidBattleEstablishesANativeOpponentProtectorAndDefense",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderBattleProtectorBaselineTest.sameGameLastKnownInformationRetainsTheProtector",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    "java.lang.AssertionError: expected [battle-protector-1] but found [null]",
+    "java.lang.AssertionError: expected [true] but found [false]",
+    "java.lang.AssertionError: expected [battle-protector-1] but found [null]"
+  ],
+  "passing_controls": [
+    "Native paid Battle casting chooses an actual opponent protector and establishes defense/public view.",
+    "Live copied battlefield Battle retains the mapped protector and defense.",
+    "Ordinary nonbattle LKI does not acquire a protector."
+  ],
+  "limits": [
+    "The spell is selected explicitly and the native engine chooses its protector; this is not an autonomous casting-strategy witness.",
+    "The historical chosen-card link is explicit metadata, not an added printed Grizzly Bears ability.",
+    "The native OppProtect property query demonstrates predicate loss on LKI, not a complete combat, attack-admission, damage or defeat-trigger outcome.",
+    "Public-view and copied-world assertions after the missing historical protector are not reached and remain unverified.",
+    "No production correction is included yet; the reviewed phasing/imprint runtime remains selected."
+  ],
+  "execution": {
+    "process": {
+      "status": "finished",
+      "bytes": 3351,
+      "returncode": 0,
+      "elapsed_seconds": 12.265
+    },
+    "testng_status": 1,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "production_origins_verified": 122,
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-battle-protector-research\\CommanderBattleProtectorBaselineTest.java": "556b3ffc5d9220a3d3da27e3e4c68ac0d3c6e9150a7e1ea4c83cbbb568a8e158"
+    },
+    "raw_evidence_sha256": "1de827a0a52359ec15dcf4b0bfe5cb4ca556ccf1dbc901c7e5113a29b89b91a2",
+    "raw_process_sha256": "4469530c6955b115a6fd11aec07676964b21de800244dd71617b984959d0c7c2",
+    "native_log_sha256": "9675ee252a4450ab22816ba486e596f823a86f2e0b8610e873572146553814ae",
+    "testng_report_sha256": "c115cd85e7894d8e3bd078135a2b21b481dcd8c5956372c3cf4f32043eb58817",
+    "compiler_inputs_sha256": "aa735f4e04a90761c35558cef7d380bc94cae3983997fd8d2ff95eecc007688b"
+  },
+  "reproduction": {
+    "fixture_sha256": "556b3ffc5d9220a3d3da27e3e4c68ac0d3c6e9150a7e1ea4c83cbbb568a8e158",
+    "fixture_source": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CardCollection;\nimport forge.game.card.CardCopyService;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Unverified protector research. Native spell is supplied; historical links are explicit metadata. */\npublic class CommanderBattleProtectorBaselineTest extends AITest {\n    @Test public void paidBattleEstablishesANativeOpponentProtectorAndDefense() {\n        Board board = board();\n        assertTrue(board.battle.isBattle());\n        assertTrue(board.battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(board.battle.getProtectingPlayer());\n        assertTrue(board.actor.getOpponents().contains(board.battle.getProtectingPlayer()));\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE), 3);\n        assertSame(board.battle.getView().getProtectingPlayer(), board.battle.getProtectingPlayer().getView());\n    }\n\n    @Test public void aLiveCopiedBattleRetainsItsMappedProtector() {\n        Board board = board(); Player original = board.battle.getProtectingPlayer();\n        GameCopier copier = copy(board); Card battle = copier.find(board.battle);\n        assertSame(battle.getProtectingPlayer(), copier.find(original));\n        assertSame(battle.getProtectingPlayer().getGame(), copier.getCopiedGame());\n        assertSame(battle.getView().getProtectingPlayer(), copier.find(original).getView());\n        assertEquals(battle.getCounters(CounterEnumType.DEFENSE), 3);\n    }\n\n    @Test public void sameGameLastKnownInformationRetainsTheProtector() {\n        Board board = board();\n        Card history = CardCopyService.getLKICopy(board.battle);\n        assertTrue(history.isBattle());\n        assertSame(history.getProtectingPlayer(), board.battle.getProtectingPlayer());\n        assertSame(history.getView().getProtectingPlayer(), board.battle.getProtectingPlayer().getView());\n        assertEquals(history.getCounters(CounterEnumType.DEFENSE), 3);\n    }\n\n    /** Native property evaluation on LKI, not a new spell or a legal attack-admission claim. */\n    @Test public void nativeOpponentProtectorPropertyRemainsTrueOnLastKnownInformation() {\n        Board board = board();\n        assertTrue(board.battle.isValid(\"Battle.OppProtect\", board.actor, board.battle, null));\n        Card history = CardCopyService.getLKICopy(board.battle);\n        assertTrue(history.isValid(\"Battle.OppProtect\", board.actor, board.battle, null));\n    }\n\n    /** Explicit chosen-card history, not an added printed Grizzly Bears ability. */\n    @Test public void aHistoricalBattleProtectorMapsIntoTheCopiedWorld() {\n        Board board = board(); Player protector = board.battle.getProtectingPlayer();\n        Card host = addCardToZone(\"Grizzly Bears\", board.actor, ZoneType.Battlefield);\n        host.setChosenCards(new CardCollection(board.battle));\n        Card moved = board.game.getAction().moveToGraveyard(board.battle, null);\n        assertNotEquals(moved.getGameTimestamp(), board.battle.getGameTimestamp());\n        GameCopier copier = copy(board); Card history = copier.find(host).getChosenCard();\n        assertNotNull(history); assertNotSame(history, copier.find(moved));\n        assertEquals(history.getGameTimestamp(), board.battle.getGameTimestamp());\n        assertSame(history.getProtectingPlayer(), copier.find(protector));\n        assertSame(history.getProtectingPlayer().getGame(), copier.getCopiedGame());\n        assertSame(history.getView().getProtectingPlayer(), copier.find(protector).getView());\n    }\n\n    @Test public void ordinaryNonbattleHistoryDoesNotAcquireAProtector() {\n        Board board = board(); Card card = addCardToZone(\"Grizzly Bears\", board.actor, ZoneType.Battlefield);\n        Card history = CardCopyService.getLKICopy(card);\n        assertNull(card.getProtectingPlayer()); assertNull(history.getProtectingPlayer());\n        assertNull(history.getView().getProtectingPlayer());\n    }\n\n    private GameCopier copy(Board board) {\n        assertTrue(board.game.getStack().isEmpty());\n        GameCopier copier = new GameCopier(board.game).withStack(true);\n        Game game = copier.makeCopy(null, board.actor);\n        assertTrue(game.getStack().isEmpty());\n        return copier;\n    }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle protector research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n",
+    "driver_sha256": "568e019bceb30811bf5e59d018c7dab27c98d929e485e2de21d629f859068cfe",
+    "driver_source": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/1f184ed22c1d4641840e1ecad59e322a'\nTEST_CLASS = 'forge.ai.CommanderBattleProtectorBaselineTest'\nFIXTURE = WORK / 'CommanderBattleProtectorBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-battle-protector6-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-battle-protector6-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n",
+    "preserved_inputs": {
+      "AITest.java": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/AITest.java",
+        "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+      },
+      "CommanderBattleProtectorBaselineTest.java": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/CommanderBattleProtectorBaselineTest.java",
+        "sha256": "556b3ffc5d9220a3d3da27e3e4c68ac0d3c6e9150a7e1ea4c83cbbb568a8e158"
+      },
+      "javac.exe": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/javac.exe",
+        "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+      },
+      "packaged_rules.py": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/packaged_rules.py",
+        "sha256": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a"
+      },
+      "run_baseline.py": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/run_baseline.py",
+        "sha256": "568e019bceb30811bf5e59d018c7dab27c98d929e485e2de21d629f859068cfe"
+      },
+      "testng-7.10.2.jar": {
+        "path": "data/development/commander-battle-protector-research/packaged-battle-protector6-baseline/input-snapshots/testng-7.10.2.jar",
+        "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+      }
+    }
+  }
+}

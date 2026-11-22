@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+Historical Battle protector state remains an open gap. Six native probes have
+three passing controls and three failures: native LKI loses the protector, a
+historical copied reference has none, and the native opponent-protector predicate
+changes. See the [exact failures and reproductions](engine/battle_protector_gap.json).
+These checks are separate from the passing phasing/imprint validation below.
+
 Generic phasing/imprint snapshots preserve phased-out physical cards and their
 attachments, mapped phase owners, direct/suppressed phase-in flags and imprinted
 references/public views. All 549 source checks pass with 25 new contracts,

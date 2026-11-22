@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Open historical Battle-protector gap
+
+Six probes against the reviewed phasing/imprint runtime pass three controls and
+fail three contracts. Real paid Invasion of Gobakhan establishes an actual native
+opponent protector, defense and public view. Its live battlefield copy retains
+the mapped protector. Ordinary nonbattle last-known information remains unprotected.
+
+Native Battle LKI loses its protector, a historical chosen-card copy has none,
+and the native Battle.OppProtect predicate changes from true to false on LKI.
+Later public-view and copied-world identity assertions are not reached. Three
+failed contracts are not three distinct card bugs.
+
+No production correction is included yet. The spell is supplied, while the engine
+chooses its protector. The chosen-card history is explicit metadata, not a printed
+Grizzly Bears ability. Predicate loss is not a complete combat, attack-admission,
+damage or defeat-trigger witness. See the
+[gap report and exact reproductions](../engine/battle_protector_gap.json).
+
 ## Phased physical state and imprint references
 
 The reviewed runtime enumerates physical cards with the native API that includes
