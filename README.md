@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+Copied phasing state has an open lookup gap. Eight native probes have three
+passing controls and five failures when mapping a creature phased out by paid
+Slip Out the Back. Later phase-in assertions are not reached. See the
+[exact failures and reproductions](engine/phasing_context_gap.json). These checks
+are separate from the passing Gift-context validation below.
+
 Generic Gift-context copying maps recipients into copied games and historical
 state through the shared snapshot routine. All 524 source checks pass with 22 new
 contracts, including paid Scrapshooter and Into the Flood Maw resolution, countered

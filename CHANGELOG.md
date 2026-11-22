@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a copied-phasing lookup gap after real paid Slip Out the Back: five
+  contracts cannot map the phased-out creature. Preserve three passing controls,
+  exact reproduction sources, raw report hashes and an initial native-default
+  fixture correction. Later phase-owner/view/nested/phase-in assertions are not
+  reached; no phasing production correction is included yet.
+
 - Correct generic Gift-recipient copying through the shared card snapshot after
   entity maps exist, including native last-known information. Pass 524 source cases
   with 22 new contracts and real paid permanent/instant Gift witnesses. Preserve

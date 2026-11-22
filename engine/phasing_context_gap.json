@@ -1,0 +1,288 @@
+{
+  "status": "confirmed_copy_lookup_failure_pending_fix",
+  "scope": "After real paid Slip Out the Back phases out a creature without changing its battlefield zone or timestamp, five copied-state contracts cannot map that phased-out creature. These five failed contracts share a lookup symptom; they are not five distinct card bugs.",
+  "baseline_commit": "1880238fcd98c06ae116eb44676c40e0eeaa6e86",
+  "baseline_build": "c863e33e82d147189c0bef7657878641",
+  "baseline_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-gift-context",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "1ef69c6c9f485a375890e96410588e6464f1897525b1970d6b2ea48bdd4c9056",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "2e1b37572ec94e9e49cf6658ed5be92ce3c06bc9d95f850d4430fa5d5ca308d5",
+    "native_tests": {
+      "total": 1750,
+      "passed": 1750,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "531c67d812364c8df75af2c126f6ed0636fb4abe6be68f6d4fd7d8da08a028ae",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 8,
+    "passed": 3,
+    "failed": 5,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.aCopiedPhasedCreatureRemainsPhasedOut",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.anUnphasedCreatureDoesNotAcquirePhasingState",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.directPhasingAndPublicPresentationSurviveCopying",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.nativePaidSlipOutTheBackPhasesWithoutChangingTheCreaturesZone",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.nestedCopiesMapThePhaseOwnerTwice",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.phasingInTheCopyDoesNotChangeTheOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.sameGameLastKnownInformationRetainsNativePhasingState",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderPhasingContextBaselineTest.theCopiedPhaseOwnerBelongsToTheCopiedGame",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/362417934",
+    "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/2137601740",
+    "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/821380386",
+    "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/1828598477",
+    "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/218002096"
+  ],
+  "passing_controls": [
+    "Real native Slip Out the Back payment, counter placement and phasing preserve battlefield zone and timestamp.",
+    "Same-game native last-known information retains the exercised phasing state.",
+    "An unphased copied creature retains its native default state."
+  ],
+  "limits": [
+    "All five failures stop at GameCopier.find. Copied phase-owner, public view, nested identity and later phase-in assertions are therefore not reached and remain unverified.",
+    "The original unphased control incorrectly assumed a false default direct-phasing designation; the corrected control compares the native original. Both runs and exact inputs are preserved.",
+    "Cards, spells and targets are supplied in controlled partial registrations; this does not establish autonomous AI strategy or all Commander deck interactions.",
+    "Indirect attachment phasing, suppressed normal phase-in and Battle protector history are separate untested follow-up requirements.",
+    "No production correction has been implemented for this finding. The reviewed Gift runtime remains selected."
+  ],
+  "execution": {
+    "process": {
+      "status": "finished",
+      "bytes": 3720,
+      "returncode": 0,
+      "elapsed_seconds": 12.312
+    },
+    "testng_status": 1,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "production_origins_verified": 117,
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-phasing-context-research\\CommanderPhasingContextBaselineTest.java": "10cf6a6e9f47e22aec02495bb8cc3e9c4ca31f3a0f3dd207853bc0149bda347d"
+    },
+    "raw_evidence_sha256": "06170764cb24955e579b9c4fb9c2e2f2792ff16e0a7c605a281e3b9115bd56fb",
+    "raw_process_sha256": "f0657df9ed768ea4a61c9e2db38d0eef01d50fa171ff28913c4e6eff90fbe7f2",
+    "native_log_sha256": "0b5ef062396bb55a0fadea4c835bcfce2d6945fdcb6b97b599b0a6f1bf05bcc8",
+    "testng_report_sha256": "f0dc3770b5ada8cc78a048a6f2c7f659dc7636ec3ba9eef06d3e54720b66363e",
+    "compiler_inputs_sha256": "0c321972b6c5a1c3406d5424f4482e69c09d642264ffc4972f085e07ef6ba7e6"
+  },
+  "reproduction": {
+    "fixture_sha256": "10cf6a6e9f47e22aec02495bb8cc3e9c4ca31f3a0f3dd207853bc0149bda347d",
+    "fixture_source": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CardCopyService;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Unverified native phasing research. Supplied spells do not establish autonomous AI choice. */\npublic class CommanderPhasingContextBaselineTest extends AITest {\n    @Test public void nativePaidSlipOutTheBackPhasesWithoutChangingTheCreaturesZone() {\n        Board board = board();\n        long timestamp = board.creature.getGameTimestamp();\n        castSlip(board);\n        assertTrue(board.creature.isInZone(ZoneType.Battlefield));\n        assertEquals(board.creature.getGameTimestamp(), timestamp);\n        assertTrue(board.creature.isPhasedOut());\n        assertTrue(board.creature.isDirectlyPhasedOut());\n        assertSame(board.creature.getPhasedOut(), board.actor);\n        assertTrue(board.creature.getView().isPhasedOut());\n        assertEquals(board.creature.getCounters(CounterEnumType.P1P1), 1);\n    }\n\n    @Test public void aCopiedPhasedCreatureRemainsPhasedOut() {\n        Board board = board(); castSlip(board);\n        GameCopier copier = copy(board);\n        Card creature = copier.find(board.creature);\n        assertNotNull(creature);\n        assertTrue(creature.isPhasedOut());\n        assertEquals(creature.getCounters(CounterEnumType.P1P1), 1);\n    }\n\n    @Test public void theCopiedPhaseOwnerBelongsToTheCopiedGame() {\n        Board board = board(); castSlip(board);\n        GameCopier copier = copy(board);\n        Player phaseOwner = copier.find(board.creature).getPhasedOut();\n        assertNotNull(phaseOwner);\n        assertSame(phaseOwner, copier.find(board.actor));\n        assertSame(phaseOwner.getGame(), copier.getCopiedGame());\n    }\n\n    @Test public void directPhasingAndPublicPresentationSurviveCopying() {\n        Board board = board(); castSlip(board);\n        Card creature = copy(board).find(board.creature);\n        assertTrue(creature.isDirectlyPhasedOut());\n        assertTrue(creature.getView().isPhasedOut());\n    }\n\n    @Test public void phasingInTheCopyDoesNotChangeTheOriginal() {\n        Board board = board(); castSlip(board);\n        Card creature = copy(board).find(board.creature);\n        assertTrue(creature.isPhasedOut());\n        creature.phase(true);\n        assertFalse(creature.isPhasedOut());\n        assertFalse(creature.getView().isPhasedOut());\n        assertEquals(creature.getCounters(CounterEnumType.P1P1), 1);\n        assertTrue(board.creature.isPhasedOut());\n        assertSame(board.creature.getPhasedOut(), board.actor);\n    }\n\n    @Test public void sameGameLastKnownInformationRetainsNativePhasingState() {\n        Board board = board(); castSlip(board);\n        Card history = CardCopyService.getLKICopy(board.creature);\n        assertTrue(history.isPhasedOut());\n        assertSame(history.getPhasedOut(), board.actor);\n        assertTrue(history.isDirectlyPhasedOut());\n        assertTrue(history.getView().isPhasedOut());\n    }\n\n    @Test public void nestedCopiesMapThePhaseOwnerTwice() {\n        Board board = board(); castSlip(board);\n        GameCopier first = copy(board);\n        GameCopier second = new GameCopier(first.getCopiedGame()).withStack(true);\n        Game game = second.makeCopy(null, first.find(board.actor));\n        Card creature = second.find(first.find(board.creature));\n        assertTrue(creature.isPhasedOut());\n        assertSame(creature.getPhasedOut(), second.find(first.find(board.actor)));\n        assertSame(creature.getPhasedOut().getGame(), game);\n    }\n\n    @Test public void anUnphasedCreatureDoesNotAcquirePhasingState() {\n        Board board = board();\n        Card creature = copy(board).find(board.creature);\n        assertNotNull(creature);\n        assertFalse(creature.isPhasedOut());\n        assertNull(creature.getPhasedOut());\n        // The native direct-phasing designation can be true even while unphased.\n        assertEquals(creature.isDirectlyPhasedOut(), board.creature.isDirectlyPhasedOut());\n        assertFalse(creature.getView().isPhasedOut());\n    }\n\n    private GameCopier copy(Board board) {\n        assertTrue(board.game.getStack().isEmpty());\n        GameCopier copier = new GameCopier(board.game).withStack(true);\n        Game game = copier.makeCopy(null, board.actor);\n        assertTrue(game.getStack().isEmpty());\n        return copier;\n    }\n\n    private void castSlip(Board board) {\n        Card source = addCardToZone(\"Slip Out the Back\", board.actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility();\n        spell.setActivatingPlayer(board.actor);\n        spell.getTargets().add(board.creature);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, spell, null));\n        settle(board.game);\n        assertEquals(board.actor.getSpellsCastThisTurn(), 1);\n        assertTrue(board.actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        assertTrue(board.game.getCardState(spell.getHostCard()).isInZone(ZoneType.Graveyard));\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Phasing research stack did not settle\");\n    }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"phasing-context-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Phasing context research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play);\n        Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        addCardToZone(\"Island\", actor, ZoneType.Battlefield);\n        Card creature = addCardToZone(\"Grizzly Bears\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true);\n        game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        return new Board(game, actor, creature);\n    }\n\n    private record Board(Game game, Player actor, Card creature) { }\n}\n",
+    "driver_sha256": "bc0ddc5c92a1e8c2c2a00fe83f8e4814614048df60300a62f72e60d6ad32317a",
+    "driver_source": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/c863e33e82d147189c0bef7657878641'\nTEST_CLASS = 'forge.ai.CommanderPhasingContextBaselineTest'\nFIXTURE = WORK / 'CommanderPhasingContextBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-phasing-context8-control-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-phasing-context8-control-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n",
+    "preserved_inputs": {
+      "AITest.java": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/AITest.java",
+        "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+      },
+      "CommanderPhasingContextBaselineTest.java": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/CommanderPhasingContextBaselineTest.java",
+        "sha256": "10cf6a6e9f47e22aec02495bb8cc3e9c4ca31f3a0f3dd207853bc0149bda347d"
+      },
+      "javac.exe": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/javac.exe",
+        "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+      },
+      "packaged_rules.py": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/packaged_rules.py",
+        "sha256": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a"
+      },
+      "run_baseline_fixed_control.py": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/run_baseline_fixed_control.py",
+        "sha256": "bc0ddc5c92a1e8c2c2a00fe83f8e4814614048df60300a62f72e60d6ad32317a"
+      },
+      "testng-7.10.2.jar": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-control-baseline/input-snapshots/testng-7.10.2.jar",
+        "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+      }
+    }
+  },
+  "fixture_corrections": [
+    {
+      "status": "verified_fixture_correction",
+      "phase": "packaged-phasing-context8-baseline",
+      "counts": {
+        "total": 8,
+        "passed": 2,
+        "failed": 6,
+        "skipped": 0
+      },
+      "evidence_sha256": "5054757a37ad75a8c01e08c7d86a8369bca560d77481b003d1d421db819f8ec2",
+      "report_sha256": "2ac908da9f23e9f5617ddd8ce3bbb017a23c762effa726718870e4396352bab3",
+      "cause": "The unphased control incorrectly assumed the direct-phasing designation defaults false. Native Card defaults can retain that designation while isPhasedOut is false.",
+      "change": "Compare the copied designation against the native original, retaining all assertions that the card remains unphased with no phase owner and a false public phased-out view.",
+      "production_changes": false,
+      "engine_failure_observation": "Five phased-card lookups throw Could not map errors; no assertion about the later phase-in outcome can be made because those fixtures stop at lookup.",
+      "final_counts": {
+        "total": 8,
+        "passed": 3,
+        "failed": 5,
+        "skipped": 0
+      }
+    }
+  ],
+  "initial_phase": {
+    "counts": {
+      "total": 8,
+      "passed": 2,
+      "failed": 6,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.aCopiedPhasedCreatureRemainsPhasedOut",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.anUnphasedCreatureDoesNotAcquirePhasingState",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.directPhasingAndPublicPresentationSurviveCopying",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.nativePaidSlipOutTheBackPhasesWithoutChangingTheCreaturesZone",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.nestedCopiesMapThePhaseOwnerTwice",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.phasingInTheCopyDoesNotChangeTheOriginal",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.sameGameLastKnownInformationRetainsNativePhasingState",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderPhasingContextBaselineTest.theCopiedPhaseOwnerBelongsToTheCopiedGame",
+        "status": "FAIL"
+      }
+    ],
+    "failures": [
+      "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/745868137",
+      "java.lang.AssertionError: expected [false] but found [true]",
+      "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/1022473723",
+      "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/1776434836",
+      "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/235668413",
+      "java.lang.RuntimeException: Couldn't map Grizzly Bears (34)/1942990808"
+    ],
+    "evidence_sha256": "5054757a37ad75a8c01e08c7d86a8369bca560d77481b003d1d421db819f8ec2",
+    "report_sha256": "2ac908da9f23e9f5617ddd8ce3bbb017a23c762effa726718870e4396352bab3",
+    "preserved_inputs": {
+      "AITest.java": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/AITest.java",
+        "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+      },
+      "CommanderPhasingContextBaselineTest.java": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/CommanderPhasingContextBaselineTest.java",
+        "sha256": "9c4c43eaf0c80d2f0aa360c04d5750916d29051da41287e01051a757fce5c7b3"
+      },
+      "javac.exe": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/javac.exe",
+        "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+      },
+      "packaged_rules.py": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/packaged_rules.py",
+        "sha256": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a"
+      },
+      "run_baseline.py": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/run_baseline.py",
+        "sha256": "47bd18baa231bc225a57b01cbfcdeb615465c770b57223862bea9a66c15c402a"
+      },
+      "testng-7.10.2.jar": {
+        "path": "data/development/commander-phasing-context-research/packaged-phasing-context8-baseline/input-snapshots/testng-7.10.2.jar",
+        "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+      }
+    },
+    "fixture_source": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CardCopyService;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Unverified native phasing research. Supplied spells do not establish autonomous AI choice. */\npublic class CommanderPhasingContextBaselineTest extends AITest {\n    @Test public void nativePaidSlipOutTheBackPhasesWithoutChangingTheCreaturesZone() {\n        Board board = board();\n        long timestamp = board.creature.getGameTimestamp();\n        castSlip(board);\n        assertTrue(board.creature.isInZone(ZoneType.Battlefield));\n        assertEquals(board.creature.getGameTimestamp(), timestamp);\n        assertTrue(board.creature.isPhasedOut());\n        assertTrue(board.creature.isDirectlyPhasedOut());\n        assertSame(board.creature.getPhasedOut(), board.actor);\n        assertTrue(board.creature.getView().isPhasedOut());\n        assertEquals(board.creature.getCounters(CounterEnumType.P1P1), 1);\n    }\n\n    @Test public void aCopiedPhasedCreatureRemainsPhasedOut() {\n        Board board = board(); castSlip(board);\n        GameCopier copier = copy(board);\n        Card creature = copier.find(board.creature);\n        assertNotNull(creature);\n        assertTrue(creature.isPhasedOut());\n        assertEquals(creature.getCounters(CounterEnumType.P1P1), 1);\n    }\n\n    @Test public void theCopiedPhaseOwnerBelongsToTheCopiedGame() {\n        Board board = board(); castSlip(board);\n        GameCopier copier = copy(board);\n        Player phaseOwner = copier.find(board.creature).getPhasedOut();\n        assertNotNull(phaseOwner);\n        assertSame(phaseOwner, copier.find(board.actor));\n        assertSame(phaseOwner.getGame(), copier.getCopiedGame());\n    }\n\n    @Test public void directPhasingAndPublicPresentationSurviveCopying() {\n        Board board = board(); castSlip(board);\n        Card creature = copy(board).find(board.creature);\n        assertTrue(creature.isDirectlyPhasedOut());\n        assertTrue(creature.getView().isPhasedOut());\n    }\n\n    @Test public void phasingInTheCopyDoesNotChangeTheOriginal() {\n        Board board = board(); castSlip(board);\n        Card creature = copy(board).find(board.creature);\n        assertTrue(creature.isPhasedOut());\n        creature.phase(true);\n        assertFalse(creature.isPhasedOut());\n        assertFalse(creature.getView().isPhasedOut());\n        assertEquals(creature.getCounters(CounterEnumType.P1P1), 1);\n        assertTrue(board.creature.isPhasedOut());\n        assertSame(board.creature.getPhasedOut(), board.actor);\n    }\n\n    @Test public void sameGameLastKnownInformationRetainsNativePhasingState() {\n        Board board = board(); castSlip(board);\n        Card history = CardCopyService.getLKICopy(board.creature);\n        assertTrue(history.isPhasedOut());\n        assertSame(history.getPhasedOut(), board.actor);\n        assertTrue(history.isDirectlyPhasedOut());\n        assertTrue(history.getView().isPhasedOut());\n    }\n\n    @Test public void nestedCopiesMapThePhaseOwnerTwice() {\n        Board board = board(); castSlip(board);\n        GameCopier first = copy(board);\n        GameCopier second = new GameCopier(first.getCopiedGame()).withStack(true);\n        Game game = second.makeCopy(null, first.find(board.actor));\n        Card creature = second.find(first.find(board.creature));\n        assertTrue(creature.isPhasedOut());\n        assertSame(creature.getPhasedOut(), second.find(first.find(board.actor)));\n        assertSame(creature.getPhasedOut().getGame(), game);\n    }\n\n    @Test public void anUnphasedCreatureDoesNotAcquirePhasingState() {\n        Board board = board();\n        Card creature = copy(board).find(board.creature);\n        assertNotNull(creature);\n        assertFalse(creature.isPhasedOut());\n        assertNull(creature.getPhasedOut());\n        assertFalse(creature.isDirectlyPhasedOut());\n        assertFalse(creature.getView().isPhasedOut());\n    }\n\n    private GameCopier copy(Board board) {\n        assertTrue(board.game.getStack().isEmpty());\n        GameCopier copier = new GameCopier(board.game).withStack(true);\n        Game game = copier.makeCopy(null, board.actor);\n        assertTrue(game.getStack().isEmpty());\n        return copier;\n    }\n\n    private void castSlip(Board board) {\n        Card source = addCardToZone(\"Slip Out the Back\", board.actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility();\n        spell.setActivatingPlayer(board.actor);\n        spell.getTargets().add(board.creature);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, spell, null));\n        settle(board.game);\n        assertEquals(board.actor.getSpellsCastThisTurn(), 1);\n        assertTrue(board.actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        assertTrue(board.game.getCardState(spell.getHostCard()).isInZone(ZoneType.Graveyard));\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Phasing research stack did not settle\");\n    }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"phasing-context-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Phasing context research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play);\n        Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        addCardToZone(\"Island\", actor, ZoneType.Battlefield);\n        Card creature = addCardToZone(\"Grizzly Bears\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true);\n        game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        return new Board(game, actor, creature);\n    }\n\n    private record Board(Game game, Player actor, Card creature) { }\n}\n",
+    "driver_source": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/c863e33e82d147189c0bef7657878641'\nTEST_CLASS = 'forge.ai.CommanderPhasingContextBaselineTest'\nFIXTURE = WORK / 'CommanderPhasingContextBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-phasing-context8-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-phasing-context8-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n"
+  }
+}

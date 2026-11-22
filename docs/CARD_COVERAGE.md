@@ -17,6 +17,25 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Open copied-phasing lookup gap
+
+Eight probes against the reviewed Gift runtime pass three controls and fail five
+copy contracts. Native paid Slip Out the Back gives the creature its counter and
+phases it out without changing its battlefield zone or timestamp. Same-game
+last-known information and the corrected unphased copy control also pass.
+
+All five failures stop at a copied-state lookup that cannot map the phased-out
+creature. The subsequent phase-owner, public-view, nested-copy and native phase-in
+assertions are not reached and remain unverified. Five failed contracts are not
+five distinct card bugs. An initial control incorrectly assumed the native direct-
+phasing designation defaults false while unphased; comparing the native original
+corrects that fixture. Both runs and their exact inputs remain preserved.
+
+No production correction is included yet. These are supplied actions on partial
+registrations, not autonomous strategy witnesses. Indirect attachment phasing,
+suppressed normal phase-in and Battle protector history remain separate follow-up
+requirements. See the [gap report and exact reproductions](../engine/phasing_context_gap.json).
+
 ## Gift recipients and copied resolution
 
 The reviewed runtime maps public Gift recipients through the shared snapshot
