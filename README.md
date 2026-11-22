@@ -32,8 +32,10 @@ Trample over planeswalkers reserves one damage for the departed target, reducing
 player damage by one in native and copied, blocked and unblocked combat.
 The expanded 28-case baseline passes 24 controls and fails those four contracts;
 all eight paid-equip Jitte trigger controls pass. See the
-[exact reproductions](engine/removed_defender_gap.json). All 628 focused source checks pass with the correction. A fresh packaged engine
-is under validation; the selected runtime is unchanged.
+[exact reproductions](engine/removed_defender_gap.json). All 628 focused source checks and 1,854 selected native tests pass. Independent
+packaged families pass 1,102 cases; broader gameplay and serialization pass
+3,328 and 256 tests. See the [packaged evidence](engine/removed_defender_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime is unchanged.
 
 First-strike assignment history now survives copied combat, including live and
 historical departed combatants in independent collections. All 600 source checks

@@ -35,8 +35,14 @@ three runs and inputs. Mature attackers, blocker declarations and starting
 loyalty are supplied preconditions. This is not autonomous strategy coverage.
 The candidate passes all 628 focused source checks, retaining 600 and adding 28.
 The 62-case Battle family retains all 34 prior methods. Only Combat.java changes
-in production. A fresh packaged engine is under validation; the selected runtime
-is unchanged. See the [source evidence](../engine/removed_defender_native_evidence.json).
+in production. Full live validation is pending; the selected runtime is unchanged.
+See the [source evidence](../engine/removed_defender_native_evidence.json).
+
+The removed-defender candidate also passes 1,854 selected native tests, all four
+independent packaged families (781/65/194/62), 3,328 broader gameplay tests and
+256 serialization tests. All 495 implementation inputs remain frozen. See its
+[packaged evidence](../engine/removed_defender_packaged_evidence.json). Full live
+validation and activation remain pending; these checks do not certify all rules.
 
 ## First-strike history in copied combat
 

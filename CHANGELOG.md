@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the removed-defender candidate with 1,854 selected native tests,
+  retaining every prior 1,826 method and adding 28. Independent packaged families
+  pass 781/65/194/62 cases; broader gameplay and serialization pass 3,328/256.
+  Only Combat.class changes; card scripts and default AI are unchanged. Verify
+  495 frozen inputs and restore temporary test-policy bytes. Full live validation
+  and runtime activation remain pending.
+
 - Correct removed-planeswalker assignment in source: preserve departed defender
   type/protector context and exclude the missing planeswalker from lethal damage
   recipients. Pass 628 focused source checks, retaining 600 plus 28 new contracts.
