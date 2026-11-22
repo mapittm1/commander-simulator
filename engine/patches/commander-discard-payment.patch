@@ -1,0 +1,468 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCostDecision.java b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -4,6 +4,7 @@
+ import com.google.common.collect.Multiset;
+ 
+ import forge.ai.AiCardMemory.MemorySet;
++import forge.ai.simulation.DiscardPaymentChoices;
+ import forge.card.CardType;
+ import forge.card.ColorSet;
+ import forge.game.Game;
+@@ -92,6 +93,15 @@
+ 
+     @Override
+     public PaymentDecision visit(CostDiscard cost) {
++        String choice = ((PlayerControllerAi) player.getController()).getAi().getSimulationPicker()
++                .chooseDiscardPayment(ability, cost, discarded, isEffect());
++        if (choice != null) DiscardPaymentChoices.installPlan(ability, choice);
++        if (DiscardPaymentChoices.hasPlan(ability)) {
++            Card planned = DiscardPaymentChoices.takePlannedCard(player, ability, cost, isEffect(), discarded);
++            if (planned == null) return null;
++            discarded.add(planned);
++            return PaymentDecision.card(planned);
++        }
+         final String type = cost.getType();
+         CardCollectionView hand = player.getCardsIn(ZoneType.Hand);
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+@@ -1,4 +1,6 @@
+ package forge.ai;
++
++import forge.ai.simulation.DiscardPaymentChoices;
+ 
+ import java.util.Collection;
+ import java.util.List;
+@@ -145,6 +147,18 @@
+             return true;
+         }
+ 
++        if (DiscardPaymentChoices.hasPlan(sa)) {
++            CostDiscard plannedCost = null;
++            for (CostPart part : cost.getCostParts()) {
++                if (part instanceof CostDiscard discard) {
++                    if (plannedCost != null) return false;
++                    plannedCost = discard;
++                }
++            }
++            return plannedCost != null && DiscardPaymentChoices.peekPlannedCard(
++                    ai, sa, plannedCost, false, CardCollection.EMPTY) != null;
++        }
++
+         CardCollection hand = new CardCollection(ai.getCardsIn(ZoneType.Hand));
+ 
+         for (final CostPart part : cost.getCostParts()) {
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/DiscardPaymentChoices.java b/forge-ai/src/main/java/forge/ai/simulation/DiscardPaymentChoices.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/DiscardPaymentChoices.java
+@@ -0,0 +1,159 @@
++package forge.ai.simulation;
++
++import forge.game.GameObject;
++import forge.game.card.Card;
++import forge.game.card.CardCollection;
++import forge.game.card.CardCollectionView;
++import forge.game.cost.CostDiscard;
++import forge.game.cost.CostPart;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++import forge.util.AITimeoutTracker;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Objects;
++
++/** Bounded single-card discard choices for paid activated-ability previews and replay. */
++public final class DiscardPaymentChoices {
++    private static final String KEY = "AIPaidDiscard";
++    private static final int MAX_CHOICES = 32;
++    private DiscardPaymentChoices() { }
++
++    private static CostDiscard simpleDiscard(SpellAbility action) {
++        if (!action.isActivatedAbility() || action.getPayCosts() == null) return null;
++        CostDiscard result = null;
++        for (CostPart part : action.getPayCosts().getCostParts()) {
++            if (part instanceof CostDiscard discard) {
++                if (result != null || discard.payCostFromSource() || !"Card".equals(discard.getType())
++                        || discard.getAbilityAmount(action) != 1) return null;
++                result = discard;
++            }
++        }
++        return result;
++    }
++
++    private static String cardStamp(Card card) {
++        return card.getId() + "@" + card.getGameTimestamp();
++    }
++
++    private static String binding(SpellAbility action) {
++        Player actor = action.getActivatingPlayer();
++        if (actor == null) return null;
++        StringBuilder result = new StringBuilder(actor.getId() + ":" + cardStamp(action.getHostCard()) + ":" + action.getApi());
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            result.append("[");
++            for (GameObject target : part.getTargets()) {
++                if (target instanceof Card card) result.append("C").append(cardStamp(card));
++                else if (target instanceof Player player) result.append("P").append(player.getId());
++                else return null;
++                result.append(",");
++            }
++            result.append("]");
++        }
++        return result.append(":").toString();
++    }
++
++    public static List<SpellAbility> variants(SpellAbility action) {
++        CostDiscard cost = simpleDiscard(action);
++        if (cost == null) return List.of(action);
++        SpellAbility ordinary = action.copy(); clearPlan(ordinary);
++        String owner = binding(ordinary);
++        if (owner == null) return List.of(ordinary);
++        List<SpellAbility> result = new ArrayList<>(); result.add(ordinary);
++        for (String choice : paymentOptions(ordinary.getActivatingPlayer(), ordinary, cost, false, CardCollection.EMPTY)) {
++            SpellAbility trial = ordinary.copy(); installPlan(trial, choice); result.add(trial);
++        }
++        return result;
++    }
++
++    public static List<String> paymentOptions(Player payer, SpellAbility action, CostDiscard cost,
++            boolean effect, CardCollectionView excluded) {
++        SpellAbility root = action.getRootAbility();
++        if (!payer.equals(root.getActivatingPlayer()) || simpleDiscard(root) == null
++                || cost.payCostFromSource() || !"Card".equals(cost.getType())
++                || cost.getAbilityAmount(action) != 1 || !cost.canPay(action, payer, effect)) return List.of();
++        String owner = binding(root); if (owner == null) return List.of();
++        List<String> result = new ArrayList<>();
++        for (Card card : payer.getCardsIn(ZoneType.Hand)) {
++            AITimeoutTracker.check();
++            if (card.equals(root.getHostCard()) && card.isInZone(ZoneType.Hand) && payer.equals(card.getOwner())) continue;
++            if (excluded.contains(card) || !card.canBeDiscardedBy(action, effect)) continue;
++            result.add(owner + cardStamp(card));
++            // Keep the native payment policy rather than silently dropping legal choices.
++            if (result.size() > MAX_CHOICES) return List.of();
++        }
++        return result;
++    }
++
++    public static String plannedChoice(SpellAbility action) {
++        return action.getRootAbility().getPlannedAiChoice(KEY);
++    }
++
++    public static void installPlan(SpellAbility action, String choice) {
++        if (choice == null) clearPlan(action);
++        else action.getRootAbility().setPlannedAiChoice(KEY, choice);
++    }
++
++    public static boolean hasPlan(SpellAbility action) {
++        return action != null && action.getRootAbility().getPlannedAiChoice(KEY) != null;
++    }
++
++    /** Consume an internal choice only after rechecking native payment legality and identities. */
++    public static Card takePlannedCard(Player payer, SpellAbility action, CostDiscard cost,
++            boolean effect, CardCollectionView excluded) {
++        Card selected = selectedCard(payer, action, cost, effect, excluded, false);
++        clearPlan(action);
++        return selected;
++    }
++
++    public static Card peekPlannedCard(Player payer, SpellAbility action, CostDiscard cost,
++            boolean effect, CardCollectionView excluded) {
++        return selectedCard(payer, action, cost, effect, excluded, true);
++    }
++
++    private static boolean referencesCurrent(SpellAbility action) {
++        Card host = action.getHostCard();
++        Card currentHost = host.getGame().getCardState(host, null);
++        if (currentHost == null || !host.equalsWithGameTimestamp(currentHost)) return false;
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            if (part.usesTargeting() && !part.isTargetNumberValid()) return false;
++            for (GameObject target : part.getTargets()) {
++                if (target instanceof Card card) {
++                    Card current = host.getGame().getCardState(card, null);
++                    if (current == null || !card.equalsWithGameTimestamp(current)
++                            || (part.usesTargeting() && !part.canTarget(current))) return false;
++                }
++            }
++        }
++        return true;
++    }
++
++    private static Card selectedCard(Player payer, SpellAbility action, CostDiscard cost,
++            boolean effect, CardCollectionView excluded, boolean beforePayment) {
++        SpellAbility root = action.getRootAbility();
++        if (beforePayment && !referencesCurrent(root)) return null;
++        String planned = root.getPlannedAiChoice(KEY);
++        if (planned == null || !payer.equals(root.getActivatingPlayer())
++                || root.getHostCard().getGame() != payer.getGame()
++                || simpleDiscard(root) == null || cost.payCostFromSource()
++                || !"Card".equals(cost.getType()) || cost.getAbilityAmount(action) != 1
++                || !cost.canPay(action, payer, effect)) return null;
++        String owner = binding(root); if (owner == null) return null;
++        for (Card card : payer.getCardsIn(ZoneType.Hand)) {
++            if (!excluded.contains(card) && Objects.equals(planned, owner + cardStamp(card))
++                    && card.canBeDiscardedBy(action, effect)) return card;
++        }
++        return null;
++    }
++
++    static void clearPlan(SpellAbility action) {
++        action.getRootAbility().clearPlannedAiChoice(KEY);
++    }
++
++    static void copyPlan(SpellAbility source, SpellAbility destination) {
++        destination.clearPlannedAiChoice(KEY);
++        String planned = source.getPlannedAiChoice(KEY);
++        if (planned != null) destination.setPlannedAiChoice(KEY, planned);
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -41,6 +41,7 @@
+                 || (actor.getGame().getStack().isResolving() && !action.isCastFromPlayEffect())) {
+             return new AiAbilityDecision(0, AiPlayDecision.AnotherTime);
+         }
++        if (followup) DiscardPaymentChoices.clearPlan(action);
+         ASSESSING.set(true);
+         try {
+             return AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(0L),
+@@ -97,29 +98,31 @@
+             for (int choice = 0; choice < MAX_TARGET_CHOICES
+                     && (selector.hasTargeting() ? selector.selectNextTargets() : choice == 0); choice++) {
+                 AITimeoutTracker.check();
+-                for (SpellAbility variant : variants.apply(trial)) {
+-                    if (outcomes++ == MAX_TARGET_CHOICES) break modeLoop;
+-                    AITimeoutTracker.check();
+-                    long value = 0;
+-                    long available = 0;
+-                    boolean complete = true;
+-                    for (int i = 0; i < SEEDS.length; i++) {
+-                        final long seed = SEEDS[i];
+-                        final GameStateEvaluator.Score start = baseline[i];
+-                        GameStateEvaluator.Score result = AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(seed), () -> {
+-                            GameSimulator simulator = new GameSimulator(new SimulationController(start, followup ? 1 : 0), actor.getGame(), actor, null);
+-                            return simulator.simulateSpellAbility(variant);
+-                        }));
+-                        if (result.value == Integer.MIN_VALUE) {
+-                            complete = false;
+-                            break;
++                for (SpellAbility preparedVariant : variants.apply(trial)) {
++                    for (SpellAbility variant : followup ? DiscardPaymentChoices.variants(preparedVariant) : List.of(preparedVariant)) {
++                        if (outcomes++ == MAX_TARGET_CHOICES) break modeLoop;
++                        AITimeoutTracker.check();
++                        long value = 0;
++                        long available = 0;
++                        boolean complete = true;
++                        for (int i = 0; i < SEEDS.length; i++) {
++                            final long seed = SEEDS[i];
++                            final GameStateEvaluator.Score start = baseline[i];
++                            GameStateEvaluator.Score result = AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(seed), () -> {
++                                GameSimulator simulator = new GameSimulator(new SimulationController(start, followup ? 1 : 0), actor.getGame(), actor, null);
++                                return simulator.simulateSpellAbility(variant);
++                            }));
++                            if (result.value == Integer.MIN_VALUE) {
++                                complete = false;
++                                break;
++                            }
++                            value += result.value;
++                            available += result.availableValue;
+                         }
+-                        value += result.value;
+-                        available += result.availableValue;
+-                    }
+-                    if (complete && value > bestValue && available > baselineAvailable) {
+-                        best = variant.copy();
+-                        bestValue = value;
++                        if (complete && value > bestValue && available > baselineAvailable) {
++                            best = variant.copy();
++                            bestValue = value;
++                        }
+                     }
+                 }
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/Plan.java b/forge-ai/src/main/java/forge/ai/simulation/Plan.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/Plan.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/Plan.java
+@@ -105,8 +105,15 @@
+         MultiTargetSelector.Targets targets;
+         List<String> choices;
+         List<String> textWords;
++        String discardPayment;
+         int[] modes;
+         String modesStr; // for human pretty-print consumption only
++
++        public static Decision forDiscardPayment(Score initialScore, Decision previous, String choice) {
++            Decision decision = new Decision(initialScore, previous, (SpellAbilityRef) null);
++            decision.discardPayment = choice;
++            return decision;
++        }
+ 
+         public Decision(Score initialScore, Decision prevDecision, SpellAbilityRef saRef) {
+             this.initialScore = initialScore;
+@@ -150,7 +157,9 @@
+             if (!showHostCard) {
+                 sb.append("[initScore=").append(initialScore).append(" ");
+             }
+-            if (modesStr != null) {
++            if (saRef == null && discardPayment != null) {
++                sb.append("Discard payment");
++            } else if (modesStr != null) {
+                 sb.append(modesStr);
+             } else {
+                 String sa = saRef.toString(showHostCard);
+@@ -163,6 +172,7 @@
+                 sb.append(" (targets: ").append(targets).append(")");
+             }
+             if (textWords != null) sb.append(" (text words: ").append(Joiner.on(", ").join(textWords)).append(")");
++            if (discardPayment != null && saRef != null) sb.append(" (discard payment selected)");
+             if (choices != null) {
+                 sb.append(" (chosen: ").append(Joiner.on(", ").join(choices)).append(")");
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SimulationController.java
+@@ -91,6 +91,10 @@
+ 
+     public void evaluateTextWord(String word) {
+         currentStack.add(new Plan.Decision(getCurrentScore(), getLastDecision(), word));
++    }
++
++    public void evaluateDiscardPayment(String choice) {
++        currentStack.add(Plan.Decision.forDiscardPayment(getCurrentScore(), getLastDecision(), choice));
+     }
+ 
+     public void evaluateCardChoice(Card choice) {
+@@ -153,6 +157,8 @@
+                 writeIndex++;
+             } else if (d.targets != null) {
+                 sequence.get(writeIndex - 1).targets = d.targets;
++            } else if (d.discardPayment != null) {
++                sequence.get(writeIndex - 1).discardPayment = d.discardPayment;
+             } else if (d.choices != null) {
+                 Plan.Decision to = sequence.get(writeIndex - 1);
+                 if (to.choices == null) {
+@@ -176,6 +182,7 @@
+         MultiTargetSelector.Targets targets = null;
+         List<String> choices = new ArrayList<>();
+         List<String> textWords = new ArrayList<>();
++        String discardPayment = null;
+         int[] modes = null;
+         String modesStr = null;
+ 
+@@ -183,6 +190,8 @@
+         while (d.saRef == null) {
+             if (d.targets != null) {
+                 targets = d.targets;
++            } else if (d.discardPayment != null) {
++                discardPayment = d.discardPayment;
+             } else if (d.choices != null) {
+                 // Since we're iterating backwards, add to the front.
+                 choices.addAll(0, d.choices);
+@@ -204,6 +213,7 @@
+         merged.modesStr = modesStr;
+         if (!textWords.isEmpty()) merged.textWords = textWords;
+         merged.xMana = d.xMana;
++        merged.discardPayment = discardPayment == null ? d.discardPayment : discardPayment;
+         return merged;
+     }
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+@@ -35,6 +35,7 @@
+         }
+         // Reveal admission can assess a modified hand spell before an effect grant exists.
+         destination.copyCostModifiersFrom(source);
++        DiscardPaymentChoices.copyPlan(source, destination);
+ 
+         copyKeywordChoices(source, destination);
+         destination.setCastFromPlayEffect(source.isCastFromPlayEffect());
+@@ -53,6 +54,7 @@
+                 sourceAbility = sourceAbility.getSubAbility(),
+                         destinationAbility = destinationAbility.getSubAbility()) {
+             TextChangeChoices.copyPlan(sourceAbility, destinationAbility);
++            DiscardPaymentChoices.copyPlan(sourceAbility, destinationAbility);
+             if (!sourceAbility.usesTargeting()) {
+                 continue;
+             }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoicesIterator.java
+@@ -10,6 +10,7 @@
+ import org.apache.commons.math3.util.CombinatoricsUtils;
+ 
+ import java.util.*;
++import java.util.function.Consumer;
+ 
+ public class SpellAbilityChoicesIterator {
+     private final SimulationController controller;
+@@ -103,13 +104,22 @@
+ 
+     public String chooseTextWord(List<String> options) {
+         if (options.isEmpty()) throw new IllegalArgumentException("No legal text word choices");
++        return chooseIndexedChoice(options, controller::evaluateTextWord);
++    }
++
++    public String chooseDiscardPayment(List<String> options) {
++        return chooseIndexedChoice(options, controller::evaluateDiscardPayment);
++    }
++
++    private String chooseIndexedChoice(List<String> options, Consumer<String> record) {
++        if (options.isEmpty()) throw new IllegalArgumentException("No legal choices");
+         cpIndex++;
+         if (cpIndex >= choicePoints.size()) choicePoints.add(new ChoicePoint());
+         ChoicePoint point = choicePoints.get(cpIndex);
+         point.numChoices = options.size();
+         String selected = options.get(point.nextChoice);
+         if (cpIndex >= incrementedCpIndex) {
+-            controller.evaluateTextWord(selected);
++            record.accept(selected);
+             evalDepth++;
+         }
+         return selected;
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+@@ -8,6 +8,7 @@
+ import forge.game.Game;
+ import forge.game.ability.ApiType;
+ import forge.game.card.*;
++import forge.game.cost.CostDiscard;
+ import forge.game.phase.PhaseType;
+ import forge.game.player.Player;
+ import forge.game.spellability.AbilitySub;
+@@ -305,6 +306,15 @@
+             return null;
+         }
+         TextChangeChoices.installWords(sa, decision.textWords);
++        DiscardPaymentChoices.installPlan(sa, decision.discardPayment);
++        if (decision.discardPayment != null && decision.modes == null) {
++            CostDiscard discard = sa.getPayCosts().getCostPartByType(CostDiscard.class);
++            if (discard == null || DiscardPaymentChoices.peekPlannedCard(player, sa, discard, false, CardCollection.EMPTY) == null) {
++                DiscardPaymentChoices.clearPlan(sa);
++                printPlannedActionFailure(decision, "Discard payment changed");
++                return null;
++            }
++        }
+         print("Planned decision " + plan.getNextDecisionIndex() + ": " + decision);
+         return sa;
+     }
+@@ -442,6 +452,15 @@
+         });
+     }
+ 
++    public String chooseDiscardPayment(SpellAbility action, CostDiscard cost, CardCollectionView excluded, boolean effect) {
++        if (interceptor == null || !interceptor.acceptsTextRoot(action)) return null;
++        // A prepared choice must also be recorded; native payment still validates it.
++        List<String> options = DiscardPaymentChoices.hasPlan(action)
++                ? List.of(DiscardPaymentChoices.plannedChoice(action))
++                : DiscardPaymentChoices.paymentOptions(player, action, cost, effect, excluded);
++        return options.isEmpty() ? null : interceptor.chooseDiscardPayment(options);
++    }
++
+     /** Resolution-time mode choices share the ordered replay stream with their text words. */
+     public String chooseTextMode(SpellAbility action, List<String> options) {
+         return interceptor == null || !interceptor.acceptsTextRoot(action) ? null

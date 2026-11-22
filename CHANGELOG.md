@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add generic activated single-card discard planning and full simulation
+  choice replay. Validate the chosen card through native cost approval and payment,
+  copy identities independently and reject stale actors, targets, timestamps and
+  changed cost shapes. Pass 438 source tests with 40 new contracts, including real
+  combined-cost activations and oversized native-payment fallback. Preserve fixture
+  corrections, unchanged policy observations and a fixed candidate boundary
+  regression separately.
+- Activate the reviewed discard-payment build after 1,664 selected native tests,
+  separate 781/65/66 packaged families, 3,138 broader gameplay tests, 256 serialization
+  tests and 44 live tests with 1,560 subtests pass. Verify all 476 frozen inputs and
+  catalog construction of 32,636 starting identities with seven nonstarting meld
+  exclusions. Eight production sources change and one helper is added; card scripts,
+  AI hints, identity reviews and the default profile are unchanged. Full card,
+  rules and strategy correctness remain unproven.
+
 - Correct generic tap/untap choices and paid one-follow-up planning, preserving
   unique chained targets and rejecting wasted or unaffordable untaps. Defer
   incomplete alternative searches instead of claiming an improvement. Isolate

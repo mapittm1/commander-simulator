@@ -25,7 +25,7 @@ class UntapIntegrationTests(unittest.TestCase):
     """Require all fixed methods, native class origins and integrity checks to pass."""
 
     def test_packaged_untap_rules(self):
-        """Run the separate 26-case family within the unchanged 90-second worker budget."""
+        """Run the separate 66-case family within the unchanged 90-second worker budget."""
         settings = read_settings()
         run = create_run()
         compile_rules(settings, run, *reviewed_inputs())
@@ -40,13 +40,13 @@ class UntapIntegrationTests(unittest.TestCase):
             "untap.json",
             {
                 "untap-summary.json": 1,
-                "untap-methods.json": 26,
+                "untap-methods.json": 66,
             },
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 26)
+        self.assertEqual(len({row["method"] for row in methods}), 66)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
-        assert_rule_summary(self, summary, 26, NATIVE_CLASSES)
+        assert_rule_summary(self, summary, 66, NATIVE_CLASSES)
         print(json.dumps({"untap_run": run.name}), flush=True)

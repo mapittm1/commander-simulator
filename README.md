@@ -27,6 +27,18 @@ difference.
 
 ## Card coverage
 
+Generic activated-discard planning compares legal single-card payments and
+carries its choice through native cost approval, copied previews and full-pilot
+replay. Actual Mind Over Matter and Trickster Mage payments enable the native
+follow-up; separate Fatestitcher and Puppet Strings controls retain tap/mana
+behavior. All 438 source checks pass with 40 new contracts. Larger discard-choice
+sets retain native payment policy rather than searching a partial hand. Card
+scripts and AI hints are unchanged. See the
+[source evidence](engine/discard_payment_native_evidence.json),
+[packaged validation](engine/discard_payment_evidence.json), and
+[coverage limits](docs/CARD_COVERAGE.md#activated-discard-payments).
+Full card and AI correctness remain open.
+
 Tap/untap AI choices now honor native per-target controller defaults. Paid untaps
 can enable an immediate follow-up, including two unique Hidden Strings targets.
 The planner compares against plays already available and defers when its bounded
@@ -471,14 +483,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,624 selected native tests, packaged
-families of 781, 65 and 26 rules cases, 3,098 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,520 subtests. All 473 frozen inputs
+The current reviewed runtime passed 1,664 selected native tests, packaged
+families of 781, 65 and 66 rules cases, 3,138 broader gameplay tests, 256 serialization
+tests, and 44 live integration tests with 1,560 subtests. All 476 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/untap_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/discard_payment_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

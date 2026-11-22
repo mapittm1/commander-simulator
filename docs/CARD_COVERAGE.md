@@ -17,6 +17,51 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Activated discard payments
+
+The reviewed planner can choose which card pays an activated ability's single
+unrestricted card-discard cost. Mind Over Matter can discard a spare Forest,
+untap Gilded Lotus and enable Hellrider. Trickster Mage also pays its blue mana
+and tap costs through native payment. Full-pilot witnesses select the setup,
+spend the intended card and cast the follow-up; shared API controls test admission
+and actual payment independently. Fatestitcher and Puppet Strings retain native
+tap and mana cost behavior.
+
+Private planning metadata binds the actor, source and ordered targets, including
+card timestamps. Before payment, copied or replayed choices are checked against
+current objects and native cost legality. Changed actors, costs, targets, departed
+cards and cards returning as new objects cannot silently substitute a payment.
+Native payment consumes the plan. Costs can move their source or target after
+activation legality has been checked; that does not create an extra targeting
+check during cost payment. Metadata is separate from editable card rules text.
+
+The search covers at most 32 eligible discard cards under the existing shared
+preview budget. Larger hands preserve the complete native payment policy rather
+than searching only a prefix. A printed Squee beyond the boundary verifies that
+fallback. Multi-card, random, constrained-type and full-hand discard costs continue
+to use native behavior and are outside this new optimization. The bounded planner
+still compares setup plus one follow-up with all immediate alternatives within
+its existing limit and defers an incomplete baseline.
+
+The positive Mind Over Matter and Trickster Mage states have already used their
+land drop. Preserved exploratory expectations with a land drop available were
+incorrect: the evaluator preferred playing the spare land. Separate negative
+controls retain that decision. Sacrificing an ability's target as a mana source
+is an existing AI policy exclusion, not a replay or rules-engine defect. Native
+unplanned discard heuristics are unchanged.
+
+Eight Hidden Strings resolution controls separately verify partial target loss,
+both targets leaving, new object identities on return, and stun counters on either
+target. Together with 32 activated-payment cases, they add 40 focused contracts
+and retain 398 source checks. The packaged untap family now has 66 cases. Run it
+with `COMMANDER_ENGINE_INTEGRATION=1` and a configured JDK compiler using
+`.venv/Scripts/python.exe -m pytest -q -s tests/integration/test_untap_integration.py`.
+See the [source comparison](../engine/discard_payment_native_evidence.json) and
+[activation evidence](../engine/discard_payment_evidence.json). These selected
+states do not establish arbitrary card compositions, complete multiplayer
+strategy or full rules coverage. Autonomous heuristic/hybrid discovery remains
+separate from shared API acceptance; card exclusion hints have not been changed.
+
 ## Tap and untap decisions
 
 The reviewed untap correction honors the native default for each target: untap

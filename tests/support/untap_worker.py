@@ -1,4 +1,4 @@
-"""Fixed tap/untap and preview-cache regressions within the normal worker budget."""
+"""Fixed untap, discard-payment and preview-cache checks within the normal worker budget."""
 
 import json
 import sys
@@ -22,6 +22,8 @@ SOURCES = {
     "CommanderUntapResolutionTest": "commander_untap_resolution_test_sha256",
     "CommanderUntapFollowupTest": "commander_untap_followup_test_sha256",
     "CommanderPreviewCacheTest": "commander_preview_cache_test_sha256",
+    "CommanderActivatedUntapTest": "commander_activated_untap_test_sha256",
+    "CommanderChainedUntapTest": "commander_chained_untap_test_sha256",
 }
 TEST_CLASSES = tuple("forge.ai." + name for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -42,6 +44,13 @@ NATIVE_CLASSES = (
     "forge.ai.AiController",
     "forge.ai.ComputerUtil",
     "forge.ai.ComputerUtilCombat",
+    "forge.ai.AiCostDecision",
+    "forge.ai.ComputerUtilCost",
+    "forge.ai.simulation.DiscardPaymentChoices",
+    "forge.ai.simulation.Plan",
+    "forge.ai.simulation.Plan$Decision",
+    "forge.ai.simulation.SpellAbilityChoicesIterator",
+    "forge.ai.simulation.SpellAbilityChoicesIterator$ChoicePoint",
 )
 FAMILY = RuleFamily(
     TEST_CLASSES, ("forge.ai.AITest",), NATIVE_CLASSES, "untap.json", "untap"
