@@ -1,0 +1,900 @@
+{
+  "status": "packaged_research_passed_fresh_native_build_pending",
+  "baseline_commit": "6451a9a074ed7360812baf7a76fc7340f59d9b24",
+  "baseline_lock_sha256": "47fe52c28286de6a2224dd3ef05dd2fbe78d9fc3f05aff61ff30642770959cf4",
+  "scope": "Nine distinct controlled native regressions cover actual paid original/free copied casting, resolving and countering, decline then later acceptance, repeated combat hits, changed creature controllers, temporary noncreature encoders and copied-game independence. Card selection and cast acceptance are scripted; normal AI admission and complete all-card correctness are unproven. No production Java or card-script change is proposed.",
+  "fixture": {
+    "path": "engine/tests/CommanderCipherCastingTest.java",
+    "sha256": "0301494fd9281a46b51a2c37b8c55b5421ffb74529459cfe7f772dd0f52681a0",
+    "tests": 9
+  },
+  "research": {
+    "initial30_unscripted_selection": {
+      "run": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-baseline",
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-cipher-links",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "257037102ade35a6d220a207bad431c1ed7d6884a01bef10a34f5cdf062dbfe5",
+          "cards_sha256": "5cd79b91d1dc3e2f9f645bae9dab6e30c4564448e8fe6b7c87f5303a52e4b5bf",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "ce2d76c191ef2d0e060683b21cdbb888aa01afc96c3c017c8cfb6f4a48f3b781",
+          "native_tests": {
+            "total": 1524,
+            "passed": 1524,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "2a08fce5c0623fdb318f2e7353bca70bde736182e1cbabd3d7e5b8a5ea1e6cfe",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 30,
+          "passed": 25,
+          "failed": 5,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.combatCipherCastsAFreeCopyWithoutReencoding",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedSourceRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncoderZoneRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedGameCastsItsOwnCipherCopyWithoutChangingOriginal",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedMultipleSourcesKeepTwoCombatTriggers",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedPendingEncodingLeavesOriginalPending",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedResolvedEncodingMapsBothLinksIntoTheCopy",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteredSpellDoesNotEncode",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteringCipherCopyLeavesTheEncodedCardInExile",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.declinedEncodingCreatesNoCombatDamageTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.decliningCipherCopyLeavesTheEncodingUsable",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedSourceZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encoderZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.invalidTargetCancelsBothTextChangeAndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.noCreatureAllowsTextChangeButNotEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsAllowedInOwnEmptyMainPhase",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedDuringCombat",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedOnAnOpponentsTurn",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedWithAnotherSpellOnTheStack",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncodedSourceLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncoderLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.repeatedCombatHitsCanCastTwoCopiesFromOneEncoding",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.textExpirationDoesNotEndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.twoEncodedSourcesCreateTwoCombatTriggers",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": "3ef3c907add4d8552839d4042bbfa012aa41f654e0ea8d860332d58eb2a54d72"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "e301457545834e5315f70fed068ebfb3de9306f8b03cedc69717793e8d5544aa",
+        "failures": [
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [3] but found [2]"
+        ]
+      },
+      "evidence_sha256": "6feae2b914684b98707ed93d97fdb12c77c0f6cb1fa45eaa5de529910f39527a",
+      "process": {
+        "status": "finished",
+        "bytes": 3420,
+        "returncode": 0,
+        "elapsed_seconds": 11.25
+      },
+      "input_snapshots": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-baseline/input-snapshots/0-javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-baseline/input-snapshots/1-testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-baseline/input-snapshots/2-AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-baseline/input-snapshots/3-CommanderCipherCastingResearchTest.java",
+          "sha256": "3ef3c907add4d8552839d4042bbfa012aa41f654e0ea8d860332d58eb2a54d72"
+        }
+      }
+    },
+    "controlled30": {
+      "run": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-controlled-choice",
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-cipher-links",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "257037102ade35a6d220a207bad431c1ed7d6884a01bef10a34f5cdf062dbfe5",
+          "cards_sha256": "5cd79b91d1dc3e2f9f645bae9dab6e30c4564448e8fe6b7c87f5303a52e4b5bf",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "ce2d76c191ef2d0e060683b21cdbb888aa01afc96c3c017c8cfb6f4a48f3b781",
+          "native_tests": {
+            "total": 1524,
+            "passed": 1524,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "2a08fce5c0623fdb318f2e7353bca70bde736182e1cbabd3d7e5b8a5ea1e6cfe",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 30,
+          "passed": 30,
+          "failed": 0,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.combatCipherCastsAFreeCopyWithoutReencoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedSourceRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncoderZoneRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedGameCastsItsOwnCipherCopyWithoutChangingOriginal",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedMultipleSourcesKeepTwoCombatTriggers",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedPendingEncodingLeavesOriginalPending",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedResolvedEncodingMapsBothLinksIntoTheCopy",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteredSpellDoesNotEncode",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteringCipherCopyLeavesTheEncodedCardInExile",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.declinedEncodingCreatesNoCombatDamageTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.decliningCipherCopyLeavesTheEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedSourceZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encoderZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.invalidTargetCancelsBothTextChangeAndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.noCreatureAllowsTextChangeButNotEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsAllowedInOwnEmptyMainPhase",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedDuringCombat",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedOnAnOpponentsTurn",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedWithAnotherSpellOnTheStack",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncodedSourceLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncoderLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.repeatedCombatHitsCanCastTwoCopiesFromOneEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.textExpirationDoesNotEndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.twoEncodedSourcesCreateTwoCombatTriggers",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 0,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": "c00b958a014322b047cd59f77f4a2e4d7734bdaaabb807825f715ed2efbf4119"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "ec330cdabd65837bfff61dcf1ea690ad17117acebc8a4ac93c5d934e72531426",
+        "failures": []
+      },
+      "evidence_sha256": "047992d674db8aa31ac835841266d4e54b38f57d0a8fdb272c588e768e0a119d",
+      "process": {
+        "status": "finished",
+        "bytes": 3142,
+        "returncode": 0,
+        "elapsed_seconds": 11.532
+      },
+      "input_snapshots": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-controlled-choice/input-snapshots/0-javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-controlled-choice/input-snapshots/1-testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-controlled-choice/input-snapshots/2-AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting30-controlled-choice/input-snapshots/3-CommanderCipherCastingResearchTest.java",
+          "sha256": "c00b958a014322b047cd59f77f4a2e4d7734bdaaabb807825f715ed2efbf4119"
+        }
+      }
+    },
+    "compositions34": {
+      "run": "data/development/commander-cipher-casting-research/packaged-cipher-casting34-compositions",
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-cipher-links",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "257037102ade35a6d220a207bad431c1ed7d6884a01bef10a34f5cdf062dbfe5",
+          "cards_sha256": "5cd79b91d1dc3e2f9f645bae9dab6e30c4564448e8fe6b7c87f5303a52e4b5bf",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "ce2d76c191ef2d0e060683b21cdbb888aa01afc96c3c017c8cfb6f4a48f3b781",
+          "native_tests": {
+            "total": 1524,
+            "passed": 1524,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "2a08fce5c0623fdb318f2e7353bca70bde736182e1cbabd3d7e5b8a5ea1e6cfe",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 34,
+          "passed": 34,
+          "failed": 0,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.changedControllerCanCastTheEncodedCopy",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.combatCipherCastsAFreeCopyWithoutReencoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedChangedControllerCanCastWithoutChangingOriginal",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncodedSourceRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedEncoderZoneRoundtripDoesNotRestoreEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedGameCastsItsOwnCipherCopyWithoutChangingOriginal",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedMultipleSourcesKeepTwoCombatTriggers",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedNoncreatureEncoderCanAnimateAndTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedPendingEncodingLeavesOriginalPending",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.copiedResolvedEncodingMapsBothLinksIntoTheCopy",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteredSpellDoesNotEncode",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.counteringCipherCopyLeavesTheEncodedCardInExile",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.declinedEncodingCreatesNoCombatDamageTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.decliningCipherCopyLeavesTheEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedCombatDamageCreatesOneCipherTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encodedSourceZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.encoderZoneRoundtripEndsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.invalidTargetCancelsBothTextChangeAndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.noCreatureAllowsTextChangeButNotEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsAllowedInOwnEmptyMainPhase",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedDuringCombat",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedOnAnOpponentsTurn",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.normalHandCastIsRejectedWithAnotherSpellOnTheStack",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidColorChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanDeclineEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.paidLandChangeCanEncodeOnItsCreature",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncodedSourceLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.removingCopiedEncoderLeavesOriginalEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.repeatedCombatHitsCanCastTwoCopiesFromOneEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.temporarilyNoncreatureEncoderRetainsItsEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.textExpirationDoesNotEndEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingResearchTest.twoEncodedSourcesCreateTwoCombatTriggers",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 0,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": "7809809c4663fa4fef21af2490243adc2a7443bbafc266f37649a0d41ca2e0b4"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "df548a97d54318585e43b5881878fcba11a0871ff02d2504b7d37bd5e91f5831",
+        "failures": []
+      },
+      "evidence_sha256": "7ff7adeb050695cf2b4cacc61e7d4d7cd9dd21a9462cd788a67783714f27fead",
+      "process": {
+        "status": "finished",
+        "bytes": 3230,
+        "returncode": 0,
+        "elapsed_seconds": 11.016
+      },
+      "input_snapshots": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting34-compositions/input-snapshots/0-javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting34-compositions/input-snapshots/1-testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting34-compositions/input-snapshots/2-AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingResearchTest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting34-compositions/input-snapshots/3-CommanderCipherCastingResearchTest.java",
+          "sha256": "7809809c4663fa4fef21af2490243adc2a7443bbafc266f37649a0d41ca2e0b4"
+        }
+      }
+    },
+    "promotion9": {
+      "run": "data/development/commander-cipher-casting-research/packaged-cipher-casting9-promotion",
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-cipher-links",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "257037102ade35a6d220a207bad431c1ed7d6884a01bef10a34f5cdf062dbfe5",
+          "cards_sha256": "5cd79b91d1dc3e2f9f645bae9dab6e30c4564448e8fe6b7c87f5303a52e4b5bf",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "ce2d76c191ef2d0e060683b21cdbb888aa01afc96c3c017c8cfb6f4a48f3b781",
+          "native_tests": {
+            "total": 1524,
+            "passed": 1524,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "2a08fce5c0623fdb318f2e7353bca70bde736182e1cbabd3d7e5b8a5ea1e6cfe",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.changedControllerCanCastTheEncodedCopy",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.combatCipherCastsAFreeCopyWithoutReencoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.copiedChangedControllerCanCastWithoutChangingOriginal",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.copiedGameCastsItsOwnCipherCopyWithoutChangingOriginal",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.copiedNoncreatureEncoderCanAnimateAndTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.counteringCipherCopyLeavesTheEncodedCardInExile",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.decliningCipherCopyLeavesTheEncodingUsable",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.repeatedCombatHitsCanCastTwoCopiesFromOneEncoding",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCipherCastingTest.temporarilyNoncreatureEncoderRetainsItsEncoding",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 0,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingTest.java": "0301494fd9281a46b51a2c37b8c55b5421ffb74529459cfe7f772dd0f52681a0"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "b7eee0f45d60bee7810890eebe5ba55e789106777953c24f1d461888d5f39b32",
+        "failures": []
+      },
+      "evidence_sha256": "91d50395507f98661e47f053bcf66648836c78cac22b21ea4a61c47f6f1f3311",
+      "process": {
+        "status": "finished",
+        "bytes": 3226,
+        "returncode": 0,
+        "elapsed_seconds": 10.782
+      },
+      "input_snapshots": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting9-promotion/input-snapshots/0-javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting9-promotion/input-snapshots/1-testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting9-promotion/input-snapshots/2-AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-cipher-casting-research\\CommanderCipherCastingTest.java": {
+          "path": "data/development/commander-cipher-casting-research/packaged-cipher-casting9-promotion/input-snapshots/3-CommanderCipherCastingTest.java",
+          "sha256": "0301494fd9281a46b51a2c37b8c55b5421ffb74529459cfe7f772dd0f52681a0"
+        }
+      }
+    }
+  },
+  "initial_failure_interpretation": "The first30 run has25 passing controls and5 failures before scripted playSaFromPlayEffect is reached. The initial fixture leaves the earlier PlayEffect card-selection decision to the normal AI; explicit singleton card selection makes all30 pass. Treat these initial failures as selection/setup-limited observations, not a demonstrated production rules defect. Do not claim default AI admission from the corrected controlled fixture.",
+  "rules_reference": {
+    "url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.txt",
+    "effective": "2026-11-06",
+    "checked": "2026-11-22",
+    "references": [
+      "307.1",
+      "702.99a",
+      "702.99b",
+      "702.99c"
+    ],
+    "scope": "Distinguish normal sorcery timing, optional encoding, encoded relationship lifetime, and casting a copy through the granted combat-damage ability. Rules define expected behavior; they do not establish engine support."
+  }
+}

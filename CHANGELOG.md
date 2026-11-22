@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add nine controlled cipher-casting regressions for real copy resolution,
+  countering, decline followed by later casting, repeated hits, changed
+  controllers and temporary noncreature encoders, with copied-game controls.
+  Pass all nine against packaged production classes after 34 research cases.
+  Preserve initial failures at an unscripted AI card-selection boundary.
+- Activate the test-expanded reviewed runtime after 1,533 selected native tests,
+  781 packaged interaction cases, 3,007 broader gameplay tests, 256 serialization
+  tests and 42 live tests with 1,429 subtests pass. Verify all 444 frozen inputs
+  and catalog construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. All 2,160 production sources, packaged classes, card resources
+  and AI hints are unchanged. Default AI admission, wider compositions and full
+  card correctness remain unproven.
+
 - Copy both ends of encoded relationships before recalculating static abilities.
   The generic GameCopier correction preserves cipher combat triggers for one or
   multiple encoded cards without changing card scripts or AI restrictions.

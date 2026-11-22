@@ -86,6 +86,7 @@ SOURCES = {
     "CommanderCrystalSprayRulesTest": "commander_crystal_spray_rules_test_sha256",
     "CommanderCrystalSprayStackTest": "commander_crystal_spray_stack_test_sha256",
     "CommanderTraitDoctoringRulesTest": "commander_trait_doctoring_rules_test_sha256",
+    "CommanderCipherCastingTest": "commander_cipher_casting_test_sha256",
     "CommanderBaubleCoverageTest": "commander_bauble_coverage_test_sha256",
     "CommanderVintageOpeningReplayTest": "commander_vintage_opening_test_sha256",
     "CommanderCompositeModeCoverageTest": "commander_composite_mode_test_sha256",

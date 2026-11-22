@@ -393,6 +393,18 @@ certify rules correctness. See the
 casting, additional compositions and AI admission remain required coverage.
 Full card correctness remains unproven.
 
+Nine additional controlled cipher-casting regressions verify resolving,
+countering and declining copies, later acceptance, repeated hits, changed
+controllers and temporary noncreature encoders, including copied games. See the
+[research and selection controls](engine/cipher_casting_native_evidence.json).
+The reviewed build passes 1,533 selected native tests, 781 packaged interaction
+cases, 3,007 broader gameplay tests, 256 serialization tests and 42 live tests
+with 1,429 subtests. All 444 frozen inputs are unchanged. All 2,160 production
+source files, packaged classes, card resources and AI hints match the prior
+reviewed runtime. See the [validation and activation](engine/cipher_casting_evidence.json).
+Scripted card selection isolates these rules paths from normal AI admission;
+wider compositions and complete card correctness remain unproven.
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -407,13 +419,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,524 selected native tests, 772 packaged
-rules cases, 2,998 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,420 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,533 selected native tests, 781 packaged
+rules cases, 3,007 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,429 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/cipher_links_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/cipher_casting_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
