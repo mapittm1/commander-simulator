@@ -1,8 +1,8 @@
 # Controlled card interaction checks
 
-These tests inspect engine state at defined checkpoints, using Forge 2.0.15's
-actual damage, trigger admission, stack resolution, zone-change, and state-based
-action APIs. They are separate from full-game AI smoke tests and user simulations.
+These tests inspect engine state at defined checkpoints, using the selected
+reviewed Forge runtime's damage, trigger admission, stack resolution, zone-change,
+and state-based action APIs. They are separate from full-game AI smoke tests and user simulations.
 
 ```powershell
 .\.venv\Scripts\python.exe -m pip install -r requirements-interactions.txt
@@ -16,6 +16,31 @@ The compiler is used only for the fixed test controllers; the configured pinned
 JRE still runs Forge. The existing Windows Java runtime exposes its JVM library; standard
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
+
+## Battle combat and Siege defeat
+
+Run the separate fixed ten-case pytest family with the selected reviewed engine,
+optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
+
+```powershell
+$env:COMMANDER_ENGINE_INTEGRATION = "1"
+.\.venv\Scripts\python.exe -m pytest -q -s tests/integration/test_battle_combat_integration.py
+```
+
+Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
+quality checks skip this family unless the opt-in environment flag is enabled.
+It is separate from the `engine-interactions` CLI suite.
+
+All ten native cases pass against the unchanged reviewed Battle-protector engine.
+They cover legal defender enumeration, copied combat, damage to defense counters,
+lethal Siege defeat, paid Fog, Hexmage sacrifice, transformed casting, Stifle on
+the defeat trigger and Beast Within before trigger resolution. Actions, targets,
+legal board setup and unblocked attacks are supplied; native resolution executes.
+The family does not establish autonomous combat strategy or every Battle
+interaction. Fixed source/dependency checks, compilation integrity, 24 production
+class origins and hash-bound method receipts use the existing 90-second worker
+budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
+and [validation evidence](../engine/battle_combat_evidence.json).
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 

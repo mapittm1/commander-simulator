@@ -17,6 +17,57 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Battle combat and Siege defeat
+
+A separate packaged pytest family now exercises ten native Battle paths against
+the unchanged reviewed Battle-protector runtime. All ten pass, with 24 production
+class origins checked against the selected JAR and hash-bound source, compilation,
+profile and method receipts. The fixed fixture is
+[CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
+
+| Witness | Required result |
+| --- | --- |
+| Legal defenders | The Battle's controller and another opponent can attack it; its designated protector cannot select it as a defender. |
+| Copied declaration | The copied attacker targets the copied Battle, whose defending player is the copied protector. |
+| Unblocked damage | Grizzly Bears removes two of three defense counters without reducing any player's life. |
+| Copied damage | Damage in the copied combat changes only copied defense; the original Battle retains three counters. |
+| Lethal damage | Colossal Dreadmaw defeats the Siege and native resolution casts Lightshield Array; trample does not spill damage to a player. |
+| Paid Fog | Native prevention leaves all three defense counters and creates no defeat outcome. |
+| Hexmage sacrifice | Its native sacrifice cost is paid, all defense counters are removed, and the Siege is cast transformed. |
+| Pending sacrifice copy | The copied paid activation resolves independently; the original activation and Battle remain pending/unchanged. |
+| Stifled defeat | Countering the defeat trigger leaves a zero-defense Battle for native state-based actions to put in the graveyard; no back face is cast. |
+| Removal response | Beast Within destroys the Battle before defeat resolves, creates its Beast, and prevents the back-face cast. |
+
+These are partial multiplayer Commander fixtures with supplied legal board
+preconditions, mature unblocked attackers, phase checkpoints, source actions and
+targets. Native costs, damage, prevention, effects, triggers, optional positive
+back-face acceptance and state-based actions execute. They do not validate an
+uploaded deck or establish autonomous attack/target strategy. Blocking,
+simultaneous defeats, all replacement orders, optional declines and arbitrary
+control-transfer compositions remain outside this family.
+
+The initial ten-case probe passed six and failed four because its development
+phase helper ended combat before damage assignment. The corrected helper uses
+the explicit preserve-combat overload; all ten then pass. Both exact fixtures,
+drivers and raw report hashes remain preserved. This is a fixture correction,
+not an engine defect or a production change.
+
+The fixed Java source is pinned in
+[battle_combat_tests.json](../engine/battle_combat_tests.json); the shared helper
+and TestNG dependency retain their existing recipe pins. Review manifests are
+included in the worker's support-source hashes. Six offline boundary tests reject
+altered fixture/helper/dependency bytes, redirected dependency paths and missing
+review hashes. The quality gate passes 426 tests and 520 subtests, skipping 45
+opt-in integration tests. All 488 previously reviewed implementation inputs remain
+unchanged; 493 frozen inputs include the five new harness files.
+
+This test-only extension runs the new pytest family; it does not claim a fresh
+full 45-test run or a 1,802-test engine build. The selected runtime still carries
+its separately verified 1,792 build regressions and the earlier full integration
+results. See the [evidence and preserved fixture correction](../engine/battle_combat_evidence.json)
+and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
+Full card, rules, combat and AI correctness remain unverified.
+
 ## Historical Battle-protector snapshots
 
 The reviewed runtime restores the designated protector through one

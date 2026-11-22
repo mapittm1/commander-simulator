@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a separate ten-case packaged Battle combat/Siege-defeat pytest family:
+  defender selection, mapped combat, defense damage, copied-world isolation,
+  lethal combat, paid Fog, Hexmage sacrifice/free transformed casting, Stifle and
+  removal in response to defeat. All ten pass against the unchanged reviewed
+  engine with 24 production class origins verified and the normal 90-second worker
+  limit. Preserve an initial four-case fixture failure caused by ending combat
+  during phase advancement, plus the corrected ten-case pass; no engine defect or
+  production correction is inferred from that fixture mistake.
+- Pin the new Java fixture and existing TestNG dependency, bind review manifests
+  to worker receipts, and add six offline tests rejecting changed or redirected
+  inputs. Pass 426 offline tests with 520 subtests. All prior 488 implementation
+  inputs remain unchanged; 493 inputs include the five new harness files. The
+  existing 1,792 native build regressions and prior 44-test full integration run
+  remain separate evidence; this test-only extension runs the new pytest family.
+  Full card, combat and AI correctness remain open.
+
 - Correct generic Battle-protector restoration in copied games and native LKI,
   replacing the battlefield-only path with shared mapped references/public views.
   Pass 566 source tests with 17 Battle contracts. Preserve the original three and
