@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record an internal post-assignment combat snapshot gap: 32 of 36 probes pass;
+  four copied absent-defender recipients fail strict mapping. Preserve exact
+  fixtures, driver, native report hashes, stack trace and finished process receipt.
+  Existing 28 removed-defender contracts and four new valid-recipient controls
+  pass. This checkpoint is internal, not a player priority window; autonomous
+  gameplay impact remains unmeasured. No new production correction is claimed.
+
 - Activate the reviewed removed-defender correction after all 45 live integration
   tests and 1,750 subtests pass, including repeated 781/65/194/62 packaged
   families. Preserve the prior 1,826 native methods in the 1,854-test build,

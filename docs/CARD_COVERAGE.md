@@ -17,6 +17,22 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Internal post-assignment snapshot gap
+
+A follow-up probe against the selected removed-defender runtime passes 32 of 36
+contracts. Four copied assignments fail with a strict mapping exception for the
+no-zone stand-in of a removed defender: ordinary trample at an absent Battle or
+planeswalker, over-planeswalkers trample at an absent Battle, and the blocked
+absent-Battle case. Live Battle/planeswalker and legal player-damage assignment
+controls pass, as do all prior 28 removed-defender contracts.
+
+The representative native trace reaches Combat's damage-table copying after
+GameCopier cannot map the stand-in. These are internal snapshots between damage
+assignment and settlement, not player priority windows. Invocation frequency and
+autonomous gameplay impact are unmeasured. No additional production correction
+is included yet. See [exact failures and inputs](../engine/damage_assignment_snapshot_gap.json).
+Full card, rules and AI correctness remain open.
+
 ## Removed planeswalker damage assignment
 
 The reviewed runtime preserves departed defender type and protector context in

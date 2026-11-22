@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+An internal damage-assignment snapshot gap remains open: a 36-case probe passes
+32 and fails four copies that try to map a removed defender's stand-in after
+assignment. These are internal snapshot checkpoints, not player priority windows;
+autonomous gameplay impact is unmeasured. See the
+[exact reproductions](engine/damage_assignment_snapshot_gap.json).
+
 The reviewed runtime corrects damage assignment after an attacked planeswalker
 leaves combat: trample over planeswalkers no longer reserves a damage point for
 the absent target. Live loyalty and real blocker requirements remain intact.
