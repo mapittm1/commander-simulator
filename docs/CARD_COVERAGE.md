@@ -17,33 +17,57 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Open first-strike copy gap
+## First-strike history in copied combat
 
-Native first-strike history passes, while a copy between the two damage steps
-can make a first-strike-only creature assign normal damage again. The original
-ten-case probe passes nine and fails one. Expanded probes pass 18 and fail six
-contracts: copied attacker/blocker history, loss of first strike after paid Dress
-Down, multiple first-strike attackers, an unblocked Battle attack and nested
-copies. These are six failed contracts, not six distinct card bugs.
+The reviewed runtime preserves which combatants already assigned first-strike
+damage. Remaining physical cards map into the copied game; departed incarnations
+use the shared native historical-card copier. Collections remain independent
+across nested copies. This restores state without changing native damage policy.
 
-Native controls record two damage on a surviving Centaur Courser; copies record
-four. Native unblocked combat leaves one defense counter, while copies wrongly
-defeat the Battle. Current double strike and paid Temur Battle Rage gaining double
-strike pass. Paid Unsummon of a first striker, blocked/trample combat and pending
-Siege defeat/response copies also pass, bounding the observed failure.
+All 600 focused source tests pass, retaining 566 and adding the 34-case Battle
+family. That family retains the original ten packaged witnesses and adds 24
+boundaries: blocking eligibility, blocked and trample combat, pending Siege defeat
+and Stifle copies, first/double strike, multiple combatants, nested worlds and
+departed first-striker history after paid Unsummon.
 
-Board states, blockers, actions, targets and phase checkpoints are supplied.
-The multiple-attacker case explicitly starts with five defense counters as a
-legal state precondition, not printed entry defense. Native costs, damage,
-keyword effects, triggers and state-based actions execute. This does not certify
-autonomous strategy, every copied history or full combat correctness. A source
-candidate is being validated separately; the reviewed runtime remains selected.
-See the [exact baseline failures and reproduction sources](../engine/combat_strike_gap.json).
+The original ten-case baseline passes nine and fails one. The expanded baseline
+passes 18 and fails six contracts; these are not six distinct card bugs. Native
+controls record two damage on a surviving Centaur Courser, while old copies record
+four. Native first-strike-only attacks leave one defense counter; old copies
+wrongly defeat the Battle. Current double strike and paid Temur Battle Rage gaining
+double strike remain correct. Paid Dress Down losing first strike still preserves
+which step already happened. Multiple-attacker fixtures explicitly start with five
+defense counters as a legal board precondition, not printed entry defense.
+
+Source validation initially stopped before TestNG because the standalone fixture
+retained two unused imports. Removing only those imports satisfies Checkstyle;
+all assertions and production behavior remain unchanged. The failed phase, exact
+inputs, report/log hashes and original native reproductions remain preserved.
+
+The fresh build passes 1,826 selected native tests. Independent packaged families
+of 781, 65, 194 and 34 pass separately and again in 45 integration tests with 1,722
+subtests. Broader gameplay and serialization pass 3,300 and 256 cases. To conserve
+disk, the broader run recompiles the independent source-tested candidate rather
+than cloning a third source tree. Its reviewed test-only policies are preserved
+and restored byte-for-byte; all production sources match the sealed build. Only
+Combat.java and Combat.class change in production, with no added/removed classes.
+All 494 implementation inputs remain frozen. Card scripts, AI hints, default
+profile and damage-assignment policy are unchanged.
+
+These partial Commander fixtures supply legal setup, blockers, actions, targets
+and phase checkpoints. Native costs, damage, effects, triggers and state-based
+actions execute; autonomous attack strategy and every multiplayer composition are
+not certified. Catalog construction covers 32,636 starting identities with seven
+nonstarting meld exclusions; loading does not certify rules. See the
+[source comparison](../engine/combat_strike_native_evidence.json),
+[packaged activation evidence](../engine/combat_strike_evidence.json), and
+[resolved gap with original reproductions](../engine/combat_strike_gap.json).
+Full card, rules, combat and strategy correctness remain unverified.
 
 ## Battle combat and Siege defeat
 
-A separate packaged pytest family now exercises ten native Battle paths against
-the unchanged reviewed Battle-protector runtime. All ten pass, with 24 production
+The expanded packaged pytest family exercises 34 native Battle paths against
+the reviewed strike-history runtime. All 34 pass, with 24 production
 class origins checked against the selected JAR and hash-bound source, compilation,
 profile and method receipts. The fixed fixture is
 [CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
@@ -76,18 +100,17 @@ drivers and raw report hashes remain preserved. This is a fixture correction,
 not an engine defect or a production change.
 
 The fixed Java source is pinned in
-[battle_combat_tests.json](../engine/battle_combat_tests.json); the shared helper
-and TestNG dependency retain their existing recipe pins. Review manifests are
-included in the worker's support-source hashes. Six offline boundary tests reject
-altered fixture/helper/dependency bytes, redirected dependency paths and missing
-review hashes. The quality gate passes 426 tests and 520 subtests, skipping 45
-opt-in integration tests. All 488 previously reviewed implementation inputs remain
-unchanged; 493 frozen inputs include the five new harness files.
+[battle_combat_tests.json](../engine/battle_combat_tests.json) and the native build
+recipe. The shared helper and TestNG dependency retain their existing pins;
+review manifests are included in worker support-source hashes. Six offline
+boundary tests reject altered fixture/helper/dependency bytes, redirected
+dependency paths and missing review hashes. The quality gate passes 426 tests and
+520 subtests, skipping 45 opt-in integration tests.
 
-This test-only extension runs the new pytest family; it does not claim a fresh
-full 45-test run or a 1,802-test engine build. The selected runtime still carries
-its separately verified 1,792 build regressions and the earlier full integration
-results. See the [evidence and preserved fixture correction](../engine/battle_combat_evidence.json)
+The initial ten-case test-only milestone is preserved in its
+[historical evidence](../engine/battle_combat_evidence.json). The current 34-case
+family is included in the 1,826-test engine build and the full 45-test integration
+run described above. See the [current validation](../engine/combat_strike_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
 Full card, rules, combat and AI correctness remain unverified.
 

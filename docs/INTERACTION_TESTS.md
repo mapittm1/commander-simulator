@@ -19,7 +19,7 @@ Windows. Ordinary catalog, deck, and simulation commands do not need this bridge
 
 ## Battle combat and Siege defeat
 
-Run the separate fixed ten-case pytest family with the selected reviewed engine,
+Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
 
 ```powershell
@@ -31,7 +31,11 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All ten native cases pass against the unchanged reviewed Battle-protector engine.
+All 34 native cases pass against the reviewed strike-history engine. The family
+retains the original ten witnesses and adds 24 boundaries covering blocked/trample
+combat, first/double strike, paid keyword changes, multiple and nested copies,
+departed strike history and pending defeat responses. The original copy failures
+are resolved; see the [preserved gap](../engine/combat_strike_gap.json).
 They cover legal defender enumeration, copied combat, damage to defense counters,
 lethal Siege defeat, paid Fog, Hexmage sacrifice, transformed casting, Stifle on
 the defeat trigger and Beast Within before trigger resolution. Actions, targets,
@@ -40,7 +44,7 @@ The family does not establish autonomous combat strategy or every Battle
 interaction. Fixed source/dependency checks, compilation integrity, 24 production
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
-and [validation evidence](../engine/battle_combat_evidence.json).
+and [current validation evidence](../engine/combat_strike_evidence.json).
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 

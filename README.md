@@ -27,21 +27,16 @@ difference.
 
 ## Card coverage
 
-A first-strike copy gap remains open: copying combat between damage steps loses
-which creatures already assigned first-strike damage. Six expanded contracts
-show repeated normal-step damage, including incorrect Battle defeat; 18 controls
-pass. Native paths and double-strike controls retain the expected behavior. A
-source candidate is under validation; the reviewed runtime remains selected.
-See the [exact failures and reproductions](engine/combat_strike_gap.json).
-
-Battle combat and Siege defeat now have a separate ten-case packaged pytest
-family against the unchanged selected engine. Native witnesses cover legal
-Battle defenders, damage to defense rather than player life, copied combat,
-paid Fog, Vampire Hexmage sacrifice, transformed casting, and Stifle/Beast Within
-responses to defeat. All ten pass. Six offline checks reject altered test inputs.
-See the [Battle combat evidence](engine/battle_combat_evidence.json) and
-[repeatable command](docs/INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
-This is additional validation; it does not certify all combat or AI choices.
+First-strike assignment history now survives copied combat, including live and
+historical departed combatants in independent collections. All 600 source checks
+pass. The 34-case Battle family retains ten cases and adds 24 boundaries covering
+blocking, trample, pending defeat responses, first/double strike, paid keyword
+changes, multiple creatures and nested worlds. The original one and expanded six
+copy failures are resolved in the reviewed runtime. See the
+[source comparison](engine/combat_strike_native_evidence.json),
+[packaged validation](engine/combat_strike_evidence.json), and
+[resolved gap with original reproductions](engine/combat_strike_gap.json).
+These selected cases do not certify all combat or autonomous AI choices.
 
 Shared Battle-protector snapshots preserve live and historical protector references
 and public views in copied games and native LKI. All 566 source tests pass, with
@@ -558,16 +553,15 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,792 selected native tests, packaged
-families of 781, 65 and 194 rules cases, 3,266 broader gameplay tests, 256 serialization
-tests, and 44 live integration tests with 1,688 subtests. All 488 frozen inputs
-from that build remain unchanged. The separate Battle combat family adds ten
-packaged cases without a new engine build. The Python quality gate passed 426
-offline tests with 520 subtests; 45 opt-in integration tests are skipped by default.
-The refreshed catalog probe constructed 32,636 starting-card identities;
-its seven other identities are nonstarting meld results. Construction parses
-native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/battle_protector_evidence.json).
+The current reviewed runtime passed 1,826 selected native tests, separate packaged
+families of 781, 65, 194 and 34 rules cases, 3,300 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,722 subtests. All 494
+implementation inputs remain frozen. The Python quality gate passed 426 offline
+tests with 520 subtests; 45 opt-in integration tests are skipped by default.
+The refreshed catalog probe constructed 32,636 starting-card identities; its seven
+other identities are nonstarting meld results. Construction parses native abilities
+and is not proof of every interaction. Native receipts use class-qualified method
+names. See the [validation and activation evidence](engine/combat_strike_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

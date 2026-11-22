@@ -1,0 +1,18 @@
+diff --git a/forge-game/src/main/java/forge/game/combat/Combat.java b/forge-game/src/main/java/forge/game/combat/Combat.java
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -117,6 +117,14 @@
+             damageMap.get().put(map.map(entry.getRowKey()), map.map(entry.getColumnKey()), entry.getValue());
+         }
+ 
++        // A copy between damage steps must retain who already assigned first-strike damage.
++        // Departed combatants are historical objects, not their new zone incarnations.
++        for (Card combatant : combat.combatantsThatDealtFirstStrikeDamage.get()) {
++            Card copiedCombatant = combatant.getGame().getCardState(combatant, null) == combatant
++                    ? map.map(combatant)
++                    : CardCopyService.getLKICopyForGame(combatant, map);
++            combatantsThatDealtFirstStrikeDamage.get().add(copiedCombatant);
++        }
+         attackConstraints = new AttackConstraints(this);
+     }
+ 

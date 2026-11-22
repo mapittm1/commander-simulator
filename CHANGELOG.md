@@ -6,6 +6,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct first-strike assignment history in combat snapshots: map live
+  combatants into copied physical cards and departed incarnations through the
+  native historical-card copier, with independent containers. Pass 600 source
+  tests, retaining 566 and adding the 34-case Battle family (ten retained external
+  cases plus 24 new boundaries). Resolve the original one and expanded six copy
+  failures while retaining legitimate double strike and paid keyword changes.
+  Preserve the initial Checkstyle stop and its two-import-only fixture correction.
+- Activate the reviewed strike-history build after 1,826 selected native tests,
+  independent 781/65/194/34 packaged families, 3,300 broader gameplay tests, 256
+  serialization tests and 45 live tests with 1,722 subtests pass. Verify 494 frozen
+  inputs and construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. Only Combat.java and Combat.class change in production; no
+  classes are added or removed. Card scripts, AI hints, default profile and damage
+  assignment policy remain unchanged. Preserve broad-test policy originals and
+  restore them byte-for-byte after independent compilation. Full card, combat,
+  rules and strategy correctness remain open.
+
 - Record a first-strike combat-copy gap: an initial probe passes nine controls
   and fails copied strike history; expanded probes pass 18 and fail six contracts.
   Copies can assign normal damage a second time, kill a native-surviving creature,
