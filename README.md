@@ -335,8 +335,27 @@ The relevant inspection/memory classes and its card script are byte-identical.
 An explicitly inspected top card loses its remembered identity after an unshuffled
 draw, including copied pending resolution. Payment/private disclosure, unseen
 and shuffled-draw controls pass. See the
-[pending knowledge finding](engine/spy_network_knowledge_gap.json). Its fixture
-remains outside passing totals; AI admission policy is not tested by this probe.
+[historical knowledge finding](engine/spy_network_knowledge_gap.json). The fixed
+fixture now runs in the reviewed matrix below. AI admission policy is not tested
+by this direct paid-cast probe.
+
+The explicit-position source candidate now passes all 244 selected native checks,
+including nineteen paid-card/API inspection scenarios. Their identical packaged
+baseline passes nine controls and fails ten cases. Exact top/bottom `ValidAll`
+qualifiers grant position knowledge only to the authorized observer. Identity-only,
+filtered and mixed selections do not infer hidden positions. Interleaved draws,
+hidden reorders, fresh inspection and copied pending resolution are covered.
+A stronger one-card-library test catches a top-and-bottom conjunction gap in the
+243/244 draft; the corrected source passes that case too. The change is confined
+to the generic LookAt handler; card scripts and AI flags are unchanged. See the
+[source comparison](engine/look_positions_native_evidence.json). The reviewed
+runtime passes 1,470 selected native tests, 718 packaged interaction cases,
+2,944 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,366 subtests. All 436 frozen inputs remain unchanged. The catalog probe
+constructs 32,636 starting identities and excludes seven nonstarting meld results;
+construction does not establish rules correctness. See the
+[validation and activation](engine/look_positions_evidence.json). AI admission,
+information-spending policy and complete card correctness remain unproven.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -352,13 +371,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,451 selected native tests, 699 packaged
-rules cases, 2,925 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,347 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,470 selected native tests, 718 packaged
+rules cases, 2,944 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,366 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/modal_text_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/look_positions_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

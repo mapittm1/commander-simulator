@@ -6,6 +6,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Track explicitly disclosed absolute library positions through the generic
+  LookAt handler. Restrict positional disclosure to exact top/bottom qualifiers;
+  preserve private recipients and avoid inferences from identity-only, filtered
+  or mixed selections. Keep remembered positions through verified interleaved
+  draws and invalidate them after hidden reorders.
+- Pass 244 source-native checks including nineteen expanded inspection cases.
+  Their identical packaged baseline passes nine controls and fails ten cases.
+  Preserve the passing 238-case draft and the 243/244 draft caught by the stronger
+  one-card-library conjunction case. The corrected source passes all cases.
+- Move the pending Spy Network fixture into engine/tests and bind its old inputs
+  to preserved local snapshots. Card scripts and AI flags are unchanged. The
+  reviewed runtime passes 1,470 selected native tests, 718 packaged interaction
+  cases, 2,944 broader gameplay tests, 256 serialization tests and 42 live tests
+  with 1,366 subtests. Preserve all 436 frozen inputs and the construction probe
+  of 32,636 starting identities with seven nonstarting meld exclusions. Complete
+  card correctness and information-spending AI policy remain unproven.
+
 - Record a preexisting Spy Network inspected-draw knowledge gap with five identical
   packaged witnesses on both prior and corrected modal runtimes: three controls
   pass and two inspected-draw cases fail. Verify unchanged inspection/memory

@@ -80,6 +80,8 @@ SOURCES = {
     "CommanderTextCompositionTest": "commander_text_composition_test_sha256",
     "CommanderPluralTextTest": "commander_plural_text_test_sha256",
     "CommanderLookAtCoverageTest": "commander_look_at_coverage_test_sha256",
+    "CommanderSpyNetworkKnowledgeTest": "commander_spy_network_knowledge_test_sha256",
+    "CommanderLibraryLookAtPositionTest": "commander_library_look_at_position_test_sha256",
     "CommanderBaubleCoverageTest": "commander_bauble_coverage_test_sha256",
     "CommanderVintageOpeningReplayTest": "commander_vintage_opening_test_sha256",
     "CommanderCompositeModeCoverageTest": "commander_composite_mode_test_sha256",
@@ -129,6 +131,7 @@ TEST_CLASSES = tuple(
     if name != "AITest"
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
+    "forge.game.ability.effects.LookAtEffect",
     "forge.ai.AiController",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",

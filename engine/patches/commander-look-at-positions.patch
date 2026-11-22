@@ -1,0 +1,56 @@
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java b/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java
+@@ -1,14 +1,45 @@
+ package forge.game.ability.effects;
+ 
+ import forge.game.ability.SpellAbilityEffect;
++import forge.game.card.Card;
++import forge.game.card.CardCollection;
++import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
+ import forge.util.Lang;
++import java.util.List;
++import java.util.Map;
+ 
+ public class LookAtEffect extends SpellAbilityEffect {
++    private enum LibraryPosition { TOP, BOTTOM, UNKNOWN }
+ 
+     @Override
+     public void resolve(final SpellAbility sa) {
+-        sa.getHostCard().getGame().getAction().revealTo(getTargetCards(sa), sa.getActivatingPlayer());
++        CardCollection cards = getTargetCards(sa);
++        Player observer = sa.getActivatingPlayer();
++        sa.getHostCard().getGame().getAction().revealTo(cards, observer);
++        LibraryPosition position = disclosedLibraryPosition(sa);
++        if (position == LibraryPosition.UNKNOWN) return;
++        for (Card card : cards) {
++            if (!card.isInZone(ZoneType.Library)) continue;
++            Player owner = card.getOwner();
++            int index = position == LibraryPosition.TOP ? 0 : owner.getCardsIn(ZoneType.Library).size() - 1;
++            // The memory callback validates the current incarnation and library revision.
++            observer.getController().observeLibraryTop(owner, Map.of(index, card));
++        }
++    }
++
++    private static LibraryPosition disclosedLibraryPosition(SpellAbility action) {
++        String[] definition = action.getParamOrDefault("Defined", "").trim().split("\\s+", 2);
++        if (definition.length != 2 || !definition[0].equals("ValidAll") || definition[1].contains(","))
++            return LibraryPosition.UNKNOWN;
++        int separator = definition[1].indexOf('.');
++        if (separator < 0) return LibraryPosition.UNKNOWN;
++        List<String> properties = List.of(definition[1].substring(separator + 1).split("\\+"));
++        boolean top = properties.contains("TopLibrary"), bottom = properties.contains("BottomLibrary");
++        // Filtered forms such as TopLibrary_Creature reveal identity, not absolute position.
++        if (!top && !bottom) return LibraryPosition.UNKNOWN;
++        return top ? LibraryPosition.TOP : LibraryPosition.BOTTOM;
+     }
+ 
+     @Override
+@@ -20,5 +51,4 @@
+         sb.append('.');
+         return sb.toString();
+     }
+-
+ }
