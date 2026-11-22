@@ -193,6 +193,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-battle-protector.patch",
                 "engine/patches/commander-combat-strike.patch",
                 "engine/patches/commander-removed-defender.patch",
+                "engine/patches/commander-assigned-damage.patch",
                 "engine/patches/commander-trait-doctoring-ai.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",

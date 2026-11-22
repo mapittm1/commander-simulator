@@ -29,8 +29,13 @@ controls pass, as do all prior 28 removed-defender contracts.
 The representative native trace reaches Combat's damage-table copying after
 GameCopier cannot map the stand-in. These are internal snapshots between damage
 assignment and settlement, not player priority windows. Invocation frequency and
-autonomous gameplay impact are unmeasured. No additional production correction
-is included yet. See [exact failures and inputs](../engine/damage_assignment_snapshot_gap.json).
+autonomous gameplay impact are unmeasured. The expanded baseline passes 36 of 44;
+eight contracts fail the same mapping boundary, including paid-equip Jitte cases.
+The source correction excludes stand-ins from damage recipients and passes all 644
+focused checks, retaining 628 and adding 16. The 78-case Battle family retains 62
+prior methods. Fresh packaged/full validation remains pending; selected runtime
+is unchanged. See [exact failures and inputs](../engine/damage_assignment_snapshot_gap.json)
+and [source evidence](../engine/damage_assignment_snapshot_native_evidence.json).
 Full card, rules and AI correctness remain open.
 
 ## Removed planeswalker damage assignment

@@ -1,0 +1,45 @@
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -898,7 +898,9 @@
+             }
+             if (assignToPlayer) {
+                 attackers.remove(attacker);
+-                damageMap.get().put(attacker, defender, damageDealt);
++                if (!isRemovedDefender(defender)) {
++                    damageMap.get().put(attacker, defender, damageDealt);
++                }
+             }
+             else if (orderedBlockers == null || orderedBlockers.isEmpty()) {
+                 attackers.remove(attacker);
+@@ -913,7 +915,9 @@
+                         System.err.println("[COMBAT] defender is null, getDefenderPlayerByAttacker(attacker) result: " + defender);
+                     }
+                     // this will fail if defender is null, and it doesn't allow null values..
+-                    damageMap.get().put(attacker, defender, damageDealt);
++                    if (!isRemovedDefender(defender)) {
++                        damageMap.get().put(attacker, defender, damageDealt);
++                    }
+                 } // No damage happens if blocked but no blockers left
+             } else {
+                 Map<Card, Integer> map = assigningPlayer.getController().assignCombatDamage(attacker, orderedBlockers, attackers,
+@@ -929,7 +933,7 @@
+ 
+                 for (Entry<Card, Integer> dt : map.entrySet()) {
+                     if (dt.getKey() == null) {
+-                        if (dt.getValue() > 0) {
++                        if (dt.getValue() > 0 && !isRemovedDefender(defender)) {
+                             if (defender instanceof Card) {
+                                 ((Card) defender).addAssignedDamage(dt.getValue(), attacker);
+                             }
+@@ -945,6 +949,11 @@
+         return assignedDamage;
+     }
+ 
++    // Rule 506.4c keeps the attackers in combat, but the stand-in cannot receive damage.
++    private static boolean isRemovedDefender(final GameEntity defender) {
++        return defender instanceof Card card && card.getId() == -1;
++    }
++
+     private boolean dealDamageThisPhase(Card combatant, boolean firstStrikeDamage) {
+         // During first strike damage, double strike and first strike deal damage
+         // During regular strike damage, double strike and anyone who hasn't dealt damage deal damage

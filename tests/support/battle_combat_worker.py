@@ -29,6 +29,7 @@ NATIVE_CLASSES = (
     "forge.game.GameAction",
     "forge.game.card.Card",
     "forge.game.card.CardCopyService",
+    "forge.game.card.CardDamageTable",
     "forge.game.card.CardFactoryUtil",
     "forge.game.card.CardProperty",
     "forge.game.combat.Combat",

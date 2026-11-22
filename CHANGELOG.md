@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct internal assigned-damage snapshots in source by excluding absent
+  defender stand-ins from damage recipients. Pass 644 focused checks, retaining 628
+  plus 16 new contracts; the 78-case Battle family retains 62 prior methods. The
+  initial 636-case pass and expanded 44-case baseline remain preserved. Paid Jitte
+  controls verify absent/live targets, real blockers and grouped damage events.
+  Fresh packaged/full validation remains pending; selected runtime is unchanged.
+
 - Record an internal post-assignment combat snapshot gap: 32 of 36 probes pass;
   four copied absent-defender recipients fail strict mapping. Preserve exact
   fixtures, driver, native report hashes, stack trace and finished process receipt.

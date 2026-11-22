@@ -408,11 +408,34 @@ public class CommanderBattleCombatTest extends AITest {
     @Test public void nativeJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,false,true,false,false,true); }
     @Test public void copiedJitteTriggersForLegalOverPlaneswalkerDamage() { scenario(true,true,true,true,false,false,true); }
 
+
+    @Test public void copiedAssignedJitteAtRemovedBattleWithOrdinaryTrampleDoesNotTrigger() { scenario(false,false,false,true,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtRemovedWalkerWithOrdinaryTrampleDoesNotTrigger() { scenario(true,false,false,true,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtRemovedBattleWithOverPlaneswalkersDoesNotTrigger() { scenario(false,true,false,true,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtRemovedWalkerTriggersForPlayerDamage() { scenario(true,true,false,true,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtLiveBattleTriggersForDefenseDamage() { scenario(false,true,false,false,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtLiveWalkerTriggersOnceForWalkerAndPlayerDamage() { scenario(true,true,false,false,false,false,true,true); }
+    @Test public void copiedAssignedJitteAtBlockedRemovedBattleTriggersForBlockerDamageOnly() { scenario(false,true,false,true,true,false,true,true); }
+    @Test public void copiedAssignedJitteAtBlockedRemovedWalkerTriggersOnceForBlockerAndPlayerDamage() { scenario(true,true,false,true,true,false,true,true); }
+
+    @Test public void copiedAssignmentAtRemovedBattleWithOrdinaryTrampleSettlesWithoutDamage() { scenario(false,false,false,true,false,false,false,true); }
+    @Test public void copiedAssignmentAtRemovedBattleWithOverPlaneswalkersSettlesWithoutDamage() { scenario(false,true,false,true,false,false,false,true); }
+    @Test public void copiedAssignmentAtRemovedWalkerWithOrdinaryTrampleSettlesWithoutDamage() { scenario(true,false,false,true,false,false,false,true); }
+    @Test public void copiedAssignmentAtRemovedWalkerWithOverPlaneswalkersRetainsPlayerDamage() { scenario(true,true,false,true,false,false,false,true); }
+    @Test public void copiedAssignmentAtLiveBattleRetainsDefenseDamage() { scenario(false,true,false,false,false,false,false,true); }
+    @Test public void copiedAssignmentAtLiveWalkerRetainsLoyaltyAndPlayerDamage() { scenario(true,true,false,false,false,false,false,true); }
+    @Test public void copiedBlockedAssignmentAtRemovedBattleSettlesBlockerDamageOnly() { scenario(false,true,false,true,true,false,false,true); }
+    @Test public void copiedBlockedAssignmentAtRemovedWalkerRetainsBlockerAndPlayerDamage() { scenario(true,true,false,true,true,false,false,true); }
+
     private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered) {
         scenario(walker,overPlaneswalkers,copied,remove,blocked,countered,false);
     }
 
     private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered,boolean withJitte) {
+        scenario(walker,overPlaneswalkers,copied,remove,blocked,countered,withJitte,false);
+    }
+
+    private void scenario(boolean walker,boolean overPlaneswalkers,boolean copied,boolean remove,boolean blocked,boolean countered,boolean withJitte,boolean copyAssignedDamage) {
         Board board=board();Player opponent=board.battle.getProtectingPlayer();Card defender=board.battle;
         if(walker) {
             defender=addCardToZone("Jace, the Mind Sculptor",opponent,ZoneType.Battlefield);
@@ -463,14 +486,21 @@ public class CommanderBattleCombatTest extends AITest {
         game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);
         assertTrue(game.getCombat().assignCombatDamage(false));
         System.out.println("REMOVED_DEFENDER assigned: defender="+recipient.getAssignedDamageMap().values().stream().mapToInt(Integer::intValue).sum());
+        // Internal assignment snapshots are tested here, not a player priority window.
+        if(copyAssignedDamage) {
+            GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,actor);
+            actor=copier.find(actor);target=copier.find(target);attacker=copier.find(attacker);
+            targetCard=copier.find(targetCard);targetBlocker=copier.find(targetBlocker);targetJitte=copier.find(targetJitte);
+            assertTrue(game.getCombat().isAttacking(attacker));
+        }
         game.getCombat().dealAssignedDamage();settle(game);
         List<Integer> expected=new ArrayList<>(initial);
         if(walker&&overPlaneswalkers) {
             int index=game.getPlayers().indexOf(target);int required=(live?3:0)+(blocked?2:0);
             expected.set(index,initial.get(index)-Math.max(0,power-required));
         }
-        if(withJitte)assertEquals(targetJitte.getCounters(CounterEnumType.CHARGE),walker&&overPlaneswalkers?2:0,"Jitte counts actual combat damage, not assignment to a removed-target stand-in");
-        if(!withJitte)assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,
+        if(withJitte)assertEquals(targetJitte.getCounters(CounterEnumType.CHARGE),live||blocked||walker&&overPlaneswalkers?2:0,"Jitte counts actual combat damage, not assignment to a removed-target stand-in");
+        if(!withJitte||copyAssignedDamage)assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,
                 "A departed walker requires no phantom lethal damage; live loyalty and real blockers still require assignment");
         assertTrue(attacker.isInZone(ZoneType.Battlefield));
         if(blocked)assertTrue(game.getCardState(targetBlocker).isInZone(ZoneType.Graveyard));
@@ -478,7 +508,7 @@ public class CommanderBattleCombatTest extends AITest {
             if(walker)assertTrue(game.getCardState(targetCard).isInZone(ZoneType.Graveyard));
             else assertArray(game,targetCard);
         }
-        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,"Copy damage cannot change original player life");
+        if(copied||copyAssignedDamage)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,"Copy damage cannot change original player life");
     }
 
     /** Mature attacks, a loyalty-three walker and blocker declaration are supplied legal state preconditions. */
