@@ -17,32 +17,42 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Removed planeswalker assignment gap
+## Removed planeswalker damage assignment
 
-A 28-case native baseline passes 24 and fails four player-damage contracts.
-After paid Beast Within removes an attacked planeswalker, Thrasta assigns one
-point to a stand-in for the departed target. Its former controller therefore
-takes one less damage, both with and without a real blocker, in native and copied
-combat. Live-target, countered-removal, ordinary-trample and removed-Battle
-controls pass. Eight additional paid-equip Jitte controls pass, so these probes
-do not establish a phantom combat-damage trigger defect.
+The reviewed runtime preserves departed defender type and protector context in
+native and copied combat stand-ins. Trample over planeswalkers skips the absent
+planeswalker as a damage recipient, while actual blockers and live planeswalker
+loyalty still require lethal assignment. The correction changes only Combat.java
+and Combat.class; card scripts and the default AI profile are unchanged.
+
+The original eight-case baseline passes six and fails two contracts. The expanded
+20-case baseline passes 16 and fails four. Adding eight paid-equip Jitte controls
+gives 24 passes and the same four failures. These are native/copied and
+blocked/unblocked witnesses of one assignment defect, not four independent card
+bugs. All eight Jitte controls pass before and after correction, so no phantom
+combat-damage trigger defect is claimed. The exact baseline inputs and reports
+remain in the [resolved gap](../engine/removed_defender_gap.json).
 
 [Rule 702.19e](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf)
 permits player damage after a planeswalker leaves combat, with lethal assignment
 to actual blockers still required. The missing planeswalker requires no damage.
-The exact [baseline evidence](../engine/removed_defender_gap.json) preserves all
-three runs and inputs. Mature attackers, blocker declarations and starting
-loyalty are supplied preconditions. This is not autonomous strategy coverage.
-The candidate passes all 628 focused source checks, retaining 600 and adding 28.
-The 62-case Battle family retains all 34 prior methods. Only Combat.java changes
-in production. Full live validation is pending; the selected runtime is unchanged.
-See the [source evidence](../engine/removed_defender_native_evidence.json).
+Mature attackers, blocker declarations and starting loyalty are supplied legal
+preconditions; these fixtures do not certify autonomous strategy.
 
-The removed-defender candidate also passes 1,854 selected native tests, all four
-independent packaged families (781/65/194/62), 3,328 broader gameplay tests and
-256 serialization tests. All 495 implementation inputs remain frozen. See its
-[packaged evidence](../engine/removed_defender_packaged_evidence.json). Full live
-validation and activation remain pending; these checks do not certify all rules.
+All 628 focused source checks pass, retaining 600 and adding 28. The 62-case
+Battle family preserves all prior 34 test bodies and helpers. The fresh build
+passes all 1,854 selected native tests, retaining every prior 1,826 method.
+Independent packaged families of 781/65/194/62 cases pass separately and again
+in the full 45-test integration run with 1,750 subtests. Broader gameplay and
+serialization pass 3,328 and 256 tests. Temporary reviewed test-policy patches
+are restored byte-for-byte; the 495 implementation inputs remain frozen.
+The catalog probe constructs 32,636 starting identities with seven nonstarting
+meld results excluded. Construction is not rules certification.
+
+See the [source evidence](../engine/removed_defender_native_evidence.json),
+[preserved packaged milestone](../engine/removed_defender_packaged_evidence.json),
+and [full validation and activation](../engine/removed_defender_evidence.json).
+Full card, rules, combat and AI correctness remain open.
 
 ## First-strike history in copied combat
 
@@ -93,8 +103,8 @@ Full card, rules, combat and strategy correctness remain unverified.
 
 ## Battle combat and Siege defeat
 
-The expanded packaged pytest family exercises 34 native Battle paths against
-the reviewed strike-history runtime. All 34 pass, with 24 production
+The expanded packaged pytest family exercises 62 native Battle paths against
+the reviewed removed-defender runtime. All 62 pass, with 24 production
 class origins checked against the selected JAR and hash-bound source, compilation,
 profile and method receipts. The fixed fixture is
 [CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
@@ -135,9 +145,9 @@ dependency paths and missing review hashes. The quality gate passes 426 tests an
 520 subtests, skipping 45 opt-in integration tests.
 
 The initial ten-case test-only milestone is preserved in its
-[historical evidence](../engine/battle_combat_evidence.json). The current 34-case
-family is included in the 1,826-test engine build and the full 45-test integration
-run described above. See the [current validation](../engine/combat_strike_evidence.json)
+[historical evidence](../engine/battle_combat_evidence.json). The current 62-case
+family is included in the 1,854-test engine build and the full 45-test integration
+run described above. See the [current validation](../engine/removed_defender_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
 Full card, rules, combat and AI correctness remain unverified.
 

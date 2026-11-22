@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed removed-defender correction after all 45 live integration
+  tests and 1,750 subtests pass, including repeated 781/65/194/62 packaged
+  families. Preserve the prior 1,826 native methods in the 1,854-test build,
+  all 600 focused source methods in the 628-test suite, and 495 frozen inputs.
+  Broader gameplay/serialization pass 3,328/256. Health and catalog checks pass;
+  32,636 starting identities construct with seven nonstarting meld exclusions.
+  Only Combat.java and Combat.class change in production. Scripts and default
+  AI remain unchanged; full card, rules and strategy correctness remain open.
+
 - Validate the removed-defender candidate with 1,854 selected native tests,
   retaining every prior 1,826 method and adding 28. Independent packaged families
   pass 781/65/194/62 cases; broader gameplay and serialization pass 3,328/256.

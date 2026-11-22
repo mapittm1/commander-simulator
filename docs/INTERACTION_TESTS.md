@@ -31,11 +31,13 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All 34 native cases pass against the reviewed strike-history engine. The family
-retains the original ten witnesses and adds 24 boundaries covering blocked/trample
-combat, first/double strike, paid keyword changes, multiple and nested copies,
-departed strike history and pending defeat responses. The original copy failures
-are resolved; see the [preserved gap](../engine/combat_strike_gap.json).
+All 62 native cases pass against the reviewed removed-defender engine. The family
+retains the previous 34 witnesses and adds 28 removed/live defender controls,
+blocked/unblocked trample assignments, countered removal and paid-equip Jitte
+triggers. First/double strike, paid keyword changes, multiple/nested copies,
+departed strike history and pending defeat responses remain covered. See the
+[resolved assignment gap](../engine/removed_defender_gap.json).
+
 They cover legal defender enumeration, copied combat, damage to defense counters,
 lethal Siege defeat, paid Fog, Hexmage sacrifice, transformed casting, Stifle on
 the defeat trigger and Beast Within before trigger resolution. Actions, targets,
@@ -44,7 +46,7 @@ The family does not establish autonomous combat strategy or every Battle
 interaction. Fixed source/dependency checks, compilation integrity, 24 production
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
-and [current validation evidence](../engine/combat_strike_evidence.json).
+and [current validation evidence](../engine/removed_defender_evidence.json).
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 
