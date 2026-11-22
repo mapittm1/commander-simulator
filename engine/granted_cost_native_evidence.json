@@ -1,0 +1,2421 @@
+{
+  "scope": "Generic already-granted casting-cost preservation in AI previews. Selected contracts do not establish complete card, timing, priority, or strategy coverage.",
+  "baseline_commit": "811ea68b3454a042f8080bd2536e2bdd7e511aff",
+  "baseline_lock_sha256": "cf36fd91527f5b26b7f5e0bf5016a4c98e855b886625c52d7cef059efb861ec0",
+  "patch": "engine/patches/commander-granted-cost-preview.patch",
+  "patch_sha256": "7cb7e0c316ad7fbecac4b134af365b83df5a14120b7f281076bca18ed7964b89",
+  "production_files": [
+    {
+      "path": "forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java",
+      "baseline_sha256": "3db5d112b369c3197996f3389d1376b842b88e25205e29306c7230eccdcebb55",
+      "candidate_source_sha256": "c63375fa8f409ca5fe6bf85ace2c4c127282aa95e67150d0a5204e7f930640da",
+      "patched_sha256": "c63375fa8f409ca5fe6bf85ace2c4c127282aa95e67150d0a5204e7f930640da",
+      "equivalence": "Only native Git CRLF/LF conversion permitted; decoded text exact."
+    }
+  ],
+  "fixtures": [
+    {
+      "path": "engine/tests/CommanderGrantedCostPreviewTest.java",
+      "sha256": "d1d10ca1e3f8e00e9d2938b5abf7e37c56c01fdaed2e6f5c80bb2a923375248e",
+      "key": "commander_granted_cost_preview_test_sha256"
+    },
+    {
+      "path": "engine/tests/CommanderGrantedCostBoundaryTest.java",
+      "sha256": "461524fad4901b30905e5c98e169a99e50aa788bd0446c67be2e70baef2f0c93",
+      "key": "commander_granted_cost_boundary_test_sha256"
+    }
+  ],
+  "baselines": {
+    "packaged-granted-cost4-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-free-cast",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "d775769fb06f74b6adc4fecf1416e785233571ca17f1d9df13b94f9c1918a914",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "d70f2862c7a92ddb984594673ef5e4856c90631e212bd691169fd00501db37f0",
+          "native_tests": {
+            "total": 1559,
+            "passed": 1559,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "4a74c69924ecd351cc41311ed399b260a6071a56a22554fc3cdd978305a92da5",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 4,
+          "passed": 2,
+          "failed": 2,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderGrantedCostPreviewResearchTest.nativeGrantedOriginalCanPayItsReplacementCost",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostPreviewResearchTest.previewPaysTheAffordableGrantedReplacementCost",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostPreviewResearchTest.previewRetainsAZeroReplacementCostWithoutAWaiverMarker",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostPreviewResearchTest.unaffordableGrantedReplacementCostRemainsUnavailable",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-granted-cost-research\\CommanderGrantedCostPreviewResearchTest.java": "8feab5bcab17ba3d321a43c74769cec26053329b27ecabad7ccf4ebbbf8d1fd3"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "6ddccce8fd63a52c21a54f2cf87378eff7e9e8eec366b58fa87565b91471f238",
+        "failures": [
+          "java.lang.AssertionError: The preview must use the actual cost granted by the effect, not the printed cost expected [true] but found [false]",
+          "java.lang.AssertionError: The preview must use the actual cost granted by the effect, not the printed cost expected [true] but found [false]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3967,
+        "returncode": 0,
+        "elapsed_seconds": 10.437
+      },
+      "report": "data/development/commander-granted-cost-research/packaged-granted-cost4-baseline/reports/testng-results.xml"
+    },
+    "packaged-granted-cost8-corrected2-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-free-cast",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "d775769fb06f74b6adc4fecf1416e785233571ca17f1d9df13b94f9c1918a914",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "d70f2862c7a92ddb984594673ef5e4856c90631e212bd691169fd00501db37f0",
+          "native_tests": {
+            "total": 1559,
+            "passed": 1559,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "4a74c69924ecd351cc41311ed399b260a6071a56a22554fc3cdd978305a92da5",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 8,
+          "passed": 3,
+          "failed": 5,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.aReplacementCostHigherThanPrintedIsNotUndercharged",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.aZeroReplacementDoesNotWaiveAnUnpayableSacrifice",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.anUnaffordableLifeReplacementIsRejected",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.buybackIsPaidExactlyOnceAndReturnsTheOriginalCard",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.discardReplacementCostDoesNotMutateTheLiveHand",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.lifeReplacementCostIsPaidOnlyInThePreview",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.mandatorySacrificeSurvivesReplacingTheManaCost",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderGrantedCostBoundaryResearchTest.wizardSpellbookNativeOneManaBranchCastsTheCopy",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-granted-cost-research\\CommanderGrantedCostBoundaryResearchTest.java": "c71ac119ca27ab6091726f3b6d85306244f2f68143901186549f6ea864d8c141"
+        },
+        "production_origins_verified": 104,
+        "report_sha256": "3de6305743f99e70dd027449036aa8c624171a7f4b0cbcd44575372c73864d78",
+        "failures": [
+          "java.lang.AssertionError: expected [false] but found [true]",
+          "java.lang.AssertionError: expected [true] but found [false]",
+          "java.lang.AssertionError: expected [true] but found [false]",
+          "java.lang.AssertionError: expected [true] but found [false]",
+          "java.lang.AssertionError: expected [true] but found [false]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 4606,
+        "returncode": 0,
+        "elapsed_seconds": 11.328
+      },
+      "report": "data/development/commander-granted-cost-research/packaged-granted-cost8-corrected2-baseline/reports/testng-results.xml"
+    }
+  },
+  "fixed": {
+    "counts": {
+      "total": 345,
+      "passed": 345,
+      "failed": 0,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aNegatedColorWordRemainsInTheOriginalWordDomain",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aNewFlashCreatureRemainsExcludedFromResponseReadiness",
+        "status": "PASS",
+        "duration_ms": 23,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aPaidNativeLandPluralRewriteChangesUntapProhibition",
+        "status": "PASS",
+        "duration_ms": 9,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aPaidNativeNegatedColorRewriteMakesTheDestroyTargetIllegal",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aPaidNativePluralRewriteChangesThePendingSpellsActualBonus",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aPluralBasicLandWordRemainsInTheOriginalWordDomain",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aPluralOracleWordRemainsInTheOriginalWordDomain",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.aTemporaryPumpOnAnUnthreatenedSickCreatureAddsNoImmediateValue",
+        "status": "PASS",
+        "duration_ms": 32,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.anIrregularPluralUsesItsCurrentWordAfterAnEarlierRewrite",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.fullPilotRewritesTheNegatedDestroySpell",
+        "status": "PASS",
+        "duration_ms": 5007,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.fullPilotUsesThePluralPendingSpellToSaveAnAttacker",
+        "status": "PASS",
+        "duration_ms": 422,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.heuristicPilotRewritesTheNegatedDestroySpell",
+        "status": "PASS",
+        "duration_ms": 792,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.heuristicPilotUsesThePluralPendingSpellToSaveAnAttacker",
+        "status": "PASS",
+        "duration_ms": 460,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.hybridPilotRewritesTheNegatedDestroySpell",
+        "status": "PASS",
+        "duration_ms": 944,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.hybridPilotUsesThePluralPendingSpellToSaveAnAttacker",
+        "status": "PASS",
+        "duration_ms": 422,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderPluralTextTest.ordinaryMainPhaseStillFiltersSummoningSickCreatureValue",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PaidOutcomePlannerTest.arbitraryResolvingParentsAreNotReplayed",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PaidOutcomePlannerTest.controlledDecisionUsesCapturedBeneficiary",
+        "status": "PASS",
+        "duration_ms": 30,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PaidOutcomePlannerTest.requiredTargetsCannotBecomeAnUntargetedAction",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PaidOutcomePlannerTest.unaffordableOutcomeIsNotAFreeSpell",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PaidOutcomePlannerTest.untargetedActionHasOneCandidate",
+        "status": "PASS",
+        "duration_ms": 16,
+        "message": null
+      },
+      {
+        "method": "forge.ai.simulation.CommanderModalBudgetTest.forcedThirtyTwoModesPrepareOneCombinationWithoutMutatingTheSource",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderFreeCastChoiceCopyTest.abilityCopyRetainsTheFreeCastMarker",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderFreeCastChoiceCopyTest.textChoiceVariantRetainsTheFreeCastMarker",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderFreeCastChoiceCopyTest.grantingAFreeCastDoesNotModifyThePrintedAbility",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.castTriggerStillDrawsWhenTheSpellTargetBecomesIllegal",
+        "status": "PASS",
+        "duration_ms": 353,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.changingAPendingCounterspellSavesItsBlueTargetAndDraws",
+        "status": "PASS",
+        "duration_ms": 9,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.changingAPendingLandWordSpellChangesItsActualVictims",
+        "status": "PASS",
+        "duration_ms": 12,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.copiedColorExpirationLeavesOriginalEffectActive",
+        "status": "PASS",
+        "duration_ms": 10,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.copiedLandExpirationLeavesOriginalEffectActive",
+        "status": "PASS",
+        "duration_ms": 12,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.copiedPendingIllegalTargetDoesNotAlterOriginal",
+        "status": "PASS",
+        "duration_ms": 9,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.drawRestrictionDoesNotCancelTheTextChange",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.legalNoEffectChangeStillDrawsOneCard",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.paidColorChangeDrawsAndExpires",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.paidLandChangeDrawsAndExpires",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.playersAndCardsInHandAreNotLegalTargets",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.targetLeavingAndReturningDoesNotRestoreLegality",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.targetLeavingBattlefieldCancelsTheCantrip",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayRulesTest.twoManaCannotPayForTheSpell",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatActiveNoStack",
+        "status": "PASS",
+        "duration_ms": 30,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatActiveStack",
+        "status": "PASS",
+        "duration_ms": 27,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatPendingNoStack",
+        "status": "PASS",
+        "duration_ms": 27,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatPendingStack",
+        "status": "PASS",
+        "duration_ms": 28,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.departedNoStack",
+        "status": "PASS",
+        "duration_ms": 25,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.departedStack",
+        "status": "PASS",
+        "duration_ms": 26,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulActiveNoStack",
+        "status": "PASS",
+        "duration_ms": 48,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulActiveStack",
+        "status": "PASS",
+        "duration_ms": 59,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulPendingNoStack",
+        "status": "PASS",
+        "duration_ms": 48,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulPendingStack",
+        "status": "PASS",
+        "duration_ms": 43,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.expiredNoStack",
+        "status": "PASS",
+        "duration_ms": 45,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.expiredStack",
+        "status": "PASS",
+        "duration_ms": 44,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.factoryHistoryNoStack",
+        "status": "PASS",
+        "duration_ms": 20,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.factoryHistoryStack",
+        "status": "PASS",
+        "duration_ms": 12,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.layerRemovalNoStack",
+        "status": "PASS",
+        "duration_ms": 12,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.layerRemovalStack",
+        "status": "PASS",
+        "duration_ms": 11,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverActiveNoStack",
+        "status": "PASS",
+        "duration_ms": 46,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverActiveStack",
+        "status": "PASS",
+        "duration_ms": 44,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverPendingNoStack",
+        "status": "PASS",
+        "duration_ms": 45,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverPendingStack",
+        "status": "PASS",
+        "duration_ms": 58,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapActiveNoStack",
+        "status": "PASS",
+        "duration_ms": 71,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapActiveStack",
+        "status": "PASS",
+        "duration_ms": 78,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapPendingNoStack",
+        "status": "PASS",
+        "duration_ms": 53,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapPendingStack",
+        "status": "PASS",
+        "duration_ms": 63,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.selfControlNoStack",
+        "status": "PASS",
+        "duration_ms": 54,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.selfControlStack",
+        "status": "PASS",
+        "duration_ms": 55,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstActiveNoStack",
+        "status": "PASS",
+        "duration_ms": 50,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstActiveStack",
+        "status": "PASS",
+        "duration_ms": 43,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstPendingNoStack",
+        "status": "PASS",
+        "duration_ms": 36,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstPendingStack",
+        "status": "PASS",
+        "duration_ms": 34,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderSpyNetworkKnowledgeTest.aHiddenShuffleStillHidesTheSamePhysicalTopCard",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderSpyNetworkKnowledgeTest.copiedPendingSpyNetworkRetainsItsOwnInspectedDrawKnowledge",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderSpyNetworkKnowledgeTest.drawingWithoutInspectionDoesNotDiscloseTheCard",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderSpyNetworkKnowledgeTest.inspectedTopDrawKeepsItsKnownIdentityWithoutAHiddenReorder",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderSpyNetworkKnowledgeTest.paidSpyNetworkDisclosesOnlyToItsActor",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherFreeCastBoundaryTest.aFreeCopyPaysAnAffordableManaTax",
+        "status": "PASS",
+        "duration_ms": 1696,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherFreeCastBoundaryTest.aFreeCopyStillRequiresAnUnpaidManaTax",
+        "status": "PASS",
+        "duration_ms": 761,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherFreeCastBoundaryTest.aGrantDoesNotOverrideMagistratesCastingRestriction",
+        "status": "PASS",
+        "duration_ms": 1587,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherFreeCastBoundaryTest.previewCannotProfitFromRemovingTheEncodedOriginal",
+        "status": "PASS",
+        "duration_ms": 1000,
+        "message": null
+      },
+      {
+        "method": "forge.ai.simulation.GameCopierOrphanEffectTest.aBarrowgoyfThatIsStillInPlayIsCopiedWithItsPower",
+        "status": "PASS",
+        "duration_ms": 2,
+        "message": null
+      },
+      {
+        "method": "forge.ai.simulation.GameCopierOrphanEffectTest.aStaticEffectWhoseSourceIsNoLongerInAZoneDoesNotBreakTheCopy",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.simulation.GameCopierOrphanEffectTest.aSourceThatIsStillInPlayHasItsEffectAppliedOnceInTheCopy",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.simulation.GameCopierOrphanEffectTest.anEffectOfAnOldCopyOfACardIsUndoneOnTheCardInTheCopy",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CompletedPlanRecoveryTest.completedImprovementSurvivesUnfinishedLaterBranch",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CompletedPlanRecoveryTest.unavailableOnlyGainDoesNotProduceFallback",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CompletedPlanRecoveryTest.nonImprovingCompletedBranchDoesNotProduceFallback",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CompletedPlanRecoveryTest.unfinishedFirstBranchCannotProduceFallback",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCopyAiTest.normalPilotCastsUsefulColorCipherCopyDuringFirstStrike",
+        "status": "PASS",
+        "duration_ms": 1993,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCopyAiTest.normalPilotCastsUsefulLandCipherCopyDuringFirstStrike",
+        "status": "PASS",
+        "duration_ms": 1954,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.aReplacementCostHigherThanPrintedIsNotUndercharged",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.aZeroReplacementDoesNotWaiveAnUnpayableSacrifice",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.anUnaffordableLifeReplacementIsRejected",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.buybackIsPaidExactlyOnceAndReturnsTheOriginalCard",
+        "status": "PASS",
+        "duration_ms": 32,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.discardReplacementCostDoesNotMutateTheLiveHand",
+        "status": "PASS",
+        "duration_ms": 17,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.lifeReplacementCostIsPaidOnlyInThePreview",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.mandatorySacrificeSurvivesReplacingTheManaCost",
+        "status": "PASS",
+        "duration_ms": 25,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostBoundaryTest.wizardSpellbookNativeOneManaBranchCastsTheCopy",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.copiedFullColorAndCantrip",
+        "status": "PASS",
+        "duration_ms": 371,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.fullColorAndCantrip",
+        "status": "PASS",
+        "duration_ms": 382,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.fullLandAndCantrip",
+        "status": "PASS",
+        "duration_ms": 391,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.heuristicColorAndCantrip",
+        "status": "PASS",
+        "duration_ms": 259,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.heuristicLandAndCantrip",
+        "status": "PASS",
+        "duration_ms": 469,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.hybridColorAndCantrip",
+        "status": "PASS",
+        "duration_ms": 289,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayTest.hybridLandAndCantrip",
+        "status": "PASS",
+        "duration_ms": 455,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlOutcomeScoringTest.avertingFutureLossDoesNotFabricateWin",
+        "status": "PASS",
+        "duration_ms": 2,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlOutcomeScoringTest.neutralForecastDoesNotSpendResources",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlOutcomeScoringTest.nativeDiscountedWinIsPreserved",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlOutcomeScoringTest.discountedLossCannotBecomeUsefulMaterialGain",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aGenericLibraryIdentityRevealDoesNotDiscloseItsPosition",
+        "status": "PASS",
+        "duration_ms": 576,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aHiddenReorderInvalidatesPositionEvenIfTheSameCardRemainsOnTop",
+        "status": "PASS",
+        "duration_ms": 71,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aNativeTwoCardPeekTracksTwoConsecutiveDraws",
+        "status": "PASS",
+        "duration_ms": 22,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aPaidPendingInspectionResolvesIndependentlyInACopy",
+        "status": "PASS",
+        "duration_ms": 215,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aSelectivePublicRevealDoesNotDiscloseUnrevealedTopCards",
+        "status": "PASS",
+        "duration_ms": 20,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aShuffleBreaksKnowledgeEvenWhenTheSamePhysicalCardIsDrawn",
+        "status": "PASS",
+        "duration_ms": 18,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.aTappedBaubleCannotPayItsInspectionCost",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.anUnknownBottomDrawPreservesKnownTopInformation",
+        "status": "PASS",
+        "duration_ms": 41,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.anUnshuffledInspectedTopDrawKeepsItsKnownIdentity",
+        "status": "PASS",
+        "duration_ms": 17,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.copiedInspectedTopKnowledgeSurvivesADrawWithoutChangingTheOriginal",
+        "status": "PASS",
+        "duration_ms": 29,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.drawingWithoutAPriorInspectionDoesNotCreateObserverKnowledge",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.fullSimulationCastsTheFreeBauble",
+        "status": "PASS",
+        "duration_ms": 117,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.heuristicCastsTheFreeBauble",
+        "status": "PASS",
+        "duration_ms": 62,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.hybridCastsTheFreeBauble",
+        "status": "PASS",
+        "duration_ms": 32,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.inspectedTopKnowledgeSurvivesATurnBoundary",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderBaubleCoverageTest.paidInspectionIsPrivateAndItsSlowtripDrawsOnce",
+        "status": "PASS",
+        "duration_ms": 16,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.aBlindGuessNamesAnImportantNonlandCardOfTheOpponent",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.aCardSeenRevealedInTheHandIsTheOneNamed",
+        "status": "PASS",
+        "duration_ms": 2,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.aCardWithDiscardMeIsNamedAgainstItself",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.anEmptyOrSingleCardHandIsNotWorthIt",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.anOrdinaryHandIsNotThrownAwayByItself",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.bridgeFromBelowInHandIsNamedAgainstItself",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.cabalTherapyInHandDoesNotMakeTheAiAimItAtItself",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.theGuardRefusesTherapyAimedAtTheAiWithNothingToNameButNotAtTheOpponent",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.theHeuristicsNowApproveCabalTherapyAgainstAHandOfSeveralCards",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.theNameTheAiChoseIsInTheLogAtTheDefaultVerbosity",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.FlatMonteCarloNamedDiscardTest.withNothingSeenTheMostCommonNonlandCardOfTheirDeckIsNamed",
+        "status": "PASS",
+        "duration_ms": 2,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderEffectCastPreviewTest.anUnregisteredGeneratedCardCopyCanBeProjected",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderEffectCastPreviewTest.copiedCardChoiceRetainsItsPreviewIdentity",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderEffectCastPreviewTest.copiedCardPreviewPreservesTheExiledOriginal",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderEffectCastPreviewTest.grantedOriginalCastActuallyConsumesTheOriginal",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedEncodedCombatDamageCreatesOneCipherTrigger",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedEncodedSourceRoundtripDoesNotRestoreEncoding",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedEncoderZoneRoundtripDoesNotRestoreEncoding",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedMultipleSourcesKeepTwoCombatTriggers",
+        "status": "PASS",
+        "duration_ms": 20,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedPendingEncodingLeavesOriginalPending",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.copiedResolvedEncodingMapsBothLinksIntoTheCopy",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.counteredSpellDoesNotEncode",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.declinedEncodingCreatesNoCombatDamageTrigger",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.encodedCombatDamageCreatesOneCipherTrigger",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.encodedSourceZoneRoundtripEndsEncoding",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.encoderZoneRoundtripEndsEncoding",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.invalidTargetCancelsBothTextChangeAndEncoding",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.noCreatureAllowsTextChangeButNotEncoding",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.normalHandCastIsAllowedInOwnEmptyMainPhase",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.normalHandCastIsRejectedDuringCombat",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.normalHandCastIsRejectedOnAnOpponentsTurn",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.normalHandCastIsRejectedWithAnotherSpellOnTheStack",
+        "status": "PASS",
+        "duration_ms": 2,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.paidColorChangeCanDeclineEncoding",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.paidColorChangeCanEncodeOnItsCreature",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.paidLandChangeCanDeclineEncoding",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.paidLandChangeCanEncodeOnItsCreature",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.removingCopiedEncodedSourceLeavesOriginalEncodingUsable",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.removingCopiedEncoderLeavesOriginalEncodingUsable",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.textExpirationDoesNotEndEncoding",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringRulesTest.twoEncodedSourcesCreateTwoCombatTriggers",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.braceletFull",
+        "status": "PASS",
+        "duration_ms": 3610,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.braceletHeuristic",
+        "status": "PASS",
+        "duration_ms": 827,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.braceletHybrid",
+        "status": "PASS",
+        "duration_ms": 1539,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.declineBracelet",
+        "status": "PASS",
+        "duration_ms": 90,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.declineMind",
+        "status": "PASS",
+        "duration_ms": 230,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.declineSecret",
+        "status": "PASS",
+        "duration_ms": 67,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.declineSorin",
+        "status": "PASS",
+        "duration_ms": 510,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.declineWorst",
+        "status": "PASS",
+        "duration_ms": 226,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.mindFull",
+        "status": "PASS",
+        "duration_ms": 723,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.mindHeuristic",
+        "status": "PASS",
+        "duration_ms": 636,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.mindHybrid",
+        "status": "PASS",
+        "duration_ms": 1074,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.normalSecretFull",
+        "status": "PASS",
+        "duration_ms": 852,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.normalSecretHeuristic",
+        "status": "PASS",
+        "duration_ms": 715,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.normalSecretHybrid",
+        "status": "PASS",
+        "duration_ms": 1332,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.secretFull",
+        "status": "PASS",
+        "duration_ms": 689,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.secretHeuristic",
+        "status": "PASS",
+        "duration_ms": 610,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.secretHybrid",
+        "status": "PASS",
+        "duration_ms": 1103,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.sorinFull",
+        "status": "PASS",
+        "duration_ms": 1088,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.sorinHeuristic",
+        "status": "PASS",
+        "duration_ms": 799,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.sorinHybrid",
+        "status": "PASS",
+        "duration_ms": 1400,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.worstFull",
+        "status": "PASS",
+        "duration_ms": 743,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.worstHeuristic",
+        "status": "PASS",
+        "duration_ms": 519,
+        "message": null
+      },
+      {
+        "method": "forge.ai.PlayerControlPlanningTest.worstHybrid",
+        "status": "PASS",
+        "duration_ms": 1035,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.copiedPendingLandRewriteKeepsOriginalIndependent",
+        "status": "PASS",
+        "duration_ms": 461,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.copiedPendingRewriteKeepsOriginalStackIndependent",
+        "status": "PASS",
+        "duration_ms": 402,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.fullRewritesPendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 354,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.fullRewritesPendingLandDestruction",
+        "status": "PASS",
+        "duration_ms": 249,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.heuristicRewritesPendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 230,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.heuristicRewritesPendingLandDestruction",
+        "status": "PASS",
+        "duration_ms": 252,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.hybridRewritesPendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 225,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCrystalSprayStackTest.hybridRewritesPendingLandDestruction",
+        "status": "PASS",
+        "duration_ms": 209,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.copiedFullGenericChoiceKeepsTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 620,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.copiedFullTemporaryChoiceKeepsTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 497,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.copiedHeuristicGenericChoiceKeepsTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 437,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.copiedHybridCharmKeepsTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 460,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.fullMindBendChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 376,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.fullSpectralShiftChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 438,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.fullWhimChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 408,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.heuristicDoesNotSpendWhimWithoutAnOutcomeBenefit",
+        "status": "PASS",
+        "duration_ms": 21,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.heuristicMindBendChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 469,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.heuristicSpectralShiftChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 378,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.heuristicWhimChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 429,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.hybridDoesNotSpendWhimWithoutAnOutcomeBenefit",
+        "status": "PASS",
+        "duration_ms": 18,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.hybridMindBendChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 432,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.hybridSpectralShiftChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 488,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderModalTextCoverageTest.hybridWhimChoosesTheLandWordMode",
+        "status": "PASS",
+        "duration_ms": 443,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.activatedResponseFull",
+        "status": "PASS",
+        "duration_ms": 348,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.activatedResponseHeuristic",
+        "status": "PASS",
+        "duration_ms": 273,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.chainFull",
+        "status": "PASS",
+        "duration_ms": 74,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.chainHeuristic",
+        "status": "PASS",
+        "duration_ms": 86,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.fullCandidateMindslaver",
+        "status": "PASS",
+        "duration_ms": 34,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.fullCandidateSecret",
+        "status": "PASS",
+        "duration_ms": 27,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.fullCandidateWorst",
+        "status": "PASS",
+        "duration_ms": 20,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.fullControlled",
+        "status": "PASS",
+        "duration_ms": 85,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.fullOrdinary",
+        "status": "PASS",
+        "duration_ms": 71,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.heuristicControlled",
+        "status": "PASS",
+        "duration_ms": 60,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.heuristicOrdinary",
+        "status": "PASS",
+        "duration_ms": 23,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.initialControllerScore",
+        "status": "PASS",
+        "duration_ms": 26,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome0Payment",
+        "status": "PASS",
+        "duration_ms": 29,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome0Release",
+        "status": "PASS",
+        "duration_ms": 24,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome1Payment",
+        "status": "PASS",
+        "duration_ms": 26,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome1Release",
+        "status": "PASS",
+        "duration_ms": 33,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome2Payment",
+        "status": "PASS",
+        "duration_ms": 29,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.outcome2Release",
+        "status": "PASS",
+        "duration_ms": 28,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.responseControlledFull",
+        "status": "PASS",
+        "duration_ms": 200,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.responseControlledHeuristic",
+        "status": "PASS",
+        "duration_ms": 206,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.responseOrdinaryFull",
+        "status": "PASS",
+        "duration_ms": 175,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.responseOrdinaryHeuristic",
+        "status": "PASS",
+        "duration_ms": 28,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.selfFull",
+        "status": "PASS",
+        "duration_ms": 50,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.selfHeuristic",
+        "status": "PASS",
+        "duration_ms": 17,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.uncounterableFull",
+        "status": "PASS",
+        "duration_ms": 207,
+        "message": null
+      },
+      {
+        "method": "forge.ai.ControlledDecisionAiTest.uncounterableHeuristic",
+        "status": "PASS",
+        "duration_ms": 195,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextCompositionTest.copiedComposedSpellKeepsItsPendingWordReplay",
+        "status": "PASS",
+        "duration_ms": 323,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextCompositionTest.fullModeMindBendReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 331,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextCompositionTest.fullModeSpectralShiftReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 321,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextCompositionTest.fullModeWhimReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 327,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextCompositionTest.suppliedEntwinedCastReplaysBothModesAndAllFourWords",
+        "status": "PASS",
+        "duration_ms": 5387,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.aCopiedPendingFullModeSpellKeepsItsWordsAndOriginalIsolation",
+        "status": "PASS",
+        "duration_ms": 1047,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.aLegalNoEffectRewriteCanBeUsefulThroughCastTriggers",
+        "status": "PASS",
+        "duration_ms": 470,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.aiAdmitsAUsefulBasicLandWordChange",
+        "status": "PASS",
+        "duration_ms": 1101,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.aiAdmitsAUsefulColorWordChange",
+        "status": "PASS",
+        "duration_ms": 325,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.aiAdmitsAUsefulCreatureWordChange",
+        "status": "PASS",
+        "duration_ms": 790,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.alterRealityPaysItsNativeSpellCost",
+        "status": "PASS",
+        "duration_ms": 373,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.anAlreadyUsefulAnthemIsNotRewrittenHarmfully",
+        "status": "PASS",
+        "duration_ms": 268,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.artificialEvolutionNeverSelectsWallAsTheNewType",
+        "status": "PASS",
+        "duration_ms": 427,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.changingTargetsInvalidatesAnOldWordPlan",
+        "status": "PASS",
+        "duration_ms": 245,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.chosenWordsSurviveOrdinaryAbilityCopies",
+        "status": "PASS",
+        "duration_ms": 214,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.copiedPlansDoNotChooseForADifferentActivator",
+        "status": "PASS",
+        "duration_ms": 188,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.fullModeRetainsItsPrecombatInstantDeferral",
+        "status": "PASS",
+        "duration_ms": 421,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.fullPickerRefusesTheHarmfulRewrite",
+        "status": "PASS",
+        "duration_ms": 263,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.fullPickerRewritesThePendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 1007,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.fullPickerUsesAUsefulColorWordChange",
+        "status": "PASS",
+        "duration_ms": 258,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.glamerdyePaysItsNativeSpellCost",
+        "status": "PASS",
+        "duration_ms": 152,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.heuristicPickerRefusesTheHarmfulRewrite",
+        "status": "PASS",
+        "duration_ms": 164,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.heuristicPickerRewritesThePendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 637,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.heuristicPickerUsesAUsefulColorWordChange",
+        "status": "PASS",
+        "duration_ms": 164,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.hybridPickerRefusesTheHarmfulRewrite",
+        "status": "PASS",
+        "duration_ms": 142,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.hybridPickerRewritesThePendingCounterspell",
+        "status": "PASS",
+        "duration_ms": 477,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.hybridPickerUsesAUsefulColorWordChange",
+        "status": "PASS",
+        "duration_ms": 142,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.lowImpactLandwalkDoesNotJustifySpendingTheCard",
+        "status": "PASS",
+        "duration_ms": 349,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeAbsentColorWordDoesNotCreateAnAnthem",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeBasicLandWordChangeChangesBlocking",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeColorChangeCopiesWithoutSharingTheWordMap",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeColorWordChangePaysManaAndChangesTheAnthem",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeCounterspellTextChangeMakesItsBlueTargetIllegal",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.nativeCreatureWordChangeChangesTheTribalBonus",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.rewritingACounterspellOnTheStackProtectsTheBlueSpell",
+        "status": "PASS",
+        "duration_ms": 577,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.shamanPaysItsTapCostAndRetainsTheAddedUpkeep",
+        "status": "PASS",
+        "duration_ms": 116,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.unusedColorWordsDoNotChangeNamesOrColor",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderChangeTextAiTest.wordForecastsPreserveTheCallerRandomStream",
+        "status": "PASS",
+        "duration_ms": 153,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderVintageOpeningReplayTest.openingAtSeed0",
+        "status": "PASS",
+        "duration_ms": 166,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderVintageOpeningReplayTest.openingAtSeed4096",
+        "status": "PASS",
+        "duration_ms": 55,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderVintageOpeningReplayTest.openingAtSeed42",
+        "status": "PASS",
+        "duration_ms": 48,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.copiedComposedSpellKeepsItsPendingWordReplay",
+        "status": "PASS",
+        "duration_ms": 383,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.fullModeMindBendReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 315,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.fullModeSpectralShiftReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 305,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.fullModeWhimReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 328,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.heuristicMindBendReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 217,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.heuristicSpectralShiftReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 312,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.heuristicWhimReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 301,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.hybridMindBendReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 251,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.hybridSpectralShiftReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 316,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.hybridWhimReplaysItsColorChoice",
+        "status": "PASS",
+        "duration_ms": 276,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCompositeModeCoverageTest.suppliedEntwinedCastReplaysBothModesAndAllFourWords",
+        "status": "PASS",
+        "duration_ms": 5474,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextTargetIdentityTest.differentlyColoredTextTargetsRemainDistinct",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextTargetIdentityTest.differentlyTypedTextTargetsRemainDistinct",
+        "status": "PASS",
+        "duration_ms": 1,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTextTargetIdentityTest.identicalUnmodifiedTargetsCanStillBePruned",
+        "status": "PASS",
+        "duration_ms": 0,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.combatDoesNotPermitTheOriginalSorcery",
+        "status": "PASS",
+        "duration_ms": 3,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.copiedFullColorResolution",
+        "status": "PASS",
+        "duration_ms": 765,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.copiedFullLandResolution",
+        "status": "PASS",
+        "duration_ms": 438,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.fullColorAdmission",
+        "status": "PASS",
+        "duration_ms": 567,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.fullLandAdmission",
+        "status": "PASS",
+        "duration_ms": 395,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.heuristicColorAdmission",
+        "status": "PASS",
+        "duration_ms": 356,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.heuristicLandAdmission",
+        "status": "PASS",
+        "duration_ms": 522,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.hybridColorAdmission",
+        "status": "PASS",
+        "duration_ms": 381,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.hybridLandAdmission",
+        "status": "PASS",
+        "duration_ms": 540,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderTraitDoctoringAiTest.unaffordableOriginalIsNotAdmitted",
+        "status": "PASS",
+        "duration_ms": 116,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostPreviewTest.nativeGrantedOriginalCanPayItsReplacementCost",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostPreviewTest.previewPaysTheAffordableGrantedReplacementCost",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostPreviewTest.previewRetainsAZeroReplacementCostWithoutAWaiverMarker",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderGrantedCostPreviewTest.unaffordableGrantedReplacementCostRemainsUnavailable",
+        "status": "PASS",
+        "duration_ms": 9,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aFilteredBottomCreatureLookDoesNotDiscloseAnAbsoluteIndex",
+        "status": "PASS",
+        "duration_ms": 10,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aFilteredTopCreatureLookDoesNotDiscloseAnAbsoluteIndex",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aFreshLookReestablishesPositionAfterAHiddenReorder",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aHiddenReorderInvalidatesAnOtherwiseUnchangedTopCard",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aKnownBottomPositionSurvivesAnUnknownTopDraw",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aKnownTopPositionSurvivesAnUnknownBottomDraw",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aLaterIdentityOnlyLookDoesNotErasePreviouslyKnownPosition",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aMixedSelectionDoesNotInferPositionFromActualPlacement",
+        "status": "PASS",
+        "duration_ms": 5,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.aShuffleHidesTheSamePhysicalBottomCard",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.anExplicitBottomLookPreservesABottomDraw",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.anExplicitTopLookPreservesAnUnshuffledDraw",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.anIdentityOnlyLookDoesNotInferThePhysicalTopPosition",
+        "status": "PASS",
+        "duration_ms": 4,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.copiedPendingBottomInspectionStaysPrivateAndIndependent",
+        "status": "PASS",
+        "duration_ms": 7,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLibraryLookAtPositionTest.topAndBottomConjunctionIdentifiesASingleCardLibrary",
+        "status": "PASS",
+        "duration_ms": 6,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.aCopyDoesNotTransferInspectionOfAnEarlierIncarnation",
+        "status": "PASS",
+        "duration_ms": 51,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.aFaceUpCreatureIsNotALegalInspectionTarget",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.aFreshInspectionReplacesStaleIncarnationKnowledge",
+        "status": "PASS",
+        "duration_ms": 15,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.aPendingInspectionResolvesOnlyInItsCopiedGame",
+        "status": "PASS",
+        "duration_ms": 16,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.aRecastFaceDownCardDoesNotReuseAnEarlierInspection",
+        "status": "PASS",
+        "duration_ms": 15,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.activeInspectionMemorySurvivesCopiedPlayerControl",
+        "status": "PASS",
+        "duration_ms": 14,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.anAlreadyInspectedIdentityIsRemappedAndIsolatedInACopy",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.avenSoulgazerPaysForAPrivateInspection",
+        "status": "PASS",
+        "duration_ms": 10,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.baseInspectionMemoryReturnsAfterCopiedControlEnds",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.copiedPrivateMemoriesRemainSeparateForEachPlayer",
+        "status": "PASS",
+        "duration_ms": 14,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.copyingAnUninspectedGameDoesNotInventPrivateKnowledge",
+        "status": "PASS",
+        "duration_ms": 11,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.failedPaymentDoesNotRevealTheHiddenIdentity",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.movingAnUnseenLibraryCardToHandDoesNotRevealIt",
+        "status": "PASS",
+        "duration_ms": 11,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.returningAFaceDownPermanentPreservesItsPubliclyRevealedIdentity",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.returningAPublicFaceUpCreatureKeepsItsIdentityKnown",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.returningAnUnseenFaceDownExiledCardDoesNotRevealIt",
+        "status": "PASS",
+        "duration_ms": 8,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.smokeTellerPaysForAPrivateInspection",
+        "status": "PASS",
+        "duration_ms": 9,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderLookAtCoverageTest.stackedInspectionMemoriesStayWithTheirCopiedControllers",
+        "status": "PASS",
+        "duration_ms": 13,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.changedControllerCanCastTheEncodedCopy",
+        "status": "PASS",
+        "duration_ms": 26,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.combatCipherCastsAFreeCopyWithoutReencoding",
+        "status": "PASS",
+        "duration_ms": 19,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.copiedChangedControllerCanCastWithoutChangingOriginal",
+        "status": "PASS",
+        "duration_ms": 22,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.copiedGameCastsItsOwnCipherCopyWithoutChangingOriginal",
+        "status": "PASS",
+        "duration_ms": 15,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.copiedNoncreatureEncoderCanAnimateAndTrigger",
+        "status": "PASS",
+        "duration_ms": 34,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.counteringCipherCopyLeavesTheEncodedCardInExile",
+        "status": "PASS",
+        "duration_ms": 17,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.decliningCipherCopyLeavesTheEncodingUsable",
+        "status": "PASS",
+        "duration_ms": 18,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.repeatedCombatHitsCanCastTwoCopiesFromOneEncoding",
+        "status": "PASS",
+        "duration_ms": 19,
+        "message": null
+      },
+      {
+        "method": "forge.ai.CommanderCipherCastingTest.temporarilyNoncreatureEncoderRetainsItsEncoding",
+        "status": "PASS",
+        "duration_ms": 18,
+        "message": null
+      }
+    ],
+    "production_sources": 2160,
+    "production_unchanged_during_run": true,
+    "fixture_inputs": {
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCompositeModeCoverageTest.java": "d38584832a5d88d3e026a668af69f190166911e38677f0292fbddaa238813c9b",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderModalTextCoverageTest.java": "5291031b2ee98cd63f838ad08d611dd17556d262f301ad91a0de9d2c4e7952ba",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderLookAtCoverageTest.java": "3a61c01c4b1ea725294a5fac40ad094a79e1e2884055ae3044dac639d6c5f8f5",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderChangeTextAiTest.java": "799b952861f8a085e0551ef98af6db62696dd99118a696a6e236ed8e0cb15a6b",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderTextCompositionTest.java": "b93e8953ef08477b09e8a56eb9e3eb7137324e0924f0aaac4168bde5a02b2108",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderPluralTextTest.java": "d80251d22a3ee2cc5355754395317be623260411023e52266da4e538162dc28f",
+      "forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloNamedDiscardTest.java": "e1af11d19214b1c39255bf0a27b6eaaffb68cea7ec01231d1f9ba8f8b4e3e477",
+      "forge-gui-desktop/src/test/java/forge/ai/simulation/GameCopierOrphanEffectTest.java": "0a193aae58fa60a62f5b26ea7ab331c7c759d7c0ffe49fbc5ae0d9fe8293a3bf",
+      "forge-gui-desktop/src/test/java/forge/ai/ControlTurnGameCopyTest.java": "152581c329fac95880f835ded0baa4a2c3c05d7c705da7a9f44d976c8f942d0c",
+      "forge-gui-desktop/src/test/java/forge/ai/ControlledDecisionAiTest.java": "6e847c642180b8101d090af0c745bf944f43017b5fa2cef06d4f955099ef9063",
+      "forge-gui-desktop/src/test/java/forge/ai/PlayerControlPlanningTest.java": "8b7f773cc7a203ad48b5372000467a92adc10181cbd7e38ba9308e33f0672eb3",
+      "forge-gui-desktop/src/test/java/forge/ai/CompletedPlanRecoveryTest.java": "150272c183c9db1d8c9134d3759a6757c82fea635ee8a864695ffe5033dde1d5",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderBaubleCoverageTest.java": "4bba2764f7be1287e960c92ac910ef2264a1b50ee6d2da013be1ff6c3952cc6d",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderVintageOpeningReplayTest.java": "cdc34d3273e22a057ba7f794305ad88b70ac18400dcf37fd7b9bafa35115e58a",
+      "forge-gui-desktop/src/test/java/forge/ai/PaidOutcomePlannerTest.java": "46af8820f9e58abf2f32ba53725363849b7dad819a2495cbd41976a88f75ad3a",
+      "forge-gui-desktop/src/test/java/forge/ai/ControlOutcomeScoringTest.java": "862b6d0b178fbff88d39b7a1bd63574c92c7c4afe42b9bc55f21c0b3b5ffa7d5",
+      "forge-gui-desktop/src/test/java/forge/ai/simulation/CommanderModalBudgetTest.java": "3d2d3706215b3846e03bc7c1da826193781f58bbff1f3574f2b0a34d83d303bd",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderSpyNetworkKnowledgeTest.java": "7e678bbe6807afd025c32bc0ebdf99a17def842908bca437d68628ae80083e28",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderLibraryLookAtPositionTest.java": "6420eb3c66e49b6ce6698a10d4c81ea2651abca047c07ce578b04ea677429292",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCrystalSprayTest.java": "907ebe7fda35fd324be199c21abc29031de2c0875283c313d722ad2b22b95dac",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCrystalSprayRulesTest.java": "139ab8efb579362f7680681cfd6371d29b9f917aca7084b8d921ed94533b7c5b",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCrystalSprayStackTest.java": "b7af6c222744384ffc80658a499261e0efb5b8632a85f81be35020a852ebabb3",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderTraitDoctoringRulesTest.java": "cb00d50f85ec0e2d7375c0988d729b2dad1a6a31a332bbe45542272bcfa6742d",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCipherCastingTest.java": "0301494fd9281a46b51a2c37b8c55b5421ffb74529459cfe7f772dd0f52681a0",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderTraitDoctoringAiTest.java": "102eb1d0594a7399d4b5d3975488b745b539a6944c31b568a7556a89d83523c8",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCipherCopyAiTest.java": "997454b38e59486cc67b5693526c33c251c96a84fe81052692d5d124946c5280",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderFreeCastChoiceCopyTest.java": "72975627be1a504a9048fa183112a670342d2d3434ce6afde8eed94034be75a8",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderTextTargetIdentityTest.java": "0031487370935efee925f05265c184ce610e6708d6d1b0c346f4e7e617f2d9b6",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderCipherFreeCastBoundaryTest.java": "382d89a8526199f565bcd124e8fa44bf882c6c0c84f0a74dc01f8d327c05d8a5",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderEffectCastPreviewTest.java": "02cefa7374116ea0604c90ebf385f1e9a0302da2b02c10a46061492ff899e65c",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderGrantedCostPreviewTest.java": "d1d10ca1e3f8e00e9d2938b5abf7e37c56c01fdaed2e6f5c80bb2a923375248e",
+      "forge-gui-desktop/src/test/java/forge/ai/CommanderGrantedCostBoundaryTest.java": "461524fad4901b30905e5c98e169a99e50aa788bd0446c67be2e70baef2f0c93"
+    },
+    "card_inputs": {
+      "forge-gui/res/cardsfolder/t/trait_doctoring.txt": "6a206544b202654c9739a5f17998352665f8516d6f6967f2cf10101d8307855a",
+      "forge-gui/res/cardsfolder/h/honor_of_the_pure.txt": "11dac6c1e38ce7bcc261623aa77d8f1a2aae2169b48bc2c430ce8891d7254bdf",
+      "forge-gui/res/cardsfolder/c/crusading_knight.txt": "3d7ba206b870980fd223bc0d037d754a925c026aac9d6ded478330e09f323ac5",
+      "forge-gui/res/cardsfolder/l/last_thoughts.txt": "10ef523f7f656997e1ff61e3337a2e92a47d940c23bd6ac50629aeac83f98d71",
+      "forge-gui/res/cardsfolder/i/invisible_stalker.txt": "6907c4351f59e48d46645677e780278865947936618d803c094cd709c19b9a2f",
+      "forge-gui/res/cardsfolder/c/coral_merfolk.txt": "293403e1759e2bc8957f27efd93ed79f75527b2ce179cc1a5fd66e857cca8693",
+      "forge-gui/res/cardsfolder/m/mind_bend.txt": "7d71fb9397cb4cffae7db8fea26fc8858506bf9a718e154370e756aa902f8c29",
+      "forge-gui/res/cardsfolder/w/warden_of_the_beyond.txt": "e24f31e90e1acfae92ca699e114d7b4f25a7dd85d13b773c899de0153e10edd1",
+      "forge-gui/res/cardsfolder/t/thalia_guardian_of_thraben.txt": "ee4f10d2ab4ccbb787e61b99a219768ea4f1e40ac8e35bce7e7bea639ea651d5",
+      "forge-gui/res/cardsfolder/d/drannith_magistrate.txt": "afec2bd15dc38419bc954be0a51c1704c5fd61d81aac63b19ce9cf44c076054a",
+      "forge-gui/res/cardsfolder/c/crystal_spray.txt": "960d76a6dc3e4738f18eece2eabf39a1d705788d3a7cb64477a9a86a0c427130",
+      "forge-gui/res/cardsfolder/w/whim_of_volrath.txt": "27717fb57c37e8126fdd22017943fc5a3c5f8ab0ea6665c3723ad1a4fed36062",
+      "forge-gui/res/cardsfolder/s/spectral_shift.txt": "915d05869e28bf7edfdc3345aa90edd5767dbc6dc4a460fcf65c89062357fff3",
+      "forge-gui/res/cardsfolder/f/forest.txt": "9a574ea2a8136e588ab77ff8bf260075a94572d8099a7d0d98c62590479aa5a6",
+      "forge-gui/res/cardsfolder/i/island.txt": "e590434de75aa3e39a03555d0c91788cdabe37f5fdf91ce7c1a189c79f4cade6",
+      "forge-gui/res/cardsfolder/w/wastes.txt": "471ac5a8e8a8d63609f6e31a14d8ce20bdc9bfbfa34395bb45a047139928f8d9",
+      "forge-gui/res/cardsfolder/a/altars_reap.txt": "9eebbe1e9cec3b0424c8f6df7bd4280799b61e5d773523507d10b8145b8b2e2d",
+      "forge-gui/res/cardsfolder/s/sprout_swarm.txt": "a12ae7e208c2e1f4c5371105c9fcec607fd143a14cbe4833a747b529bdabc2dd",
+      "forge-gui/res/cardsfolder/w/wizards_spellbook.txt": "66a9273a63d64ae29c826ab914a00b4e8bc2117bbbb33972cc15bc7eeb245860"
+    },
+    "report_sha256": "49b980169bef5b9f39cc133730341773eed59580ba25485d6232ab0a402f371b",
+    "log_sha256": "5cbe23865624a342c10d347b3d230de4f215598622e5a360d0ab79e311d60a7c",
+    "scope": "Granted replacement-cost preview candidate: twelve new contracts plus333 retained text/private/control/payment/cipher cases. Reviewed1559 runtime remains selected. Source checks are not packaged/full-rule/AI certification."
+  },
+  "fixture_corrections": "Original eight-case baseline contained one setup failure: native permission enumeration correctly rejected a spell with no sacrifice available. Corrected test obtains the grant with a creature present, then removes it before preview; that control passes. A separate fixture compilation attempt omitted the required nullable cause argument to moveToGraveyard; no gameplay ran in that attempt. Original reports and exact inputs preserved locally.",
+  "status": "source_validated"
+}

@@ -1,0 +1,16 @@
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+@@ -26,6 +26,12 @@
+             List<OptionalCostValue> costs = GameActionUtil.getOptionalCostValues(destination);
+             costs.removeIf(cost -> !source.isOptionalCostPaid(cost.getType()));
+             destination = GameActionUtil.addOptionalCosts(destination, costs);
++        }
++
++        if (source.isCastFromPlayEffect()) {
++            // The granting effect already chose this cost, including optional additions.
++            // Copy it after reconstructing choices so those additions are not charged twice.
++            destination.setPayCosts(source.getPayCosts().copy());
+         }
+ 
+         copyKeywordChoices(source, destination);

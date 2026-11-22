@@ -25,7 +25,7 @@ class FreeCastingIntegrationTests(unittest.TestCase):
     """Require all fixed methods, native class origins and integrity checks to pass."""
 
     def test_packaged_free_casting_rules(self):
-        """Run the separate 26-case family within the unchanged 90-second worker budget."""
+        """Run the separate 38-case family within the unchanged 90-second worker budget."""
         settings = read_settings()
         run = create_run()
         compile_rules(settings, run, *reviewed_inputs())
@@ -40,16 +40,16 @@ class FreeCastingIntegrationTests(unittest.TestCase):
             "free-casting.json",
             {
                 "free-casting-summary.json": 1,
-                "free-casting-methods.json": 26,
+                "free-casting-methods.json": 38,
             },
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 26)
+        self.assertEqual(len({row["method"] for row in methods}), 38)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
-            summary["counts"], {"total": 26, "passed": 26, "failed": 0, "skipped": 0}
+            summary["counts"], {"total": 38, "passed": 38, "failed": 0, "skipped": 0}
         )
         for key in (
             "testng_status",

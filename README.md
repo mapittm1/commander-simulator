@@ -27,6 +27,15 @@ difference.
 
 ## Card coverage
 
+AI previews now preserve a casting cost already granted by an effect, including
+zero or higher mana costs, life and discard payments, mandatory sacrifices and
+buyback. Twelve focused contracts plus 333 retained source checks pass. Native
+Wizard's Spellbook branch resolution is retained as a control. The correction
+changes one production class; card scripts and the default AI profile are unchanged.
+See the [source comparison](engine/granted_cost_native_evidence.json) and
+[packaged validation](engine/granted_cost_evidence.json). Full card and AI
+correctness remain open.
+
 Optional life-gain actions now preserve their once-per-turn allowance while life
 gain is prohibited. Controls distinguish ordinary gains and gains replaced by life
 loss. A legal reveal remains available even when its resulting gain is prohibited.
@@ -434,13 +443,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,559 selected native tests, packaged
-families of 781 and 26 rules cases, 3,033 broader gameplay tests, 256 serialization
-tests, and 43 live integration tests with 1,455 subtests. The Python quality gate
-passed 420 offline tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
-identities; its seven other identities are nonstarting meld results. Construction
-parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/free_cast_evidence.json).
+The current reviewed runtime passed 1,571 selected native tests, packaged
+families of 781 and 38 rules cases, 3,045 broader gameplay tests, 256 serialization
+tests, and 43 live integration tests with 1,467 subtests. All 460 frozen inputs
+remain unchanged. The Python quality gate passed 420 offline tests with 520
+subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
+its seven other identities are nonstarting meld results. Construction parses
+native abilities and is not proof of every interaction. Native receipts use
+class-qualified method names. See the [validation and activation evidence](engine/granted_cost_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

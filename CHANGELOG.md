@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve effect-granted casting costs during AI preview reconstruction after
+  reproducing seven engine failures across twelve focused contracts. Pass all
+  345 source checks, covering replacement-cost affordability, life, discard,
+  mandatory sacrifice and buyback, with native Wizard's Spellbook resolution as
+  a retained control. Preserve original fixture setup/compiler and harness-path
+  failures separately; none count as engine failures.
+- Activate the reviewed granted-cost build after 1,571 selected native tests,
+  separate 781/38 packaged families, 3,045 broader gameplay tests, 256 serialization
+  tests and 43 live tests with 1,467 subtests pass. Verify all 460 frozen inputs
+  and catalog construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. Exactly one production source and class change; card scripts,
+  archive identity reviews and the default AI profile are unchanged. Complete
+  card, rules and strategy correctness remain unproven.
+
 - Resolve generic free-casting behavior for preserved mana-waiver modifiers, native
   effect permissions, simulated copies that retain their original card, and
   target pruning that distinguishes effective text. Pass 333 selected source

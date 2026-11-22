@@ -25,11 +25,16 @@ SOURCES = {
     "CommanderTextTargetIdentityTest": "commander_text_target_identity_test_sha256",
     "CommanderCipherFreeCastBoundaryTest": "commander_cipher_free_cast_boundary_test_sha256",
     "CommanderEffectCastPreviewTest": "commander_effect_cast_preview_test_sha256",
+    "CommanderGrantedCostPreviewTest": "commander_granted_cost_preview_test_sha256",
+    "CommanderGrantedCostBoundaryTest": "commander_granted_cost_boundary_test_sha256",
 }
 TEST_CLASSES = tuple("forge.ai." + name for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
     "forge.game.spellability.SpellAbility",
     "forge.ai.simulation.GameSimulator",
+    "forge.ai.simulation.SpellAbilityChoiceCopier",
+    "forge.game.cost.Cost",
+    "forge.game.GameActionUtil",
     "forge.ai.simulation.PaidOutcomePlanner",
     "forge.ai.simulation.PossibleTargetSelector",
     "forge.ai.simulation.PossibleTargetSelector$SimilarTargetSkipper",
