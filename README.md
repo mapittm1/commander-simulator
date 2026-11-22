@@ -27,7 +27,22 @@ difference.
 
 ## Card coverage
 
-AI previews now preserve a casting cost already granted by an effect, including
+Runtime cost modifiers and nested expressions now survive ability copies and
+previews, including pre-grant hand-spell assessments and colored reductions.
+Native play-effect resolution and AI admission share modifier setup and use spell
+casting costs. Generated hand copies retain their originals and receive no
+hand-card loss compensation in hybrid safety. An independent control rejects paying
+life when the resulting draw is prohibited.
+All 372 source checks pass, including 27 new cases. Native Kefnet first-draw
+witnesses pass under heuristic, hybrid and full simulation. Ogre Battlecaster
+branch controls supply targets and do not establish autonomous attack selection.
+Card scripts and AI hints are unchanged. See the
+[source comparison](engine/cost_modifier_native_evidence.json) and
+[packaged validation](engine/cost_modifier_evidence.json). Full card and AI
+correctness remain open.
+
+The earlier granted-cost correction preserves a casting cost already granted by
+an effect, including
 zero or higher mana costs, life and discard payments, mandatory sacrifices and
 buyback. Twelve focused contracts plus 333 retained source checks pass. Native
 Wizard's Spellbook branch resolution is retained as a control. The correction
@@ -443,14 +458,14 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,571 selected native tests, packaged
-families of 781 and 38 rules cases, 3,045 broader gameplay tests, 256 serialization
-tests, and 43 live integration tests with 1,467 subtests. All 460 frozen inputs
+The current reviewed runtime passed 1,598 selected native tests, packaged
+families of 781 and 65 rules cases, 3,072 broader gameplay tests, 256 serialization
+tests, and 43 live integration tests with 1,494 subtests. All 467 frozen inputs
 remain unchanged. The Python quality gate passed 420 offline tests with 520
 subtests. The refreshed catalog probe constructed 32,636 starting-card identities;
 its seven other identities are nonstarting meld results. Construction parses
 native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/granted_cost_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/cost_modifier_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

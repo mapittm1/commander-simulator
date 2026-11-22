@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve runtime cost modifiers and nested expressions across ability copies,
+  previews and pre-grant hand-spell assessments. Share native play-effect modifier
+  setup and apply casting-cost rules during AI admission. Classify generated hand
+  copies consistently for simulation and hybrid safety, retaining their originals
+  without hand-card loss compensation. Pass 372 source checks with 27 new cases
+  after reproducing 14 engine failures and 13 controls. Cover Kefnet first-draw
+  admission across three pilot profiles and supplied-target Ogre branch rules.
+  Preserve fixture and Checkstyle corrections separately from engine failures.
+- Activate the reviewed cost-modifier build after 1,598 selected native tests,
+  separate 781/65 packaged families, 3,072 broader gameplay tests, 256 serialization
+  tests and 43 live tests with 1,494 subtests pass. Verify all 467 frozen inputs
+  and catalog construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. Exactly seven production sources/classes change; card scripts,
+  AI hints, identity reviews and the default AI profile are unchanged. Complete
+  card, rules and strategy correctness remain unproven.
+
 - Preserve effect-granted casting costs during AI preview reconstruction after
   reproducing seven engine failures across twelve focused contracts. Pass all
   345 source checks, covering replacement-cost affordability, life, discard,

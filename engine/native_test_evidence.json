@@ -1,16 +1,16 @@
 {
   "scope": "Selected non-UI native gameplay and card/deck serialization regressions; not all-card rules certification",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "44e70de4eab63540860903bdb25d54338440db506916e7e3c0e7e91979432ef9",
+  "recipe_sha256": "81f25708ee0f495d3db24e1c8026e0c65744b160d79a6414b8dfcfb2feb23106",
   "test_only_policies": {
     "engine/patches/star-trek-commandeer-validation.patch": "2acafd29317c738cbe0e15ca9fb84aa6030520de266a8a447b54a2f645edbb91",
     "engine/patches/bauble-ai-classification-validation.patch": "1015d713605580e97c9d137481d533d20c6fe140d0d063a0f5fac104c691f4f4"
   },
-  "frozen_inputs_sha256": "d160f07ad9d171de7ee94927a946c119004ff592b4b0cc5afc660c35279b0402",
+  "frozen_inputs_sha256": "959cabca864009dd2b477f023c33da53bc475e3977ecfb34aa4818d42b265516",
   "suites": {
     "gameplay": {
-      "total": 3045,
-      "passed": 3045,
+      "total": 3072,
+      "passed": 3072,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -36,6 +36,8 @@
         "forge.ai.CommanderColorChoiceTest",
         "forge.ai.CommanderCompositeModeCoverageTest",
         "forge.ai.CommanderConditionalManaTest",
+        "forge.ai.CommanderCostModifierExpressionTest",
+        "forge.ai.CommanderCostModifierPreviewTest",
         "forge.ai.CommanderCrystalSprayRulesTest",
         "forge.ai.CommanderCrystalSprayStackTest",
         "forge.ai.CommanderCrystalSprayTest",
@@ -56,7 +58,9 @@
         "forge.ai.CommanderFreeCastChoiceCopyTest",
         "forge.ai.CommanderGrantedCostBoundaryTest",
         "forge.ai.CommanderGrantedCostPreviewTest",
+        "forge.ai.CommanderHandCostModifierTest",
         "forge.ai.CommanderIncubateTest",
+        "forge.ai.CommanderKefnetCostTest",
         "forge.ai.CommanderLearnTest",
         "forge.ai.CommanderLibraryLookAtPositionTest",
         "forge.ai.CommanderLookAtCoverageTest",
@@ -73,6 +77,7 @@
         "forge.ai.CommanderPreventedReturnTest",
         "forge.ai.CommanderPriorityBoardingTest",
         "forge.ai.CommanderPublicVoteTest",
+        "forge.ai.CommanderRaisedCastCostTest",
         "forge.ai.CommanderReaperLimitTest",
         "forge.ai.CommanderReverseTurnOrderTest",
         "forge.ai.CommanderRinoaReturnTest",
@@ -88,6 +93,7 @@
         "forge.ai.CommanderTraitDoctoringAiTest",
         "forge.ai.CommanderTraitDoctoringRulesTest",
         "forge.ai.CommanderTransformHistoryTest",
+        "forge.ai.CommanderTransientCopySafetyTest",
         "forge.ai.CommanderUlalekAbilityOnlyTest",
         "forge.ai.CommanderUlalekTest",
         "forge.ai.CommanderVillainousChoiceTest",
@@ -294,16 +300,16 @@
         "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
         "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 279,
+      "selected_classes": 285,
       "process": {
         "status": "finished",
-        "bytes": 162625,
+        "bytes": 163198,
         "returncode": 0,
-        "elapsed_seconds": 240.313
+        "elapsed_seconds": 243.157
       },
-      "local_run_id": "native-gameplay-db2ad52beea64739b24edccf4d379660",
-      "testng_results_sha256": "d5bf12b1a2db381c338628613c3a7d7223271d9d74c02626e13e2d2c977fe429",
-      "log_sha256": "2ef531c57c6fe25cbdb5e2ec9056ea9d6bf08fa03861484c7f552ed09353898c"
+      "local_run_id": "native-gameplay-3011c65bfc7941fe8607b3edb2f6f69c",
+      "testng_results_sha256": "ef3694e87139b393d1e770b5379422f40767cd089b3d97aa416241d99cccbd60",
+      "log_sha256": "38cbe4d2d4687b37386b1eadc688e296a3d7207737bc04154c01b6abc692a15e"
     },
     "serialization": {
       "total": 256,
@@ -331,13 +337,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 30165,
+        "bytes": 30365,
         "returncode": 0,
-        "elapsed_seconds": 91.156
+        "elapsed_seconds": 90.5
       },
-      "local_run_id": "native-serialization-1adcfa83cb5e485ba4b017685b90f935",
-      "testng_results_sha256": "af4370ffc016aa4ceea82488faa52e3a80268290816da5df374fb4c2170e16e3",
-      "log_sha256": "533bab178058604c6786be9c743b6d53d6b30df0d7841191fb738785f7ff0880"
+      "local_run_id": "native-serialization-08e04c90807c42c88d540e3aa2b9d366",
+      "testng_results_sha256": "9959521562b8e2d0e61ee2b6edba5179bcea875aa777305b87630fef13c6a542",
+      "log_sha256": "a9e4d1fe4371e86602d3a1a1c75b387bc4ca6bd3b723bca812a00d61953eb6c9"
     }
   },
   "evidence_note": "Raw reports remain ignored local data under each recorded run ID."

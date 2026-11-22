@@ -1,4 +1,4 @@
-"""Fixed free-casting native regressions; each invocation has the normal worker budget."""
+"""Fixed free-casting and cost-modifier regressions; each uses the normal worker budget."""
 
 import json
 import sys
@@ -27,6 +27,12 @@ SOURCES = {
     "CommanderEffectCastPreviewTest": "commander_effect_cast_preview_test_sha256",
     "CommanderGrantedCostPreviewTest": "commander_granted_cost_preview_test_sha256",
     "CommanderGrantedCostBoundaryTest": "commander_granted_cost_boundary_test_sha256",
+    "CommanderCostModifierPreviewTest": "commander_cost_modifier_preview_test_sha256",
+    "CommanderKefnetCostTest": "commander_kefnet_cost_test_sha256",
+    "CommanderCostModifierExpressionTest": "commander_cost_modifier_expression_test_sha256",
+    "CommanderRaisedCastCostTest": "commander_raised_cast_cost_test_sha256",
+    "CommanderHandCostModifierTest": "commander_hand_cost_modifier_test_sha256",
+    "CommanderTransientCopySafetyTest": "commander_transient_copy_safety_test_sha256",
 }
 TEST_CLASSES = tuple("forge.ai." + name for name in SOURCES if name != "AITest")
 NATIVE_CLASSES = (
@@ -35,6 +41,10 @@ NATIVE_CLASSES = (
     "forge.ai.simulation.SpellAbilityChoiceCopier",
     "forge.game.cost.Cost",
     "forge.game.GameActionUtil",
+    "forge.ai.SpellAbilityAi",
+    "forge.ai.simulation.OnePlaySafetyChecker",
+    "forge.game.cost.CostAdjustment",
+    "forge.ai.ability.RevealAi",
     "forge.ai.simulation.PaidOutcomePlanner",
     "forge.ai.simulation.PossibleTargetSelector",
     "forge.ai.simulation.PossibleTargetSelector$SimilarTargetSkipper",
