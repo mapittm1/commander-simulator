@@ -17,6 +17,29 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Open first-strike copy gap
+
+Native first-strike history passes, while a copy between the two damage steps
+can make a first-strike-only creature assign normal damage again. The original
+ten-case probe passes nine and fails one. Expanded probes pass 18 and fail six
+contracts: copied attacker/blocker history, loss of first strike after paid Dress
+Down, multiple first-strike attackers, an unblocked Battle attack and nested
+copies. These are six failed contracts, not six distinct card bugs.
+
+Native controls record two damage on a surviving Centaur Courser; copies record
+four. Native unblocked combat leaves one defense counter, while copies wrongly
+defeat the Battle. Current double strike and paid Temur Battle Rage gaining double
+strike pass. Paid Unsummon of a first striker, blocked/trample combat and pending
+Siege defeat/response copies also pass, bounding the observed failure.
+
+Board states, blockers, actions, targets and phase checkpoints are supplied.
+The multiple-attacker case explicitly starts with five defense counters as a
+legal state precondition, not printed entry defense. Native costs, damage,
+keyword effects, triggers and state-based actions execute. This does not certify
+autonomous strategy, every copied history or full combat correctness. A source
+candidate is being validated separately; the reviewed runtime remains selected.
+See the [exact baseline failures and reproduction sources](../engine/combat_strike_gap.json).
+
 ## Battle combat and Siege defeat
 
 A separate packaged pytest family now exercises ten native Battle paths against

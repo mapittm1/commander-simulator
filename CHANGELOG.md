@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a first-strike combat-copy gap: an initial probe passes nine controls
+  and fails copied strike history; expanded probes pass 18 and fail six contracts.
+  Copies can assign normal damage a second time, kill a native-surviving creature,
+  or incorrectly defeat a Battle. Preserve original and expanded exact fixtures,
+  drivers, failed expectations and report hashes. Native controls, double strike,
+  paid gained-double-strike and departed-incarnation controls pass. A separate
+  source candidate is under validation; no corrected packaged engine is claimed.
+
 - Add a separate ten-case packaged Battle combat/Siege-defeat pytest family:
   defender selection, mapped combat, defense damage, copied-world isolation,
   lethal combat, paid Fog, Hexmage sacrifice/free transformed casting, Stifle and

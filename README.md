@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+A first-strike copy gap remains open: copying combat between damage steps loses
+which creatures already assigned first-strike damage. Six expanded contracts
+show repeated normal-step damage, including incorrect Battle defeat; 18 controls
+pass. Native paths and double-strike controls retain the expected behavior. A
+source candidate is under validation; the reviewed runtime remains selected.
+See the [exact failures and reproductions](engine/combat_strike_gap.json).
+
 Battle combat and Siege defeat now have a separate ten-case packaged pytest
 family against the unchanged selected engine. Native witnesses cover legal
 Battle defenders, damage to defense rather than player life, copied combat,

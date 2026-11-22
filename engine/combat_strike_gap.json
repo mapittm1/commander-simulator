@@ -1,0 +1,535 @@
+{
+  "status": "confirmed_first_strike_history_loss_pending_fix",
+  "scope": "Copying combat between first-strike and normal damage loses the already-assigned first-strike history. Native controls retain two damage and an undefeated one-defense Battle; copied first-strike-only creatures assign again, recording four damage or incorrectly defeating the Battle. Six failed expanded contracts are not six distinct card bugs.",
+  "baseline_commit": "8c6722e03e5ebb34bac4a33d452a35ceb0505ebd",
+  "baseline_build": "8d5b4381d5a341b8a0e1c0c0b371bdbf",
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-battle-protector",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "1686ef804be54a678cd061ca7c6bd8e8ac2736df71b6dbaecc88e5aca9843b82",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "830cbf8350ed8660e9e3dff1f1e1acd05a8dd074c47b1e967eea0b1a7e22fb35",
+    "native_tests": {
+      "total": 1792,
+      "passed": 1792,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "72a242afcc174008fa07696d6962cf4371b31b4aad6337fa8656c901661ed8b2",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "baselines": {
+    "packaged-battle-boundary10-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-battle-protector",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "1686ef804be54a678cd061ca7c6bd8e8ac2736df71b6dbaecc88e5aca9843b82",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "830cbf8350ed8660e9e3dff1f1e1acd05a8dd074c47b1e967eea0b1a7e22fb35",
+          "native_tests": {
+            "total": 1792,
+            "passed": 1792,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "72a242afcc174008fa07696d6962cf4371b31b4aad6337fa8656c901661ed8b2",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 10,
+          "passed": 9,
+          "failed": 1,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.blockedCombatKillsBothCreaturesWithoutDamagingTheBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.copiedBlockedCombatLeavesBothOriginalCreaturesAlive",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.copiedCounterspellTargetsTheCopiedDefeatTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.copiedPendingDefeatRetainsTheBattleUntilItsTriggerResolves",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.copiedTrampleCombatLeavesOriginalDefenseAndBlockerUntouched",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.firstStrikeBlockerKillsTheAttackerBeforeNormalDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.nativeStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.onlyTheProtectorMayBlockAnAttackOnTheBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderBattleBoundaryBaselineTest.trampleThroughABlockerDefeatsOnlyTheBattle",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-battle-boundary-research\\CommanderBattleBoundaryBaselineTest.java": "efafaeebfca2029baa6534cd60624da7bf24e5f78b95dac9fc9dc6ddf56311a7"
+        },
+        "production_origins_verified": 125,
+        "report_sha256": "65a7e8cf1cf3469d651d41b2631fde2e076e923a1a04569621b680e83d84df87",
+        "failures": [
+          "java.lang.AssertionError: expected [true] but found [false]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3201,
+        "returncode": 0,
+        "elapsed_seconds": 13.625
+      },
+      "preserved_inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-battle-boundary-research/packaged-battle-boundary10-baseline/input-snapshots/javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-battle-boundary-research/packaged-battle-boundary10-baseline/input-snapshots/testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": {
+          "path": "data/development/commander-battle-boundary-research/packaged-battle-boundary10-baseline/input-snapshots/packaged_rules.py",
+          "sha256": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-battle-boundary-research/packaged-battle-boundary10-baseline/input-snapshots/AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-battle-boundary-research\\CommanderBattleBoundaryBaselineTest.java": {
+          "path": "data/development/commander-battle-boundary-research/packaged-battle-boundary10-baseline/input-snapshots/CommanderBattleBoundaryBaselineTest.java",
+          "sha256": "efafaeebfca2029baa6534cd60624da7bf24e5f78b95dac9fc9dc6ddf56311a7"
+        }
+      },
+      "fixture": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CardCollection;\nimport forge.game.card.CardCopyService;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Native Battle blocking, strike-step and pending-defeat boundaries; choices/setup are supplied. */\npublic class CommanderBattleBoundaryBaselineTest extends AITest {\n    @Test public void copiedPendingDefeatRetainsTheBattleUntilItsTriggerResolves() {\n        Board board=board(); pendingDefeat(board);\n        GameCopier copier=new GameCopier(board.game).withStack(true); Game game=copier.makeCopy(null,board.actor);\n        assertEquals(game.getStack().size(),1); assertTrue(copier.find(board.battle).isInZone(ZoneType.Battlefield));\n        assertEquals(copier.find(board.battle).getCounters(CounterEnumType.DEFENSE),0);\n        settle(game); assertArray(game,copier.find(board.battle));\n        assertTrue(board.battle.isInZone(ZoneType.Battlefield)); assertEquals(board.game.getStack().size(),1);\n        assertEquals(board.actor.getSpellsCastThisTurn(),1);\n    }\n\n    @Test public void copiedCounterspellTargetsTheCopiedDefeatTrigger() {\n        Board board=board(); pendingDefeat(board); Player responder=board.battle.getProtectingPlayer();\n        addCardToZone(\"Island\",responder,ZoneType.Battlefield);\n        SpellAbility stifle=addCardToZone(\"Stifle\",responder,ZoneType.Hand).getFirstSpellAbility();\n        stifle.setActivatingPlayer(responder);stifle.getTargets().add(board.game.getStack().peekAbility());\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(responder,stifle,null));\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        assertEquals(game.getStack().size(),2); settle(game);\n        Card card=game.getCardState(copier.find(board.battle));assertTrue(card.isInZone(ZoneType.Graveyard));\n        assertEquals(card.getName(),\"Invasion of Gobakhan\");assertEquals(copier.find(board.actor).getSpellsCastThisTurn(),1);\n        assertEquals(board.game.getStack().size(),2);assertTrue(board.battle.isInZone(ZoneType.Battlefield));\n    }\n\n    @Test public void onlyTheProtectorMayBlockAnAttackOnTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");\n        Player protector=board.battle.getProtectingPlayer();\n        Card defender=addCardToZone(\"Grizzly Bears\",protector,ZoneType.Battlefield);\n        Card own=addCardToZone(\"Grizzly Bears\",board.actor,ZoneType.Battlefield);\n        Player third=board.actor.getOpponents().stream().filter(player->player!=protector).findFirst().orElseThrow();\n        Card other=addCardToZone(\"Grizzly Bears\",third,ZoneType.Battlefield);\n        assertTrue(CombatUtil.canBlock(attack.attacker,defender,attack.combat));\n        assertFalse(CombatUtil.canBlock(attack.attacker,own,attack.combat));\n        assertFalse(CombatUtil.canBlock(attack.attacker,other,attack.combat));\n    }\n\n    @Test public void blockedCombatKillsBothCreaturesWithoutDamagingTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        damage(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(board.game.getCardState(attack.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void copiedBlockedCombatLeavesBothOriginalCreaturesAlive() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        assertTrue(game.getCombat().isBlocked(copier.find(attack.attacker)));\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);\n        assertTrue(game.getCardState(copier.find(attack.attacker)).isInZone(ZoneType.Graveyard));\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertTrue(blocker.isInZone(ZoneType.Battlefield));\n        assertEquals(copier.find(board.battle).getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void firstStrikeBlockerKillsTheAttackerBeforeNormalDamage() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(board.game.getCardState(attack.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));assertEquals(blocker.getDamage(),0);\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n        attack.combat.removeAbsentCombatants();assertFalse(attack.combat.assignCombatDamage(false));\n    }\n\n    @Test public void trampleThroughABlockerDefeatsOnlyTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Colossal Dreadmaw\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        List<Integer> life=board.game.getPlayers().stream().map(Player::getLife).toList();\n        damage(board.game,attack.combat,board.actor);settle(board.game);assertArray(board.game,board.battle);\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        assertEquals(attack.attacker.getDamage(),2);assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),life);\n    }\n\n    @Test public void copiedTrampleCombatLeavesOriginalDefenseAndBlockerUntouched() {\n        Board board=board();Attack attack=attack(board,\"Colossal Dreadmaw\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);assertArray(game,copier.find(board.battle));\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n        assertEquals(attack.attacker.getDamage(),0);\n    }\n\n    @Test public void nativeStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertEquals(attack.attacker.getDamage(),2);assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        damage(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertEquals(attack.attacker.getDamage(),2);\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertEquals(attack.attacker.getDamage(),2);assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        Card copiedAttacker=copier.find(attack.attacker);assertEquals(copiedAttacker.getDamage(),2);\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);\n        assertTrue(game.getCardState(copiedAttacker).isInZone(ZoneType.Battlefield));assertEquals(copiedAttacker.getDamage(),2);\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertEquals(attack.attacker.getDamage(),2);\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));\n    }\n\n    private void pendingDefeat(Board board) {\n        hexmage(board);board.game.getStack().resolveStack();queue(board.game);\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),0);\n        assertTrue(board.battle.isInZone(ZoneType.Battlefield));assertTrue(board.game.getStack().peekAbility().isTrigger());\n    }\n\n    /** Blocker declaration is supplied; native eligibility and both damage orders are required. */\n    private Card block(Board board,Attack attack,String name) {\n        Card blocker=addCardToZone(name,board.battle.getProtectingPlayer(),ZoneType.Battlefield);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));\n        attack.combat.addBlocker(attack.attacker,blocker);attack.combat.setBlocked(attack.attacker,true);\n        attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();\n        return blocker;\n    }\n\n    private void firstStrike(Game game,Combat combat,Player actor) {\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_FIRST_STRIKE_DAMAGE,actor,false,3);\n        assertTrue(combat.assignCombatDamage(true));combat.dealAssignedDamage();\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n",
+      "driver": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/8d5b4381d5a341b8a0e1c0c0b371bdbf'\nTEST_CLASS = 'forge.ai.CommanderBattleBoundaryBaselineTest'\nFIXTURE = WORK / 'CommanderBattleBoundaryBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-battle-boundary10-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-battle-boundary10-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n",
+      "driver_sha256": "dcd8a73c3686e87660bd6e35d8c69dfde340626faae53f143584e0c2fe080e07",
+      "failed_expectations": [
+        {
+          "method": "copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+          "message": "\n              expected [true] but found [false]\n            ",
+          "location": [
+            "at forge.ai.CommanderBattleBoundaryBaselineTest.copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain(CommanderBattleBoundaryBaselineTest.java:125)"
+          ]
+        }
+      ]
+    },
+    "packaged-combat-strike24-baseline": {
+      "evidence": {
+        "scope": "Focused research against packaged production classes; not all-card certification.",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-battle-protector",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "1686ef804be54a678cd061ca7c6bd8e8ac2736df71b6dbaecc88e5aca9843b82",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "830cbf8350ed8660e9e3dff1f1e1acd05a8dd074c47b1e967eea0b1a7e22fb35",
+          "native_tests": {
+            "total": 1792,
+            "passed": 1792,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "72a242afcc174008fa07696d6962cf4371b31b4aad6337fa8656c901661ed8b2",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 24,
+          "passed": 18,
+          "failed": 6,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.blockedCombatKillsBothCreaturesWithoutDamagingTheBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedBlockedCombatLeavesBothOriginalCreaturesAlive",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedCounterspellTargetsTheCopiedDefeatTrigger",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedDoubleStrikerStillDamagesTheBattleInBothSteps",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedFirstStrikeAttackerDoesNotDamageItsBlockerTwice",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedGainedDoubleStrikePermitsNormalDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedHistoryTracksBothFirstStrikeAttackers",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedLossOfFirstStrikeDoesNotPermitAnotherDamageStep",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedPendingDefeatRetainsTheBattleUntilItsTriggerResolves",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedTrampleCombatLeavesOriginalDefenseAndBlockerUntouched",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.departedFirstStrikerHistoryDoesNotBreakACopyAfterPaidUnsummon",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.firstStrikeBlockerKillsTheAttackerBeforeNormalDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeDoubleStrikerStillDamagesTheBattleInBothSteps",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeFirstStrikeAttackerDoesNotDamageItsBlockerTwice",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeGainedDoubleStrikePermitsNormalDamage",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeHistoryTracksBothFirstStrikeAttackers",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeLossOfFirstStrikeDoesNotPermitAnotherDamageStep",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nativeUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.nestedStrikeCopiesResolveIndependentlyOfEachOtherAndTheOriginal",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.onlyTheProtectorMayBlockAnAttackOnTheBattle",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderCombatStrikeExpandedBaselineTest.trampleThroughABlockerDefeatsOnlyTheBattle",
+            "status": "PASS"
+          }
+        ],
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-battle-boundary-research\\CommanderCombatStrikeExpandedBaselineTest.java": "d3afd714abb2839b7155274bef26793cca57a6a3253e71daf921cbb8bb930955"
+        },
+        "production_origins_verified": 125,
+        "report_sha256": "e269f47f7a60332a1494259d321a603405e5368e1a65eefa38a4974d58def0c1",
+        "failures": [
+          "java.lang.AssertionError: First-strike-only attacker must not assign normal damage again expected [2] but found [4]",
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [2] but found [4]",
+          "java.lang.AssertionError: A first-strike-only blocker must not deal damage again in the normal step expected [2] but found [4]",
+          "java.lang.AssertionError: expected [1] but found [0]",
+          "java.lang.AssertionError: expected [2] but found [4]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3613,
+        "returncode": 0,
+        "elapsed_seconds": 14.094
+      },
+      "preserved_inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": {
+          "path": "data/development/commander-battle-boundary-research/packaged-combat-strike24-baseline/input-snapshots/javac.exe",
+          "sha256": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": {
+          "path": "data/development/commander-battle-boundary-research/packaged-combat-strike24-baseline/input-snapshots/testng-7.10.2.jar",
+          "sha256": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": {
+          "path": "data/development/commander-battle-boundary-research/packaged-combat-strike24-baseline/input-snapshots/packaged_rules.py",
+          "sha256": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": {
+          "path": "data/development/commander-battle-boundary-research/packaged-combat-strike24-baseline/input-snapshots/AITest.java",
+          "sha256": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff"
+        },
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-battle-boundary-research\\CommanderCombatStrikeExpandedBaselineTest.java": {
+          "path": "data/development/commander-battle-boundary-research/packaged-combat-strike24-baseline/input-snapshots/CommanderCombatStrikeExpandedBaselineTest.java",
+          "sha256": "d3afd714abb2839b7155274bef26793cca57a6a3253e71daf921cbb8bb930955"
+        }
+      },
+      "fixture": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CardCollection;\nimport forge.game.card.CardCopyService;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Native Battle blocking, strike-step and pending-defeat boundaries; choices/setup are supplied. */\npublic class CommanderCombatStrikeExpandedBaselineTest extends AITest {\n    @Test public void copiedPendingDefeatRetainsTheBattleUntilItsTriggerResolves() {\n        Board board=board(); pendingDefeat(board);\n        GameCopier copier=new GameCopier(board.game).withStack(true); Game game=copier.makeCopy(null,board.actor);\n        assertEquals(game.getStack().size(),1); assertTrue(copier.find(board.battle).isInZone(ZoneType.Battlefield));\n        assertEquals(copier.find(board.battle).getCounters(CounterEnumType.DEFENSE),0);\n        settle(game); assertArray(game,copier.find(board.battle));\n        assertTrue(board.battle.isInZone(ZoneType.Battlefield)); assertEquals(board.game.getStack().size(),1);\n        assertEquals(board.actor.getSpellsCastThisTurn(),1);\n    }\n\n    @Test public void copiedCounterspellTargetsTheCopiedDefeatTrigger() {\n        Board board=board(); pendingDefeat(board); Player responder=board.battle.getProtectingPlayer();\n        addCardToZone(\"Island\",responder,ZoneType.Battlefield);\n        SpellAbility stifle=addCardToZone(\"Stifle\",responder,ZoneType.Hand).getFirstSpellAbility();\n        stifle.setActivatingPlayer(responder);stifle.getTargets().add(board.game.getStack().peekAbility());\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(responder,stifle,null));\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        assertEquals(game.getStack().size(),2); settle(game);\n        Card card=game.getCardState(copier.find(board.battle));assertTrue(card.isInZone(ZoneType.Graveyard));\n        assertEquals(card.getName(),\"Invasion of Gobakhan\");assertEquals(copier.find(board.actor).getSpellsCastThisTurn(),1);\n        assertEquals(board.game.getStack().size(),2);assertTrue(board.battle.isInZone(ZoneType.Battlefield));\n    }\n\n    @Test public void onlyTheProtectorMayBlockAnAttackOnTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");\n        Player protector=board.battle.getProtectingPlayer();\n        Card defender=addCardToZone(\"Grizzly Bears\",protector,ZoneType.Battlefield);\n        Card own=addCardToZone(\"Grizzly Bears\",board.actor,ZoneType.Battlefield);\n        Player third=board.actor.getOpponents().stream().filter(player->player!=protector).findFirst().orElseThrow();\n        Card other=addCardToZone(\"Grizzly Bears\",third,ZoneType.Battlefield);\n        assertTrue(CombatUtil.canBlock(attack.attacker,defender,attack.combat));\n        assertFalse(CombatUtil.canBlock(attack.attacker,own,attack.combat));\n        assertFalse(CombatUtil.canBlock(attack.attacker,other,attack.combat));\n    }\n\n    @Test public void blockedCombatKillsBothCreaturesWithoutDamagingTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        damage(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(board.game.getCardState(attack.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void copiedBlockedCombatLeavesBothOriginalCreaturesAlive() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        assertTrue(game.getCombat().isBlocked(copier.find(attack.attacker)));\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);\n        assertTrue(game.getCardState(copier.find(attack.attacker)).isInZone(ZoneType.Graveyard));\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertTrue(blocker.isInZone(ZoneType.Battlefield));\n        assertEquals(copier.find(board.battle).getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void firstStrikeBlockerKillsTheAttackerBeforeNormalDamage() {\n        Board board=board();Attack attack=attack(board,\"Grizzly Bears\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(board.game.getCardState(attack.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));assertEquals(blocker.getDamage(),0);\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n        attack.combat.removeAbsentCombatants();assertFalse(attack.combat.assignCombatDamage(false));\n    }\n\n    @Test public void trampleThroughABlockerDefeatsOnlyTheBattle() {\n        Board board=board();Attack attack=attack(board,\"Colossal Dreadmaw\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        List<Integer> life=board.game.getPlayers().stream().map(Player::getLife).toList();\n        damage(board.game,attack.combat,board.actor);settle(board.game);assertArray(board.game,board.battle);\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        assertEquals(attack.attacker.getDamage(),2);assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),life);\n    }\n\n    @Test public void copiedTrampleCombatLeavesOriginalDefenseAndBlockerUntouched() {\n        Board board=board();Attack attack=attack(board,\"Colossal Dreadmaw\");Card blocker=block(board,attack,\"Grizzly Bears\");\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);assertArray(game,copier.find(board.battle));\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n        assertEquals(attack.attacker.getDamage(),0);\n    }\n\n    @Test public void nativeStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertEquals(attack.attacker.getDamage(),2);assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        damage(board.game,attack.combat,board.actor);settle(board.game);\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertEquals(attack.attacker.getDamage(),2);\n        assertTrue(board.game.getCardState(blocker).isInZone(ZoneType.Graveyard));\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    @Test public void copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        assertEquals(attack.attacker.getDamage(),2);assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        Card copiedAttacker=copier.find(attack.attacker);assertEquals(copiedAttacker.getDamage(),2);\n        damage(game,game.getCombat(),copier.find(board.actor));\n        assertEquals(copiedAttacker.getDamage(),2,\"A first-strike-only blocker must not deal damage again in the normal step\");\n        settle(game);\n        assertTrue(game.getCardState(copiedAttacker).isInZone(ZoneType.Battlefield));assertEquals(copiedAttacker.getDamage(),2);\n        assertTrue(game.getCardState(copier.find(blocker)).isInZone(ZoneType.Graveyard));\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertEquals(attack.attacker.getDamage(),2);\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));\n    }\n\n    @Test public void nativeFirstStrikeAttackerDoesNotDamageItsBlockerTwice() { attackerHistory(false); }\n    @Test public void copiedFirstStrikeAttackerDoesNotDamageItsBlockerTwice() { attackerHistory(true); }\n    @Test public void nativeUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep() { unblockedHistory(false); }\n    @Test public void copiedUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep() { unblockedHistory(true); }\n    @Test public void nativeDoubleStrikerStillDamagesTheBattleInBothSteps() { doubleStrikeHistory(false); }\n    @Test public void copiedDoubleStrikerStillDamagesTheBattleInBothSteps() { doubleStrikeHistory(true); }\n    @Test public void nativeLossOfFirstStrikeDoesNotPermitAnotherDamageStep() { lostFirstStrike(false); }\n    @Test public void copiedLossOfFirstStrikeDoesNotPermitAnotherDamageStep() { lostFirstStrike(true); }\n    @Test public void nativeGainedDoubleStrikePermitsNormalDamage() { gainedDoubleStrike(false); }\n    @Test public void copiedGainedDoubleStrikePermitsNormalDamage() { gainedDoubleStrike(true); }\n    @Test public void nativeHistoryTracksBothFirstStrikeAttackers() { multipleFirstStrikers(false); }\n    @Test public void copiedHistoryTracksBothFirstStrikeAttackers() { multipleFirstStrikers(true); }\n\n    @Test public void nestedStrikeCopiesResolveIndependentlyOfEachOtherAndTheOriginal() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        GameCopier first=new GameCopier(board.game).withStack(true);Game firstGame=first.makeCopy(null,board.actor);\n        GameCopier second=new GameCopier(firstGame).withStack(true);Game secondGame=second.makeCopy(null,first.find(board.actor));\n        Card secondAttacker=second.find(first.find(attack.attacker));\n        damage(secondGame,secondGame.getCombat(),second.find(first.find(board.actor)));\n        assertEquals(secondAttacker.getDamage(),2);settle(secondGame);assertTrue(secondAttacker.isInZone(ZoneType.Battlefield));\n        damage(firstGame,firstGame.getCombat(),first.find(board.actor));\n        assertEquals(first.find(attack.attacker).getDamage(),2);settle(firstGame);\n        assertTrue(first.find(attack.attacker).isInZone(ZoneType.Battlefield));\n        assertTrue(attack.attacker.isInZone(ZoneType.Battlefield));assertEquals(attack.attacker.getDamage(),2);\n        assertTrue(blocker.isInZone(ZoneType.Battlefield));\n    }\n\n    @Test public void departedFirstStrikerHistoryDoesNotBreakACopyAfterPaidUnsummon() {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        Player responder=board.battle.getProtectingPlayer();addCardToZone(\"Island\",responder,ZoneType.Battlefield);\n        SpellAbility bounce=addCardToZone(\"Unsummon\",responder,ZoneType.Hand).getFirstSpellAbility();\n        bounce.setActivatingPlayer(responder);bounce.getTargets().add(blocker);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(responder,bounce,null));settle(board.game);\n        Card returned=board.game.getCardState(blocker);assertTrue(returned.isInZone(ZoneType.Hand));\n        assertNotEquals(returned.getGameTimestamp(),blocker.getGameTimestamp());assertEquals(bounce.getPayingMana().size(),1);\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        damage(game,game.getCombat(),copier.find(board.actor));settle(game);\n        assertTrue(copier.find(returned).isInZone(ZoneType.Hand));assertEquals(copier.find(attack.attacker).getDamage(),2);\n        assertTrue(copier.find(attack.attacker).isInZone(ZoneType.Battlefield));\n        assertEquals(copier.find(board.battle).getCounters(CounterEnumType.DEFENSE),3);\n        assertTrue(returned.isInZone(ZoneType.Hand));assertEquals(attack.attacker.getDamage(),2);\n    }\n\n    private void attackerHistory(boolean copied) {\n        Board board=board();Attack attack=attack(board,\"Vampire Hexmage\");Card blocker=block(board,attack,\"Centaur Courser\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);assertEquals(blocker.getDamage(),2);\n        World world=world(board,attack,blocker,copied);damage(world.game,world.game.getCombat(),world.actor);\n        assertEquals(world.blocker.getDamage(),2,\"First-strike-only attacker must not assign normal damage again\");settle(world.game);\n        assertTrue(world.game.getCardState(world.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(world.blocker.isInZone(ZoneType.Battlefield));assertEquals(world.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    private void unblockedHistory(boolean copied) {\n        Board board=board();Attack attack=attack(board,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),1);\n        World world=world(board,attack,null,copied);normalIfAssigned(world);\n        assertEquals(world.game.getCardState(world.battle).getCounters(CounterEnumType.DEFENSE),1);\n        assertTrue(world.battle.isBattle());assertTrue(world.battle.isInZone(ZoneType.Battlefield));\n        assertEquals(world.actor.getSpellsCastThisTurn(),1);\n    }\n\n    private void doubleStrikeHistory(boolean copied) {\n        Board board=board();Attack attack=attack(board,\"Fencing Ace\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),2);\n        World world=world(board,attack,null,copied);assertTrue(world.attacker.hasDoubleStrike());\n        damage(world.game,world.game.getCombat(),world.actor);settle(world.game);\n        assertEquals(world.battle.getCounters(CounterEnumType.DEFENSE),1);assertTrue(world.battle.isInZone(ZoneType.Battlefield));\n    }\n\n    private void lostFirstStrike(boolean copied) {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);assertEquals(attack.attacker.getDamage(),2);\n        Player responder=board.battle.getProtectingPlayer();\n        for(int index=0;index<2;index++)addCardToZone(\"Island\",responder,ZoneType.Battlefield);\n        SpellAbility dress=addCardToZone(\"Dress Down\",responder,ZoneType.Hand).getFirstSpellAbility();dress.setActivatingPlayer(responder);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(responder,dress,null));settle(board.game);\n        assertEquals(dress.getPayingMana().size(),2);assertFalse(blocker.hasFirstStrike());\n        World world=world(board,attack,blocker,copied);assertFalse(world.blocker.hasFirstStrike());\n        damage(world.game,world.game.getCombat(),world.actor);assertEquals(world.attacker.getDamage(),2);settle(world.game);\n        assertTrue(world.attacker.isInZone(ZoneType.Battlefield));assertTrue(world.game.getCardState(world.blocker).isInZone(ZoneType.Graveyard));\n    }\n\n    private void gainedDoubleStrike(boolean copied) {\n        Board board=board();Attack attack=attack(board,\"Centaur Courser\");Card blocker=block(board,attack,\"Vampire Hexmage\");\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);\n        Player responder=board.battle.getProtectingPlayer();\n        for(int index=0;index<2;index++)addCardToZone(\"Mountain\",responder,ZoneType.Battlefield);\n        SpellAbility rage=addCardToZone(\"Temur Battle Rage\",responder,ZoneType.Hand).getFirstSpellAbility();\n        rage.setActivatingPlayer(responder);rage.getTargets().add(blocker);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(responder,rage,null));settle(board.game);\n        assertEquals(rage.getPayingMana().size(),2);assertTrue(blocker.hasDoubleStrike());\n        World world=world(board,attack,blocker,copied);assertTrue(world.blocker.hasDoubleStrike());\n        damage(world.game,world.game.getCombat(),world.actor);assertEquals(world.attacker.getDamage(),4);settle(world.game);\n        assertTrue(world.game.getCardState(world.attacker).isInZone(ZoneType.Graveyard));\n        assertTrue(world.game.getCardState(world.blocker).isInZone(ZoneType.Graveyard));\n        assertEquals(world.battle.getCounters(CounterEnumType.DEFENSE),3);\n    }\n\n    /** Five defense counters are an explicit legal board precondition, not printed entry defense. */\n    private void multipleFirstStrikers(boolean copied) {\n        Board board=board();board.battle.setCounters(CounterEnumType.DEFENSE,5);Attack attack=attack(board,\"Vampire Hexmage\");\n        Card other=addCardToZone(\"Vampire Hexmage\",board.actor,ZoneType.Battlefield);other.setSickness(false);\n        assertTrue(CombatUtil.canAttack(other,board.battle));attack.combat.addAttacker(other,board.battle);other.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game,other,attack.combat,true);attack.combat.setBlocked(other,false);\n        firstStrike(board.game,attack.combat,board.actor);settle(board.game);assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),1);\n        World world=world(board,attack,null,copied);normalIfAssigned(world);\n        assertEquals(world.game.getCardState(world.battle).getCounters(CounterEnumType.DEFENSE),1);\n        assertTrue(world.battle.isBattle());assertTrue(world.battle.isInZone(ZoneType.Battlefield));\n    }\n\n    private void normalIfAssigned(World world) {\n        world.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,world.actor,false,3);\n        if(world.game.getCombat().assignCombatDamage(false))world.game.getCombat().dealAssignedDamage();\n        settle(world.game);\n    }\n\n    private World world(Board board,Attack attack,Card blocker,boolean copied) {\n        if(!copied)return new World(board.game,board.actor,board.battle,attack.attacker,blocker);\n        GameCopier copier=new GameCopier(board.game).withStack(true);Game game=copier.makeCopy(null,board.actor);\n        return new World(game,copier.find(board.actor),copier.find(board.battle),copier.find(attack.attacker),copier.find(blocker));\n    }\n\n    private record World(Game game,Player actor,Card battle,Card attacker,Card blocker) { }\n\n    private void pendingDefeat(Board board) {\n        hexmage(board);board.game.getStack().resolveStack();queue(board.game);\n        assertEquals(board.battle.getCounters(CounterEnumType.DEFENSE),0);\n        assertTrue(board.battle.isInZone(ZoneType.Battlefield));assertTrue(board.game.getStack().peekAbility().isTrigger());\n    }\n\n    /** Blocker declaration is supplied; native eligibility and both damage orders are required. */\n    private Card block(Board board,Attack attack,String name) {\n        Card blocker=addCardToZone(name,board.battle.getProtectingPlayer(),ZoneType.Battlefield);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));\n        attack.combat.addBlocker(attack.attacker,blocker);attack.combat.setBlocked(attack.attacker,true);\n        attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();\n        return blocker;\n    }\n\n    private void firstStrike(Game game,Combat combat,Player actor) {\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_FIRST_STRIKE_DAMAGE,actor,false,3);\n        assertTrue(combat.assignCombatDamage(true));combat.dealAssignedDamage();\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n",
+      "driver": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/8d5b4381d5a341b8a0e1c0c0b371bdbf'\nTEST_CLASS = 'forge.ai.CommanderCombatStrikeExpandedBaselineTest'\nFIXTURE = WORK / 'CommanderCombatStrikeExpandedBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-combat-strike24-baseline'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-combat-strike24-baseline'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n",
+      "driver_sha256": "0bf71d5a49e314390df36de1ec4936998f13586f7bc5de299c78a0f3d26a33ee",
+      "failed_expectations": [
+        {
+          "method": "copiedFirstStrikeAttackerDoesNotDamageItsBlockerTwice",
+          "message": "\n              First-strike-only attacker must not assign normal damage again expected [2] but found [4]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.attackerHistory(CommanderCombatStrikeExpandedBaselineTest.java:182)",
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedFirstStrikeAttackerDoesNotDamageItsBlockerTwice(CommanderCombatStrikeExpandedBaselineTest.java:134)"
+          ]
+        },
+        {
+          "method": "copiedHistoryTracksBothFirstStrikeAttackers",
+          "message": "\n              expected [1] but found [0]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.multipleFirstStrikers(CommanderCombatStrikeExpandedBaselineTest.java:241)",
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedHistoryTracksBothFirstStrikeAttackers(CommanderCombatStrikeExpandedBaselineTest.java:144)"
+          ]
+        },
+        {
+          "method": "copiedLossOfFirstStrikeDoesNotPermitAnotherDamageStep",
+          "message": "\n              expected [2] but found [4]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.lostFirstStrike(CommanderCombatStrikeExpandedBaselineTest.java:213)",
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedLossOfFirstStrikeDoesNotPermitAnotherDamageStep(CommanderCombatStrikeExpandedBaselineTest.java:140)"
+          ]
+        },
+        {
+          "method": "copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+          "message": "\n              A first-strike-only blocker must not deal damage again in the normal step expected [2] but found [4]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain(CommanderCombatStrikeExpandedBaselineTest.java:125)"
+          ]
+        },
+        {
+          "method": "copiedUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep",
+          "message": "\n              expected [1] but found [0]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.unblockedHistory(CommanderCombatStrikeExpandedBaselineTest.java:191)",
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.copiedUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep(CommanderCombatStrikeExpandedBaselineTest.java:136)"
+          ]
+        },
+        {
+          "method": "nestedStrikeCopiesResolveIndependentlyOfEachOtherAndTheOriginal",
+          "message": "\n              expected [2] but found [4]\n            ",
+          "location": [
+            "at forge.ai.CommanderCombatStrikeExpandedBaselineTest.nestedStrikeCopiesResolveIndependentlyOfEachOtherAndTheOriginal(CommanderCombatStrikeExpandedBaselineTest.java:153)"
+          ]
+        }
+      ]
+    }
+  },
+  "classification": {
+    "original_counts": {
+      "total": 10,
+      "passed": 9,
+      "failed": 1,
+      "skipped": 0
+    },
+    "expanded_counts": {
+      "total": 24,
+      "passed": 18,
+      "failed": 6,
+      "skipped": 0
+    },
+    "controls": "Native strike history, current double strike and newly gained double strike pass. Blocking, trample, pending defeat/response copies and a departed first striker also pass. Copied attacker/blocker history, multiple first strikers, loss of first strike and nested copies fail."
+  },
+  "limits": [
+    "Actions, targets, blockers, phase checkpoints and legal board preconditions are supplied in partial Commander fixtures; this does not certify autonomous attack strategy or deck legality.",
+    "Multiple-first-striker fixtures explicitly begin with five defense counters, a legal state precondition rather than printed Invasion of Gobakhan entry defense.",
+    "Paid Dress Down and Temur Battle Rage test losing first strike and gaining double strike; paid Unsummon checks a departed incarnation.",
+    "A source candidate is being validated separately. The reviewed1792-test runtime remains selected; no corrected packaged build is claimed.",
+    "Full card, combat, rules and AI correctness remain unverified."
+  ]
+}
