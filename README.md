@@ -242,9 +242,58 @@ excludes seven nonstarting meld results. See the
 [native comparison and held predecessors](engine/text_choice_native_evidence.json)
 and [packaged validation and activation](engine/text_choices_evidence.json).
 The earlier [twelve-case finding](engine/change_text_ai_gap.json) remains historical.
-Supplied entwine costs do not prove optimal optional-cost selection. Composite
-heuristic/hybrid support, full text-change/card correctness, face-down visibility
-and optimal AI remain unverified.
+Supplied entwine costs do not prove optimal optional-cost selection. A follow-up
+composed-spell probe passes five full-mode controls and fails six heuristic/hybrid
+casts across Whim of Volrath, Mind Bend and Spectral Shift. A reversible hint-only
+diagnostic keeps those five controls passing and the six casts failing: removing
+AI exclusions alone does not resolve the mode-planning gap. All three card scripts
+were restored and all 2,159 production sources verified unchanged. See the
+[pending mode finding](engine/composite_text_ai_gap.json). Full text-change/card
+correctness, hidden-information behavior and optimal AI remain unverified.
+
+A private-knowledge candidate retains current-object information without sharing
+memory between games, players or control agents. Publicly identified returns to
+hand retain their identity; unseen library moves and face-down exile returns do
+not create observer knowledge. Reads filter old incarnations without changing the
+original player's store during a preview. Fresh inspection replaces old references.
+
+All 170 selected source-native checks pass, including eighteen knowledge cases and
+named-discard, copy, text-change, control, decision and plan-recovery neighbors.
+The identical eighteen-case packaged baseline passes ten controls and fails eight
+cases. Two intermediate drafts remain held after stronger public-return and
+control-layer tests found regressions. See the
+[native comparison](engine/private_knowledge_native_evidence.json).
+The earlier 1,405-test build and audit passed, but it remains held. Its broader
+run passed 2,878 of 2,879 cases. Follow-up checks found that timestamp-only filtering
+lost an inspected top card when it was drawn. The original failed build, reports
+and 424 frozen inputs are preserved.
+
+The corrected source tracks only explicitly disclosed library positions and carries
+them through verified draws. Shuffles and hidden reorders invalidate that tracking;
+physical card ids alone cannot identify a draw. Knowledge survives turn boundaries,
+while per-turn planning reservations still expire. Copied agents receive mapped,
+independent knowledge and library revisions.
+
+All 189 selected source checks pass, including sixteen Bauble/knowledge cases and
+three fixed opening replays. The prior runtime passes nine of the sixteen cases;
+the held candidate passes eight, with different failures. Native payment, copied
+slowtrips, bottom draws, selective reveals and all three ordinary AI modes are
+covered. Only Mishra's Bauble's obsolete All-AI hint is removed; Oracle text is preserved.
+See the [knowledge finding](engine/private_library_knowledge_gap.json),
+[classification finding](engine/bauble_ai_gap.json) and
+[source evidence](engine/private_knowledge_native_evidence.json).
+The reviewed runtime passes 1,424 selected native tests and its source/resource
+audit, 672 packaged rules cases, 2,898 broader gameplay tests, 256 serialization
+tests, and 42 live tests with 1,320 subtests. All 428 reviewed inputs remained
+unchanged. Catalog construction covers 32,636 starting identities and excludes
+seven nonstarting meld results. A test-only metadata migration requires Bauble's
+normal AI eligibility and broad permanent discovery; the other excluded cantrips
+retain their narrow fallback checks. Its paired packaged checks pass all fifteen
+cases on this runtime and reject the previous archive in two expected assertions.
+The first broader failure and initial policy prototype remain preserved.
+See the [packaged validation and activation](engine/private_knowledge_evidence.json).
+LookAt AI policy, optimal information valuation and complete
+hidden-information correctness remain open.
 
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
@@ -260,13 +309,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,387 selected native tests, 635 packaged
-rules cases, 2,861 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,283 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,424 selected native tests, 672 packaged
+rules cases, 2,898 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,320 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/text_choices_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/private_knowledge_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

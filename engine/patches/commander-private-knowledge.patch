@@ -1,0 +1,509 @@
+diff --git a/forge-ai/src/main/java/forge/ai/AiCardMemory.java b/forge-ai/src/main/java/forge/ai/AiCardMemory.java
+--- a/forge-ai/src/main/java/forge/ai/AiCardMemory.java
++++ b/forge-ai/src/main/java/forge/ai/AiCardMemory.java
+@@ -25,9 +25,12 @@
+ import com.google.common.base.Suppliers;
+ import com.google.common.collect.Maps;
+ import com.google.common.collect.Sets;
++import forge.game.IEntityMap;
+ import forge.game.card.Card;
+ import forge.game.mana.ManaCostBeingPaid;
+ import forge.game.player.Player;
++import forge.game.player.PlayerController;
++import forge.game.zone.ZoneType;
+ 
+ 
+ /**
+@@ -74,11 +77,121 @@
+ 
+     private final Supplier<Map<MemoryType, Set>> memoryMap = Suppliers.memoize(Maps::newConcurrentMap);
+ 
++    private record CardIdentity(int id, long timestamp) {
++        static CardIdentity of(Card card) { return new CardIdentity(card.getId(), card.getGameTimestamp()); }
++    }
++
++    private record LibraryKnowledge(Player owner, long revision, Map<Integer, CardIdentity> positions) {
++        LibraryKnowledge { positions = Map.copyOf(positions); }
++        boolean isCurrent() {
++            return owner.getGame().getPlayers().contains(owner)
++                    && owner.getZone(ZoneType.Library).getLibraryOrderRevision() == revision;
++        }
++    }
++
++    private final Map<Player, LibraryKnowledge> libraryKnowledge = Maps.newHashMap();
++
++    public void rememberLibraryPositions(Player owner, Map<Integer, Card> disclosed) {
++        long revision = owner.getZone(ZoneType.Library).getLibraryOrderRevision();
++        Map<Integer, CardIdentity> positions = Maps.newHashMap();
++        LibraryKnowledge previous = libraryKnowledge.get(owner);
++        if (previous != null && previous.owner() == owner && previous.isCurrent()) {
++            positions.putAll(previous.positions());
++        }
++        for (Map.Entry<Integer, Card> entry : disclosed.entrySet()) {
++            int index = entry.getKey();
++            Card card = entry.getValue();
++            if (index >= 0 && index < owner.getCardsIn(ZoneType.Library).size()
++                    && card.getGame() == owner.getGame()
++                    && card.equalsWithGameTimestamp(owner.getCardsIn(ZoneType.Library).get(index))) {
++                positions.put(index, CardIdentity.of(card));
++                rememberCard(card, MemorySet.REVEALED_CARDS);
++            }
++        }
++        if (!positions.isEmpty()) {
++            libraryKnowledge.put(owner, new LibraryKnowledge(owner, revision, positions));
++        }
++    }
++
++    public void observeLibraryDraw(PlayerController.LibraryDraw draw) {
++        LibraryKnowledge known = libraryKnowledge.remove(draw.owner());
++        if (known == null || known.owner() != draw.owner() || known.revision() != draw.previousRevision()) {
++            return;
++        }
++        long revision = draw.owner().getZone(ZoneType.Library).getLibraryOrderRevision();
++        if (revision != draw.previousRevision() + 1
++                || draw.owner().getCardsIn(ZoneType.Library).size() != draw.previousSize() - 1) {
++            return;
++        }
++        CardIdentity expected = known.positions().get(draw.index());
++        if (expected != null) {
++            if (expected.id() != draw.previousCardId() || expected.timestamp() != draw.previousCardTimestamp()
++                    || draw.drawn().getId() != expected.id()) {
++                return;
++            }
++            rememberCard(draw.drawn(), MemorySet.REVEALED_CARDS);
++        }
++        Map<Integer, CardIdentity> remaining = Maps.newHashMap();
++        for (Map.Entry<Integer, CardIdentity> entry : known.positions().entrySet()) {
++            if (entry.getKey() != draw.index()) {
++                remaining.put(entry.getKey() > draw.index() ? entry.getKey() - 1 : entry.getKey(), entry.getValue());
++            }
++        }
++        if (!remaining.isEmpty()) {
++            libraryKnowledge.put(draw.owner(), new LibraryKnowledge(draw.owner(), revision, remaining));
++        }
++    }
++
+     public AiCardMemory() {
+     }
+ 
++    private <T> Set<T> storedMemorySet(MemoryType<T> set) {
++        return (Set<T>) memoryMap.get().computeIfAbsent(set, value -> Sets.newConcurrentHashSet());
++    }
++
++    private static boolean isCurrentRevealedCard(Card card) {
++        if (card.getGame() == null) {
++            return false;
++        }
++        Card current = card.getGame().getCardState(card, null);
++        return current != null && card.equalsWithGameTimestamp(current);
++    }
++
+     private <T> Set<T> getMemorySet(MemoryType<T> set) {
+-        return (Set<T>) memoryMap.get().computeIfAbsent(set, value -> Sets.newConcurrentHashSet());
++        Set<T> stored = storedMemorySet(set);
++        if (!MemorySet.REVEALED_CARDS.equals(set)) {
++            return stored;
++        }
++        // A read must not mutate the original player's memory during a preview.
++        Set<T> current = Sets.newHashSet();
++        for (T value : stored) {
++            if (value instanceof Card card && isCurrentRevealedCard(card)) {
++                current.add(value);
++            }
++        }
++        return Set.copyOf(current);
++    }
++
++    /** Copy current private knowledge through the snapshot map without sharing memory sets. */
++    public void copyRevealedCardsFrom(AiCardMemory original, IEntityMap objects) {
++        Set<Card> known = original.getMemorySet(MemorySet.REVEALED_CARDS);
++        java.util.List<LibraryKnowledge> tracked = original.libraryKnowledge.values().stream()
++                .filter(LibraryKnowledge::isCurrent).toList();
++        storedMemorySet(MemorySet.REVEALED_CARDS).clear();
++        libraryKnowledge.clear();
++        for (LibraryKnowledge entry : tracked) {
++            Player owner = objects.map(entry.owner());
++            if (owner != null && owner.getZone(ZoneType.Library).getLibraryOrderRevision() == entry.revision()) {
++                libraryKnowledge.put(owner, new LibraryKnowledge(owner, entry.revision(), entry.positions()));
++            }
++        }
++        for (Card card : known) {
++            Card mapped = objects.map(card);
++            if (mapped != null && mapped.getGame() == objects.getGame()
++                    && mapped.equalsWithGameTimestamp(card)) {
++                rememberCard(mapped, MemorySet.REVEALED_CARDS);
++            }
++        }
+     }
+ 
+     /**
+@@ -91,6 +204,9 @@
+      */
+     public boolean isRememberedCard(Card c, MemorySet set) {
+         if (c == null) {
++            return false;
++        }
++        if (set == MemorySet.REVEALED_CARDS && !isCurrentRevealedCard(c)) {
+             return false;
+         }
+         return getMemorySet(set).contains(c);
+@@ -132,7 +248,12 @@
+     public boolean rememberCard(Card c, MemorySet set) {
+         if (c == null)
+             return false;
+-        return getMemorySet(set).add(c);
++        Set<Card> stored = storedMemorySet(set);
++        if (set == MemorySet.REVEALED_CARDS) {
++            // Card equality uses its id; a fresh reveal must replace an older object.
++            stored.removeIf(previous -> previous.getId() == c.getId() && previous != c);
++        }
++        return stored.add(c);
+     }
+ 
+     /**
+@@ -149,7 +270,7 @@
+         if (!isRememberedCard(c, set)) {
+             return false;
+         }
+-        return getMemorySet(set).remove(c);
++        return storedMemorySet(set).remove(c);
+     }
+ 
+     /**
+@@ -199,13 +320,22 @@
+      */
+     public void clearMemorySet(MemoryType set) {
+         if (set != null) {
+-            getMemorySet(set).clear();
++            if (MemorySet.REVEALED_CARDS.equals(set)) { libraryKnowledge.clear(); }
++            storedMemorySet(set).clear();
+         }
+     }
+ 
+     /**
+      * Clears all memory sets stored in this card memory for the given player.
+      */
++    public void clearTurnPlanningMemory() {
++        for (MemoryType set : memoryMap.get().keySet()) {
++            if (!MemorySet.REVEALED_CARDS.equals(set)) {
++                clearMemorySet(set);
++            }
++        }
++    }
++
+     public void clearAllRemembered() {
+         for (MemoryType memSet : memoryMap.get().keySet()) {
+             clearMemorySet(memSet);
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -576,6 +576,34 @@
+     }
+ 
+     @Override
++    public void observeLibraryTop(Player owner, Map<Integer, Card> positions) {
++        if (owner.getGame() == player.getGame()) {
++            getAi().getCardMemory().rememberLibraryPositions(owner, positions);
++        }
++    }
++
++    @Override
++    public void observeLibraryDraw(PlayerController.LibraryDraw draw) {
++        if (draw.owner().getGame() == player.getGame()) {
++            getAi().getCardMemory().observeLibraryDraw(draw);
++        }
++    }
++
++    @Override
++    public void copySnapshotKnowledgeFrom(PlayerController original, IEntityMap objects) {
++        if (original instanceof PlayerControllerAi previous) {
++            getAi().getCardMemory().copyRevealedCardsFrom(previous.getAi().getCardMemory(), objects);
++        }
++    }
++
++    @Override
++    public void observePublicCardReturn(Card card) {
++        if (card.getGame() == player.getGame() && card.isInZone(ZoneType.Hand)) {
++            AiCardMemory.rememberCard(player, card, AiCardMemory.MemorySet.REVEALED_CARDS);
++        }
++    }
++
++    @Override
+     public void reveal(CardCollectionView cards, ZoneType zone, Player owner, String messagePrefix, boolean addSuffix) {
+         for (Card c : cards) {
+             AiCardMemory.rememberCard(player, c, AiCardMemory.MemorySet.REVEALED_CARDS);
+@@ -1860,8 +1888,8 @@
+ 
+     @Override
+     public void resetAtEndOfTurn() {
+-        // TODO - if card memory is ever used to remember something for longer than a turn, make sure it's not reset here.
+-        getAi().getCardMemory().clearAllRemembered();
++        // Planning reservations expire; legitimately acquired knowledge has its own lifetime.
++        getAi().getCardMemory().clearTurnPlanningMemory();
+     }
+ 
+     @Override
+diff --git a/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java b/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
+--- a/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
+@@ -17,6 +17,17 @@
+ import forge.util.Localizer;
+ 
+ public class PeekAndRevealEffect extends SpellAbilityEffect {
++
++    private void discloseLibraryPositions(Player observer, Player owner,
++            CardCollectionView ordered, CardCollectionView visible) {
++        Map<Integer, Card> positions = new HashMap<>();
++        for (int index = 0; index < ordered.size(); index++) {
++            if (visible.contains(ordered.get(index))) {
++                positions.put(index, ordered.get(index));
++            }
++        }
++        observer.getController().observeLibraryTop(owner, positions);
++    }
+ 
+     @Override
+     public boolean canChooseOptionalAction(final SpellAbility sa) {
+@@ -112,6 +123,10 @@
+                                 Localizer.getInstance().getMessage("lblLookingCardFrom"));
+             }
+ 
++            if (!noPeek && srcZone == ZoneType.Library) {
++                discloseLibraryPositions(peekingPlayer, zoneToPeek, peekCards, peekCards);
++            }
++
+             if (doReveal && sa.hasParam("RevealOptional")) {
+                 final Card cardToShow = revealableCards.size() == 1 ? revealableCards.get(0) : null;
+                 doReveal = peekingPlayer.getController().confirmAction(sa, null,
+@@ -122,6 +137,12 @@
+                 peekingPlayer.getGame().getAction().reveal(revealableCards, srcZone, zoneToPeek, !noPeek,
+                         source.getTranslatedName() + " - " +
+                                 Localizer.getInstance().getMessage("lblRevealingCardFrom"));
++
++                if (srcZone == ZoneType.Library) {
++                    for (Player observer : peekingPlayer.getGame().getPlayers()) {
++                        discloseLibraryPositions(observer, zoneToPeek, peekCards, revealableCards);
++                    }
++                }
+ 
+                 if (rememberRevealed) {
+                     Map<Integer, Card> cachedMap = Maps.newHashMap();
+diff --git a/forge-game/src/main/java/forge/game/GameAction.java b/forge-game/src/main/java/forge/game/GameAction.java
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -645,6 +645,17 @@
+             reveal(new CardCollection(revealLKI), revealLKI.getOwner(), true, "Face-down card leaves the " + zoneFrom.toString() + ": ");
+         }
+ 
++        // A public return identifies the new hand object, not merely its leaving LKI.
++        // Hidden library and face-down exile movements do not identify that object.
++        boolean publicReturn = fromBattlefield || zoneFrom.is(ZoneType.Stack)
++                || (!wasFacedown && (zoneFrom.is(ZoneType.Graveyard)
++                        || zoneFrom.is(ZoneType.Exile) || zoneFrom.is(ZoneType.Command)));
++        if (publicReturn && copied.isInZone(ZoneType.Hand)) {
++            for (Player observer : game.getPlayers()) {
++                observer.getController().observePublicCardReturn(copied);
++            }
++        }
++
+         if (fromBattlefield) {
+             // Soulbond unpairing
+             if (c.isPaired()) {
+diff --git a/forge-game/src/main/java/forge/game/player/Player.java b/forge-game/src/main/java/forge/game/player/Player.java
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1326,8 +1326,9 @@
+         if (!library.isEmpty()) {
+             Card c;
+ 
+-            if (drawsFromBottom()) {
+-                c = library.get(library.size() - 1);
++            final int drawIndex = drawsFromBottom() ? library.size() - 1 : 0;
++            if (drawIndex != 0) {
++                c = library.get(drawIndex);
+             } else {
+                 c = library.get(0);
+             }
+@@ -1339,8 +1340,19 @@
+                 }
+             }
+ 
++            long previousRevision = library.getLibraryOrderRevision();
++            int previousSize = library.size();
++            int previousCardId = c.getId();
++            long previousCardTimestamp = c.getGameTimestamp();
+             c = game.getAction().moveTo(hand, c, cause, params);
+             drawn.add(c);
++            if (c.isInZone(ZoneType.Hand)) {
++                PlayerController.LibraryDraw observation = new PlayerController.LibraryDraw(this, c,
++                        previousRevision, previousSize, drawIndex, previousCardId, previousCardTimestamp);
++                for (Player observer : game.getPlayers()) {
++                    observer.notifyAgentsOfLibraryDraw(observation);
++                }
++            }
+ 
+             // CR 121.6c additional actions can't be performed when draw gets replaced
+             // but "drawn this way" effects should still count them
+@@ -1390,6 +1402,17 @@
+             triedToDrawFromEmptyLibrary = true;
+         }
+         return drawn;
++    }
++
++    private void notifyAgentsOfLibraryDraw(PlayerController.LibraryDraw observation) {
++        Set<PlayerController> agents = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
++        agents.add(controller);
++        for (Pair<Player, PlayerController> layer : controlledBy.values()) {
++            agents.add(layer.getRight());
++        }
++        for (PlayerController agent : agents) {
++            agent.observeLibraryDraw(observation);
++        }
+     }
+ 
+     public final void resetNumDrawnThisDrawStep() {
+@@ -2787,6 +2810,7 @@
+     /** Restore control layers without sharing game-bound decision controllers or firing events. */
+     public void copySnapshotControllersFrom(Player original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
++        controller.copySnapshotKnowledgeFrom(original.controller, context);
+         controlledBy.clear();
+         for (Entry<Long, Pair<Player, PlayerController>> entry : original.controlledBy.entrySet()) {
+             Player master = context.map(entry.getValue().getLeft());
+@@ -2806,6 +2830,7 @@
+             }
+             IGameEntitiesFactory factory = (IGameEntitiesFactory) decisionMaker.getOriginalLobbyPlayer();
+             PlayerController copiedController = factory.createMindSlaveController(master, this);
++            copiedController.copySnapshotKnowledgeFrom(entry.getValue().getRight(), context);
+             controlledBy.put(entry.getKey(), Pair.of(master, copiedController));
+         }
+         getView().updateMindSlaveMaster(this);
+diff --git a/forge-game/src/main/java/forge/game/player/PlayerController.java b/forge-game/src/main/java/forge/game/player/PlayerController.java
+--- a/forge-game/src/main/java/forge/game/player/PlayerController.java
++++ b/forge-game/src/main/java/forge/game/player/PlayerController.java
+@@ -195,6 +195,25 @@
+     public abstract CardCollection orderBlocker(final Card attacker, final Card blocker, final CardCollection oldBlockers);
+     public abstract CardCollection orderAttackers(Card blocker, CardCollection attackers);
+ 
++    /** Only positions explicitly disclosed to this observer are included. */
++    public void observeLibraryTop(Player owner, Map<Integer, Card> positions) { }
++
++    /** A draw event identifies engine objects; observers use only previously acquired position knowledge. */
++    public record LibraryDraw(Player owner, Card drawn, long previousRevision, int previousSize,
++            int index, int previousCardId, long previousCardTimestamp) { }
++
++    public void observeLibraryDraw(LibraryDraw draw) { }
++
++    /** Restore agent-local knowledge after the destination controller and card identities exist. */
++    public void copySnapshotKnowledgeFrom(PlayerController original, IEntityMap objects) {
++        // Controllers that retain private knowledge provide their own mapped copy.
++    }
++
++    /** A publicly identified card has entered a hand; observers may retain that identity. */
++    public void observePublicCardReturn(Card card) {
++        // Presentation already observes zone changes; controllers may retain private knowledge.
++    }
++
+     /** Shows the card to this player*/
+     public final void reveal(CardCollectionView cards, ZoneType zone, Player owner) {
+         reveal(cards, zone, owner, null);
+diff --git a/forge-game/src/main/java/forge/game/zone/Zone.java b/forge-game/src/main/java/forge/game/zone/Zone.java
+--- a/forge-game/src/main/java/forge/game/zone/Zone.java
++++ b/forge-game/src/main/java/forge/game/zone/Zone.java
+@@ -49,6 +49,15 @@
+     private final CardCollection cardList = new CardCollection();
+     protected final ZoneType zoneType;
+     protected final Game game;
++    private long libraryOrderRevision;
++
++    public final long getLibraryOrderRevision() { return libraryOrderRevision; }
++
++    private void changedLibraryOrder() {
++        if (zoneType == ZoneType.Library) {
++            libraryOrderRevision++;
++        }
++    }
+ 
+     protected final transient ListMultimap<ZoneType, Card> cardsAddedThisTurn = MultimapBuilder.enumKeys(ZoneType.class).arrayListValues().build();
+     protected final transient ListMultimap<ZoneType, Card> cardsAddedLastTurn = MultimapBuilder.enumKeys(ZoneType.class).arrayListValues().build();
+@@ -62,6 +71,7 @@
+ 
+     protected void sort() {
+         cardList.sort(COMPARATOR);
++        changedLibraryOrder();
+     }
+ 
+     public Zone(final ZoneType zone0, Game game0) {
+@@ -83,6 +93,7 @@
+     public final void reorder(final Card c, final int index) {
+         cardList.remove(c);
+         cardList.add(index, c);
++        changedLibraryOrder();
+     }
+ 
+     public final void add(final Card c) {
+@@ -146,6 +157,7 @@
+                 cardList.add(index, c);
+             }
+         }
++        changedLibraryOrder();
+         onChanged();
+ 
+         game.fireEvent(new GameEventZone(zoneType, getPlayer(), EventValueChangeType.Added, c));
+@@ -161,6 +173,7 @@
+ 
+     public void remove(final Card c) {
+         if (cardList.remove(c)) {
++            changedLibraryOrder();
+             onChanged();
+             game.fireEvent(new GameEventZone(zoneType, getPlayer(), EventValueChangeType.Removed, c));
+         }
+@@ -172,6 +185,7 @@
+             c.setZone(this);
+             cardList.add(c);
+         }
++        changedLibraryOrder();
+         onChanged();
+         game.fireEvent(new GameEventZone(zoneType, getPlayer(), EventValueChangeType.ComplexUpdate, null));
+     }
+@@ -179,6 +193,7 @@
+     public final void removeAllCards(boolean forcedWithoutEvents) {
+         if (forcedWithoutEvents) {
+             cardList.clear();
++            changedLibraryOrder();
+         } else {
+             for (Card c : cardList) {
+                 remove(c);
+@@ -248,6 +263,7 @@
+ 
+     /** Restore observed entries after snapshot construction, without inventing zone moves. */
+     public final void copyTurnHistoryFrom(Zone original, forge.game.IEntityMap map) {
++        libraryOrderRevision = original.libraryOrderRevision;
+         cardsAddedThisTurn.clear();
+         cardsAddedLastTurn.clear();
+         enteredFromThisTurn.clear();
+@@ -276,6 +292,7 @@
+ 
+     public void shuffle() {
+         Collections.shuffle(cardList, MyRandom.getRandom());
++        changedLibraryOrder();
+         onChanged();
+     }
+ 
+@@ -288,6 +305,7 @@
+         Zone result = new Zone(zoneType, game);
+ 
+         result.setCards(CardCopyService.getLKICopyList(getCards(), cachedMap));
++        result.libraryOrderRevision = libraryOrderRevision;
+ 
+         return result;
+     }
+diff --git a/forge-gui/res/cardsfolder/m/mishras_bauble.txt b/forge-gui/res/cardsfolder/m/mishras_bauble.txt
+--- a/forge-gui/res/cardsfolder/m/mishras_bauble.txt
++++ b/forge-gui/res/cardsfolder/m/mishras_bauble.txt
+@@ -4,5 +4,4 @@
+ A:AB$ PeekAndReveal | Cost$ T Sac<1/CARDNAME> | ValidTgts$ Player | NoReveal$ True | SubAbility$ DelTrigSlowtrip | SpellDescription$ Look at the top card of target player's library.
+ SVar:DelTrigSlowtrip:DB$ DelayedTrigger | NextTurn$ True | Mode$ Phase | Phase$ Upkeep | ValidPlayer$ Player | Execute$ DrawSlowtrip | StackDescription$ SpellDescription | SpellDescription$ Draw a card at the beginning of the next turn's upkeep.
+ SVar:DrawSlowtrip:DB$ Draw | Defined$ You
+-AI:RemoveDeck:All
+ Oracle:{T}, Sacrifice Mishra's Bauble: Look at the top card of target player's library. Draw a card at the beginning of the next turn's upkeep.

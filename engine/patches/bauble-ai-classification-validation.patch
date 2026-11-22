@@ -1,0 +1,47 @@
+diff --git a/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java b/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
+--- a/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
++++ b/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java
+@@ -63,26 +63,30 @@
+     }
+ 
+     /**
+-     * The AI:RemoveDeck:All cards of the metagame stay marked (a card that loses the mark is no longer a play of the
+-     * rollouts only), and the cantrips and tutors among them are offered to the rollouts.
++     * Reviewed cards retain their tested AI policy. Remaining All-AI exclusions stay marked,
++     * while supported cantrips and tutors remain offered to rollouts.
+      */
+     @Test
+     public void theRemoveDeckCardsAreMarkedAndTheCantripsAreOffered() {
+         final Player p = deal(BESEECH_STORM);
+-        for (final String name : new String[] { "Gitaxian Probe", "Vampiric Tutor", "Mishra's Bauble", "Urza's Bauble",
++        for (final String name : new String[] { "Gitaxian Probe", "Vampiric Tutor", "Urza's Bauble",
+                 "Demonic Consultation", "Merchant Scroll", "Prismatic Ending", "Mindbreak Trap", "Manifold Key",
+                 "Lion's Eye Diamond", "Doomsday", "Goblin Welder", "Flash", "Nethergoyf" }) {
+             AssertJUnit.assertTrue(name, ComputerUtilCard.isCardRemAIDeck(addCardToZone(name, p, ZoneType.Hand)));
+         }
+         AssertJUnit.assertFalse("Commandeer uses the reviewed spell-control implementation",
+                 ComputerUtilCard.isCardRemAIDeck(addCardToZone("Commandeer", p, ZoneType.Hand)));
++        AssertJUnit.assertFalse("Mishra's Bauble uses the reviewed private-knowledge and paid-draw behavior",
++                ComputerUtilCard.isCardRemAIDeck(addCardToZone("Mishra's Bauble", p, ZoneType.Hand)));
+         for (final String name : new String[] { "Gitaxian Probe", "Vampiric Tutor", "Mishra's Bauble", "Urza's Bauble",
+                 "Demonic Consultation" }) {
+             final Card c = addCardToZone(name, p, ZoneType.Hand);
+             boolean offered = false;
+             for (final SpellAbility sa : c.getSpellAbilities()) {
+                 sa.setActivatingPlayer(p);
+-                offered |= FlatMonteCarloPicker.isDiscoverable(sa);
++                // Reviewed normal-play cards use broad permanent development discovery;
++                // the remaining All-AI cards still require the narrow fallback path.
++                offered |= FlatMonteCarloPicker.isDiscoverable(sa, "Mishra's Bauble".equals(name));
+             }
+             AssertJUnit.assertTrue(name, offered);
+         }
+@@ -148,6 +152,8 @@
+                     .test(addCardToZone("Gitaxian Probe", p, ZoneType.Hand).getRules()));
+             AssertJUnit.assertTrue("Commandeer remains eligible with Flat MC off",
+                     forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS.test(addCardToZone("Commandeer", p, ZoneType.Hand).getRules()));
++            AssertJUnit.assertTrue("Mishra's Bauble remains eligible with Flat MC off",
++                    forge.card.CardRulesPredicates.IS_KEPT_IN_AI_DECKS.test(addCardToZone("Mishra's Bauble", p, ZoneType.Hand).getRules()));
+         } finally {
+             forge.card.CardAiHints.setKeptForFlatMc(null);
+         }

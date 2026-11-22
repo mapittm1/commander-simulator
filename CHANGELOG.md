@@ -6,6 +6,47 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct the held private-knowledge candidate with explicit disclosed library
+  positions, structural-order revisions, tracked top/bottom draws and mapped
+  per-agent position state. Hidden reorders invalidate positions; generic identity
+  reveals do not disclose positions. Keep durable knowledge across turn boundaries
+  while clearing per-turn planning reservations.
+- Pass 189 source-native checks, including sixteen expanded Bauble/knowledge cases
+  and three retained opening replays. The earlier runtime passes nine of sixteen
+  cases and the held candidate eight; preserve both per-case baselines.
+- Remove only Mishra's Bauble's All-AI exclusion after native paid peek, delayed
+  draw, copied resolution and actual heuristic/hybrid/full casts pass. Oracle text
+  is unchanged. Activate after 1,424 selected native, 672 packaged, 2,898 broader
+  gameplay, 256 serialization and 42 live tests with 1,320 subtests pass. Bind all
+  428 reviewed inputs and the 32,636-identity catalog probe with seven nonstarting
+  meld exclusions. Keep the earlier failed candidate and reports preserved.
+- Migrate Bauble's test-only AI metadata expectations to normal AI eligibility
+  and broad permanent discovery, retaining narrow discovery checks for excluded
+  cards. Fifteen paired packaged checks pass on the candidate and fail the two
+  expected old-archive assertions. Preserve the first broader failure and policy
+  prototype; no production Java changes are introduced by this test migration.
+
+- Prepare generic private-knowledge lifetime and agent-snapshot handling. Preserve
+  public hand-return identities, filter old incarnations without mutating source
+  memory during reads, and map base and stacked control-agent knowledge separately.
+- Pass 170 source-native checks, including eighteen new knowledge witnesses. Their
+  identical packaged baseline passes ten controls and fails eight cases. Preserve
+  two held drafts caught by additional public-return and controller-layer controls.
+  The fresh 1,405-test build and source/resource audit pass, with 424 frozen inputs.
+  Hold activation after the broader run passes 2,878 of 2,879 gameplay cases and
+  further paired checks expose a library-knowledge regression. Preserve the failed
+  build and exact frozen inputs; the reviewed text-choice runtime remains active.
+- Reproduce the landless Bauble opening at three seeds on both baseline and
+  candidate. A reversible All-AI-hint removal makes the three source replays act;
+  no permanent override or smoke-test waiver has been applied.
+- Preserve paired library-knowledge results: both engines pass six of nine cases,
+  but the candidate fixes shuffled-draw identification and loses a legitimately
+  tracked unshuffled draw. Further position and shuffle handling is required.
+- Record a separate composed-text policy gap: five full-mode controls pass and six
+  heuristic/hybrid casts decline. Keep its fixture pending, outside passing totals.
+  A reversible three-card hint-only diagnostic preserves the same five-pass/six-fail
+  result with unchanged production Java; removing exclusions alone is insufficient.
+
 - Cap retained sick-creature value during response previews at its original value.
   Protect an established creature without treating an unusable temporary pump as
   immediately valuable. Use private LKI snapshots for reference valuation.
