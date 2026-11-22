@@ -6,6 +6,33 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a preexisting Spy Network inspected-draw knowledge gap with five identical
+  packaged witnesses on both prior and corrected modal runtimes: three controls
+  pass and two inspected-draw cases fail. Verify unchanged inspection/memory
+  classes and card script; keep the fixture pending and outside passing totals.
+
+- Add generic mode-before-target paid-outcome planning and child text-word variants.
+  Replay paid choices through mapped copies and full-simulation resolution modes.
+  Evaluate supported normal paid casts before a wait-for-buyback preference while
+  retaining no-benefit and payment checks.
+- Pass 225 selected source-native checks, including 26 expanded mode cases and a
+  forced-mode budget witness. The identical 26-case packaged baseline passes eight
+  controls and fails eighteen cases.
+  Preserve the 76/78, 89/91 and corrected 91/91 drafts and all raw reports.
+- Remove only the All-AI hints from Whim of Volrath, Mind Bend and Spectral Shift
+  after the source witnesses pass; preserve their Oracle text. Move the original
+  pending fixture into engine/tests with its old baseline inputs frozen locally.
+  The fresh 1,450-test build and source/resource/class audit pass, but activation
+  is held after a stronger native API witness times out while preparing 32 legal
+  forced modes. Preserve all 432 frozen inputs and the five-second native /
+  thirty-second worker timeout receipts. The initial no-target fixture is not an
+  engine finding. The branch-feasibility correction passes all 225 source checks;
+  the same forced-mode witness takes 6 ms in that retained run. Activate only the
+  corrected build after 1,451 selected native, 699 packaged, 2,925 broader gameplay,
+  256 serialization and 42 live tests with 1,347 subtests pass. Preserve all 433
+  frozen inputs and the 32,636-identity construction probe with seven nonstarting
+  meld exclusions. Complete card correctness remains unproven.
+
 - Correct the held private-knowledge candidate with explicit disclosed library
   positions, structural-order revisions, tracked top/bottom draws and mapped
   per-agent position state. Hidden reorders invalidate positions; generic identity

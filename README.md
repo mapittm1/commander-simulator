@@ -295,6 +295,49 @@ See the [packaged validation and activation](engine/private_knowledge_evidence.j
 LookAt AI policy, optimal information valuation and complete
 hidden-information correctness remain open.
 
+Generic modal-text planning passes 225 selected source-native checks,
+including 26 composed-spell scenarios covering actual casts, land-word choices,
+copied pending choices, buyback reservation and no-benefit controls, plus a forced-
+mode budget witness. The identical 26-case packaged baseline passes eight controls
+and fails eighteen cases. Modes are prepared before
+targets; replacement words are planned on selected child abilities. Full simulation
+records resolution-time generic mode tokens in order with its word choices.
+Supported normal paid casts are evaluated before applying a wait-for-buyback
+preference. Existing preservation policy remains for other buyback spells.
+
+The first draft passes 76 of 78 tests; the next passes 89 of 91. Stronger land-word
+cases expose a full-simulation mode-selection gap, fixed in the retained 91-case
+draft and the expanded 224-case run. See the
+[source comparison](engine/modal_text_native_evidence.json). Only the three
+reviewed All-AI exclusion hints are removed, with Oracle text unchanged. The fresh
+1,450-test build passes its selected regressions and source/resource/class audit,
+but remains held after a stronger native API budget probe: preparing 32 legal
+forced modes exceeds a five-second test budget and reaches the worker's thirty-
+second bound. This is not a claim about a printed card having 32 modes. All 432
+frozen inputs and the failed probe remain preserved. The isolated correction
+prunes branches that cannot reach the required mode count; all 225 source-native
+checks pass, with the same forced-mode witness taking 6 ms in the retained run.
+See the [budget finding](engine/modal_budget_gap.json). The corrected reviewed
+runtime passes 1,451 selected native tests, 699 packaged interaction cases,
+2,925 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,347 subtests. All 433 frozen inputs remain unchanged. Catalog construction
+covers 32,636 starting identities and excludes seven nonstarting meld results;
+construction alone does not establish rules correctness. The earlier 1,450-test
+build remains held. See the
+[packaged validation and activation](engine/modal_text_evidence.json).
+Search is bounded;
+random choices, repeat modes, multiple generic choosers, optimal optional-cost
+selection and complete card correctness remain unverified.
+
+A separate five-case paid Spy Network probe passes three controls and fails two
+inspected-draw cases on both the prior reviewed and corrected modal runtimes.
+The relevant inspection/memory classes and its card script are byte-identical.
+An explicitly inspected top card loses its remembered identity after an unshuffled
+draw, including copied pending resolution. Payment/private disclosure, unseen
+and shuffled-draw controls pass. See the
+[pending knowledge finding](engine/spy_network_knowledge_gap.json). Its fixture
+remains outside passing totals; AI admission policy is not tested by this probe.
+
 Rinoa's queued return retains the graveyard objects from the death event.
 It cannot follow a card through exile and back. Tests cover simultaneous deaths,
 tapped entry, a flying counter, and used and unused return allowances in copied
@@ -309,13 +352,13 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,424 selected native tests, 672 packaged
-rules cases, 2,898 broader gameplay tests, 256 serialization tests, and 42 live
-integration tests with 1,320 subtests. The Python quality gate passed 416 offline
+The current reviewed runtime passed 1,451 selected native tests, 699 packaged
+rules cases, 2,925 broader gameplay tests, 256 serialization tests, and 42 live
+integration tests with 1,347 subtests. The Python quality gate passed 416 offline
 tests with 520 subtests. The refreshed catalog probe constructed 32,636 starting-card
 identities; its seven other identities are nonstarting meld results. Construction
 parses native abilities and is not proof of every interaction. Native receipts use
-class-qualified method names. See the [validation and activation evidence](engine/private_knowledge_evidence.json).
+class-qualified method names. See the [validation and activation evidence](engine/modal_text_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

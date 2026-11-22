@@ -82,6 +82,9 @@ SOURCES = {
     "CommanderLookAtCoverageTest": "commander_look_at_coverage_test_sha256",
     "CommanderBaubleCoverageTest": "commander_bauble_coverage_test_sha256",
     "CommanderVintageOpeningReplayTest": "commander_vintage_opening_test_sha256",
+    "CommanderCompositeModeCoverageTest": "commander_composite_mode_test_sha256",
+    "CommanderModalTextCoverageTest": "commander_modal_text_test_sha256",
+    "CommanderModalBudgetTest": "commander_modal_budget_test_sha256",
     "CommanderVillainousChoiceTest": "commander_villainous_choice_test_sha256",
     "CommanderLearnTest": "commander_learn_test_sha256",
     "CommanderReverseTurnOrderTest": "commander_reverse_turn_order_test_sha256",
@@ -119,10 +122,17 @@ SOURCES = {
     "StarTrekKobayashiTest": "star_trek_kobayashi_test_sha256",
     "StarTrekAssimilateProbeTest": "star_trek_assimilate_test_sha256",
 }
+TEST_CLASS_PACKAGES = {"CommanderModalBudgetTest": "forge.ai.simulation"}
 TEST_CLASSES = tuple(
-    f"forge.ai.{name}" for name in SOURCES if name != "AITest"
+    f"{TEST_CLASS_PACKAGES.get(name, 'forge.ai')}.{name}"
+    for name in SOURCES
+    if name != "AITest"
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
+    "forge.ai.AiController",
+    "forge.ai.ability.ChooseGenericAi",
+    "forge.ai.ability.CharmAi",
+    "forge.ai.simulation.ModalTextChoices",
     "forge.ai.AiCardMemory",
     "forge.game.player.PlayerController",
     "forge.ai.PlayerControllerAi",

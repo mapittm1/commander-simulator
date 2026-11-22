@@ -177,6 +177,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-empower-ai.patch",
                 "engine/patches/commander-text-choices.patch",
                 "engine/patches/commander-private-knowledge.patch",
+                "engine/patches/commander-modal-text.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",
                 "engine/patches/commander-reverse-turn-order.patch",
@@ -306,6 +307,9 @@ def _verify_inputs(args, recipe):
         "CommanderLookAtCoverageTest.java": "commander_look_at_coverage_test_sha256",
         "CommanderBaubleCoverageTest.java": "commander_bauble_coverage_test_sha256",
         "CommanderVintageOpeningReplayTest.java": "commander_vintage_opening_test_sha256",
+        "CommanderCompositeModeCoverageTest.java": "commander_composite_mode_test_sha256",
+        "CommanderModalTextCoverageTest.java": "commander_modal_text_test_sha256",
+        "CommanderModalBudgetTest.java": "commander_modal_budget_test_sha256",
         "CommanderVillainousChoiceTest.java": "commander_villainous_choice_test_sha256",
         "CommanderLearnTest.java": "commander_learn_test_sha256",
         "CommanderReverseTurnOrderTest.java": "commander_reverse_turn_order_test_sha256",
@@ -389,6 +393,9 @@ def _verify_inputs(args, recipe):
         "m/magical_hack.txt",
         "s/sleight_of_mind.txt",
         "m/mishras_bauble.txt",
+        "w/whim_of_volrath.txt",
+        "m/mind_bend.txt",
+        "s/spectral_shift.txt",
     ]:
         raise ValueError("Unexpected native card override registry")
     if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
@@ -698,6 +705,8 @@ def _patch_source(source, run, recipe):
         "CommanderLookAtCoverageTest.java",
         "CommanderBaubleCoverageTest.java",
         "CommanderVintageOpeningReplayTest.java",
+        "CommanderCompositeModeCoverageTest.java",
+        "CommanderModalTextCoverageTest.java",
         "CommanderVillainousChoiceTest.java",
         "CommanderLearnTest.java",
         "CommanderReverseTurnOrderTest.java",
@@ -739,6 +748,12 @@ def _patch_source(source, run, recipe):
             PROJECT / "engine/tests" / filename,
             source / "forge-gui-desktop/src/test/java/forge/ai" / filename,
         )
+
+    shutil.copyfile(
+        PROJECT / "engine/tests/CommanderModalBudgetTest.java",
+        source
+        / "forge-gui-desktop/src/test/java/forge/ai/simulation/CommanderModalBudgetTest.java",
+    )
 
     shutil.copyfile(
         PROJECT / "engine/tests/ResolvingControlForecastTest.java",
@@ -786,7 +801,7 @@ def _compile(args, source, maven, run):
             "-DforkCount=0",
             "-Dmaven.repo.local=" + str(PROJECT / "data/engine-builds/m2"),
             "-Dmaven.compiler.proc=none",
-            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,CardCharacteristicDiscrepancyTest,StarTrekBattlefrontTest,StarTrekFederationTest,StarTrekRevealTest,StarTrekStationTest,CommanderDiceReplacementTest,CommanderOptionalDiePaymentTest,CommanderExploreTest,CommanderDiscoverTest,CommanderDiscoverLkiTest,CommanderDiscoverScalarTest,CommanderDiscoverVehicleTest,CommanderDiscoverCastFormsTest,CommanderDiscoverTaxTest,CommanderDiscoverSacrificeTest,CommanderSwitchBlockAiTest,CommanderEmpowerAiTest,CommanderChangeTextAiTest,CommanderTextCompositionTest,CommanderPluralTextTest,CommanderLookAtCoverageTest,CommanderBaubleCoverageTest,CommanderVintageOpeningReplayTest,CommanderVillainousChoiceTest,CommanderLearnTest,CommanderReverseTurnOrderTest,CommanderExtraTurnDirectionTest,CommanderEndTurnTest,CommanderIncubateTest,CommanderTransformHistoryTest,CommanderSnapshotTransformStackTest,CommanderOracleCorrectionsTest,CommanderTemptCopyTest,CommanderConditionalManaTest,CommanderUlalekTest,CommanderUlalekAbilityOnlyTest,CommanderReaperLimitTest,CommanderRinoaReturnTest,CommanderPreventedReturnTest,CommanderTargetedReturnTest,CommanderOptionalLifeGainTest,CommanderOptionalDrawTest,CommanderOptionalCopyTest,CommanderCarpetManaTest,CommanderOptionalCountersTest,CommanderOptionalXTest,CommanderPriorityBoardingTest,CommanderOptionalPlayTest,forge.gamesimulationtests.priority.*Test,CommanderSecretVoteTest,CommanderEmptyVoteTest,CommanderPublicVoteTest,CommanderCirdanTest,CommanderTimeTravelTest,ProliferateFightAndInvestigateTest,StarTrekHoloEngineerTest,StarTrekNamedAbilityTest,ManaSacrificeTest,BeamMeUpTest",
+            "-Dtest=Sticker*Test,CommanderColorChoiceTest,CompanionPregameTest,SupplementaryGameCopyTest,StickerGameCopyTest,HistoricalGameCopyTest,DamageGameCopyTest,ParticipantGameCopyTest,StartingLifeGameCopyTest,StackGameCopyTest,FaceGameCopyTest,UsageGameCopyTest,TurnUsageGameCopyTest,DelayedGameCopyTest,TurnScheduleGameCopyTest,ConditionalGameCopyTest,AnimationGameCopyTest,CloneDurationGameCopyTest,ProtectionGameCopyTest,KeywordExpirationGameCopyTest,BlockingPreventionGameCopyTest,RingTextGameCopyTest,AttachmentManaGameCopyTest,HostReturnGameCopyTest,EffectCleanupGameCopyTest,DetainGameCopyTest,ControlTurnGameCopyTest,ControlledDecisionAiTest,ControlledCombatAiCoverageTest,PlayerControlPlanningTest,PreviewRandomIsolationTest,ControlOutcomeScoringTest,CompletedPlanRecoveryTest,ResolvingControlForecastTest,SpellControlCoverageTest,ComposedSpellControlTest,OptionalTriggerCheckpointTest,SpellControlCastHistoryTest,MassCounterRemovalTest,PaidOutcomePlannerTest,CulturalExchangeCoverageTest,MultiplePilesCoverageTest,ExchangeChoiceContractsTest,DrawEndingCoverageTest,CostPreviewIsolationTest,ReflectedManaCoverageTest,ManaTriggerFollowupTest,MixedReflectedManaTest,ManaAddedCoverageTest,SnowManaProjectionTest,ManaReplacementCoverageTest,ChosenManaReplacementProbeTest,UnpaidCastRecoveryProbeTest,OverlappingCastCostsProbeTest,NonmanaPaymentRecoveryProbeTest,FailedActivationManaProbeTest,FailedTapCostProbeTest,FailedGroupTapCostProbeTest,GroupTapSelectionProbeTest,TapManaOverlapProbeTest,NestedTapManaOverlapProbeTest,FilterTapManaOverlapProbeTest,NestedManaRollbackProbeTest,EnergyCostRecoveryProbeTest,DiscardCostRecoveryProbeTest,MixedDiscardRecoveryProbeTest,CardCounterCostRecoveryProbeTest,GroupedCounterCostProbeTest,SacrificeCostRecoveryProbeTest,StarTrekSagaProbeTest,StarTrekDilemmaProbeTest,StarTrekAssimilateProbeTest,StarTrekBeamResolutionTest,StarTrekCombatEntryTest,StarTrekKobayashiTest,CardCharacteristicDiscrepancyTest,StarTrekBattlefrontTest,StarTrekFederationTest,StarTrekRevealTest,StarTrekStationTest,CommanderDiceReplacementTest,CommanderOptionalDiePaymentTest,CommanderExploreTest,CommanderDiscoverTest,CommanderDiscoverLkiTest,CommanderDiscoverScalarTest,CommanderDiscoverVehicleTest,CommanderDiscoverCastFormsTest,CommanderDiscoverTaxTest,CommanderDiscoverSacrificeTest,CommanderSwitchBlockAiTest,CommanderEmpowerAiTest,CommanderChangeTextAiTest,CommanderTextCompositionTest,CommanderPluralTextTest,CommanderLookAtCoverageTest,CommanderBaubleCoverageTest,CommanderVintageOpeningReplayTest,CommanderCompositeModeCoverageTest,CommanderModalTextCoverageTest,CommanderModalBudgetTest,CommanderVillainousChoiceTest,CommanderLearnTest,CommanderReverseTurnOrderTest,CommanderExtraTurnDirectionTest,CommanderEndTurnTest,CommanderIncubateTest,CommanderTransformHistoryTest,CommanderSnapshotTransformStackTest,CommanderOracleCorrectionsTest,CommanderTemptCopyTest,CommanderConditionalManaTest,CommanderUlalekTest,CommanderUlalekAbilityOnlyTest,CommanderReaperLimitTest,CommanderRinoaReturnTest,CommanderPreventedReturnTest,CommanderTargetedReturnTest,CommanderOptionalLifeGainTest,CommanderOptionalDrawTest,CommanderOptionalCopyTest,CommanderCarpetManaTest,CommanderOptionalCountersTest,CommanderOptionalXTest,CommanderPriorityBoardingTest,CommanderOptionalPlayTest,forge.gamesimulationtests.priority.*Test,CommanderSecretVoteTest,CommanderEmptyVoteTest,CommanderPublicVoteTest,CommanderCirdanTest,CommanderTimeTravelTest,ProliferateFightAndInvestigateTest,StarTrekHoloEngineerTest,StarTrekNamedAbilityTest,ManaSacrificeTest,BeamMeUpTest",
             "-Dsurefire.failIfNoSpecifiedTests=false",
             "-f",
             str(source / "pom.xml"),

@@ -1,0 +1,467 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ability/CharmAi.java b/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/CharmAi.java
+@@ -1,4 +1,10 @@
+ package forge.ai.ability;
++
++import forge.ai.simulation.TextChangeChoices;
++
++import forge.ai.simulation.PaidOutcomePlanner;
++
++import forge.ai.simulation.ModalTextChoices;
+ 
+ import com.google.common.collect.Lists;
+ import forge.ai.*;
+@@ -25,6 +31,10 @@
+ public class CharmAi extends SpellAbilityAi {
+     @Override
+     protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        if (ModalTextChoices.supports(sa)) {
++            return PaidOutcomePlanner.choose(ai, sa, TextChangeChoices::variants);
++        }
++
+         final Card source = sa.getHostCard();
+         List<AbilitySub> choices = CharmEffect.makePossibleOptions(sa);
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/ability/ChooseGenericAi.java b/forge-ai/src/main/java/forge/ai/ability/ChooseGenericAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/ChooseGenericAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/ChooseGenericAi.java
+@@ -1,4 +1,10 @@
+ package forge.ai.ability;
++
++import forge.ai.simulation.TextChangeChoices;
++
++import forge.ai.simulation.PaidOutcomePlanner;
++
++import forge.ai.simulation.ModalTextChoices;
+ 
+ import com.google.common.collect.Lists;
+ import forge.ai.*;
+@@ -39,6 +45,10 @@
+ 
+     @Override
+     protected AiAbilityDecision checkApiLogic(final Player ai, final SpellAbility sa) {
++        if (ModalTextChoices.supports(sa)) {
++            return PaidOutcomePlanner.choose(ai, sa, TextChangeChoices::variants);
++        }
++
+         if (sa.hasParam("AILogic")) {
+             // This is equivalent to what was here before but feels bad
+             return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
+diff --git a/forge-ai/src/main/java/forge/ai/AiController.java b/forge-ai/src/main/java/forge/ai/AiController.java
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -1041,9 +1041,12 @@
+ 
+         final Card card = sa.getHostCard();
+ 
+-        // Trying to play a card that has Buyback without a Buyback cost, look for possible additional considerations
++        // Supported outcome planners compare the normal paid cast; a wait-for-buyback
++        // preference must not veto it before the actual benefit and costs are checked.
++        // Other buyback spells retain the existing preservation preference.
+         if (getBoolProperty(AiProps.TRY_TO_PRESERVE_BUYBACK_SPELLS) && card.hasKeyword(Keyword.BUYBACK)
+-                && !sa.isBuyback() && !canPlaySpellWithoutBuyback(sa)) {
++                && !sa.isBuyback() && !ModalTextChoices.supports(sa)
++                && !canPlaySpellWithoutBuyback(sa)) {
+             return AiPlayDecision.NeedsToPlayCriteriaNotMet;
+         }
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -6,6 +6,7 @@
+ import forge.ai.ability.ProtectAi;
+ import forge.ai.ability.PutStickerAi;
+ import forge.ai.simulation.ComboPlan;
++import forge.ai.simulation.ModalTextChoices;
+ import forge.ai.simulation.OpeningHand;
+ import forge.card.CardStateName;
+ import forge.card.ColorSet;
+@@ -457,6 +458,19 @@
+     @Override
+     public SpellAbility chooseSingleSpellForEffect(List<SpellAbility> spells, SpellAbility sa, String title,
+             Map<String, Object> params) {
++        if (ModalTextChoices.supports(sa) && sa.getApi() == ApiType.GenericChoice
++                && sa.getHostCard().getGame().getStack().isResolving()) {
++            List<String> options = ModalTextChoices.resolutionModes(sa, spells);
++            if (!options.isEmpty()) {
++                String mode = getAi().getSimulationPicker() == null ? null
++                        : getAi().getSimulationPicker().chooseTextMode(sa, options);
++                if (mode == null) mode = forge.ai.simulation.TextChangeChoices.consumeFullWord(sa, options);
++                int index = options.indexOf(mode);
++                if (index >= 0) return spells.get(index);
++            }
++        }
++        SpellAbility planned = ModalTextChoices.plannedGeneric(player, sa, spells);
++        if (planned != null) return planned;
+         return SpellApiToAi.Converter.get(sa).chooseSingleSpellAbility(player, sa, spells, params);
+     }
+ 
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/ModalTextChoices.java b/forge-ai/src/main/java/forge/ai/simulation/ModalTextChoices.java
+new file mode 100644
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/simulation/ModalTextChoices.java
+@@ -0,0 +1,166 @@
++package forge.ai.simulation;
++
++import forge.game.GameObject;
++import forge.game.ability.AbilityUtils;
++import forge.game.ability.ApiType;
++import forge.game.ability.effects.CharmEffect;
++import forge.game.player.Player;
++import forge.game.spellability.AbilitySub;
++import forge.game.spellability.SpellAbility;
++import forge.util.AITimeoutTracker;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.function.Function;
++
++/** Bounded mode preparation and replay for paid outcomes containing text changes. */
++public final class ModalTextChoices {
++    private static final String MODES = "AITextModes";
++    private static final String OWNER = "AITextModesOwner";
++    private static final int MAX_MODES = 32;
++    private static final int MAX_VARIANTS = 128;
++
++    private ModalTextChoices() { }
++
++    public static boolean supports(SpellAbility action) {
++        if (action.getActivatingPlayer() == null || action.hasParam("Random")
++                || action.hasParam("AtRandom") || action.hasParam("NumRandomChoices")
++                || action.hasParam("Chooser") || action.hasParam("CanRepeatModes")) return false;
++        if (action.getApi() == ApiType.GenericChoice
++                && (!"You".equals(action.getParam("Defined"))
++                    || !"1".equals(action.getParamOrDefault("ChoiceAmount", "1")))) return false;
++        if (action.getApi() != ApiType.Charm && action.getApi() != ApiType.GenericChoice) return false;
++        List<AbilitySub> choices = action.getAdditionalAbilityList("Choices");
++        return choices != null && !choices.isEmpty() && choices.size() <= MAX_MODES
++                && choices.stream().anyMatch(ModalTextChoices::containsText);
++    }
++
++    private static boolean containsText(SpellAbility action) {
++        for (SpellAbility part = action; part != null; part = part.getSubAbility()) {
++            if (part.getApi() == ApiType.ChangeText) return true;
++        }
++        return false;
++    }
++
++    static List<SpellAbility> variants(SpellAbility action) {
++        if (!supports(action)) return List.of(action.copy());
++        SpellAbility prepared = action.copy();
++        List<AbilitySub> all = prepared.getAdditionalAbilityList("Choices");
++        List<AbilitySub> legal = prepared.getApi() == ApiType.Charm
++                ? CharmEffect.makePossibleOptions(prepared) : all;
++        int max = prepared.getApi() == ApiType.GenericChoice ? 1
++                : prepared.isEntwine() ? legal.size()
++                : AbilityUtils.calculateAmount(prepared.getHostCard(), prepared.getParamOrDefault("CharmNum", "1"), prepared);
++        int min = prepared.isEntwine() ? max : prepared.getApi() == ApiType.GenericChoice ? 1
++                : AbilityUtils.calculateAmount(prepared.getHostCard(), prepared.getParamOrDefault("MinCharmNum", String.valueOf(max)), prepared);
++        if (min < 0 || max < min || max > MAX_MODES) return List.of();
++        List<Integer> indices = new ArrayList<>();
++        for (int i = 0; i < all.size(); i++) if (legal.contains(all.get(i))) indices.add(i);
++        List<List<Integer>> combinations = new ArrayList<>();
++        combine(indices, 0, min, Math.min(max, indices.size()), new ArrayList<>(), combinations);
++        List<SpellAbility> result = new ArrayList<>();
++        for (List<Integer> selected : combinations) {
++            SpellAbility variant = action.copy();
++            variant.setPlannedAiChoice(MODES, selected.stream().map(String::valueOf).collect(java.util.stream.Collectors.joining(",")));
++            variant.setPlannedAiChoice(OWNER, String.valueOf(action.getActivatingPlayer().getId()));
++            if (variant.getApi() == ApiType.Charm) {
++                List<AbilitySub> chosen = new ArrayList<>();
++                for (int index : selected) chosen.add(variant.getAdditionalAbilityList("Choices").get(index));
++                variant.setChosenList(chosen);
++                variant.setSubAbility(null);
++                CharmEffect.chainAbilities(variant, chosen);
++            }
++            result.add(variant);
++        }
++        return result;
++    }
++
++    private static void combine(List<Integer> options, int start, int min, int max,
++            List<Integer> selected, List<List<Integer>> result) {
++        AITimeoutTracker.check();
++        // A branch with too few remaining modes cannot produce a legal combination.
++        // Without this guard an all-mode form explores every impossible subset.
++        if (result.size() >= MAX_VARIANTS || selected.size() + options.size() - start < min) return;
++        if (selected.size() >= min) result.add(List.copyOf(selected));
++        if (selected.size() == max) return;
++        for (int i = start; i < options.size() && result.size() < MAX_VARIANTS; i++) {
++            selected.add(options.get(i));
++            combine(options, i + 1, min, max, selected, result);
++            selected.remove(selected.size() - 1);
++        }
++    }
++
++    private static List<Integer> indices(SpellAbility action) {
++        String value = action.getPlannedAiChoice(MODES);
++        if (value == null || value.isEmpty() || value.length() > 128) return List.of();
++        List<Integer> result = new ArrayList<>();
++        try {
++            for (String token : value.split(",")) {
++                int index = Integer.parseInt(token);
++                if (index < 0 || index >= action.getAdditionalAbilityList("Choices").size()
++                        || result.contains(index)) return List.of();
++                result.add(index);
++            }
++        } catch (NumberFormatException exception) { return List.of(); }
++        return result;
++    }
++
++    static SpellAbility genericChild(SpellAbility action) {
++        List<Integer> selected = indices(action);
++        return action.getApi() == ApiType.GenericChoice && selected.size() == 1
++                ? action.getAdditionalAbilityList("Choices").get(selected.get(0)) : null;
++    }
++
++    public static SpellAbility plannedGeneric(Player actor, SpellAbility action, List<SpellAbility> available) {
++        if (!supports(action) || !action.getHostCard().getGame().getStack().isResolving()
++                || !String.valueOf(actor.getId()).equals(action.getPlannedAiChoice(OWNER))) return null;
++        SpellAbility selected = genericChild(action);
++        return selected != null && available.contains(selected) ? selected : null;
++    }
++
++    /** Stable ordinal tokens distinguish resolution-time modes from literal word choices. */
++    public static List<String> resolutionModes(SpellAbility action, List<SpellAbility> available) {
++        if (action.getApi() != ApiType.GenericChoice) return List.of();
++        List<AbilitySub> all = action.getAdditionalAbilityList("Choices");
++        if (all == null || all.size() > MAX_MODES) return List.of();
++        List<String> result = new ArrayList<>();
++        for (SpellAbility choice : available) {
++            int index = all.indexOf(choice);
++            if (index < 0) return List.of();
++            result.add("mode:" + index);
++        }
++        return result;
++    }
++
++    static void copyChoices(SpellAbility source, SpellAbility destination,
++            Function<GameObject, GameObject> mapper) {
++        for (String key : List.of(MODES, OWNER)) destination.clearPlannedAiChoice(key);
++        String encoded = source.getPlannedAiChoice(MODES);
++        if (encoded == null || source.getApi() != destination.getApi()) return;
++        List<Integer> selected = indices(source);
++        if (selected.isEmpty() && (!encoded.isEmpty() || source.getApi() != ApiType.Charm)) return;
++        List<AbilitySub> from = source.getAdditionalAbilityList("Choices");
++        List<AbilitySub> to = destination.getAdditionalAbilityList("Choices");
++        if (from == null || to == null || from.size() != to.size()) return;
++        if (source.getApi() == ApiType.Charm && !selected.isEmpty() && source.getSubAbility() == null) return;
++        destination.setPlannedAiChoice(MODES, encoded);
++        if (source.getPlannedAiChoice(OWNER) != null)
++            destination.setPlannedAiChoice(OWNER, source.getPlannedAiChoice(OWNER));
++        if (source.getApi() == ApiType.GenericChoice) {
++            for (int index : selected) SpellAbilityChoiceCopier.copyTargets(from.get(index), to.get(index), mapper);
++        } else if (source.getApi() == ApiType.Charm) {
++            List<AbilitySub> modes = new ArrayList<>();
++            SpellAbility part = source.getSubAbility();
++            for (int index : selected) {
++                AbilitySub mode = to.get(index);
++                SpellAbilityChoiceCopier.copyTargets(part, mode, mapper);
++                for (SpellAbility original = from.get(index); original != null; original = original.getSubAbility()) {
++                    if (part != null) part = part.getSubAbility();
++                }
++                modes.add(mode);
++            }
++            destination.setChosenList(modes);
++            destination.setSubAbility(null);
++            CharmEffect.chainAbilities(destination, modes);
++        }
++    }
++}
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PaidOutcomePlanner.java
+@@ -49,39 +49,41 @@
+             baselineValue += baseline[i].value;
+             baselineAvailable += baseline[i].availableValue;
+         }
+-        SpellAbility trial = action.copy();
+-        MultiTargetSelector selector = new MultiTargetSelector(trial, null);
++        List<SpellAbility> prepared = ModalTextChoices.variants(action);
+         SpellAbility best = null;
+         long bestValue = baselineValue;
+         // An untargeted action has one empty target combination, not zero choices.
+         int outcomes = 0;
+-        targetLoop:
+-        for (int choice = 0; choice < MAX_TARGET_CHOICES
+-                && (selector.hasTargeting() ? selector.selectNextTargets() : choice == 0); choice++) {
+-            AITimeoutTracker.check();
+-            for (SpellAbility variant : variants.apply(trial)) {
+-                if (outcomes++ == MAX_TARGET_CHOICES) break targetLoop;
++        modeLoop:
++        for (SpellAbility trial : prepared) {
++            MultiTargetSelector selector = new MultiTargetSelector(trial, null);
++            for (int choice = 0; choice < MAX_TARGET_CHOICES
++                    && (selector.hasTargeting() ? selector.selectNextTargets() : choice == 0); choice++) {
+                 AITimeoutTracker.check();
+-                long value = 0;
+-                long available = 0;
+-                boolean complete = true;
+-                for (int i = 0; i < SEEDS.length; i++) {
+-                    final long seed = SEEDS[i];
+-                    final GameStateEvaluator.Score start = baseline[i];
+-                    GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
+-                        GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
+-                        return simulator.simulateSpellAbility(variant);
+-                    });
+-                    if (result.value == Integer.MIN_VALUE) {
+-                        complete = false;
+-                        break;
++                for (SpellAbility variant : variants.apply(trial)) {
++                    if (outcomes++ == MAX_TARGET_CHOICES) break modeLoop;
++                    AITimeoutTracker.check();
++                    long value = 0;
++                    long available = 0;
++                    boolean complete = true;
++                    for (int i = 0; i < SEEDS.length; i++) {
++                        final long seed = SEEDS[i];
++                        final GameStateEvaluator.Score start = baseline[i];
++                        GameStateEvaluator.Score result = MyRandom.withRandom(new Random(seed), () -> {
++                            GameSimulator simulator = new GameSimulator(new SimulationController(start, 0), actor.getGame(), actor, null);
++                            return simulator.simulateSpellAbility(variant);
++                        });
++                        if (result.value == Integer.MIN_VALUE) {
++                            complete = false;
++                            break;
++                        }
++                        value += result.value;
++                        available += result.availableValue;
+                     }
+-                    value += result.value;
+-                    available += result.availableValue;
+-                }
+-                if (complete && value > bestValue && available > baselineAvailable) {
+-                    best = variant.copy();
+-                    bestValue = value;
++                    if (complete && value > bestValue && available > baselineAvailable) {
++                        best = variant.copy();
++                        bestValue = value;
++                    }
+                 }
+             }
+         }
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityChoiceCopier.java
+@@ -39,6 +39,7 @@
+         if (source == destination) {
+             return;
+         }
++        ModalTextChoices.copyChoices(source, destination, gameObjectMapper);
+         for (SpellAbility sourceAbility = source, destinationAbility = destination;
+                 sourceAbility != null && destinationAbility != null;
+                 sourceAbility = sourceAbility.getSubAbility(),
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/SpellAbilityPicker.java
+@@ -442,6 +442,12 @@
+         });
+     }
+ 
++    /** Resolution-time mode choices share the ordered replay stream with their text words. */
++    public String chooseTextMode(SpellAbility action, List<String> options) {
++        return interceptor == null || !interceptor.acceptsTextRoot(action) ? null
++                : interceptor.chooseTextWord(options);
++    }
++
+     public String chooseTextWord(SpellAbility action, List<String> options, boolean color) {
+         return interceptor == null || !interceptor.acceptsTextRoot(action) ? null
+                 : interceptor.chooseTextWord(TextChangeChoices.resolutionOptions(action, options, color));
+diff --git a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+--- a/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/TextChangeChoices.java
+@@ -45,29 +45,46 @@
+     private TextChangeChoices() { }
+ 
+     public static List<SpellAbility> variants(SpellAbility targeted) {
+-        List<SpellAbility> result = new ArrayList<>();
+-        for (Words color : pairs(targeted, "ChangeColorWord", true)) {
+-            for (Words type : pairs(targeted, "ChangeTypeWord", false)) {
+-                AITimeoutTracker.check();
+-                SpellAbility variant = targeted.copy();
+-                clearFullWords(variant);
+-                for (String key : KEYS) {
+-                    variant.clearPlannedAiChoice(key);
+-                }
+-                bind(variant, targeted);
+-                if (color != null) {
+-                    setWords(variant, true, color.from, color.to);
+-                }
+-                if (type != null) {
+-                    setWords(variant, false, type.from, type.to);
+-                }
+-                result.add(variant);
+-                if (result.size() == MAX_VARIANTS) {
+-                    return result;
+-                }
+-            }
++        List<SpellAbility> result = List.of(targeted.copy());
++        int count = textParts(targeted).size();
++        for (int index = 0; index < count; index++) {
++            List<SpellAbility> next = new ArrayList<>();
++            for (SpellAbility candidate : result) {
++                SpellAbility part = textParts(candidate).get(index);
++                for (Words color : pairs(part, "ChangeColorWord", true)) {
++                    for (Words type : pairs(part, "ChangeTypeWord", false)) {
++                        AITimeoutTracker.check();
++                        SpellAbility variant = candidate.copy();
++                        SpellAbility child = textParts(variant).get(index);
++                        clearFullWords(variant);
++                        for (String key : KEYS) child.clearPlannedAiChoice(key);
++                        bind(child, child);
++                        if (color != null) setWords(child, true, color.from, color.to);
++                        if (type != null) setWords(child, false, type.from, type.to);
++                        next.add(variant);
++                        if (next.size() == MAX_VARIANTS) break;
++                    }
++                    if (next.size() == MAX_VARIANTS) break;
++                }
++                if (next.size() == MAX_VARIANTS) break;
++            }
++            result = next;
+         }
+         return result;
++    }
++
++    private static List<SpellAbility> textParts(SpellAbility root) {
++        List<SpellAbility> parts = new ArrayList<>();
++        for (SpellAbility part = root; part != null; part = part.getSubAbility()) {
++            if (part.getApi() == ApiType.ChangeText) parts.add(part);
++            SpellAbility selected = ModalTextChoices.genericChild(part);
++            if (selected != null) {
++                for (SpellAbility child = selected; child != null; child = child.getSubAbility()) {
++                    if (child.getApi() == ApiType.ChangeText) parts.add(child);
++                }
++            }
++        }
++        return parts;
+     }
+ 
+     private static List<Words> pairs(SpellAbility action, String parameter, boolean color) {
+diff --git a/forge-gui/res/cardsfolder/w/whim_of_volrath.txt b/forge-gui/res/cardsfolder/w/whim_of_volrath.txt
+--- a/forge-gui/res/cardsfolder/w/whim_of_volrath.txt
++++ b/forge-gui/res/cardsfolder/w/whim_of_volrath.txt
+@@ -6,5 +6,4 @@
+ SVar:ChangeColor:DB$ ChangeText | Defined$ ParentTarget | ChangeColorWord$ Choose Choose | SpellDescription$ Change color
+ SVar:ChangeType:DB$ ChangeText | Defined$ ParentTarget | ChangeTypeWord$ ChooseBasicLandType ChooseBasicLandType | SpellDescription$ Change type
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Buyback {2} (You may pay an additional {2} as you cast this spell. If you do, put this card into your hand as it resolves.)\nChange the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (For example, you may change "nonred creature" to "nongreen creature" or "plainswalk" to "swampwalk.")
+diff --git a/forge-gui/res/cardsfolder/m/mind_bend.txt b/forge-gui/res/cardsfolder/m/mind_bend.txt
+--- a/forge-gui/res/cardsfolder/m/mind_bend.txt
++++ b/forge-gui/res/cardsfolder/m/mind_bend.txt
+@@ -5,5 +5,4 @@
+ SVar:ChangeColor:DB$ ChangeText | Defined$ ParentTarget | ChangeColorWord$ Choose Choose | Duration$ Permanent | SpellDescription$ Change color
+ SVar:ChangeType:DB$ ChangeText | Defined$ ParentTarget | ChangeTypeWord$ ChooseBasicLandType ChooseBasicLandType | Duration$ Permanent | SpellDescription$ Change type
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another. (For example, you may change "nonblack creature" to "nongreen creature" or "forestwalk" to "islandwalk." This effect lasts indefinitely.)
+diff --git a/forge-gui/res/cardsfolder/s/spectral_shift.txt b/forge-gui/res/cardsfolder/s/spectral_shift.txt
+--- a/forge-gui/res/cardsfolder/s/spectral_shift.txt
++++ b/forge-gui/res/cardsfolder/s/spectral_shift.txt
+@@ -6,5 +6,4 @@
+ SVar:DBBasicLand:DB$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | ChangeTypeWord$ ChooseBasicLandType ChooseBasicLandType | Duration$ Permanent | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one basic land type with another. (This effect lasts indefinitely.)
+ SVar:DBColor:DB$ ChangeText | ValidTgts$ Card | TgtZone$ Stack,Battlefield | TgtPrompt$ Choose target spell or permanent | ChangeColorWord$ Choose Choose | Duration$ Permanent | SpellDescription$ Change the text of target spell or permanent by replacing all instances of one color word with another. (This effect lasts indefinitely.)
+ AI:RemoveDeck:Random
+-AI:RemoveDeck:All
+ Oracle:Choose one —\n• Change the text of target spell or permanent by replacing all instances of one basic land type with another. (This effect lasts indefinitely.)\n• Change the text of target spell or permanent by replacing all instances of one color word with another. (This effect lasts indefinitely.)\nEntwine {2} (Choose both if you pay the entwine cost.)
