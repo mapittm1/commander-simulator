@@ -27,22 +27,32 @@ difference.
 
 ## Card coverage
 
-A draw-step timing correction passes all 1,066 focused source checks, retaining
-1,042 and adding 24. Per-draw checks catch a Reed Richards replacement firing on
-the third own-step draw instead of the second even though a three-draw batch
-totals six cards. Paired history controls also catch a foreign-step draw being
-excluded as normal. See the [preserved failures](engine/draw_step_replacement_gap.json)
-and [source validation](engine/draw_step_replacement_native_evidence.json).
-The recipe prepares 2,291 native and 1,134 packaged checks; these are future
-validation targets. The selected 2,267-test runtime below remains unchanged.
+The selected runtime applies first-extra replacements to the first eligible draw,
+while exempting the first card drawn during each own draw step. Draws during
+another player's draw step count as extra draws. Global draw-step history is
+preserved in original games and active/common snapshots.
 
+All 1,066 focused source checks and 2,291 native tests pass, retaining 2,267 native
+cases and adding 24. Independent/repeated packaged families pass 1134/65/194/146;
+broader gameplay/serialization pass 3,765/256. All 45 live tests and 2,187 subtests
+pass. Post-move health is ready; construction passes for 32,636 starting identities
+with seven nonstarting meld exclusions. See the [preserved per-event failures](engine/draw_step_replacement_gap.json),
+[source validation](engine/draw_step_replacement_native_evidence.json),
+[packaged checks](engine/draw_step_replacement_packaged_evidence.json), and
+[activation evidence](engine/draw_step_replacement_evidence.json).
 
-The selected runtime evaluates paid Recruit actions and preserves copied draw
+The 24 fixed contracts retain identical baseline fixture bytes and cover own-step
+first/second/third draws, equal three-card batch totals, foreign-step and MAIN2
+histories, and original/active/common worlds. Card scripts and AI profiles are
+unchanged. Other replacement/prevention combinations, denied or replaced draw
+history, strategy and complete Commander correctness remain unproven.
+
+The earlier Recruit/draw-provenance milestone evaluated paid Recruit actions and preserves copied draw
 history, drawn-card flags and last-drawn provenance. Native cost admission and
 AI payment share a current-turn, current-hand and card-timestamp check, rejecting
 previous-turn cards and cards that left and returned to the hand.
 
-All 1,042 focused source checks and 2,267 native tests pass, retaining all 2,212
+That milestone passed 1,042 focused source checks and 2,267 native tests, retaining all 2,212
 prior native methods and adding 55. Independent and repeated packaged families
 pass 1110/65/194/146; broader gameplay/serialization pass 3,741/256. All 45 live
 tests and 2,163 subtests pass. Post-move health is ready, and construction passes

@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate first-extra draw timing and foreign-step exclusion after all 1,066
+  source and 2,291 native checks pass, retaining 2,267 and adding 24. Independent
+  and repeated packaged families pass 1134/65/194/146; broader gameplay and
+  serialization pass 3,765/256; all 45 live tests and 2,187 subtests pass.
+  Verify post-move readiness and construction of 32,636 starting identities
+  with seven nonstarting meld exclusions. Preserve native 18-case12pass/6fail
+  and 24-case15pass/9fail baselines and identical fixed-fixture bytes. Per-event
+  checks expose timing errors hidden by equal batch totals. Two existing classes
+  change; scripts/profiles are unchanged. Wider replacement/prevention/history
+  and full Commander correctness remain open. See engine/draw_step_replacement_evidence.json.
+
 - Correct first-extra draw timing and foreign-step exclusion in isolated source.
   All 1,066 focused checks pass, retaining 1,042 and adding 24 per-event/history
   contracts across original/active/common games. Preserve native18-case12pass/6fail

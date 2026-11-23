@@ -1,5 +1,5 @@
 {
-  "status": "confirmed_selected_runtime_gap_source_corrected_packaging_pending",
+  "status": "passed_and_activated",
   "baseline_commit": "383e2d99e27b2f9716bf37a40c07bf6a810c8eed",
   "catalog_oracle": {
     "card_id": "51f55021-04e0-49bf-8f1f-de2a578c95fc",
@@ -705,7 +705,14 @@
   "finding": "Own-step first-extra replacement fires on the third draw instead of the second; equal three-draw batch totals conceal the timing error. Paired MAIN2/foreign-DRAW history controls expose exclusion of an out-of-turn draw as normal. All original/active/common worlds reproduce the supplied failures.",
   "limits": [
     "Per-event checks are needed; passing batch totals are not timing proof.",
-    "Source1066 correction is not yet packaged or active; selected2267 retains these failures.",
+    "The correction is packaged and active with 2291 passing native methods; full replacement/prevention coverage and Commander correctness remain unproven.",
     "All replacement/prevention ordering and attempted/replaced-draw history remain further validation."
-  ]
+  ],
+  "activation_validation": {
+    "evidence": "engine/draw_step_replacement_evidence.json",
+    "sha256": "c92e52f5d063958c928bf03e0a94d34d086cc79ccd1c4784fd8d249323eafd1e",
+    "native_methods": 2291,
+    "live_tests": 45,
+    "live_subtests": 2187
+  }
 }
