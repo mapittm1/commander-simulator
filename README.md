@@ -27,11 +27,15 @@ difference.
 
 ## Card coverage
 
-An autonomous rearrange baseline passes 12 of 14 native checks. Full simulation
-selects and pays X=4 in the supplied end-step states; hybrid mode skips the same
-useful ability in original/copied games before planning. Paid resolution and
-decline controls pass. See the [admission gap](engine/autonomous_rearrange_gap.json).
-The selected runtime below remains active; a correction is not yet validated.
+An isolated autonomous rearrange correction passes 892 focused source checks,
+retaining 865 and adding 27. Primary rearrange abilities receive generic semantic
+admission and paired native paid-outcome assessment, including X, legal targets,
+payment, privacy and deadline cleanup. The original hybrid baseline failures and
+fixture compile failures remain preserved. A native shared-X composite check
+passes; its follow-up retains the full paid X. Packaging and broader/full live
+validation remain pending. See the [baseline](engine/autonomous_rearrange_gap.json)
+and [source evidence](engine/autonomous_rearrange_native_evidence.json).
+The selected runtime below is unchanged; complete card/rules/AI support remains open.
 
 The selected runtime preserves previously known library positions outside an
 authorized inspection through declared index transforms. Bounded scopes permit

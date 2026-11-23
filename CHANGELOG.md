@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add source-validated generic autonomous rearrange admission and paid native
+  outcome assessment. All 892 focused checks pass, retaining 865 and adding 27.
+  Validate actual hybrid/full original/copied X selection, payment, known/empty/
+  timing/budget controls, native color and target restrictions, private knowledge,
+  X cleanup and recovery after expired previews. Preserve shared X in a trusted
+  native composed life-gain effect. Restrict the library-size optimization to
+  standalone own-library rearrangements. Preserve the two hybrid baseline failures
+  and all three fixture compilation failures. Packaging and broader/full live
+  gates remain pending; selected engine/scripts/default AI are unchanged.
+  Complete Commander correctness remains unproven.
+  See engine/autonomous_rearrange_native_evidence.json.
+
 - Record a fourteen-case autonomous rearrange baseline: twelve pass and two
   original/copied hybrid choices fail. Full simulation announces and pays X=4;
   supplied paid-resolution and known/empty/timing/unaffordable decline controls

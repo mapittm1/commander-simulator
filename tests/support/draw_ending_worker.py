@@ -33,6 +33,9 @@ SOURCES = {
     "CommanderLibraryChoiceBoundaryTest": "commander_library_choice_boundary_test_sha256",
     "CommanderLibraryKnowledgeTransitionTest": "commander_library_knowledge_transition_test_sha256",
     "CommanderLibraryObservationBoundaryTest": "commander_library_observation_boundary_test_sha256",
+    "CommanderAutonomousRearrangeTest": "commander_autonomous_rearrange_test_sha256",
+    "CommanderRearrangeChoiceBoundaryTest": "commander_rearrange_choice_boundary_test_sha256",
+    "CommanderRearrangeCompositeXTest": "commander_rearrange_composite_x_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -150,6 +153,7 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.LookAtEffect",
     "forge.ai.InspectionKnowledge",
     "forge.ai.InformationEffects",
+    "forge.ai.ability.RearrangeTopOfLibraryAi",
     "forge.ai.ability.PumpAi",
     "forge.ai.ability.PermanentNoncreatureAi",
     "forge.game.ability.effects.RearrangeTopOfLibraryEffect",
@@ -299,7 +303,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 933-case packaged family."""
+    """Execute the existing fixed 960-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

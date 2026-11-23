@@ -1,0 +1,51 @@
+--- a/forge-ai/src/main/java/forge/ai/InformationEffects.java
++++ b/forge-ai/src/main/java/forge/ai/InformationEffects.java
+@@ -22,8 +22,14 @@
+     private InformationEffects() { }
+ 
+     public static boolean supportsPrimary(SpellAbility action) {
+-        return action != null && action.isSpell() && (isInspectionChain(action)
+-                || action.getApi() == ApiType.PermanentNoncreature && isPureInformationPermanent(action.getHostCard()));
++        return action != null && (isPrimaryRearrange(action) || action.isSpell() && (isInspectionChain(action)
++                || action.getApi() == ApiType.PermanentNoncreature && isPureInformationPermanent(action.getHostCard())));
++    }
++
++    /** Native paid outcomes support primary rearrange spells and activations, not arbitrary hosts. */
++    public static boolean isPrimaryRearrange(SpellAbility action) {
++        return action != null && (action.isSpell() || action.isActivatedAbility())
++                && action.getApi() == ApiType.RearrangeTopOfLibrary;
+     }
+ 
+     public static boolean isPureInformationPermanent(Card card) {
+--- a/forge-ai/src/main/java/forge/ai/ability/RearrangeTopOfLibraryAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/RearrangeTopOfLibraryAi.java
+@@ -39,6 +39,29 @@
+             // Do it once per turn, generally (may be improved later)
+             if (source.getAbilityActivatedThisTurn().getActivators(sa).contains(aiPlayer)) {
+                 return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++            }
++        }
++
++        if (InformationEffects.isPrimaryRearrange(sa)) {
++            // Announce a legal affordable X before comparing native paid outcomes.
++            // A rejected or interrupted preview must not leave a stale X on the live action.
++            Integer previousX = sa.getXManaCostPaid();
++            boolean selected = false;
++            try {
++                if (sa.costHasManaX() && "Count$xPaid".equals(sa.getSVar("X"))) {
++                    int maximum = ComputerUtilCost.setMaxXValue(sa, aiPlayer, false);
++                    // A follow-up may use the same X for more than the inspected library.
++                    if (sa.getSubAbility() == null && "X".equals(sa.getParam("NumCards"))
++                            && "You".equals(sa.getParam("Defined"))) {
++                        maximum = Math.min(maximum, aiPlayer.getCardsIn(ZoneType.Library).size());
++                    }
++                    sa.setXManaCostPaid(maximum);
++                }
++                AiAbilityDecision decision = forge.ai.simulation.PaidOutcomePlanner.choose(aiPlayer, sa);
++                selected = decision.willingToPlay();
++                return decision;
++            } finally {
++                if (!selected) sa.setXManaCostPaid(previousX);
+             }
+         }
+ 
