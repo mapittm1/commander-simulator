@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+A controlled-information baseline passes six native controls and fails eight
+AI observer/selection checks. Paid control, payment, countering and rearrange
+resolution succeed, but the controlling player lacks the observed positions,
+and the original player loses them when control ends. Controlled autonomous
+choices also skip useful information. See the [exact baseline](engine/controlled_information_gap.json).
+The selected runtime below remains active; a correction is not yet validated.
+
 The selected runtime admits primary library-rearrange spells and activations by
 ability semantics. Hybrid mode compares paired native paid outcomes for useful
 information, legal targets and actual costs. Shared cost budgeting prepares X;

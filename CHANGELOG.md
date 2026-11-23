@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record fourteen native controlled-information contracts: six proxy/payment/
+  counter controls pass and eight rightful-observer/autonomous-choice checks fail.
+  Real paid Worst Fears establishes control, paid Soothsaying resolves and Stifle
+  prevents disclosure. The acting proxy learns three positions; the master and
+  post-control original player retain zero. Preserve exact fixture, driver/input
+  snapshots, native origins and reports. Require generic current in-game
+  observation rights and captured recipients, without copying private histories
+  or granting later controllers earlier hidden observations. Selected 2,117-method
+  runtime remains active; complete rules and calibrated strategy remain unproven.
+  See engine/controlled_information_gap.json and official rules 724.4/724.5a.
+
 - Activate generic autonomous rearrange choices after all 45 live tests and
   2,013 subtests pass, including repeated 960/65/194/146 packaged families.
   All 892 focused source, 2,117 native, 3,591 gameplay and 256 serialization checks
