@@ -1,0 +1,496 @@
+{
+  "status": "source_validated_packaging_pending",
+  "baseline_commit": "a4212934b20023a487a5e99bceba108ae40199b4",
+  "selected_native_methods_unchanged": 2212,
+  "source_audit": {
+    "status": "passed_source_only_packaging_pending",
+    "counts": {
+      "total": 1021,
+      "passed": 1021,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_methods": 987,
+    "production_sources": 2166,
+    "production_changes": [
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
+      "forge-ai/src/main/java/forge/ai/ability/RecruitAi.java",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "forge-game/src/main/java/forge/game/GameSnapshot.java",
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "input_manifests": {
+      "production-inputs.json": "dbc94a73c2743a25be9e1a3f467a40f10552c2bc2661e5a83fcffb1be82d2f48",
+      "test-inputs.json": "a6e34c1e6dc2d1ab9eb8184eed6a785b9c4e0ca57d3bb39ca0dfb9748326265a",
+      "card-inputs.json": "f1db78cb4548d8af15a57c8d77ba2131b969446ca4901dd663b9c99c8139972c"
+    },
+    "report_sha256": "cb648465029d3873b8cbf753f20e39c08d051197ef7fd551620c1d2a5969c242",
+    "log_sha256": "333565a7de2fdfcf5869959e059707d86f892ed32e84b126b4f22fbeb28e3af0",
+    "auditor_sha256": "caa768ae74f5ac0bdc42fa43dec562a7493d5afe4bcbd9724bd9c50eabed876b",
+    "limits": [
+      "Selected runtime2212 unchanged; no package or activation proof.",
+      "Controlled willing-profile actual choices do not certify default probabilistic strategy.",
+      "Paid-root Recruit prototype retains mandatory fallback; optional triggers remain deferred.",
+      "Ten safety plus eight printed draw-history scenarios are original/copied partial states; last-drawn object references and all Recruit/Commander contexts remain unproven."
+    ]
+  },
+  "source_audit_sha256": "e0acca77c05476ee5f93ccfc336cd24d223d3acca168e1ed1110bdf89218f7ea",
+  "source_phases": {
+    "source-recruit1003": {
+      "log_sha256": "66f4e3b989f00ae0f4c4b3a5ad36f95d447c93a215d69f3adab8a5bde4177ca1",
+      "input_manifests": {
+        "card-inputs.json": "5c02b6691772d11f00c6f84fa2ef8113540fcbd077c06bae5ef659d2958fbcc9",
+        "production-inputs.json": "5a88387c783b0ef665e7377ffe0f9bee3479972ee64cf57426cd1e33b2894d5f",
+        "test-inputs.json": "06a08265f216175c2c9a5cff575399d9a5bf6c67a95122a6b9e6f396ba5c5254"
+      },
+      "counts": {
+        "total": 1003,
+        "passed": 1002,
+        "failed": 1,
+        "skipped": 0
+      },
+      "report_sha256": "333fb2e844c00d105fe176c61d20d80a8d4822d9663b6287cc8735283a6ed53b",
+      "failed_methods": [
+        {
+          "method": "forge.ai.CommanderRecruitPlanningTest.copiedHybridChoosesCounterWithRecruit",
+          "status": "FAIL",
+          "duration_ms": 7,
+          "message": "\n              An affordable legal counter can prevent the supplied lethal spell expected object to not be null\n            "
+        }
+      ]
+    },
+    "source-recruit1013": {
+      "log_sha256": "e5f35413de55b1ec478deb82425606e31985da8ccb9cc2d4073267af541095f4",
+      "input_manifests": {
+        "card-inputs.json": "c930832152e603f22fc1ce890865777fa2549ca622b8ff150b3d908e1fc6a3c8",
+        "production-inputs.json": "5a88387c783b0ef665e7377ffe0f9bee3479972ee64cf57426cd1e33b2894d5f",
+        "test-inputs.json": "71ca9dd84d0ee9a9676e5bf03771b57483fff852699f746f5972a3c4c5a695ae"
+      },
+      "status": "no_native_test_report",
+      "failure": {
+        "status": "fixture_compile_failed_no_tests_executed",
+        "cause": "Safety fixture called drawCards(int, SpellAbility), but native API requires drawCards(int, SpellAbility, Map).",
+        "correction": "Add AbilityKey.newMap() argument only. No production, scenarios, profiles, assertions or timeout changes.",
+        "log_sha256": "e5f35413de55b1ec478deb82425606e31985da8ccb9cc2d4073267af541095f4"
+      }
+    },
+    "source-recruit1013-v2": {
+      "log_sha256": "1ce194ef6a4ef750566031d64c076bee1ccab7ee3a21c0e2ebc37ce70bb99f24",
+      "input_manifests": {
+        "card-inputs.json": "c930832152e603f22fc1ce890865777fa2549ca622b8ff150b3d908e1fc6a3c8",
+        "production-inputs.json": "5a88387c783b0ef665e7377ffe0f9bee3479972ee64cf57426cd1e33b2894d5f",
+        "test-inputs.json": "7fb6f095bd1e3df2849d865b08658f3e4f61f55af1862ce038cb7e670bb7117e"
+      },
+      "counts": {
+        "total": 1013,
+        "passed": 1011,
+        "failed": 2,
+        "skipped": 0
+      },
+      "report_sha256": "b40aec24048a38870f7268f7e01b00e67617cc2f22dc4b9889e39f12c494ad01",
+      "failed_methods": [
+        {
+          "method": "forge.ai.CommanderRecruitSafetyTest.copiedDrawProhibited",
+          "status": "FAIL",
+          "duration_ms": 31,
+          "message": "\n              Native outcome must account for DrawProhibited expected [true] but found [false]\n            "
+        },
+        {
+          "method": "forge.ai.CommanderRecruitSafetyTest.originalDrawProhibited",
+          "status": "FAIL",
+          "duration_ms": 24,
+          "message": "\n              Native outcome must account for DrawProhibited expected [true] but found [false]\n            "
+        }
+      ]
+    },
+    "source-recruit1013-v3": {
+      "log_sha256": "b373ec42bdb1d44d98fff902bcae4337dd196bf6f499c979b169fd532c9fe1f4",
+      "input_manifests": {
+        "card-inputs.json": "c930832152e603f22fc1ce890865777fa2549ca622b8ff150b3d908e1fc6a3c8",
+        "production-inputs.json": "1ab0e40fe101ba7d1b4baa32fa182744a62fb12cb6d746b908b26114ffb846b4",
+        "test-inputs.json": "45a948b861e148896ddbe2764bd1975230ce76ecaaa6a9d81eb6e6bd2cc34234"
+      },
+      "counts": {
+        "total": 1013,
+        "passed": 1011,
+        "failed": 2,
+        "skipped": 0
+      },
+      "report_sha256": "b8e69f5544084f912a59e20cfe19865de9fac8145a2844e555067fa6828a3650",
+      "failed_methods": [
+        {
+          "method": "forge.ai.CommanderRecruitSafetyTest.copiedDrawProhibited",
+          "status": "FAIL",
+          "duration_ms": 11,
+          "message": "\n              expected [1] but found [0]\n            "
+        },
+        {
+          "method": "forge.ai.CommanderRecruitSafetyTest.originalDrawProhibited",
+          "status": "FAIL",
+          "duration_ms": 6,
+          "message": "\n              expected [1] but found [0]\n            "
+        }
+      ]
+    },
+    "source-recruit1021": {
+      "log_sha256": "5b28db3991d1ff5f2167720adacee69fc694d28372a593fbfc41932d2c539a71",
+      "input_manifests": {
+        "card-inputs.json": "f1db78cb4548d8af15a57c8d77ba2131b969446ca4901dd663b9c99c8139972c",
+        "production-inputs.json": "dbc94a73c2743a25be9e1a3f467a40f10552c2bc2661e5a83fcffb1be82d2f48",
+        "test-inputs.json": "1c10cb34609ccc2949121917607f9799b7e518ccf301b8ca176d2fbb14b649a2"
+      },
+      "status": "no_native_test_report",
+      "failure": {
+        "status": "fixture_checkstyle_failed_no_tests_executed",
+        "cause": "Unused Card import in new draw-history fixture.",
+        "correction": "Remove only unused import; no production/scenario/assertion/profile/budget changes.",
+        "log_sha256": "5b28db3991d1ff5f2167720adacee69fc694d28372a593fbfc41932d2c539a71"
+      }
+    },
+    "source-recruit1021-v2": {
+      "log_sha256": "333565a7de2fdfcf5869959e059707d86f892ed32e84b126b4f22fbeb28e3af0",
+      "input_manifests": {
+        "card-inputs.json": "f1db78cb4548d8af15a57c8d77ba2131b969446ca4901dd663b9c99c8139972c",
+        "production-inputs.json": "dbc94a73c2743a25be9e1a3f467a40f10552c2bc2661e5a83fcffb1be82d2f48",
+        "test-inputs.json": "a6e34c1e6dc2d1ab9eb8184eed6a785b9c4e0ca57d3bb39ca0dfb9748326265a"
+      },
+      "counts": {
+        "total": 1021,
+        "passed": 1021,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "cb648465029d3873b8cbf753f20e39c08d051197ef7fd551620c1d2a5969c242",
+      "failed_methods": []
+    }
+  },
+  "draw_history_baseline": {
+    "counts": {
+      "total": 8,
+      "passed": 4,
+      "failed": 4,
+      "skipped": 0
+    },
+    "failed_methods": [
+      {
+        "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedFirstDrawIsNotStolen",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedFirstExtraDrawIsReplaced",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedLaterExtraDrawIsNotReplaced",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedSecondDrawIsStolen",
+        "status": "FAIL"
+      }
+    ],
+    "failures": [
+      "java.lang.AssertionError: expected [3] but found [0]",
+      "java.lang.AssertionError: expected [3] but found [0]",
+      "java.lang.AssertionError: expected [3] but found [0]",
+      "java.lang.AssertionError: expected [3] but found [0]"
+    ],
+    "process": {
+      "status": "finished",
+      "bytes": 3360,
+      "returncode": 0,
+      "elapsed_seconds": 9.938
+    },
+    "report_sha256": "0b48e04ca900a1d9c4cc4199fb6119b7ff1d5e664f750fd1a398b99d3a8affd0",
+    "log_sha256": "9f0b552e10d5832ec6c3f5d4e8f1628047963b9f86c6ec1796f80a65618948da",
+    "interpretation": "Four copied cases fail at nonzero last-turn count assertions before their replacement outcomes. Four original controls pass. Do not label these as observed copied replacement-outcome failures."
+  },
+  "new_source_methods": [
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.copiedConditionalSkip",
+      "status": "PASS",
+      "duration_ms": 30,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.copiedDrawProhibited",
+      "status": "PASS",
+      "duration_ms": 34,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.copiedEmptyLibrary",
+      "status": "PASS",
+      "duration_ms": 26,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.copiedLaboratoryManiac",
+      "status": "PASS",
+      "duration_ms": 37,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.copiedPlatinumAngel",
+      "status": "PASS",
+      "duration_ms": 30,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.originalConditionalSkip",
+      "status": "PASS",
+      "duration_ms": 26,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.originalDrawProhibited",
+      "status": "PASS",
+      "duration_ms": 29,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.originalEmptyLibrary",
+      "status": "PASS",
+      "duration_ms": 27,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.originalLaboratoryManiac",
+      "status": "PASS",
+      "duration_ms": 28,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitSafetyTest.originalPlatinumAngel",
+      "status": "PASS",
+      "duration_ms": 27,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedCounterWithRecruitHasSupportedAdmission",
+      "status": "PASS",
+      "duration_ms": 34,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedFullChoosesCounterWithRecruit",
+      "status": "PASS",
+      "duration_ms": 20,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedFullChoosesOrdinaryCounterControl",
+      "status": "PASS",
+      "duration_ms": 16,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedHigherManaValueCounterDoesNotRecruit",
+      "status": "PASS",
+      "duration_ms": 5,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedHybridChoosesCounterWithRecruit",
+      "status": "PASS",
+      "duration_ms": 32,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedHybridChoosesOrdinaryCounterControl",
+      "status": "PASS",
+      "duration_ms": 8,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedOrdinaryCounterHasSupportedAdmission",
+      "status": "PASS",
+      "duration_ms": 6,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.copiedPaidCounterWithRecruitResolvesDrawDiscardAndSoldier",
+      "status": "PASS",
+      "duration_ms": 5,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.counterWithRecruitHasSupportedAdmission",
+      "status": "PASS",
+      "duration_ms": 28,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.fullChoosesCounterWithRecruit",
+      "status": "PASS",
+      "duration_ms": 19,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.fullChoosesOrdinaryCounterControl",
+      "status": "PASS",
+      "duration_ms": 16,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.higherManaValueCounterDoesNotRecruit",
+      "status": "PASS",
+      "duration_ms": 3,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.hybridChoosesCounterWithRecruit",
+      "status": "PASS",
+      "duration_ms": 31,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.hybridChoosesOrdinaryCounterControl",
+      "status": "PASS",
+      "duration_ms": 6,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.ordinaryCounterHasSupportedAdmission",
+      "status": "PASS",
+      "duration_ms": 5,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderRecruitPolicyPlanningTest.paidCounterWithRecruitResolvesDrawDiscardAndSoldier",
+      "status": "PASS",
+      "duration_ms": 4,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedFirstDrawIsNotStolen",
+      "status": "PASS",
+      "duration_ms": 2,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedFirstExtraDrawIsReplaced",
+      "status": "PASS",
+      "duration_ms": 3,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedLaterExtraDrawIsNotReplaced",
+      "status": "PASS",
+      "duration_ms": 2,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.copiedSecondDrawIsStolen",
+      "status": "PASS",
+      "duration_ms": 3,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.originalFirstDrawIsNotStolen",
+      "status": "PASS",
+      "duration_ms": 1,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.originalFirstExtraDrawIsReplaced",
+      "status": "PASS",
+      "duration_ms": 1,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.originalLaterExtraDrawIsNotReplaced",
+      "status": "PASS",
+      "duration_ms": 2,
+      "message": null
+    },
+    {
+      "method": "forge.ai.CommanderDrawHistorySnapshotTest.originalSecondDrawIsStolen",
+      "status": "PASS",
+      "duration_ms": 1,
+      "message": null
+    }
+  ],
+  "artifacts": {
+    "engine/pending/recruit-planning/CommanderDrawHistorySnapshotTest.java": "9d38d15c1b426ada92594e50985a203ac2019fa06ce0513f2257029d2955f04b",
+    "engine/pending/recruit-planning/CommanderRecruitPlanningBaselineTest.java": "2a5a765b502817e819281c5a5c0ac3559e06420b995812fd7048a7f0f2dae4f7",
+    "engine/pending/recruit-planning/CommanderRecruitPlanningDiagnosticTest.java": "aa44853c4367fa92250195fd70e6d45a3acb5d6b8ada80318149a028b35eddc1",
+    "engine/pending/recruit-planning/CommanderRecruitPolicyPlanningTest.java": "e6fcc0e09e2fb68fe1041c9dd3c65eb3555e9f061710421b2e01d79aa1615c82",
+    "engine/pending/recruit-planning/CommanderRecruitSafetyTest.java": "c24475fe7682e2bfa590f2df8bcd8dfd103eca7132e598ce66b6fd7ef448128d",
+    "engine/pending/recruit-planning/recruit-paid-draw-history.patch": "019a4bfdfb63ba55d98177b1392df6be071d48809c7b431c9e9ef682e6d07023"
+  },
+  "patch_replay": {
+    "status": "patch_applies_and_normalized_text_matches_running_source_not_test_completion",
+    "changes": [
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
+      "forge-ai/src/main/java/forge/ai/ability/RecruitAi.java",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "forge-game/src/main/java/forge/game/GameSnapshot.java",
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "patch_sha256": "019a4bfdfb63ba55d98177b1392df6be071d48809c7b431c9e9ef682e6d07023",
+    "source_manifest_sha256": "dbc94a73c2743a25be9e1a3f467a40f10552c2bc2661e5a83fcffb1be82d2f48",
+    "line_ending_byte_differences": [
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
+      "forge-ai/src/main/java/forge/ai/ability/RecruitAi.java",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "forge-game/src/main/java/forge/game/GameSnapshot.java",
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "interpretation": "git apply retains existing context CRLF whereas edited source is LF. Universal-newline UTF-8 text matches for all five files; raw hashes are deliberately not called equal. Any future packaged build must independently validate exact produced inputs and results.",
+    "replayed_sha256": {
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java": "b4913eb9671a7578eb5ae4e8fa48ccb6b176189bdb0eb1efb9ecf9214eadec9c",
+      "forge-ai/src/main/java/forge/ai/ability/RecruitAi.java": "bbb1b4df581fcdaf4729dd3bc2b6bd21502f2989708d64e4ffd8012eaa6c4d79",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "01135588fa3373f0b9aec0e656fcfbf35f9571342a6fad9b0130ada60a914a47",
+      "forge-game/src/main/java/forge/game/GameSnapshot.java": "c2c8c34d1604929d220e5badfa2a1979006250e66e7b388dc275325f75da961e",
+      "forge-game/src/main/java/forge/game/player/Player.java": "90792f88bdc638646cce8c52eb0b00d5b2d38679abc2b8ce871a2ccfc7fce6fd"
+    },
+    "tested_source_sha256": {
+      "forge-ai/src/main/java/forge/ai/SpellApiToAi.java": "72e0d51107c2c86ed268592b86b888659e358290a7d3944c671f2b8946d4b2e2",
+      "forge-ai/src/main/java/forge/ai/ability/RecruitAi.java": "27b5b97e8f4daac1612c40bed9c381f1381e32077ae46f6424a7ab9d7b6f439c",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "fcf1fd81c6252c8071b528e0d52425380c7c1c93810b51f9ba3943781bbc0bac",
+      "forge-game/src/main/java/forge/game/GameSnapshot.java": "624382326c0f596b945e6aeb1995c49b834b322440b3fc297b45bd70ff7c4b51",
+      "forge-game/src/main/java/forge/game/player/Player.java": "ef72a0e4b76aa7d2b8664cf8514a2cde437577156cb9b64d2a2643738ed1e8ef"
+    }
+  },
+  "refinements": {
+    "policy": {
+      "status": "prepared_not_executed",
+      "preserved_phase": "source-recruit1003",
+      "counts": {
+        "total": 1003,
+        "passed": 1002,
+        "failed": 1,
+        "skipped": 0
+      },
+      "remaining_failure": "copiedHybridChoosesCounterWithRecruit",
+      "refinement": "All eight actual-choice scenarios now explicitly select existing willing Cautious counter policy as the four admission scenarios already do. Paid4 scenarios unchanged. No assertions removed or weakened; all prior987 contracts retained. Default policy retains legitimate probabilistic declines and is not certified by these controlled tests.",
+      "baseline_report_sha256": "333fb2e844c00d105fe176c61d20d80a8d4822d9663b6287cc8735283a6ed53b"
+    },
+    "draw_history": {
+      "status": "source_correction_prepared_not_executed",
+      "preserved_phase": "source-recruit1013-v2",
+      "counts": {
+        "total": 1013,
+        "passed": 1011,
+        "failed": 2,
+        "skipped": 0
+      },
+      "finding": "GameSnapshot.assignPlayerState omits all four Player draw-history counters; copied Spirit of the Labyrinth allowance becomes available again. The paired paid planner sees an empty-library draw loss instead of a prohibited draw.",
+      "correction": "Copy this-turn, extra-this-turn, last-turn and draw-step counts by value with view refresh; do not draw cards or fire events. Call from common GameSnapshot assignment. Add explicit nested-copy count/hand/allowance checks to both previously failing paid safety scenarios. No assertions weakened, no profile or card edits.",
+      "limits": "Additional nonzero draw-step/extra/last-turn and replacement/event-number validation remains necessary; these ten safety scenarios alone do not certify the entire history contract."
+    }
+  },
+  "behavior": [
+    "Recruit paid admission and drawbacks compare complete native paid root actions using existing bounded paired evaluation, including parent conditions and draw/discard/token replacements. No card-name exceptions or profile/card resource edits.",
+    "Copy four player draw counters in both active GameCopier and common GameSnapshot assignment, refreshing the view without draw events.",
+    "Ten safety cases require actual paid replay for empty-library loss, conditional skip, draw prohibition, Laboratory Maniac and Platinum Angel. Eight more exercise printed Notion Thief/Reed outcomes and copy independence."
+  ],
+  "limits": [
+    "Source validation only; no rebuilt package or selected-runtime activation. The selected2212 runtime retains the recorded gap.",
+    "Eight actual-choice cases use explicitly willing existing Cautious policy after preserving a default copied hybrid decline. This does not certify default probabilistic strategy.",
+    "Mandatory-trigger fallback is retained; optional Recruit triggers remain deferred by planner restrictions.",
+    "Last-drawn-card identity/reference and further draw/history, targeting, replacement, nested/controller and strategy contexts need meaningful validation.",
+    "Complete Commander card/rules/AI support remains unproven."
+  ]
+}

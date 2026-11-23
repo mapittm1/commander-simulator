@@ -6,6 +6,27 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the isolated Recruit/draw-history prototype with all 1,021 focused
+  source checks, retaining 987 and adding 34. Compare complete paid root actions
+  for Recruit; preserve four draw counters in active and common copy paths.
+  Paid safety cases cover empty-library loss, conditional skips, draw prohibition,
+  Laboratory Maniac and Platinum Angel; printed Notion Thief/Reed cases verify
+  copied history and independent outcomes. Preserve failed phases, fixture compile
+  and Checkstyle errors, controlled-policy refinement and raw source hashes.
+  Patch replay matches normalized text; record line-ending byte differences
+  explicitly. Selected 2,212-test runtime is unchanged; packaging, optional
+  Recruit triggers, last-drawn references and wider correctness remain pending.
+  See engine/recruit_planning_native_evidence.json.
+
+- Preserve Recruit planning baselines: original16-case11pass/5fail and a
+  controlled-admission16-case12pass/4fail diagnostic. Hybrid misses supplied
+  Sound the Trumpets responses while full-mode choice, ordinary-counter controls
+  and paid conditional Recruit resolution pass. Keep the original stochastic
+  raw ordinary-counter decline separate; only admission checks select an existing
+  willing profile, with all states/assertions and resource hashes preserved.
+  No source correction or complete card coverage is claimed. See
+  engine/recruit_planning_gap.json and both pending fixtures.
+
 - Activate generic delayed disclosure and captured display metadata after all
   45 live tests and 2,108 subtests pass, including repeated packaged families
   of 1055/65/194/146. All 987 focused source, 2,212 native, 3,686 gameplay and

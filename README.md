@@ -27,6 +27,20 @@ difference.
 
 ## Card coverage
 
+An isolated Recruit/draw-history prototype passes all 1,021 focused source checks,
+retaining 987 and adding 34. Recruit admission compares complete paid native
+outcomes; both copy paths preserve draw counters without firing draw events.
+New cases cover actual paid effects, empty-library loss, conditional skipping,
+draw prohibition, Laboratory Maniac, Platinum Angel, Notion Thief and Reed Richards.
+See the [source checkpoint](engine/recruit_planning_native_evidence.json).
+
+Packaging and activation are pending; the selected runtime below retains the
+[recorded Recruit gap](engine/recruit_planning_gap.json). Failed native phases,
+a fixture compilation error and an unused-import Checkstyle failure are preserved.
+Controlled willing-profile choices isolate Recruit from probabilistic counter
+policy; they do not establish default strategy. Optional Recruit triggers,
+last-drawn-card references and wider rules/history contexts remain further work.
+
 The selected runtime routes the active delayed-reveal wrapper through shared
 per-card rights. Only current matching views in declared/current zones resolve;
 stale agents and foreign/copied view aliases cannot redirect fresh information.
