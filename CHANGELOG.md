@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate generic last-drawn payment/provenance with all 1,042 focused source
+  checks, retaining 1,021 and adding 21 original/active-copy/common-snapshot
+  contracts. Share current-turn/current-hand/drawn-flag/timestamp eligibility
+  between native cost admission and AI payment; rebind historical card references
+  and preserve draw flags in copied games. Baselines retain 12-case8pass/4fail
+  and 21-case13pass/8fail results plus a fixture syntax compilation failure.
+  Register this and the prior Recruit correction for fresh builds: 2,267 native
+  and 1,110 packaged checks are expected, not yet passed. Selected runtime remains
+  unchanged. See engine/last_drawn_payment_native_evidence.json; broader rules,
+  optional Recruit, default-policy strategy and full Commander support remain open.
+
 - Validate the isolated Recruit/draw-history prototype with all 1,021 focused
   source checks, retaining 987 and adding 34. Compare complete paid root actions
   for Recruit; preserve four draw counters in active and common copy paths.

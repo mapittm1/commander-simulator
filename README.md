@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+The combined Recruit/draw-provenance candidate passes all 1,042 focused source
+checks, retaining 1,021 and adding 21 actual LastDrawn payment cases. Both copy
+routes rebind the last drawn card and preserve its draw flag. Native cost admission
+and AI payment share a current-turn, current-hand and card-timestamp check, rejecting
+previous-turn cards and cards that left and returned. See the [preserved failures](engine/last_drawn_payment_gap.json)
+and [source validation](engine/last_drawn_payment_native_evidence.json).
+
+The recipe now prepares a fresh build with 2,267 expected native tests and a
+1,110-case packaged family. These are validation targets, not completed results;
+the selected runtime remains the 2,212-test delayed-reveal build below.
+
 An isolated Recruit/draw-history prototype passes all 1,021 focused source checks,
 retaining 987 and adding 34. Recruit admission compares complete paid native
 outcomes; both copy paths preserve draw counters without firing draw events.

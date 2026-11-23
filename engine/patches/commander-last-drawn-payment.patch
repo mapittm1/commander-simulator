@@ -1,0 +1,86 @@
+--- a/forge-ai/src/main/java/forge/ai/AiCostDecision.java
++++ b/forge-ai/src/main/java/forge/ai/AiCostDecision.java
+@@ -106,10 +106,8 @@
+         CardCollectionView hand = player.getCardsIn(ZoneType.Hand);
+ 
+         if (type.equals("LastDrawn")) {
+-            if (!hand.contains(player.getLastDrawnCard())) {
+-                return null;
+-            }
+-            return PaymentDecision.card(player.getLastDrawnCard());
++            Card drawn = player.getLastDrawnCardForPayment();
++            return drawn == null ? null : PaymentDecision.card(drawn);
+         }
+         if (cost.payCostFromSource()) {
+             if (!hand.contains(source)) {
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -287,6 +287,7 @@
+         for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
+             entry.getValue().copySnapshotControllersFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRingFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotDrawnFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+         }
+--- a/forge-game/src/main/java/forge/game/GameSnapshot.java
++++ b/forge-game/src/main/java/forge/game/GameSnapshot.java
+@@ -152,6 +152,9 @@
+ 
+         SpellAbilitySnapshot stackState = new SpellAbilitySnapshot(gameObjectMap);
+         copySnapshotUsageAndTraits(fromGame, toGame, stackState);
++        for (Player original : fromGame.getPlayers()) {
++            findBy(toGame, original).copySnapshotDrawnFrom(original, stackState);
++        }
+         toGame.getTriggerHandler().resetActiveTriggers();
+         toGame.getStack().restoreSnapshotFrom(fromGame.getStack(), stackState, includeStack);
+ 
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8544,6 +8544,7 @@
+ 
+     public void copySnapshotUsageFrom(Card original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
++        drawnThisTurn = original.drawnThisTurn;
+         numberTurnActivations.copySnapshotFrom(original.numberTurnActivations, context);
+         numberGameActivations.copySnapshotFrom(original.numberGameActivations, context);
+         numberAbilityResolved.copySnapshotFrom(original.numberAbilityResolved, context);
+--- a/forge-game/src/main/java/forge/game/cost/CostDiscard.java
++++ b/forge-game/src/main/java/forge/game/cost/CostDiscard.java
+@@ -149,7 +149,7 @@
+             // this will always work
+         }
+         else if (type.equals("LastDrawn")) {
+-            final Card c = payer.getLastDrawnCard();
++            final Card c = payer.getLastDrawnCardForPayment();
+             return handList.contains(c);
+         }
+         else {
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1990,6 +1990,25 @@
+     public final Card getLastDrawnCard() {
+         return lastDrawnCard;
+     }
++    /** The current hand object eligible for a last-drawn discard cost, or null. */
++    public final Card getLastDrawnCardForPayment() {
++        if (lastDrawnCard == null || numDrawnThisTurn == 0) {
++            return null;
++        }
++        for (Card card : getCardsIn(ZoneType.Hand)) {
++            if (card.getDrawnThisTurn() && card.equalsWithGameTimestamp(lastDrawnCard)) {
++                return card;
++            }
++        }
++        return null;
++    }
++
++    /** Rebind draw provenance after card objects have been restored in the copied game. */
++    public final void copySnapshotDrawnFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        lastDrawnCard = context.map(original.lastDrawnCard);
++    }
++
+     private Card setLastDrawnCard(final Card c) {
+         lastDrawnCard = c;
+         return lastDrawnCard;

@@ -43,6 +43,10 @@ SOURCES = {
     "CommanderDirectRevealBoundaryTest": "commander_direct_reveal_boundary_test_sha256",
     "CommanderDelayedPrivateRevealTest": "commander_delayed_private_reveal_test_sha256",
     "CommanderDelayedRevealBoundaryTest": "commander_delayed_reveal_boundary_test_sha256",
+    "CommanderRecruitPolicyPlanningTest": "commander_recruit_policy_planning_test_sha256",
+    "CommanderRecruitSafetyTest": "commander_recruit_safety_test_sha256",
+    "CommanderDrawHistorySnapshotTest": "commander_draw_history_snapshot_test_sha256",
+    "CommanderLastDrawnBoundaryTest": "commander_last_drawn_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -186,6 +190,7 @@ NATIVE_CLASSES = (
     "forge.ai.simulation.TextChangeChoices",
     "forge.ai.ComputerUtilMana",
     "forge.ai.SpellApiToAi",
+    "forge.ai.ability.RecruitAi",
     "forge.ai.ability.SwitchBlockAi",
     "forge.ai.ability.EmpowerAi",
     "forge.game.ability.effects.EmpowerEffect",
@@ -313,7 +318,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1055-case packaged family."""
+    """Execute the existing fixed 1110-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
