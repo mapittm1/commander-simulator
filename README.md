@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+A separate no-shuffle transition baseline exposes remaining AI deduction loss:
+eight original/copied Opt/Consider checks fail, while four ordinary-draw and fully
+reannounced-order controls pass. Native resolution succeeds, but prior known
+positions outside the new inspection are forgotten. The selected runtime below
+remains active. See the [exact transition baseline](engine/library_knowledge_transition_gap.json).
+
 The selected runtime records authorized initial library inspection and announced
 resulting order through shared callbacks for scry, surveil and rearrange. It
 retains seen identities before replacements move cards, keeps private top/bottom

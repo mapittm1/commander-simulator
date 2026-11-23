@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record twelve native no-shuffle knowledge-transition contracts: eight
+  original/copied Opt/Consider retention checks fail, while four direct-draw and
+  fully-reannounced-order controls pass. Native card resolution succeeds; the AI
+  loses deducible positions of previously inspected cards outside the new window.
+  Preserve exact fixtures, driver/source snapshots, production origins and report
+  digests. Require observer-authorized transitions rather than hidden-state scans
+  or revision-count heuristics. The selected reviewed engine remains active;
+  complete card/rules/AI coverage remains unproven.
+  See engine/library_knowledge_transition_gap.json.
+
 - Activate shared library inspection/order knowledge after all 45 live tests and
   1,953 subtests pass, including repeated 900/65/194/146 packaged families.
   All 832 focused source, 2,057 native, 3,531 broader gameplay and 256 serialization
