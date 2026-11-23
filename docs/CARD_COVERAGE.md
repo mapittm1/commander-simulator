@@ -17,6 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Independent creature and attacked-permanent combat roles
+
+A new source correction separates role removal. It preserves a valid block when
+Luxior removes an attacked Gideon's planeswalker type, and preserves an attacked
+planeswalker when removing March of the Machines ends its creature type. Explicit
+removal still clears all roles. Native paid animation, Donate, equip, tap costs,
+Disenchant and Stifle/Counterspell controls reproduce four failures in twelve
+selected cases on the current runtime; all pass in the corrected source suite.
+The full focused source selection passes 712 methods, retaining 676 and adding
+24 restoration plus 12 dual-role methods. See the
+[exact baselines](../engine/dual_combat_role_gap.json) and
+[source validation](../engine/dual_combat_role_native_evidence.json).
+The expectations follow rule 506.4d in the
+[November 6 Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf).
+Fresh packaged/full validation remains pending, and the selected runtime is
+unchanged. Supplied legal states and chosen actions do not certify all cards,
+combat compositions or autonomous strategy.
+
 ## Defender type history through continuous effects
 
 The reviewed runtime remembers the legal defender type for each attacking band.

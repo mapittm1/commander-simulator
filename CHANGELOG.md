@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct independent combat-role removal in source. Losing planeswalker type
+  preserves a valid block and its assignment order; losing creature type preserves
+  a valid attacked planeswalker. Retain 676 focused tests and add 24 restoration
+  plus 12 dual-role contracts: all 712 pass. Preserve six/twelve-case baselines
+  with two/four failures and passing native-cost/countering controls. Extend the
+  reviewed recipe to 1,938 native methods and the packaged family to 146. Fresh
+  packaged/full validation remains pending; the selected runtime is unchanged.
+
 - Add 24 paid defender-type restoration regressions to the packaged Battle family;
   all 134 methods pass. Cover Disenchant and Counterspell after native flash-enabled
   Song of the Dryads, including copied and nested pending stacks. Check unchanged

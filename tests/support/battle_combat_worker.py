@@ -22,6 +22,7 @@ from tests.support.packaged_rules import (  # pylint: disable=wrong-import-posit
 TEST_CLASSES = (
     "forge.ai.CommanderBattleCombatTest",
     "forge.ai.CommanderDefenderRestorationTest",
+    "forge.ai.CommanderDualCombatRoleTest",
 )
 NATIVE_CLASSES = (
     "forge.ai.ComputerUtil",
@@ -43,6 +44,8 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostPayment",
     "forge.game.ability.AbilityUtils",
     "forge.game.ability.effects.AttachEffect",
+    "forge.game.ability.effects.AnimateEffect",
+    "forge.game.ability.effects.GainControlEffect",
     "forge.game.staticability.StaticAbilityContinuous",
     "forge.game.staticability.StaticAbilityCastWithFlash",
     "forge.game.ability.effects.CountersRemoveEffect",
@@ -74,11 +77,13 @@ def reviewed_inputs() -> tuple[list[Path], Path]:
         PROJECT / "engine/tests/AITest.java",
         PROJECT / "engine/tests/CommanderBattleCombatTest.java",
         PROJECT / "engine/tests/CommanderDefenderRestorationTest.java",
+        PROJECT / "engine/tests/CommanderDualCombatRoleTest.java",
     ]
     hashes = (
         recipe.get("packaged_ai_base_sha256"),
         review.get("fixture_sha256"),
         review.get("restoration_fixture_sha256"),
+        review.get("dual_role_fixture_sha256"),
     )
     for source, expected_hash in zip(sources, hashes):
         if file_hash(source) != expected_hash:

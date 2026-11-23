@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+A source correction preserves independent blocking and attacked-planeswalker
+roles when one card type is lost. All 712 focused source checks pass, including
+12 native paid Gideon/Luxior and March-removal probes; four prior failures are
+resolved in source. See the [dual-role evidence](engine/dual_combat_role_native_evidence.json)
+and [gap report](engine/dual_combat_role_gap.json). Fresh packaged/full validation
+is pending; the selected runtime remains unchanged.
+
 The packaged Battle family now passes 134 cases, retaining 110 and adding 24
 paid type-restoration and countered-restoration checks. Song of the Dryads,
 Disenchant and Counterspell exercise original, copied and nested pending stacks;

@@ -19,6 +19,12 @@ Windows. Ordinary catalog, deck, and simulation commands do not need this bridge
 
 ## Battle combat and Siege defeat
 
+The next fixed family adds twelve dual-role cases to the prior passing 134.
+They pass in the 712-case source suite; fresh 146-case packaged execution is
+pending. See the [source evidence](../engine/dual_combat_role_native_evidence.json).
+The selected runtime still reproduces four role-loss failures, so the new full
+family must not be described as passing against that runtime.
+
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
 

@@ -37,6 +37,7 @@ class BattleCombatInputTests(unittest.TestCase):
         self.base.write_bytes(b"fixed test helper")
         self.fixture.write_bytes(b"fixed Battle fixture")
         self.restoration.write_bytes(b"fixed restoration fixture")
+        self.dual_role.write_bytes(b"fixed dual-role fixture")
         self.jar.write_bytes(b"fixed dependency")
         self.recipe = {
             "packaged_ai_base_sha256": file_hash(self.base),
@@ -48,9 +49,15 @@ class BattleCombatInputTests(unittest.TestCase):
         self.review = {
             "fixture_sha256": file_hash(self.fixture),
             "restoration_fixture_sha256": file_hash(self.restoration),
+            "dual_role_fixture_sha256": file_hash(self.dual_role),
         }
         self.write_reviews()
         self.enterContext(patch.object(battle_combat_worker, "PROJECT", self.root))
+
+    @property
+    def dual_role(self) -> Path:
+        """Resolve the fixed supplemental fixture within this isolated workspace."""
+        return self.root / "engine/tests/CommanderDualCombatRoleTest.java"
 
     def write_reviews(self):
         """Write temporary operator review files without compiling or executing Java."""
@@ -63,9 +70,11 @@ class BattleCombatInputTests(unittest.TestCase):
             )
 
     def test_valid_review_returns_only_the_fixed_sources_and_dependency(self):
-        """A valid review admits the three canonical source paths and pinned dependency."""
+        """A valid review admits the four canonical source paths and pinned dependency."""
         sources, dependency = battle_combat_worker.reviewed_inputs()
-        self.assertEqual(sources, [self.base, self.fixture, self.restoration])
+        self.assertEqual(
+            sources, [self.base, self.fixture, self.restoration, self.dual_role]
+        )
         self.assertEqual(dependency, self.jar)
 
     def test_changed_battle_fixture_is_rejected(self):
@@ -109,6 +118,19 @@ class BattleCombatInputTests(unittest.TestCase):
     def test_missing_restoration_review_is_rejected(self):
         """The older one-fixture review cannot approve an additional executable source."""
         del self.review["restoration_fixture_sha256"]
+        self.write_reviews()
+        with self.assertRaisesRegex(ValueError, "source changed"):
+            battle_combat_worker.reviewed_inputs()
+
+    def test_changed_dual_role_fixture_is_rejected(self):
+        """The added executable source cannot bypass its own review digest."""
+        self.dual_role.write_bytes(b"changed dual-role fixture")
+        with self.assertRaisesRegex(ValueError, "source changed"):
+            battle_combat_worker.reviewed_inputs()
+
+    def test_missing_dual_role_review_is_rejected(self):
+        """A review of earlier fixtures cannot approve this additional class."""
+        del self.review["dual_role_fixture_sha256"]
         self.write_reviews()
         with self.assertRaisesRegex(ValueError, "source changed"):
             battle_combat_worker.reviewed_inputs()

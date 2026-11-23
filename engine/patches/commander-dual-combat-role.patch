@@ -1,0 +1,144 @@
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -645,78 +645,83 @@
+         }
+     }
+ 
+-    // remove a combatant whose side is unknown
++    // Explicit removal (zone/control/protector changes, phasing, or an effect) removes every role.
+     public final void removeFromCombat(final Card c) {
+-        AttackingBand ab = getBandOfAttacker(c);
+-        if (ab != null) {
+-            unregisterAttacker(c, ab);
+-            ab.removeAttacker(c);
++        removeCreatureFromCombat(c);
++        removeAttackedPermanentFromCombat(c);
++    }
++
++    private void removeCreatureFromCombat(final Card c) {
++        AttackingBand band = getBandOfAttacker(c);
++        if (band != null) {
++            unregisterAttacker(c, band);
++            band.removeAttacker(c);
+             if (isRealCombat()) {
+                 c.updateAttackingForView();
+             }
+             return;
+         }
+-
+-        // if not found in attackers, look for this card in blockers
+-        for (Entry<AttackingBand, Card> be : blockedBands.get().entries()) {
+-            if (be.getValue().equals(c)) {
+-                unregisterDefender(c, be.getKey());
+-            }
+-        }
+-
+-        // Consult active combat, including defenders added after the initial constraints.
+-        Collection<AttackingBand> bands = attackedByBands.get().get(c);
+-        if (!bands.isEmpty()) {
+-            Multimap<GameEntity, AttackingBand> attackerBuffer = ArrayListMultimap.create();
+-            for (AttackingBand abDef : bands) {
+-                unregisterDefender(c, abDef);
+-                CardType defenderType = defenderTypesByBand.get().remove(abDef);
+-                // Rule 506.4c preserves attackers after the actual defender leaves combat.
+-                Card fake = new Card(-1, c.getGame());
+-                fake.setName("<Nothing>");
+-                fake.getCurrentState().setType(new CardType(defenderType == null ? c.getType() : defenderType));
+-                fake.setProtectingPlayer(c.getProtectingPlayer());
+-                fake.setController(c.getController(), 0);
+-                attackerBuffer.put(fake, abDef);
+-            }
+-            bands.clear();
+-            attackedByBands.get().putAll(attackerBuffer);
+-        }
+-
+-        // remove card from map
++        for (Entry<AttackingBand, Card> entry : blockedBands.get().entries()) {
++            if (entry.getValue().equals(c)) {
++                unregisterDefender(c, entry.getKey());
++            }
++        }
+         while (blockedBands.get().values().remove(c));
+         if (isRealCombat()) {
+             c.updateBlockingForView();
+         }
+     }
+ 
++    private void removeAttackedPermanentFromCombat(final Card c) {
++        Collection<AttackingBand> bands = attackedByBands.get().get(c);
++        if (bands.isEmpty()) {
++            return;
++        }
++        Multimap<GameEntity, AttackingBand> attackerBuffer = ArrayListMultimap.create();
++        for (AttackingBand band : bands) {
++            // This removes the attacked role only. A surviving blocking role retains its orders.
++            CardType defenderType = defenderTypesByBand.get().remove(band);
++            Card fake = new Card(-1, c.getGame());
++            fake.setName("<Nothing>");
++            fake.getCurrentState().setType(new CardType(defenderType == null ? c.getType() : defenderType));
++            fake.setProtectingPlayer(c.getProtectingPlayer());
++            fake.setController(c.getController(), 0);
++            attackerBuffer.put(fake, band);
++        }
++        bands.clear();
++        attackedByBands.get().putAll(attackerBuffer);
++    }
++
+     public final boolean removeAbsentCombatants() {
+-        // CR 506.4 iterate all attackers and remove illegal declarations
+-        CardCollection missingCombatants = new CardCollection();
+-        for (Entry<GameEntity, AttackingBand> ee : attackedByBands.get().entries()) {
+-            for (Card c : ee.getValue().getAttackers()) {
+-                if (!c.isInPlay() || !c.isCreature()) {
+-                    missingCombatants.add(c);
+-                }
+-            }
+-            if (ee.getKey() instanceof Card c) {
+-                if (!c.isBattle() && !c.isPlaneswalker()) {
+-                    missingCombatants.add(c);
+-                }
+-            }
+-        }
+-
+-        for (Entry<AttackingBand, Card> be : blockedBands.get().entries()) {
+-            Card blocker = be.getValue();
++        // CR 506.4d: losing one type removes only the role that required that type.
++        CardCollection missingCreatures = new CardCollection();
++        CardCollection missingDefenders = new CardCollection();
++        for (Entry<GameEntity, AttackingBand> entry : attackedByBands.get().entries()) {
++            for (Card attacker : entry.getValue().getAttackers()) {
++                if (!attacker.isInPlay() || !attacker.isCreature()) {
++                    missingCreatures.add(attacker);
++                }
++            }
++            if (entry.getKey() instanceof Card defender) {
++                if (!defender.isBattle() && !defender.isPlaneswalker()) {
++                    missingDefenders.add(defender);
++                }
++            }
++        }
++        for (Entry<AttackingBand, Card> entry : blockedBands.get().entries()) {
++            Card blocker = entry.getValue();
+             if (!blocker.isInPlay() || !blocker.isCreature()) {
+-                missingCombatants.add(blocker);
+-            }
+-        }
+-
+-        if (missingCombatants.isEmpty()) { return false; }
+-
+-        for (Card c : missingCombatants) {
+-            removeFromCombat(c);
++                missingCreatures.add(blocker);
++            }
++        }
++        if (missingCreatures.isEmpty() && missingDefenders.isEmpty()) {
++            return false;
++        }
++        for (Card creature : missingCreatures) {
++            removeCreatureFromCombat(creature);
++        }
++        for (Card defender : missingDefenders) {
++            removeAttackedPermanentFromCombat(defender);
+         }
+         return true;
+     }
