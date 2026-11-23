@@ -9,7 +9,7 @@ import pytest
 from commander.engine.forge_config import read_settings
 from commander.engine.native_runtime import create_run
 from commander.paths import PROJECT_ROOT
-from tests.support.draw_ending_worker import _compile, _inputs
+from tests.support.draw_ending_worker import NATIVE_CLASSES, _compile, _inputs
 from tests.support.native_receipts import read_test_receipts
 from tests.support.native_worker import run_test_worker
 from tests.support.packaged_rules import SUPPORT_SOURCES
@@ -56,5 +56,10 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             "partial_successes",
         ):
             self.assertEqual(summary[key], 0)
-        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 127)
+        expected_classes = list(NATIVE_CLASSES)
+        self.assertEqual(len(expected_classes), 129)
+        self.assertEqual(len(set(expected_classes)), len(expected_classes))
+        self.assertEqual(
+            summary["production_classes_from_packaged_jar"], expected_classes
+        )
         print(json.dumps({"draw_ending_run": run.name}), flush=True)

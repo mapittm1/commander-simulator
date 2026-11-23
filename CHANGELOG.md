@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify the fresh cache-lifetime candidate with all 2,463 native tests passing,
+  retaining 2,361 and adding 102 across combat history and cache lifetime.
+  Audit the six production source families, eight changed classes, unchanged
+  card/archive/profile data and absence of added or removed production classes.
+  Preserve the first independent packaged run: all 1,711 native subtests pass,
+  while the wrapper fails its stale 127-origin expectation. Update that guard to
+  require the exact, duplicate-free reviewed 129-class manifest. Packaged rerun,
+  broader/full live checks, catalog validation and activation remain pending.
+
 - Correct the AI cache lifetime in source: remove the process-wide fallback
   that retained completed games, recompute unscoped queries from current state,
   and scope native spell decisions with exception-safe nested cleanup. All

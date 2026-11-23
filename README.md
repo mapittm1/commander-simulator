@@ -32,8 +32,14 @@ and could return stale board evaluations outside a decision. Memoized references
 now live inside an explicit decision or preview and are released on success or
 failure. All 1,238 mixed source tests pass in one JVM at the existing 2 GiB heap
 and timeout, retaining the prior 1,222 cases and adding 16 cache-lifetime checks.
-The selected runtime below is unchanged; a fresh native build and packaged,
-broader, full live and catalog validation are still pending.
+The fresh candidate passes all 2,463 native tests, retaining 2,361 prior methods
+and adding 102 across combat history and cache lifetime. Its compiled classes
+match the six reviewed source families; card and AI profile data are unchanged.
+The first independent packaged run passed all 1,711 native subtests but failed
+a stale wrapper expectation of 127 class origins instead of the verified 129.
+The wrapper now checks the exact, duplicate-free reviewed class list; its rerun,
+broader, full live and catalog checks remain pending. The selected runtime below
+is unchanged.
 
 The baseline reproduced six cache-lifetime failures, including stale evaluations
 after a Forest entered play in original and copied games. Recorded reference
