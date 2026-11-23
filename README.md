@@ -31,15 +31,18 @@ A source correction preserves independent blocking and attacked-planeswalker
 roles when one card type is lost. All 712 focused source checks pass, including
 12 native paid Gideon/Luxior and March-removal probes; four prior failures are
 resolved in source. See the [dual-role evidence](engine/dual_combat_role_native_evidence.json)
-and [gap report](engine/dual_combat_role_gap.json). Fresh packaged/full validation
-is pending; the selected runtime remains unchanged.
+and [gap report](engine/dual_combat_role_gap.json). The fresh candidate passes
+1,938 native methods, packaged families of 781/65/194/146 cases and broader
+gameplay/serialization suites of 3,412/256. See the
+[packaged evidence](engine/dual_combat_role_packaged_evidence.json). Full live
+validation and activation remain pending; the selected runtime is unchanged.
 
-The packaged Battle family now passes 134 cases, retaining 110 and adding 24
+The earlier test-only Battle extension passed 134 cases, retaining 110 and adding 24
 paid type-restoration and countered-restoration checks. Song of the Dryads,
 Disenchant and Counterspell exercise original, copied and nested pending stacks;
 regaining a type does not restore the old attack. See the
 [restoration evidence](engine/defender_restoration_evidence.json). These supplemental
-tests leave production code and the 1,902-method engine build unchanged.
+tests left production code and the then-current 1,902-method build unchanged.
 
 Combat now remembers a defender's legal type when each attacking group forms,
 keeps independent copies of that history, and retires it when the defender leaves

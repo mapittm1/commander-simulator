@@ -45,7 +45,7 @@ NATIVE_CLASSES = (
     "forge.game.ability.AbilityUtils",
     "forge.game.ability.effects.AttachEffect",
     "forge.game.ability.effects.AnimateEffect",
-    "forge.game.ability.effects.GainControlEffect",
+    "forge.game.ability.effects.ControlGainEffect",
     "forge.game.staticability.StaticAbilityContinuous",
     "forge.game.staticability.StaticAbilityCastWithFlash",
     "forge.game.ability.effects.CountersRemoveEffect",

@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the separate combat-role build with 1,938 native methods, retaining
+  all 1,902 and adding 36. Packaged families pass 781/65/194/146; broader gameplay
+  and serialization pass 3,412/256. Only Combat.class changes. Preserve the initial
+  Battle origin-lookup failure before gameplay, correct ControlGainEffect's class
+  name and rerun the affected 146-case family successfully. Bind both 500-file
+  phase manifests and the single worker-only correction. Scripts, default AI,
+  production and Java expectations do not change during that correction.
+  Full live validation and activation remain pending; the selected engine is unchanged.
+
 - Correct independent combat-role removal in source. Losing planeswalker type
   preserves a valid block and its assignment order; losing creature type preserves
   a valid attacked planeswalker. Retain 676 focused tests and add 24 restoration

@@ -19,11 +19,12 @@ Windows. Ordinary catalog, deck, and simulation commands do not need this bridge
 
 ## Battle combat and Siege defeat
 
-The next fixed family adds twelve dual-role cases to the prior passing 134.
-They pass in the 712-case source suite; fresh 146-case packaged execution is
-pending. See the [source evidence](../engine/dual_combat_role_native_evidence.json).
-The selected runtime still reproduces four role-loss failures, so the new full
-family must not be described as passing against that runtime.
+The expanded 146-case family passes against the combat-role candidate, including
+twelve dual-role cases. See the [source evidence](../engine/dual_combat_role_native_evidence.json)
+and [packaged validation](../engine/dual_combat_role_packaged_evidence.json).
+The selected runtime remains unchanged pending full live validation/activation
+and still reproduces four role-loss failures; this command will expose those
+failures until the corrected candidate is selected.
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
@@ -37,26 +38,27 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All 134 native cases pass against the reviewed defender-type engine. The family
-retains 110 witnesses and adds 24 paid restoration contracts, including copied
+All 146 native cases pass against the combat-role candidate. The family retains
+134 witnesses and adds twelve dual-role contracts. The prior 134 retained 110
+and added 24 paid restoration contracts, including copied
 and nested pending Disenchant/Counterspell stacks. The prior 110 include 32
 type-change, blocked and pending/nested spell-copy contracts. Native paid Aura
-casting, flash-timing checks and Counterspell responses complement strike history, assigned damage and Siege
-defeat. See the [resolved type-loss gap](../engine/defender_typechange_gap.json).
+casting, flash-timing checks and Counterspell responses complement strike
+history, assigned damage and Siege defeat. See the [resolved type-loss gap](../engine/defender_typechange_gap.json).
 
 They cover legal defender enumeration, copied combat, damage to defense counters,
 lethal Siege defeat, paid Fog, Hexmage sacrifice, transformed casting, Stifle on
 the defeat trigger and Beast Within before trigger resolution. Actions, targets,
 legal board setup and unblocked attacks are supplied; native resolution executes.
 The family does not establish autonomous combat strategy or every Battle
-interaction. Fixed source/dependency checks, compilation integrity, 28 production
+interaction. Fixed source/dependency checks, compilation integrity, 30 production
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
-and [restoration evidence](../engine/defender_restoration_evidence.json).
-The additional fixture supplements the unchanged 1,902-method production build.
-The prior [full runtime validation](../engine/defender_typechange_evidence.json)
-remains a separate milestone; the full live suite was not rerun for this test-only
-extension.
+and [current packaged evidence](../engine/dual_combat_role_packaged_evidence.json).
+Both supplemental fixtures are included in the 1,938-method candidate. The prior
+[full runtime validation](../engine/defender_typechange_evidence.json) remains a
+separate milestone; full live validation and activation of this candidate are
+still pending.
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 
