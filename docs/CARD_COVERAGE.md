@@ -17,7 +17,34 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Direct private reveals and captured public library positions
+## Delayed disclosure rights and display metadata
+
+The active delayed-reveal wrapper resolves exact current views in declared and
+current native zones, then delegates one fresh disclosure to shared per-card
+rights. Capture audiences and zone/owner display groups before callbacks.
+Outside-game restrictions, inactive/foreign/copied-view controls, privacy,
+current rights versus past history, metadata grouping and single/multi-zone
+prefixes pass. No private-history copying or card-name exceptions are added.
+
+All 987 source, 2,212 native, independent/repeated 1055/65/194/146 packaged,
+3,686 gameplay, 256 serialization and 45 live/2,108 subtest checks pass. All 533
+implementation inputs remain frozen through validation. Three production files
+and nine existing classes change; no production classes are added. Post-move
+health and construction of 32,636 starting identities with seven nonstarting
+meld exclusions pass. Scripts/default AI are unchanged. Preserve the original
+18-case10-pass/8-fail baseline and987-case986-pass/1-fail prefix boundary phase.
+A pre-execution auditor count-substitution error is preserved with its corrected
+bound revision; native totals and method retention were independently verified.
+See the [activation evidence](../engine/delayed_private_reveal_evidence.json).
+
+Eighteen paid cases use printed Ancient Stirrings no-valid-choice and Impulse
+actual-choice paths in original/copied states with countering and normal privacy.
+Thirteen recording-agent cases instrument identity, zones, callbacks and metadata;
+they do not establish every UI or printed nested rules context. Direct view paths
+bypassing this wrapper, histories, temporary controllers and autonomous strategy
+remain broader work. Construction and selected tests do not certify full rules.
+
+## Earlier direct private reveals and captured public library positions
 
 Shared rights now cover RevealHand Look and PeekAndReveal private disclosures.
 Capture private/public library audiences before callbacks, retain publicly

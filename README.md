@@ -27,19 +27,32 @@ difference.
 
 ## Card coverage
 
-The delayed-reveal candidate passes 2,212 native tests, retaining all 2,181
-prior methods and adding 31. All 987 focused source checks pass; independent
-packaged families pass 1055/65/194/146 and broader gameplay/serialization pass
-3,686/256. Active delayed disclosures enforce current-view and zone checks,
-shared per-card rights and captured zone/owner metadata across callbacks.
-Single/multi-zone prefixes and outside-game restrictions pass supplied boundaries.
-Original native and later prefix failures remain preserved. See the
-[source evidence](engine/delayed_private_reveal_native_evidence.json) and
-[packaged validation](engine/delayed_private_reveal_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime below
-is unchanged. Other view/UI/history paths and full rules/AI remain unproven.
+The selected runtime routes the active delayed-reveal wrapper through shared
+per-card rights. Only current matching views in declared/current zones resolve;
+stale agents and foreign/copied view aliases cannot redirect fresh information.
+Audience and zone/owner display groups are captured before callbacks, preserving
+outside-game restrictions, original/current-agent memories and single/multi-zone
+prefixes. No private histories are copied or card-name exceptions added.
 
-The selected runtime routes the RevealHand Look and PeekAndReveal private
+All 987 focused source checks and 2,212 native build tests pass, retaining all
+2,181 prior native methods and adding 31. Independent and repeated packaged
+families pass 1055/65/194/146; broader gameplay/serialization pass 3,686/256.
+All 45 live tests and 2,108 subtests pass. Post-move health is ready; construction
+passes for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source evidence](engine/delayed_private_reveal_native_evidence.json),
+[packaged milestone](engine/delayed_private_reveal_packaged_evidence.json), and
+[validation and activation](engine/delayed_private_reveal_evidence.json).
+
+The eighteen-case paid Ancient Stirrings/Impulse baseline passes ten controls
+and fails eight master/post-control assertions; all eighteen methods now pass.
+Thirteen instrumented privacy/view/callback/metadata boundaries include a
+preserved intermediate prefix failure. These delayed-reveal phases have no
+fixture compilation or Checkstyle failure. Direct view paths bypassing this
+wrapper, all UI/history/temporary-controller/nested contexts and autonomous
+strategy still need meaningful validation. Scripts/default AI are unchanged.
+Complete Commander card/rules/AI correctness remains unproven.
+
+The earlier direct-reveal runtime routes the RevealHand Look and PeekAndReveal private
 disclosure paths through shared per-card rights. Private library audiences are
 captured before callbacks;
 public library audiences also include dormant agents and agents removed during
@@ -688,16 +701,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 2,181 selected native tests, separate packaged
-families of 1024, 65, 194 and 146 rules cases, 3,655 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 2,077 subtests. All 530
+The current reviewed runtime passed 2,212 selected native tests, separate packaged
+families of 1055, 65, 194 and 146 rules cases, 3,686 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 2,108 subtests. All 533
 implementation inputs stayed frozen through candidate validation. Earlier failed
 source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/direct_private_reveal_evidence.json).
+names. See the [validation and activation evidence](engine/delayed_private_reveal_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

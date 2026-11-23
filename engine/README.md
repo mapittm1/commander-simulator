@@ -9,7 +9,18 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected direct-reveal runtime routes private hand/peek information through
+The selected delayed-reveal runtime enforces current-view/zone identity and
+shared disclosure rights, capturing audience and zone/owner groups before
+callbacks. All 987 focused source, 2,212 native, independent/repeated
+1055/65/194/146 packaged, 3,686 gameplay, 256 serialization and45 live/2,108
+subtest checks pass. Three files and nine existing classes change; no production
+classes are added. Preserve original native/prefix failures and the corrected
+auditor provenance. Scripts/default AI are unchanged. See the
+[patch](patches/commander-delayed-private-reveal.patch) and
+[activation evidence](delayed_private_reveal_evidence.json). Other view/UI/history
+paths and complete Commander rules/strategy remain unproven.
+
+The earlier direct-reveal runtime routes private hand/peek information through
 shared rights and captures private/public library audiences before callbacks.
 All 956 focused source, 2,181 native, independent/repeated 1024/65/194/146 packaged,
 3,655 gameplay, 256 serialization and 45 live/2,077 subtest checks pass. Three

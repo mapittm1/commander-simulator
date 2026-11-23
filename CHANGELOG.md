@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic delayed disclosure and captured display metadata after all
+  45 live tests and 2,108 subtests pass, including repeated packaged families
+  of 1055/65/194/146. All 987 focused source, 2,212 native, 3,686 gameplay and
+  256 serialization checks pass. Verify 533 frozen inputs, retained methods,
+  original native and prefix failures, corrected auditor provenance, post-move
+  readiness and construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. Three files and nine existing classes change; no production
+  classes are added. Card scripts/default AI are unchanged. Other view/UI/history
+  contexts and complete Commander rules/AI/strategy remain unproven. See
+  engine/delayed_private_reveal_evidence.json.
+
 - Validate the delayed-reveal candidate with all 2,212 native tests, retaining
   2,181 and adding 31. All 987 focused source, independent packaged families
   of 1055/65/194/146 and broader gameplay/serialization of 3,686/256 pass.
