@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the cache-lifetime candidate's incomplete live gate: 44 tests and
+  all 2,359 subtests pass, while the limited full-game conformance check remains
+  inconclusive because no fixed-seed game exercises Goreclaw's required attack
+  trigger witness. Keep seeds and absent/contradictory-witness checks unchanged.
+  Twelve native declaration probes reproduce the same open-opponent opportunity
+  gap across classic/hybrid/full modes and original/copied states; these probes
+  assert legality and record choices, not strategic optimality. Record the
+  successful four-group packaged rerun, broader 3,937/256 checks, and independent
+  catalog construction of 32,636 starting identities with seven nonstarting meld
+  exclusions. Keep the previous runtime selected. See
+  engine/ai_cache_lifetime_live_evidence.json.
+
 - Verify the fresh cache-lifetime candidate with all 2,463 native tests passing,
   retaining 2,361 and adding 102 across combat history and cache lifetime.
   Audit the six production source families, eight changed classes, unchanged

@@ -37,9 +37,20 @@ and adding 102 across combat history and cache lifetime. Its compiled classes
 match the six reviewed source families; card and AI profile data are unchanged.
 The first independent packaged run passed all 1,711 native subtests but failed
 a stale wrapper expectation of 127 class origins instead of the verified 129.
-The wrapper now checks the exact, duplicate-free reviewed class list; its rerun,
-broader, full live and catalog checks remain pending. The selected runtime below
-is unchanged.
+The strengthened wrapper passed all four tests and 1,711 subtests, and broader
+gameplay/serialization passed 3,937/256. The independent catalog probe constructed
+32,636 starting identities with seven expected nonstarting meld exclusions.
+
+The full live run passed 44 tests and all 2,359 subtests, but the limited
+full-game conformance test remains inconclusive: Goreclaw never attacked in any
+of its three fixed-seed games, so its required unblocked trigger witness was
+absent. Twelve controlled declaration probes show that all three AI modes
+attack open boards but decline attacks when higher-threat blockers are present,
+even with a different opponent open. This is an observed target-planning gap;
+the probe does not establish a uniquely optimal strategy. Fixed seeds and
+absence/contradiction checks are unchanged. The candidate is not activated;
+the selected runtime below remains unchanged. See the
+[preserved live witness and diagnostic evidence](engine/ai_cache_lifetime_live_evidence.json).
 
 The baseline reproduced six cache-lifetime failures, including stale evaluations
 after a Forest entered play in original and copied games. Recorded reference
