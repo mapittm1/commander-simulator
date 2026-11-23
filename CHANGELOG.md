@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate direct private-reveal and captured public-library observation routing
+  after all 45 live tests and 2,077 subtests pass, including repeated packaged
+  families of 1024/65/194/146. All 956 focused source, 2,181 native, 3,655 gameplay
+  and 256 serialization checks pass. Verify 530 frozen inputs, retained methods,
+  preserved native/Checkstyle failures, post-move readiness and construction of
+  32,636 starting identities with seven nonstarting meld exclusions. Three source
+  files and five existing classes change; no production classes are added. Card
+  scripts/default AI are unchanged. Other direct/delayed callbacks and full
+  Commander rules/AI/strategy remain unproven. See
+  engine/direct_private_reveal_evidence.json.
+
 - Validate the direct-reveal candidate with all 2,181 native tests, retaining
   2,159 and adding 22. All 956 focused source, independent packaged families
   of 1024/65/194/146 and broader gameplay/serialization of 3,655/256 pass.

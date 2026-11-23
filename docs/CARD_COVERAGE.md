@@ -17,7 +17,31 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Controlled players and fresh observations
+## Direct private reveals and captured public library positions
+
+Shared rights now cover RevealHand Look and PeekAndReveal private disclosures.
+Capture private/public library audiences before callbacks, retain publicly
+announced positions for dormant or removed agents, and preserve independent
+copied states, normal privacy and countered non-disclosure. No private-history
+copying or production card-name exceptions are added.
+
+All 956 focused source, 2,181 native, independent/repeated 1024/65/194/146 packaged,
+3,655 gameplay, 256 serialization and 45 live/2,077 subtest checks pass. All 530
+implementation inputs remain frozen through validation. Three production files
+and five existing classes change; no production classes are added. Post-move
+health and construction of 32,636 starting identities with seven nonstarting
+meld exclusions pass. Scripts/default AI are unchanged. Preserve the original
+18-case10-pass/8-fail baseline, the956-case954-pass/2-fail boundary phase and the
+unused-import Checkstyle stop. See the
+[activation evidence](../engine/direct_private_reveal_evidence.json).
+
+Eighteen paid cases use printed Worst Fears, Peek, Brutal Deceiver, Counterspell
+and Stifle paths in original/copied states. Four callback boundaries explicitly
+instrument control changes. Other direct/delayed APIs, all private histories,
+temporary controllers, nested/rollback states and autonomous strategy remain
+open. Selected checks and construction do not certify full Commander correctness.
+
+## Earlier controlled players and fresh observations
 
 The reviewed shared reveal and inspected-library paths capture their audiences
 and preserve authorized recipients across control changes.

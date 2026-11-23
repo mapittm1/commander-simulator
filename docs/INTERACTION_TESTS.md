@@ -17,7 +17,19 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Controlled-player observation and private/public boundaries
+## Direct private-reveal and public-position boundaries
+
+The selected runtime passes the expanded 1024-case packaged family, including
+18 paid direct-private-reveal cases and four instrumented callback/public-position
+boundaries. Shared rights and captured audiences retain authorized knowledge
+across controller changes while normal privacy, countered non-disclosure and
+copied-state isolation pass. All 956 focused source, 2,181 native, independent/
+repeated 1024/65/194/146 packaged, 3,655 gameplay, 256 serialization and
+45 live/2,077 subtest checks pass. Preserve all failed phases. See the
+[activation evidence](../engine/direct_private_reveal_evidence.json).
+Other direct/delayed callbacks and complete rules/strategy remain unproven.
+
+## Earlier controlled-player observation and private/public boundaries
 
 The selected runtime passes the expanded 1002-case packaged family, including
 18 paid controlled-information cases, nine audience boundaries and fifteen
@@ -111,7 +123,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/controlled_information_evidence.json).
+[current full validation](../engine/direct_private_reveal_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:

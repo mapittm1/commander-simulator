@@ -1,24 +1,21 @@
 {
   "scope": "Independent native gameplay and serialization compilation using the source-tested candidate; temporary reviewed test-only policies are restored byte-for-byte. Not all-card certification.",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "df168915a8ff524ed79e53df822e11b532a9f039a6cc6114baa9219ad006e8b6",
+  "recipe_sha256": "00e3c81431030ef7887a08833c643fc19dd488abe655a26a02b4d75bc8d81c7b",
   "test_only_policies": {
     "engine/patches/star-trek-commandeer-validation.patch": "2acafd29317c738cbe0e15ca9fb84aa6030520de266a8a447b54a2f645edbb91",
     "engine/patches/bauble-ai-classification-validation.patch": "1015d713605580e97c9d137481d533d20c6fe140d0d063a0f5fac104c691f4f4"
   },
-  "frozen_inputs_sha256": "d9f3115f0767027f5ad40e9605a4b28ad9ab9db68fd3f01712edfa8e5492d825",
+  "frozen_inputs_sha256": "bafe6ffc49f531529eb88018b32b1ec5400e459ada71be36dd8153c3fff3253f",
   "candidate_source_reused": true,
   "production_sources": 2165,
-  "byte_identical_production_sources": 2159,
+  "byte_identical_production_sources": 2162,
   "reviewed_line_ending_paths": [
-    "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
     "forge-game/src/main/java/forge/game/GameAction.java",
-    "forge-game/src/main/java/forge/game/player/Player.java",
-    "forge-game/src/main/java/forge/game/player/PlayerController.java",
-    "forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java",
-    "forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java"
+    "forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java",
+    "forge-game/src/main/java/forge/game/ability/effects/RevealHandEffect.java"
   ],
-  "candidate_production_inputs_sha256": "f93f7c978ecd2fb5f1e7dbc06aef061d53570d13b8169cf7d4290af06b6e51eb",
+  "candidate_production_inputs_sha256": "7e98e81de6eb043091b6b9d6419956d110ea4979474f6e1436577d292f98e36e",
   "test_policy_originals_restored": true,
   "test_policy_files": {
     "forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": {
@@ -28,8 +25,8 @@
   },
   "suites": {
     "gameplay": {
-      "total": 3633,
-      "passed": 3633,
+      "total": 3655,
+      "passed": 3655,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -69,6 +66,8 @@
         "forge.ai.CommanderCrystalSprayTest",
         "forge.ai.CommanderDefenderRestorationTest",
         "forge.ai.CommanderDiceReplacementTest",
+        "forge.ai.CommanderDirectPrivateRevealTest",
+        "forge.ai.CommanderDirectRevealBoundaryTest",
         "forge.ai.CommanderDiscoverCastFormsTest",
         "forge.ai.CommanderDiscoverLkiTest",
         "forge.ai.CommanderDiscoverSacrificeTest",
@@ -351,16 +350,16 @@
         "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
         "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 317,
+      "selected_classes": 319,
       "process": {
         "status": "finished",
-        "bytes": 197453,
+        "bytes": 199369,
         "returncode": 0,
-        "elapsed_seconds": 207.594
+        "elapsed_seconds": 210.328
       },
-      "local_run_id": "native-gameplay-820d19008ced404d9e1f1416e9f158ed",
-      "testng_results_sha256": "687f73f3e79316f4533e72fe41512baa3aa2f5935bd0edea1e69336acc8973b5",
-      "log_sha256": "c0c9481b565eba8966e3180658308265017eb1f7f46563aae9f15f1b47665324"
+      "local_run_id": "native-gameplay-fd1f450bc45d48aabd117159e04b4e2f",
+      "testng_results_sha256": "b59f2be153bffae0a14733b260fc3aca8179780a0217f8bfaed546e16a8c4498",
+      "log_sha256": "8132b34bbcc8c77dbe0a75a380cdbf7335b160bdf1480a4797bbb33a61cd37ad"
     },
     "serialization": {
       "total": 256,
@@ -388,13 +387,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 30020,
+        "bytes": 29928,
         "returncode": 0,
-        "elapsed_seconds": 79.031
+        "elapsed_seconds": 78.906
       },
-      "local_run_id": "native-serialization-785e4d9e7316451798dd3fd0d859ff42",
-      "testng_results_sha256": "24eb1f23c93e6db4e6d077e261f984d0e354f22d08f8975866b991b1413ce798",
-      "log_sha256": "2a2e933fee632183b580eea75b346e669e2c5e3c9640f48b36f49c9e142f79de"
+      "local_run_id": "native-serialization-4bd2545eab764112b3a4a76df69ddd7c",
+      "testng_results_sha256": "0aae4ca513c263d13db27709d09cc7ea1c6ff8de57be4e7bbeda3a6090221e4c",
+      "log_sha256": "25060d71ce4f096d9884efccacdf0dc45932eaf6c863a57c2afd65ada5e9ddc2"
     }
   }
 }

@@ -9,7 +9,18 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected controlled-information runtime captures rightful private audiences,
+The selected direct-reveal runtime routes private hand/peek information through
+shared rights and captures private/public library audiences before callbacks.
+All 956 focused source, 2,181 native, independent/repeated 1024/65/194/146 packaged,
+3,655 gameplay, 256 serialization and 45 live/2,077 subtest checks pass. Three
+source files and five existing classes change; no production classes are added.
+Preserve original native failures, later public-position failures and the initial
+unused-import Checkstyle stop. Scripts/default AI are unchanged. See the
+[patch](patches/commander-direct-private-reveal.patch) and
+[activation evidence](direct_private_reveal_evidence.json). Selected contracts
+do not certify other effect paths or full Commander rules/strategy.
+
+The earlier controlled-information runtime captures rightful private audiences,
 keeps per-agent memories and separates public knowledge from presentation.
 All 934 focused source, 2,159 native, independent/repeated 1002/65/194/146 packaged,
 3,633 gameplay, 256 serialization and 45 live/2,055 subtest checks pass. Preserve

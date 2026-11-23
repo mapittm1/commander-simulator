@@ -27,21 +27,34 @@ difference.
 
 ## Card coverage
 
-The direct-private-reveal candidate passes 2,181 native tests, retaining all
-2,159 prior methods and adding 22. All 956 focused source checks pass;
-independent packaged families pass 1024/65/194/146, and broader gameplay and
-serialization pass 3,655/256. Shared private hand/peek routing and captured
-private/public library audiences retain rightful knowledge across callbacks,
-including dormant or removed agents for public positions. Original native
-failures and the unused-import Checkstyle stop remain preserved. See the
-[source evidence](engine/direct_private_reveal_native_evidence.json) and
-[packaged validation](engine/direct_private_reveal_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime below
-is unchanged. Other direct/delayed callbacks and full rules/AI correctness
-remain unproven.
+The selected runtime routes the RevealHand Look and PeekAndReveal private
+disclosure paths through shared per-card rights. Private library audiences are
+captured before callbacks;
+public library audiences also include dormant agents and agents removed during
+reveal callbacks. Declared positions follow those captured audiences without
+copying private histories or adding card-name exceptions.
 
-The selected runtime's shared reveal and inspected-library paths preserve fresh
-in-game observations for the controlled player, their controller and the acting
+All 956 focused source checks and 2,181 native build tests pass, retaining all
+2,159 prior native methods and adding 22. Independent and repeated packaged
+families pass 1024/65/194/146; broader gameplay/serialization pass 3,655/256.
+All 45 live tests and 2,077 subtests pass. Post-move health is ready; construction
+passes for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source evidence](engine/direct_private_reveal_native_evidence.json),
+[packaged milestone](engine/direct_private_reveal_packaged_evidence.json), and
+[validation and activation](engine/direct_private_reveal_evidence.json).
+
+The original eighteen-case paid baseline passes ten controls and fails eight
+master/post-control knowledge assertions; all eighteen methods now pass. Four
+callback/public-position boundaries include two preserved intermediate failures.
+The initial unused-import Checkstyle stop also remains preserved. Recording-agent
+fixtures explicitly construct controller transitions; they do not establish all
+printed nested control-card rules. Other direct/delayed effect callbacks,
+agent/history unification, temporary controllers, all nested/rollback contexts
+and autonomous strategy still need meaningful validation. Scripts/default AI
+are unchanged. Complete Commander card/rules/AI correctness remains unproven.
+
+The earlier controlled-information runtime's shared reveal and inspected-library
+paths preserve fresh in-game observations for the controlled player, their controller and the acting
 agent. Library audiences are captured
 at inspection time, so later controllers do not inherit earlier private peeks.
 Private reveals distinguish in-game and outside-game cards. Explicit receiving
@@ -663,16 +676,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 2,159 selected native tests, separate packaged
-families of 1002, 65, 194 and 146 rules cases, 3,633 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 2,055 subtests. All 527
+The current reviewed runtime passed 2,181 selected native tests, separate packaged
+families of 1024, 65, 194 and 146 rules cases, 3,655 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 2,077 subtests. All 530
 implementation inputs stayed frozen through candidate validation. Earlier failed
 source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/controlled_information_evidence.json).
+names. See the [validation and activation evidence](engine/direct_private_reveal_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
