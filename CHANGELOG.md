@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct information scoring during resolving-stack transitions: public stack
+  visibility cannot earn hand or library-position credit from a stale zone
+  collection. Preserve authorized paid knowledge across copies. All 804 focused
+  source checks pass, retaining 799 plus four regressions and the original
+  unchanged upstream safety test. Preserve the unactivated 2,025-test candidate,
+  its 3,498/3,499 broader result and four failing isolated baselines. A fresh
+  2,029-test build, packaged and broader/full live validation remain pending.
+  See engine/information_choice_native_evidence.json; full correctness remains open.
+
 - Add a source-validated generic information correction: 799 checks retain 745 and
   add 54. Preserve chosen library order and retire matching position knowledge
   when a card is explicitly forgotten. Value only authorized hands, positions and

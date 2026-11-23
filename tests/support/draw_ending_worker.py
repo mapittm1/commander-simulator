@@ -27,6 +27,7 @@ SOURCES = {
     "CommanderInformationOrderingTest": "commander_information_ordering_test_sha256",
     "CommanderInformationValueTest": "commander_information_value_test_sha256",
     "CommanderInformationContextTest": "commander_information_context_test_sha256",
+    "CommanderResolvingInformationCopyTest": "commander_resolving_information_copy_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -285,7 +286,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 868-case packaged family."""
+    """Execute the existing fixed 872-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

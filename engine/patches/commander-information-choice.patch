@@ -60,7 +60,7 @@
  
 --- /dev/null
 +++ b/forge-ai/src/main/java/forge/ai/InformationEffects.java
-@@ -0,0 +1,100 @@
+@@ -0,0 +1,106 @@
 +package forge.ai;
 +
 +import forge.game.ability.ApiType;
@@ -142,8 +142,12 @@
 +    }
 +
 +    private static boolean librarySlotKnown(Player observer, Player owner, int index) {
-+        return AiCardMemory.isLibraryPositionKnown(observer, owner, index)
-+                || owner.getCardsIn(ZoneType.Library).get(index).getView().canBeShownTo(observer.getView());
++        Card card = owner.getCardsIn(ZoneType.Library).get(index);
++        // Zone collections can briefly retain a card while a parent ability resolves.
++        // Public stack visibility must not become knowledge of a private library slot.
++        return card.getZone() == owner.getZone(ZoneType.Library)
++                && (AiCardMemory.isLibraryPositionKnown(observer, owner, index)
++                || card.getView().canBeShownTo(observer.getView()));
 +    }
 +
 +    public static int knownInformationValue(Player observer) {
@@ -151,7 +155,9 @@
 +        int library = 0;
 +        for (Player owner : observer.getGame().getPlayers()) {
 +            if (owner.isOpponentOf(observer)) {
-+                for (Card card : owner.getCardsIn(ZoneType.Hand)) if (identityKnown(observer, card)) hand += 2;
++                for (Card card : owner.getCardsIn(ZoneType.Hand)) {
++                    if (card.getZone() == owner.getZone(ZoneType.Hand) && identityKnown(observer, card)) hand += 2;
++                }
 +            }
 +            for (int index = 0; index < owner.getCardsIn(ZoneType.Library).size() && library < 8; index++) {
 +                if (librarySlotKnown(observer, owner, index)) library++;

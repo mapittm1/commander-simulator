@@ -136,6 +136,7 @@ REGRESSION_SOURCES = {
     "CommanderInformationOrderingTest.java": "commander_information_ordering_test_sha256",
     "CommanderInformationValueTest.java": "commander_information_value_test_sha256",
     "CommanderInformationContextTest.java": "commander_information_context_test_sha256",
+    "CommanderResolvingInformationCopyTest.java": "commander_resolving_information_copy_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",
