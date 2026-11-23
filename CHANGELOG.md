@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic paid combat-removal planning and action discovery in isolated
+  source. All 1,108 focused tests pass, retaining 1,066 and adding 42. Preserve
+  selected-runtime 18-case14pass/4fail and 24-case20pass/4fail reports, identical
+  regression bytes and the first prototype's four failures before discovery was
+  corrected. Native paid/Fog/full-simulation controls distinguish resolution from
+  classic/hybrid willingness. Cover multiple attackers, indestructible, hexproof,
+  payment limits and tapped sources in original/copied games. Register a future
+  2,333-native/1,176-packaged build; these are targets, not completed checks.
+  Selected runtime remains unchanged; triggers, reblocking and broader strategy
+  need further verification. See engine/combat_removal_native_evidence.json.
+
 - Activate first-extra draw timing and foreign-step exclusion after all 1,066
   source and 2,291 native checks pass, retaining 2,267 and adding 24. Independent
   and repeated packaged families pass 1134/65/194/146; broader gameplay and

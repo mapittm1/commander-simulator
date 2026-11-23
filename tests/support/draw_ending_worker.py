@@ -48,6 +48,8 @@ SOURCES = {
     "CommanderDrawHistorySnapshotTest": "commander_draw_history_snapshot_test_sha256",
     "CommanderLastDrawnBoundaryTest": "commander_last_drawn_boundary_test_sha256",
     "CommanderDrawStepBoundaryTest": "commander_draw_step_boundary_test_sha256",
+    "CommanderCombatRemovalPlanningTest": "commander_combat_removal_planning_test_sha256",
+    "CommanderCombatRemovalBoundaryTest": "commander_combat_removal_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -254,6 +256,9 @@ NATIVE_CLASSES = (
     "forge.game.combat.Combat",
     "forge.game.replacement.ReplacementHandler",
     "forge.game.replacement.ReplaceDraw",
+    "forge.ai.ability.RemoveFromCombatAi",
+    "forge.game.ability.effects.RemoveFromCombatEffect",
+    "forge.ai.ability.FogAi",
     "forge.game.ability.effects.DigEffect",
     "forge.game.ability.effects.CountersPutEffect",
     "forge.game.card.CardFactoryUtil",
@@ -320,7 +325,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1134-case packaged family."""
+    """Execute the existing fixed 1176-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

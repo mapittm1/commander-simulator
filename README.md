@@ -27,6 +27,16 @@ difference.
 
 ## Card coverage
 
+A generic combat-removal correction passes 1,108 focused source tests, retaining
+all 1,066 prior contracts and adding 42. Classic/hybrid AI can now consider paid
+removal actions despite old deck-exclusion hints and compare their native outcomes.
+Tests cover single/multiple attackers, actual lethal damage, full payment, copied
+states, indestructible creatures, hexproof, tapped sources and unavailable mana.
+The selected runtime below is unchanged; packaging and activation remain pending.
+See the [preserved combat failures](engine/combat_removal_gap.json) and
+[source evidence](engine/combat_removal_native_evidence.json). Triggered removal,
+reblocking composites and complete combat strategy remain unproven.
+
 The selected runtime applies first-extra replacements to the first eligible draw,
 while exempting the first card drawn during each own draw step. Draws during
 another player's draw step count as extra draws. Global draw-step history is

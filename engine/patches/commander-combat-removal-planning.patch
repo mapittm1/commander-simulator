@@ -1,0 +1,68 @@
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -24,6 +24,7 @@
+ import forge.ai.ability.ChangeZoneAi;
+ import forge.ai.ability.ControlExchangeVariantAi;
+ import forge.ai.ability.LearnAi;
++import forge.ai.ability.RemoveFromCombatAi;
+ import forge.ai.simulation.*;
+ import forge.card.CardStateName;
+ import forge.card.CardType;
+@@ -2037,7 +2038,7 @@
+                 return true;
+             }
+             final Card h = spellAbility.getHostCard();
+-            return h != null && ((ComputerUtilCard.isCardRemAIDeck(h) && !flatMc && !InformationEffects.supportsPrimary(spellAbility)) || ComboAssembly.deadOnArrival(player, spellAbility)
++            return h != null && ((ComputerUtilCard.isCardRemAIDeck(h) && !flatMc && !InformationEffects.supportsPrimary(spellAbility) && !RemoveFromCombatAi.evaluatesPrimary(spellAbility)) || ComboAssembly.deadOnArrival(player, spellAbility)
+                     || (flatMc && LoopRunner.held(player, spellAbility))
+                     || (flatMc && SurpriseEntry.isEntryAbility(spellAbility) && !SurpriseEntry.offered(player, spellAbility))
+                     || (flatMc && FlatMonteCarloPicker.needlessTrick(player, spellAbility))
+@@ -2636,7 +2637,7 @@
+      */
+     public boolean isFlatMcOnlyPlay(final SpellAbility sa) {
+         final Card h = sa == null ? null : sa.getHostCard();
+-        return h != null && ComputerUtilCard.isCardRemAIDeck(h) && flatMonteCarloActive() && !InformationEffects.supportsPrimary(sa)
++        return h != null && ComputerUtilCard.isCardRemAIDeck(h) && flatMonteCarloActive() && !InformationEffects.supportsPrimary(sa) && !RemoveFromCombatAi.evaluatesPrimary(sa)
+                 && !deckPlan(player).combos.isKeyCard(h) && !TutorPlan.hasPlanTarget(player, sa);
+     }
+ 
+--- a/forge-ai/src/main/java/forge/ai/ability/RemoveFromCombatAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/RemoveFromCombatAi.java
+@@ -3,15 +3,23 @@
+ import forge.ai.AiAbilityDecision;
+ import forge.ai.AiPlayDecision;
+ import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
+ import forge.game.player.Player;
++import forge.game.ability.ApiType;
+ import forge.game.spellability.SpellAbility;
+ 
+ public class RemoveFromCombatAi extends SpellAbilityAi {
+ 
++    /** A root paid action evaluated natively, even when its host has an old deck exclusion hint. */
++    public static boolean evaluatesPrimary(SpellAbility action) {
++        return action != null && (action.isSpell() || action.isActivatedAbility())
++                && action.getApi() == ApiType.RemoveFromCombat;
++    }
++
+     @Override
+-    protected AiAbilityDecision canPlay(Player aiPlayer, SpellAbility sa) {
+-        // disabled for the AI for now. Only for Gideon Jura at this time.
+-        return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++    protected AiAbilityDecision checkApiLogic(Player aiPlayer, SpellAbility sa) {
++        // Compare the fully paid action and its targets with the remaining combat.
++        return PaidOutcomePlanner.choose(aiPlayer, sa.getRootAbility());
+     }
+ 
+     @Override
+@@ -20,8 +28,8 @@
+             return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
+         }
+ 
+-        // TODO - implement AI
+-        return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++        // Evaluate a parent spell with all its effects, rather than an isolated subeffect.
++        return PaidOutcomePlanner.choose(aiPlayer, sa.getRootAbility());
+     }
+ 
+     /* (non-Javadoc)
