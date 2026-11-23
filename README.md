@@ -27,16 +27,17 @@ difference.
 
 ## Card coverage
 
-An isolated delayed-reveal correction passes 987 focused source checks,
-retaining 956 and adding 31. Active delayed disclosures use shared per-card
-rights after strict current-view and zone checks. Captured zone/owner groups
-preserve privacy and presentation across callback control changes; the
-single-zone constructor now retains its display prefix. Original eight paid
-failures and the later prefix failure remain preserved. Packaging and broader/
-full live validation remain pending; the selected runtime below is unchanged.
-See the [baseline](engine/delayed_private_reveal_gap.json) and
-[source evidence](engine/delayed_private_reveal_native_evidence.json).
-Other view paths, all UI/history contexts and full rules/AI remain unproven.
+The delayed-reveal candidate passes 2,212 native tests, retaining all 2,181
+prior methods and adding 31. All 987 focused source checks pass; independent
+packaged families pass 1055/65/194/146 and broader gameplay/serialization pass
+3,686/256. Active delayed disclosures enforce current-view and zone checks,
+shared per-card rights and captured zone/owner metadata across callbacks.
+Single/multi-zone prefixes and outside-game restrictions pass supplied boundaries.
+Original native and later prefix failures remain preserved. See the
+[source evidence](engine/delayed_private_reveal_native_evidence.json) and
+[packaged validation](engine/delayed_private_reveal_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Other view/UI/history paths and full rules/AI remain unproven.
 
 The selected runtime routes the RevealHand Look and PeekAndReveal private
 disclosure paths through shared per-card rights. Private library audiences are

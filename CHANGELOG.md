@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the delayed-reveal candidate with all 2,212 native tests, retaining
+  2,181 and adding 31. All 987 focused source, independent packaged families
+  of 1055/65/194/146 and broader gameplay/serialization of 3,686/256 pass.
+  Audit 2,165 production sources, three changed files, nine existing classes,
+  no added production classes and 533 frozen implementation inputs. Card
+  scripts/default AI are unchanged. Full live validation and activation remain
+  pending; selected checks do not certify all Commander rules or strategy. See
+  engine/delayed_private_reveal_packaged_evidence.json.
+
 - Add a source-validated generic delayed-disclosure correction: all 987 focused
   checks pass, retaining 956 and adding 31. Resolve only current matching views
   and declared/current zones; enforce active-agent and per-card disclosure rights.
