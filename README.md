@@ -33,9 +33,12 @@ restrictions and their expiration independently in copied games, and isolates
 preview randomness from live undo. All 1,360 mixed source cases pass in one JVM,
 retaining 1,238 and adding 122. Separate isolated overlays pass the 122 focused
 cases and all 1,306 existing packaged cases at unchanged budgets. The build recipe
-now includes the named regressions; a fresh sealed build targeting 2,585 native
-and 1,428 packaged cases, broader checks and full-live validation remain pending.
-The selected runtime is unchanged. See
+now includes the named regressions. A fresh sealed candidate passes all 2,585
+native tests and matches the reviewed source; cards and AI profiles are unchanged.
+Its first packaged run passed all 1,833 native checks, but the wrapper retained a
+129-origin expectation for the now-132-class manifest. That guard is corrected;
+its rerun, broader and full-live validation remain pending. The selected runtime
+is unchanged. See [the sealed candidate evidence](engine/multiplayer_attack_horizon_native_evidence.json) and
 [the source correction and preserved failures](engine/multiplayer_attack_horizon_evidence.json).
 
 The preceding cache-lifetime candidate removes an AI cache that retained completed games

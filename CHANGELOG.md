@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Build and audit the sealed multiplayer-horizon candidate: all 2,585 native
+  tests pass, retaining 2,463 and adding 122. All 2,168 production sources match
+  the reviewed source after line-ending normalization; changed/added classes
+  stay within the six reviewed families, with cards and AI profiles unchanged.
+  Preserve the first independent packaged run: all 1,833 native subtests pass,
+  while the wrapper retains a stale 129-origin expectation for the reviewed
+  132-class manifest. Correct only that count and retain exact/duplicate-free
+  origin checks. Rerun, broader/full-live checks and activation remain pending.
+  See engine/multiplayer_attack_horizon_native_evidence.json.
+
 - Register generic multiplayer attack-horizon source and 122 uniquely named
   regressions. Carry native combat state through successive opponent turns,
   preserve live RNG/undo state, and avoid nested whole-round searches inside

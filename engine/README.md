@@ -522,5 +522,8 @@ existing 1,306-case packaged family and 122 focused cases. See
 for exact source/fixture hashes, preserved failures and bounded-policy limits.
 
 The recipe now targets 2,585 native and 1,428 draw-ending-family cases in a fresh
-sealed artifact. Those targets, broader/full-live checks and activation remain
-pending. The selected runtime and its lock have not changed.
+sealed artifact. The fresh candidate now passes all 2,585 native tests. All 1,833
+packaged native cases pass, but the first wrapper retained129 origins instead of
+132; its correction/rerun and broader/full-live checks remain pending. See
+[multiplayer_attack_horizon_native_evidence.json](multiplayer_attack_horizon_native_evidence.json).
+The selected runtime and its lock have not changed.
