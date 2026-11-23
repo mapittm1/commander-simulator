@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add source-validated controlled-information observation routing: all 934
+  focused checks pass, retaining 892 and adding 42. Capture fresh inspection
+  audiences before control changes; preserve per-agent memories and distinguish
+  in-game from outside-game disclosures. Retain public reveal/return knowledge
+  for original/current/dormant agents independently of optional owner display.
+  Validate real paid control/inspection, copies, counters, failed payment, actor
+  resources, stale/foreign contexts, current-view identity and structural cycles.
+  Preserve native baseline and failed private/public reveal phases. Packaging and
+  broader/full live gates remain pending; selected engine/scripts/default AI
+  remain unchanged. Complete rules and calibrated strategy remain unproven.
+  See engine/controlled_information_native_evidence.json.
+
 - Record fourteen native controlled-information contracts: six proxy/payment/
   counter controls pass and eight rightful-observer/autonomous-choice checks fail.
   Real paid Worst Fears establishes control, paid Soothsaying resolves and Stifle

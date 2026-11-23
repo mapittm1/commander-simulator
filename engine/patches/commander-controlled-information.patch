@@ -1,0 +1,390 @@
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -620,21 +620,34 @@
+     @Override
+     public void observePublicCardReturn(Card card) {
+         if (card.getGame() == player.getGame() && card.isInZone(ZoneType.Hand)) {
+-            AiCardMemory.rememberCard(player, card, AiCardMemory.MemorySet.REVEALED_CARDS);
++            rememberDisclosedCard(card);
++        }
++    }
++
++    @Override
++    public void observePublicCards(CardCollectionView cards) {
++        for (Card card : cards) rememberDisclosedCard(card);
++    }
++
++    private void rememberDisclosedCard(Card card) {
++        // This controller may be a captured original agent, not the player's current proxy.
++        if (card != null && card.getGame() == player.getGame()) {
++            getAi().getCardMemory().rememberCard(card, AiCardMemory.MemorySet.REVEALED_CARDS);
+         }
+     }
+ 
+     @Override
+     public void reveal(CardCollectionView cards, ZoneType zone, Player owner, String messagePrefix, boolean addSuffix) {
+-        for (Card c : cards) {
+-            AiCardMemory.rememberCard(player, c, AiCardMemory.MemorySet.REVEALED_CARDS);
+-        }
++        for (Card card : cards) rememberDisclosedCard(card);
+     }
+ 
+     @Override
+     public void reveal(List<CardView> cards, ZoneType zone, PlayerView owner, String messagePrefix, boolean addSuffix) {
+-        for (CardView cv : cards) {
+-            AiCardMemory.rememberCard(player, player.getGame().findByView(cv), AiCardMemory.MemorySet.REVEALED_CARDS);
++        for (CardView view : cards) {
++            if (view == null) continue;
++            Card card = player.getGame().findByView(view);
++            // A copied or foreign view must not select an unrelated local object with the same ID.
++            if (card != null && card.getView() == view) rememberDisclosedCard(card);
+         }
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -651,9 +651,7 @@
+                 || (!wasFacedown && (zoneFrom.is(ZoneType.Graveyard)
+                         || zoneFrom.is(ZoneType.Exile) || zoneFrom.is(ZoneType.Command)));
+         if (publicReturn && copied.isInZone(ZoneType.Hand)) {
+-            for (Player observer : game.getPlayers()) {
+-                observer.getController().observePublicCardReturn(copied);
+-            }
++            for (PlayerController observer : capturePublicObservers()) observer.observePublicCardReturn(copied);
+         }
+ 
+         if (fromBattlefield) {
+@@ -2373,6 +2371,17 @@
+         return newCard;
+     }
+ 
++    private List<PlayerController> capturePublicObservers() {
++        List<PlayerController> agents = Lists.newArrayList();
++        Set<PlayerController> seen = java.util.Collections.newSetFromMap(new java.util.IdentityHashMap<>());
++        for (Player participant : game.getPlayers()) {
++            for (PlayerController agent : participant.getPublicObservationControllers()) {
++                if (seen.add(agent)) agents.add(agent);
++            }
++        }
++        return List.copyOf(agents);
++    }
++
+     public void revealTo(final Card card, final Player to) {
+         revealTo(card, Collections.singleton(to));
+     }
+@@ -2389,14 +2398,36 @@
+         revealTo(cards, to, null, true);
+     }
+     public void revealTo(final CardCollectionView cards, final Iterable<Player> to, String messagePrefix, boolean addSuffix) {
+-        if (cards.isEmpty()) {
+-            return;
+-        }
+-
+-        final ZoneType zone = cards.getFirst().getZone().getZoneType();
+-        final Player owner = cards.getFirst().getOwner();
+-        for (final Player p : to) {
+-            p.getController().reveal(cards, zone, owner, messagePrefix, addSuffix);
++        CardCollection currentCards = new CardCollection();
++        for (Card card : cards) {
++            if (card != null && card.getGame() == game && card.getZone() != null) currentCards.add(card);
++        }
++        if (currentCards.isEmpty()) return;
++        List<Player> named = Lists.newArrayList();
++        boolean hasControlledRecipient = false;
++        for (Player player : to) {
++            if (player != null && player.getGame() == game && game.getPlayers().contains(player)) {
++                named.add(player);
++                hasControlledRecipient |= player.isControlled();
++            }
++        }
++        // Use the native in-game membership; sideboards and other outside-game objects are excluded.
++        CardCollectionView inGame = hasControlledRecipient ? game.getCardsInGame() : null;
++        Map<PlayerController, CardCollection> deliveries = new java.util.IdentityHashMap<>();
++        for (Player player : named) {
++            PlayerController chooser = player.getController();
++            List<PlayerController> inside = player.getInGameObservationControllers(chooser);
++            List<PlayerController> outside = player.getOutsideGameObservationControllers(chooser);
++            for (Card card : currentCards) {
++                List<PlayerController> recipients = inGame == null || inGame.contains(card) ? inside : outside;
++                for (PlayerController agent : recipients) deliveries.computeIfAbsent(agent, key -> new CardCollection()).add(card);
++            }
++        }
++        // Capture every recipient before any callback can change the active controller.
++        for (Map.Entry<PlayerController, CardCollection> entry : deliveries.entrySet()) {
++            CardCollection disclosed = entry.getValue();
++            entry.getKey().reveal(disclosed, disclosed.getFirst().getZone().getZoneType(),
++                    disclosed.getFirst().getOwner(), messagePrefix, addSuffix);
+         }
+     }
+ 
+@@ -2421,11 +2452,18 @@
+         reveal(cards, zt, cardOwner, dontRevealToOwner, messagePrefix, true);
+     }
+     public void reveal(CardCollectionView cards, ZoneType zt, Player cardOwner, boolean dontRevealToOwner, String messagePrefix, boolean msgAddSuffix) {
+-        for (Player p : game.getPlayers()) {
+-            if (dontRevealToOwner && cardOwner == p) {
+-                continue;
+-            }
+-            p.getController().reveal(cards, zt, cardOwner, messagePrefix, msgAddSuffix);
++        if (cardOwner != null && cardOwner.getGame() != game) return;
++        CardCollection disclosed = new CardCollection();
++        for (Card card : cards) if (card != null && card.getGame() == game) disclosed.add(card);
++        if (disclosed.isEmpty()) return;
++        // Public knowledge is independent of the optional display to the owner.
++        for (PlayerController agent : capturePublicObservers()) agent.observePublicCards(disclosed);
++        for (Player p : Lists.newArrayList(game.getPlayers())) {
++            if (dontRevealToOwner && cardOwner == p) continue;
++            PlayerController agent = p.getController();
++            if (p.getInGameObservationControllers(agent).contains(agent)) {
++                agent.reveal(disclosed, zt, cardOwner, messagePrefix, msgAddSuffix);
++            }
+         }
+     }
+ 
+@@ -2778,8 +2816,34 @@
+         game.getTriggerHandler().runTrigger(TriggerType.TakesInitiative, runParams, false);
+     }
+ 
++    /** Immutable recipients captured at the authorized inspection, not at a later control change. */
++    public final class LibraryObservers {
++        private final List<PlayerController> agents;
++        private LibraryObservers(PlayerController chooser) {
++            agents = chooser == null || chooser.getGame() != game || chooser.getPlayer() == null ? List.of()
++                    : chooser.getPlayer().getInGameObservationControllers(chooser);
++        }
++        private boolean isFor(Game current) { return game == current; }
++    }
++
++    public LibraryObservers captureLibraryObservers(PlayerController chooser) {
++        return new LibraryObservers(chooser);
++    }
++
++    /** Deliver only positions declared by a native effect to its captured inspection audience. */
++    public void observeLibraryPositionsForObservers(Player owner, LibraryObservers observers, Map<Integer, Card> disclosed) {
++        if (owner == null || owner.getGame() != game || observers == null || !observers.isFor(game)) return;
++        Map<Integer, Card> positions = Map.copyOf(disclosed);
++        for (PlayerController agent : observers.agents) agent.observeLibraryTop(owner, positions);
++    }
++
+     /** Observe the actual inspected prefix before any private choice or replacement moves it. */
+     public void observeInspectedLibraryPrefix(Player owner, PlayerController observer, CardCollectionView inspected) {
++        observeInspectedLibraryPrefixForObservers(owner, captureLibraryObservers(observer), inspected);
++    }
++
++    public void observeInspectedLibraryPrefixForObservers(Player owner, LibraryObservers observers, CardCollectionView inspected) {
++        if (owner == null || owner.getGame() != game || observers == null || !observers.isFor(game)) return;
+         CardCollectionView library = owner.getCardsIn(ZoneType.Library);
+         Map<Integer, Card> disclosed = Maps.newHashMap();
+         for (int index = 0; index < inspected.size() && index < library.size(); index++) {
+@@ -2788,7 +2852,8 @@
+                 disclosed.put(index, current);
+             }
+         }
+-        observer.observeLibraryTop(owner, disclosed);
++        Map<Integer, Card> positions = Map.copyOf(disclosed);
++        for (PlayerController agent : observers.agents) agent.observeLibraryTop(owner, positions);
+     }
+ 
+     /**
+@@ -2803,6 +2868,12 @@
+ 
+     public void observeChosenLibraryOrder(Player owner, PlayerController observer,
+             CardCollectionView toTop, CardCollectionView toBottom, Zone.LibraryObservation observation) {
++        observeChosenLibraryOrderForObservers(owner, captureLibraryObservers(observer), toTop, toBottom, observation);
++    }
++
++    public void observeChosenLibraryOrderForObservers(Player owner, LibraryObservers observers,
++            CardCollectionView toTop, CardCollectionView toBottom, Zone.LibraryObservation observation) {
++        if (owner == null || owner.getGame() != game || observers == null || !observers.isFor(game)) return;
+         CardCollectionView library = owner.getCardsIn(ZoneType.Library);
+         Map<Integer, Card> disclosed = Maps.newHashMap();
+         int topCount = toTop == null ? 0 : toTop.size();
+@@ -2825,7 +2896,8 @@
+         }
+         // Never use hidden final identities to restore an old outside position.
+         if (observation == null || !observation.isFor(owner.getZone(ZoneType.Library))) {
+-            observer.observeLibraryTop(owner, disclosed);
++            Map<Integer, Card> positions = Map.copyOf(disclosed);
++            for (PlayerController agent : observers.agents) agent.observeLibraryTop(owner, positions);
+             return;
+         }
+         boolean unchanged = observation.preservesOutside()
+@@ -2833,9 +2905,11 @@
+                 && disclosed.size() == topCount + bottomCount
+                 && library.size() == observation.previousSize() - observation.inspectedCount() + topCount + bottomCount;
+         for (Card card : disclosed.values()) unchanged &= observation.permits(card);
+-        observer.observeLibraryOrder(new PlayerController.LibraryOrderObservation(owner,
++        PlayerController.LibraryOrderObservation order = new PlayerController.LibraryOrderObservation(owner,
+                 observation.previousRevision(), observation.previousSize(), observation.inspectedCount(),
+-                topCount, bottomCount, unchanged), disclosed);
++                topCount, bottomCount, unchanged);
++        Map<Integer, Card> positions = Map.copyOf(disclosed);
++        for (PlayerController agent : observers.agents) agent.observeLibraryOrder(order, positions);
+     }
+ 
+     public void scry(final List<Player> players, int numScry, SpellAbility cause) {
+@@ -2873,7 +2947,7 @@
+         }
+ 
+         Map<Player, Zone.LibraryObservation> observations = Maps.newLinkedHashMap();
+-        Map<Player, PlayerController> observers = Maps.newLinkedHashMap();
++        Map<Player, LibraryObservers> observers = Maps.newLinkedHashMap();
+         try {
+             // make the decisions
+             Map<Player, ImmutablePair<CardCollection, CardCollection>> decisions = Maps.newLinkedHashMap();
+@@ -2882,8 +2956,8 @@
+                 final CardCollection topN = new CardCollection(p.getCardsIn(ZoneType.Library, e.getValue()));
+                 PlayerController observer = p.getController();
+                 observations.put(p, p.getZone(ZoneType.Library).beginLibraryObservation(topN));
+-                observers.put(p, observer);
+-                observeInspectedLibraryPrefix(p, observer, topN);
++                observers.put(p, captureLibraryObservers(observer));
++                observeInspectedLibraryPrefixForObservers(p, observers.get(p), topN);
+                 ImmutablePair<CardCollection, CardCollection> decision = observer.arrangeForScry(topN);
+                 decisions.put(p, decision);
+                 int numToTop = decision.getLeft() == null ? 0 : decision.getLeft().size();
+@@ -2914,7 +2988,7 @@
+                     }
+                 }
+ 
+-                observeChosenLibraryOrder(p, observers.get(p), toTop, toBottom, observations.get(p));
++                observeChosenLibraryOrderForObservers(p, observers.get(p), toTop, toBottom, observations.get(p));
+ 
+                 if (cause != null) {
+                     final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(p);
+--- a/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/LookAtEffect.java
+@@ -1,5 +1,6 @@
+ package forge.game.ability.effects;
+ 
++import forge.game.GameAction;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.Card;
+ import forge.game.card.CardCollection;
+@@ -17,7 +18,9 @@
+     public void resolve(final SpellAbility sa) {
+         CardCollection cards = getTargetCards(sa);
+         Player observer = sa.getActivatingPlayer();
+-        sa.getHostCard().getGame().getAction().revealTo(cards, observer);
++        GameAction action = sa.getHostCard().getGame().getAction();
++        GameAction.LibraryObservers observers = action.captureLibraryObservers(observer.getController());
++        action.revealTo(cards, observer);
+         LibraryPosition position = disclosedLibraryPosition(sa);
+         if (position == LibraryPosition.UNKNOWN) return;
+         for (Card card : cards) {
+@@ -25,7 +28,7 @@
+             Player owner = card.getOwner();
+             int index = position == LibraryPosition.TOP ? 0 : owner.getCardsIn(ZoneType.Library).size() - 1;
+             // The memory callback validates the current incarnation and library revision.
+-            observer.getController().observeLibraryTop(owner, Map.of(index, card));
++            action.observeLibraryPositionsForObservers(owner, observers, Map.of(index, card));
+         }
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
+@@ -3,6 +3,7 @@
+ import java.util.List;
+ 
+ import com.google.common.collect.Iterables;
++import forge.game.GameAction;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.Card;
+@@ -104,13 +105,14 @@
+         CardCollection topCards = player.getTopXCardsFromLibrary(numCards);
+ 
+         PlayerController observer = activator.getController();
++        GameAction.LibraryObservers observers = player.getGame().getAction().captureLibraryObservers(observer);
+         try (Zone.LibraryObservation observation = player.getZone(ZoneType.Library).beginLibraryObservation(topCards)) {
+-            player.getGame().getAction().observeInspectedLibraryPrefix(player, observer, topCards);
++            player.getGame().getAction().observeInspectedLibraryPrefixForObservers(player, observers, topCards);
+             CardCollectionView orderedCards = observer.orderMoveToZoneList(topCards, ZoneType.Library, sa);
+             for (Card next : orderedCards) {
+                 player.getGame().getAction().moveToLibrary(next, 0, sa);
+             }
+-            player.getGame().getAction().observeChosenLibraryOrder(player, observer, orderedCards, null, observation);
++            player.getGame().getAction().observeChosenLibraryOrderForObservers(player, observers, orderedCards, null, observation);
+         }
+         // A subsequent hidden shuffle changes the library revision and invalidates these positions.
+         if (mayshuffle && activator.getController().confirmAction(sa, null, Localizer.getInstance().getMessage("lblDoyouWantShuffleTheLibrary"), null)) {
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1164,8 +1164,9 @@
+ 
+         if (!topN.isEmpty()) {
+             PlayerController observer = getController();
++            GameAction.LibraryObservers observers = getGame().getAction().captureLibraryObservers(observer);
+             try (Zone.LibraryObservation observation = getZone(ZoneType.Library).beginLibraryObservation(topN)) {
+-                getGame().getAction().observeInspectedLibraryPrefix(this, observer, topN);
++                getGame().getAction().observeInspectedLibraryPrefixForObservers(this, observers, topN);
+                 final Pair<CardCollection, CardCollection> lists = observer.arrangeForSurveil(topN);
+                 final CardCollection toTop = lists.getLeft();
+                 final CardCollection toGrave = lists.getRight();
+@@ -1196,7 +1197,7 @@
+                 }
+ 
+                 // Only the announced kept prefix is known; graveyard replacements may shuffle other cards.
+-                getGame().getAction().observeChosenLibraryOrder(this, observer, toTop, null, observation);
++                getGame().getAction().observeChosenLibraryOrderForObservers(this, observers, toTop, null, observation);
+                 getGame().fireEvent(new GameEventSurveil(PlayerView.get(this), numToTop, numToGrave));
+             }
+         }
+@@ -2767,6 +2768,45 @@
+             return controlledBy.lastEntry().getValue().getValue();
+         }
+         return controller;
++    }
++
++    /** Capture fresh in-game observation recipients; never transfer existing private histories. */
++    public final List<PlayerController> getInGameObservationControllers(PlayerController actingAgent) {
++        if (actingAgent == null || actingAgent != getController() || actingAgent.getGame() != game) return List.of();
++        List<PlayerController> recipients = new ArrayList<>();
++        Set<PlayerController> seenAgents = Collections.newSetFromMap(new IdentityHashMap<>());
++        Set<Player> seenPlayers = Collections.newSetFromMap(new IdentityHashMap<>());
++        for (Player participant = this; participant != null && seenPlayers.add(participant);
++                participant = participant.getControllingPlayer()) {
++            if (participant.getGame() != game || !game.getPlayers().contains(participant)) return List.of();
++            for (PlayerController agent : new PlayerController[] {participant.controller, participant.getController()}) {
++                if (agent == null || agent.getGame() != game || agent.getPlayer() == null || agent.getPlayer().getGame() != game) return List.of();
++                if (seenAgents.add(agent)) recipients.add(agent);
++            }
++        }
++        return List.copyOf(recipients);
++    }
++
++    /** Outside-game information belongs only to the named player, not the controller of that player. */
++    public final List<PlayerController> getOutsideGameObservationControllers(PlayerController actingAgent) {
++        if (actingAgent == null || actingAgent != getController() || actingAgent.getGame() != game
++                || controller == null || controller.getGame() != game || !game.getPlayers().contains(this)) return List.of();
++        return List.of(controller);
++    }
++
++    /** Public facts can update dormant agents too; this does not authorize private disclosures. */
++    public final List<PlayerController> getPublicObservationControllers() {
++        List<PlayerController> agents = new ArrayList<>();
++        Set<PlayerController> seen = Collections.newSetFromMap(new IdentityHashMap<>());
++        if (controller != null && controller.getGame() == game && controller.getPlayer() != null
++                && controller.getPlayer().getGame() == game && seen.add(controller)) agents.add(controller);
++        for (Pair<Player, PlayerController> layer : controlledBy.values()) {
++            Player master = layer.getLeft(); PlayerController agent = layer.getRight();
++            if (master.getGame() == game && game.getRegisteredPlayers().contains(master) && agent != null
++                    && agent.getGame() == game && agent.getPlayer() != null && agent.getPlayer().getGame() == game
++                    && seen.add(agent)) agents.add(agent);
++        }
++        return List.copyOf(agents);
+     }
+ 
+     public final Player getControllingPlayer() {
+--- a/forge-game/src/main/java/forge/game/player/PlayerController.java
++++ b/forge-game/src/main/java/forge/game/player/PlayerController.java
+@@ -217,6 +217,9 @@
+         // Controllers that retain private knowledge provide their own mapped copy.
+     }
+ 
++    /** A public reveal is knowledge even when presentation suppresses a redundant owner dialog. */
++    public void observePublicCards(CardCollectionView cards) { }
++
+     /** A publicly identified card has entered a hand; observers may retain that identity. */
+     public void observePublicCardReturn(Card card) {
+         // Presentation already observes zone changes; controllers may retain private knowledge.

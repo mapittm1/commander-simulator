@@ -27,12 +27,17 @@ difference.
 
 ## Card coverage
 
-A controlled-information baseline passes six native controls and fails eight
-AI observer/selection checks. Paid control, payment, countering and rearrange
-resolution succeed, but the controlling player lacks the observed positions,
-and the original player loses them when control ends. Controlled autonomous
-choices also skip useful information. See the [exact baseline](engine/controlled_information_gap.json).
-The selected runtime below remains active; a correction is not yet validated.
+An isolated controlled-information correction passes 934 focused source checks,
+retaining 892 and adding 42. Fresh library audiences retain authorized recipients
+across control changes; private reveals respect in-game/outside-game boundaries.
+Public reveal/return facts update rightful agent memories independently of owner
+display suppression. Real paid inspections, copies, failed payment, counters,
+foreign views, dormant agents and control-graph boundaries pass. The original
+baseline and additional failed reveal phases remain preserved. Packaging and
+broader/full live validation are pending; the selected runtime below is unchanged.
+See the [baseline](engine/controlled_information_gap.json) and
+[source evidence](engine/controlled_information_native_evidence.json).
+Complete card/rules/AI correctness remains unproven.
 
 The selected runtime admits primary library-rearrange spells and activations by
 ability semantics. Hybrid mode compares paired native paid outcomes for useful

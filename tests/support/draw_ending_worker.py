@@ -36,6 +36,9 @@ SOURCES = {
     "CommanderAutonomousRearrangeTest": "commander_autonomous_rearrange_test_sha256",
     "CommanderRearrangeChoiceBoundaryTest": "commander_rearrange_choice_boundary_test_sha256",
     "CommanderRearrangeCompositeXTest": "commander_rearrange_composite_x_test_sha256",
+    "CommanderControlledInformationTest": "commander_controlled_information_test_sha256",
+    "CommanderObservationAudienceBoundaryTest": "commander_observation_audience_boundary_test_sha256",
+    "CommanderPrivateRevealBoundaryTest": "commander_private_reveal_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -209,6 +212,7 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostRemoveCounter",
     "forge.game.cost.CostRemoveAnyCounter",
     "forge.game.GameAction",
+    "forge.game.GameAction$LibraryObservers",
     "forge.game.GameEntity",
     "forge.game.ability.AbilityUtils",
     "forge.game.card.CardZoneTable",
@@ -303,7 +307,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 960-case packaged family."""
+    """Execute the existing fixed 1002-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
