@@ -47,6 +47,13 @@ Fresh packaged/full validation remains pending; selected runtime is unchanged.
 Invocation frequency, other type/control changes and full rules/AI correctness
 remain unmeasured.
 
+The defender-type candidate also passes 1,902 selected native tests, independent
+781/65/194/110 packaged families, 3,376 broader gameplay tests and 256 serialization
+tests. All 497 implementation inputs remain frozen; the Battle worker verifies
+28 production class origins. See the
+[packaged evidence](../engine/defender_typechange_packaged_evidence.json).
+Full live validation and activation remain pending.
+
 ## Internal assigned-damage snapshots
 
 The reviewed runtime excludes removed-defender stand-ins from assigned damage.

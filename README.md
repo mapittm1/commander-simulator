@@ -32,8 +32,10 @@ ten and fails two. With flash-enabled paid Song of the Dryads, turning the Battl
 into a Forest makes Thrasta incorrectly deal seven damage to the attacking
 player in original and copied games. Countered-spell and walker controls pass.
 See the [exact reproductions](engine/defender_typechange_gap.json). All 676 focused source checks now
-pass with a generic correction, including 32 new contracts. Fresh packaged/full
-validation remains pending; the selected runtime is unchanged.
+pass with a generic correction, including 32 new contracts. The fresh build passes 1,902 selected native tests and packaged families of
+781/65/194/110 cases, plus 3,376 broader gameplay and 256 serialization tests.
+See [packaged evidence](engine/defender_typechange_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime is unchanged.
 
 Internal combat snapshots now preserve valid assigned damage after an attacked
 permanent leaves combat. Absent-defender stand-ins no longer enter the damage

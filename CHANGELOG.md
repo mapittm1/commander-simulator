@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the defender-type candidate with 1,902 selected native methods,
+  retaining all 1,870 and adding 32. Independent packaged families pass
+  781/65/194/110 cases; broader gameplay/serialization pass 3,376/256. Only
+  Combat.class changes. Card scripts and default AI remain unchanged. Verify
+  497 frozen inputs and 28 Battle-family production class origins. Full live
+  validation and runtime activation remain pending.
+  Preserve an interrupted broader phase without a terminal receipt; a separate
+  completed recovery run supplies the broader validation evidence.
+
 - Correct defender type history in source: remember legal type per attacking
   group, clone it across game copies, and retire it on departure or combat end.
   Use active combat groups for removal. Pass 676 focused source checks, retaining
