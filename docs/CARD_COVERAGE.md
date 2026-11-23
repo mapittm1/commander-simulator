@@ -17,6 +17,45 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Primary face-down inspection and authorized knowledge
+
+The selected runtime uses a generic primary inspection policy for Smoke Teller
+and Aven Soulgazer. Actual heuristic, hybrid and full-simulation choices pay their
+native costs, disclose information only to the authorized observer, and avoid
+repeat payment for an already inspected face. Free access through a paid Lens of
+Clarity and remembered identity have equal information value; destroying the Lens
+cannot manufacture a reward. Copied games keep knowledge and forgetting separate;
+returning and recasting a concealed card does not inherit the old object's credit.
+A known and an unknown face-down body remain separate simulation target choices.
+The policy uses public characteristics and authorized visibility or memory rather
+than consulting the concealed identity. Information credit is bounded at eight;
+these tests do not calibrate the strategy or establish every hidden-information
+choice elsewhere in the engine.
+
+The packaged baseline passes eight controls and fails twelve primary-policy and
+actual-picker checks. All twenty methods are retained and pass after correction;
+thirteen additional boundaries cover knowledge, free access and target pruning.
+All 745 focused source checks pass. The 1,971-method native build retains all
+1,938 prior methods. Independent and repeated packaged families pass 814/65/194/146
+cases, broader gameplay/serialization pass 3,445/256, and all 45 live tests with
+1,867 subtests pass. All 505 implementation inputs stay frozen during validation.
+The two new production classes accompany changes in the API registry, evaluation
+and target selection; eight existing packaged classes change, including nested
+classes, and two are added. Card scripts and default AI remain unchanged.
+
+The original controller probe collapsed supported policy declines to CantPlayAi;
+the corrected direct-policy probe still demonstrates six original admission
+failures. The first source phase and five later boundary failures remain
+preserved. Additional baseline source snapshots were created after execution
+only after matching the original compilation digests; retained reproduction
+drivers are explicitly distinguished from missing run-time driver hashes.
+See the [source evidence](../engine/inspection_ai_native_evidence.json),
+[packaged milestone](../engine/inspection_ai_packaged_evidence.json), and
+[full validation and activation](../engine/inspection_ai_evidence.json).
+Supplied partial pods, selected actions and construction of 32,636 starting
+identities do not certify complete Commander rules or autonomous strategy.
+Hand/library inspection strategy remains open.
+
 ## Independent creature and attacked-permanent combat roles
 
 The reviewed runtime removes only the invalid combat role when a permanent loses

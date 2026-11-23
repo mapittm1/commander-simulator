@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed inspection AI correction after 45 live tests and 1,867
+  subtests pass, including repeated 814/65/194/146 packaged families. Retain every
+  prior native method in the 1,971-test build; all 745 focused source, 3,445 broader
+  gameplay and 256 serialization checks pass. Verify 505 frozen implementation
+  inputs, exact preserved source phases, original baseline fixtures, post-move
+  readiness and construction of 32,636 starting identities with seven nonstarting
+  meld exclusions. Preserve disclosure, payment, countering and copied-memory
+  controls. Card scripts and default AI remain unchanged. Information utility is
+  a bounded heuristic; hand/library inspection strategy and full card/rules/AI
+  correctness remain open. See engine/inspection_ai_evidence.json.
+
 - Validate the inspection AI candidate with 1,971 native methods, retaining all
   1,938 and adding 33. Independent packaged families pass 814/65/194/146 cases;
   broader gameplay/serialization pass 3,445/256. Verify 2,164 production sources

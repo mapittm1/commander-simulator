@@ -9,7 +9,16 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The reviewed combat-role correction separates creature and attacked-permanent
+The selected inspection runtime adds a generic LookAt policy, bounded authorized
+knowledge value and knowledge-sensitive target pruning. All 1,971 selected native,
+745 focused source, independent/repeated 814/65/194/146 packaged, 3,445 broader
+gameplay, 256 serialization and 45 live/1,867 subtest checks pass. Preserve the
+original 8-pass/12-fail baseline and failed source phases. Card scripts and default
+AI remain unchanged. See the [inspection patch](patches/commander-inspection-ai.patch)
+and [activation evidence](inspection_ai_evidence.json). Bounded information value,
+selected tests and catalog construction do not certify every card or strategy.
+
+The earlier reviewed combat-role correction separates creature and attacked-permanent
 removal in [Combat.java](patches/commander-dual-combat-role.patch). Paid native
 Gideon/Luxior and March-removal controls preserve whichever role remains valid.
 All 1,938 selected native, 712 focused source, 781/65/194/146 packaged,

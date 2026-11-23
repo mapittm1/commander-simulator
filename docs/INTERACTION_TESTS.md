@@ -17,13 +17,35 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
+## Private face-down inspection
+
+The selected reviewed runtime passes the expanded 814-case packaged family,
+including twenty retained primary-inspection contracts and thirteen knowledge
+boundaries. Test Smoke Teller and Aven Soulgazer with actual heuristic, hybrid and
+full choices, native paid activation, Stifle, pending-stack copies, unavailable
+mana, Lens of Clarity access, copied knowledge, control changes, new card
+incarnations and knowledge-distinct targets. The shared fixture has no test
+methods and is verified as an isolated compiled helper. The family checks 107
+production class origins from the packaged JAR, retaining the 90-second worker
+budget. See [cases and limits](CARD_COVERAGE.md#primary-face-down-inspection-and-authorized-knowledge)
+and [full validation](../engine/inspection_ai_evidence.json).
+
+```powershell
+$env:COMMANDER_ENGINE_INTEGRATION = "1"
+.\.venv\Scripts\python.exe -m pytest -q -s tests/integration/test_draw_endings_integration.py
+```
+
+These supplied partial pods do not establish full-deck strategy, all private
+information choices or hand/library inspection strategy. Ordinary quality checks
+skip native integration unless the opt-in flag is enabled.
+
 ## Battle combat and Siege defeat
 
-The expanded 146-case family passes against the selected reviewed combat-role
+The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[full validation](../engine/dual_combat_role_evidence.json).
+[current full validation](../engine/inspection_ai_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
@@ -37,7 +59,7 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All 146 native cases pass against the reviewed combat-role runtime. The family retains
+All 146 native cases pass against the selected reviewed runtime. The family retains
 134 witnesses and adds twelve dual-role contracts. The prior 134 retained 110
 and added 24 paid restoration contracts, including copied
 and nested pending Disenchant/Counterspell stacks. The prior 110 include 32
@@ -53,9 +75,9 @@ The family does not establish autonomous combat strategy or every Battle
 interaction. Fixed source/dependency checks, compilation integrity, 30 production
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
-and [current packaged evidence](../engine/dual_combat_role_packaged_evidence.json).
-Both supplemental fixtures are included in the reviewed 1,938-method build. All
-45 live tests and 1,834 subtests pass, including repeated packaged families.
+and [current packaged evidence](../engine/inspection_ai_packaged_evidence.json).
+Both supplemental fixtures are included in the reviewed 1,971-method build. All
+45 live tests and 1,867 subtests pass, including repeated packaged families.
 The prior [validation](../engine/defender_typechange_evidence.json) remains a
 separate historical milestone. Full card/rules/AI correctness remains unverified.
 

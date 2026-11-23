@@ -27,19 +27,22 @@ difference.
 
 ## Card coverage
 
-The inspection AI candidate passes 1,971 native tests, retaining all 1,938 and
-adding 33 paid activation, privacy, free-access and copied-knowledge controls.
-All 745 focused source checks pass, as do independent packaged families of
-814/65/194/146 cases and broader gameplay/serialization suites of 3,445/256.
-The generic correction avoids redundant face-down inspection and preserves
-knowledge-distinct targets during pruning. Card scripts and the default AI
-profile are unchanged. See the [source evidence](engine/inspection_ai_native_evidence.json)
-and [packaged validation](engine/inspection_ai_packaged_evidence.json).
-Full live validation and activation are pending; the selected runtime below
-remains unchanged. Hand/library inspection strategy, calibrated information
-value and full card/rules/AI correctness remain open.
+The selected runtime now supports primary face-down inspection decisions for
+Smoke Teller and Aven Soulgazer through a generic policy. It avoids paying to
+inspect a face already known or freely visible, keeps private knowledge separate
+in copied games, and retains knowledge-distinct targets during simulation pruning.
+All 745 focused source checks and 1,971 native tests pass. Independent and repeated
+packaged families pass 814/65/194/146 cases; broader gameplay/serialization pass
+3,445/256, and all 45 live tests with 1,867 subtests pass. Post-move health is ready;
+construction of 32,636 starting identities passes with seven nonstarting meld
+exclusions. See the [source evidence](engine/inspection_ai_native_evidence.json),
+[packaged milestone](engine/inspection_ai_packaged_evidence.json), and
+[validation and activation](engine/inspection_ai_evidence.json).
+Card scripts and default AI are unchanged. Information value is a bounded
+heuristic; hand/library inspection strategy and complete card/rules/AI correctness
+remain open.
 
-The reviewed runtime preserves independent blocking and attacked-planeswalker
+Earlier combat-role validation preserved independent blocking and attacked-planeswalker
 roles when a permanent loses one card type. All 712 focused source checks pass;
 the 146-case Battle family includes twelve paid dual-role controls. Independent
 and repeated packaged checks, broader regressions, all 45 live tests and 1,834
@@ -613,16 +616,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,938 selected native tests, separate packaged
-families of 781, 65, 194 and 146 rules cases, 3,412 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 1,834 subtests. The corrected
-500-file validation phase stayed frozen; its earlier worker-only origin correction
-is documented separately. The Python quality gate passed 430 offline
+The current reviewed runtime passed 1,971 selected native tests, separate packaged
+families of 814, 65, 194 and 146 rules cases, 3,445 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,867 subtests. All 505
+implementation inputs stayed frozen through candidate validation. Earlier failed
+source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/dual_combat_role_evidence.json).
+names. See the [validation and activation evidence](engine/inspection_ai_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
