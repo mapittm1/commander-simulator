@@ -27,16 +27,18 @@ difference.
 
 ## Card coverage
 
-An isolated direct-private-reveal correction passes 956 focused source checks,
-retaining 934 and adding 22. Shared rights now cover RevealHand Look and
-PeekAndReveal private disclosures. Captured public library audiences retain
-announced positions for dormant agents and across callback control changes.
-The original eight failed paid assertions, two later public-position failures
-and an unused-import Checkstyle failure remain preserved. The selected runtime
-below is unchanged; packaging and broader/full live validation remain pending.
-See the [baseline](engine/direct_private_reveal_gap.json) and
-[source evidence](engine/direct_private_reveal_native_evidence.json).
-Other direct/delayed callbacks and full Commander correctness remain unproven.
+The direct-private-reveal candidate passes 2,181 native tests, retaining all
+2,159 prior methods and adding 22. All 956 focused source checks pass;
+independent packaged families pass 1024/65/194/146, and broader gameplay and
+serialization pass 3,655/256. Shared private hand/peek routing and captured
+private/public library audiences retain rightful knowledge across callbacks,
+including dormant or removed agents for public positions. Original native
+failures and the unused-import Checkstyle stop remain preserved. See the
+[source evidence](engine/direct_private_reveal_native_evidence.json) and
+[packaged validation](engine/direct_private_reveal_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Other direct/delayed callbacks and full rules/AI correctness
+remain unproven.
 
 The selected runtime's shared reveal and inspected-library paths preserve fresh
 in-game observations for the controlled player, their controller and the acting

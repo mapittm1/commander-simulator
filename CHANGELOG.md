@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the direct-reveal candidate with all 2,181 native tests, retaining
+  2,159 and adding 22. All 956 focused source, independent packaged families
+  of 1024/65/194/146 and broader gameplay/serialization of 3,655/256 pass.
+  Audit 2,165 production sources, three changed files, five existing classes,
+  no added production classes and 530 frozen implementation inputs. Card
+  scripts/default AI are unchanged. Full live validation and activation remain
+  pending; selected checks do not certify all Commander rules or strategy. See
+  engine/direct_private_reveal_packaged_evidence.json.
+
 - Add a source-validated generic direct-reveal correction: all 956 focused
   checks pass, retaining 934 and adding 22. Route private hand/peek disclosures
   through shared rights and capture public library audiences before callbacks.
