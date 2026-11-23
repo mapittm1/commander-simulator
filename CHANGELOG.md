@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the autonomous rearrange candidate with 2,117 native tests, retaining
+  all 2,090 and adding 27. All 892 focused source, independent packaged families
+  of 960/65/194/146, and broader gameplay/serialization of 3,591/256 pass. Audit
+  2,165 production sources, two changed production files/classes, no added classes,
+  and 523 frozen implementation inputs. Scripts/default AI remain unchanged.
+  Full live validation and activation remain pending; selected contracts do not
+  certify every Commander interaction or calibrated strategy.
+  See engine/autonomous_rearrange_packaged_evidence.json.
+
 - Add source-validated generic autonomous rearrange admission and paid native
   outcome assessment. All 892 focused checks pass, retaining 865 and adding 27.
   Validate actual hybrid/full original/copied X selection, payment, known/empty/

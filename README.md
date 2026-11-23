@@ -27,15 +27,17 @@ difference.
 
 ## Card coverage
 
-An isolated autonomous rearrange correction passes 892 focused source checks,
-retaining 865 and adding 27. Primary rearrange abilities receive generic semantic
-admission and paired native paid-outcome assessment, including X, legal targets,
-payment, privacy and deadline cleanup. The original hybrid baseline failures and
-fixture compile failures remain preserved. A native shared-X composite check
-passes; its follow-up retains the full paid X. Packaging and broader/full live
-validation remain pending. See the [baseline](engine/autonomous_rearrange_gap.json)
-and [source evidence](engine/autonomous_rearrange_native_evidence.json).
-The selected runtime below is unchanged; complete card/rules/AI support remains open.
+The autonomous rearrange candidate passes 2,117 native tests, retaining all
+2,090 prior methods and adding 27. All 892 focused source checks pass;
+independent packaged families pass 960/65/194/146, and broader gameplay and
+serialization pass 3,591/256. Generic admission and paired paid outcomes cover
+hybrid ability selection, X, legal targets, native payment, privacy and deadline
+cleanup. A trusted native composition retains the full X for its follow-up.
+Original failures and fixture corrections remain preserved. See the
+[source evidence](engine/autonomous_rearrange_native_evidence.json) and
+[packaged validation](engine/autonomous_rearrange_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Complete card/rules/AI correctness remains open.
 
 The selected runtime preserves previously known library positions outside an
 authorized inspection through declared index transforms. Bounded scopes permit
