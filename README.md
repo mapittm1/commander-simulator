@@ -27,28 +27,37 @@ difference.
 
 ## Card coverage
 
-A generic reblocking correction passes 1,136 focused source tests, retaining all
-1,108 prior contracts and adding 28. Native effects now mark the attacker blocked
-when assigning a blocker; that state persists if a real paid Shock destroys the
-blocker before combat damage. A Block API policy evaluates the complete paid
-parent, allowing classic/hybrid AI to consider removal and reassignment together.
+The selected runtime correctly marks an attacker blocked when a native effect
+assigns a blocker. That state persists if the blocker leaves before damage.
+The Block API evaluates the complete paid parent, so classic/hybrid AI can judge
+removing a blocker and assigning it to another attacker together.
 
-The source checks retain identical 20/28-case baseline fixtures and preserve the
-state-only prototype's eight remaining AI failures. Four ordinary damage controls
-already passed; four departure cases exposed the actual incorrect player loss.
-See the [preserved reblocking failures](engine/combat_reblocking_gap.json) and
-[source validation](engine/combat_reblocking_native_evidence.json). The recipe
-prepares 2,361 native and 1,204 packaged checks; those are pending validation
-targets. The selected 2,333-test runtime below is unchanged. Wider restrictions,
-blocking history, mandatory/optional triggers and full Commander correctness
-remain unproven.
+All 1,136 focused source and 2,361 native tests pass, retaining all 2,333 prior
+native methods and adding 28. Independent/repeated packaged groups pass
+1204/65/194/146; broader gameplay/serialization pass 3,835/256. All 45 live tests
+and 2,257 subtests pass. Post-move health is ready; construction passes for 32,636
+starting identities with seven nonstarting meld exclusions. See the
+[preserved reblocking failures](engine/combat_reblocking_gap.json),
+[source validation](engine/combat_reblocking_native_evidence.json),
+[packaged checks](engine/combat_reblocking_packaged_evidence.json), and
+[activation evidence](engine/combat_reblocking_evidence.json).
 
-The selected runtime evaluates paid combat-removal actions and their legal targets
+The 28 fixed contracts retain identical baseline bytes. Four ordinary damage
+controls passed before correction; four paid Shock/departure cases exposed an
+incorrect defending-player loss. The state-only prototype fixed rules/damage
+but retained eight AI declines until the Block policy was added. Original/copied
+cases cover paid explicit choices, optional decline, no-response lethal and all
+three AI modes. Two existing production files/classes change and one BlockAi
+source/class is added. Card scripts, profiles and test assertions are unchanged.
+Other blocker histories, combat restrictions, trigger policies and complete
+Commander rules or strategy remain unproven.
+
+The earlier combat-removal milestone evaluated paid combat-removal actions and their legal targets
 against the remaining combat. Classic/hybrid AI can reach that policy even when a
 host carries an old deck-exclusion hint. It can choose the lethal attacker among
 multiple threats and pays the real activation cost before removing it.
 
-All 1,108 focused source and 2,333 native tests pass, retaining every prior 2,291
+That milestone passed 1,108 focused source and 2,333 native tests, retaining every prior 2,291
 native method and adding 42. Independent/repeated packaged groups pass
 1176/65/194/146; broader gameplay/serialization pass 3,807/256. All 45 live tests
 and 2,229 subtests pass. Post-move health is ready; construction passes for 32,636

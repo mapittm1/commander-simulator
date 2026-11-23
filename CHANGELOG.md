@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic reblocking state and paid-parent AI planning after all 1,136
+  source and 2,361 native tests pass, retaining 2,333 and adding 28. Independent
+  and repeated packaged groups pass 1204/65/194/146; broader gameplay and
+  serialization pass 3,835/256; all 45 live tests and 2,257 subtests pass.
+  Verify post-move readiness and construction of 32,636 starting identities with
+  seven nonstarting meld exclusions. Preserve 20/28-case baselines, exact fixed
+  fixtures and the state-only prototype's eight AI failures. Two existing files
+  and classes change, with one new BlockAi class; scripts/profiles and limits
+  are unchanged. Other blocker histories, restrictions, trigger policies and full
+  Commander correctness remain unproven. See engine/combat_reblocking_evidence.json.
+
 - Correct generic native reblocking state and paid-parent AI planning in isolated
   source. All 1,136 focused tests pass, retaining 1,108 and adding 28. Preserve
   baselines of 20 cases (4 passed, 16 failed) and 28 cases (8 passed, 20 failed),
