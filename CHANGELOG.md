@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct defender type history in source: remember legal type per attacking
+  group, clone it across game copies, and retire it on departure or combat end.
+  Use active combat groups for removal. Pass 676 focused source checks, retaining
+  644 plus 32 new contracts; the 110-case Battle family retains 78 prior methods.
+  Preserve 12/24/32-case baselines and the compiler-only fixture correction.
+  Fresh packaged/full validation remains pending; selected runtime is unchanged.
+
 - Record a defender type-loss damage gap: ten of twelve native probes pass;
   two wrongly damage the attacking player after an attacked Battle becomes a
   Forest. Use native flash-enabled Song payment/resolution and Counterspell

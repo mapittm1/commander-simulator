@@ -29,7 +29,7 @@ class BattleCombatIntegrationTests(unittest.TestCase):
     """Require all fixed methods, native class origins and integrity checks to pass."""
 
     def test_packaged_battle_combat_rules(self):
-        """Run the separate 78-case family within the unchanged 90-second worker budget."""
+        """Run the separate 110-case family within the unchanged 90-second worker budget."""
         settings = read_settings()
         run = create_run()
         compile_rules(settings, run, *reviewed_inputs())
@@ -48,13 +48,13 @@ class BattleCombatIntegrationTests(unittest.TestCase):
             "battle-combat.json",
             {
                 "battle-combat-summary.json": 1,
-                "battle-combat-methods.json": 78,
+                "battle-combat-methods.json": 110,
             },
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 78)
+        self.assertEqual(len({row["method"] for row in methods}), 110)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
-        assert_rule_summary(self, summary, 78, NATIVE_CLASSES)
+        assert_rule_summary(self, summary, 110, NATIVE_CLASSES)
         print(json.dumps({"battle_combat_run": run.name}), flush=True)

@@ -530,6 +530,126 @@ public class CommanderBattleCombatTest extends AITest {
     }
 
 
+
+    @Test public void nativeBlockedChangedBattleOrdinaryKeepsBlockerDamage() { typeChange(false,false,false,false,false,false,true); }
+    @Test public void copiedBlockedChangedBattleOrdinaryKeepsBlockerDamage() { typeChange(false,false,true,false,false,false,true); }
+    @Test public void nativeBlockedChangedBattleOverPlaneswalkersKeepsBlockerDamage() { typeChange(false,true,false,false,false,false,true); }
+    @Test public void copiedBlockedChangedBattleOverPlaneswalkersKeepsBlockerDamage() { typeChange(false,true,true,false,false,false,true); }
+    @Test public void nativeBlockedChangedWalkerOrdinaryKeepsBlockerDamage() { typeChange(true,false,false,false,false,false,true); }
+    @Test public void copiedBlockedChangedWalkerOrdinaryKeepsBlockerDamage() { typeChange(true,false,true,false,false,false,true); }
+    @Test public void nativeBlockedChangedWalkerOverPlaneswalkersKeepsBlockerDamage() { typeChange(true,true,false,false,false,false,true); }
+    @Test public void copiedBlockedChangedWalkerOverPlaneswalkersKeepsBlockerDamage() { typeChange(true,true,true,false,false,false,true); }
+
+    @Test public void pendingCopiedBattleOrdinaryPreservesDefenderHistory() { typeChange(false,false,false,false,true,false); }
+    @Test public void pendingCopiedBattleOverPlaneswalkersPreservesDefenderHistory() { typeChange(false,true,false,false,true,false); }
+    @Test public void pendingCopiedWalkerOrdinaryPreservesDefenderHistory() { typeChange(true,false,false,false,true,false); }
+    @Test public void pendingCopiedWalkerOverPlaneswalkersPreservesDefenderHistory() { typeChange(true,true,false,false,true,false); }
+    @Test public void pendingCopiedCounteredBattlePreservesDefenderHistory() { typeChange(false,true,false,true,true,false); }
+    @Test public void pendingCopiedCounteredWalkerPreservesDefenderHistory() { typeChange(true,true,false,true,true,false); }
+    @Test public void nestedPendingCopiedBattleOrdinaryPreservesDefenderHistory() { typeChange(false,false,false,false,true,true); }
+    @Test public void nestedPendingCopiedBattleOverPlaneswalkersPreservesDefenderHistory() { typeChange(false,true,false,false,true,true); }
+    @Test public void nestedPendingCopiedWalkerOrdinaryPreservesDefenderHistory() { typeChange(true,false,false,false,true,true); }
+    @Test public void nestedPendingCopiedWalkerOverPlaneswalkersPreservesDefenderHistory() { typeChange(true,true,false,false,true,true); }
+    @Test public void nestedPendingCopiedCounteredBattlePreservesDefenderHistory() { typeChange(false,true,false,true,true,true); }
+    @Test public void nestedPendingCopiedCounteredWalkerPreservesDefenderHistory() { typeChange(true,true,false,true,true,true); }
+
+    @Test public void nativeChangedBattleOrdinaryTrampleRetainsLegalDamage() { typeChange(false,false,false,false); }
+    @Test public void copiedChangedBattleOrdinaryTrampleRetainsLegalDamage() { typeChange(false,false,true,false); }
+    @Test public void nativeChangedBattleOverPlaneswalkersRetainsLegalDamage() { typeChange(false,true,false,false); }
+    @Test public void copiedChangedBattleOverPlaneswalkersRetainsLegalDamage() { typeChange(false,true,true,false); }
+    @Test public void nativeCounteredBattleTypeChangeKeepsLiveRequirements() { typeChange(false,true,false,true); }
+    @Test public void copiedCounteredBattleTypeChangeKeepsLiveRequirements() { typeChange(false,true,true,true); }
+    @Test public void nativeChangedWalkerOrdinaryTrampleRetainsLegalDamage() { typeChange(true,false,false,false); }
+    @Test public void copiedChangedWalkerOrdinaryTrampleRetainsLegalDamage() { typeChange(true,false,true,false); }
+    @Test public void nativeChangedWalkerOverPlaneswalkersRetainsLegalDamage() { typeChange(true,true,false,false); }
+    @Test public void copiedChangedWalkerOverPlaneswalkersRetainsLegalDamage() { typeChange(true,true,true,false); }
+    @Test public void nativeCounteredWalkerTypeChangeKeepsLiveRequirements() { typeChange(true,true,false,true); }
+    @Test public void copiedCounteredWalkerTypeChangeKeepsLiveRequirements() { typeChange(true,true,true,true); }
+
+    /** A mature attacker and declared combat are supplied; Song and responses use native paid casting. */
+    private void typeChange(boolean walker,boolean overPlaneswalkers,boolean copied,boolean countered) {
+        typeChange(walker,overPlaneswalkers,copied,countered,false,false);
+    }
+
+    private void typeChange(boolean walker,boolean overPlaneswalkers,boolean copied,boolean countered,boolean copyBeforeResolution,boolean nested) {
+        typeChange(walker,overPlaneswalkers,copied,countered,copyBeforeResolution,nested,false);
+    }
+
+    private void typeChange(boolean walker,boolean overPlaneswalkers,boolean copied,boolean countered,boolean copyBeforeResolution,boolean nested,boolean blocked) {
+        Board board=board();Player owner=walker?board.battle.getProtectingPlayer():board.actor;
+        Card defender=walker?addCardToZone("Jace, the Mind Sculptor",owner,ZoneType.Battlefield):board.battle;
+        if(walker)defender.setCounters(CounterEnumType.LOYALTY,3);
+        Attack attack=attackDefender(board,overPlaneswalkers?"Thrasta, Tempest's Roar":"Colossal Dreadmaw",defender,null);
+        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();
+        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);
+        Card blocker=null;
+        if(blocked) {
+            Player blockingPlayer=walker?owner:defender.getProtectingPlayer();
+            blocker=addCardToZone("Grizzly Bears",blockingPlayer,ZoneType.Battlefield);
+            assertTrue(CombatUtil.canBlock(attack.attacker,blocker,attack.combat));
+            attack.combat.addBlocker(attack.attacker,blocker);attack.combat.setBlocked(attack.attacker,true);
+            attack.combat.orderBlockersForDamageAssignment();attack.combat.orderAttackersForDamageAssignment();
+        }
+        Player caster=board.game.getPlayers().get(2);
+        // Priority passes are supplied; payment and stack resolution use native casting.
+        board.game.getPhaseHandler().setPriority(caster);
+        for(int index=0;index<3;index++)addCardToZone("Forest",caster,ZoneType.Battlefield);
+        SpellAbility spell=addCardToZone("Song of the Dryads",caster,ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(caster);spell.getTargets().add(defender);
+        assertFalse(spell.canPlay(),"A sorcery-timed Aura requires flash during declared combat");
+        addCardToZone("Vedalken Orrery",caster,ZoneType.Battlefield);settle(board.game);
+        assertTrue(spell.canPlay(),"Orrery permits the native Aura cast at this supplied priority checkpoint");
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(caster,spell,null));assertEquals(spell.getPayingMana().size(),3);
+        if(countered) {
+            for(int index=0;index<2;index++)addCardToZone("Island",board.actor,ZoneType.Battlefield);
+            SpellAbility counter=addCardToZone("Counterspell",board.actor,ZoneType.Hand).getFirstSpellAbility();
+            board.game.getPhaseHandler().setPriority(board.actor);
+            counter.setActivatingPlayer(board.actor);counter.getTargets().add(board.game.getStack().peekAbility());
+            assertTrue(counter.canPlay());assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,counter,null));
+            assertEquals(counter.getPayingMana().size(),2);
+        }
+        Game game=board.game;Player actor=board.actor,target=owner;Card attacker=attack.attacker;
+        Card targetDefender=defender,auraSource=board.game.getCardState(spell.getHostCard());
+        if(copyBeforeResolution)assertEquals(board.game.getStack().size(),countered?2:1);
+        for(int depth=0;depth<(copyBeforeResolution?(nested?2:1):0);depth++) {
+            GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,actor);
+            actor=copier.find(actor);target=copier.find(target);attacker=copier.find(attacker);blocker=copier.find(blocker);
+            targetDefender=copier.find(targetDefender);auraSource=copier.find(auraSource);
+        }
+        System.out.println("TYPE_CHANGE before resolution: walker="+walker+"; over="+overPlaneswalkers+"; copy="+copied+"; countered="+countered+"; pendingCopy="+copyBeforeResolution+"; nested="+nested);
+        settle(game);Card physical=game.getCardState(targetDefender);
+        assertTrue(physical.isInZone(ZoneType.Battlefield));assertEquals(physical.isBattle(),!walker&&countered);
+        assertEquals(physical.isPlaneswalker(),walker&&countered);
+        Card aura=game.getCardState(auraSource);
+        if(!countered) {
+            assertTrue(physical.isLand());assertTrue(physical.getType().hasSubtype("Forest"));
+            assertTrue(aura.isInZone(ZoneType.Battlefield));assertSame(aura.getEntityAttachedTo(),physical);
+        } else {
+            assertTrue(aura.isInZone(ZoneType.Graveyard),"Native Counterspell cancels the paid Aura");
+        }
+        if(copied) {
+            GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,actor);
+            actor=copier.find(actor);target=copier.find(target);attacker=copier.find(attacker);blocker=copier.find(blocker);
+        }
+        assertTrue(game.getCombat().isAttacking(attacker),"Type loss removes the defender, not the attacker");
+        System.out.println("TYPE_CHANGE before damage: walker="+walker+"; over="+overPlaneswalkers+"; copy="+copied+"; countered="+countered+"; defender="+game.getCombat().getDefenderByAttacker(attacker));
+        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);
+        assertTrue(game.getCombat().assignCombatDamage(false));game.getCombat().dealAssignedDamage();settle(game);
+        if(blocked)assertTrue(game.getCardState(blocker).isInZone(ZoneType.Graveyard),"Real blockers still receive lethal damage");
+        List<Integer> expected=new ArrayList<>(initial);
+        if(walker&&overPlaneswalkers) {
+            int index=game.getPlayers().indexOf(target);expected.set(index,initial.get(index)-power+(countered?3:0)+(blocked?2:0));
+        }
+        assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,"A removed Battle cannot redirect over-planeswalker damage; a removed walker may");
+        if(copied||copyBeforeResolution)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,"Copy damage cannot alter original life");
+        if(copyBeforeResolution) {
+            assertEquals(board.game.getStack().size(),countered?2:1);
+            assertEquals(board.game.getCardState(defender).isBattle(),!walker);
+            assertEquals(board.game.getCardState(defender).isPlaneswalker(),walker);
+        }
+    }
+
+
     /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */
     private Attack attack(Board board, String name) {
         Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);

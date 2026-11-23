@@ -1,0 +1,90 @@
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -25,6 +25,7 @@
+ import com.google.common.collect.Multimap;
+ import com.google.common.collect.Multimaps;
+ import com.google.common.collect.Table;
++import forge.card.CardType;
+ import forge.game.*;
+ import forge.game.ability.AbilityKey;
+ import forge.game.event.GameEventAddLog;
+@@ -69,6 +70,8 @@
+     private final Supplier<Map<Card, CardCollection>> blockersOrderedForDamageAssignment = Suppliers.memoize(Maps::newHashMap);
+     private final Supplier<CardCollection> lkiCache = Suppliers.memoize(CardCollection::new);
+     private final Supplier<CardDamageTable> damageMap = Suppliers.memoize(CardDamageTable::new);
++    // Remember the legal defender type even after a continuous effect removes it.
++    private final Supplier<Map<AttackingBand, CardType>> defenderTypesByBand = Suppliers.memoize(Maps::newHashMap);
+ 
+     // List holds creatures who have dealt 1st strike damage to disallow them deal damage on regular basis (unless they have double-strike KW)
+     private final Supplier<CardCollection> combatantsThatDealtFirstStrikeDamage = Suppliers.memoize(CardCollection::new);
+@@ -90,6 +93,10 @@
+             AttackingBand origBand = entry.getValue();
+             AttackingBand newBand = map.mapCombatBand(origBand);
+             bandsMap.put(origBand, newBand);
++            CardType defenderType = combat.defenderTypesByBand.get().get(origBand);
++            if (defenderType != null) {
++                defenderTypesByBand.get().put(newBand, new CardType(defenderType));
++            }
+             final GameEntity defender = entry.getKey();
+             if (defender instanceof Card && ((Card) defender).getId() == -1) {
+                 // the stand-in for a planeswalker or battle that left combat (rule 506.4c, see removeFromCombat): it is
+@@ -172,6 +179,7 @@
+ 
+         //clear all combat-related collections
+         attackableEntries.get().clear();
++        defenderTypesByBand.get().clear();
+         attackedByBands.get().clear();
+         blockedBands.get().clear();
+         attackersOrderedForDamageAssignment.get().clear();
+@@ -287,6 +295,9 @@
+             attackersOfDefender.add(band);
+         } else {
+             band.addAttacker(c);
++        }
++        if (defender instanceof Card card && card.getId() != -1) {
++            defenderTypesByBand.get().computeIfAbsent(band, key -> new CardType(card.getType()));
+         }
+         if (isRealCombat()) {
+             c.updateAttackingForView();
+@@ -653,24 +664,23 @@
+             }
+         }
+ 
+-        for (Card battleOrPW : IterableUtil.filter(attackableEntries.get(), Card.class)) {
+-            if (battleOrPW.equals(c)) {
+-                Multimap<GameEntity, AttackingBand> attackerBuffer = ArrayListMultimap.create();
+-                Collection<AttackingBand> bands = attackedByBands.get().get(c);
+-                for (AttackingBand abDef : bands) {
+-                    unregisterDefender(c, abDef);
+-                    // Rule 506.4c workaround to keep creatures in combat
+-                    Card fake = new Card(-1, c.getGame());
+-                    fake.setName("<Nothing>");
+-                    fake.getCurrentState().setType(new forge.card.CardType(c.getType()));
+-                    fake.setProtectingPlayer(c.getProtectingPlayer());
+-                    fake.setController(c.getController(), 0);
+-                    attackerBuffer.put(fake, abDef);
+-                }
+-                bands.clear();
+-                attackedByBands.get().putAll(attackerBuffer);
+-                break;
+-            }
++        // Consult active combat, including defenders added after the initial constraints.
++        Collection<AttackingBand> bands = attackedByBands.get().get(c);
++        if (!bands.isEmpty()) {
++            Multimap<GameEntity, AttackingBand> attackerBuffer = ArrayListMultimap.create();
++            for (AttackingBand abDef : bands) {
++                unregisterDefender(c, abDef);
++                CardType defenderType = defenderTypesByBand.get().remove(abDef);
++                // Rule 506.4c preserves attackers after the actual defender leaves combat.
++                Card fake = new Card(-1, c.getGame());
++                fake.setName("<Nothing>");
++                fake.getCurrentState().setType(new CardType(defenderType == null ? c.getType() : defenderType));
++                fake.setProtectingPlayer(c.getProtectingPlayer());
++                fake.setController(c.getController(), 0);
++                attackerBuffer.put(fake, abDef);
++            }
++            bands.clear();
++            attackedByBands.get().putAll(attackerBuffer);
+         }
+ 
+         // remove card from map

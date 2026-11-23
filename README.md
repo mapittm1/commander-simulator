@@ -31,7 +31,9 @@ An attacked-Battle type-loss gap remains open: a native twelve-case probe passes
 ten and fails two. With flash-enabled paid Song of the Dryads, turning the Battle
 into a Forest makes Thrasta incorrectly deal seven damage to the attacking
 player in original and copied games. Countered-spell and walker controls pass.
-See the [exact reproductions](engine/defender_typechange_gap.json).
+See the [exact reproductions](engine/defender_typechange_gap.json). All 676 focused source checks now
+pass with a generic correction, including 32 new contracts. Fresh packaged/full
+validation remains pending; the selected runtime is unchanged.
 
 Internal combat snapshots now preserve valid assigned damage after an attacked
 permanent leaves combat. Absent-defender stand-ins no longer enter the damage

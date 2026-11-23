@@ -37,8 +37,15 @@ starting loyalty are supplied legal state, not autonomous setup decisions.
 An initial compiler stop used a CardType method on Card; only that receiver was
 corrected. No native tests ran in the stopped phase, and no expectation changed.
 See [exact evidence and preserved inputs](../engine/defender_typechange_gap.json).
+The expanded baseline passes 20 of 24, then 28 of 32 probes with real blockers;
+four contracts fail the same type-history boundary. A generic source correction
+remembers defender type per attacking band, copies it independently, and retires
+it on departure or combat end. All 676 focused source checks pass, retaining 644
+and adding 32; the 110-case Battle family retains all 78 prior methods. See the
+[source evidence](../engine/defender_typechange_native_evidence.json).
+Fresh packaged/full validation remains pending; selected runtime is unchanged.
 Invocation frequency, other type/control changes and full rules/AI correctness
-remain unmeasured. No further production correction is included yet.
+remain unmeasured.
 
 ## Internal assigned-damage snapshots
 
