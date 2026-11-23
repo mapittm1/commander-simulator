@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the corrected information candidate with 2,029 native methods,
+  retaining all 1,971 and adding 58. Independent packaged families pass
+  872/65/194/146 cases; broader gameplay/serialization pass 3,503/256, including
+  the unchanged upstream safety test that failed in the first candidate.
+  Verify 2,165 production sources, 512 frozen implementation inputs and unchanged
+  scripts/default AI. Full live validation and activation remain pending;
+  complete card/rules/AI correctness remains open.
+  See engine/information_choice_packaged_evidence.json.
+
 - Correct information scoring during resolving-stack transitions: public stack
   visibility cannot earn hand or library-position credit from a stale zone
   collection. Preserve authorized paid knowledge across copies. All 804 focused

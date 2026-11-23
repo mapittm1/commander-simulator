@@ -32,15 +32,17 @@ Fresh packaged baselines expose additional information-choice and ordering gaps:
 Paid resolution and privacy controls pass; actual choices and retention of an
 announced own-library order need further work. See the
 [open gap and exact witnesses](engine/information_choice_gap.json).
-The first correction passed 799 source checks, 2,025 build tests and the packaged
-868/65/194/146 families, but broader gameplay passed 3,498 of 3,499: a resolving
-spell's public visibility incorrectly earned hand-information credit through a
-transitional zone collection. That candidate was not activated. Four isolated
-regressions reproduce the hand/library and copied-knowledge errors. A zone-aware
-correction passes 804 focused checks, including those four and the unchanged
-upstream safety test. The 2,029-test rebuild and remaining validation are pending.
-See the [source evidence](engine/information_choice_native_evidence.json).
-The selected runtime below is unchanged; complete card correctness remains open.
+The corrected information candidate passes 2,029 native build tests, retaining
+all 1,971 prior methods and adding 58. All 804 focused source checks pass,
+including the unchanged upstream resolving-stack safety test. Independent
+packaged families pass 872/65/194/146 cases; broader gameplay and serialization
+pass 3,503/256. Public stack visibility no longer earns private-zone information
+credit, and authorized paid knowledge remains private and copy-consistent.
+The failed first candidate and its four isolated regressions are preserved.
+See the [source evidence](engine/information_choice_native_evidence.json) and
+[packaged validation](engine/information_choice_packaged_evidence.json).
+Full live validation and activation remain pending. The selected runtime below
+is unchanged; complete card/rules/AI correctness remains open.
 
 The selected runtime now supports primary face-down inspection decisions for
 Smoke Teller and Aven Soulgazer through a generic policy. It avoids paying to
