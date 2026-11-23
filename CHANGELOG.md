@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record 16 paid native scry/surveil contracts against the selected information
+  runtime: six countering/privacy/unavailable-mana controls pass and ten original
+  or pending-copy position-retention checks fail. Preserve exact compiled
+  fixtures, driver snapshots, native production origins and report hashes.
+  Native movement succeeds; resulting private position knowledge is missing.
+  Link the official rules review and keep complete rules/strategy coverage open.
+  See engine/library_choice_knowledge_gap.json.
+
 - Activate reviewed generic information choices and resolving-zone scoring after
   all 45 live tests and 1,925 subtests pass, including repeated 872/65/194/146
   packaged families. All 804 focused source, 2,029 native, 3,503 broader gameplay

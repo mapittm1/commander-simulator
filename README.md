@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+A fresh paid scry/surveil baseline confirms a remaining knowledge gap: six
+countering, privacy and unavailable-mana controls pass, while ten original/copied
+chosen-position checks fail. The cards move through native resolution, but the
+AI does not retain the chosen library positions. A generic correction is under
+review; the selected runtime below remains active. See the
+[exact baseline and rules review](engine/library_choice_knowledge_gap.json).
+
 The selected runtime supports generic paid hand/library information decisions and
 retains announced library order. It values authorized knowledge, avoids redundant
 inspection in supplied states and includes native cast-trigger benefits, damage
