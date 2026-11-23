@@ -27,16 +27,18 @@ difference.
 
 ## Card coverage
 
-The original no-shuffle transition baseline passes four controls and fails eight
-Opt/Consider deduction-retention checks. An isolated generic correction now
-passes 865 focused source checks, retaining 832 and adding 33. Bounded scopes
-preserve previously known outside positions only through authorized moves;
-opaque resets and uninspected-object changes invalidate that preservation.
-Same-library timestamp refreshes retain exact-object authorization, while stale
-or foreign copies do not. Source, negative scope/copy and paid rearrange/shuffle
-checks pass; packaging and broader/full live validation remain pending. The
-selected runtime below remains active. See the [baseline](engine/library_knowledge_transition_gap.json)
-and [source evidence](engine/library_knowledge_transition_native_evidence.json).
+The library-transition candidate passes 2,090 native build tests, retaining all
+2,057 prior methods and adding 33. All 865 focused source checks pass;
+independent packaged families pass 933/65/194/146 cases, and broader gameplay
+and serialization pass 3,564/256. Bounded exact-object scopes preserve known
+outside positions through declared index transforms without searching hidden
+final identities. Opaque resets, outside-card changes and invalid contexts
+retire that preservation. The original Opt/Consider baseline failures and
+failed timestamp prototype remain preserved. See the
+[source evidence](engine/library_knowledge_transition_native_evidence.json) and
+[packaged validation](engine/library_knowledge_transition_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Complete card/rules/AI correctness remains open.
 
 The selected runtime records authorized initial library inspection and announced
 resulting order through shared callbacks for scry, surveil and rearrange. It

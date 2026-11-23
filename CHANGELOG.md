@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify library-transition knowledge with 2,090 native tests, retaining all
+  prior 2,057 and adding 33. All 865 focused source checks, independent packaged
+  families of 933/65/194/146, and broader gameplay/serialization of 3,564/256 pass.
+  Audit 2,165 production sources, seven changed source files, two added nested
+  classes and 519 frozen implementation inputs. Scripts/default AI stay unchanged.
+  Preserve prior failures and exact-object refinement. Full live validation and
+  activation remain pending; selected contracts do not certify complete rules
+  or calibrated strategy. See engine/library_knowledge_transition_packaged_evidence.json.
+
 - Add a source-validated observer-authorized library transition model: all 865
   focused checks pass, retaining 832 and adding 33. Preserve known outside
   positions through declared index transforms without scanning hidden final
