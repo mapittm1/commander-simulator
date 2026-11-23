@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic autonomous rearrange choices after all 45 live tests and
+  2,013 subtests pass, including repeated 960/65/194/146 packaged families.
+  All 892 focused source, 2,117 native, 3,591 gameplay and 256 serialization checks
+  pass. Audit 523 frozen inputs, retained baseline methods, preserved native and
+  fixture failures, post-move health and construction of 32,636 starting identities
+  with seven nonstarting meld exclusions. Two production files/classes change;
+  no classes are added. Native paid outcomes handle hybrid admission, X, targets,
+  payment, privacy and deadline cleanup; a trusted native composition retains
+  shared X. Scripts/default AI remain unchanged. Controlled/nested/mandatory
+  contexts and calibrated strategy remain open; selected contracts and construction
+  do not certify complete Commander correctness.
+  See engine/autonomous_rearrange_evidence.json.
+
 - Validate the autonomous rearrange candidate with 2,117 native tests, retaining
   all 2,090 and adding 27. All 892 focused source, independent packaged families
   of 960/65/194/146, and broader gameplay/serialization of 3,591/256 pass. Audit

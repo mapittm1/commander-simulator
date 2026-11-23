@@ -17,7 +17,35 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Deducible positions outside library inspections
+## Autonomous primary library rearrange decisions
+
+Generic API-based admission permits primary rearrange spells and activations,
+without production card-name exceptions or admitting unrelated host abilities.
+Hybrid policy uses paired native paid outcomes and shared cost budgeting for X.
+The public library-size bound applies only to standalone own-library inspection;
+a composed follow-up may also depend on X. Declined or interrupted previews
+restore prior X. Original/copied hybrid and full selection, actual payment,
+known/empty/timing/budget controls, color requirements, sole/no legal targets,
+private knowledge and deadline recovery pass. A trusted synthetic native
+shared-X life-gain composition pays four mana and gains four life while inspecting
+a two-card library; it is not an oracle-text claim about its host card.
+
+The baseline passes 12 and fails two hybrid choices. All fourteen methods pass
+after correction, alongside twelve added boundaries and the composite contract.
+All 892 focused source, 2,117 native, independent/repeated 960/65/194/146 packaged,
+3,591 gameplay, 256 serialization and 45 live/2,013 subtest checks pass. All 523
+implementation inputs stay frozen through validation. Two production files and
+two existing classes change; no production classes are added. Post-move health
+and construction of 32,636 starting identities with seven nonstarting meld
+exclusions pass. Scripts/default AI remain unchanged. Preserve both native
+baseline failures, all three fixture compiler failures, and the already-passing
+pre-refinement composite contract. See the [activation evidence](../engine/autonomous_rearrange_evidence.json).
+
+Selected supplied states do not certify every controlled actor, nested/rollback
+context, mandatory trigger, X/target interaction or calibrated strategy.
+Complete Commander correctness remains unproven.
+
+## Earlier deducible positions outside library inspections
 
 Bounded observation scopes preserve previously acquired outside identity pairs
 through declared index transforms for scry, surveil and rearrange. Only the exact

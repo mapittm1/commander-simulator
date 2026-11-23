@@ -9,7 +9,17 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected library-transition runtime preserves previously known outside
+The selected autonomous rearrange runtime adds generic admission and paired
+native paid outcomes for primary spells and activations. All 892 focused source,
+2,117 native, independent/repeated 960/65/194/146 packaged, 3,591 gameplay,
+256 serialization and 45 live/2,013 subtest checks pass. Validate X, actual payment,
+target restrictions, privacy and deadline recovery. Preserve original native and
+fixture failures and the passing shared-X composition. Scripts/default AI remain
+unchanged. See the [patch](patches/commander-autonomous-rearrange.patch) and
+[activation evidence](autonomous_rearrange_evidence.json). Selected contracts
+and construction do not certify complete Commander correctness or strategy.
+
+The earlier library-transition runtime preserves previously known outside
 positions through bounded exact-object observation scopes and declared indices,
 without searching hidden final identities. All 865 focused source, 2,090 native,
 independent/repeated 933/65/194/146 packaged, 3,564 gameplay, 256 serialization

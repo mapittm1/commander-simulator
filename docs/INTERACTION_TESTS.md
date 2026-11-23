@@ -17,9 +17,20 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Library transition knowledge and observation scopes
+## Autonomous rearrange admission and native paid outcomes
 
-The selected runtime passes all 933 cases in the expanded packaged family,
+The selected runtime passes the expanded 960-case packaged family, including
+fourteen retained autonomous/payment/decline contracts, twelve cleanup/payment/
+privacy/target/deadline boundaries and one trusted native shared-X composition.
+All 2,117 native, 892 focused source, independent/repeated 960/65/194/146 packaged,
+3,591 gameplay, 256 serialization and 45 live/2,013 subtest checks pass.
+The original hybrid failures and fixture compiler failures remain preserved.
+See the [activation evidence](../engine/autonomous_rearrange_evidence.json).
+These selected contracts do not certify complete rules or calibrated strategy.
+
+## Earlier library transition knowledge and observation scopes
+
+The earlier library-transition runtime passed all 933 cases in the expanded packaged family,
 including twelve retained paid transition methods and 21 observation boundaries.
 Original/copied pods preserve known outside positions through Opt/Consider.
 Controls cover direct draw, full reannouncement, exact-object timestamp refresh,
@@ -86,7 +97,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/library_knowledge_transition_evidence.json).
+[current full validation](../engine/autonomous_rearrange_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
