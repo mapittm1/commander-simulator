@@ -37,6 +37,13 @@ See the [preserved combat failures](engine/combat_removal_gap.json) and
 [source evidence](engine/combat_removal_native_evidence.json). Triggered removal,
 reblocking composites and complete combat strategy remain unproven.
 
+The fresh candidate passes all 2,333 native tests. Its first independent run
+passed all 1,176 methods in the expanded family, then failed writing the receipt
+at the unchanged 128 KiB document limit. Large method receipts now use bounded
+500-case parts with hash-checked indexes; nine offline tests cover round trips,
+legacy receipts, tampering, names, counts and oversized individual cases.
+The independent packaged rerun and broader/live activation gates remain pending.
+
 The selected runtime applies first-extra replacements to the first eligible draw,
 while exempting the first card drawn during each own draw step. Draws during
 another player's draw step count as extra draws. Global draw-step history is

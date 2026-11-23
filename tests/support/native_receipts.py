@@ -4,7 +4,18 @@ from pathlib import Path
 from unittest import TestCase
 
 from commander.engine.forge_config import EngineSettings, file_hash, read_settings
-from commander.engine.interactions.suite import read_bounded_json, write_bounded_json
+from commander.engine.interactions.suite import (
+    read_bounded_json,
+    read_hashed_json,
+    write_bounded_json,
+)
+
+CASES_PER_RECEIPT_PART = 500
+
+
+def _chunk_name(name: str, index: int) -> str:
+    stem = name.removesuffix(".json")
+    return f"{stem}-{index:04d}.json"
 
 
 def write_test_receipts(
@@ -13,9 +24,32 @@ def write_test_receipts(
     """Write fixed cases in bounded parts with engine and unchanged-profile identity."""
     receipts = []
     for name, rows in parts.items():
+        if len(rows) <= CASES_PER_RECEIPT_PART:
+            path = run / name
+            write_bounded_json(path, {"cases": rows})
+            receipts.append(
+                {"name": name, "sha256": file_hash(path), "cases": len(rows)}
+            )
+            continue
+        chunks = []
+        for offset in range(0, len(rows), CASES_PER_RECEIPT_PART):
+            selected = rows[offset : offset + CASES_PER_RECEIPT_PART]
+            chunk_name = _chunk_name(name, offset // CASES_PER_RECEIPT_PART)
+            path = run / chunk_name
+            write_bounded_json(path, {"cases": selected})
+            chunks.append(
+                {"name": chunk_name, "sha256": file_hash(path), "cases": len(selected)}
+            )
         path = run / name
-        write_bounded_json(path, {"cases": rows})
-        receipts.append({"name": name, "sha256": file_hash(path), "cases": len(rows)})
+        write_bounded_json(path, {"chunks": chunks})
+        receipts.append(
+            {
+                "name": name,
+                "sha256": file_hash(path),
+                "cases": len(rows),
+                "chunked": True,
+            }
+        )
     write_bounded_json(
         run / manifest_name,
         {
@@ -41,15 +75,45 @@ def read_test_receipts(
         raise ValueError("Native witness receipt names differ from the fixed selection")
     cases = []
     for part, (name, count) in zip(manifest["parts"], expected.items()):
-        path = run / name
-        rows = read_bounded_json(path)["cases"]
-        if (part["sha256"], part["cases"], len(rows)) != (
-            file_hash(path),
-            count,
-            count,
-        ):
-            raise ValueError("Native witness receipt digest or case count changed")
-        cases.extend(rows)
+        cases.extend(_read_receipt_part(run, part, name, count))
+    return cases
+
+
+def _read_case_part(run: Path, name: str, digest: str, count: int) -> list[dict]:
+    document, actual_digest = read_hashed_json(run / name)
+    if (digest, count) != (actual_digest, len(document["cases"])):
+        raise ValueError("Native witness receipt digest or case count changed")
+    return document["cases"]
+
+
+def _read_receipt_part(run: Path, part: dict, name: str, count: int) -> list[dict]:
+    if part["cases"] != count:
+        raise ValueError("Native witness receipt digest or case count changed")
+    if not part.get("chunked", False):
+        return _read_case_part(run, name, part["sha256"], count)
+    index_document, digest = read_hashed_json(run / name)
+    if part["sha256"] != digest:
+        raise ValueError("Native witness receipt digest or case count changed")
+    chunks = index_document["chunks"]
+    sizes = [
+        min(CASES_PER_RECEIPT_PART, count - offset)
+        for offset in range(0, count, CASES_PER_RECEIPT_PART)
+    ]
+    # Validate every physical name against caller-selected names before reading files.
+    if (
+        count <= CASES_PER_RECEIPT_PART
+        or len(chunks) != len(sizes)
+        or any(
+            chunk["name"] != _chunk_name(name, index) or chunk["cases"] != size
+            for index, (chunk, size) in enumerate(zip(chunks, sizes))
+        )
+    ):
+        raise ValueError(
+            "Native witness chunk names or counts differ from the fixed selection"
+        )
+    cases = []
+    for chunk, size in zip(chunks, sizes):
+        cases.extend(_read_case_part(run, chunk["name"], chunk["sha256"], size))
     return cases
 
 

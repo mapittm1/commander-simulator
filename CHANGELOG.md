@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Keep native evidence documents at 128 KiB by splitting large method results
+  into bounded 500-case parts with a hash-bound canonical index. Preserve legacy
+  single-file reads; derive physical names from fixed caller-selected logical
+  names and reject altered names/counts before reading case files. Verify parsed
+  bytes and hashes together. Nine offline regressions cover round trips,
+  tampering, counts, path selection and oversized individual cases. Preserve the
+  first packaged run: all 1,176 native methods pass, but receipt writing fails;
+  the other three families pass. Fresh build passes 2,333 native tests. Packaged
+  rerun, broader/live validation and combat activation remain pending.
+
 - Correct generic paid combat-removal planning and action discovery in isolated
   source. All 1,108 focused tests pass, retaining 1,066 and adding 42. Preserve
   selected-runtime 18-case14pass/4fail and 24-case20pass/4fail reports, identical
