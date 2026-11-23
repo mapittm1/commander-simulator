@@ -9,6 +9,14 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+The reviewed combat-role correction separates creature and attacked-permanent
+removal in [Combat.java](patches/commander-dual-combat-role.patch). Paid native
+Gideon/Luxior and March-removal controls preserve whichever role remains valid.
+All 1,938 selected native, 712 focused source, 781/65/194/146 packaged,
+3,412 broader gameplay, 256 serialization and 45 live/1,834 subtest checks pass.
+See the [activation evidence](dual_combat_role_evidence.json); selected contracts
+and catalog construction do not certify every card or AI strategy.
+
 In the earlier recipe, the Wicker Picker patch was pinned
 to an immutable upstream pull-request head. Local regression fixes are a second
 patch, applied after the upstream patch. Two further patches preserve chosen

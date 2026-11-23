@@ -19,12 +19,11 @@ Windows. Ordinary catalog, deck, and simulation commands do not need this bridge
 
 ## Battle combat and Siege defeat
 
-The expanded 146-case family passes against the combat-role candidate, including
-twelve dual-role cases. See the [source evidence](../engine/dual_combat_role_native_evidence.json)
-and [packaged validation](../engine/dual_combat_role_packaged_evidence.json).
-The selected runtime remains unchanged pending full live validation/activation
-and still reproduces four role-loss failures; this command will expose those
-failures until the corrected candidate is selected.
+The expanded 146-case family passes against the selected reviewed combat-role
+runtime, including twelve dual-role cases. See the
+[source evidence](../engine/dual_combat_role_native_evidence.json),
+[packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
+[full validation](../engine/dual_combat_role_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
@@ -38,7 +37,7 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All 146 native cases pass against the combat-role candidate. The family retains
+All 146 native cases pass against the reviewed combat-role runtime. The family retains
 134 witnesses and adds twelve dual-role contracts. The prior 134 retained 110
 and added 24 paid restoration contracts, including copied
 and nested pending Disenchant/Counterspell stacks. The prior 110 include 32
@@ -55,10 +54,10 @@ interaction. Fixed source/dependency checks, compilation integrity, 30 productio
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
 and [current packaged evidence](../engine/dual_combat_role_packaged_evidence.json).
-Both supplemental fixtures are included in the 1,938-method candidate. The prior
-[full runtime validation](../engine/defender_typechange_evidence.json) remains a
-separate milestone; full live validation and activation of this candidate are
-still pending.
+Both supplemental fixtures are included in the reviewed 1,938-method build. All
+45 live tests and 1,834 subtests pass, including repeated packaged families.
+The prior [validation](../engine/defender_typechange_evidence.json) remains a
+separate historical milestone. Full card/rules/AI correctness remains unverified.
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 

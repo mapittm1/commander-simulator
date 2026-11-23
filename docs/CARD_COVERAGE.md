@@ -19,27 +19,30 @@ own lock and validation.
 
 ## Independent creature and attacked-permanent combat roles
 
-A new source correction separates role removal. It preserves a valid block when
-Luxior removes an attacked Gideon's planeswalker type, and preserves an attacked
-planeswalker when removing March of the Machines ends its creature type. Explicit
-removal still clears all roles. Native paid animation, Donate, equip, tap costs,
-Disenchant and Stifle/Counterspell controls reproduce four failures in twelve
-selected cases on the current runtime; all pass in the corrected source suite.
-The full focused source selection passes 712 methods, retaining 676 and adding
-24 restoration plus 12 dual-role methods. See the
-[exact baselines](../engine/dual_combat_role_gap.json) and
-[source validation](../engine/dual_combat_role_native_evidence.json).
+The reviewed runtime removes only the invalid combat role when a permanent loses
+one card type. Luxior can remove an attacked Gideon's planeswalker type without
+ending its block; removing March of the Machines can end its creature type
+without ending the attack against it. Explicit removal still clears all roles.
 The expectations follow rule 506.4d in the
 [November 6 Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf).
-The fresh candidate passes 1,938 selected native methods, retaining 1,902, plus
-781/65/194/146 packaged cases and 3,412/256 broader gameplay/serialization tests.
-Only Combat.class changes; scripts and default AI stay unchanged. The first
-Battle worker stopped before gameplay on a mistyped origin-check class name; the
-corrected 146-case family passes. Both frozen phases and that single worker-only
-correction are bound in the [packaged evidence](../engine/dual_combat_role_packaged_evidence.json).
-Full live validation and activation remain pending; the selected engine is
-unchanged. Supplied legal states and chosen actions do not certify all cards,
-combat compositions or autonomous strategy.
+
+The original six/twelve-case baselines retain two/four failures and their passing
+controls. All 712 focused source tests pass, retaining 676 and adding 24 restoration
+plus twelve dual-role contracts. The build preserves all 1,902 prior native methods
+and passes 1,938. Independent 781/65/194/146 packaged families pass and repeat in
+45 live tests with 1,834 subtests. Broader gameplay/serialization pass 3,412/256.
+Only Combat.java and Combat.class change; scripts and default AI remain unchanged.
+The corrected 500-file validation phase stays frozen. The initial Battle origin
+lookup stopped before gameplay on a mistyped class name; both frozen phases,
+failed receipts and the corrected worker are retained without changing expectations.
+Post-move health is ready; catalog construction passes 32,636 starting identities
+with seven nonstarting meld exclusions. See the
+[source evidence](../engine/dual_combat_role_native_evidence.json),
+[packaged milestone](../engine/dual_combat_role_packaged_evidence.json),
+[full validation and activation](../engine/dual_combat_role_evidence.json), and
+[resolved gap](../engine/dual_combat_role_gap.json).
+Supplied legal states, selected actions and card construction do not certify all
+cards, combat compositions or autonomous strategy.
 
 ## Defender type history through continuous effects
 
@@ -205,7 +208,7 @@ Full card, rules, combat and strategy correctness remain unverified.
 ## Battle combat and Siege defeat
 
 The expanded packaged pytest family exercises 146 native Battle paths against
-the combat-role candidate. All 146 pass, with 30 production
+the reviewed combat-role runtime. All 146 pass, with 30 production
 class origins checked against the selected JAR and hash-bound source, compilation,
 profile and method receipts. The fixed fixtures are
 [CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java)
@@ -267,9 +270,9 @@ family is included in the 1,902-test engine build and the full 45-test integrati
 run described above. See the [current validation](../engine/defender_typechange_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
 The earlier 24-case restoration extension left the 1,902-method build unchanged.
-The new 1,938-method candidate includes those 24 and twelve dual-role methods;
-full live validation and activation remain pending. Full card, rules, combat and
-AI correctness remain unverified.
+The reviewed 1,938-method build includes those 24 and twelve dual-role methods.
+All 45 live tests and 1,834 subtests pass. Full card, rules, combat and AI
+correctness remain unverified.
 
 ## Historical Battle-protector snapshots
 

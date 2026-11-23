@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed combat-role correction after all 45 live tests and 1,834
+  subtests pass, with independent/repeated 781/65/194/146 packaged families.
+  Retain every prior 1,902 native method in the 1,938-test build; all 712 focused
+  source checks, 3,412 broader gameplay and 256 serialization tests pass. Preserve
+  both frozen phases and the corrected origin-check failure before gameplay.
+  Verify post-move health and construction of 32,636 starting identities with
+  seven nonstarting meld exclusions. Only Combat.java/Combat.class change;
+  scripts and default AI remain unchanged. Full card/rules/AI correctness stays open.
+
 - Validate the separate combat-role build with 1,938 native methods, retaining
   all 1,902 and adding 36. Packaged families pass 781/65/194/146; broader gameplay
   and serialization pass 3,412/256. Only Combat.class changes. Preserve the initial

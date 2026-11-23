@@ -27,15 +27,14 @@ difference.
 
 ## Card coverage
 
-A source correction preserves independent blocking and attacked-planeswalker
-roles when one card type is lost. All 712 focused source checks pass, including
-12 native paid Gideon/Luxior and March-removal probes; four prior failures are
-resolved in source. See the [dual-role evidence](engine/dual_combat_role_native_evidence.json)
-and [gap report](engine/dual_combat_role_gap.json). The fresh candidate passes
-1,938 native methods, packaged families of 781/65/194/146 cases and broader
-gameplay/serialization suites of 3,412/256. See the
-[packaged evidence](engine/dual_combat_role_packaged_evidence.json). Full live
-validation and activation remain pending; the selected runtime is unchanged.
+The reviewed runtime preserves independent blocking and attacked-planeswalker
+roles when a permanent loses one card type. All 712 focused source checks pass;
+the 146-case Battle family includes twelve paid dual-role controls. Independent
+and repeated packaged checks, broader regressions, all 45 live tests and 1,834
+subtests pass. See the [full validation](engine/dual_combat_role_evidence.json)
+and [resolved gap](engine/dual_combat_role_gap.json). The original baseline failures
+and corrected harness-origin lookup remain preserved. Full card/rules/AI
+correctness remains open.
 
 The earlier test-only Battle extension passed 134 cases, retaining 110 and adding 24
 paid type-restoration and countered-restoration checks. Song of the Dryads,
@@ -602,15 +601,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,902 selected native tests, separate packaged
-families of 781, 65, 194 and 110 rules cases, 3,376 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 1,798 subtests. All 497
-implementation inputs remain frozen. The Python quality gate passed 426 offline
+The current reviewed runtime passed 1,938 selected native tests, separate packaged
+families of 781, 65, 194 and 146 rules cases, 3,412 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,834 subtests. The corrected
+500-file validation phase stayed frozen; its earlier worker-only origin correction
+is documented separately. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/defender_typechange_evidence.json).
+names. See the [validation and activation evidence](engine/dual_combat_role_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
