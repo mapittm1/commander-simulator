@@ -38,16 +38,16 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 1176},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 1204},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 1176)
+        self.assertEqual(len({row["method"] for row in methods}), 1204)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
             summary["counts"],
-            {"total": 1176, "passed": 1176, "failed": 0, "skipped": 0},
+            {"total": 1204, "passed": 1204, "failed": 0, "skipped": 0},
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (
@@ -56,5 +56,5 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             "partial_successes",
         ):
             self.assertEqual(summary[key], 0)
-        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 122)
+        self.assertEqual(len(summary["production_classes_from_packaged_jar"]), 127)
         print(json.dumps({"draw_ending_run": run.name}), flush=True)

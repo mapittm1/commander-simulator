@@ -1,0 +1,46 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/BlockEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/BlockEffect.java
+@@ -55,6 +55,9 @@
+ 
+                 // If the attacker was blocked, this covers adding the blocker to the damage assignment
+                 combat.addBlocker(attacker, blocker);
++                // An effect makes the attacker blocked just as declaring a blocker does.
++                // That state persists if the assigned blocker leaves before combat damage.
++                combat.setBlocked(attacker, true);
+                 combat.orderAttackersForDamageAssignment(blocker);
+ 
+                 blocker.addBlockedThisTurn(CardCopyService.getLKICopy(attacker));
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -38,6 +38,7 @@
+             .put(ApiType.BecomesBlocked, BecomesBlockedAi.class)
+             .put(ApiType.BidLife, BidLifeAi.class)
+             .put(ApiType.BlankLine, AlwaysPlayAi.class)
++            .put(ApiType.Block, BlockAi.class)
+             .put(ApiType.Blight, BlightAi.class)
+             .put(ApiType.Bond, BondAi.class)
+             .put(ApiType.Branch, BranchAi.class)
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/BlockAi.java
+@@ -0,0 +1,21 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.SpellAbilityAi;
++import forge.ai.simulation.PaidOutcomePlanner;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++
++/** Judge assigned-blocking effects as part of the complete paid parent action. */
++public final class BlockAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        // Removing a blocker and assigning it elsewhere must be evaluated together.
++        return PaidOutcomePlanner.choose(actor, action.getRootAbility());
++    }
++}

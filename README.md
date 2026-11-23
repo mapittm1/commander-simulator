@@ -27,6 +27,22 @@ difference.
 
 ## Card coverage
 
+A generic reblocking correction passes 1,136 focused source tests, retaining all
+1,108 prior contracts and adding 28. Native effects now mark the attacker blocked
+when assigning a blocker; that state persists if a real paid Shock destroys the
+blocker before combat damage. A Block API policy evaluates the complete paid
+parent, allowing classic/hybrid AI to consider removal and reassignment together.
+
+The source checks retain identical 20/28-case baseline fixtures and preserve the
+state-only prototype's eight remaining AI failures. Four ordinary damage controls
+already passed; four departure cases exposed the actual incorrect player loss.
+See the [preserved reblocking failures](engine/combat_reblocking_gap.json) and
+[source validation](engine/combat_reblocking_native_evidence.json). The recipe
+prepares 2,361 native and 1,204 packaged checks; those are pending validation
+targets. The selected 2,333-test runtime below is unchanged. Wider restrictions,
+blocking history, mandatory/optional triggers and full Commander correctness
+remain unproven.
+
 The selected runtime evaluates paid combat-removal actions and their legal targets
 against the remaining combat. Classic/hybrid AI can reach that policy even when a
 host carries an old deck-exclusion hint. It can choose the lethal attacker among

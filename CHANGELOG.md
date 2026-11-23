@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic native reblocking state and paid-parent AI planning in isolated
+  source. All 1,136 focused tests pass, retaining 1,108 and adding 28. Preserve
+  baselines of 20 cases (4 passed, 16 failed) and 28 cases (8 passed, 20 failed),
+  with identical fixed fixture bytes. Four basic damage controls pass before correction; four real paid Shock
+  departure cases expose an incorrect defending-player loss. The state-only
+  prototype passes all rules/damage/full-simulation controls but leaves eight
+  classic/hybrid declines with runtime missing-Block-policy diagnostics. Add a
+  generic Block AI policy that evaluates the complete paid parent. Two existing
+  production files and one new AI class change; scripts/profiles are unchanged.
+  Register future 2,361-native/1,204-packaged targets; the selected 2,333-test
+  runtime remains unchanged. Wider blocking history, restrictions and triggers
+  remain further work. See engine/combat_reblocking_native_evidence.json.
+
 - Activate generic paid combat-removal planning after all 1,108 source and 2,333
   native tests pass, retaining 2,291 and adding 42. Independent/repeated packaged
   groups pass 1176/65/194/146; broader gameplay/serialization pass 3,807/256;
