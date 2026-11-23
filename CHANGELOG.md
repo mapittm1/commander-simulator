@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed defender-type correction after all 45 live tests and
+  1,798 subtests pass, with repeated 781/65/194/110 packaged families. Preserve
+  all 1,870 prior native methods in the 1,902-test build and retain 644 focused
+  checks in the 676-test suite. Broader gameplay/serialization pass 3,376/256;
+  only the completed recovery phase supplies broader success claims. Preserve
+  the interrupted phase and restore temporary policy bytes. Verify 497 frozen
+  inputs, health readiness and construction of 32,636 starting identities with
+  seven nonstarting meld exclusions. Only Combat.java and Combat.class change;
+  scripts and default AI remain unchanged. Full rules/AI correctness stays open.
+
 - Validate the defender-type candidate with 1,902 selected native methods,
   retaining all 1,870 and adding 32. Independent packaged families pass
   781/65/194/110 cases; broader gameplay/serialization pass 3,376/256. Only

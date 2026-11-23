@@ -17,42 +17,46 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Defender type-loss gap
+## Defender type history through continuous effects
 
-The selected assigned-damage runtime passes ten of twelve follow-up probes.
-After native paid Song of the Dryads turns an attacked Battle into a Forest,
-Thrasta incorrectly deals seven damage to the attacking player, in original
-and copied games. Ordinary trample, transformed-walker and countered-Aura
-controls pass. These two failures witness one gap, not two independent card bugs.
+The reviewed runtime remembers the legal defender type for each attacking band.
+It clones the type data into copied bands and retires it on defender departure
+or combat end. Removal consults the active combat index. The stand-in therefore
+retains former-Battle identity after Song of the Dryads changes the actual
+permanent into a Forest. No card-name exception is used in production.
 
-Under the [pinned rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf),
-506.4 removes an attacked Battle when it loses that type; 506.4c preserves the
-attacker but prevents unblocked damage to the absent target. The former-walker
-exception in 702.19e does not permit spillover from a removed Battle.
+The original twelve-case baseline passes ten and fails two native/copied
+self-damage contracts. The pending/nested baseline passes 20 of 24 and fails
+four witnesses of the same gap. Eight real-blocker controls give 28 of 32 passes
+with the same four failures. All are preserved in the
+[resolved gap](../engine/defender_typechange_gap.json). The initial compiler-only
+fixture stop and its single API-receiver correction are retained; no assertion
+or gameplay expectation changed to obtain compilation.
 
-The fixture rejects the Aura without flash, supplies a Vedalken Orrery and
-priority checkpoints, then uses native three-mana casting and optional two-mana
-Counterspell responses. Mature attackers, declared combat, Orrery presence and
-starting loyalty are supplied legal state, not autonomous setup decisions.
-An initial compiler stop used a CardType method on Card; only that receiver was
-corrected. No native tests ran in the stopped phase, and no expectation changed.
-See [exact evidence and preserved inputs](../engine/defender_typechange_gap.json).
-The expanded baseline passes 20 of 24, then 28 of 32 probes with real blockers;
-four contracts fail the same type-history boundary. A generic source correction
-remembers defender type per attacking band, copies it independently, and retires
-it on departure or combat end. All 676 focused source checks pass, retaining 644
-and adding 32; the 110-case Battle family retains all 78 prior methods. See the
-[source evidence](../engine/defender_typechange_native_evidence.json).
-Fresh packaged/full validation remains pending; selected runtime is unchanged.
-Invocation frequency, other type/control changes and full rules/AI correctness
-remain unmeasured.
+All 676 focused source checks pass, retaining 644 and adding 32. The 110-case
+Battle family retains every prior 78 method. A fresh build passes all 1,902
+selected native tests, retaining the previous 1,870. Independent 781/65/194/110
+packaged families pass separately and again in 45 live tests with 1,798 subtests.
+The Battle worker verifies 28 production class origins. Broader gameplay and
+serialization pass 3,376 and 256 tests with 497 implementation inputs frozen.
+A prior broader phase lost its observation and process handles without a terminal
+receipt. Its partial reports remain preserved and supply no passing result.
+Separate completed recovery runs provide the broader evidence; original policy
+bytes are restored exactly. Only Combat.java and Combat.class change in
+production. Card scripts and the default AI profile remain unchanged.
 
-The defender-type candidate also passes 1,902 selected native tests, independent
-781/65/194/110 packaged families, 3,376 broader gameplay tests and 256 serialization
-tests. All 497 implementation inputs remain frozen; the Battle worker verifies
-28 production class origins. See the
-[packaged evidence](../engine/defender_typechange_packaged_evidence.json).
-Full live validation and activation remain pending.
+Native probes pay for Song and Counterspell, reject casting without flash, and
+verify original-world life/type/stack isolation when pending spells resolve in
+copied and nested games. Mature attackers, declared combat, Orrery presence,
+starting loyalty and priority checkpoints are supplied legal preconditions.
+Other type/control effects, autonomous invocation frequency and strategy quality
+remain unmeasured. The catalog constructs 32,636 starting identities and excludes
+seven nonstarting meld results; construction is not complete rules certification.
+
+See the [source evidence](../engine/defender_typechange_native_evidence.json),
+[preserved packaged milestone](../engine/defender_typechange_packaged_evidence.json),
+and [full validation and activation](../engine/defender_typechange_evidence.json).
+Full card, combat, rules and AI correctness remain open.
 
 ## Internal assigned-damage snapshots
 
@@ -176,8 +180,8 @@ Full card, rules, combat and strategy correctness remain unverified.
 
 ## Battle combat and Siege defeat
 
-The expanded packaged pytest family exercises 78 native Battle paths against
-the reviewed assigned-damage runtime. All 78 pass, with 25 production
+The expanded packaged pytest family exercises 110 native Battle paths against
+the reviewed defender-type runtime. All 110 pass, with 28 production
 class origins checked against the selected JAR and hash-bound source, compilation,
 profile and method receipts. The fixed fixture is
 [CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
@@ -218,9 +222,9 @@ dependency paths and missing review hashes. The quality gate passes 426 tests an
 520 subtests, skipping 45 opt-in integration tests.
 
 The initial ten-case test-only milestone is preserved in its
-[historical evidence](../engine/battle_combat_evidence.json). The current 78-case
-family is included in the 1,870-test engine build and the full 45-test integration
-run described above. See the [current validation](../engine/damage_assignment_snapshot_evidence.json)
+[historical evidence](../engine/battle_combat_evidence.json). The current 110-case
+family is included in the 1,902-test engine build and the full 45-test integration
+run described above. See the [current validation](../engine/defender_typechange_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
 Full card, rules, combat and AI correctness remain unverified.
 

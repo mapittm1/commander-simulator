@@ -27,15 +27,16 @@ difference.
 
 ## Card coverage
 
-An attacked-Battle type-loss gap remains open: a native twelve-case probe passes
-ten and fails two. With flash-enabled paid Song of the Dryads, turning the Battle
-into a Forest makes Thrasta incorrectly deal seven damage to the attacking
-player in original and copied games. Countered-spell and walker controls pass.
-See the [exact reproductions](engine/defender_typechange_gap.json). All 676 focused source checks now
-pass with a generic correction, including 32 new contracts. The fresh build passes 1,902 selected native tests and packaged families of
-781/65/194/110 cases, plus 3,376 broader gameplay and 256 serialization tests.
-See [packaged evidence](engine/defender_typechange_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime is unchanged.
+Combat now remembers a defender's legal type when each attacking group forms,
+keeps independent copies of that history, and retires it when the defender leaves
+combat or combat ends. An attacked Battle becoming a Forest no longer redirects
+trample-over-planeswalkers damage to the attacking player. All 676 focused source
+checks pass; the 110-case Battle family retains 78 methods and adds 32 type-change,
+blocked, pending-spell and nested-copy controls. See the
+[source evidence](engine/defender_typechange_native_evidence.json),
+[full validation](engine/defender_typechange_evidence.json), and
+[resolved gap](engine/defender_typechange_gap.json).
+Supplied legal state and selected cases do not certify all card, rules or AI choices.
 
 Internal combat snapshots now preserve valid assigned damage after an attacked
 permanent leaves combat. Absent-defender stand-ins no longer enter the damage
@@ -584,15 +585,15 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,870 selected native tests, separate packaged
-families of 781, 65, 194 and 78 rules cases, 3,344 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 1,766 subtests. All 496
+The current reviewed runtime passed 1,902 selected native tests, separate packaged
+families of 781, 65, 194 and 110 rules cases, 3,376 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,798 subtests. All 497
 implementation inputs remain frozen. The Python quality gate passed 426 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/damage_assignment_snapshot_evidence.json).
+names. See the [validation and activation evidence](engine/defender_typechange_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
