@@ -1,0 +1,102 @@
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -2823,11 +2823,19 @@
+             agents = chooser == null || chooser.getGame() != game || chooser.getPlayer() == null ? List.of()
+                     : chooser.getPlayer().getInGameObservationControllers(chooser);
+         }
++        private LibraryObservers(List<PlayerController> publicAgents) {
++            agents = List.copyOf(publicAgents);
++        }
+         private boolean isFor(Game current) { return game == current; }
+     }
+ 
+     public LibraryObservers captureLibraryObservers(PlayerController chooser) {
+         return new LibraryObservers(chooser);
++    }
++
++    /** Capture agents present for the immediately following public library revelation. */
++    public LibraryObservers capturePublicLibraryObservers() {
++        return new LibraryObservers(capturePublicObservers());
+     }
+ 
+     /** Deliver only positions declared by a native effect to its captured inspection audience. */
+--- a/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/PeekAndRevealEffect.java
+@@ -6,6 +6,7 @@
+ 
+ import com.google.common.collect.Maps;
+ 
++import forge.game.GameAction;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.*;
+@@ -18,7 +19,7 @@
+ 
+ public class PeekAndRevealEffect extends SpellAbilityEffect {
+ 
+-    private void discloseLibraryPositions(Player observer, Player owner,
++    private void discloseLibraryPositions(GameAction.LibraryObservers observers, Player owner,
+             CardCollectionView ordered, CardCollectionView visible) {
+         Map<Integer, Card> positions = new HashMap<>();
+         for (int index = 0; index < ordered.size(); index++) {
+@@ -26,7 +27,7 @@
+                 positions.put(index, ordered.get(index));
+             }
+         }
+-        observer.getController().observeLibraryTop(owner, positions);
++        owner.getGame().getAction().observeLibraryPositionsForObservers(owner, observers, positions);
+     }
+ 
+     @Override
+@@ -118,13 +119,15 @@
+             CardCollectionView revealableCards = CardLists.getValidCards(peekCards, revealValid, peekingPlayer, source, sa);
+             boolean doReveal = !sa.hasParam("NoReveal") && !revealableCards.isEmpty();
+             if (!noPeek) {
+-                peekingPlayer.getController().reveal(peekCards, srcZone, zoneToPeek,
++                // Retain the audience of this inspection even if a reveal callback changes control.
++                final GameAction action = peekingPlayer.getGame().getAction();
++                final GameAction.LibraryObservers observers = action.captureLibraryObservers(peekingPlayer.getController());
++                action.revealTo(peekCards, peekingPlayer,
+                         source.getTranslatedName() + " - " +
+                                 Localizer.getInstance().getMessage("lblLookingCardFrom"));
+-            }
+-
+-            if (!noPeek && srcZone == ZoneType.Library) {
+-                discloseLibraryPositions(peekingPlayer, zoneToPeek, peekCards, peekCards);
++                if (srcZone == ZoneType.Library) {
++                    discloseLibraryPositions(observers, zoneToPeek, peekCards, peekCards);
++                }
+             }
+ 
+             if (doReveal && sa.hasParam("RevealOptional")) {
+@@ -134,14 +137,15 @@
+             }
+ 
+             if (doReveal) {
+-                peekingPlayer.getGame().getAction().reveal(revealableCards, srcZone, zoneToPeek, !noPeek,
++                final GameAction action = peekingPlayer.getGame().getAction();
++                final GameAction.LibraryObservers observers = srcZone == ZoneType.Library
++                        ? action.capturePublicLibraryObservers() : null;
++                action.reveal(revealableCards, srcZone, zoneToPeek, !noPeek,
+                         source.getTranslatedName() + " - " +
+                                 Localizer.getInstance().getMessage("lblRevealingCardFrom"));
+ 
+                 if (srcZone == ZoneType.Library) {
+-                    for (Player observer : peekingPlayer.getGame().getPlayers()) {
+-                        discloseLibraryPositions(observer, zoneToPeek, peekCards, revealableCards);
+-                    }
++                    discloseLibraryPositions(observers, zoneToPeek, peekCards, revealableCards);
+                 }
+ 
+                 if (rememberRevealed) {
+--- a/forge-game/src/main/java/forge/game/ability/effects/RevealHandEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RevealHandEffect.java
+@@ -49,7 +49,7 @@
+                 hand = CardLists.getType(hand, sa.getParam("RevealType"));
+             }
+             if (sa.hasParam("Look")) {
+-                sa.getActivatingPlayer().getController().reveal(hand, ZoneType.Hand, p);
++                host.getGame().getAction().revealTo(hand, sa.getActivatingPlayer());
+             } else {
+                 host.getGame().getAction().reveal(hand, p);
+             }

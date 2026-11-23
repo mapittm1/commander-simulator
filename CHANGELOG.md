@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a source-validated generic direct-reveal correction: all 956 focused
+  checks pass, retaining 934 and adding 22. Route private hand/peek disclosures
+  through shared rights and capture public library audiences before callbacks.
+  Validate dormant/removed agents, private callback changes, paid/countered
+  printed cards and copied states. Preserve native failures and the initial
+  unused-import Checkstyle stop. Packaging and broader/full live gates remain
+  pending; selected runtime/scripts/default AI are unchanged. See
+  engine/direct_private_reveal_native_evidence.json. Full correctness is unproven.
+
+- Preserve an 18-case paid direct-private-reveal baseline against the selected
+  runtime: ten controls pass and eight master/post-control knowledge assertions
+  fail for printed Peek and Brutal Deceiver in original/copied states. Generic
+  RevealHand Look/PeekAndReveal routing is in isolated source validation. Other
+  callbacks and complete Commander correctness remain unproven. See
+  engine/direct_private_reveal_gap.json and the preserved pending fixture.
+
 - Activate generic controlled-player observation routing after all 45 live tests
   and 2,055 subtests pass, including repeated 1002/65/194/146 packaged families.
   All 934 focused source, 2,159 native, 3,633 gameplay and 256 serialization checks

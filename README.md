@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+An isolated direct-private-reveal correction passes 956 focused source checks,
+retaining 934 and adding 22. Shared rights now cover RevealHand Look and
+PeekAndReveal private disclosures. Captured public library audiences retain
+announced positions for dormant agents and across callback control changes.
+The original eight failed paid assertions, two later public-position failures
+and an unused-import Checkstyle failure remain preserved. The selected runtime
+below is unchanged; packaging and broader/full live validation remain pending.
+See the [baseline](engine/direct_private_reveal_gap.json) and
+[source evidence](engine/direct_private_reveal_native_evidence.json).
+Other direct/delayed callbacks and full Commander correctness remain unproven.
+
 The selected runtime's shared reveal and inspected-library paths preserve fresh
 in-game observations for the controlled player, their controller and the acting
 agent. Library audiences are captured
@@ -50,9 +61,8 @@ methods remain and pass after correction. Eighteen paid cases include real
 control, rearrange, private inspection, counters, failed payment and copied states.
 Nine audience and fifteen reveal/return boundaries also use explicitly constructed
 control graphs and recording agents; they do not certify all nested control-card
-resolutions. Failed private/public reveal phases remain preserved. No private
-histories are copied at control changes, and production code has no card-name
-exceptions. Scripts/default AI are unchanged. All agent-identity/history,
+resolutions. Failed private/public reveal phases remain preserved. This correction copies no private
+histories at control changes and adds no card-name exceptions. Scripts/default AI are unchanged. All agent-identity/history,
 temporary-controller, nested/rollback and strategy contexts remain broader
 validation work. Direct private callbacks in other effect APIs still need native
 validation. Complete card/rules/AI correctness is unproven.
