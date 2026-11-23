@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record two packaged information baselines against the selected inspection
+  runtime: 26 cases pass 20/fail 6, and four own-library-order cases pass 2/fail 2.
+  Preserve exact fixtures, driver/source snapshots, production origins and report
+  digests. Distinguish working paid/private rule resolution from choice behavior;
+  full simulation already casts a useful first Lens but also a redundant copy.
+  Original and copied Spy Network resolution lose the chosen own-library order.
+  Preserve an initial fixture compilation stop separately. An isolated correction
+  is under validation; selected engine and full-card limits remain unchanged.
+  See engine/information_choice_gap.json.
+
 - Activate the reviewed inspection AI correction after 45 live tests and 1,867
   subtests pass, including repeated 814/65/194/146 packaged families. Retain every
   prior native method in the 1,971-test build; all 745 focused source, 3,445 broader

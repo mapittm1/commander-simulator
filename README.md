@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+Fresh packaged baselines expose additional information-choice and ordering gaps:
+26 supplied-pod checks pass 20/fail 6, and four own-library-order checks pass 2/fail 2.
+Paid resolution and privacy controls pass; actual choices and retention of an
+announced own-library order need further work. See the
+[open gap and exact witnesses](engine/information_choice_gap.json).
+An isolated prototype is under validation; the selected runtime below is unchanged.
+
 The selected runtime now supports primary face-down inspection decisions for
 Smoke Teller and Aven Soulgazer through a generic policy. It avoids paying to
 inspect a face already known or freely visible, keeps private knowledge separate
