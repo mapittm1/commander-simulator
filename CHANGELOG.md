@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic paid combat-removal planning after all 1,108 source and 2,333
+  native tests pass, retaining 2,291 and adding 42. Independent/repeated packaged
+  groups pass 1176/65/194/146; broader gameplay/serialization pass 3,807/256;
+  all 45 live tests and 2,229 subtests pass. Verify post-move readiness and
+  construction of 32,636 starting identities with seven nonstarting meld results.
+  Preserve both four-failure baselines, the handler-only prototype failures and
+  the first packaged receipt-size failure. Keep identical fixed fixtures, card
+  scripts/profiles and 128 KiB/90-second limits. Two production files and three
+  existing classes change; no classes are added. Triggered/composed reblocking
+  and complete Commander rules/strategy remain unproven.
+  See engine/combat_removal_evidence.json.
+
 - Keep native evidence documents at 128 KiB by splitting large method results
   into bounded 500-case parts with a hash-bound canonical index. Preserve legacy
   single-file reads; derive physical names from fixed caller-selected logical

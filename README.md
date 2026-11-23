@@ -27,29 +27,41 @@ difference.
 
 ## Card coverage
 
-A generic combat-removal correction passes 1,108 focused source tests, retaining
-all 1,066 prior contracts and adding 42. Classic/hybrid AI can now consider paid
-removal actions despite old deck-exclusion hints and compare their native outcomes.
-Tests cover single/multiple attackers, actual lethal damage, full payment, copied
-states, indestructible creatures, hexproof, tapped sources and unavailable mana.
-The selected runtime below is unchanged; packaging and activation remain pending.
-See the [preserved combat failures](engine/combat_removal_gap.json) and
-[source evidence](engine/combat_removal_native_evidence.json). Triggered removal,
-reblocking composites and complete combat strategy remain unproven.
+The selected runtime evaluates paid combat-removal actions and their legal targets
+against the remaining combat. Classic/hybrid AI can reach that policy even when a
+host carries an old deck-exclusion hint. It can choose the lethal attacker among
+multiple threats and pays the real activation cost before removing it.
 
-The fresh candidate passes all 2,333 native tests. Its first independent run
-passed all 1,176 methods in the expanded family, then failed writing the receipt
-at the unchanged 128 KiB document limit. Large method receipts now use bounded
-500-case parts with hash-checked indexes; nine offline tests cover round trips,
-legacy receipts, tampering, names, counts and oversized individual cases.
-The independent packaged rerun and broader/live activation gates remain pending.
+All 1,108 focused source and 2,333 native tests pass, retaining every prior 2,291
+native method and adding 42. Independent/repeated packaged groups pass
+1176/65/194/146; broader gameplay/serialization pass 3,807/256. All 45 live tests
+and 2,229 subtests pass. Post-move health is ready; construction passes for 32,636
+starting identities with seven nonstarting meld exclusions. See the
+[preserved combat failures](engine/combat_removal_gap.json),
+[source validation](engine/combat_removal_native_evidence.json),
+[packaged checks](engine/combat_removal_packaged_evidence.json), and
+[activation evidence](engine/combat_removal_evidence.json).
 
-The selected runtime applies first-extra replacements to the first eligible draw,
+The 42 fixed contracts retain identical baseline fixture bytes. Paid/Fog and
+no-response lethal controls separate resolution from willingness. Original/copied
+states cover single/multiple attackers, indestructible creatures, hexproof,
+tapped sources and unavailable mana. Two production files and three existing
+classes change; no classes, card scripts or profile changes are added.
+
+Large native receipts use 500-case parts with hash-bound indexes while preserving
+the 128 KiB document and 90-second worker limits. The first packaged run passed
+all 1,176 methods but failed writing the receipt; it remains preserved. Corrected
+independent/repeated runs pass. Nine offline regressions verify bounded round
+trips, legacy receipts, tampering, fixed names/counts and oversized cases.
+Triggered removal, optional/mandatory reblocking choices and complete Commander
+rules or strategy remain unproven.
+
+The earlier draw-step milestone applied first-extra replacements to the first eligible draw,
 while exempting the first card drawn during each own draw step. Draws during
 another player's draw step count as extra draws. Global draw-step history is
 preserved in original games and active/common snapshots.
 
-All 1,066 focused source checks and 2,291 native tests pass, retaining 2,267 native
+That milestone passed 1,066 focused source checks and 2,291 native tests, retaining 2,267 native
 cases and adding 24. Independent/repeated packaged families pass 1134/65/194/146;
 broader gameplay/serialization pass 3,765/256. All 45 live tests and 2,187 subtests
 pass. Post-move health is ready; construction passes for 32,636 starting identities
