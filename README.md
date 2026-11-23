@@ -27,16 +27,16 @@ difference.
 
 ## Card coverage
 
-An internal damage-assignment snapshot gap remains open: a 36-case probe passes
-32 and fails four copies that try to map a removed defender's stand-in after
-assignment. These are internal snapshot checkpoints, not player priority windows;
-autonomous gameplay impact is unmeasured. See the
-[exact reproductions](engine/damage_assignment_snapshot_gap.json). All 644 focused
-source checks now pass with an isolated correction, including sixteen new snapshot/paid-trigger controls.
-The fresh build also passes 1,870 selected native tests, separate packaged families
-of 781/65/194/78 cases, 3,344 broader gameplay tests and 256 serialization tests.
-See the [packaged evidence](engine/damage_assignment_snapshot_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime is unchanged.
+Internal combat snapshots now preserve valid assigned damage after an attacked
+permanent leaves combat. Absent-defender stand-ins no longer enter the damage
+table; real blocker, permanent and player damage remain intact. All 644 focused
+source checks pass. The 78-case Battle family retains its prior 62 methods and
+adds sixteen internal snapshot and paid-equip trigger controls. See the
+[source evidence](engine/damage_assignment_snapshot_native_evidence.json),
+[full validation](engine/damage_assignment_snapshot_evidence.json), and
+[resolved gap](engine/damage_assignment_snapshot_gap.json).
+Internal snapshots are not player priority windows. Autonomous invocation
+frequency and full card, rules and AI correctness remain unverified.
 
 The reviewed runtime corrects damage assignment after an attacked planeswalker
 leaves combat: trample over planeswalkers no longer reserves a damage point for
@@ -574,15 +574,15 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 1,854 selected native tests, separate packaged
-families of 781, 65, 194 and 62 rules cases, 3,328 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 1,750 subtests. All 495
+The current reviewed runtime passed 1,870 selected native tests, separate packaged
+families of 781, 65, 194 and 78 rules cases, 3,344 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,766 subtests. All 496
 implementation inputs remain frozen. The Python quality gate passed 426 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/removed_defender_evidence.json).
+names. See the [validation and activation evidence](engine/damage_assignment_snapshot_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

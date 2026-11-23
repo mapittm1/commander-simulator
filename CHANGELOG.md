@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate the reviewed assigned-damage correction after all 45 live integration
+  tests and 1,766 subtests pass, with repeated 781/65/194/78 packaged families.
+  Preserve 1,854 prior native methods in the 1,870-test build and retain 628
+  focused checks in the 644-test source suite. Broader gameplay/serialization
+  pass 3,344/256; 496 implementation inputs remain frozen. Health and catalog
+  checks pass with 32,636 starting identities and seven nonstarting meld results.
+  Only Combat.java and Combat.class change; scripts and default AI are unchanged.
+  Internal assignment snapshots are not player priority windows. Full card,
+  rules and strategy correctness remain open.
+
 - Validate the assigned-damage candidate with 1,870 selected native tests,
   retaining all 1,854 prior methods and adding 16. Independent packaged families
   pass 781/65/194/78 cases; broader gameplay/serialization pass 3,344/256.

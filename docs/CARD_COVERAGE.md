@@ -17,33 +17,41 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Internal post-assignment snapshot gap
+## Internal assigned-damage snapshots
 
-A follow-up probe against the selected removed-defender runtime passes 32 of 36
-contracts. Four copied assignments fail with a strict mapping exception for the
-no-zone stand-in of a removed defender: ordinary trample at an absent Battle or
-planeswalker, over-planeswalkers trample at an absent Battle, and the blocked
-absent-Battle case. Live Battle/planeswalker and legal player-damage assignment
-controls pass, as do all prior 28 removed-defender contracts.
+The reviewed runtime excludes removed-defender stand-ins from assigned damage.
+Strict mapping remains in place for actual required objects. This prevents
+copying an internal damage table from trying to find a nonexistent permanent;
+real blocker, live permanent and player assignments remain intact. Only
+Combat.java and Combat.class change in production. Card scripts and the default
+AI profile remain unchanged.
 
-The representative native trace reaches Combat's damage-table copying after
-GameCopier cannot map the stand-in. These are internal snapshots between damage
-assignment and settlement, not player priority windows. Invocation frequency and
-autonomous gameplay impact are unmeasured. The expanded baseline passes 36 of 44;
-eight contracts fail the same mapping boundary, including paid-equip Jitte cases.
-The source correction excludes stand-ins from damage recipients and passes all 644
-focused checks, retaining 628 and adding 16. The 78-case Battle family retains 62
-prior methods. Fresh packaged/full validation remains pending; selected runtime
-is unchanged. See [exact failures and inputs](../engine/damage_assignment_snapshot_gap.json)
-and [source evidence](../engine/damage_assignment_snapshot_native_evidence.json).
-Full card, rules and AI correctness remain open.
+The original baseline passes 32 of 36 probes and fails four copied absent-target
+assignments. The expanded baseline passes 36 of 44 and fails the same four plus
+four paid-equip Jitte variants. These eight contracts witness one mapping gap,
+not eight separate card bugs. Exact inputs, finished receipts and native traces
+remain in the [resolved gap](../engine/damage_assignment_snapshot_gap.json).
 
-The assigned-damage candidate also passes 1,870 selected native tests and
-independent packaged families of 781/65/194/78 cases, plus 3,344 broader gameplay
-and 256 serialization tests. All 496 implementation inputs remain frozen;
-the Battle family verifies 25 production class origins. See the
-[packaged evidence](../engine/damage_assignment_snapshot_packaged_evidence.json).
-Full live validation and activation remain pending.
+The initial 636-case source pass is preserved before adding eight paid-trigger
+controls. All 644 final focused source checks pass, retaining 628 and adding 16.
+The 78-case Battle family retains all prior 62 methods. A fresh build passes
+1,870 selected native tests, retaining every prior 1,854 method. Independent
+781/65/194/78 packaged families pass separately and again in 45 live tests with
+1,766 subtests. Broader gameplay/serialization pass 3,344/256. The Battle worker
+verifies 25 production class origins, including CardDamageTable; 496 implementation
+inputs remain frozen. Temporary test-policy bytes are restored exactly.
+
+Paid-equip probes cover absent/live targets, real blockers and simultaneous
+multi-recipient damage without extra Jitte triggers. These are internal snapshots
+between assignment and settlement, not player priority windows. Supplied legal
+state and actions do not establish autonomous invocation frequency or strategy.
+The catalog probe constructs 32,636 starting identities, with seven nonstarting
+meld results excluded. Construction is not complete rules certification.
+
+See the [source evidence](../engine/damage_assignment_snapshot_native_evidence.json),
+[preserved packaged milestone](../engine/damage_assignment_snapshot_packaged_evidence.json),
+and [full validation and activation](../engine/damage_assignment_snapshot_evidence.json).
+Full card, combat, rules and AI correctness remain open.
 
 ## Removed planeswalker damage assignment
 
@@ -131,8 +139,8 @@ Full card, rules, combat and strategy correctness remain unverified.
 
 ## Battle combat and Siege defeat
 
-The expanded packaged pytest family exercises 62 native Battle paths against
-the reviewed removed-defender runtime. All 62 pass, with 24 production
+The expanded packaged pytest family exercises 78 native Battle paths against
+the reviewed assigned-damage runtime. All 78 pass, with 25 production
 class origins checked against the selected JAR and hash-bound source, compilation,
 profile and method receipts. The fixed fixture is
 [CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
@@ -173,9 +181,9 @@ dependency paths and missing review hashes. The quality gate passes 426 tests an
 520 subtests, skipping 45 opt-in integration tests.
 
 The initial ten-case test-only milestone is preserved in its
-[historical evidence](../engine/battle_combat_evidence.json). The current 62-case
-family is included in the 1,854-test engine build and the full 45-test integration
-run described above. See the [current validation](../engine/removed_defender_evidence.json)
+[historical evidence](../engine/battle_combat_evidence.json). The current 78-case
+family is included in the 1,870-test engine build and the full 45-test integration
+run described above. See the [current validation](../engine/damage_assignment_snapshot_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
 Full card, rules, combat and AI correctness remain unverified.
 
