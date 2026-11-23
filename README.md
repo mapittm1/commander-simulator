@@ -27,38 +27,30 @@ difference.
 
 ## Card coverage
 
-The library-choice candidate passes 2,057 native build tests, retaining all 2,029
-prior methods and adding 28. All 832 focused source checks pass; independent
-packaged families pass 900/65/194/146 cases, and broader gameplay/serialization
-pass 3,531/256. Shared callbacks record authorized initial inspection and final
-announced top/bottom placements for scry, surveil and reorder. Seen/public
-identities remain distinct from unknown shuffled positions. Native shuffle
-damage witnesses replacement and later-trigger boundaries. The original baseline
-and fixture corrections remain preserved. See the
-[source evidence](engine/library_choice_knowledge_native_evidence.json) and
-[packaged validation](engine/library_choice_knowledge_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime below
-is unchanged. Complete card/rules/AI correctness remains open.
+The selected runtime records authorized initial library inspection and announced
+resulting order through shared callbacks for scry, surveil and rearrange. It
+retains seen identities before replacements move cards, keeps private top/bottom
+choices separate from public reveals, and invalidates positions after a shuffle.
+Known draws and copied games preserve the tested private knowledge independently.
 
-The selected runtime supports generic paid hand/library information decisions and
-retains announced library order. It values authorized knowledge, avoids redundant
-inspection in supplied states and includes native cast-trigger benefits, damage
-and granted mana in decisions. Public stack visibility cannot earn private hand
-or library-position credit during resolving transitions. Copies preserve paid
-knowledge independently, and explicit forgetting retires matching positions.
-
-All 804 focused source checks and 2,029 native build tests pass, retaining every
+All 832 focused source checks and 2,057 native build tests pass, retaining every
 prior native method. Independent and repeated packaged families pass
-872/65/194/146 cases; broader gameplay/serialization pass 3,503/256. All 45 live
-tests and 1,925 subtests pass. Post-move health is ready; construction passes for
+900/65/194/146 cases; broader gameplay/serialization pass 3,531/256. All 45 live
+tests and 1,953 subtests pass. Post-move health is ready; construction passes for
 32,636 starting identities with seven nonstarting meld exclusions. See the
-[source evidence](engine/information_choice_native_evidence.json),
-[packaged milestone](engine/information_choice_packaged_evidence.json), and
-[validation and activation](engine/information_choice_evidence.json).
-The original choice/order failures, intermediate source failures and rejected
-first candidate remain preserved. Card scripts and default AI are unchanged.
-Information utility is a bounded heuristic; complete card/rules/AI correctness
-remains open. Scry/surveil knowledge retention needs separate native validation.
+[source evidence](engine/library_choice_knowledge_native_evidence.json),
+[packaged milestone](engine/library_choice_knowledge_packaged_evidence.json), and
+[validation and activation](engine/library_choice_knowledge_evidence.json).
+The original sixteen-case baseline, failed boundary setups, native diagnostic
+and inspection-identity refinement remain preserved. Card scripts and default
+AI are unchanged. Positions outside announced changes are conservatively
+invalidated by library revisions; further public deductions and other library
+choice APIs still need native validation. Complete card/rules/AI correctness
+and calibrated strategy remain open.
+
+The earlier [information milestone](engine/information_choice_evidence.json)
+introduced generic paid information choices, bounded utility, explicit forgetting
+and resolving-zone boundaries. Its native and packaged contracts remain retained.
 
 The earlier [inspection milestone](engine/inspection_ai_evidence.json) introduced
 generic face-down inspection choices, privacy and knowledge-sensitive target
@@ -638,16 +630,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 2,029 selected native tests, separate packaged
-families of 872, 65, 194 and 146 rules cases, 3,503 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 1,925 subtests. All 512
+The current reviewed runtime passed 2,057 selected native tests, separate packaged
+families of 900, 65, 194 and 146 rules cases, 3,531 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 1,953 subtests. All 516
 implementation inputs stayed frozen through candidate validation. Earlier failed
 source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/information_choice_evidence.json).
+names. See the [validation and activation evidence](engine/library_choice_knowledge_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first

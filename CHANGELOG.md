@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate shared library inspection/order knowledge after all 45 live tests and
+  1,953 subtests pass, including repeated 900/65/194/146 packaged families.
+  All 832 focused source, 2,057 native, 3,531 broader gameplay and 256 serialization
+  checks pass. Verify 516 frozen implementation inputs, retained baseline methods,
+  preserved fixture corrections, post-move readiness and construction of 32,636
+  starting identities with seven nonstarting meld exclusions. Preserve seen
+  identities and private placements across known draws, copies and native
+  replacement/trigger shuffles. Scripts/default AI remain unchanged. Further
+  public deductions and other library-choice APIs remain open; selected tests
+  and catalog construction do not certify complete rules or calibrated strategy.
+  See engine/library_choice_knowledge_evidence.json.
+
 - Validate the library-choice candidate with 2,057 native methods, retaining
   all 2,029 and adding 28. Independent packaged families pass 900/65/194/146 cases;
   broader gameplay/serialization pass 3,531/256. Verify all 2,165 production

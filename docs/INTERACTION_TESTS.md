@@ -17,9 +17,24 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Paid information and resolving-stack knowledge
+## Library inspection, chosen order and shuffle boundaries
 
-The selected runtime passes the 872-case packaged family, including paid
+The selected runtime passes the expanded 900-case packaged family, including
+sixteen retained paid scry/surveil contracts and twelve draw/copy/replacement
+boundaries. Shared callbacks preserve actual initial inspection and announced
+private top/bottom order. Seen/public identities remain distinct from unknown
+shuffled positions. Native Psychogenic Probe damage proves that the intended
+replacement and later-trigger shuffles occur. Original failures, the fixture
+setup diagnostic and the initial-inspection refinement remain preserved.
+Independent/repeated 900/65/194/146 packaged families, 3,531 broader gameplay,
+256 serialization and all 45 live tests with 1,953 subtests pass. See the
+[full validation](../engine/library_choice_knowledge_evidence.json).
+These selected contracts do not certify every card/rule or calibrated strategy;
+public deductions outside announced placements and other library APIs remain open.
+
+## Earlier paid information and resolving-stack knowledge
+
+The earlier information runtime passed the 872-case packaged family, including paid
 hand/library choices, announced ordering, forgetting, real cast-trigger benefits
 and damage, granted mana and four resolving-zone regressions. Public stack
 visibility does not award private hand/library knowledge through transitional
@@ -58,7 +73,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/information_choice_evidence.json).
+[current full validation](../engine/library_choice_knowledge_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
@@ -89,8 +104,8 @@ interaction. Fixed source/dependency checks, compilation integrity, 30 productio
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
 and [current packaged evidence](../engine/inspection_ai_packaged_evidence.json).
-Both supplemental fixtures remain in the reviewed 2,029-method build. All
-45 live tests and 1,925 subtests pass, including repeated packaged families.
+Both supplemental fixtures remain in the reviewed 2,057-method build. All
+45 live tests and 1,953 subtests pass, including repeated packaged families.
 The prior [validation](../engine/defender_typechange_evidence.json) remains a
 separate historical milestone. Full card/rules/AI correctness remains unverified.
 

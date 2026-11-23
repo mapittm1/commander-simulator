@@ -9,7 +9,17 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected information runtime adds generic paid information decisions,
+The selected library-choice runtime adds shared actual-inspection and announced
+order callbacks for scry, surveil and rearrange. All 2,057 native, 832 focused
+source, independent/repeated 900/65/194/146 packaged, 3,531 broader gameplay,
+256 serialization and 45 live/1,953 subtest checks pass. Preserve the original
+sixteen-case baseline, boundary fixture corrections, native setup diagnostic
+and initial-inspection refinement. Scripts/default AI remain unchanged. See the
+[library-choice patch](patches/commander-library-choice-knowledge.patch) and
+[activation evidence](library_choice_knowledge_evidence.json). Public deductions
+and other library APIs remain open; complete rules/strategy are not certified.
+
+The earlier information runtime adds generic paid information decisions,
 announced library-order retention and resolving-zone information boundaries.
 All 2,029 native, 804 focused source, independent/repeated 872/65/194/146 packaged,
 3,503 broader gameplay, 256 serialization and 45 live/1,925 subtest checks pass.

@@ -17,9 +17,47 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Paid information, library order and resolving-zone boundaries
+## Initial library inspection and resulting private order
 
-The selected information runtime uses generic authorized knowledge and paid
+The selected runtime uses shared authorized inspection and announced-placement
+callbacks for native scry, surveil and rearrange. The inspecting controller sees
+only the actual inspected prefix. Final position knowledge requires matching
+current library objects in the announced top/bottom placements. A seen or
+publicly revealed identity is not evidence of its position after a shuffle.
+The implementation contains no production card-name exceptions.
+
+The packaged sixteen-case baseline passes six countering, privacy and unavailable
+mana controls and fails ten original/copied chosen-position checks. All sixteen
+methods remain and pass after correction. Twelve additional boundaries cover
+Preordain's known draw, bottom-position shifts after Reach Through Mists,
+independent copied memory, Rest in Peace and immediate/later shuffle timing.
+Psychogenic Probe damage witnesses actual native shuffles for Darksteel Colossus
+and Kozilek, Butcher of Truth. An initial high-mana fixture did not send those
+creatures toward the graveyard; a four-case native diagnostic preserves that
+finding. The corrected fixture retains the original position assertions and
+requires the shuffle witness. Public-reveal expectations then exposed missing
+initial inspection identity retention; recording the actual inspection before
+movement resolves that distinction. All failed phases remain preserved.
+
+All 832 focused source checks pass. The 2,057-method native build retains every
+prior 2,029 method and adds 28. Independent/repeated packaged families pass
+900/65/194/146, broader gameplay/serialization pass 3,531/256 and all 45 live tests
+with 1,953 subtests pass. All 516 implementation inputs remain frozen through
+validation. Three production sources change and four existing packaged classes
+change; no classes are added. Post-move health is ready and 32,636 starting
+identities construct with seven nonstarting meld exclusions. Card scripts and
+default AI are unchanged. See the [source evidence](../engine/library_choice_knowledge_native_evidence.json),
+[packaged milestone](../engine/library_choice_knowledge_packaged_evidence.json)
+and [activation evidence](../engine/library_choice_knowledge_evidence.json).
+
+These tests establish selected contracts. Revision changes conservatively retire
+knowledge outside announced placements; public deductions and other library
+choice APIs still need native validation. Full Commander rules and calibrated
+AI strategy remain unproven.
+
+## Earlier paid information, library order and resolving-zone boundaries
+
+The earlier information runtime introduced generic authorized knowledge and paid
 native outcomes for primary information decisions. The supplied Spy Network and
 Lens of Clarity states cover actual heuristic/hybrid/full choices, redundant
 payment avoidance, private hand and library knowledge, countering and copied
