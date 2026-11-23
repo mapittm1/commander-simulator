@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a defender type-loss damage gap: ten of twelve native probes pass;
+  two wrongly damage the attacking player after an attacked Battle becomes a
+  Forest. Use native flash-enabled Song payment/resolution and Counterspell
+  controls. Preserve fixtures, drivers, exact failures and report/process hashes.
+  Retain the initial compiler-only fixture stop and its API-receiver correction;
+  no gameplay expectation changed. No further production fix is claimed.
+
 - Activate the reviewed assigned-damage correction after all 45 live integration
   tests and 1,766 subtests pass, with repeated 781/65/194/78 packaged families.
   Preserve 1,854 prior native methods in the 1,870-test build and retain 628

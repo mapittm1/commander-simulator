@@ -17,6 +17,29 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Defender type-loss gap
+
+The selected assigned-damage runtime passes ten of twelve follow-up probes.
+After native paid Song of the Dryads turns an attacked Battle into a Forest,
+Thrasta incorrectly deals seven damage to the attacking player, in original
+and copied games. Ordinary trample, transformed-walker and countered-Aura
+controls pass. These two failures witness one gap, not two independent card bugs.
+
+Under the [pinned rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf),
+506.4 removes an attacked Battle when it loses that type; 506.4c preserves the
+attacker but prevents unblocked damage to the absent target. The former-walker
+exception in 702.19e does not permit spillover from a removed Battle.
+
+The fixture rejects the Aura without flash, supplies a Vedalken Orrery and
+priority checkpoints, then uses native three-mana casting and optional two-mana
+Counterspell responses. Mature attackers, declared combat, Orrery presence and
+starting loyalty are supplied legal state, not autonomous setup decisions.
+An initial compiler stop used a CardType method on Card; only that receiver was
+corrected. No native tests ran in the stopped phase, and no expectation changed.
+See [exact evidence and preserved inputs](../engine/defender_typechange_gap.json).
+Invocation frequency, other type/control changes and full rules/AI correctness
+remain unmeasured. No further production correction is included yet.
+
 ## Internal assigned-damage snapshots
 
 The reviewed runtime excludes removed-defender stand-ins from assigned damage.

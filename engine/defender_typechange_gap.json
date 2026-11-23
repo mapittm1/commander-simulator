@@ -1,0 +1,266 @@
+{
+  "status": "confirmed_defender_type_loss_damage_gap_pending_fix",
+  "baseline_commit": "89e326ab236f8435ba4a37c8f59eb65f98594183",
+  "baseline_build": "cfd5880daaaa45ae9253a15e13c8cf9e",
+  "scope": "After native paid Song of the Dryads turns an attacked Battle into a Forest, Thrasta deals seven damage to the attacking player in native and copied games. Expected life 40 is observed as 33. Ten other contracts pass, including ordinary trample, transformed walkers, and countered type-change controls. Two failed contracts witness one type-history gap, not two card bugs.",
+  "rules": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf",
+    "effective": "2026-09-25",
+    "sections": [
+      "506.4",
+      "506.4c",
+      "702.19e"
+    ]
+  },
+  "evidence": {
+    "scope": "Focused research against packaged production classes; not all-card certification.",
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-assigned-damage",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "7690b285de4777fc851fedfc1312286898b3cb731ffb38a00ff6b6aa95f6dacc",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "3699d2136f0165a7b45c246f54a30d4f0ab255436fdfcf689a293df579ebae9d",
+      "native_tests": {
+        "total": 1870,
+        "passed": 1870,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "289f397ad76172356f850cf27c5b36ccf408ffef0a6643da64725078e98bafc5",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "counts": {
+      "total": 12,
+      "passed": 10,
+      "failed": 2,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedChangedBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedChangedBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedChangedWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedChangedWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedCounteredBattleTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedCounteredWalkerTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeChangedBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeChangedBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeChangedWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeChangedWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeCounteredBattleTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeCounteredWalkerTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      }
+    ],
+    "testng_status": 1,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-defender-typechange-research\\CommanderDefenderTypeChangeBaselineTest.java": "312b79861e521f020d1dcf83a1145be55e1675987f840426c1b6071787aae218"
+    },
+    "production_origins_verified": 129,
+    "report_sha256": "fc41bfc64e9199cf4a30f5f0b4e4933ed28db4594ebf4a70485d9f9fe82481a2",
+    "failures": [
+      "java.lang.AssertionError: A removed Battle cannot redirect over-planeswalker damage; a removed walker may: Lists differ at element [0]: 40 != 33 expected [40] but found [33]",
+      "java.lang.AssertionError: A removed Battle cannot redirect over-planeswalker damage; a removed walker may: Lists differ at element [0]: 40 != 33 expected [40] but found [33]"
+    ]
+  },
+  "process": {
+    "status": "finished",
+    "bytes": 5772,
+    "returncode": 0,
+    "elapsed_seconds": 15.547
+  },
+  "native_log_sha256": "866c2974a64018955d60d8442a21467f58f3189ffb94eb9a0376254aa0af0a61",
+  "preserved_inputs": {
+    "CommanderDefenderTypeChangeBaselineTest.java": {
+      "path": "data/development/commander-defender-typechange-research/packaged-defender-type12-baseline-compiled/input-snapshots/CommanderDefenderTypeChangeBaselineTest.java",
+      "sha256": "312b79861e521f020d1dcf83a1145be55e1675987f840426c1b6071787aae218",
+      "content": "package forge.ai;\n\nimport forge.ai.simulation.GameCopier;\nimport forge.deck.Deck;\nimport forge.game.Game;\nimport forge.game.combat.Combat;\nimport forge.game.combat.CombatUtil;\nimport forge.game.GameRules;\nimport forge.game.GameStage;\nimport forge.game.GameType;\nimport forge.game.Match;\nimport forge.game.card.Card;\nimport forge.game.card.CounterEnumType;\nimport forge.game.phase.PhaseType;\nimport forge.game.player.Player;\nimport forge.game.player.RegisteredPlayer;\nimport forge.game.spellability.SpellAbility;\nimport forge.game.zone.ZoneType;\nimport java.util.ArrayList;\nimport java.util.List;\nimport org.testng.annotations.Test;\nimport static org.testng.Assert.*;\n\n/** Native type-loss research; legal supplied combat and actual paid flash-enabled casting. */\npublic class CommanderDefenderTypeChangeBaselineTest extends AITest {\n    @Test public void nativeChangedBattleOrdinaryTrampleRetainsLegalDamage() { typeChange(false,false,false,false); }\n    @Test public void copiedChangedBattleOrdinaryTrampleRetainsLegalDamage() { typeChange(false,false,true,false); }\n    @Test public void nativeChangedBattleOverPlaneswalkersRetainsLegalDamage() { typeChange(false,true,false,false); }\n    @Test public void copiedChangedBattleOverPlaneswalkersRetainsLegalDamage() { typeChange(false,true,true,false); }\n    @Test public void nativeCounteredBattleTypeChangeKeepsLiveRequirements() { typeChange(false,true,false,true); }\n    @Test public void copiedCounteredBattleTypeChangeKeepsLiveRequirements() { typeChange(false,true,true,true); }\n    @Test public void nativeChangedWalkerOrdinaryTrampleRetainsLegalDamage() { typeChange(true,false,false,false); }\n    @Test public void copiedChangedWalkerOrdinaryTrampleRetainsLegalDamage() { typeChange(true,false,true,false); }\n    @Test public void nativeChangedWalkerOverPlaneswalkersRetainsLegalDamage() { typeChange(true,true,false,false); }\n    @Test public void copiedChangedWalkerOverPlaneswalkersRetainsLegalDamage() { typeChange(true,true,true,false); }\n    @Test public void nativeCounteredWalkerTypeChangeKeepsLiveRequirements() { typeChange(true,true,false,true); }\n    @Test public void copiedCounteredWalkerTypeChangeKeepsLiveRequirements() { typeChange(true,true,true,true); }\n\n    /** A mature attacker and declared combat are supplied; Song and responses use native paid casting. */\n    private void typeChange(boolean walker,boolean overPlaneswalkers,boolean copied,boolean countered) {\n        Board board=board();Player owner=walker?board.battle.getProtectingPlayer():board.actor;\n        Card defender=walker?addCardToZone(\"Jace, the Mind Sculptor\",owner,ZoneType.Battlefield):board.battle;\n        if(walker)defender.setCounters(CounterEnumType.LOYALTY,3);\n        Attack attack=attackDefender(board,overPlaneswalkers?\"Thrasta, Tempest's Roar\":\"Colossal Dreadmaw\",defender,null);\n        int power=attack.attacker.getNetPower();List<Integer> initial=board.game.getPlayers().stream().map(Player::getLife).toList();\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_BLOCKERS,board.actor,false,3);\n        Player caster=board.game.getPlayers().get(2);\n        // Priority passes are supplied; payment and stack resolution use native casting.\n        board.game.getPhaseHandler().setPriority(caster);\n        for(int index=0;index<3;index++)addCardToZone(\"Forest\",caster,ZoneType.Battlefield);\n        SpellAbility spell=addCardToZone(\"Song of the Dryads\",caster,ZoneType.Hand).getFirstSpellAbility();\n        spell.setActivatingPlayer(caster);spell.getTargets().add(defender);\n        assertFalse(spell.canPlay(),\"A sorcery-timed Aura requires flash during declared combat\");\n        addCardToZone(\"Vedalken Orrery\",caster,ZoneType.Battlefield);settle(board.game);\n        assertTrue(spell.canPlay(),\"Orrery permits the native Aura cast at this supplied priority checkpoint\");\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(caster,spell,null));assertEquals(spell.getPayingMana().size(),3);\n        if(countered) {\n            for(int index=0;index<2;index++)addCardToZone(\"Island\",board.actor,ZoneType.Battlefield);\n            SpellAbility counter=addCardToZone(\"Counterspell\",board.actor,ZoneType.Hand).getFirstSpellAbility();\n            board.game.getPhaseHandler().setPriority(board.actor);\n            counter.setActivatingPlayer(board.actor);counter.getTargets().add(board.game.getStack().peekAbility());\n            assertTrue(counter.canPlay());assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,counter,null));\n            assertEquals(counter.getPayingMana().size(),2);\n        }\n        System.out.println(\"TYPE_CHANGE before resolution: walker=\"+walker+\"; over=\"+overPlaneswalkers+\"; copy=\"+copied+\"; countered=\"+countered);\n        settle(board.game);Card physical=board.game.getCardState(defender);\n        assertTrue(physical.isInZone(ZoneType.Battlefield));assertEquals(physical.isBattle(),!walker&&countered);\n        assertEquals(physical.isPlaneswalker(),walker&&countered);\n        if(!countered) {\n            assertTrue(physical.isLand());assertTrue(physical.getType().hasSubtype(\"Forest\"));\n            Card aura=board.game.getCardState(spell.getHostCard());assertTrue(aura.isInZone(ZoneType.Battlefield));\n            assertSame(aura.getEntityAttachedTo(),physical);\n        }\n        Game game=board.game;Player actor=board.actor,target=owner;Card attacker=attack.attacker;\n        if(copied) {\n            GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,actor);\n            actor=copier.find(actor);target=copier.find(owner);attacker=copier.find(attacker);\n        }\n        assertTrue(game.getCombat().isAttacking(attacker),\"Type loss removes the defender, not the attacker\");\n        System.out.println(\"TYPE_CHANGE before damage: walker=\"+walker+\"; over=\"+overPlaneswalkers+\"; copy=\"+copied+\"; countered=\"+countered+\"; defender=\"+game.getCombat().getDefenderByAttacker(attacker));\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE,actor,false,3);\n        assertTrue(game.getCombat().assignCombatDamage(false));game.getCombat().dealAssignedDamage();settle(game);\n        List<Integer> expected=new ArrayList<>(initial);\n        if(walker&&overPlaneswalkers) {\n            int index=game.getPlayers().indexOf(target);expected.set(index,initial.get(index)-power+(countered?3:0));\n        }\n        assertEquals(game.getPlayers().stream().map(Player::getLife).toList(),expected,\"A removed Battle cannot redirect over-planeswalker damage; a removed walker may\");\n        if(copied)assertEquals(board.game.getPlayers().stream().map(Player::getLife).toList(),initial,\"Copy damage cannot alter original life\");\n    }\n\n    /** Mature attacks, a loyalty-three walker and blocker declaration are supplied legal state preconditions. */\n    private Attack attackDefender(Board board,String name,Card defender,Card jitte) {\n        Card attacker=addCardToZone(name,board.actor,ZoneType.Battlefield);attacker.setSickness(false);\n        if(jitte!=null) {\n            for(int index=0;index<2;index++)addCardToZone(\"Plains\",board.actor,ZoneType.Battlefield);\n            SpellAbility equip=jitte.getSpellAbilities().stream().filter(SpellAbility::isEquip).findFirst().orElseThrow();\n            equip.setActivatingPlayer(board.actor);equip.getTargets().add(attacker);assertTrue(equip.canPlay());\n            assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor,equip,null));settle(board.game);\n            assertEquals(equip.getPayingMana().size(),2);assertSame(jitte.getEntityAttachedTo(),attacker);\n            assertEquals(jitte.getCounters(CounterEnumType.CHARGE),0);\n        }\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS,board.actor,3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(defender));assertTrue(CombatUtil.canAttack(attacker,defender));\n        Combat combat=new Combat(board.actor);board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker,defender);attacker.setTapped(true);CombatUtil.checkDeclaredAttacker(board.game,attacker,combat,true);\n        combat.setBlocked(attacker,false);return new Attack(attacker,combat);\n    }\n\n    /** A matured attacker and unblocked declaration are supplied legal combat preconditions. */\n    private Attack attack(Board board, String name) {\n        Card attacker=addCardToZone(name, board.actor, ZoneType.Battlefield); attacker.setSickness(false);\n        board.game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DECLARE_ATTACKERS, board.actor, 3);\n        assertTrue(CombatUtil.getAllPossibleDefenders(board.actor).contains(board.battle));\n        assertTrue(CombatUtil.canAttack(attacker, board.battle));\n        Combat combat=new Combat(board.actor); board.game.getPhaseHandler().setCombat(combat);\n        combat.addAttacker(attacker, board.battle); attacker.setTapped(true);\n        CombatUtil.checkDeclaredAttacker(board.game, attacker, combat, true); combat.setBlocked(attacker, false);\n        return new Attack(attacker,combat);\n    }\n\n    private void damage(Game game, Combat combat, Player actor) {\n        // The default development overload ends combat; preserve the declared combat here.\n        game.getPhaseHandler().devModeSet(PhaseType.COMBAT_DAMAGE, actor, false, 3);\n        assertTrue(combat.assignCombatDamage(false)); combat.dealAssignedDamage();\n    }\n\n    private Activation hexmage(Board board) {\n        Card card=addCardToZone(\"Vampire Hexmage\", board.actor, ZoneType.Battlefield);\n        SpellAbility action=card.getSpellAbilities().stream()\n                .filter(ability -> ability.getApi()==forge.game.ability.ApiType.RemoveCounter).findFirst().orElseThrow();\n        action.setActivatingPlayer(board.actor); action.getTargets().add(board.battle);\n        assertTrue(action.canPlay()); assertTrue(ComputerUtil.handlePlayingSpellAbility(board.actor, action, null));\n        Card sacrificed=board.game.getCardState(card); assertTrue(sacrificed.isInZone(ZoneType.Graveyard));\n        return new Activation(sacrificed,action);\n    }\n\n    private void queue(Game game) {\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().collectTriggerForWaiting();\n        game.getTriggerHandler().runWaitingTriggers(); game.getStack().addAllTriggeredAbilitiesToStack();\n    }\n\n    private void assertArray(Game game, Card original) {\n        Card card=game.getCardState(original); assertTrue(card.isInZone(ZoneType.Battlefield));\n        assertEquals(card.getName(), \"Lightshield Array\"); assertFalse(card.isBattle());\n        assertTrue(card.isEnchantment()); assertEquals(card.getCounters(CounterEnumType.DEFENSE), 0);\n    }\n\n    private record Attack(Card attacker, Combat combat) { }\n    private record Activation(Card sacrificed, SpellAbility action) { }\n\n    private Board board() {\n        List<RegisteredPlayer> seats = new ArrayList<>();\n        for (int index = 0; index < 4; index++) seats.add(RegisteredPlayer.forCommander(new Deck())\n                .setPlayer(new LobbyPlayerAi(\"battle-protector-\" + index, null)));\n        GameRules rules = new GameRules(GameType.Commander);\n        Game game = new Game(seats, rules, new Match(rules, seats, \"Battle combat research\"));\n        game.setNoGUIUser(); game.setAge(GameStage.Play); Player actor = game.getPlayers().get(0);\n        for (Player player : game.getPlayers()) {\n            for (int index = 0; index < 8; index++) addCardToZone(\"Forest\", player, ZoneType.Library);\n        }\n        for (int index = 0; index < 2; index++) addCardToZone(\"Plains\", actor, ZoneType.Battlefield);\n        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);\n        game.getAction().checkStateEffects(true); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();\n        Card source = addCardToZone(\"Invasion of Gobakhan\", actor, ZoneType.Hand);\n        SpellAbility spell = source.getFirstSpellAbility(); spell.setActivatingPlayer(actor);\n        assertTrue(ComputerUtil.handlePlayingSpellAbility(actor, spell, null)); settle(game);\n        assertEquals(actor.getSpellsCastThisTurn(), 1);\n        assertEquals(spell.getPayingMana().size(), 2);\n        assertTrue(actor.getLandsInPlay().stream().allMatch(Card::isTapped));\n        Card battle = game.getCardState(spell.getHostCard());\n        assertTrue(battle.isInZone(ZoneType.Battlefield));\n        assertNotNull(battle.getProtectingPlayer());\n        return new Board(game, actor, battle);\n    }\n\n    private void settle(Game game) {\n        for (int step = 0; step < 40; step++) {\n            game.getAction().checkStateEffects(true);\n            game.getTriggerHandler().collectTriggerForWaiting();\n            game.getTriggerHandler().runWaitingTriggers();\n            game.getStack().addAllTriggeredAbilitiesToStack();\n            if (game.getStack().isEmpty()) return;\n            game.getStack().resolveStack();\n        }\n        throw new AssertionError(\"Battle research stack did not settle\");\n    }\n\n    private record Board(Game game, Player actor, Card battle) { }\n}\n"
+    },
+    "run_compiled_baseline.py": {
+      "path": "data/development/commander-defender-typechange-research/packaged-defender-type12-baseline-compiled/input-snapshots/run_compiled_baseline.py",
+      "sha256": "b2f31ef1b81f3e72355fc8ff7aa9989f92c0285f678b2b2dd13d5e1311dad757",
+      "content": "from pathlib import Path\nimport hashlib\nimport importlib\nimport json\nimport os\nimport sys\n\nROOT = Path(__file__).resolve().parents[3]\nsys.path.insert(0, str(ROOT))\nfrom commander.engine.engine_process import ProcessLimits, run_bounded\nfrom commander.engine.forge_config import file_hash, jvm_library, read_settings\nfrom commander.engine.native_runtime import _engine_profile, _environment, require_bridge\nfrom tests.support import draw_ending_worker as rules\n\nWORK = Path(__file__).resolve().parent\nBUILD = ROOT / 'data/engine-builds/cfd5880daaaa45ae9253a15e13c8cf9e'\nTEST_CLASS = 'forge.ai.CommanderDefenderTypeChangeBaselineTest'\nFIXTURE = WORK / 'CommanderDefenderTypeChangeBaselineTest.java'\nNATIVE_ORIGINS = tuple(dict.fromkeys((*rules.NATIVE_CLASSES, 'forge.game.ability.effects.EncodeEffect', 'forge.game.card.CardCopyService', 'forge.game.card.Card', 'forge.ai.simulation.GameCopier', 'forge.game.combat.Combat', 'forge.game.trigger.TriggerHandler', 'forge.ai.ability.TapOrUntapAi', 'forge.game.ability.effects.TapOrUntapEffect', 'forge.ai.SpellAbilityAi', 'forge.ai.ability.TapOrUntapAllAi', 'forge.ai.ability.ChooseTypeAi', 'forge.game.ability.effects.TapOrUntapAllEffect', 'forge.game.ability.effects.ChooseTypeEffect', 'forge.game.ability.effects.ChooseColorEffect', 'forge.game.ability.effects.DiscardEffect', 'forge.game.cost.CostPromiseGift', 'forge.game.ability.effects.TokenEffect', 'forge.game.GameActionUtil', 'forge.game.cost.CostPayment', 'forge.game.ability.AbilityUtils', 'forge.game.ability.effects.DrawEffect', 'forge.game.ability.effects.CounterEffect', 'forge.game.ability.effects.PhasesEffect', 'forge.game.card.CounterEnumType', 'forge.game.phase.Untap', 'forge.game.zone.PlayerZoneBattlefield', 'forge.game.ability.effects.EffectEffect', 'forge.game.ability.effects.DestroyEffect', 'forge.game.ability.effects.ManaReflectedEffect', 'forge.game.card.CardProperty', 'forge.game.GameAction', 'forge.game.combat.CombatUtil', 'forge.game.ability.effects.CountersRemoveEffect', 'forge.game.ability.effects.FogEffect', 'forge.game.ability.effects.PlayEffect', 'forge.game.card.CardDamageTable', 'forge.game.ability.effects.AttachEffect', 'forge.game.staticability.StaticAbilityContinuous', 'forge.game.staticability.StaticAbilityCastWithFlash')))\n\n\ndef sources():\n    recipe = json.loads((ROOT / 'engine/sticker_recipe.json').read_bytes())\n    base = ROOT / 'engine/tests/AITest.java'\n    dependency = ROOT / recipe['packaged_testng']['path']\n    assert file_hash(base) == recipe['packaged_ai_base_sha256']\n    assert file_hash(dependency) == recipe['packaged_testng']['sha256']\n    return [base, FIXTURE], dependency\n\n\ndef worker(run):\n    settings = read_settings(BUILD / 'engine-config.json')\n    engine = settings.verify()\n    metadata = json.loads((run / 'rules-inputs.json').read_bytes())\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    output = run / 'rules-classes'\n    assert metadata['classes'] == {path.relative_to(output).as_posix(): file_hash(path)\n                                   for path in output.rglob('*.class')}\n    _, dependency = sources()\n    require_bridge()\n    java = importlib.import_module('jpype')\n    archive = settings.home / engine['jar_name']\n    java.startJVM(jvm_library(settings.java), '-Xmx1536m', '-XX:ActiveProcessorCount=2',\n                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',\n                  classpath=list(map(str, (archive, output, dependency))), convertStrings=True)\n    for name in NATIVE_ORIGINS:\n        assert rules._origin(java, name).samefile(archive), name\n    for name in ('forge.ai.AITest', TEST_CLASS):\n        assert rules._origin(java, name).samefile(output), name\n    runner = java.JClass('org.testng.TestNG')()\n    listener = java.JClass('org.testng.TestListenerAdapter')()\n    runner.addListener(listener)\n    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TEST_CLASS).class_]))\n    runner.setOutputDirectory(str(run / 'reports'))\n    runner.setUseDefaultListeners(True)\n    runner.run()\n    counts, methods = rules._results(listener)\n    assert all(file_hash(Path(path)) == digest for path, digest in metadata['inputs'].items())\n    record = {'scope': 'Focused research against packaged production classes; not all-card certification.',\n              'engine': engine, 'counts': counts, 'methods': methods,\n              'testng_status': int(runner.getStatus()),\n              'configuration_failures': len(listener.getConfigurationFailures()),\n              'configuration_skips': len(listener.getConfigurationSkips()),\n              'inputs': metadata['inputs'], 'production_origins_verified': len(NATIVE_ORIGINS),\n              'report_sha256': file_hash(run / 'reports/testng-results.xml'),\n              'failures': [str(result.getThrowable()) for result in listener.getFailedTests()]}\n    (run / 'evidence.json').write_bytes((json.dumps(record, indent=2) + '\\n').encode('utf-8'))\n    print(json.dumps({'counts': counts, 'failures': record['failures']}), flush=True)\n    java.shutdownJVM()\n\n\ndef parent():\n    settings = read_settings(BUILD / 'engine-config.json')\n    settings.verify()\n    run = WORK / 'packaged-defender-type12-baseline-compiled'\n    run.mkdir()\n    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'\n    selected, dependency = sources()\n    rules._compile(settings, run, selected, dependency)\n    with _engine_profile(settings, run):\n        result = run_bounded([sys.executable, '-I', str(Path(__file__).resolve()), '--worker', str(run)],\n                             settings.home, run / 'native.log',\n                             ProcessLimits(90, log_bytes=262144, environment=_environment(run)))\n    (run / 'process.json').write_bytes((json.dumps(result, indent=2) + '\\n').encode('utf-8'))\n    assert result['status'] == 'finished' and result['returncode'] == 0, result\n    record = json.loads((run / 'evidence.json').read_bytes())\n    assert record['configuration_failures'] == record['configuration_skips'] == 0\n    print(json.dumps({'counts': record['counts'], 'failures': record['failures'], 'process': result}))\n\n\nif __name__ == '__main__':\n    if len(sys.argv) == 3 and sys.argv[1] == '--worker':\n        target = Path(sys.argv[2]).resolve(strict=True)\n        assert target.parent == WORK and target.name == 'packaged-defender-type12-baseline-compiled'\n        worker(target)\n    else:\n        assert len(sys.argv) == 1\n        parent()\n"
+    }
+  },
+  "failed_methods": [
+    "forge.ai.CommanderDefenderTypeChangeBaselineTest.copiedChangedBattleOverPlaneswalkersRetainsLegalDamage",
+    "forge.ai.CommanderDefenderTypeChangeBaselineTest.nativeChangedBattleOverPlaneswalkersRetainsLegalDamage"
+  ],
+  "compiler_stop": {
+    "status": "compiler_stopped_before_native_tests",
+    "cause": "Fixture called Card.hasSubtype, which is absent from the pinned API. Use Card.getType().hasSubtype. No gameplay tests ran.",
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-assigned-damage",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "7690b285de4777fc851fedfc1312286898b3cb731ffb38a00ff6b6aa95f6dacc",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "3699d2136f0165a7b45c246f54a30d4f0ab255436fdfcf689a293df579ebae9d",
+      "native_tests": {
+        "total": 1870,
+        "passed": 1870,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "289f397ad76172356f850cf27c5b36ccf408ffef0a6643da64725078e98bafc5",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "compiler_log_sha256": "e006e874a07bfe304a08c893ec9ed254098229002532358cfab62c92b97a7528",
+    "preserved_inputs": {
+      "CommanderDefenderTypeChangeBaselineTest.java": {
+        "path": "data/development/commander-defender-typechange-research/packaged-defender-type12-baseline/input-snapshots/CommanderDefenderTypeChangeBaselineTest.java",
+        "sha256": "58d41f78118298932a9bc116500c24d2cdf7fb15d604662ac5b0586dc5d97ebb"
+      },
+      "run_baseline.py": {
+        "path": "data/development/commander-defender-typechange-research/packaged-defender-type12-baseline/input-snapshots/run_baseline.py",
+        "sha256": "03d494912197e918b825f536795e2e1d5c18b4cb64ce579ad90c1a8ab9e13ef1"
+      }
+    }
+  },
+  "compiler_correction": {
+    "scope": "Only the fixture API receiver changed from Card.hasSubtype to Card.getType().hasSubtype; all assertions and scenario setup remain unchanged. The stopped phase ran no native gameplay tests.",
+    "original_fixture_sha256": "58d41f78118298932a9bc116500c24d2cdf7fb15d604662ac5b0586dc5d97ebb",
+    "compiled_fixture_sha256": "312b79861e521f020d1dcf83a1145be55e1675987f840426c1b6071787aae218"
+  },
+  "limits": [
+    "Mature attackers, declared combat, three starting loyalty counters, an Orrery on the battlefield and explicit priority checkpoints are supplied legal preconditions.",
+    "Song pays 2G through native casting after a rejection without flash; Counterspell pays UU in response. Costs and resolution use native engine paths.",
+    "Autonomous choice quality, invocation frequency and other type/control-change effects remain unmeasured.",
+    "No further production correction is included; full card/rules/AI correctness remains open."
+  ],
+  "mechanism_inference": "The native stand-in copies the current type after the permanent becomes a Forest, while over-planeswalker dispatch tests whether its defender is a Battle. This code path is consistent with loss of former-Battle classification; broader type/control-change behavior remains unmeasured."
+}
