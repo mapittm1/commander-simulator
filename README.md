@@ -30,9 +30,13 @@ difference.
 A fresh paid scry/surveil baseline confirms a remaining knowledge gap: six
 countering, privacy and unavailable-mana controls pass, while ten original/copied
 chosen-position checks fail. The cards move through native resolution, but the
-AI does not retain the chosen library positions. A generic correction is under
-review; the selected runtime below remains active. See the
-[exact baseline and rules review](engine/library_choice_knowledge_gap.json).
+AI does not retain the chosen library positions. A generic correction passes 832 focused source checks, retaining 804 and adding
+28, including draw/copy and replacement/shuffle boundaries. Shared initial-inspection and announced
+order callbacks serve scry, surveil and reorder without production card-name
+exceptions. Packaging and broader/full live validation remain pending; the
+selected runtime below remains active. See the
+[exact baseline](engine/library_choice_knowledge_gap.json) and
+[source evidence](engine/library_choice_knowledge_native_evidence.json).
 
 The selected runtime supports generic paid hand/library information decisions and
 retains announced library order. It values authorized knowledge, avoids redundant

@@ -28,6 +28,9 @@ SOURCES = {
     "CommanderInformationValueTest": "commander_information_value_test_sha256",
     "CommanderInformationContextTest": "commander_information_context_test_sha256",
     "CommanderResolvingInformationCopyTest": "commander_resolving_information_copy_test_sha256",
+    "LibraryChoiceTestSupport": "library_choice_test_support_sha256",
+    "CommanderLibraryChoiceKnowledgeTest": "commander_library_choice_knowledge_test_sha256",
+    "CommanderLibraryChoiceBoundaryTest": "commander_library_choice_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -133,7 +136,13 @@ TEST_CLASS_PACKAGES = {"CommanderModalBudgetTest": "forge.ai.simulation"}
 TEST_CLASSES = tuple(
     f"{TEST_CLASS_PACKAGES.get(name, 'forge.ai')}.{name}"
     for name in SOURCES
-    if name not in {"AITest", "InspectionTestSupport", "InformationChoiceTestSupport"}
+    if name
+    not in {
+        "AITest",
+        "InspectionTestSupport",
+        "InformationChoiceTestSupport",
+        "LibraryChoiceTestSupport",
+    }
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
     "forge.game.ability.effects.LookAtEffect",
@@ -286,7 +295,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 872-case packaged family."""
+    """Execute the existing fixed 900-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
@@ -296,6 +305,7 @@ def main() -> None:
             "forge.ai.AITest",
             "forge.ai.InspectionTestSupport",
             "forge.ai.InformationChoiceTestSupport",
+            "forge.ai.LibraryChoiceTestSupport",
             PRIORITY_PACKAGE + "PriorityTestBase",
         ),
         NATIVE_CLASSES,

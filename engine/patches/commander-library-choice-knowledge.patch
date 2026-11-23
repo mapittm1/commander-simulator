@@ -1,0 +1,118 @@
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -2778,6 +2778,50 @@
+         game.getTriggerHandler().runTrigger(TriggerType.TakesInitiative, runParams, false);
+     }
+ 
++    /** Observe the actual inspected prefix before any private choice or replacement moves it. */
++    public void observeInspectedLibraryPrefix(Player owner, PlayerController observer, CardCollectionView inspected) {
++        CardCollectionView library = owner.getCardsIn(ZoneType.Library);
++        Map<Integer, Card> disclosed = Maps.newHashMap();
++        for (int index = 0; index < inspected.size() && index < library.size(); index++) {
++            Card current = library.get(index);
++            if (current.getZone() == owner.getZone(ZoneType.Library) && current.equalsWithGameTimestamp(inspected.get(index))) {
++                disclosed.put(index, current);
++            }
++        }
++        observer.observeLibraryTop(owner, disclosed);
++    }
++
++    /**
++     * Retain only announced placements of inspected cards, never unobserved library identities.
++     * Top cards were inserted at index zero in list order; bottom cards were appended.
++     * The observer may be a different player from the library owner, as with rearrange effects.
++     */
++    public void observeChosenLibraryOrder(Player owner, PlayerController observer,
++            CardCollectionView toTop, CardCollectionView toBottom) {
++        CardCollectionView library = owner.getCardsIn(ZoneType.Library);
++        Map<Integer, Card> disclosed = Maps.newHashMap();
++        int topCount = toTop == null ? 0 : toTop.size();
++        for (int index = 0; index < topCount && index < library.size(); index++) {
++            Card announced = toTop.get(topCount - 1 - index);
++            Card current = library.get(index);
++            if (current.getZone() == owner.getZone(ZoneType.Library) && current.equalsWithGameTimestamp(announced)) {
++                disclosed.put(index, current);
++            }
++        }
++        int bottomCount = toBottom == null ? 0 : toBottom.size();
++        for (int offset = 0; offset < bottomCount; offset++) {
++            int index = library.size() - bottomCount + offset;
++            if (index < 0) continue;
++            Card announced = toBottom.get(offset);
++            Card current = library.get(index);
++            if (current.getZone() == owner.getZone(ZoneType.Library) && current.equalsWithGameTimestamp(announced)) {
++                disclosed.put(index, current);
++            }
++        }
++        // A later hidden shuffle invalidates these positions through the library revision.
++        observer.observeLibraryTop(owner, disclosed);
++    }
++
+     public void scry(final List<Player> players, int numScry, SpellAbility cause) {
+         if (numScry <= 0) {
+             // CR 701.22b If a player is instructed to scry 0, no scry event occurs.
+@@ -2817,6 +2861,7 @@
+         for (final Map.Entry<Player, Integer> e : actualPlayers.entrySet()) {
+             final Player p = e.getKey();
+             final CardCollection topN = new CardCollection(p.getCardsIn(ZoneType.Library, e.getValue()));
++            observeInspectedLibraryPrefix(p, p.getController(), topN);
+             ImmutablePair<CardCollection, CardCollection> decision = p.getController().arrangeForScry(topN);
+             decisions.put(p, decision);
+             int numToTop = decision.getLeft() == null ? 0 : decision.getLeft().size();
+@@ -2847,6 +2892,8 @@
+                 }
+             }
+ 
++            observeChosenLibraryOrder(p, p.getController(), toTop, toBottom);
++
+             if (cause != null) {
+                 final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(p);
+                 runParams.put(AbilityKey.ScryNum, numLookedAt);
+--- a/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
+@@ -1,8 +1,6 @@
+ package forge.game.ability.effects;
+ 
+ import java.util.List;
+-import java.util.HashMap;
+-import java.util.Map;
+ 
+ import com.google.common.collect.Iterables;
+ import forge.game.ability.AbilityUtils;
+@@ -107,16 +105,7 @@
+         for (Card next : orderedCards) {
+             player.getGame().getAction().moveToLibrary(next, 0, sa);
+         }
+-        // The chooser knows the announced order. Do not infer positions for any unobserved card.
+-        // Each insertion used index zero, so the resulting prefix reverses orderedCards.
+-        Map<Integer, Card> disclosed = new HashMap<>();
+-        CardCollectionView library = player.getCardsIn(ZoneType.Library);
+-        for (int index = 0; index < orderedCards.size() && index < library.size(); index++) {
+-            Card announced = orderedCards.get(orderedCards.size() - 1 - index);
+-            Card current = library.get(index);
+-            if (current.getId() == announced.getId()) disclosed.put(index, current);
+-        }
+-        activator.getController().observeLibraryTop(player, disclosed);
++        player.getGame().getAction().observeChosenLibraryOrder(player, activator.getController(), orderedCards, null);
+         // A subsequent hidden shuffle changes the library revision and invalidates these positions.
+         if (mayshuffle && activator.getController().confirmAction(sa, null, Localizer.getInstance().getMessage("lblDoyouWantShuffleTheLibrary"), null)) {
+             player.shuffle(sa);
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1163,6 +1163,7 @@
+         final CardCollection topN = getTopXCardsFromLibrary(num);
+ 
+         if (!topN.isEmpty()) {
++            getGame().getAction().observeInspectedLibraryPrefix(this, getController(), topN);
+             final Pair<CardCollection, CardCollection> lists = getController().arrangeForSurveil(topN);
+             final CardCollection toTop = lists.getLeft();
+             final CardCollection toGrave = lists.getRight();
+@@ -1192,6 +1193,8 @@
+                 }
+             }
+ 
++            // Only the announced kept prefix is known; graveyard replacements may shuffle other cards.
++            getGame().getAction().observeChosenLibraryOrder(this, getController(), toTop, null);
+             getGame().fireEvent(new GameEventSurveil(PlayerView.get(this), numToTop, numToGrave));
+         }
+ 

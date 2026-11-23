@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add source-validated shared initial-inspection and announced-library-order
+  callbacks for scry, surveil and rearrange. All 832 focused checks pass, retaining 804 and adding
+  28. Preserve original/copied paid top/bottom/mixed choices, countering, privacy
+  and unavailable mana. Validate known draws, independent copied memory, exile
+  replacements and immediate/later hidden shuffles. Production uses announced
+  placements and current object identity, without card-name exceptions.
+  Packaging and broader/full live validation remain pending; the selected
+  information runtime remains active. Complete rules and strategy are unproven.
+  See engine/library_choice_knowledge_native_evidence.json.
+
 - Record 16 paid native scry/surveil contracts against the selected information
   runtime: six countering/privacy/unavailable-mana controls pass and ten original
   or pending-copy position-retention checks fail. Preserve exact compiled
