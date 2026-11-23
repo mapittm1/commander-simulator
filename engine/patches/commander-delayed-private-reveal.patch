@@ -1,0 +1,79 @@
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -2413,21 +2413,28 @@
+         }
+         // Use the native in-game membership; sideboards and other outside-game objects are excluded.
+         CardCollectionView inGame = hasControlledRecipient ? game.getCardsInGame() : null;
+-        Map<PlayerController, CardCollection> deliveries = new java.util.IdentityHashMap<>();
++        // Capture display groups with the audience; later callbacks must not retag another zone or owner.
++        Map<PlayerController, Map<ImmutablePair<ZoneType, Player>, CardCollection>> deliveries = new java.util.IdentityHashMap<>();
+         for (Player player : named) {
+             PlayerController chooser = player.getController();
+             List<PlayerController> inside = player.getInGameObservationControllers(chooser);
+             List<PlayerController> outside = player.getOutsideGameObservationControllers(chooser);
+             for (Card card : currentCards) {
+                 List<PlayerController> recipients = inGame == null || inGame.contains(card) ? inside : outside;
+-                for (PlayerController agent : recipients) deliveries.computeIfAbsent(agent, key -> new CardCollection()).add(card);
++                for (PlayerController agent : recipients) {
++                    Map<ImmutablePair<ZoneType, Player>, CardCollection> groups =
++                            deliveries.computeIfAbsent(agent, key -> Maps.newLinkedHashMap());
++                    ImmutablePair<ZoneType, Player> group = ImmutablePair.of(card.getZone().getZoneType(), card.getOwner());
++                    groups.computeIfAbsent(group, key -> new CardCollection()).add(card);
++                }
+             }
+         }
+         // Capture every recipient before any callback can change the active controller.
+-        for (Map.Entry<PlayerController, CardCollection> entry : deliveries.entrySet()) {
+-            CardCollection disclosed = entry.getValue();
+-            entry.getKey().reveal(disclosed, disclosed.getFirst().getZone().getZoneType(),
+-                    disclosed.getFirst().getOwner(), messagePrefix, addSuffix);
++        for (Map.Entry<PlayerController, Map<ImmutablePair<ZoneType, Player>, CardCollection>> entry : deliveries.entrySet()) {
++            for (Map.Entry<ImmutablePair<ZoneType, Player>, CardCollection> group : entry.getValue().entrySet()) {
++                entry.getKey().reveal(group.getValue(), group.getKey().getLeft(),
++                        group.getKey().getRight(), messagePrefix, addSuffix);
++            }
+         }
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/player/DelayedReveal.java
++++ b/forge-game/src/main/java/forge/game/player/DelayedReveal.java
+@@ -24,7 +24,7 @@
+         this(cards0, zone0, owner0, "");
+     }
+     public DelayedReveal(final Iterable<Card> cards0, final ZoneType zone0, final PlayerView owner0, final String messagePrefix0) {
+-        this(cards0, Set.of(zone0), owner0, "");
++        this(cards0, Set.of(zone0), owner0, messagePrefix0);
+     }
+     public DelayedReveal(final Iterable<Card> cards0, final Set<ZoneType> zone0, final PlayerView owner0, final String messagePrefix0) {
+         cards = CardView.getCollection(cards0);
+--- a/forge-game/src/main/java/forge/game/player/PlayerController.java
++++ b/forge-game/src/main/java/forge/game/player/PlayerController.java
+@@ -41,7 +41,6 @@
+ import java.util.Map;
+ import java.util.Set;
+ import java.util.function.Predicate;
+-import java.util.stream.Collectors;
+ 
+ /**
+  * A prototype for player controller class
+@@ -237,8 +236,18 @@
+         reveal(cards, zone, owner, null, true);
+     }
+     public final void reveal(DelayedReveal delayedReveal) {
+-        for (ZoneType zt : delayedReveal.getZone()) {
+-            reveal(delayedReveal.getCards().stream().filter(c -> c.getZone() == zt).collect(Collectors.toList()), zt, delayedReveal.getOwner(), delayedReveal.getMessagePrefix());
++        if (delayedReveal == null || player == null || player.getGame() != getGame()
++                || player.getController() != this) return;
++        CardCollection disclosed = new CardCollection();
++        for (CardView view : delayedReveal.getCards()) {
++            if (view == null || !delayedReveal.getZone().contains(view.getZone())) continue;
++            Card card = getGame().findByView(view);
++            // A foreign/copied view must not select a local card with the same numeric ID.
++            if (card != null && card.getView() == view && card.getZone() != null
++                    && card.getZone().getZoneType() == view.getZone()) disclosed.add(card);
++        }
++        if (!disclosed.isEmpty()) {
++            getGame().getAction().revealTo(disclosed, player, delayedReveal.getMessagePrefix());
+         }
+     }
+     public abstract void reveal(List<CardView> cards, ZoneType zone, PlayerView owner, String messagePrefix, boolean addMsgSuffix);

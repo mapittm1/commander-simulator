@@ -150,6 +150,8 @@ REGRESSION_SOURCES = {
     "CommanderPrivateRevealBoundaryTest.java": "commander_private_reveal_boundary_test_sha256",
     "CommanderDirectPrivateRevealTest.java": "commander_direct_private_reveal_test_sha256",
     "CommanderDirectRevealBoundaryTest.java": "commander_direct_reveal_boundary_test_sha256",
+    "CommanderDelayedPrivateRevealTest.java": "commander_delayed_private_reveal_test_sha256",
+    "CommanderDelayedRevealBoundaryTest.java": "commander_delayed_reveal_boundary_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

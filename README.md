@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+An isolated delayed-reveal correction passes 987 focused source checks,
+retaining 956 and adding 31. Active delayed disclosures use shared per-card
+rights after strict current-view and zone checks. Captured zone/owner groups
+preserve privacy and presentation across callback control changes; the
+single-zone constructor now retains its display prefix. Original eight paid
+failures and the later prefix failure remain preserved. Packaging and broader/
+full live validation remain pending; the selected runtime below is unchanged.
+See the [baseline](engine/delayed_private_reveal_gap.json) and
+[source evidence](engine/delayed_private_reveal_native_evidence.json).
+Other view paths, all UI/history contexts and full rules/AI remain unproven.
+
 The selected runtime routes the RevealHand Look and PeekAndReveal private
 disclosure paths through shared per-card rights. Private library audiences are
 captured before callbacks;

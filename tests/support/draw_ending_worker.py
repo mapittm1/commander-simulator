@@ -41,6 +41,8 @@ SOURCES = {
     "CommanderPrivateRevealBoundaryTest": "commander_private_reveal_boundary_test_sha256",
     "CommanderDirectPrivateRevealTest": "commander_direct_private_reveal_test_sha256",
     "CommanderDirectRevealBoundaryTest": "commander_direct_reveal_boundary_test_sha256",
+    "CommanderDelayedPrivateRevealTest": "commander_delayed_private_reveal_test_sha256",
+    "CommanderDelayedRevealBoundaryTest": "commander_delayed_reveal_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -214,6 +216,7 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostRemoveCounter",
     "forge.game.cost.CostRemoveAnyCounter",
     "forge.game.GameAction",
+    "forge.game.player.DelayedReveal",
     "forge.game.ability.effects.RevealHandEffect",
     "forge.game.GameAction$LibraryObservers",
     "forge.game.GameEntity",
@@ -310,7 +313,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1024-case packaged family."""
+    """Execute the existing fixed 1055-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

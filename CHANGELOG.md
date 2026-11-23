@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a source-validated generic delayed-disclosure correction: all 987 focused
+  checks pass, retaining 956 and adding 31. Resolve only current matching views
+  and declared/current zones; enforce active-agent and per-card disclosure rights.
+  Capture audience and zone/owner groups before callbacks, preserve outside-game
+  restrictions, and retain single/multi-zone display prefixes. Validate paid
+  printed inspection, counters, privacy, copied states and thirteen explicit
+  identity/callback/metadata boundaries. Preserve original native and prefix
+  failures. Packaging and broader/full live gates remain pending; selected
+  runtime/scripts/default AI are unchanged. See
+  engine/delayed_private_reveal_native_evidence.json. Full correctness is unproven.
+
+- Preserve an18-case paid delayed-reveal baseline: ten controls pass and eight
+  master/post-control assertions fail for Ancient Stirrings with no valid choice
+  and Impulse with an actual choice, in original/copied states. Witness only
+  unselected inspected identities. Investigate shared delayed disclosure,
+  current-view identity, outside-game rights and callback boundaries separately;
+  no source correction or full coverage is claimed yet. See
+  engine/delayed_private_reveal_gap.json and the pending native fixture.
+
 - Activate direct private-reveal and captured public-library observation routing
   after all 45 live tests and 2,077 subtests pass, including repeated packaged
   families of 1024/65/194/146. All 956 focused source, 2,181 native, 3,655 gameplay
