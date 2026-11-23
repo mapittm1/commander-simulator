@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate deducible library-position retention after all 45 live tests and
+  1,986 subtests pass, including repeated 933/65/194/146 packaged families.
+  All 865 focused source, 2,090 native, 3,564 gameplay and 256 serialization checks
+  pass. Audit 519 frozen implementation inputs, retained baseline methods,
+  preserved failed phases, post-move readiness and construction of 32,636 starting
+  identities with seven nonstarting meld exclusions. Transform prior knowledge
+  through declared indices without hidden identity searches. Seven production
+  files and ten existing classes change; two nested classes are added.
+  Scripts/default AI remain unchanged. Other observers, all nested/rollback
+  contexts, other library APIs and calibrated strategy remain open. Selected
+  checks and construction do not certify complete card/rules/AI correctness.
+  See engine/library_knowledge_transition_evidence.json.
+
 - Verify library-transition knowledge with 2,090 native tests, retaining all
   prior 2,057 and adding 33. All 865 focused source checks, independent packaged
   families of 933/65/194/146, and broader gameplay/serialization of 3,564/256 pass.

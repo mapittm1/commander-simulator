@@ -17,9 +17,36 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Initial library inspection and resulting private order
+## Deducible positions outside library inspections
 
-The selected runtime uses shared authorized inspection and announced-placement
+Bounded observation scopes preserve previously acquired outside identity pairs
+through declared index transforms for scry, surveil and rearrange. Only the exact
+inspected objects authorize moves; opaque resets, shuffles and outside-object
+moves invalidate preservation. Same-library timestamp refresh does not replace
+the inspected object. Hidden final identities are not searched to recover old
+knowledge. Closed, foreign, stale, overflow and inconsistent-shape controls pass,
+including independent copied states, paid Soothsaying and actual shuffle damage.
+
+The twelve-case paid Opt/Consider baseline passes four controls and fails eight
+outside-position checks. All twelve methods pass after correction, alongside
+21 added boundary methods and all 832 prior focused methods. Preserve the failed
+timestamp prototype and exact-object refinement. All 865 source, 2,090 native,
+independent/repeated 933/65/194/146 packaged, 3,564 gameplay, 256 serialization
+and 45 live/1,986 subtest checks pass. All 519 implementation inputs remain
+frozen through validation. Seven production files and ten existing packaged
+classes change; two nested production classes are added. Post-move readiness
+and construction of 32,636 starting identities with seven nonstarting meld
+exclusions pass. Scripts/default AI remain unchanged.
+
+Only the authorized chooser receives this preservation. Public deductions for
+other observers, all nested/rollback contexts, other library APIs and calibrated
+autonomous strategy still require validation. Paid Soothsaying resolution is
+not proof of autonomous activation choice. Selected checks and construction
+do not certify complete Commander correctness. See the [activation evidence](../engine/library_knowledge_transition_evidence.json).
+
+## Earlier initial library inspection and resulting private order
+
+The earlier library-choice runtime introduced shared authorized inspection and announced-placement
 callbacks for native scry, surveil and rearrange. The inspecting controller sees
 only the actual inspected prefix. Final position knowledge requires matching
 current library objects in the announced top/bottom placements. A seen or

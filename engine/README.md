@@ -9,7 +9,16 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected library-choice runtime adds shared actual-inspection and announced
+The selected library-transition runtime preserves previously known outside
+positions through bounded exact-object observation scopes and declared indices,
+without searching hidden final identities. All 865 focused source, 2,090 native,
+independent/repeated 933/65/194/146 packaged, 3,564 gameplay, 256 serialization
+and 45 live/1,986 subtest checks pass. Preserve the failed baseline and timestamp
+prototype. Scripts/default AI remain unchanged. See the [patch](patches/commander-library-knowledge-transition.patch)
+and [activation evidence](library_knowledge_transition_evidence.json).
+Selected contracts and construction do not certify complete rules or strategy.
+
+The earlier library-choice runtime adds shared actual-inspection and announced
 order callbacks for scry, surveil and rearrange. All 2,057 native, 832 focused
 source, independent/repeated 900/65/194/146 packaged, 3,531 broader gameplay,
 256 serialization and 45 live/1,953 subtest checks pass. Preserve the original

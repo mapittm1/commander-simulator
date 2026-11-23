@@ -17,9 +17,22 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Library inspection, chosen order and shuffle boundaries
+## Library transition knowledge and observation scopes
 
-The selected runtime passes the expanded 900-case packaged family, including
+The selected runtime passes all 933 cases in the expanded packaged family,
+including twelve retained paid transition methods and 21 observation boundaries.
+Original/copied pods preserve known outside positions through Opt/Consider.
+Controls cover direct draw, full reannouncement, exact-object timestamp refresh,
+opaque resets/shuffles, outside moves, closed/foreign/stale/overflow scopes,
+state restoration, nested observation, shape limits, paid Soothsaying and actual
+Psychogenic Probe shuffle damage. Independent/repeated 933/65/194/146 packaged
+families, 3,564 gameplay, 256 serialization and 45 live/1,986 subtest checks pass.
+See the [activation evidence](../engine/library_knowledge_transition_evidence.json).
+These establish selected contracts; complete rules and strategy remain unproven.
+
+## Earlier library inspection, chosen order and shuffle boundaries
+
+The earlier library-choice runtime passed the expanded 900-case packaged family, including
 sixteen retained paid scry/surveil contracts and twelve draw/copy/replacement
 boundaries. Shared callbacks preserve actual initial inspection and announced
 private top/bottom order. Seen/public identities remain distinct from unknown
@@ -73,7 +86,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/library_choice_knowledge_evidence.json).
+[current full validation](../engine/library_knowledge_transition_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
