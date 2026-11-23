@@ -17,9 +17,23 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Autonomous rearrange admission and native paid outcomes
+## Controlled-player observation and private/public boundaries
 
-The selected runtime passes the expanded 960-case packaged family, including
+The selected runtime passes the expanded 1002-case packaged family, including
+18 paid controlled-information cases, nine audience boundaries and fifteen
+private/public reveal/return cases. Capture recipients at inspection, retain
+rightful memories after control ends, reject stale/foreign contexts and preserve
+outside-game restrictions, actor payment, counters, copied states and owner
+presentation suppression. All 934 focused source, 2,159 native,
+independent/repeated 1002/65/194/146 packaged, 3,633 gameplay, 256 serialization
+and 45 live/2,055 subtest checks pass. See the
+[activation evidence](../engine/controlled_information_evidence.json).
+Recording-agent and structural graph cases are explicit boundary fixtures;
+selected contracts do not certify all nested card resolutions or strategy.
+
+## Earlier autonomous rearrange admission and native paid outcomes
+
+The earlier autonomous-rearrange runtime passed the expanded 960-case packaged family, including
 fourteen retained autonomous/payment/decline contracts, twelve cleanup/payment/
 privacy/target/deadline boundaries and one trusted native shared-X composition.
 All 2,117 native, 892 focused source, independent/repeated 960/65/194/146 packaged,
@@ -97,7 +111,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/autonomous_rearrange_evidence.json).
+[current full validation](../engine/controlled_information_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:

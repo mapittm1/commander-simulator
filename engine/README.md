@@ -9,7 +9,16 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected autonomous rearrange runtime adds generic admission and paired
+The selected controlled-information runtime captures rightful private audiences,
+keeps per-agent memories and separates public knowledge from presentation.
+All 934 focused source, 2,159 native, independent/repeated 1002/65/194/146 packaged,
+3,633 gameplay, 256 serialization and 45 live/2,055 subtest checks pass. Preserve
+original and intermediate failed phases. Scripts/default AI remain unchanged.
+See the [patch](patches/commander-controlled-information.patch) and
+[activation evidence](controlled_information_evidence.json). Structural graph
+fixtures and construction do not certify complete Commander rules or strategy.
+
+The earlier autonomous rearrange runtime adds generic admission and paired
 native paid outcomes for primary spells and activations. All 892 focused source,
 2,117 native, independent/repeated 960/65/194/146 packaged, 3,591 gameplay,
 256 serialization and 45 live/2,013 subtest checks pass. Validate X, actual payment,

@@ -17,7 +17,41 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Autonomous primary library rearrange decisions
+## Controlled players and fresh observations
+
+The reviewed shared reveal and inspected-library paths capture their audiences
+and preserve authorized recipients across control changes.
+Private reveals classify each card using native in-game membership; outside-game
+cards follow explicit named-player rights. Receiving agents update their own
+memories rather than redirecting to a current proxy. Current-view identity checks
+reject copied/foreign views that share local IDs. Public reveal/return facts reach
+original/current/dormant agents without changing owner display suppression.
+Blind draw delivery still updates prior position knowledge without disclosing
+unknown cards. No private histories are copied when control changes.
+
+The native fourteen-case baseline passes six controls and fails eight observer/
+autonomous assertions. All fourteen remain and pass, along with four paid private
+inspection cases, nine audience and fifteen reveal/return boundaries. Real paid
+Worst Fears, Soothsaying, Spy Network, Stifle and failed payment exercise ordinary
+and copied states. Additional recording-agent and cyclic/suppressed control cases
+construct boundary states explicitly; they do not establish all nested card rules.
+Preserve the pre-private-extension 927-case phase with twelve failures and the
+public five-case phase with five failures, alongside all passing phases.
+
+All 934 source, 2,159 native, independent/repeated 1002/65/194/146 packaged,
+3,633 gameplay, 256 serialization and 45 live/2,055 subtest checks pass. All 527
+implementation inputs remain frozen through validation. Six production files and
+ten existing classes change; one nested capture class is added. Post-move health
+and construction of 32,636 starting identities with seven nonstarting meld
+exclusions pass. Scripts/default AI remain unchanged. See the
+[activation evidence](../engine/controlled_information_evidence.json).
+
+All agent-identity/private-history, temporary-controller, nested/rollback/copy and
+calibrated strategy contexts remain broader validation work. Direct private
+callbacks in other effect APIs still require native validation. Selected contracts
+and catalog construction do not certify complete Commander correctness.
+
+## Earlier autonomous primary library rearrange decisions
 
 Generic API-based admission permits primary rearrange spells and activations,
 without production card-name exceptions or admitting unrelated host abilities.

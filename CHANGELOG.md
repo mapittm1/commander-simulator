@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic controlled-player observation routing after all 45 live tests
+  and 2,055 subtests pass, including repeated 1002/65/194/146 packaged families.
+  All 934 focused source, 2,159 native, 3,633 gameplay and 256 serialization checks
+  pass. Audit 527 frozen inputs, retained baseline methods, preserved failed phases,
+  post-move readiness and construction of 32,636 starting identities with seven
+  nonstarting meld exclusions. Six source families and ten existing classes change;
+  one nested observer-capture class is added. Capture private audiences, enforce
+  in-game/outside-game rights, preserve per-agent memories and separate public
+  knowledge from owner display. No private-history copying or production card-name
+  exceptions. Scripts/default AI remain unchanged. Structural graph fixtures and
+  selected native checks do not certify all card/rules/AI or calibrated strategy.
+  See engine/controlled_information_evidence.json.
+
 - Validate the controlled-information candidate with 2,159 native tests, retaining
   all 2,117 and adding 42. All 934 focused source, independent packaged families
   of 1002/65/194/146, and broader gameplay/serialization of 3,633/256 pass. Audit

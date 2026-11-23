@@ -27,43 +27,39 @@ difference.
 
 ## Card coverage
 
-The controlled-information candidate passes 2,159 native tests, retaining all
-2,117 prior methods and adding 42. All 934 focused source checks pass;
-independent packaged families pass 1002/65/194/146, and broader gameplay and
-serialization pass 3,633/256. Captured library audiences, per-card private reveal
-rights, explicit receiving-agent memories and public reveal/return notifications
-cover real paid control/inspection and structural privacy boundaries. Original
-failures and intermediate failed reveal phases remain preserved. See the
-[source evidence](engine/controlled_information_native_evidence.json) and
-[packaged validation](engine/controlled_information_packaged_evidence.json).
-Full live validation and activation remain pending; the selected runtime below
-is unchanged. Complete card/rules/AI correctness remains unproven.
+The selected runtime's shared reveal and inspected-library paths preserve fresh
+in-game observations for the controlled player, their controller and the acting
+agent. Library audiences are captured
+at inspection time, so later controllers do not inherit earlier private peeks.
+Private reveals distinguish in-game and outside-game cards. Explicit receiving
+agents retain their own memories, and foreign views cannot select local cards
+through matching IDs. Public reveal/return facts update original/current/dormant
+agents independently of optional owner display; blind draw history stays intact.
 
-The selected runtime admits primary library-rearrange spells and activations by
-ability semantics. Hybrid mode compares paired native paid outcomes for useful
-information, legal targets and actual costs. Shared cost budgeting prepares X;
-a public library-size optimization applies only to standalone own-library
-rearrangements. Declined or interrupted previews restore the previous X.
-Authorized knowledge stays private, and composed effects retain their shared X.
-
-All 892 focused source checks and 2,117 native build tests pass, retaining all
-2,090 prior native methods and adding 27. Independent and repeated packaged
-families pass 960/65/194/146; broader gameplay/serialization pass 3,591/256.
-All 45 live tests and 2,013 subtests pass. Post-move health is ready; construction
+All 934 focused source checks and 2,159 native build tests pass, retaining all
+2,117 prior native methods and adding 42. Independent and repeated packaged
+families pass 1002/65/194/146; broader gameplay/serialization pass 3,633/256.
+All 45 live tests and 2,055 subtests pass. Post-move health is ready; construction
 passes for 32,636 starting identities with seven nonstarting meld exclusions.
-See the [source evidence](engine/autonomous_rearrange_native_evidence.json),
-[packaged milestone](engine/autonomous_rearrange_packaged_evidence.json), and
-[validation and activation](engine/autonomous_rearrange_evidence.json).
+See the [source evidence](engine/controlled_information_native_evidence.json),
+[packaged milestone](engine/controlled_information_packaged_evidence.json), and
+[validation and activation](engine/controlled_information_evidence.json).
 
-The original baseline passes 12 controls and fails two original/copied hybrid
-choices. All fourteen methods are retained and pass after correction. Twelve
-additional boundaries cover X cleanup, payment/color constraints, legal targets,
-privacy and deadline recovery. A trusted synthetic native shared-X life-gain
-composition passes; it is not a printed-card oracle-text claim. The original
-failures and all three fixture compiler failures remain preserved. Scripts and
-default AI are unchanged. These supplied states do not certify all controlled
-actors, nested/rollback contexts, mandatory triggers, X/target interactions or
-calibrated strategy. Complete card/rules/AI correctness remains unproven.
+The original fourteen-case baseline passes six and fails eight; all fourteen
+methods remain and pass after correction. Eighteen paid cases include real
+control, rearrange, private inspection, counters, failed payment and copied states.
+Nine audience and fifteen reveal/return boundaries also use explicitly constructed
+control graphs and recording agents; they do not certify all nested control-card
+resolutions. Failed private/public reveal phases remain preserved. No private
+histories are copied at control changes, and production code has no card-name
+exceptions. Scripts/default AI are unchanged. All agent-identity/history,
+temporary-controller, nested/rollback and strategy contexts remain broader
+validation work. Direct private callbacks in other effect APIs still need native
+validation. Complete card/rules/AI correctness is unproven.
+
+The earlier [autonomous rearrange milestone](engine/autonomous_rearrange_evidence.json)
+introduced generic paid primary rearrange choices, X preparation, legal target
+search, private knowledge and deadline cleanup. Those contracts remain retained.
 
 The earlier [library-transition milestone](engine/library_knowledge_transition_evidence.json)
 introduced bounded exact-object observations and declared index transforms for
@@ -655,16 +651,16 @@ The shared rules checks are generic; card scripts declare the required destinati
 See the [resolved failure record](engine/prevented_return_gap.json).
 Full card and AI coverage remain open.
 
-The current reviewed runtime passed 2,117 selected native tests, separate packaged
-families of 960, 65, 194 and 146 rules cases, 3,591 broader gameplay tests, 256
-serialization tests, and 45 live integration tests with 2,013 subtests. All 523
+The current reviewed runtime passed 2,159 selected native tests, separate packaged
+families of 1002, 65, 194 and 146 rules cases, 3,633 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 2,055 subtests. All 527
 implementation inputs stayed frozen through candidate validation. Earlier failed
 source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
 tests with 520 subtests; 45 opt-in integration tests are skipped by default.
 The refreshed catalog probe constructed 32,636 starting-card identities; its seven
 other identities are nonstarting meld results. Construction parses native abilities
 and is not proof of every interaction. Native receipts use class-qualified method
-names. See the [validation and activation evidence](engine/autonomous_rearrange_evidence.json).
+names. See the [validation and activation evidence](engine/controlled_information_evidence.json).
 Complete card and AI correctness remain unverified.
 
 The Reaper, King No More keeps its once-per-turn return available if the first
