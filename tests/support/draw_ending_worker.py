@@ -60,6 +60,12 @@ SOURCES = {
     "CommanderTokenBlockingHistoryTest": "commander_token_blocking_history_test_sha256",
     "CommanderSwitchedBlockingHistoryTest": "commander_switched_blocking_history_test_sha256",
     "CommanderAiCacheLifetimeTest": "commander_ai_cache_lifetime_test_sha256",
+    "CommanderMultiplayerAttackOpportunityTest": "commander_multiplayer_attack_opportunity_test_sha256",
+    "CommanderMultiplayerAttackSafetyTest": "commander_multiplayer_attack_safety_test_sha256",
+    "CommanderMultiplayerAttackBoundaryTest": "commander_multiplayer_attack_boundary_test_sha256",
+    "CommanderGoadCopyBoundaryTest": "commander_goad_copy_boundary_test_sha256",
+    "CommanderGoadDurationCopyTest": "commander_goad_duration_copy_test_sha256",
+    "CommanderForecastPlanningScopeTest": "commander_forecast_planning_scope_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -187,6 +193,9 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.EncodeEffect",
     "forge.ai.AiController",
     "forge.ai.AiCache",
+    "forge.ai.AiAttackController",
+    "forge.ai.simulation.MultiplayerAttackPlanner",
+    "forge.game.ability.effects.GoadEffect",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -342,7 +351,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1306-case packaged family."""
+    """Execute the existing fixed 1428-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

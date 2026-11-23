@@ -510,3 +510,17 @@ passes. See [`mass_counter_evidence.json`](mass_counter_evidence.json) for exact
 source, build, baseline, report, profile and archive identities and material limits.
 The initial fresh build omitted the two new fixture copies; its 666-test result
 was rejected by the exact-count guard before packaging or activation.
+
+
+## Pending multiplayer attack horizon
+
+The registered source patch and six regression fixtures add 122 named cases for
+native multiplayer attack planning, copied goad state/expiry and RNG/undo
+isolation. All 1,360 mixed source cases pass; independent overlays also pass the
+existing 1,306-case packaged family and 122 focused cases. See
+[multiplayer_attack_horizon_evidence.json](multiplayer_attack_horizon_evidence.json)
+for exact source/fixture hashes, preserved failures and bounded-policy limits.
+
+The recipe now targets 2,585 native and 1,428 draw-ending-family cases in a fresh
+sealed artifact. Those targets, broader/full-live checks and activation remain
+pending. The selected runtime and its lock have not changed.

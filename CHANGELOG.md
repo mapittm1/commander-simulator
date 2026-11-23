@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register generic multiplayer attack-horizon source and 122 uniquely named
+  regressions. Carry native combat state through successive opponent turns,
+  preserve live RNG/undo state, and avoid nested whole-round searches inside
+  single-combat forecasts. Copy goad instances and their mapped expiration
+  callbacks; verify independently expiring paid Disrupt Decorum effects.
+  All 1,360 mixed source cases pass in one existing-budget JVM. Isolated overlays
+  pass all 122 focused and 1,306 existing packaged cases. Preserve earlier unsafe,
+  RNG, goad-copy/expiry, timeout and fixture-setup failures. Keep the selected
+  runtime unchanged; sealed native 2,585, packaged 1,428, broader and full-live
+  gates remain pending. See engine/multiplayer_attack_horizon_evidence.json.
+
 - Add pending multiplayer attack regression witnesses: the corrected 50-case
   candidate baseline passes 38 and misses 12 ground-attack opportunities; the
   corrected 40-case suite passes 34 and misses six group attacks. All eight

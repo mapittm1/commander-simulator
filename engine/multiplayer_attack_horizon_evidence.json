@@ -1,0 +1,1586 @@
+{
+  "status": "source_corrected_registered_sealed_build_pending",
+  "baseline_commit": "1693cfcea0e2327b4d5b4d4ff14bff6f51c3f677",
+  "registration": {
+    "status": "source_registered_sealed_build_pending",
+    "source": {
+      "total": 1360,
+      "passed": 1360,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained": 1238,
+    "new_cases": 122,
+    "source_count": 2168,
+    "new_native_target": 2585,
+    "new_packaged_target": 1428,
+    "production_files": {
+      "AiController.java": "forge-ai/src/main/java/forge/ai/AiController.java",
+      "AiAttackController.java": "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+      "GameStateEvaluator.java": "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+      "MultiplayerAttackPlanner.java": "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+      "GameCopier.java": "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "GoadEffect.java": "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java"
+    },
+    "new_source_files": [
+      "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java"
+    ],
+    "patch_sha256": "c4bdd96246ebd330ebd315e96e4804ff4ac42e56661c0928e507729fd1db6a5d",
+    "normalized_patch_replay": true,
+    "fixture_keys": {
+      "CommanderMultiplayerAttackOpportunityTest": "commander_multiplayer_attack_opportunity_test_sha256",
+      "CommanderMultiplayerAttackSafetyTest": "commander_multiplayer_attack_safety_test_sha256",
+      "CommanderMultiplayerAttackBoundaryTest": "commander_multiplayer_attack_boundary_test_sha256",
+      "CommanderGoadCopyBoundaryTest": "commander_goad_copy_boundary_test_sha256",
+      "CommanderGoadDurationCopyTest": "commander_goad_duration_copy_test_sha256",
+      "CommanderForecastPlanningScopeTest": "commander_forecast_planning_scope_test_sha256"
+    },
+    "fixture_sha256": {
+      "CommanderMultiplayerAttackOpportunityTest": "51e07b2ef357f1ecb8320d5bd1b7a1247daabed86c6da7e2188e16121a1d452a",
+      "CommanderMultiplayerAttackSafetyTest": "a0a0d2c9e477fb3e5f38b4fa6c4d8f73bda81d265359853a26675ef2cf97e3c7",
+      "CommanderMultiplayerAttackBoundaryTest": "fee160728d95e9ac09a10f2a78c4f6cc74a0b2bd65a3a1f884b8fa88231fbbf9",
+      "CommanderGoadCopyBoundaryTest": "bbf6c8267c366acdc8f62bb37bd670bfbac331dfeba62f802fc63c744b3131d6",
+      "CommanderGoadDurationCopyTest": "0cf90e4b65a55c9fc52e605e9ec9b2bbd561516130632de14afcd41d6caa5a1c",
+      "CommanderForecastPlanningScopeTest": "346da022186b6561e0a907fd31ca060dbfe695db27d9dc3be92162853947f3c3"
+    },
+    "named_entrypoint_proof_sha256": "8e67ed29a129a10c33042881c06225aba61146d51046ecaf4392564842478f9f",
+    "selected_runtime_unchanged": true,
+    "sealed_f43_build_unchanged": true,
+    "registration_setup_correction": "The registration script incorrectly expected three appearances of 1306; the wrapper has four (including both total and passed). Earlier patch/source/recipe registration completed, remaining wrapper and attributes changes were resumed only after verifying exact original bytes. No test assertion was removed; all four count values now target 1428."
+  },
+  "source_phases": {
+    "source1360-v7": {
+      "log_sha256": "87d085b6926c68c8ee9cdb5a4d612b59a177853a9e03108787e06fa0854f18d5",
+      "input_manifests": {
+        "production-inputs.json": "6ef44f3f78d3b434d6171a56c1d8f232920cf158f14f05c4460af0368473ce62",
+        "test-inputs.json": "137edf19b8bb88d4c087fa6c589ec1500ba693e0e83c5b039c19d9978e12f0cb",
+        "card-inputs.json": "71b5f6b994a7872a8fb9fb54860229ec6151a7422b5485490aa3ba63698534a6"
+      },
+      "final_report_available": false,
+      "failure": "Checkstyle rejected seven unused imports before tests; imports-only correction preserved all assertions and bodies."
+    },
+    "source1360-v7-v2": {
+      "log_sha256": "fb65d881fa13d01cdea758c1a040346bc3a00c21fa974e37fe70ae228be857f2",
+      "input_manifests": {
+        "production-inputs.json": "6ef44f3f78d3b434d6171a56c1d8f232920cf158f14f05c4460af0368473ce62",
+        "test-inputs.json": "9233cd104936ddecf8ca7e45d7150c1caad0232caac1d6607b67f6a4f90efba1",
+        "card-inputs.json": "71b5f6b994a7872a8fb9fb54860229ec6151a7422b5485490aa3ba63698534a6"
+      },
+      "final_report_available": true,
+      "counts": {
+        "total": 1360,
+        "passed": 1360,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "daa1a92b0d00e83e37045ccfc4d47884242ddcf4c7541ebf436d044fd0345eee",
+      "evidence_sha256": "804b68503ab249de1f81e496bb51c39a5091dc5fd7027ad8a8d8684d98c46f20",
+      "inputs_unchanged_during_run": true
+    },
+    "source1360-v8": {
+      "log_sha256": "98206c00e812c0afed2c3cebbd4a5fd9646769e0cefaf9b6052e6c08a48b2919",
+      "input_manifests": {
+        "production-inputs.json": "6ef44f3f78d3b434d6171a56c1d8f232920cf158f14f05c4460af0368473ce62",
+        "test-inputs.json": "e12c3fd9998c9373c9aa6dfae85861161f23be94a2ca3c78c261612ace09001a",
+        "card-inputs.json": "71b5f6b994a7872a8fb9fb54860229ec6151a7422b5485490aa3ba63698534a6"
+      },
+      "final_report_available": true,
+      "counts": {
+        "total": 1360,
+        "passed": 1360,
+        "failed": 0,
+        "skipped": 0
+      },
+      "report_sha256": "82d57570f05d3c9297713cedb95024c1da534d654e1b8c47d49d5a0aafdabd0e",
+      "evidence_sha256": "0b8009219c5d3395153d4ae23775987169c41f8b5f2147b747f157e9c0206c3b",
+      "inputs_unchanged_during_run": true
+    }
+  },
+  "prototype_phases": {
+    "candidate-boundary16-prototype-v3": {
+      "process": {
+        "status": "finished",
+        "bytes": 5680,
+        "returncode": 0,
+        "elapsed_seconds": 10.922
+      },
+      "log_sha256": "c2ffc399a7eef22ecf22872b552964f3d413af4b6b871477a1d7ceb9675880c8",
+      "inputs_sha256": "e8f1657e9c7be23dce52a90ae8282b779468fee14d8944fc3261531bf4343c8d",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-boundary16-prototype-v3",
+      "counts": {
+        "total": 16,
+        "passed": 0,
+        "failed": 16,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "3483691439f2cebacb0976af5487f6d19161dfa77e9c794df5b26d5c0967b606",
+      "evidence_sha256": "92e212e5e0b7c8163d57001c43a8ea740417ba07d01940e5319b942dbcdba01c",
+      "driver_sha256": "c3151dfb6a515590552b453dbf2aeeaa0c37bbac7c5a2a2b02e6009b9168d908",
+      "failures": [
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@524c3e54] but found [forge.util.MyRandom$CountingRandom@1d7d968c]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@489b7559] but found [forge.util.MyRandom$CountingRandom@4028aab2]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@40ebb56] but found [forge.util.MyRandom$CountingRandom@5b2fc2c0]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@3e265811] but found [forge.util.MyRandom$CountingRandom@55a07f97]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@1e733bb5] but found [forge.util.MyRandom$CountingRandom@669e730d]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@25fc2b8f] but found [forge.util.MyRandom$CountingRandom@363d29dd]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@48543f11] but found [forge.util.MyRandom$CountingRandom@cda988]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@62818ab0] but found [forge.util.MyRandom$CountingRandom@39f5eba4]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@1226ba98] but found [forge.util.MyRandom$CountingRandom@79194b1c]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@1418a1bd] but found [forge.util.MyRandom$CountingRandom@49e54217]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@3723de42] but found [forge.util.MyRandom$CountingRandom@293988dc]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@1666e021] but found [forge.util.MyRandom$CountingRandom@148c571c]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@1fc5791c] but found [forge.util.MyRandom$CountingRandom@5843ab8]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@64b7719f] but found [forge.util.MyRandom$CountingRandom@414b785c]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@2cb3bc0e] but found [forge.util.MyRandom$CountingRandom@511f21f9]",
+        "java.lang.AssertionError: Restore the caller's random provider expected [java.util.Random@47ba8e3c] but found [forge.util.MyRandom$CountingRandom@1638fa8b]"
+      ]
+    },
+    "candidate-boundary16-prototype-v3-v2": {
+      "process": {
+        "status": "finished",
+        "bytes": 4580,
+        "returncode": 0,
+        "elapsed_seconds": 10.985
+      },
+      "log_sha256": "8d4b8ac2017c4a6e60d59049bdd629e461f71d47d95b100c68f75956c05692c5",
+      "inputs_sha256": "229860600a117e97b3c43d6c4485f314325341d4f555d62a76039c846886362d",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-boundary16-prototype-v3-v2",
+      "counts": {
+        "total": 16,
+        "passed": 4,
+        "failed": 12,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "5578fbe1b6e2591c995bd8299506e4f603bc1733870d504c61e9af1621d15173",
+      "evidence_sha256": "e8c23fe14770429d68130117ef6518d3808403f9903cf5fcee6058b73a816a4d",
+      "driver_sha256": "c2af8783e0b5c82d6ffbb6bcf1a7ce55bc85acd70b309657a75c6f1cc12bebd7",
+      "failures": [
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [0] but found [32]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [32] but found [40]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [40] but found [56]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [56] but found [76]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [76] but found [84]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [84] but found [128]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [128] but found [160]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [160] but found [168]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [168] but found [184]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [184] but found [204]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [204] but found [236]",
+        "java.lang.AssertionError: Preview draws cannot invalidate live undo expected [236] but found [280]"
+      ]
+    },
+    "candidate-boundary16-prototype-v4": {
+      "process": {
+        "status": "finished",
+        "bytes": 4095,
+        "returncode": 0,
+        "elapsed_seconds": 10.891
+      },
+      "log_sha256": "7e7dd78d9eec8c08af7316c51de6eaac0a33a5c285d1acb8cccc98e1035d3613",
+      "inputs_sha256": "4694ce541bffcf6c06fc1141372854e72ea5d700ee53059f54f0c70762dc160d",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-boundary16-prototype-v4",
+      "counts": {
+        "total": 16,
+        "passed": 15,
+        "failed": 1,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "c042cd0e5de00aef95605974b4ff34e8d654618f9fdd6695417bd3f2aa9c50aa",
+      "evidence_sha256": "a9c84c59049e0e7c5acef0a0680c3225c8d33a5260152967f8c6e32807f5c273",
+      "driver_sha256": "66394c1b323e91c15b45d246c37b3348f80a3437fb801a0206e865ab36020c6e",
+      "failures": [
+        "java.lang.AssertionError: Honor goad's defender requirement expected not same [opportunity-1] but found [opportunity-1]"
+      ]
+    },
+    "candidate-boundary16-prototype-v5": {
+      "process": {
+        "status": "finished",
+        "bytes": 4026,
+        "returncode": 0,
+        "elapsed_seconds": 10.969
+      },
+      "log_sha256": "3f02eff1633e309a48a9fa5818161593f28b1c8caaab1e66faf5be379cf523f9",
+      "inputs_sha256": "9c96da2f08771ce41e9c5b3b81128bea68e58af71eb8fd957c797825237be233",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-boundary16-prototype-v5",
+      "counts": {
+        "total": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "9a5a8592c093856b52d455d1cacef4bacf3a4cac89249afd9e0f8c95d986f2d1",
+      "evidence_sha256": "45d1d89f9e1da3d24ba9ad6c4e15c7e185fffd8dc6ec99f47c9d2ae2b41d2e0e",
+      "driver_sha256": "175e423f1e1a64067d11f85b0c1e7d8286e123b8a321bef998668562b068c3d9",
+      "failures": []
+    },
+    "candidate-combined118-prototype-v6": {
+      "process": {
+        "status": "finished",
+        "bytes": 11145,
+        "returncode": 0,
+        "elapsed_seconds": 15.953
+      },
+      "log_sha256": "b6aeb83bd419f631bae0948e6434773d95de10370f40370914989f2c041e62c2",
+      "inputs_sha256": "c9b636ad3dde8fa7980c3ac2005e2331518c861c2fde553dc992d8d7afad4cf8",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-combined118-prototype-v6",
+      "counts": {
+        "total": 118,
+        "passed": 118,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "29647116405a5a32a20546fe7bc228c99feb0e83048bc18147e7c8eac38998c7",
+      "evidence_sha256": "df7841a4c77d860fae6a8b340f8274f1ae2f03a2ee7ab48a937aa9cf92a0b475",
+      "driver_sha256": "ab6afa3739c0cb5e66b84dafff685a445519b48a9aa66bac7e42cee02437d79a",
+      "failures": []
+    },
+    "candidate-combined122-prototype-v7": {
+      "process": {
+        "status": "finished",
+        "bytes": 11145,
+        "returncode": 0,
+        "elapsed_seconds": 16.187
+      },
+      "log_sha256": "03460470f94d5a4cd2d81107fde53b0452fd8cb8e59ef71b6edf8d36d73d4efc",
+      "inputs_sha256": "c97908f03b820da3d99930331558f73a141c2923a4cc5fa32010eb0659ae077d",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-combined122-prototype-v7",
+      "counts": {
+        "total": 122,
+        "passed": 122,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "4da0e9ffb1cb07fb55d3162db36aef165d6ede6ccc71f00611997ba8a279dc42",
+      "evidence_sha256": "f7d2925dc55e862e5034eb843b3ccbbeb607609424df256fdc15c41559c6c88e",
+      "driver_sha256": "7ae955193ab285854301c254ce1ded714a5cf8d289b266721409db1be9ab0f57",
+      "failures": []
+    },
+    "candidate-goad-copy8-prototype-v4": {
+      "process": {
+        "status": "finished",
+        "bytes": 3568,
+        "returncode": 0,
+        "elapsed_seconds": 9.735
+      },
+      "log_sha256": "26a8476541192e5bbf956dc18c8368fed45f98a27a37b318784b024071634cc7",
+      "inputs_sha256": "5c6c703293369a4551e1c8e9d30937d7901a9eadf3676e7a4726205c652d8d69",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v4",
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "fbf258d7cc4755604a110737fe41c6c06c3f11fac90784381c89b2147bc33071",
+      "evidence_sha256": "7b902b6b5a1f6f36930ff77bd89b70e7d21cad0d7116f1c699340af437b90ab5",
+      "driver_sha256": "a8cfa0ea3329d6082dd593de30fbe63ee47c932077925decb7cdc8f85b207155",
+      "failures": [
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp"
+      ]
+    },
+    "candidate-goad-copy8-prototype-v4-v2": {
+      "process": {
+        "status": "finished",
+        "bytes": 3568,
+        "returncode": 0,
+        "elapsed_seconds": 9.781
+      },
+      "log_sha256": "ca1945cde58ef7263e71a5b7d5f79ff5e710b047f6a05fcd6bb82ee0d5bb2462",
+      "inputs_sha256": "5f9b148ca69c846faa0eb7de76a75d94da62e838e5c757cf66b4413d5e02efea",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v4-v2",
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "3ec126800a840307eb4679c90a782c3198a0e488eede9638d7411434fd4408fa",
+      "evidence_sha256": "68a33e47d7fa972498457f45a0c7a8f92d3ce924543f0723b865ab0b6398efe9",
+      "driver_sha256": "f446ceecc9e625c32f573583ec6abeb1647fcf3136bdadfc1def09151b452aff",
+      "failures": [
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp"
+      ]
+    },
+    "candidate-goad-copy8-prototype-v4-v3": {
+      "process": {
+        "status": "finished",
+        "bytes": 3568,
+        "returncode": 0,
+        "elapsed_seconds": 9.766
+      },
+      "log_sha256": "e8315760b43ae5b1fb17948555558f2be4f549c11b281bc82c84f30425c0c9cd",
+      "inputs_sha256": "0ade0eef23bbb9a21d11be800b9570ccefd8932d083c547f01aca9fa4f593187",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v4-v3",
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "b8535d7f3eccf1ce3008255dfff4f26619549a52c99b59e92b1a2c330dce8033",
+      "evidence_sha256": "e2cb87ea69b0861edcf99dbdfccfd0c5c489c4c75d5e262d5be35d99af0c33f1",
+      "driver_sha256": "d08541cbeafff55e273f1270e1dc21525069428acb1df9eb21882ff320a77ccf",
+      "failures": [
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp",
+        "java.lang.AssertionError: Preserve every timestamp"
+      ]
+    },
+    "candidate-goad-copy8-prototype-v5": {
+      "process": {
+        "status": "finished",
+        "bytes": 3912,
+        "returncode": 0,
+        "elapsed_seconds": 9.906
+      },
+      "log_sha256": "a838ee924ecbceae6b5ead02f1450a613b9148761213c04f6aac0922a2ed39f7",
+      "inputs_sha256": "6f5e3b5352dc42fadcafdcb96671069fa62c7567ae23b8274ee5d7e47307c267",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v5",
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "25d4e5118c0040c48951ec8efecb721e1bf015798d64ce0189b88b68aed08433",
+      "evidence_sha256": "e3162a70c7cf95ff3aa0319cb902864eac64ea8c5fcd857250f07b717cd0807e",
+      "driver_sha256": "7666198148dd1ee596a00dc594e68cc547b7ae10b758e6f556bbe7325122896e",
+      "failures": [
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]",
+        "java.lang.AssertionError: No player from the original world expected [false] but found [true]"
+      ]
+    },
+    "candidate-goad-copy8-prototype-v5-v2": {
+      "process": {
+        "status": "finished",
+        "bytes": 4160,
+        "returncode": 0,
+        "elapsed_seconds": 9.781
+      },
+      "log_sha256": "1d8809251d0c3e5ede5e5edfce99d41281f199aaeb1d889124b496c7f91fe732",
+      "inputs_sha256": "aa066f4640e6d8276ffc86e7d3c06cc7e8a1b6e47fc4cef4d06c31e97fa9df70",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v5-v2",
+      "counts": {
+        "total": 8,
+        "passed": 0,
+        "failed": 8,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "86d27b5ba3c2c0547aff1886e8c1dd79b9c097d35648047c9880f7acc6eaa726",
+      "evidence_sha256": "3428549db2c246f32e6b9f996f011b528b85e13ccb9506d98903b78b7147cd29",
+      "driver_sha256": "f89a8b26ee82f4ffd903337e373a7dab1ca463e47719c0d18b703afe32491c42",
+      "failures": [
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null",
+        "java.lang.NullPointerException: Cannot invoke \"forge.game.combat.Combat.getAttackConstraints()\" because \"combat\" is null"
+      ]
+    },
+    "candidate-goad-copy8-prototype-v5-v3": {
+      "process": {
+        "status": "finished",
+        "bytes": 3138,
+        "returncode": 0,
+        "elapsed_seconds": 9.938
+      },
+      "log_sha256": "43fb560de4aff98cb9b68f113c76b41997a59a42d616787fe32d88b66d605849",
+      "inputs_sha256": "fec6bd5c29e33a6dfd446ea66a010d88f47f995ebe2146d4cf10fae752b5c533",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-copy8-prototype-v5-v3",
+      "counts": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "69e0fee717d8e36142896dad3424ad5e5815649b19e485607d5bc55bb861eb20",
+      "evidence_sha256": "1a3dcac8a75cb8e5a6e1b7b7b4fa47e6d2083bbbb8a9a460d743adfbe2b9330f",
+      "driver_sha256": "18c69637154b3a020384ae60a2d04f6ef65082b6e306bc9e1e9b5d70398395b3",
+      "failures": []
+    },
+    "candidate-goad-duration4-prototype-v5": {
+      "process": {
+        "status": "finished",
+        "bytes": 3488,
+        "returncode": 0,
+        "elapsed_seconds": 10.0
+      },
+      "log_sha256": "2a42f57df449f214c1c5f2a8015551ffa346f9e04b92adcbc0049213070fe191",
+      "inputs_sha256": "8a58110694dea3c6db899af994628aa5a0750b26b64d8e7120839a362cd41557",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-duration4-prototype-v5",
+      "counts": {
+        "total": 4,
+        "passed": 0,
+        "failed": 4,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "815a9cf7080a09450ca22cc7809260aa9de9fd312fe7539d88d6fc98d63d9eac",
+      "evidence_sha256": "e9bb32d5b77d84f5e6b0417d7fb0561b4947f3241cf84c87c8ee69748bd23fd9",
+      "driver_sha256": "319c715cdbde579927d93e40570c4b58b001e8022fc9a867484e4da40e6e0c7c",
+      "failures": [
+        "java.lang.AssertionError: expected [false] but found [true]",
+        "java.lang.AssertionError: Copied duration expires at its goader's next turn expected [false] but found [true]",
+        "java.lang.AssertionError: expected [false] but found [true]",
+        "java.lang.AssertionError: Copied duration expires at its goader's next turn expected [false] but found [true]"
+      ]
+    },
+    "candidate-goad-duration4-prototype-v6": {
+      "process": {
+        "status": "finished",
+        "bytes": 3138,
+        "returncode": 0,
+        "elapsed_seconds": 9.984
+      },
+      "log_sha256": "a6e182e0ffecb712ba5bc4af541596d41951cfff3324b35c48009f884bb4b479",
+      "inputs_sha256": "f15de0f1a5294466a317918c1122d087ea766b39c314053791567170d1bb563c",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-goad-duration4-prototype-v6",
+      "counts": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "764aa2d56e3a652c8eb2e2f512dc5165e9acff98c9b905f9400a70dfd9ae4b13",
+      "evidence_sha256": "f04262ccaf578fd3db78ad3c8ad2bcdf8eb1d569122449590f699510386d916a",
+      "driver_sha256": "830755431dc5aea34e7ea0737a23972c066847589beeb21111270447aea4403a",
+      "failures": []
+    },
+    "candidate-opportunity50-prototype-v3": {
+      "process": {
+        "status": "finished",
+        "bytes": 7107,
+        "returncode": 0,
+        "elapsed_seconds": 12.797
+      },
+      "log_sha256": "00e85e25254ebada84be202944fd7b3d10e7bb4c3c6588167c4201409e9a9bf6",
+      "inputs_sha256": "d6e71019389885d74b91ccc88070dfc4b1b077fa775604fa73c40d060bd6282f",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-prototype-v3",
+      "counts": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "b37a1f6fe76eb2d7a6204ddd3a23ec9eeae0b9a19e7ed524a05d91ba9faefea1",
+      "evidence_sha256": "8b78f04ec9911c33aa87bbc7ffcad41c211abdd6c6eec983df2f9c379526d753",
+      "driver_sha256": "3d23135e42342b908a360a888d3d91635a7d31273c94c9c09b8e5ef77ad3946c",
+      "failures": []
+    },
+    "candidate-opportunity50-prototype-v4": {
+      "process": {
+        "status": "finished",
+        "bytes": 7107,
+        "returncode": 0,
+        "elapsed_seconds": 12.75
+      },
+      "log_sha256": "6d58b042056d7c20ee06e442edeb1501ca8381b3133dc339a0c845f89830b036",
+      "inputs_sha256": "0c809a903a42797f58ea60a799d3a2a514ed24d2a6994b86fc389bb1dc3a42db",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-prototype-v4",
+      "counts": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "18d8af630cc329fc899b540d6b22809f963084c0b83f161c34fc04ff928f06e6",
+      "evidence_sha256": "bf851ec6b5c16b80e0969531117f7c9b6406d9a1c242d8da17887bfc9a35bc75",
+      "driver_sha256": "2d658e990409e9739781a01c98be7002ad829b11a1ff19fe321843a02c4340e4",
+      "failures": []
+    },
+    "candidate-opportunity50-prototype-v5": {
+      "process": {
+        "status": "finished",
+        "bytes": 7107,
+        "returncode": 0,
+        "elapsed_seconds": 12.844
+      },
+      "log_sha256": "a47b96aecf6a5f323ba2b23062490d248deef4f3dd974731d40ad1419e4f64f4",
+      "inputs_sha256": "3913a648d9ec5021bf6809c3669c0fd58aec510903932d8121387ff3daba30d2",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-prototype-v5",
+      "counts": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "c353bd984e166a9855b2626992a3398422d16288e08544c26169984c35148fd3",
+      "evidence_sha256": "53ea3efcb670d611db1d17548fa171206354417abfbb38ec95407c8e5c452a17",
+      "driver_sha256": "0cb57d13dde9cd691bc9d1aaa22fed4be0349a4faf6329315aec8854041a9f87",
+      "failures": []
+    },
+    "candidate-packaged1306-prototype-v6": {
+      "process": {
+        "status": "timeout",
+        "bytes": 26809,
+        "returncode": 1,
+        "elapsed_seconds": 90.015
+      },
+      "log_sha256": "91670e72082c712e6962f02672399398efa2b1fca8339e1a6c94307ef1d21944",
+      "inputs_sha256": "816fcdb7d01ad4812258443661289493cac3c076132c29a7c2c820a9ae2d155c",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-packaged1306-prototype-v6",
+      "counts": null,
+      "final_report_available": false
+    },
+    "candidate-packaged1306-prototype-v6-timed": {
+      "process": {
+        "status": "timeout",
+        "bytes": 26809,
+        "returncode": 1,
+        "elapsed_seconds": 90.016
+      },
+      "log_sha256": "ee2a2abf0b0e4a6a68e15782f487d385f510a1ef0a0e87230b37217e8cdce460",
+      "inputs_sha256": "51f478166c0a2f2af6455c3d1d04947d7d1f83ed963d742497c36d316ebcf0c1",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-packaged1306-prototype-v6-timed",
+      "counts": null,
+      "final_report_available": false,
+      "timing": {
+        "sha256": "9f8ae9c3e463dde850c1eab01040985b8851018f74e2436420d6bedfb628558f",
+        "events": 2101,
+        "completed": 1050,
+        "slowest_completed": [
+          {
+            "duration_ms": 6726,
+            "method": "forge.ai.CommanderChangeTextAiTest.aiAdmitsAUsefulCreatureWordChange",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 6273,
+            "method": "forge.ai.CommanderChangeTextAiTest.rewritingACounterspellOnTheStackProtectsTheBlueSpell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5009,
+            "method": "forge.ai.CommanderTextCompositionTest.suppliedEntwinedCastReplaysBothModesAndAllFourWords",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5007,
+            "method": "forge.ai.CommanderChangeTextAiTest.heuristicPickerRewritesThePendingCounterspell",
+            "status": "FAIL"
+          },
+          {
+            "duration_ms": 5006,
+            "method": "forge.ai.CommanderChangeTextAiTest.fullPickerRewritesThePendingCounterspell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5006,
+            "method": "forge.ai.CommanderPluralTextTest.fullPilotRewritesTheNegatedDestroySpell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5003,
+            "method": "forge.ai.CommanderChangeTextAiTest.hybridPickerRewritesThePendingCounterspell",
+            "status": "FAIL"
+          },
+          {
+            "duration_ms": 2369,
+            "method": "forge.ai.CommanderChangeTextAiTest.fullModeRetainsItsPrecombatInstantDeferral",
+            "status": "PASS"
+          }
+        ]
+      }
+    },
+    "candidate-packaged1306-prototype-v7-timed": {
+      "process": {
+        "status": "finished",
+        "bytes": 28418,
+        "returncode": 0,
+        "elapsed_seconds": 66.172
+      },
+      "log_sha256": "5b1ef1556cda8cecc7de6e836fec9da74291739fd374f3c60bc42f5b25cdf204",
+      "inputs_sha256": "ec95acbda7e930828bd0b2ff6bbf366a6772751bff94bb23d976314f34311125",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-packaged1306-prototype-v7-timed",
+      "counts": {
+        "total": 1306,
+        "passed": 1306,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "3f613251006ac12a44475aab2b154a1ac17fdf9cc12df95d1e50e7c2288e7ea0",
+      "evidence_sha256": "3f59159cc35729825241c425ddd6d8385a808ecde971e554b0f57007e690d387",
+      "driver_sha256": "56f9c788589af7a2fa5bcdafd279190803aa60740b96c3c39b62630ff3ee8b9b",
+      "failures": [],
+      "timing": {
+        "sha256": "7ef2be7bf0fbcb4b60f66f92c8b6e4c0189eabec9af5f8be07b1d3f92c2e5979",
+        "events": 2612,
+        "completed": 1306,
+        "slowest_completed": [
+          {
+            "duration_ms": 5181,
+            "method": "forge.ai.CommanderTextCompositionTest.suppliedEntwinedCastReplaysBothModesAndAllFourWords",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5008,
+            "method": "forge.ai.CommanderPluralTextTest.fullPilotRewritesTheNegatedDestroySpell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 5007,
+            "method": "forge.ai.CommanderCompositeModeCoverageTest.suppliedEntwinedCastReplaysBothModesAndAllFourWords",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 1252,
+            "method": "forge.ai.CommanderChangeTextAiTest.fullPickerRewritesThePendingCounterspell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 986,
+            "method": "forge.ai.CommanderPluralTextTest.heuristicPilotRewritesTheNegatedDestroySpell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 972,
+            "method": "forge.ai.CommanderChangeTextAiTest.fullModeRetainsItsPrecombatInstantDeferral",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 723,
+            "method": "forge.ai.CommanderPluralTextTest.hybridPilotRewritesTheNegatedDestroySpell",
+            "status": "PASS"
+          },
+          {
+            "duration_ms": 646,
+            "method": "forge.ai.CommanderChangeTextAiTest.heuristicPickerRewritesThePendingCounterspell",
+            "status": "PASS"
+          }
+        ]
+      }
+    },
+    "candidate-safety40-prototype-v3": {
+      "process": {
+        "status": "finished",
+        "bytes": 6292,
+        "returncode": 0,
+        "elapsed_seconds": 13.063
+      },
+      "log_sha256": "cde4d8a90998292a1f4ddbfd17c80832dd34bf342ee0b362a6e5ef2856b6c566",
+      "inputs_sha256": "0e7035c7442c8847e5705d1570bd9f89cb3e6add9461b56444c1b605fb76a853",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-safety40-prototype-v3",
+      "counts": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "ca9f58f806a4b31f0f23061525e3bd82739029a5d581d08b6cc6d9b01db7a38a",
+      "evidence_sha256": "fb06345506e8f3a2d6b8c1e110637f421ceff0e0d28f9fa51a0ab6af8135655f",
+      "driver_sha256": "ca9e78524f7175b4133e56387c52bf6f511883cb2100abe2580bc26df5f460bd",
+      "failures": []
+    },
+    "candidate-safety40-prototype-v4": {
+      "process": {
+        "status": "finished",
+        "bytes": 6292,
+        "returncode": 0,
+        "elapsed_seconds": 13.891
+      },
+      "log_sha256": "f4d309af37f9ed2eb3b8cd2888e078e25ce0eda601c6692b4435e4ea15228c87",
+      "inputs_sha256": "d8f2f67a3dc0864d90f2a13c8bb57bbb0376ff327028c08b14c2563aaf807f7f",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-safety40-prototype-v4",
+      "counts": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "937924c5d23b3c457c2f2717b86b9fba8931badd48f6eba0826fe379cc639140",
+      "evidence_sha256": "b95d2bbaa3e6f5a2c6a115500b719703c6639d669dd7320cf8a5c7594b769d67",
+      "driver_sha256": "5ca84d380d0e9885550a7191f5bc3f46e651952756d80fef403fee9bff0b553c",
+      "failures": []
+    },
+    "candidate-safety40-prototype-v5": {
+      "process": {
+        "status": "finished",
+        "bytes": 6292,
+        "returncode": 0,
+        "elapsed_seconds": 13.0
+      },
+      "log_sha256": "ee42ea28a6f800782556ffc3e159e29c0d20711ca6c72c17471603835a0b5f0c",
+      "inputs_sha256": "7d096e405cc2bead82cd342b2d6baf072b63c7a5e33f9008b0e06240eb8ca3f4",
+      "local_directory": "data/development/commander-multiplayer-attack-research/candidate-safety40-prototype-v5",
+      "counts": {
+        "total": 40,
+        "passed": 40,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "6e58f18822b4431ee93e5f58b699e462bc1f0570c2cd98abdd0a4410d52edb44",
+      "evidence_sha256": "f13f5fcf8cbad7db8480bf2f74c9fc8563b225826a730151f2f5d987261ab684",
+      "driver_sha256": "368fbcc050dea71584f821a6d5206a682771adf991bef7ff910e05f46141f951",
+      "failures": []
+    },
+    "native-round4-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 4639,
+        "returncode": 0,
+        "elapsed_seconds": 9.922
+      },
+      "log_sha256": "4a629a717af4fddcb3263b5a0223907f24f9314675fbfb051c88d95260c6a27b",
+      "inputs_sha256": "27151ec33cc8163e909dc896e99eb82b676259a16b376c0c79237d5c90076a61",
+      "local_directory": "data/development/commander-multiplayer-attack-research/horizon-research/native-round4-v1",
+      "counts": {
+        "total": 4,
+        "passed": 2,
+        "failed": 2,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "ad4dfb68a88c95f06a7b8e70139ec9544ac9121edeadda6eed7a2bee7e0c7dc6",
+      "evidence_sha256": "a8c661faf789879445369fdb6fb7f4fc1ca3ba07d6ced513816ee2337dbeee06",
+      "driver_sha256": "505fc33a455a5a8fb3bb0ca5386f5566e93fb7c9063d11e776ec1c43f0819845",
+      "failures": [
+        "java.lang.AssertionError: expected [1] but found [7]",
+        "java.lang.AssertionError: expected [1] but found [7]"
+      ]
+    },
+    "native-round4-v2": {
+      "process": {
+        "status": "finished",
+        "bytes": 4676,
+        "returncode": 0,
+        "elapsed_seconds": 9.797
+      },
+      "log_sha256": "c81ea8767af68e22ff895fbfd9b4d5f01ea2bdff416a7dcb872b59152b039eeb",
+      "inputs_sha256": "709cdccb6cb39419af9fa58e502f1f8882ac54bc946b12587969a3ae582778da",
+      "local_directory": "data/development/commander-multiplayer-attack-research/horizon-research/native-round4-v2",
+      "counts": {
+        "total": 4,
+        "passed": 4,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "report_sha256": "211c147bef9855ae7901714f41d775955d8dc282ab53c88660c817e576f0658b",
+      "evidence_sha256": "32a5ad1b6646b98ecf58b2618932ba39e9461dde685bc36a11ae1e6c3db24df6",
+      "driver_sha256": "66dd99351d1f3c765a36d0560d38d80f0e4d570d826cebbac52245cd9092a301",
+      "failures": []
+    }
+  },
+  "correction_records": {
+    "boundary-fixture-correction.json": {
+      "first_phase": "candidate-boundary16-prototype-v3",
+      "first_counts": {
+        "total": 16,
+        "passed": 0,
+        "failed": 16,
+        "skipped": 0
+      },
+      "correction": "MyRandom.setRandom deliberately wraps a global provider in CountingRandom. Capture the installed provider after setting it, and require that exact object is restored. Retain underlying Random state comparison and add global callCount preservation to protect live undo. No weaker requirement; first report retained."
+    },
+    "goad-fixture-correction.json": {
+      "reason": "Player.equals deliberately uses stable IDs across copied games. isGoadedBy uses value equality, so rejecting the original Player via that query was an invalid identity check. Correct the fixture to assert the actual map value is the exact copied Player object and is not the original object. Keep timestamp, requirement-legality and independent mutation assertions unchanged.",
+      "prior_phases": [
+        "candidate-goad-copy8-prototype-v4",
+        "candidate-goad-copy8-prototype-v5"
+      ]
+    },
+    "goad-fixture-phase-correction.json": {
+      "reason": "The native goad requirement validator consults the active game combat as well as the supplied declaration. Register each supplied legal/forbidden combat with its phase handler before validation. The missing setup caused eight null-combat failures after v5 identity/timestamp checks passed. All assertions retained; v2 reports preserved."
+    },
+    "import-cleanup.json": {
+      "reason": "The first full source run stopped at Checkstyle before executing tests due to seven unused imports inherited while building the new fixtures. Remove only those exact import lines; every test body, assertion and production source is unchanged. Preserve first phase and all snapshots.",
+      "changes": {
+        "CommanderForecastPlanningScopeTest.java": [
+          "import forge.ai.simulation.GameSimulator;\n",
+          "import java.util.LinkedHashMap;\n"
+        ],
+        "CommanderGoadCopyBoundaryTest.java": [
+          "import forge.ai.simulation.GameSimulator;\n",
+          "import java.util.LinkedHashMap;\n"
+        ],
+        "CommanderGoadDurationCopyTest.java": [
+          "import forge.game.combat.Combat;\n",
+          "import forge.game.combat.CombatUtil;\n",
+          "import java.util.LinkedHashMap;\n"
+        ]
+      },
+      "production_unchanged": true,
+      "assertions_and_bodies_unchanged": true,
+      "original_sha256": {
+        "CommanderForecastPlanningScopeTest.java": "724ed4a0596c7e9490271771ea071217767b15c06eae69d97f44a6a39ebaa09c",
+        "CommanderGoadCopyBoundaryTest.java": "dc1b6cd009c582890e58faa19e7e8ad5417fe1a5485ee7757b2686c135489d30",
+        "CommanderGoadDurationCopyTest.java": "21c596e4cd175ce07c5e9bfc6e02a44b850601e6d7099dc72d0571371cfdf4b3"
+      }
+    }
+  },
+  "named_entrypoints": {
+    "CommanderMultiplayerAttackOpportunityTest": {
+      "cases": 50,
+      "wrappers": [
+        {
+          "name": "classicGoreclawOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"goreclaw\""
+        },
+        {
+          "name": "classicBearsOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"bears\""
+        },
+        {
+          "name": "classicFlyingOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"flying\""
+        },
+        {
+          "name": "classicOpenOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"open\""
+        },
+        {
+          "name": "classicSickOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"sick\""
+        },
+        {
+          "name": "classicTappedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"tapped\""
+        },
+        {
+          "name": "classicDefenderOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"defender\""
+        },
+        {
+          "name": "classicGoreclawCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"goreclaw\""
+        },
+        {
+          "name": "classicBearsCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"bears\""
+        },
+        {
+          "name": "classicFlyingCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"flying\""
+        },
+        {
+          "name": "classicOpenCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"open\""
+        },
+        {
+          "name": "classicSickCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"sick\""
+        },
+        {
+          "name": "classicTappedCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"tapped\""
+        },
+        {
+          "name": "classicDefenderCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"defender\""
+        },
+        {
+          "name": "hybridGoreclawOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"goreclaw\""
+        },
+        {
+          "name": "hybridBearsOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"bears\""
+        },
+        {
+          "name": "hybridFlyingOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"flying\""
+        },
+        {
+          "name": "hybridOpenOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"open\""
+        },
+        {
+          "name": "hybridSickOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"sick\""
+        },
+        {
+          "name": "hybridTappedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"tapped\""
+        },
+        {
+          "name": "hybridDefenderOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"defender\""
+        },
+        {
+          "name": "hybridGoreclawCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"goreclaw\""
+        },
+        {
+          "name": "hybridBearsCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"bears\""
+        },
+        {
+          "name": "hybridFlyingCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"flying\""
+        },
+        {
+          "name": "hybridOpenCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"open\""
+        },
+        {
+          "name": "hybridSickCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"sick\""
+        },
+        {
+          "name": "hybridTappedCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"tapped\""
+        },
+        {
+          "name": "hybridDefenderCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"defender\""
+        },
+        {
+          "name": "fullGoreclawOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"goreclaw\""
+        },
+        {
+          "name": "fullBearsOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"bears\""
+        },
+        {
+          "name": "fullFlyingOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"flying\""
+        },
+        {
+          "name": "fullOpenOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"open\""
+        },
+        {
+          "name": "fullSickOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"sick\""
+        },
+        {
+          "name": "fullTappedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"tapped\""
+        },
+        {
+          "name": "fullDefenderOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"defender\""
+        },
+        {
+          "name": "fullGoreclawCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"goreclaw\""
+        },
+        {
+          "name": "fullBearsCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"bears\""
+        },
+        {
+          "name": "fullFlyingCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"flying\""
+        },
+        {
+          "name": "fullOpenCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"open\""
+        },
+        {
+          "name": "fullSickCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"sick\""
+        },
+        {
+          "name": "fullTappedCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"tapped\""
+        },
+        {
+          "name": "fullDefenderCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"defender\""
+        },
+        {
+          "name": "goreclawOriginalHolding",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"goreclaw\", false, false"
+        },
+        {
+          "name": "goreclawOriginalAttacking",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"goreclaw\", false, true"
+        },
+        {
+          "name": "goreclawCopiedHolding",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"goreclaw\", true, false"
+        },
+        {
+          "name": "goreclawCopiedAttacking",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"goreclaw\", true, true"
+        },
+        {
+          "name": "bearsOriginalHolding",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"bears\", false, false"
+        },
+        {
+          "name": "bearsOriginalAttacking",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"bears\", false, true"
+        },
+        {
+          "name": "bearsCopiedHolding",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"bears\", true, false"
+        },
+        {
+          "name": "bearsCopiedAttacking",
+          "helper": "explicitNativeCombatOutcome",
+          "args": "\"bears\", true, true"
+        }
+      ],
+      "helper_body_sha256": {
+        "actualNativeDecision": "49bddf44062a42ebc1080769a1ef7749d2a9a74cce6115e62615312e376925e2",
+        "explicitNativeCombatOutcome": "9609cc574d0c1829690938b7c03b2c6d829ee8f96b948b22183dc3075541c9a1"
+      },
+      "original_sha256": "b9dec0ead3731e55ec944daf77a892ee588ac0ed4d857abb4b5f26c74fe2dc16",
+      "named_fixture_sha256": "51e07b2ef357f1ecb8320d5bd1b7a1247daabed86c6da7e2188e16121a1d452a",
+      "assertions_and_helper_bodies_unchanged": true
+    },
+    "CommanderMultiplayerAttackSafetyTest": {
+      "cases": 40,
+      "wrappers": [
+        {
+          "name": "classicGuardOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"guard\""
+        },
+        {
+          "name": "classicTaxOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"tax\""
+        },
+        {
+          "name": "classicPeaceOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"peace\""
+        },
+        {
+          "name": "classicForcedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"forced\""
+        },
+        {
+          "name": "classicGroupOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"group\""
+        },
+        {
+          "name": "classicAllblockedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "0, false, \"allblocked\""
+        },
+        {
+          "name": "classicGuardCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"guard\""
+        },
+        {
+          "name": "classicTaxCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"tax\""
+        },
+        {
+          "name": "classicPeaceCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"peace\""
+        },
+        {
+          "name": "classicForcedCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"forced\""
+        },
+        {
+          "name": "classicGroupCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"group\""
+        },
+        {
+          "name": "classicAllblockedCopied",
+          "helper": "actualNativeDecision",
+          "args": "0, true, \"allblocked\""
+        },
+        {
+          "name": "hybridGuardOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"guard\""
+        },
+        {
+          "name": "hybridTaxOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"tax\""
+        },
+        {
+          "name": "hybridPeaceOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"peace\""
+        },
+        {
+          "name": "hybridForcedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"forced\""
+        },
+        {
+          "name": "hybridGroupOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"group\""
+        },
+        {
+          "name": "hybridAllblockedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "1, false, \"allblocked\""
+        },
+        {
+          "name": "hybridGuardCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"guard\""
+        },
+        {
+          "name": "hybridTaxCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"tax\""
+        },
+        {
+          "name": "hybridPeaceCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"peace\""
+        },
+        {
+          "name": "hybridForcedCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"forced\""
+        },
+        {
+          "name": "hybridGroupCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"group\""
+        },
+        {
+          "name": "hybridAllblockedCopied",
+          "helper": "actualNativeDecision",
+          "args": "1, true, \"allblocked\""
+        },
+        {
+          "name": "fullGuardOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"guard\""
+        },
+        {
+          "name": "fullTaxOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"tax\""
+        },
+        {
+          "name": "fullPeaceOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"peace\""
+        },
+        {
+          "name": "fullForcedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"forced\""
+        },
+        {
+          "name": "fullGroupOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"group\""
+        },
+        {
+          "name": "fullAllblockedOriginal",
+          "helper": "actualNativeDecision",
+          "args": "2, false, \"allblocked\""
+        },
+        {
+          "name": "fullGuardCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"guard\""
+        },
+        {
+          "name": "fullTaxCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"tax\""
+        },
+        {
+          "name": "fullPeaceCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"peace\""
+        },
+        {
+          "name": "fullForcedCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"forced\""
+        },
+        {
+          "name": "fullGroupCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"group\""
+        },
+        {
+          "name": "fullAllblockedCopied",
+          "helper": "actualNativeDecision",
+          "args": "2, true, \"allblocked\""
+        },
+        {
+          "name": "originalBlockerSurvivesCounterattacks",
+          "helper": "nativeCounterattackOutcome",
+          "args": "false, false"
+        },
+        {
+          "name": "originalAttackLosesToCounterattacks",
+          "helper": "nativeCounterattackOutcome",
+          "args": "false, true"
+        },
+        {
+          "name": "copiedBlockerSurvivesCounterattacks",
+          "helper": "nativeCounterattackOutcome",
+          "args": "true, false"
+        },
+        {
+          "name": "copiedAttackLosesToCounterattacks",
+          "helper": "nativeCounterattackOutcome",
+          "args": "true, true"
+        }
+      ],
+      "helper_body_sha256": {
+        "actualNativeDecision": "c042a241575f0b2b97649b44e59d1a2e2c67dd596534a0d103ef743c576a09a9",
+        "nativeCounterattackOutcome": "542148f59d0a41c826e70430faa2798d0d6c6bbd09f74dc6c45279d19efdc688"
+      },
+      "original_sha256": "1624714b938ca27f5e94cedf719e6dbef627c362a08c06d6dea822e68519e70e",
+      "named_fixture_sha256": "a0a0d2c9e477fb3e5f38b4fa6c4d8f73bda81d265359853a26675ef2cf97e3c7",
+      "assertions_and_helper_bodies_unchanged": true
+    },
+    "CommanderMultiplayerAttackBoundaryTest": {
+      "cases": 16,
+      "wrappers": [
+        {
+          "name": "rngOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"rng\""
+        },
+        {
+          "name": "expiredOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"expired\""
+        },
+        {
+          "name": "controlledOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"controlled\""
+        },
+        {
+          "name": "paidTaxOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"paidTax\""
+        },
+        {
+          "name": "optionalTaxOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"optionalTax\""
+        },
+        {
+          "name": "capOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"cap\""
+        },
+        {
+          "name": "goadOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"goad\""
+        },
+        {
+          "name": "vigilanceOriginal",
+          "helper": "nativePlanningBoundary",
+          "args": "false, \"vigilance\""
+        },
+        {
+          "name": "rngCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"rng\""
+        },
+        {
+          "name": "expiredCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"expired\""
+        },
+        {
+          "name": "controlledCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"controlled\""
+        },
+        {
+          "name": "paidTaxCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"paidTax\""
+        },
+        {
+          "name": "optionalTaxCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"optionalTax\""
+        },
+        {
+          "name": "capCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"cap\""
+        },
+        {
+          "name": "goadCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"goad\""
+        },
+        {
+          "name": "vigilanceCopied",
+          "helper": "nativePlanningBoundary",
+          "args": "true, \"vigilance\""
+        }
+      ],
+      "helper_body_sha256": {
+        "nativePlanningBoundary": "d74f09836afc35d44525efcfa5d2136e46080fb66b340c401d3c7aacb6a13f74"
+      },
+      "original_sha256": "65e5d82ab2b18e60691cafd49a242c1c9b3b9cfc753c2e1a8998f4c0f12d5792",
+      "named_fixture_sha256": "fee160728d95e9ac09a10f2a78c4f6cc74a0b2bd65a3a1f884b8fa88231fbbf9",
+      "assertions_and_helper_bodies_unchanged": true
+    },
+    "CommanderGoadCopyBoundaryTest": {
+      "cases": 8,
+      "wrappers": [
+        {
+          "name": "oneCopyOneSourceRemovingOriginal",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "1, 1, false"
+        },
+        {
+          "name": "oneCopyOneSourceRemovingCopy",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "1, 1, true"
+        },
+        {
+          "name": "oneCopyTwoSourcesRemovingOriginal",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "1, 2, false"
+        },
+        {
+          "name": "oneCopyTwoSourcesRemovingCopy",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "1, 2, true"
+        },
+        {
+          "name": "twoCopiesOneSourceRemovingOriginal",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "2, 1, false"
+        },
+        {
+          "name": "twoCopiesOneSourceRemovingCopy",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "2, 1, true"
+        },
+        {
+          "name": "twoCopiesTwoSourcesRemovingOriginal",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "2, 2, false"
+        },
+        {
+          "name": "twoCopiesTwoSourcesRemovingCopy",
+          "helper": "copiedGoadRequirementsAreIndependent",
+          "args": "2, 2, true"
+        }
+      ],
+      "helper_body_sha256": {
+        "copiedGoadRequirementsAreIndependent": "beea5f9baaedfc87ed2d1bfea3d46eb2e3333b52b1be4140775085a31b0a6108"
+      },
+      "original_sha256": "3d086dc53fb7a3a57ea70e27e20c2d7766a3fd91250deda386e0fc6769e6a1ee",
+      "named_fixture_sha256": "bbf6c8267c366acdc8f62bb37bd670bfbac331dfeba62f802fc63c744b3131d6",
+      "assertions_and_helper_bodies_unchanged": true
+    },
+    "CommanderGoadDurationCopyTest": {
+      "cases": 4,
+      "wrappers": [
+        {
+          "name": "oneCopyOriginalExpiresFirst",
+          "helper": "paidGoadExpiresIndependently",
+          "args": "1, false"
+        },
+        {
+          "name": "oneCopyCopyExpiresFirst",
+          "helper": "paidGoadExpiresIndependently",
+          "args": "1, true"
+        },
+        {
+          "name": "twoCopiesOriginalExpiresFirst",
+          "helper": "paidGoadExpiresIndependently",
+          "args": "2, false"
+        },
+        {
+          "name": "twoCopiesCopyExpiresFirst",
+          "helper": "paidGoadExpiresIndependently",
+          "args": "2, true"
+        }
+      ],
+      "helper_body_sha256": {
+        "paidGoadExpiresIndependently": "295727545a49fbd5f55ea8e1000464856a7de406dfb9211a732d90659e4e9a12"
+      },
+      "original_sha256": "173d368f432238f62f28b048de2a80bf9050a19f410012c9c78ffa5310780f86",
+      "named_fixture_sha256": "0cf90e4b65a55c9fc52e605e9ec9b2bbd561516130632de14afcd41d6caa5a1c",
+      "assertions_and_helper_bodies_unchanged": true
+    },
+    "CommanderForecastPlanningScopeTest": {
+      "cases": 4,
+      "wrappers": [
+        {
+          "name": "originalNestedForecastSuccess",
+          "helper": "nestedForecastScopeRestoresOrdinaryPlanning",
+          "args": "false, false"
+        },
+        {
+          "name": "originalNestedForecastFailure",
+          "helper": "nestedForecastScopeRestoresOrdinaryPlanning",
+          "args": "false, true"
+        },
+        {
+          "name": "copiedNestedForecastSuccess",
+          "helper": "nestedForecastScopeRestoresOrdinaryPlanning",
+          "args": "true, false"
+        },
+        {
+          "name": "copiedNestedForecastFailure",
+          "helper": "nestedForecastScopeRestoresOrdinaryPlanning",
+          "args": "true, true"
+        }
+      ],
+      "helper_body_sha256": {
+        "nestedForecastScopeRestoresOrdinaryPlanning": "46016847772a1a6bba482bebaba160d993e8c9e5e9b4e384fbb28d93ff0c441c"
+      },
+      "original_sha256": "267be506496fae8f849c232b9acb16768956f2286c11304532fcb7a425c29d09",
+      "named_fixture_sha256": "346da022186b6561e0a907fd31ca060dbfe695db27d9dc3be92162853947f3c3",
+      "assertions_and_helper_bodies_unchanged": true
+    }
+  },
+  "findings": [
+    "Generic bounded search compares legal attacks at each defender using native combat and successive opponent turns. Life, blocker deaths, cleanup, draws and untaps accumulate through the horizon; fixed decision beneficiary and RNG scopes are preserved.",
+    "New goad support copies all goad timestamps with exact copied-player objects and maps individual expiration callbacks. Paid Disrupt Decorum expires independently in original/copied worlds at the goader next turn.",
+    "v3 recovered attack/safety opportunities but incremented the live undo random counter; existing nested MyRandom scopes correct that side effect.",
+    "v4 boundary tests exposed an omitted live goad map. v5 restored state but four paid-duration tests exposed its unconverted closure. v6 maps that cleanup, but whole-family tests hit the existing 90-second timeout.",
+    "Bounded method timing traced unnecessary whole-round searches nested inside single-combat word-change forecasts. v7 scopes that forecast to its existing heuristic policy; all 1306 existing packaged cases pass in 66.172 seconds at the unchanged limit.",
+    "All 1360 source cases pass in one existing-budget JVM, preserving 1238 and adding 122. The final named fixtures retain exact argument vectors and helper assertions, making every result ID unique under the existing report schema."
+  ],
+  "limits": [
+    "Selected native2361 runtime and sealed f43 native2463 build remain unchanged. New sealed native2585 and packaged1428 targets are expected future gates, not passing results.",
+    "The 1306 packaged pass and 122 focused pass use isolated reviewed production overlays against the older candidate archive, not a newly sealed distributable.",
+    "Turn search is bounded to32 candidates/eight turns by the existing decision deadline. Incomplete or reversed/skipped horizon paths are inconclusive and retain the heuristic declaration.",
+    "The opponent stress policy uses existing attack selection toward the actor and native phase/trigger/block/damage resolution. It does not search every opponent main-phase spell, possible response or multiplayer strategy.",
+    "No fixed full-game seeds, absent-witness checks, existing assertions, card scripts or AI profiles were weakened. Catalog construction and script presence remain insufficient to certify full card rules correctness.",
+    "Fresh sealed build, independent packaged/broader checks and all full-live conformance gates remain required before activation."
+  ],
+  "reviewed_fixtures": {
+    "engine/pending/multiplayer-attack-horizon/CommanderForecastPlanningScopeTest.java": "346da022186b6561e0a907fd31ca060dbfe695db27d9dc3be92162853947f3c3",
+    "engine/pending/multiplayer-attack-horizon/CommanderGoadCopyBoundaryTest.java": "bbf6c8267c366acdc8f62bb37bd670bfbac331dfeba62f802fc63c744b3131d6",
+    "engine/pending/multiplayer-attack-horizon/CommanderGoadDurationCopyTest.java": "0cf90e4b65a55c9fc52e605e9ec9b2bbd561516130632de14afcd41d6caa5a1c",
+    "engine/pending/multiplayer-attack-horizon/CommanderMultiplayerAttackBoundaryTest.java": "fee160728d95e9ac09a10f2a78c4f6cc74a0b2bd65a3a1f884b8fa88231fbbf9",
+    "engine/pending/multiplayer-attack-horizon/CommanderMultiplayerAttackOpportunityTest.java": "51e07b2ef357f1ecb8320d5bd1b7a1247daabed86c6da7e2188e16121a1d452a",
+    "engine/pending/multiplayer-attack-horizon/CommanderMultiplayerAttackSafetyTest.java": "a0a0d2c9e477fb3e5f38b4fa6c4d8f73bda81d265359853a26675ef2cf97e3c7"
+  }
+}

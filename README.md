@@ -27,7 +27,18 @@ difference.
 
 ## Card coverage
 
-The latest source candidate removes an AI cache that retained completed games
+The latest reviewed source adds native multiplayer attack planning that checks
+successive opponents' turns before committing attackers. It also preserves goad
+restrictions and their expiration independently in copied games, and isolates
+preview randomness from live undo. All 1,360 mixed source cases pass in one JVM,
+retaining 1,238 and adding 122. Separate isolated overlays pass the 122 focused
+cases and all 1,306 existing packaged cases at unchanged budgets. The build recipe
+now includes the named regressions; a fresh sealed build targeting 2,585 native
+and 1,428 packaged cases, broader checks and full-live validation remain pending.
+The selected runtime is unchanged. See
+[the source correction and preserved failures](engine/multiplayer_attack_horizon_evidence.json).
+
+The preceding cache-lifetime candidate removes an AI cache that retained completed games
 and could return stale board evaluations outside a decision. Memoized references
 now live inside an explicit decision or preview and are released on success or
 failure. All 1,238 mixed source tests pass in one JVM at the existing 2 GiB heap
