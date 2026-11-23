@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the library-choice candidate with 2,057 native methods, retaining
+  all 2,029 and adding 28. Independent packaged families pass 900/65/194/146 cases;
+  broader gameplay/serialization pass 3,531/256. Verify all 2,165 production
+  sources, 516 frozen implementation inputs and unchanged card scripts/default
+  AI. Preserve initial seen identities, final private placements, public reveals,
+  known draws, independent copied memory and actual replacement/trigger shuffle
+  witnesses. Full live validation and activation remain pending; complete
+  rules and strategy correctness remains unproven.
+  See engine/library_choice_knowledge_packaged_evidence.json.
+
 - Add source-validated shared initial-inspection and announced-library-order
   callbacks for scry, surveil and rearrange. All 832 focused checks pass, retaining 804 and adding
   28. Preserve original/copied paid top/bottom/mixed choices, countering, privacy

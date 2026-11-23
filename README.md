@@ -27,16 +27,18 @@ difference.
 
 ## Card coverage
 
-A fresh paid scry/surveil baseline confirms a remaining knowledge gap: six
-countering, privacy and unavailable-mana controls pass, while ten original/copied
-chosen-position checks fail. The cards move through native resolution, but the
-AI does not retain the chosen library positions. A generic correction passes 832 focused source checks, retaining 804 and adding
-28, including draw/copy and replacement/shuffle boundaries. Shared initial-inspection and announced
-order callbacks serve scry, surveil and reorder without production card-name
-exceptions. Packaging and broader/full live validation remain pending; the
-selected runtime below remains active. See the
-[exact baseline](engine/library_choice_knowledge_gap.json) and
-[source evidence](engine/library_choice_knowledge_native_evidence.json).
+The library-choice candidate passes 2,057 native build tests, retaining all 2,029
+prior methods and adding 28. All 832 focused source checks pass; independent
+packaged families pass 900/65/194/146 cases, and broader gameplay/serialization
+pass 3,531/256. Shared callbacks record authorized initial inspection and final
+announced top/bottom placements for scry, surveil and reorder. Seen/public
+identities remain distinct from unknown shuffled positions. Native shuffle
+damage witnesses replacement and later-trigger boundaries. The original baseline
+and fixture corrections remain preserved. See the
+[source evidence](engine/library_choice_knowledge_native_evidence.json) and
+[packaged validation](engine/library_choice_knowledge_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Complete card/rules/AI correctness remains open.
 
 The selected runtime supports generic paid hand/library information decisions and
 retains announced library order. It values authorized knowledge, avoids redundant
