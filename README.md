@@ -27,17 +27,17 @@ difference.
 
 ## Card coverage
 
-An isolated controlled-information correction passes 934 focused source checks,
-retaining 892 and adding 42. Fresh library audiences retain authorized recipients
-across control changes; private reveals respect in-game/outside-game boundaries.
-Public reveal/return facts update rightful agent memories independently of owner
-display suppression. Real paid inspections, copies, failed payment, counters,
-foreign views, dormant agents and control-graph boundaries pass. The original
-baseline and additional failed reveal phases remain preserved. Packaging and
-broader/full live validation are pending; the selected runtime below is unchanged.
-See the [baseline](engine/controlled_information_gap.json) and
-[source evidence](engine/controlled_information_native_evidence.json).
-Complete card/rules/AI correctness remains unproven.
+The controlled-information candidate passes 2,159 native tests, retaining all
+2,117 prior methods and adding 42. All 934 focused source checks pass;
+independent packaged families pass 1002/65/194/146, and broader gameplay and
+serialization pass 3,633/256. Captured library audiences, per-card private reveal
+rights, explicit receiving-agent memories and public reveal/return notifications
+cover real paid control/inspection and structural privacy boundaries. Original
+failures and intermediate failed reveal phases remain preserved. See the
+[source evidence](engine/controlled_information_native_evidence.json) and
+[packaged validation](engine/controlled_information_packaged_evidence.json).
+Full live validation and activation remain pending; the selected runtime below
+is unchanged. Complete card/rules/AI correctness remains unproven.
 
 The selected runtime admits primary library-rearrange spells and activations by
 ability semantics. Hybrid mode compares paired native paid outcomes for useful

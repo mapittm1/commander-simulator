@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the controlled-information candidate with 2,159 native tests, retaining
+  all 2,117 and adding 42. All 934 focused source, independent packaged families
+  of 1002/65/194/146, and broader gameplay/serialization of 3,633/256 pass. Audit
+  2,165 production sources, six changed production source families and one added nested class,
+  and 527 frozen implementation inputs. Scripts/default AI remain unchanged.
+  Full live validation and activation remain pending; selected contracts do not
+  certify every Commander interaction or calibrated strategy.
+  See engine/controlled_information_packaged_evidence.json.
+
 - Add source-validated controlled-information observation routing: all 934
   focused checks pass, retaining 892 and adding 42. Capture fresh inspection
   audiences before control changes; preserve per-agent memories and distinguish
