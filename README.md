@@ -27,6 +27,16 @@ difference.
 
 ## Card coverage
 
+A source-only inspection AI correction passes 745 focused checks, retaining all
+712 and adding 33 paid activation, privacy, free-access and copied-knowledge
+controls. The packaged baseline fails 12 of 20 focused cases: Smoke Teller and
+Aven Soulgazer have no primary inspection policy or useful picker outcome.
+The correction adds a generic face-down inspection policy, bounded information
+value and knowledge-sensitive target pruning. See the
+[source evidence](engine/inspection_ai_native_evidence.json). Packaging and full
+runtime validation are pending; the selected runtime below remains unchanged.
+This does not establish hand/library inspection strategy or full card correctness.
+
 The reviewed runtime preserves independent blocking and attacked-planeswalker
 roles when a permanent loses one card type. All 712 focused source checks pass;
 the 146-case Battle family includes twelve paid dual-role controls. Independent

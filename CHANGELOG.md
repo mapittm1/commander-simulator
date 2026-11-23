@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a source-validated generic inspection AI correction: 745 focused checks
+  retain 712 and add 33 paid activation, privacy, copied-memory, free-access and
+  target-selection controls. Preserve the packaged 8-pass/12-fail baseline and
+  failed source phases. Avoid redundant inspection, give free and remembered
+  face access equal bounded value, and retain knowledge-distinct targets during
+  pruning. Packaging and full runtime validation remain pending; selected engine,
+  scripts and default AI profile are unchanged. Full rules/AI correctness remains
+  open. See engine/inspection_ai_native_evidence.json.
+
 - Activate the reviewed combat-role correction after all 45 live tests and 1,834
   subtests pass, with independent/repeated 781/65/194/146 packaged families.
   Retain every prior 1,902 native method in the 1,938-test build; all 712 focused

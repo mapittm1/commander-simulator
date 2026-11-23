@@ -1,0 +1,174 @@
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/InspectionKnowledge.java
+@@ -0,0 +1,38 @@
++package forge.ai;
++
++import forge.game.card.Card;
++import forge.game.player.Player;
++import forge.game.zone.ZoneType;
++
++/** Value authorized face access and inspection memory without consulting a concealed face. */
++public final class InspectionKnowledge {
++    private static final int MAX_VALUE = 8;
++    private static final int VALUE_PER_INSPECTION = 2;
++
++    private InspectionKnowledge() { }
++
++    private static boolean isEnemyFaceDown(Card card, Player observer) {
++        return card.isInZone(ZoneType.Battlefield) && card.isFaceDown() && !card.isToken()
++                && card.getController().isOpponentOf(observer);
++    }
++
++    public static boolean isFaceDownIdentityKnown(Card card, Player observer) {
++        return card.isFaceDown() && (card.getView().canFaceDownBeShownTo(observer.getView())
++                || AiCardMemory.isRememberedCard(observer, card, AiCardMemory.MemorySet.REVEALED_CARDS));
++    }
++
++    public static boolean needsInspection(Card card, Player observer) {
++        return isEnemyFaceDown(card, observer) && !isFaceDownIdentityKnown(card, observer);
++    }
++
++    public static int knownFaceDownValue(Player observer) {
++        int value = 0;
++        for (Card card : observer.getGame().getCardsIn(ZoneType.Battlefield)) {
++            if (isEnemyFaceDown(card, observer) && isFaceDownIdentityKnown(card, observer)) {
++                value += VALUE_PER_INSPECTION;
++                if (value >= MAX_VALUE) return MAX_VALUE;
++            }
++        }
++        return value;
++    }
++}
+--- a/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
++++ b/forge-ai/src/main/java/forge/ai/SpellApiToAi.java
+@@ -123,6 +123,7 @@
+             .put(ApiType.Incubate, AlwaysPlayAi.class)
+             .put(ApiType.Investigate, InvestigateAi.class)
+             .put(ApiType.Learn, LearnAi.class)
++            .put(ApiType.LookAt, LookAtAi.class)
+             .put(ApiType.LoseLife, LifeLoseAi.class)
+             .put(ApiType.LosePerpetual, AlwaysPlayAi.class)
+             .put(ApiType.LosesGame, GameLossAi.class)
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/ability/LookAtAi.java
+@@ -0,0 +1,55 @@
++package forge.ai.ability;
++
++import forge.ai.AiAbilityDecision;
++import forge.ai.AiPlayDecision;
++import forge.ai.InspectionKnowledge;
++import forge.ai.SpellAbilityAi;
++import forge.game.card.Card;
++import forge.game.phase.PhaseType;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.zone.ZoneType;
++
++/** Primary face-down inspection uses public targets and current authorized knowledge. */
++public class LookAtAi extends SpellAbilityAi {
++    @Override
++    protected AiAbilityDecision checkApiLogic(Player actor, SpellAbility action) {
++        AiAbilityDecision targets = chooseInspectionTargets(actor, action);
++        if (!targets.willingToPlay()) return targets;
++        PhaseType phase = actor.getGame().getPhaseHandler().getPhase();
++        if (phase == PhaseType.MAIN1 || phase == PhaseType.UPKEEP || phase == PhaseType.DRAW) {
++            return new AiAbilityDecision(0, AiPlayDecision.WaitForCombat);
++        }
++        return targets;
++    }
++
++    @Override
++    public AiAbilityDecision chkDrawback(Player actor, SpellAbility action) {
++        // Non-targeted inspection subeffects inherit their parent's already-announced objects.
++        if (!action.usesTargeting()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++        return chooseInspectionTargets(actor, action);
++    }
++
++    private AiAbilityDecision chooseInspectionTargets(Player actor, SpellAbility action) {
++        if (!action.usesTargeting()) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
++        action.resetTargets();
++        boolean hasNewInformation = false;
++        for (Card card : actor.getGame().getCardsIn(ZoneType.Battlefield)) {
++            if (InspectionKnowledge.needsInspection(card, actor) && action.canTarget(card)) {
++                action.getTargets().add(card);
++                hasNewInformation = true;
++                if (action.isTargetNumberValid()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++            }
++        }
++        if (!hasNewInformation) return new AiAbilityDecision(0, AiPlayDecision.DoesntImpactGame);
++        // A known legal object can fill a required additional target without inventing information value.
++        for (Card card : actor.getGame().getCardsIn(ZoneType.Battlefield)) {
++            if (action.canTarget(card)) {
++                action.getTargets().add(card);
++                if (action.isTargetNumberValid()) return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
++            }
++        }
++        action.resetTargets();
++        return new AiAbilityDecision(0, AiPlayDecision.TargetingFailed);
++    }
++}
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+@@ -1,6 +1,7 @@
+ package forge.ai.simulation;
+ 
+ import forge.ai.AiDeckStatistics;
++import forge.ai.InspectionKnowledge;
+ import forge.ai.CreatureEvaluator;
+ import forge.card.mana.ManaAtom;
+ import forge.game.Game;
+@@ -240,6 +241,9 @@
+             }
+         }
+ 
++        int inspectionValue = InspectionKnowledge.knownFaceDownValue(aiPlayer);
++        score += inspectionValue;
++        availableScore += inspectionValue;
+         debugPrint("Score = " + score);
+         return new Score(score, availableScore);
+     }
+--- a/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java
+@@ -2,6 +2,7 @@
+ 
+ import com.google.common.collect.ArrayListMultimap;
+ import forge.ai.ComputerUtilCard;
++import forge.ai.InspectionKnowledge;
+ import forge.game.GameObject;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.card.Card;
+@@ -80,7 +81,7 @@
+             }
+         }
+ 
+-        SimilarTargetSkipper skipper = new SimilarTargetSkipper();
++        SimilarTargetSkipper skipper = new SimilarTargetSkipper(player);
+         for (GameObject o : tgt.getAllCandidates(targetingSa)) {
+             if (maxTargets == 1 && skipper.shouldSkipTarget(o)) {
+                 continue;
+@@ -90,6 +91,12 @@
+     }
+ 
+     private static class SimilarTargetSkipper {
++        private final Player observer;
++
++        private SimilarTargetSkipper(Player observer) {
++            this.observer = observer;
++        }
++
+         private final ArrayListMultimap<String, Card> validTargetsMap = ArrayListMultimap.create();
+         private final HashMap<Card, String> cardTypeStrings = new HashMap<>();
+         private HashMap<Card, Integer> creatureScores;
+@@ -130,6 +137,12 @@
+                 // Note: Checks are ordered from cheapest to more expensive ones. For example, type equals()
+                 // ends up calling toString() on the type object and is more expensive than the checks above it.
+                 if (c.getController() != existingTarget.getController() || c.getOwner() != existingTarget.getOwner()) {
++                    continue;
++                }
++                // Equal public bodies are not equivalent when one concealed identity is already known.
++                if (c.isFaceDown() != existingTarget.isFaceDown()
++                        || c.isFaceDown() && InspectionKnowledge.isFaceDownIdentityKnown(c, observer)
++                                != InspectionKnowledge.isFaceDownIdentityKnown(existingTarget, observer)) {
+                     continue;
+                 }
+                 if (c.getSpellAbilities().size() != existingTarget.getSpellAbilities().size()) {
