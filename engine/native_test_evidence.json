@@ -1,23 +1,25 @@
 {
   "scope": "Independent native gameplay and serialization compilation using the source-tested candidate; temporary reviewed test-only policies are restored byte-for-byte. Not all-card certification.",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "ad091abefc1c7dfb849a819b9166a8941a7113b115852acc37a1e2c54645de64",
+  "recipe_sha256": "001462e0d03738e5162afc3f986db82217db1f17042adca9dff431e7d39a2800",
   "test_only_policies": {
     "engine/patches/star-trek-commandeer-validation.patch": "2acafd29317c738cbe0e15ca9fb84aa6030520de266a8a447b54a2f645edbb91",
     "engine/patches/bauble-ai-classification-validation.patch": "1015d713605580e97c9d137481d533d20c6fe140d0d063a0f5fac104c691f4f4"
   },
-  "frozen_inputs_sha256": "8ee6aad41dea64791714ab8f3e8809fb2621b7a1f1b8ea0daf8bd5d06990ef8e",
+  "frozen_inputs_sha256": "97f9c620f6bde74f5e7e430ebc51c944af6000eacb94de3d4c80ef4d393dd048",
   "candidate_source_reused": true,
-  "production_sources": 2164,
-  "byte_identical_production_sources": 2159,
+  "production_sources": 2165,
+  "byte_identical_production_sources": 2158,
   "reviewed_line_ending_paths": [
-    "forge-ai/src/main/java/forge/ai/InspectionKnowledge.java",
-    "forge-ai/src/main/java/forge/ai/SpellApiToAi.java",
-    "forge-ai/src/main/java/forge/ai/ability/LookAtAi.java",
+    "forge-ai/src/main/java/forge/ai/AiCardMemory.java",
+    "forge-ai/src/main/java/forge/ai/AiController.java",
+    "forge-ai/src/main/java/forge/ai/InformationEffects.java",
+    "forge-ai/src/main/java/forge/ai/ability/PermanentNoncreatureAi.java",
+    "forge-ai/src/main/java/forge/ai/ability/PumpAi.java",
     "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
-    "forge-ai/src/main/java/forge/ai/simulation/PossibleTargetSelector.java"
+    "forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java"
   ],
-  "candidate_production_inputs_sha256": "9b0613f1f61f7d51a89b1a70dbd045cd087adbc91aeb04986a12c47487f2fd68",
+  "candidate_production_inputs_sha256": "decda56b185c34972f85982c196ab249592cf730d2a58e02954187fdb7eec4bc",
   "test_policy_originals_restored": true,
   "test_policy_files": {
     "forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": {
@@ -27,8 +29,8 @@
   },
   "suites": {
     "gameplay": {
-      "total": 3445,
-      "passed": 3445,
+      "total": 3503,
+      "passed": 3503,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -86,6 +88,10 @@
         "forge.ai.CommanderGrantedCostPreviewTest",
         "forge.ai.CommanderHandCostModifierTest",
         "forge.ai.CommanderIncubateTest",
+        "forge.ai.CommanderInformationChoiceTest",
+        "forge.ai.CommanderInformationContextTest",
+        "forge.ai.CommanderInformationOrderingTest",
+        "forge.ai.CommanderInformationValueTest",
         "forge.ai.CommanderInspectionAiTest",
         "forge.ai.CommanderInspectionKnowledgeTest",
         "forge.ai.CommanderKefnetCostTest",
@@ -112,6 +118,7 @@
         "forge.ai.CommanderRaisedCastCostTest",
         "forge.ai.CommanderReaperLimitTest",
         "forge.ai.CommanderRepeatedDiscardEntrypointTest",
+        "forge.ai.CommanderResolvingInformationCopyTest",
         "forge.ai.CommanderReverseTurnOrderTest",
         "forge.ai.CommanderRinoaReturnTest",
         "forge.ai.CommanderSecretVoteTest",
@@ -335,16 +342,16 @@
         "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
         "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 302,
+      "selected_classes": 307,
       "process": {
         "status": "finished",
-        "bytes": 191268,
+        "bytes": 192849,
         "returncode": 0,
-        "elapsed_seconds": 256.062
+        "elapsed_seconds": 203.75
       },
-      "local_run_id": "native-gameplay-4c22de0363574da2a1b218abd888515a",
-      "testng_results_sha256": "2e81b340cd2c3f7658a9b5b631d76324656324d0f31c82135ec06be22a66bb48",
-      "log_sha256": "afc580bf078a4e340fc2bcd01f3561e19aad0a3e2b38f7abdb80b1a880cdd325"
+      "local_run_id": "native-gameplay-adb498e0b8804a24b03dc767f278e7c4",
+      "testng_results_sha256": "7fb6a4bb5b3b9fdae76d4f83dc23672c9d77191b269bc2769fb7f9da7c7c3019",
+      "log_sha256": "48cd248f188f734d22fd65a37eb487ed73687f9d24f23e5687c862444fe818ab"
     },
     "serialization": {
       "total": 256,
@@ -372,13 +379,13 @@
       "selected_classes": 16,
       "process": {
         "status": "finished",
-        "bytes": 29635,
+        "bytes": 29856,
         "returncode": 0,
-        "elapsed_seconds": 99.36
+        "elapsed_seconds": 79.719
       },
-      "local_run_id": "native-serialization-351c774132304a6f8d8d8e5b30569983",
-      "testng_results_sha256": "20ad2560669f3af0d732699d0f4c57c4fa8b863893f6197ea6176db590170d0f",
-      "log_sha256": "b8eeb633cf9413d523953b989a02d68f2da6b9adc2f8d09f34ad217029cd57d0"
+      "local_run_id": "native-serialization-a437d339d1fe43cb8f3aa45d96f25b86",
+      "testng_results_sha256": "35bf5937d199f44f16fc9380b90c1128d33b798949d600a58cd60fca4566cb8e",
+      "log_sha256": "b9fcc25987895714c965bb9e0aaf3d8f1f0b4395988258ebb4f5152c02911c3b"
     }
   }
 }

@@ -17,9 +17,41 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Primary face-down inspection and authorized knowledge
+## Paid information, library order and resolving-zone boundaries
 
-The selected runtime uses a generic primary inspection policy for Smoke Teller
+The selected information runtime uses generic authorized knowledge and paid
+native outcomes for primary information decisions. The supplied Spy Network and
+Lens of Clarity states cover actual heuristic/hybrid/full choices, redundant
+payment avoidance, private hand and library knowledge, countering and copied
+pending resolution. The library-order callback records only announced positions;
+forgetting an identity retires its matching positions. Real draw/damage cast
+triggers and granted mana remain part of decision outcomes.
+
+A first 2,025-test candidate passed independent packaged checks but failed one
+of 3,499 broader methods: public stack visibility earned private-hand credit
+through a transitional zone collection, so original/copied scores differed.
+Four native baselines reproduce hand, library and paid-knowledge copy errors.
+The correction checks actual zone membership and retains authorized paid
+knowledge; it preserves the original upstream safety test and copy verification.
+The failed candidate and original baseline/source phases remain preserved.
+
+All 804 focused source checks pass. The fresh 2,029-test build retains all 1,971
+prior methods and adds 58; independent/repeated packaged families pass
+872/65/194/146 cases, broader gameplay/serialization pass 3,503/256 and all 45 live
+tests with 1,925 subtests pass. All 512 implementation inputs remain frozen during
+validation. Post-move health is ready, and the catalog constructs 32,636 starting
+identities with seven nonstarting meld exclusions. Card scripts/default AI are
+unchanged. See the [source](../engine/information_choice_native_evidence.json),
+[packaged](../engine/information_choice_packaged_evidence.json) and
+[activation evidence](../engine/information_choice_evidence.json).
+
+These fixtures establish selected contracts, not full Commander rules or
+calibrated strategy. Information value is bounded. Scry/surveil knowledge
+retention is a source-audit lead that still needs paid native baselines.
+
+## Earlier primary face-down inspection and authorized knowledge
+
+The earlier inspection runtime introduced a generic primary policy for Smoke Teller
 and Aven Soulgazer. Actual heuristic, hybrid and full-simulation choices pay their
 native costs, disclose information only to the authorized observer, and avoid
 repeat payment for an already inspected face. Free access through a paid Lens of

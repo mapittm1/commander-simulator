@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate reviewed generic information choices and resolving-zone scoring after
+  all 45 live tests and 1,925 subtests pass, including repeated 872/65/194/146
+  packaged families. All 804 focused source, 2,029 native, 3,503 broader gameplay
+  and 256 serialization checks pass. Verify 512 frozen implementation inputs,
+  source/baseline snapshots, original failure retention, post-move readiness and
+  construction of 32,636 starting identities with seven nonstarting meld exclusions.
+  Preserve private paid knowledge and resulting library order without counting
+  public stack cards as private-zone information. Card scripts/default AI remain
+  unchanged. Complete rules and strategy coverage remains open; scry/surveil
+  knowledge retention is an unverified audit lead requiring native baselines.
+  See engine/information_choice_evidence.json.
+
 - Validate the corrected information candidate with 2,029 native methods,
   retaining all 1,971 and adding 58. Independent packaged families pass
   872/65/194/146 cases; broader gameplay/serialization pass 3,503/256, including

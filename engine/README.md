@@ -9,7 +9,17 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected inspection runtime adds a generic LookAt policy, bounded authorized
+The selected information runtime adds generic paid information decisions,
+announced library-order retention and resolving-zone information boundaries.
+All 2,029 native, 804 focused source, independent/repeated 872/65/194/146 packaged,
+3,503 broader gameplay, 256 serialization and 45 live/1,925 subtest checks pass.
+Preserve the failed first candidate, original native baselines and intermediate
+source failures. Card scripts and default AI remain unchanged. See the
+[information patch](patches/commander-information-choice.patch) and
+[activation evidence](information_choice_evidence.json). Complete rules and
+calibrated strategy remain unproven; scry/surveil knowledge needs native baselines.
+
+The earlier inspection runtime adds a generic LookAt policy, bounded authorized
 knowledge value and knowledge-sensitive target pruning. All 1,971 selected native,
 745 focused source, independent/repeated 814/65/194/146 packaged, 3,445 broader
 gameplay, 256 serialization and 45 live/1,867 subtest checks pass. Preserve the

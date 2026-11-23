@@ -17,9 +17,22 @@ JRE still runs Forge. The existing Windows Java runtime exposes its JVM library;
 Linux/macOS library paths are recognized, but the live checks were verified on
 Windows. Ordinary catalog, deck, and simulation commands do not need this bridge.
 
-## Private face-down inspection
+## Paid information and resolving-stack knowledge
 
-The selected reviewed runtime passes the expanded 814-case packaged family,
+The selected runtime passes the 872-case packaged family, including paid
+hand/library choices, announced ordering, forgetting, real cast-trigger benefits
+and damage, granted mana and four resolving-zone regressions. Public stack
+visibility does not award private hand/library knowledge through transitional
+collections. Original/copied paid knowledge, disclosure privacy and the unchanged
+upstream safety assertion pass. Independent and repeated 872/65/194/146 families,
+3,503 broader gameplay, 256 serialization and all 45 live tests with 1,925 subtests
+pass. See [full validation](../engine/information_choice_evidence.json).
+The original failed candidate and baseline witnesses remain preserved. These
+selected interaction tests do not establish complete rules or calibrated strategy.
+
+## Earlier private face-down inspection
+
+The earlier inspection runtime passed the expanded 814-case packaged family,
 including twenty retained primary-inspection contracts and thirteen knowledge
 boundaries. Test Smoke Teller and Aven Soulgazer with actual heuristic, hybrid and
 full choices, native paid activation, Stifle, pending-stack copies, unavailable
@@ -45,7 +58,7 @@ The expanded 146-case family passes against the selected reviewed
 runtime, including twelve dual-role cases. See the
 [source evidence](../engine/dual_combat_role_native_evidence.json),
 [packaged milestone](../engine/dual_combat_role_packaged_evidence.json), and
-[current full validation](../engine/inspection_ai_evidence.json).
+[current full validation](../engine/information_choice_evidence.json).
 
 Run the fixed Battle pytest family with the selected reviewed engine,
 optional native bridge, pinned local TestNG dependency and trusted JDK compiler:
@@ -76,8 +89,8 @@ interaction. Fixed source/dependency checks, compilation integrity, 30 productio
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
 and [current packaged evidence](../engine/inspection_ai_packaged_evidence.json).
-Both supplemental fixtures are included in the reviewed 1,971-method build. All
-45 live tests and 1,867 subtests pass, including repeated packaged families.
+Both supplemental fixtures remain in the reviewed 2,029-method build. All
+45 live tests and 1,925 subtests pass, including repeated packaged families.
 The prior [validation](../engine/defender_typechange_evidence.json) remains a
 separate historical milestone. Full card/rules/AI correctness remains unverified.
 
