@@ -27,6 +27,16 @@ difference.
 
 ## Card coverage
 
+A draw-step timing correction passes all 1,066 focused source checks, retaining
+1,042 and adding 24. Per-draw checks catch a Reed Richards replacement firing on
+the third own-step draw instead of the second even though a three-draw batch
+totals six cards. Paired history controls also catch a foreign-step draw being
+excluded as normal. See the [preserved failures](engine/draw_step_replacement_gap.json)
+and [source validation](engine/draw_step_replacement_native_evidence.json).
+The recipe prepares 2,291 native and 1,134 packaged checks; these are future
+validation targets. The selected 2,267-test runtime below remains unchanged.
+
+
 The selected runtime evaluates paid Recruit actions and preserves copied draw
 history, drawn-card flags and last-drawn provenance. Native cost admission and
 AI payment share a current-turn, current-hand and card-timestamp check, rejecting

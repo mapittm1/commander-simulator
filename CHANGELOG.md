@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct first-extra draw timing and foreign-step exclusion in isolated source.
+  All 1,066 focused checks pass, retaining 1,042 and adding 24 per-event/history
+  contracts across original/active/common games. Preserve native18-case12pass/6fail
+  and24-case15pass/9fail baselines; equal three-draw totals remain passing controls
+  rather than timing proof. Two production files change; scripts/profiles are
+  unchanged. Register future 2,291 native/1,134 packaged checks without claiming
+  a rebuilt or active correction. See engine/draw_step_replacement_native_evidence.json;
+  wider replacement/prevention/history and complete Commander correctness remain open.
+
 - Activate generic Recruit evaluation and last-drawn payment provenance after
   all 1,042 source and 2,267 native checks pass, retaining 2,212 and adding 55.
   Independent/repeated packaged families pass 1110/65/194/146; broader gameplay

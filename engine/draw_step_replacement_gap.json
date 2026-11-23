@@ -1,0 +1,711 @@
+{
+  "status": "confirmed_selected_runtime_gap_source_corrected_packaging_pending",
+  "baseline_commit": "383e2d99e27b2f9716bf37a40c07bf6a810c8eed",
+  "catalog_oracle": {
+    "card_id": "51f55021-04e0-49bf-8f1f-de2a578c95fc",
+    "name": "Reed Richards, Smartest Man",
+    "oracle_text": "Reach\nYou have no maximum hand size.\nThe first time you would draw a card each turn except the first card you draw during each of your draw steps, you draw four cards instead.",
+    "commander_legality": "legal"
+  },
+  "phases": {
+    "packaged-draw-step18-baseline": {
+      "result": {
+        "scope": "Eighteen original/active-copy/common-snapshot native per-draw Reed outcomes: first/second/third own draw, three-card own batch, foreign draw-step first draw and main-phase first draw. Hand/library/history deltas and original-copy independence are asserted. Batch totals alone do not certify timing; source review is not a proven defect",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-recruit-draw-provenance",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "2d00af83a7734eacebdd3374a72b22f3027ca61ebd9822cb83881bbcfb990ab7",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "4ba2725ef03937b79d7e52c58f2cdb2f73c9fecb9822d3cae97c38a6060d85f1",
+          "native_tests": {
+            "total": 2267,
+            "passed": 2267,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "4f01c051a02b1253ef5b93f6edd7a1ae68e0c6fba97612e2614c06f11642a4c8",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 18,
+          "passed": 12,
+          "failed": 6,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.activeCopyOwnThird",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.commonSnapshotOwnThird",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepReplacementTest.originalOwnThird",
+            "status": "FAIL"
+          }
+        ],
+        "research_inputs_sha256": "ce765b921612d31f955a76b6f73d1aec57b12fbd2e91bf63724cd04f4a7fca58",
+        "driver_sha256": "0a4f7bdd09dd96c2aa8b2779e8179a52c762b88f9db9bf78f11b10600fba8cf1",
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\InformationChoiceTestSupport.java": "60c98e7f5af2b3c9b550bfc719e0859a433e63222f9683a85aef1ffafafa0fb6",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-draw-step-replacement-research\\CommanderDrawStepReplacementTest.java": "0c377255dc586928298ad4d9145269bba59b91a5e929206c6812aab37ccd74a2",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engines\\forge-583714b-recruit-draw-provenance-reviewed\\res\\ai\\Cautious.ai": "ba068d013a1b3b9b3e11f13ef3ee4260d7ecb8ce6bb2417142893f591e2014af"
+        },
+        "production_origins_verified": 150,
+        "production_origin_classes": [
+          "forge.game.ability.effects.LookAtEffect",
+          "forge.ai.InspectionKnowledge",
+          "forge.ai.InformationEffects",
+          "forge.ai.ability.RearrangeTopOfLibraryAi",
+          "forge.ai.ability.PumpAi",
+          "forge.ai.ability.PermanentNoncreatureAi",
+          "forge.game.ability.effects.RearrangeTopOfLibraryEffect",
+          "forge.ai.ability.LookAtAi",
+          "forge.ai.simulation.PossibleTargetSelector",
+          "forge.game.ability.effects.ChangeTextEffect",
+          "forge.game.ability.effects.EncodeEffect",
+          "forge.ai.AiController",
+          "forge.ai.ability.ChooseGenericAi",
+          "forge.ai.ability.CharmAi",
+          "forge.ai.simulation.ModalTextChoices",
+          "forge.ai.AiCardMemory",
+          "forge.game.player.PlayerController",
+          "forge.ai.PlayerControllerAi",
+          "forge.ai.simulation.PaidOutcomePlanner",
+          "forge.ai.simulation.Plan",
+          "forge.ai.simulation.SimulationController",
+          "forge.ai.simulation.GameStateEvaluator",
+          "forge.ai.simulation.SpellAbilityChoiceCopier",
+          "forge.ai.simulation.SpellAbilityChoicesIterator",
+          "forge.ai.simulation.SpellAbilityPicker",
+          "forge.ai.ability.ChangeTextAi",
+          "forge.ai.simulation.TextChangeChoices",
+          "forge.ai.ComputerUtilMana",
+          "forge.ai.SpellApiToAi",
+          "forge.ai.ability.RecruitAi",
+          "forge.ai.ability.SwitchBlockAi",
+          "forge.ai.ability.EmpowerAi",
+          "forge.game.ability.effects.EmpowerEffect",
+          "forge.ai.simulation.OnePlaySafetyChecker",
+          "forge.game.Game",
+          "forge.game.card.Card",
+          "forge.game.trigger.TriggerCounterRemoved",
+          "forge.game.ability.effects.GameDrawEffect",
+          "forge.game.ability.effects.DrawEffect",
+          "forge.game.ability.effects.CopyPermanentEffect",
+          "forge.game.ability.effects.CountersPutAllEffect",
+          "forge.game.ability.effects.ChangeXEffect",
+          "forge.game.ability.effects.PeekAndRevealEffect",
+          "forge.game.ability.effects.ImmediateTriggerEffect",
+          "forge.game.ability.effects.PlayEffect",
+          "forge.game.ability.effects.ManaReflectedEffect",
+          "forge.game.spellability.AbilityManaPart",
+          "forge.game.trigger.TriggerTapsForMana",
+          "forge.game.trigger.TriggerManaAdded",
+          "forge.game.mana.ManaCostBeingPaid",
+          "forge.ai.ComputerUtil",
+          "forge.game.GameActionUtil",
+          "forge.game.ability.effects.ReplaceManaEffect",
+          "forge.game.trigger.TriggerHandler",
+          "forge.ai.AiCostDecision",
+          "forge.game.cost.Cost",
+          "forge.game.cost.CostPayment",
+          "forge.game.cost.CostRemoveCounter",
+          "forge.game.cost.CostRemoveAnyCounter",
+          "forge.game.GameAction",
+          "forge.game.player.DelayedReveal",
+          "forge.game.ability.effects.RevealHandEffect",
+          "forge.game.GameAction$LibraryObservers",
+          "forge.game.GameEntity",
+          "forge.game.ability.AbilityUtils",
+          "forge.game.card.CardZoneTable",
+          "forge.game.cost.CostDiscard",
+          "forge.game.cost.CostPartWithList",
+          "forge.game.cost.CostPayEnergy",
+          "forge.game.zone.Zone",
+          "forge.game.zone.Zone$LibraryObservation",
+          "forge.game.player.PlayerController$LibraryOrderObservation",
+          "forge.game.cost.CostDecisionMakerBase",
+          "forge.ai.ComputerUtilCost",
+          "forge.game.cost.CostTap",
+          "forge.game.cost.CostTapType",
+          "forge.game.cost.CostPayLife",
+          "forge.game.player.Player",
+          "forge.game.spellability.SpellAbility",
+          "forge.game.cost.CostSacrifice",
+          "forge.ai.simulation.GameCopier",
+          "forge.game.ability.effects.AssimilateEffect",
+          "forge.game.ability.effects.CharmEffect",
+          "forge.game.player.PlaySpellAbility",
+          "forge.game.trigger.TriggerFacesDilemma",
+          "forge.game.zone.MagicStack",
+          "forge.game.ability.SpellAbilityEffect",
+          "forge.game.ability.effects.ChangeZoneEffect",
+          "forge.game.ability.effects.LifeGainEffect",
+          "forge.game.combat.Combat",
+          "forge.game.replacement.ReplacementHandler",
+          "forge.game.ability.effects.DigEffect",
+          "forge.game.ability.effects.CountersPutEffect",
+          "forge.game.card.CardFactoryUtil",
+          "forge.game.GameSnapshot",
+          "forge.game.ability.effects.RollDiceEffect",
+          "forge.game.ability.effects.ExploreEffect",
+          "forge.game.ability.effects.DiscoverEffect",
+          "forge.game.ability.effects.VillainousChoiceEffect",
+          "forge.game.ability.effects.LearnEffect",
+          "forge.game.ability.effects.ReverseTurnOrderEffect",
+          "forge.game.ability.effects.EndTurnEffect",
+          "forge.game.ability.effects.SetStateEffect",
+          "forge.game.card.CardCopyService",
+          "forge.game.spellability.SpellAbilityStackInstance",
+          "forge.game.spellability.SpellAbilitySnapshot",
+          "forge.game.ability.effects.CounterEffect",
+          "forge.game.ability.effects.CopySpellAbilityEffect",
+          "forge.ai.ability.CopySpellAbilityAi",
+          "forge.game.spellability.SpellAbilityProperty",
+          "forge.game.ability.effects.RepeatEachEffect",
+          "forge.game.phase.PhaseHandler",
+          "forge.game.ability.effects.VoteEffect",
+          "forge.game.ability.effects.TimeTravelEffect",
+          "forge.game.trigger.TriggerRolledDie",
+          "forge.game.trigger.WrappedAbility",
+          "forge.game.trigger.TriggerChangesZoneAll",
+          "forge.game.ability.AbilityKey",
+          "forge.game.ability.effects.RecruitEffect",
+          "forge.ai.ability.CounterAi",
+          "forge.ai.ability.TapOrUntapAi",
+          "forge.game.ability.effects.TapOrUntapEffect",
+          "forge.ai.SpellAbilityAi",
+          "forge.ai.ability.TapOrUntapAllAi",
+          "forge.ai.ability.ChooseTypeAi",
+          "forge.game.ability.effects.TapOrUntapAllEffect",
+          "forge.game.ability.effects.ChooseTypeEffect",
+          "forge.game.ability.effects.ChooseColorEffect",
+          "forge.game.ability.effects.DiscardEffect",
+          "forge.game.cost.CostPromiseGift",
+          "forge.game.ability.effects.TokenEffect",
+          "forge.game.ability.effects.PhasesEffect",
+          "forge.game.card.CounterEnumType",
+          "forge.game.phase.Untap",
+          "forge.game.zone.PlayerZoneBattlefield",
+          "forge.game.ability.effects.EffectEffect",
+          "forge.game.ability.effects.DestroyEffect",
+          "forge.game.card.CardProperty",
+          "forge.game.combat.CombatUtil",
+          "forge.game.ability.effects.CountersRemoveEffect",
+          "forge.game.ability.effects.FogEffect",
+          "forge.game.card.CardDamageTable",
+          "forge.game.ability.effects.AttachEffect",
+          "forge.game.staticability.StaticAbilityContinuous",
+          "forge.game.staticability.StaticAbilityCastWithFlash",
+          "forge.ai.ability.CannotPlayAi",
+          "forge.ai.LobbyPlayerAi",
+          "forge.game.ability.effects.ControlPlayerEffect",
+          "forge.game.ability.effects.ScryEffect",
+          "forge.game.ability.effects.SurveilEffect"
+        ],
+        "report_sha256": "61af1679647db24edee32ca2c87ae4332cc4f7a6ee3891cf541e992f96614482",
+        "failures": [
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3599,
+        "returncode": 0,
+        "elapsed_seconds": 10.032
+      },
+      "native_log_sha256": "c623bda505db03958b5074c2c3ae9a92e6ec133a61403e767d19abceeb45abe1"
+    },
+    "packaged-draw-step24-baseline": {
+      "result": {
+        "scope": "Twenty-four original/active-copy/common-snapshot native per-draw Reed outcomes: first/second/third own draw, three-card own batch, foreign draw-step first draw and main-phase first draw plus paired pre-entry extra draws during MAIN2 and a foreign DRAW step. Those controls extend the existing printed MAIN2 first-extra consumption contract; they do not establish all replacement-ordering rules. Hand/library/history deltas and original-copy independence are asserted. Batch totals alone do not certify timing; source review is not a proven defect",
+        "engine": {
+          "forge_version": "2.0.16-583714b-reviewed-recruit-draw-provenance",
+          "capabilities": [
+            "sticker_kicker",
+            "explicit_commander_colors",
+            "native_companion_pregame",
+            "supplementary_ai_zones",
+            "sticker_snapshot_state",
+            "historical_lki_state",
+            "damage_history_state",
+            "participant_snapshot_state",
+            "starting_life_snapshot",
+            "stack_snapshot_state",
+            "cast_form_snapshot",
+            "usage_snapshot_state",
+            "scheduled_snapshot_state",
+            "delayed_trigger_snapshot",
+            "turn_schedule_snapshot",
+            "conditional_cleanup_snapshot",
+            "animation_snapshot_state",
+            "copy_frame_expiration",
+            "protection_expiration",
+            "keyword_exchange_expiration",
+            "blocking_prevention_snapshot",
+            "ring_text_snapshot",
+            "attachment_mana_cleanup",
+            "host_bound_return_snapshot",
+            "effect_cleanup_regeneration",
+            "detain_control_age_snapshot",
+            "player_control_snapshot",
+            "decision_beneficiary_planning",
+            "controlled_attack_planning",
+            "primary_control_future_planning",
+            "paid_spell_control_retargeting",
+            "composed_spell_control",
+            "cast_provenance_records",
+            "paid_mass_counter_planning",
+            "paid_exchange_pile_planning",
+            "divine_intervention_counter_trigger",
+            "expired_mana_reservation_isolation",
+            "hybrid_safety_paired_random_isolation"
+          ],
+          "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "jar_sha256": "2d00af83a7734eacebdd3374a72b22f3027ca61ebd9822cb83881bbcfb990ab7",
+          "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+          "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+          "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+          "recipe_sha256": "4ba2725ef03937b79d7e52c58f2cdb2f73c9fecb9822d3cae97c38a6060d85f1",
+          "native_tests": {
+            "total": 2267,
+            "passed": 2267,
+            "failed": 0,
+            "skipped": 0
+          },
+          "build_log_sha256": "4f01c051a02b1253ef5b93f6edd7a1ae68e0c6fba97612e2614c06f11642a4c8",
+          "edition_resources": {
+            "files": 686,
+            "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+          },
+          "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+          "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+          "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+        },
+        "counts": {
+          "total": 24,
+          "passed": 15,
+          "failed": 9,
+          "skipped": 0
+        },
+        "methods": [
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyLateForeign",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyLateMain",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.activeCopyOwnThird",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotLateForeign",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotLateMain",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.commonSnapshotOwnThird",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalForeignFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalLateForeign",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalLateMain",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalMainFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalOwnBatch",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalOwnFirst",
+            "status": "PASS"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalOwnSecond",
+            "status": "FAIL"
+          },
+          {
+            "method": "forge.ai.CommanderDrawStepBoundaryTest.originalOwnThird",
+            "status": "FAIL"
+          }
+        ],
+        "research_inputs_sha256": "c687826ba03c37f99386eb6e5c091a8133082956ea84c83ae54625a8348c70ab",
+        "driver_sha256": "2065a57fab909ae935db83aa1da8a020f358676bf905145bd3be6b48b788bd60",
+        "testng_status": 1,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\InformationChoiceTestSupport.java": "60c98e7f5af2b3c9b550bfc719e0859a433e63222f9683a85aef1ffafafa0fb6",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-draw-step-replacement-research\\CommanderDrawStepBoundaryTest.java": "620049a7fc4a28f2d3a636b3561273d9f8031afe645db8def3f176dd470f2e30",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engines\\forge-583714b-recruit-draw-provenance-reviewed\\res\\ai\\Cautious.ai": "ba068d013a1b3b9b3e11f13ef3ee4260d7ecb8ce6bb2417142893f591e2014af"
+        },
+        "production_origins_verified": 150,
+        "production_origin_classes": [
+          "forge.game.ability.effects.LookAtEffect",
+          "forge.ai.InspectionKnowledge",
+          "forge.ai.InformationEffects",
+          "forge.ai.ability.RearrangeTopOfLibraryAi",
+          "forge.ai.ability.PumpAi",
+          "forge.ai.ability.PermanentNoncreatureAi",
+          "forge.game.ability.effects.RearrangeTopOfLibraryEffect",
+          "forge.ai.ability.LookAtAi",
+          "forge.ai.simulation.PossibleTargetSelector",
+          "forge.game.ability.effects.ChangeTextEffect",
+          "forge.game.ability.effects.EncodeEffect",
+          "forge.ai.AiController",
+          "forge.ai.ability.ChooseGenericAi",
+          "forge.ai.ability.CharmAi",
+          "forge.ai.simulation.ModalTextChoices",
+          "forge.ai.AiCardMemory",
+          "forge.game.player.PlayerController",
+          "forge.ai.PlayerControllerAi",
+          "forge.ai.simulation.PaidOutcomePlanner",
+          "forge.ai.simulation.Plan",
+          "forge.ai.simulation.SimulationController",
+          "forge.ai.simulation.GameStateEvaluator",
+          "forge.ai.simulation.SpellAbilityChoiceCopier",
+          "forge.ai.simulation.SpellAbilityChoicesIterator",
+          "forge.ai.simulation.SpellAbilityPicker",
+          "forge.ai.ability.ChangeTextAi",
+          "forge.ai.simulation.TextChangeChoices",
+          "forge.ai.ComputerUtilMana",
+          "forge.ai.SpellApiToAi",
+          "forge.ai.ability.RecruitAi",
+          "forge.ai.ability.SwitchBlockAi",
+          "forge.ai.ability.EmpowerAi",
+          "forge.game.ability.effects.EmpowerEffect",
+          "forge.ai.simulation.OnePlaySafetyChecker",
+          "forge.game.Game",
+          "forge.game.card.Card",
+          "forge.game.trigger.TriggerCounterRemoved",
+          "forge.game.ability.effects.GameDrawEffect",
+          "forge.game.ability.effects.DrawEffect",
+          "forge.game.ability.effects.CopyPermanentEffect",
+          "forge.game.ability.effects.CountersPutAllEffect",
+          "forge.game.ability.effects.ChangeXEffect",
+          "forge.game.ability.effects.PeekAndRevealEffect",
+          "forge.game.ability.effects.ImmediateTriggerEffect",
+          "forge.game.ability.effects.PlayEffect",
+          "forge.game.ability.effects.ManaReflectedEffect",
+          "forge.game.spellability.AbilityManaPart",
+          "forge.game.trigger.TriggerTapsForMana",
+          "forge.game.trigger.TriggerManaAdded",
+          "forge.game.mana.ManaCostBeingPaid",
+          "forge.ai.ComputerUtil",
+          "forge.game.GameActionUtil",
+          "forge.game.ability.effects.ReplaceManaEffect",
+          "forge.game.trigger.TriggerHandler",
+          "forge.ai.AiCostDecision",
+          "forge.game.cost.Cost",
+          "forge.game.cost.CostPayment",
+          "forge.game.cost.CostRemoveCounter",
+          "forge.game.cost.CostRemoveAnyCounter",
+          "forge.game.GameAction",
+          "forge.game.player.DelayedReveal",
+          "forge.game.ability.effects.RevealHandEffect",
+          "forge.game.GameAction$LibraryObservers",
+          "forge.game.GameEntity",
+          "forge.game.ability.AbilityUtils",
+          "forge.game.card.CardZoneTable",
+          "forge.game.cost.CostDiscard",
+          "forge.game.cost.CostPartWithList",
+          "forge.game.cost.CostPayEnergy",
+          "forge.game.zone.Zone",
+          "forge.game.zone.Zone$LibraryObservation",
+          "forge.game.player.PlayerController$LibraryOrderObservation",
+          "forge.game.cost.CostDecisionMakerBase",
+          "forge.ai.ComputerUtilCost",
+          "forge.game.cost.CostTap",
+          "forge.game.cost.CostTapType",
+          "forge.game.cost.CostPayLife",
+          "forge.game.player.Player",
+          "forge.game.spellability.SpellAbility",
+          "forge.game.cost.CostSacrifice",
+          "forge.ai.simulation.GameCopier",
+          "forge.game.ability.effects.AssimilateEffect",
+          "forge.game.ability.effects.CharmEffect",
+          "forge.game.player.PlaySpellAbility",
+          "forge.game.trigger.TriggerFacesDilemma",
+          "forge.game.zone.MagicStack",
+          "forge.game.ability.SpellAbilityEffect",
+          "forge.game.ability.effects.ChangeZoneEffect",
+          "forge.game.ability.effects.LifeGainEffect",
+          "forge.game.combat.Combat",
+          "forge.game.replacement.ReplacementHandler",
+          "forge.game.ability.effects.DigEffect",
+          "forge.game.ability.effects.CountersPutEffect",
+          "forge.game.card.CardFactoryUtil",
+          "forge.game.GameSnapshot",
+          "forge.game.ability.effects.RollDiceEffect",
+          "forge.game.ability.effects.ExploreEffect",
+          "forge.game.ability.effects.DiscoverEffect",
+          "forge.game.ability.effects.VillainousChoiceEffect",
+          "forge.game.ability.effects.LearnEffect",
+          "forge.game.ability.effects.ReverseTurnOrderEffect",
+          "forge.game.ability.effects.EndTurnEffect",
+          "forge.game.ability.effects.SetStateEffect",
+          "forge.game.card.CardCopyService",
+          "forge.game.spellability.SpellAbilityStackInstance",
+          "forge.game.spellability.SpellAbilitySnapshot",
+          "forge.game.ability.effects.CounterEffect",
+          "forge.game.ability.effects.CopySpellAbilityEffect",
+          "forge.ai.ability.CopySpellAbilityAi",
+          "forge.game.spellability.SpellAbilityProperty",
+          "forge.game.ability.effects.RepeatEachEffect",
+          "forge.game.phase.PhaseHandler",
+          "forge.game.ability.effects.VoteEffect",
+          "forge.game.ability.effects.TimeTravelEffect",
+          "forge.game.trigger.TriggerRolledDie",
+          "forge.game.trigger.WrappedAbility",
+          "forge.game.trigger.TriggerChangesZoneAll",
+          "forge.game.ability.AbilityKey",
+          "forge.game.ability.effects.RecruitEffect",
+          "forge.ai.ability.CounterAi",
+          "forge.ai.ability.TapOrUntapAi",
+          "forge.game.ability.effects.TapOrUntapEffect",
+          "forge.ai.SpellAbilityAi",
+          "forge.ai.ability.TapOrUntapAllAi",
+          "forge.ai.ability.ChooseTypeAi",
+          "forge.game.ability.effects.TapOrUntapAllEffect",
+          "forge.game.ability.effects.ChooseTypeEffect",
+          "forge.game.ability.effects.ChooseColorEffect",
+          "forge.game.ability.effects.DiscardEffect",
+          "forge.game.cost.CostPromiseGift",
+          "forge.game.ability.effects.TokenEffect",
+          "forge.game.ability.effects.PhasesEffect",
+          "forge.game.card.CounterEnumType",
+          "forge.game.phase.Untap",
+          "forge.game.zone.PlayerZoneBattlefield",
+          "forge.game.ability.effects.EffectEffect",
+          "forge.game.ability.effects.DestroyEffect",
+          "forge.game.card.CardProperty",
+          "forge.game.combat.CombatUtil",
+          "forge.game.ability.effects.CountersRemoveEffect",
+          "forge.game.ability.effects.FogEffect",
+          "forge.game.card.CardDamageTable",
+          "forge.game.ability.effects.AttachEffect",
+          "forge.game.staticability.StaticAbilityContinuous",
+          "forge.game.staticability.StaticAbilityCastWithFlash",
+          "forge.ai.ability.CannotPlayAi",
+          "forge.ai.LobbyPlayerAi",
+          "forge.game.ability.effects.ControlPlayerEffect",
+          "forge.game.ability.effects.ScryEffect",
+          "forge.game.ability.effects.SurveilEffect"
+        ],
+        "report_sha256": "4085fcc6e1549ec12e4fa2d62154c7a632471e8011f5ee030e30c46620f1cc22",
+        "failures": [
+          "java.lang.AssertionError: lateForeign hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: lateForeign hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: lateForeign hand delta expected [1] but found [4]",
+          "java.lang.AssertionError: ownSecond hand delta expected [4] but found [1]",
+          "java.lang.AssertionError: ownThird hand delta expected [1] but found [4]"
+        ]
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3836,
+        "returncode": 0,
+        "elapsed_seconds": 10.218
+      },
+      "native_log_sha256": "5498cac8f72d188091ba005cd3dd480cb6dbd7b895a56cf5d6380010069e23c5"
+    }
+  },
+  "fixtures": {
+    "engine/pending/draw-step-replacement/CommanderDrawStepBoundaryTest.java": "620049a7fc4a28f2d3a636b3561273d9f8031afe645db8def3f176dd470f2e30",
+    "engine/pending/draw-step-replacement/CommanderDrawStepReplacementTest.java": "0c377255dc586928298ad4d9145269bba59b91a5e929206c6812aab37ccd74a2"
+  },
+  "finding": "Own-step first-extra replacement fires on the third draw instead of the second; equal three-draw batch totals conceal the timing error. Paired MAIN2/foreign-DRAW history controls expose exclusion of an out-of-turn draw as normal. All original/active/common worlds reproduce the supplied failures.",
+  "limits": [
+    "Per-event checks are needed; passing batch totals are not timing proof.",
+    "Source1066 correction is not yet packaged or active; selected2267 retains these failures.",
+    "All replacement/prevention ordering and attempted/replaced-draw history remain further validation."
+  ]
+}

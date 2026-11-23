@@ -1,0 +1,27 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1381,7 +1381,8 @@
+                 numExtraDrawnThisTurn++;
+                 if (game.getPhaseHandler().is(PhaseType.DRAW)) {
+                     numDrawnThisDrawStep++;
+-                    if (numDrawnThisDrawStep == 1) {
++                    // Only the active player's first draw is excluded from extra draws.
++                    if (numDrawnThisDrawStep == 1 && game.getPhaseHandler().isPlayerTurn(this)) {
+                         numExtraDrawnThisTurn--;
+                     }
+                 }
+--- a/forge-game/src/main/java/forge/game/replacement/ReplaceDraw.java
++++ b/forge-game/src/main/java/forge/game/replacement/ReplaceDraw.java
+@@ -64,7 +64,11 @@
+         }
+ 
+         if (hasParam("FirstExtraCardDrawnThisTurn")) {
+-            if ((int) runParams.get(AbilityKey.ExtraDraws) != (ownDraw ? 1 : 0)) {
++            // Player's extra-draw count already excludes the normal first own-step draw.
++            if (ownDraw && p.numDrawnThisDrawStep() == 0) {
++                return false;
++            }
++            if ((int) runParams.get(AbilityKey.ExtraDraws) != 0) {
+                 return false;
+             }
+         }

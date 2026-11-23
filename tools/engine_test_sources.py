@@ -156,6 +156,7 @@ REGRESSION_SOURCES = {
     "CommanderRecruitSafetyTest.java": "commander_recruit_safety_test_sha256",
     "CommanderDrawHistorySnapshotTest.java": "commander_draw_history_snapshot_test_sha256",
     "CommanderLastDrawnBoundaryTest.java": "commander_last_drawn_boundary_test_sha256",
+    "CommanderDrawStepBoundaryTest.java": "commander_draw_step_boundary_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",
