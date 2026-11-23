@@ -27,11 +27,16 @@ difference.
 
 ## Card coverage
 
-A separate no-shuffle transition baseline exposes remaining AI deduction loss:
-eight original/copied Opt/Consider checks fail, while four ordinary-draw and fully
-reannounced-order controls pass. Native resolution succeeds, but prior known
-positions outside the new inspection are forgotten. The selected runtime below
-remains active. See the [exact transition baseline](engine/library_knowledge_transition_gap.json).
+The original no-shuffle transition baseline passes four controls and fails eight
+Opt/Consider deduction-retention checks. An isolated generic correction now
+passes 865 focused source checks, retaining 832 and adding 33. Bounded scopes
+preserve previously known outside positions only through authorized moves;
+opaque resets and uninspected-object changes invalidate that preservation.
+Same-library timestamp refreshes retain exact-object authorization, while stale
+or foreign copies do not. Source, negative scope/copy and paid rearrange/shuffle
+checks pass; packaging and broader/full live validation remain pending. The
+selected runtime below remains active. See the [baseline](engine/library_knowledge_transition_gap.json)
+and [source evidence](engine/library_knowledge_transition_native_evidence.json).
 
 The selected runtime records authorized initial library inspection and announced
 resulting order through shared callbacks for scry, surveil and rearrange. It

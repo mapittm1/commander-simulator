@@ -1,0 +1,449 @@
+--- a/forge-ai/src/main/java/forge/ai/AiCardMemory.java
++++ b/forge-ai/src/main/java/forge/ai/AiCardMemory.java
+@@ -104,8 +104,11 @@
+     }
+ 
+     public void rememberLibraryPositions(Player owner, Map<Integer, Card> disclosed) {
++        rememberLibraryPositions(owner, disclosed, Maps.newHashMap());
++    }
++
++    private void rememberLibraryPositions(Player owner, Map<Integer, Card> disclosed, Map<Integer, CardIdentity> positions) {
+         long revision = owner.getZone(ZoneType.Library).getLibraryOrderRevision();
+-        Map<Integer, CardIdentity> positions = Maps.newHashMap();
+         LibraryKnowledge previous = libraryKnowledge.get(owner);
+         if (previous != null && previous.owner() == owner && previous.isCurrent()) {
+             positions.putAll(previous.positions());
+@@ -123,6 +126,32 @@
+         if (!positions.isEmpty()) {
+             libraryKnowledge.put(owner, new LibraryKnowledge(owner, revision, positions));
+         }
++    }
++
++    /** Shift only previously acquired outside identities through an authorized transformation. */
++    public void observeLibraryOrder(PlayerController.LibraryOrderObservation observation, Map<Integer, Card> disclosed) {
++        Player owner = observation.owner();
++        LibraryKnowledge previous = libraryKnowledge.get(owner);
++        Map<Integer, CardIdentity> retained = Maps.newHashMap();
++        if (observation.outsideUnchanged() && previous != null && previous.owner() == owner
++                && previous.revision() == observation.previousRevision()
++                && observation.inspectedCount() >= 0 && observation.inspectedCount() <= observation.previousSize()
++                && observation.topCount() >= 0 && observation.bottomCount() >= 0
++                && (long) observation.topCount() + observation.bottomCount() <= observation.inspectedCount()
++                && owner.getCardsIn(ZoneType.Library).size() == (long) observation.previousSize()
++                    - observation.inspectedCount() + observation.topCount() + observation.bottomCount()) {
++            for (Map.Entry<Integer, CardIdentity> entry : previous.positions().entrySet()) {
++                int before = entry.getKey();
++                int after = observation.topCount() + before - observation.inspectedCount();
++                if (before >= observation.inspectedCount() && before < observation.previousSize()
++                        && after >= observation.topCount()
++                        && after < owner.getCardsIn(ZoneType.Library).size() - observation.bottomCount()) {
++                    retained.put(after, entry.getValue());
++                }
++            }
++        }
++        // Retained pairs come from private prior memory, not a scan of the hidden final library.
++        rememberLibraryPositions(owner, disclosed, retained);
+     }
+ 
+     public void observeLibraryDraw(PlayerController.LibraryDraw draw) {
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -597,6 +597,13 @@
+     }
+ 
+     @Override
++    public void observeLibraryOrder(PlayerController.LibraryOrderObservation observation, Map<Integer, Card> positions) {
++        if (observation.owner().getGame() == player.getGame()) {
++            getAi().getCardMemory().observeLibraryOrder(observation, positions);
++        }
++    }
++
++    @Override
+     public void observeLibraryDraw(PlayerController.LibraryDraw draw) {
+         if (draw.owner().getGame() == player.getGame()) {
+             getAi().getCardMemory().observeLibraryDraw(draw);
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -2798,6 +2798,11 @@
+      */
+     public void observeChosenLibraryOrder(Player owner, PlayerController observer,
+             CardCollectionView toTop, CardCollectionView toBottom) {
++        observeChosenLibraryOrder(owner, observer, toTop, toBottom, null);
++    }
++
++    public void observeChosenLibraryOrder(Player owner, PlayerController observer,
++            CardCollectionView toTop, CardCollectionView toBottom, Zone.LibraryObservation observation) {
+         CardCollectionView library = owner.getCardsIn(ZoneType.Library);
+         Map<Integer, Card> disclosed = Maps.newHashMap();
+         int topCount = toTop == null ? 0 : toTop.size();
+@@ -2818,8 +2823,19 @@
+                 disclosed.put(index, current);
+             }
+         }
+-        // A later hidden shuffle invalidates these positions through the library revision.
+-        observer.observeLibraryTop(owner, disclosed);
++        // Never use hidden final identities to restore an old outside position.
++        if (observation == null || !observation.isFor(owner.getZone(ZoneType.Library))) {
++            observer.observeLibraryTop(owner, disclosed);
++            return;
++        }
++        boolean unchanged = observation.preservesOutside()
++                && topCount + bottomCount <= observation.inspectedCount()
++                && disclosed.size() == topCount + bottomCount
++                && library.size() == observation.previousSize() - observation.inspectedCount() + topCount + bottomCount;
++        for (Card card : disclosed.values()) unchanged &= observation.permits(card);
++        observer.observeLibraryOrder(new PlayerController.LibraryOrderObservation(owner,
++                observation.previousRevision(), observation.previousSize(), observation.inspectedCount(),
++                topCount, bottomCount, unchanged), disclosed);
+     }
+ 
+     public void scry(final List<Player> players, int numScry, SpellAbility cause) {
+@@ -2856,51 +2872,60 @@
+             }
+         }
+ 
+-        // make the decisions
+-        Map<Player, ImmutablePair<CardCollection, CardCollection>> decisions = Maps.newLinkedHashMap();
+-        for (final Map.Entry<Player, Integer> e : actualPlayers.entrySet()) {
+-            final Player p = e.getKey();
+-            final CardCollection topN = new CardCollection(p.getCardsIn(ZoneType.Library, e.getValue()));
+-            observeInspectedLibraryPrefix(p, p.getController(), topN);
+-            ImmutablePair<CardCollection, CardCollection> decision = p.getController().arrangeForScry(topN);
+-            decisions.put(p, decision);
+-            int numToTop = decision.getLeft() == null ? 0 : decision.getLeft().size();
+-            int numToBottom = decision.getRight() == null ? 0 : decision.getRight().size();
+-
+-            // publicize the decision
+-            game.fireEvent(new GameEventScry(PlayerView.get(p), numToTop, numToBottom));
+-        }
+-        // do the moves after all the decisions (maybe not necessary, but let's
+-        // do it the official way)
+-        for (Map.Entry<Player, ImmutablePair<CardCollection, CardCollection>> e : decisions.entrySet()) {
+-            // no good iterate simultaneously in Java
+-            final Player p = e.getKey();
+-            final CardCollection toTop = e.getValue().getLeft();
+-            final CardCollection toBottom = e.getValue().getRight();
+-            int numLookedAt = 0;
+-            if (toTop != null) {
+-                numLookedAt += toTop.size();
+-                Collections.reverse(toTop); // reverse to get the correct order
+-                for (Card c : toTop) {
+-                    moveToLibrary(c, cause, null);
+-                }
+-            }
+-            if (toBottom != null) {
+-                numLookedAt += toBottom.size();
+-                for (Card c : toBottom) {
+-                    moveToBottomOfLibrary(c, cause, null);
+-                }
+-            }
+-
+-            observeChosenLibraryOrder(p, p.getController(), toTop, toBottom);
+-
+-            if (cause != null) {
+-                final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(p);
+-                runParams.put(AbilityKey.ScryNum, numLookedAt);
+-                runParams.put(AbilityKey.ScryBottom, toBottom == null ? 0 : toBottom.size());
+-                game.getTriggerHandler().runTrigger(TriggerType.Scry, runParams, false);
+-            }
+-            p.incScryThisTurn();
++        Map<Player, Zone.LibraryObservation> observations = Maps.newLinkedHashMap();
++        Map<Player, PlayerController> observers = Maps.newLinkedHashMap();
++        try {
++            // make the decisions
++            Map<Player, ImmutablePair<CardCollection, CardCollection>> decisions = Maps.newLinkedHashMap();
++            for (final Map.Entry<Player, Integer> e : actualPlayers.entrySet()) {
++                final Player p = e.getKey();
++                final CardCollection topN = new CardCollection(p.getCardsIn(ZoneType.Library, e.getValue()));
++                PlayerController observer = p.getController();
++                observations.put(p, p.getZone(ZoneType.Library).beginLibraryObservation(topN));
++                observers.put(p, observer);
++                observeInspectedLibraryPrefix(p, observer, topN);
++                ImmutablePair<CardCollection, CardCollection> decision = observer.arrangeForScry(topN);
++                decisions.put(p, decision);
++                int numToTop = decision.getLeft() == null ? 0 : decision.getLeft().size();
++                int numToBottom = decision.getRight() == null ? 0 : decision.getRight().size();
++
++                // publicize the decision
++                game.fireEvent(new GameEventScry(PlayerView.get(p), numToTop, numToBottom));
++            }
++            // do the moves after all the decisions (maybe not necessary, but let's
++            // do it the official way)
++            for (Map.Entry<Player, ImmutablePair<CardCollection, CardCollection>> e : decisions.entrySet()) {
++                // no good iterate simultaneously in Java
++                final Player p = e.getKey();
++                final CardCollection toTop = e.getValue().getLeft();
++                final CardCollection toBottom = e.getValue().getRight();
++                int numLookedAt = 0;
++                if (toTop != null) {
++                    numLookedAt += toTop.size();
++                    Collections.reverse(toTop); // reverse to get the correct order
++                    for (Card c : toTop) {
++                        moveToLibrary(c, cause, null);
++                    }
++                }
++                if (toBottom != null) {
++                    numLookedAt += toBottom.size();
++                    for (Card c : toBottom) {
++                        moveToBottomOfLibrary(c, cause, null);
++                    }
++                }
++
++                observeChosenLibraryOrder(p, observers.get(p), toTop, toBottom, observations.get(p));
++
++                if (cause != null) {
++                    final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(p);
++                    runParams.put(AbilityKey.ScryNum, numLookedAt);
++                    runParams.put(AbilityKey.ScryBottom, toBottom == null ? 0 : toBottom.size());
++                    game.getTriggerHandler().runTrigger(TriggerType.Scry, runParams, false);
++                }
++                p.incScryThisTurn();
++            }
++        } finally {
++            for (Zone.LibraryObservation observation : observations.values()) observation.close();
+         }
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
+@@ -9,6 +9,8 @@
+ import forge.game.card.CardCollection;
+ import forge.game.card.CardCollectionView;
+ import forge.game.player.Player;
++import forge.game.player.PlayerController;
++import forge.game.zone.Zone;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.zone.ZoneType;
+ import forge.util.Lang;
+@@ -101,11 +103,15 @@
+ 
+         CardCollection topCards = player.getTopXCardsFromLibrary(numCards);
+ 
+-        CardCollectionView orderedCards = activator.getController().orderMoveToZoneList(topCards, ZoneType.Library, sa);
+-        for (Card next : orderedCards) {
+-            player.getGame().getAction().moveToLibrary(next, 0, sa);
++        PlayerController observer = activator.getController();
++        try (Zone.LibraryObservation observation = player.getZone(ZoneType.Library).beginLibraryObservation(topCards)) {
++            player.getGame().getAction().observeInspectedLibraryPrefix(player, observer, topCards);
++            CardCollectionView orderedCards = observer.orderMoveToZoneList(topCards, ZoneType.Library, sa);
++            for (Card next : orderedCards) {
++                player.getGame().getAction().moveToLibrary(next, 0, sa);
++            }
++            player.getGame().getAction().observeChosenLibraryOrder(player, observer, orderedCards, null, observation);
+         }
+-        player.getGame().getAction().observeChosenLibraryOrder(player, activator.getController(), orderedCards, null);
+         // A subsequent hidden shuffle changes the library revision and invalidates these positions.
+         if (mayshuffle && activator.getController().confirmAction(sa, null, Localizer.getInstance().getMessage("lblDoyouWantShuffleTheLibrary"), null)) {
+             player.shuffle(sa);
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1163,39 +1163,42 @@
+         final CardCollection topN = getTopXCardsFromLibrary(num);
+ 
+         if (!topN.isEmpty()) {
+-            getGame().getAction().observeInspectedLibraryPrefix(this, getController(), topN);
+-            final Pair<CardCollection, CardCollection> lists = getController().arrangeForSurveil(topN);
+-            final CardCollection toTop = lists.getLeft();
+-            final CardCollection toGrave = lists.getRight();
+-
+-            int numToGrave = 0;
+-            int numToTop = 0;
+-
+-            if (toGrave != null) {
+-                for (Card c : toGrave) {
+-                    Card moved = getGame().getAction().moveToGraveyard(c, cause, params);
+-                    moved.setSurveilled(true);
+-                    numToGrave++;
++            PlayerController observer = getController();
++            try (Zone.LibraryObservation observation = getZone(ZoneType.Library).beginLibraryObservation(topN)) {
++                getGame().getAction().observeInspectedLibraryPrefix(this, observer, topN);
++                final Pair<CardCollection, CardCollection> lists = observer.arrangeForSurveil(topN);
++                final CardCollection toTop = lists.getLeft();
++                final CardCollection toGrave = lists.getRight();
++
++                int numToGrave = 0;
++                int numToTop = 0;
++
++                if (toGrave != null) {
++                    for (Card c : toGrave) {
++                        Card moved = getGame().getAction().moveToGraveyard(c, cause, params);
++                        moved.setSurveilled(true);
++                        numToGrave++;
++                    }
++                    if (cause.hasParam("RememberMoved")) {
++                        cause.getHostCard().addRemembered(toGrave);
++                    }
+                 }
+-                if (cause.hasParam("RememberMoved")) {
+-                    cause.getHostCard().addRemembered(toGrave);
++
++                if (toTop != null) {
++                    Collections.reverse(toTop); // the last card in list will become topmost in library, have to revert thus.
++                    for (Card c : toTop) {
++                        getGame().getAction().moveToLibrary(c, cause, params);
++                        numToTop++;
++                    }
++                    if (cause.hasParam("RememberKept")) {
++                        cause.getHostCard().addRemembered(toTop);
++                    }
+                 }
+-            }
+-
+-            if (toTop != null) {
+-                Collections.reverse(toTop); // the last card in list will become topmost in library, have to revert thus.
+-                for (Card c : toTop) {
+-                    getGame().getAction().moveToLibrary(c, cause, params);
+-                    numToTop++;
+-                }
+-                if (cause.hasParam("RememberKept")) {
+-                    cause.getHostCard().addRemembered(toTop);
+-                }
+-            }
+-
+-            // Only the announced kept prefix is known; graveyard replacements may shuffle other cards.
+-            getGame().getAction().observeChosenLibraryOrder(this, getController(), toTop, null);
+-            getGame().fireEvent(new GameEventSurveil(PlayerView.get(this), numToTop, numToGrave));
++
++                // Only the announced kept prefix is known; graveyard replacements may shuffle other cards.
++                getGame().getAction().observeChosenLibraryOrder(this, observer, toTop, null, observation);
++                getGame().fireEvent(new GameEventSurveil(PlayerView.get(this), numToTop, numToGrave));
++            }
+         }
+ 
+         final Map<AbilityKey, Object> runParams = AbilityKey.mapFromPlayer(this);
+--- a/forge-game/src/main/java/forge/game/player/PlayerController.java
++++ b/forge-game/src/main/java/forge/game/player/PlayerController.java
+@@ -198,6 +198,14 @@
+     /** Only positions explicitly disclosed to this observer are included. */
+     public void observeLibraryTop(Player owner, Map<Integer, Card> positions) { }
+ 
++    /** An authorized chooser can retain only an explicitly proven untouched outside region. */
++    public record LibraryOrderObservation(Player owner, long previousRevision, int previousSize,
++            int inspectedCount, int topCount, int bottomCount, boolean outsideUnchanged) { }
++
++    public void observeLibraryOrder(LibraryOrderObservation observation, Map<Integer, Card> positions) {
++        observeLibraryTop(observation.owner(), positions);
++    }
++
+     /** A draw event identifies engine objects; observers use only previously acquired position knowledge. */
+     public record LibraryDraw(Player owner, Card drawn, long previousRevision, int previousSize,
+             int index, int previousCardId, long previousCardTimestamp) { }
+--- a/forge-game/src/main/java/forge/game/zone/Zone.java
++++ b/forge-game/src/main/java/forge/game/zone/Zone.java
+@@ -50,12 +50,81 @@
+     protected final ZoneType zoneType;
+     protected final Game game;
+     private long libraryOrderRevision;
++    private transient List<LibraryObservation> libraryObservations;
++
++    /** A bounded live scope proves that cards outside an inspected prefix were not mutated. */
++    public final class LibraryObservation implements AutoCloseable {
++        private final long previousRevision = libraryOrderRevision;
++        private final int previousSize = cardList.size();
++        private final int inspectedCount;
++        private final Map<Integer, Card> inspected = Maps.newHashMap();
++        private boolean unchanged = true;
++        private boolean closed;
++
++        private LibraryObservation(CardCollectionView prefix) {
++            inspectedCount = prefix.size();
++            if (zoneType != ZoneType.Library || inspectedCount > previousSize) unchanged = false;
++            for (int index = 0; index < prefix.size(); index++) {
++                Card card = prefix.get(index);
++                if (index >= previousSize || card.getGame() != game || card.getZone() != Zone.this
++                        || card != cardList.get(index)) unchanged = false;
++                else inspected.put(card.getId(), card);
++            }
++        }
++
++        public long previousRevision() { return previousRevision; }
++        public int previousSize() { return previousSize; }
++        public int inspectedCount() { return inspectedCount; }
++        public boolean isFor(Zone zone) { return Zone.this == zone; }
++        public boolean preservesOutside() { return unchanged && !closed; }
++        public boolean permits(Card card) {
++            // Same-library placement refreshes timestamps but retains the exact inspected object.
++            // A replacement/copy that merely reuses its ID must not inherit this authorization.
++            return inspected.get(card.getId()) == card;
++        }
++        @Override public void close() {
++            if (!closed) {
++                closed = true;
++                if (libraryObservations != null) libraryObservations.remove(this);
++            }
++        }
++    }
++
++    public final LibraryObservation beginLibraryObservation(CardCollectionView prefix) {
++        LibraryObservation observation = new LibraryObservation(prefix);
++        if (libraryObservations == null) libraryObservations = Lists.newArrayList();
++        if (libraryObservations.size() >= 64) {
++            invalidateLibraryObservations();
++            observation.unchanged = false;
++        } else {
++            libraryObservations.add(observation);
++        }
++        return observation;
++    }
++
++    private void invalidateLibraryObservations() {
++        if (libraryObservations != null) {
++            for (LibraryObservation observation : libraryObservations) observation.unchanged = false;
++        }
++    }
++
++    private void changedLibraryOrder(Card moved) {
++        if (zoneType == ZoneType.Library) {
++            libraryOrderRevision++;
++            if (libraryObservations != null) {
++                for (LibraryObservation observation : libraryObservations) {
++                    if (!observation.permits(moved)) observation.unchanged = false;
++                }
++            }
++        }
++    }
+ 
+     public final long getLibraryOrderRevision() { return libraryOrderRevision; }
+ 
+     private void changedLibraryOrder() {
+         if (zoneType == ZoneType.Library) {
+             libraryOrderRevision++;
++            invalidateLibraryObservations();
+         }
+     }
+ 
+@@ -93,7 +162,7 @@
+     public final void reorder(final Card c, final int index) {
+         cardList.remove(c);
+         cardList.add(index, c);
+-        changedLibraryOrder();
++        changedLibraryOrder(c);
+     }
+ 
+     public final void add(final Card c) {
+@@ -157,7 +226,7 @@
+                 cardList.add(index, c);
+             }
+         }
+-        changedLibraryOrder();
++        changedLibraryOrder(c);
+         onChanged();
+ 
+         game.fireEvent(new GameEventZone(zoneType, getPlayer(), EventValueChangeType.Added, c));
+@@ -173,7 +242,7 @@
+ 
+     public void remove(final Card c) {
+         if (cardList.remove(c)) {
+-            changedLibraryOrder();
++            changedLibraryOrder(c);
+             onChanged();
+             game.fireEvent(new GameEventZone(zoneType, getPlayer(), EventValueChangeType.Removed, c));
+         }
+@@ -263,6 +332,7 @@
+ 
+     /** Restore observed entries after snapshot construction, without inventing zone moves. */
+     public final void copyTurnHistoryFrom(Zone original, forge.game.IEntityMap map) {
++        invalidateLibraryObservations();
+         libraryOrderRevision = original.libraryOrderRevision;
+         cardsAddedThisTurn.clear();
+         cardsAddedLastTurn.clear();

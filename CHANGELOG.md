@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a source-validated observer-authorized library transition model: all 865
+  focused checks pass, retaining 832 and adding 33. Preserve known outside
+  positions through declared index transforms without scanning hidden final
+  identities. Bounded exact-object scopes reject opaque resets, outside-card
+  mutations, stale/foreign/closed/overflow contexts and inconsistent shapes.
+  Validate copied-state independence, paid Soothsaying and actual shuffle damage.
+  Preserve the failed timestamp-based prototype and exact-object refinement.
+  Packaging and broader/full live validation remain pending; selected engine,
+  scripts and default AI remain unchanged. Complete rules/strategy remain open.
+  See engine/library_knowledge_transition_native_evidence.json.
+
 - Record twelve native no-shuffle knowledge-transition contracts: eight
   original/copied Opt/Consider retention checks fail, while four direct-draw and
   fully-reannounced-order controls pass. Native card resolution succeeds; the AI

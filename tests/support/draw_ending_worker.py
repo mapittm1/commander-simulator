@@ -31,6 +31,8 @@ SOURCES = {
     "LibraryChoiceTestSupport": "library_choice_test_support_sha256",
     "CommanderLibraryChoiceKnowledgeTest": "commander_library_choice_knowledge_test_sha256",
     "CommanderLibraryChoiceBoundaryTest": "commander_library_choice_boundary_test_sha256",
+    "CommanderLibraryKnowledgeTransitionTest": "commander_library_knowledge_transition_test_sha256",
+    "CommanderLibraryObservationBoundaryTest": "commander_library_observation_boundary_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -210,6 +212,8 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostPartWithList",
     "forge.game.cost.CostPayEnergy",
     "forge.game.zone.Zone",
+    "forge.game.zone.Zone$LibraryObservation",
+    "forge.game.player.PlayerController$LibraryOrderObservation",
     "forge.game.cost.CostDecisionMakerBase",
     "forge.ai.ComputerUtilCost",
     "forge.game.cost.CostTap",
@@ -295,7 +299,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 900-case packaged family."""
+    """Execute the existing fixed 933-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

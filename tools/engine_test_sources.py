@@ -140,6 +140,8 @@ REGRESSION_SOURCES = {
     "LibraryChoiceTestSupport.java": "library_choice_test_support_sha256",
     "CommanderLibraryChoiceKnowledgeTest.java": "commander_library_choice_knowledge_test_sha256",
     "CommanderLibraryChoiceBoundaryTest.java": "commander_library_choice_boundary_test_sha256",
+    "CommanderLibraryKnowledgeTransitionTest.java": "commander_library_knowledge_transition_test_sha256",
+    "CommanderLibraryObservationBoundaryTest.java": "commander_library_observation_boundary_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",
