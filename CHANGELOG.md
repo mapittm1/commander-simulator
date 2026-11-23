@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Record a fourteen-case autonomous rearrange baseline: twelve pass and two
+  original/copied hybrid choices fail. Full simulation announces and pays X=4;
+  supplied paid-resolution and known/empty/timing/unaffordable decline controls
+  pass. Preserve the original fixture compile failure and corrected API fixture.
+  The hybrid admission filter excludes the activated information ability before
+  planning. Generic admission, X and paid-outcome handling remain pending;
+  selected 2,090-method runtime remains active. Complete rules/strategy unproven.
+  See engine/autonomous_rearrange_gap.json.
+
 - Activate deducible library-position retention after all 45 live tests and
   1,986 subtests pass, including repeated 933/65/194/146 packaged families.
   All 865 focused source, 2,090 native, 3,564 gameplay and 256 serialization checks

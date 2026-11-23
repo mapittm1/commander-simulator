@@ -27,6 +27,12 @@ difference.
 
 ## Card coverage
 
+An autonomous rearrange baseline passes 12 of 14 native checks. Full simulation
+selects and pays X=4 in the supplied end-step states; hybrid mode skips the same
+useful ability in original/copied games before planning. Paid resolution and
+decline controls pass. See the [admission gap](engine/autonomous_rearrange_gap.json).
+The selected runtime below remains active; a correction is not yet validated.
+
 The selected runtime preserves previously known library positions outside an
 authorized inspection through declared index transforms. Bounded scopes permit
 only the exact inspected objects; opaque resets, outside-card moves and invalid
