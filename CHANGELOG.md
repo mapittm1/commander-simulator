@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct combat-local blocker history in isolated source: record confirmed
+  declarations and resolving effects, retain departed zone objects, exclude
+  cancelled selections, reset per combat, and deep-copy history between game
+  branches. All 1,222 distinct focused contracts pass across disjoint 1,192/30
+  JVM runs with identical production inputs, retaining 1,136 and adding 86.
+  Preserve the 86-case selected-runtime baseline (42 passed, 44 failed), earlier
+  baselines, the prototype's six cancelled-selection regressions, a corrected
+  token-name fixture premise, and the combined source run's heap exhaustion.
+  Test actual paid token entry and both printed blocker switches as well as
+  Shock, Cloudshift, independent forks and direct declaration commit boundaries.
+  Replay the four-file generic patch with explicit line-ending normalization.
+  Keep heap/time budgets and card/profile bytes unchanged. The selected runtime
+  remains at 2,361 native tests; packaging, broader and full live validation of
+  this candidate are pending. Full rules coverage remains unproven. See
+  engine/blocking_history_gap.json and engine/blocking_history_native_evidence.json.
+
 - Activate generic reblocking state and paid-parent AI planning after all 1,136
   source and 2,361 native tests pass, retaining 2,333 and adding 28. Independent
   and repeated packaged groups pass 1204/65/194/146; broader gameplay and

@@ -27,6 +27,22 @@ difference.
 
 ## Card coverage
 
+A combat-history correction has passed 1,222 distinct focused source tests in
+separate 1,192- and 30-case JVM runs with identical production inputs. It records
+confirmed blocks, remembers departed blockers, excludes cancelled choices, and
+keeps copied games independent. The 86 new contracts cover paid reassignment,
+Shock, Cloudshift, token entry, both printed blocker-switch paths, declaration
+commit boundaries, and a fresh combat in the same turn. The selected runtime
+below is unchanged while packaging and live checks remain pending.
+
+The expanded baseline reproduced 44 failing outcomes in 86 cases. Preserve the
+rejected prototype's six cancelled-choice failures and the combined source run's
+heap-exhaustion failure; no heap or timeout was increased. Four generic files
+change, with no new production class or card/profile edits. Additional trigger,
+banding, multiple-blocking and full Commander correctness remain unproven. See
+[historical-blocking failures](engine/blocking_history_gap.json) and
+[source-only evidence](engine/blocking_history_native_evidence.json).
+
 The selected runtime correctly marks an attacker blocked when a native effect
 assigns a blocker. That state persists if the blocker leaves before damage.
 The Block API evaluates the complete paid parent, so classic/hybrid AI can judge

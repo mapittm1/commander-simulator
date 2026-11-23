@@ -1,0 +1,139 @@
+--- a/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java
+@@ -845,6 +845,7 @@
+             if (attacker != null && combat.getDefenderPlayerByAttacker(attacker).equals(c.getController())) {
+                 final boolean wasBlocked = combat.isBlocked(attacker);
+                 combat.addBlocker(attacker, c);
++                combat.setBlocked(attacker, true);
+                 combat.orderAttackersForDamageAssignment(c);
+ 
+                 {
+--- a/forge-game/src/main/java/forge/game/ability/effects/RemoveFromCombatEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RemoveFromCombatEffect.java
+@@ -49,14 +49,8 @@
+                 if (!attackers.isEmpty()) {
+                     CardCollection blockedByCard = combat.getAttackersBlockedBy(attackers.getFirst());
+                     for (Card atk : blockedByCard) {
+-                        boolean blockedOnlyByCard = true;
+-                        for (Card blocker : combat.getBlockers(atk)) {
+-                            if (!blocker.equals(attackers.getFirst())) {
+-                                blockedOnlyByCard = false;
+-                                break;
+-                            }
+-                        }
+-                        if (blockedOnlyByCard) {
++                        // A blocker that left combat still counts as another creature this combat.
++                        if (!combat.wasBlockedByAnotherCreatureThisCombat(atk, attackers.getFirst())) {
+                             combat.setBlocked(atk, false);
+                         }
+                     }
+--- a/forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java
+@@ -108,12 +108,14 @@
+                 final Card blocker = blockers.get(i);
+                 if ((blockingStates[i] & 1) == 1) {
+                     combat.addBlocker(attacker2, blocker);
++                    combat.setBlocked(attacker2, true);
+                     if (isReblock) {
+                         runTriggers(game, attacker2, blocker);
+                     }
+                 }
+                 if((blockingStates[i] & 2) == 2) {
+                     combat.addBlocker(attacker1, blocker);
++                    combat.setBlocked(attacker1, true);
+                     if (isReblock) {
+                         runTriggers(game, attacker1, blocker);
+                     }
+@@ -162,6 +164,7 @@
+                 final Card attacker = attackers.get(i);
+                 if ((blockingStates[i] & 1) == 1) {
+                     combat.addBlocker(attacker, blocker2);
++                    combat.setBlocked(attacker, true);
+                     recordBlock(attacker, blocker2);
+                     if (isReblock) {
+                         runTriggers(game, attacker, blocker2);
+@@ -169,6 +172,7 @@
+                 }
+                 if ((blockingStates[i] & 2) == 2) {
+                     combat.addBlocker(attacker, blocker1);
++                    combat.setBlocked(attacker, true);
+                     recordBlock(attacker, blocker1);
+                     if (isReblock) {
+                         runTriggers(game, attacker, blocker1);
+--- a/forge-game/src/main/java/forge/game/combat/Combat.java
++++ b/forge-game/src/main/java/forge/game/combat/Combat.java
+@@ -72,6 +72,9 @@
+     private final Supplier<CardDamageTable> damageMap = Suppliers.memoize(CardDamageTable::new);
+     // Remember the legal defender type even after a continuous effect removes it.
+     private final Supplier<Map<AttackingBand, CardType>> defenderTypesByBand = Suppliers.memoize(Maps::newHashMap);
++    // Object keys retain departed blockers without keeping foreign or stale Card references.
++    // Each Combat owns its history; a new combat in the same turn starts empty.
++    private final Map<Pair<Integer, Long>, Set<Pair<Integer, Long>>> blockersSeenThisCombat = new HashMap<>();
+ 
+     // List holds creatures who have dealt 1st strike damage to disallow them deal damage on regular basis (unless they have double-strike KW)
+     private final Supplier<CardCollection> combatantsThatDealtFirstStrikeDamage = Suppliers.memoize(CardCollection::new);
+@@ -115,6 +118,11 @@
+             blockedBands.get().put(bandsMap.get(entry.getKey()), map.map(entry.getValue()));
+         }
+ 
++        for (Entry<Pair<Integer, Long>, Set<Pair<Integer, Long>>> entry : combat.blockersSeenThisCombat.entrySet()) {
++            // Keys are immutable values; sets must be independent between simulation branches.
++            blockersSeenThisCombat.put(entry.getKey(), new HashSet<>(entry.getValue()));
++        }
++
+         for (Entry<Card, CardCollection> entry : combat.attackersOrderedForDamageAssignment.get().entrySet()) {
+             attackersOrderedForDamageAssignment.get().put(map.map(entry.getKey()), map.mapCollection(entry.getValue()));
+         }
+@@ -180,6 +188,7 @@
+         //clear all combat-related collections
+         attackableEntries.get().clear();
+         defenderTypesByBand.get().clear();
++        blockersSeenThisCombat.clear();
+         attackedByBands.get().clear();
+         blockedBands.get().clear();
+         attackersOrderedForDamageAssignment.get().clear();
+@@ -409,7 +418,33 @@
+ 
+     // Some cards in Alpha may UNBLOCK an attacker, so second parameter is not always-true
+     public final void setBlocked(final Card attacker, boolean value) {
+-        getBandOfAttackerNotNull(attacker).setBlocked(value); // called by Curtain of Light, Dazzling Beauty, Trap Runner
++        final AttackingBand band = getBandOfAttackerNotNull(attacker);
++        band.setBlocked(value);
++        if (value) {
++            recordCommittedBlockers(band);
++        }
++    }
++
++    // addBlocker also serves tentative UI and AI choices. Only confirmed declarations
++    // and resolving effects may enter the permanent history for this combat.
++    private void recordCommittedBlockers(final AttackingBand band) {
++        for (Card member : band.getAttackers()) {
++            for (Card blocker : blockedBands.get().get(band)) {
++                blockersSeenThisCombat.computeIfAbsent(cardObjectKey(member), key -> new HashSet<>())
++                        .add(cardObjectKey(blocker));
++            }
++        }
++    }
++
++    private static Pair<Integer, Long> cardObjectKey(Card card) {
++        return Pair.of(card.getId(), card.getGameTimestamp());
++    }
++
++    /** Whether a different creature object blocked this attacker at any point in this combat. */
++    public boolean wasBlockedByAnotherCreatureThisCombat(Card attacker, Card blocker) {
++        Set<Pair<Integer, Long>> history = blockersSeenThisCombat.get(cardObjectKey(attacker));
++        Pair<Integer, Long> currentBlocker = cardObjectKey(blocker);
++        return history != null && history.stream().anyMatch(previous -> !previous.equals(currentBlocker));
+     }
+ 
+     public final void addBlocker(final Card attacker, final Card blocker) {
+@@ -733,6 +768,9 @@
+             Collection<Card> blockers = blockedBands.get().get(ab);
+             boolean isBlocked = blockers != null && !blockers.isEmpty();
+             ab.setBlocked(isBlocked);
++            if (isBlocked) {
++                recordCommittedBlockers(ab);
++            }
+ 
+             if (!isBlocked && !ab.isEmpty()) {
+                 defendersByAttackingPlayer.put(ab.getAttackers().getFirst().getController(), getDefenderByAttacker(ab));

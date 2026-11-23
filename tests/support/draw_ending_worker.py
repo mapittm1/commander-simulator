@@ -52,6 +52,13 @@ SOURCES = {
     "CommanderCombatRemovalBoundaryTest": "commander_combat_removal_boundary_test_sha256",
     "CommanderCombatReblockingTest": "commander_combat_reblocking_test_sha256",
     "CommanderCombatReblockingDamageTest": "commander_combat_reblocking_damage_test_sha256",
+    "CommanderBlockingHistoryTest": "commander_blocking_history_test_sha256",
+    "CommanderBlockingHistoryBoundaryTest": "commander_blocking_history_boundary_test_sha256",
+    "CommanderBlockingHistoryForkTest": "commander_blocking_history_fork_test_sha256",
+    "CommanderBlockingSelectionBoundaryTest": "commander_blocking_selection_boundary_test_sha256",
+    "CommanderDeclaredBlockingHistoryTest": "commander_declared_blocking_history_test_sha256",
+    "CommanderTokenBlockingHistoryTest": "commander_token_blocking_history_test_sha256",
+    "CommanderSwitchedBlockingHistoryTest": "commander_switched_blocking_history_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -259,6 +266,7 @@ NATIVE_CLASSES = (
     "forge.game.replacement.ReplacementHandler",
     "forge.game.replacement.ReplaceDraw",
     "forge.game.ability.effects.BlockEffect",
+    "forge.game.ability.effects.SwitchBlockEffect",
     "forge.game.ability.effects.ChooseCardEffect",
     "forge.ai.ability.ChooseCardAi",
     "forge.game.ability.effects.DamageDealEffect",
@@ -332,7 +340,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1204-case packaged family."""
+    """Execute the existing fixed 1290-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
