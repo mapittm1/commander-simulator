@@ -168,6 +168,7 @@ REGRESSION_SOURCES = {
     "CommanderDeclaredBlockingHistoryTest.java": "commander_declared_blocking_history_test_sha256",
     "CommanderTokenBlockingHistoryTest.java": "commander_token_blocking_history_test_sha256",
     "CommanderSwitchedBlockingHistoryTest.java": "commander_switched_blocking_history_test_sha256",
+    "CommanderAiCacheLifetimeTest.java": "commander_ai_cache_lifetime_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

@@ -59,6 +59,7 @@ SOURCES = {
     "CommanderDeclaredBlockingHistoryTest": "commander_declared_blocking_history_test_sha256",
     "CommanderTokenBlockingHistoryTest": "commander_token_blocking_history_test_sha256",
     "CommanderSwitchedBlockingHistoryTest": "commander_switched_blocking_history_test_sha256",
+    "CommanderAiCacheLifetimeTest": "commander_ai_cache_lifetime_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -185,6 +186,7 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.ChangeTextEffect",
     "forge.game.ability.effects.EncodeEffect",
     "forge.ai.AiController",
+    "forge.ai.AiCache",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -340,7 +342,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1290-case packaged family."""
+    """Execute the existing fixed 1306-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

@@ -1,0 +1,96 @@
+--- a/forge-ai/src/main/java/forge/ai/AiCache.java
++++ b/forge-ai/src/main/java/forge/ai/AiCache.java
+@@ -3,7 +3,6 @@
+ import com.google.common.collect.ArrayListMultimap;
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Multimap;
+-import com.google.common.collect.Multimaps;
+ 
+ import java.util.Arrays;
+ import java.util.List;
+@@ -12,38 +11,39 @@
+ 
+ public class AiCache {
+ 
+-    // stores result + args as vector
+-    private final static Multimap<String, List<Object>> dataMap = Multimaps.synchronizedMultimap(ArrayListMultimap.create());
++    // Results and arguments can own entire game graphs. Keep them only for an
++    // explicit decision or preview, never in a process-wide fallback cache.
++    private static final ThreadLocal<Multimap<String, List<Object>>> scopedCache = new ThreadLocal<>();
+ 
+-    private static final ThreadLocal<Multimap<String, List<Object>>> previewCache = new ThreadLocal<>();
+-
+-    /** Keep projected game references out of the live decision cache, even on failed previews. */
++    /** Bound memoized references to one decision or preview; restore nested scopes even on failure. */
+     public static <T> T withIsolatedCache(Supplier<T> action) {
+-        Multimap<String, List<Object>> previous = previewCache.get();
+-        previewCache.set(ArrayListMultimap.create());
++        Multimap<String, List<Object>> previous = scopedCache.get();
++        scopedCache.set(ArrayListMultimap.create());
+         try {
+             return action.get();
+         } finally {
+-            if (previous == null) previewCache.remove();
+-            else previewCache.set(previous);
++            if (previous == null) scopedCache.remove();
++            else scopedCache.set(previous);
+         }
+     }
+ 
+     private static Multimap<String, List<Object>> activeCache() {
+-        Multimap<String, List<Object>> scoped = previewCache.get();
+-        return scoped == null ? dataMap : scoped;
++        return scopedCache.get();
+     }
+ 
+     public static boolean identity(Object a, Object b) {
+         return a == b;
+     }
+ 
+-    // the cache is global for calculations that can be shared between games
+-    // but that also means unwanted collisions need to be considered:
+-    // for that you can pass Functions that compare the args
++    // Callers outside a decision scope observe current state without retaining it.
++    // Within a scope, explicit argument comparators preserve identity-based lookups.
+     public static <T> T getCached(String key, Supplier<T> func, List<BiFunction<Object, Object, Boolean>> argsCheck, Object... args) {
+         // TODO would like a good strategy to derive default key, but there's no clean way to obtain the method name
+-        for (List<Object> cached : Lists.newArrayList(activeCache().get(key))) {
++        final Multimap<String, List<Object>> cache = activeCache();
++        if (cache == null) {
++            return func.get();
++        }
++        for (List<Object> cached : Lists.newArrayList(cache.get(key))) {
+             boolean hit = true;
+             for (int i = 0; i < args.length; i++) {
+                 BiFunction<Object, Object, Boolean> checker = argsCheck == null ? Object::equals : argsCheck.get(i);
+@@ -59,13 +59,16 @@
+         T result = func.get();
+         List<Object> cached = Lists.newArrayList(result);
+         cached.addAll(Arrays.asList(args));
+-        activeCache().put(key, cached);
++        cache.put(key, cached);
+         return result;
+     }
+ 
+-    // TODO add different scopes + staleness indicator
++    /** Invalidate the current scope without affecting other decisions or threads. */
+     public static void clear() {
+-        activeCache().clear();
++        final Multimap<String, List<Object>> cache = activeCache();
++        if (cache != null) {
++            cache.clear();
++        }
+     }
+ 
+ }
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -1656,7 +1656,7 @@
+             if (SimAudit.ENABLED) {
+                 SimAudit.checkpoint(game, player);
+             }
+-            final List<SpellAbility> chosen = chooseSpellAbilityToPlayImpl();
++            final List<SpellAbility> chosen = AiCache.withIsolatedCache(this::chooseSpellAbilityToPlayImpl);
+             if (SimAudit.ENABLED) {
+                 SimAudit.afterChoice(game, player, chosen);
+             }

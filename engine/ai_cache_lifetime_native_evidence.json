@@ -1,0 +1,72 @@
+{
+  "status": "source_corrected_packaging_pending",
+  "counts": {
+    "total": 1238,
+    "passed": 1238,
+    "failed": 0,
+    "skipped": 0
+  },
+  "validation_mode": "All1238 mixed source methods passed in one original2048MiB/600s Maven JVM; no partitioning or heap/timeout increase.",
+  "retained_prior_methods": 1222,
+  "added_methods": 16,
+  "production_sources": 2167,
+  "new_production_changes": [
+    "forge-ai/src/main/java/forge/ai/AiCache.java",
+    "forge-ai/src/main/java/forge/ai/AiController.java"
+  ],
+  "prior_combat_history_files_retained": 4,
+  "added_production_sources": [],
+  "patch_sha256": "9eeabd2a53a3cca736869446b6b108c595f22a1ef706487a34aa4635f153d62c",
+  "normalized_patch_replay": true,
+  "baseline_evidence_sha256": "fdd112ea701ea509bd1c246f10a7dec0bb96e00fb25473ef40f5d288a42be80e",
+  "report_sha256": "e008523cffe508045a32076952c90a087d3628c2ca9e40e1362867abd564d926",
+  "log_sha256": "005d9fc8a0e05e37ba67930a05b44d3818b6a7763dc09e867714dfd0b42ffd0b",
+  "input_manifests": {
+    "production-inputs.json": "4a6d6e32047d541a8fe118d129062872ce43f7abae631512eeac3221ed47f128",
+    "test-inputs.json": "03000d5db99d5526c611d040b62630c2e33253478084dbbfd646639425c5ee40",
+    "card-inputs.json": "03a60645068290858be3ac0f2279745f3736aa3e549e92d666e0b7f9e3a96fb6"
+  },
+  "new_methods": {
+    "forge.ai.CommanderAiCacheLifetimeTest.activeCopyBoardChangesAreVisibleOutsideDecisionScope": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.clearInvalidatesOnlyTheCurrentScope": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.commonSnapshotBoardChangesAreVisibleOutsideDecisionScope": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.completedScopeDoesNotPublishItsEntries": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.concurrentExplicitScopesStayIndependent": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.explicitIdentityComparisonRemainsSupported": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.failedNestedScopeRestoresOuterValues": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.failedScopeDoesNotLeakItsEntries": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.liveBoardChangesAreVisibleOutsideDecisionScope": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.nullResultsAreMemoizedInsideScope": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.nestedScopeRestoresOuterValues": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.outsideScopeDoesNotReuseMutatedArgumentState": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.outsideScopeRecomputesRatherThanKeepingGameArguments": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.sameScopeMemoizesRepeatedArguments": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.separateScopesRecompute": "PASS",
+    "forge.ai.CommanderAiCacheLifetimeTest.unscopedThreadsCannotReuseOneAnothersResults": "PASS"
+  },
+  "fixtures": {
+    "engine/tests/CommanderAiCacheLifetimeTest.java": "96cad09729bd2a651bc47a60657ad64c578d204efe74d017dd450225366020d8",
+    "engine/pending/ai-cache-lifetime/CommanderAiCacheLifetimeTest.java": "96cad09729bd2a651bc47a60657ad64c578d204efe74d017dd450225366020d8",
+    "engine/tests/CommanderPreviewCacheTest.java": "d60562bd5d3776b57267ee560c17f3c11d4ecc111d914e12ce2004782c5d2cec"
+  },
+  "preview_method_bodies_and_assertions_unchanged": true,
+  "preview_setup_cross_checks": {
+    "baseline": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prototype": {
+      "total": 4,
+      "passed": 4,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "limits": [
+    "Source only; selected2361 runtime unchanged. Native2463, packaged1306, broader3937/256 and45-live/2359-subtest counts are future checks, not passing results.",
+    "The cache change prevents process-wide strong game-reference retention and unscoped stale game evaluations; it is not a general security audit or full MTG rules/strategy certification.",
+    "The lazy FSnapshotTable experiment is preserved but excluded; it reduced empty-table memory but still left13 mixed-suite heap failures."
+  ]
+}

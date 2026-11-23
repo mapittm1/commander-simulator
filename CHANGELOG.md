@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct the AI cache lifetime in source: remove the process-wide fallback
+  that retained completed games, recompute unscoped queries from current state,
+  and scope native spell decisions with exception-safe nested cleanup. All
+  1,238 mixed source tests pass in one JVM with the existing 2 GiB heap and
+  timeout, retaining 1,222 cases and adding 16. Preserve six selected-runtime
+  cache failures, including stale original/copied board evaluations, and the
+  earlier native build's 14 heap failures. Recorded strong-reference paths name
+  AiCache as the owner. Exclude the snapshot-allocation prototype that still
+  exhausted heap. Give four existing preview tests explicit live-decision setup
+  while preserving their complete method bodies and assertions; verify the
+  setup against old and new implementations. Replay the two-file cache patch,
+  pin fixtures, and keep card/profile inputs unchanged. The selected runtime
+  remains at 2,361 native tests; candidate packaging and live validation remain
+  pending. See engine/ai_cache_lifetime_gap.json and
+  engine/ai_cache_lifetime_native_evidence.json. Full rules coverage is unproven.
+
 - Correct combat-local blocker history in isolated source: record confirmed
   declarations and resolving effects, retain departed zone objects, exclude
   cancelled selections, reset per combat, and deep-copy history between game

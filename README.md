@@ -27,7 +27,27 @@ difference.
 
 ## Card coverage
 
-A combat-history correction has passed 1,222 distinct focused source tests in
+The latest source candidate removes an AI cache that retained completed games
+and could return stale board evaluations outside a decision. Memoized references
+now live inside an explicit decision or preview and are released on success or
+failure. All 1,238 mixed source tests pass in one JVM at the existing 2 GiB heap
+and timeout, retaining the prior 1,222 cases and adding 16 cache-lifetime checks.
+The selected runtime below is unchanged; a fresh native build and packaged,
+broader, full live and catalog validation are still pending.
+
+The baseline reproduced six cache-lifetime failures, including stale evaluations
+after a Forest entered play in original and copied games. Recorded reference
+paths identify the static cache as an owner of completed game graphs. Preserve
+the earlier 14 native heap failures and the rejected snapshot-allocation
+experiment. Four existing preview tests now open an explicit live-decision
+scope; their method bodies and assertions are unchanged, and the setup passes
+against both cache implementations. See the
+[cache-lifetime failures and ownership evidence](engine/ai_cache_lifetime_gap.json)
+and [source-only validation](engine/ai_cache_lifetime_native_evidence.json).
+This is a demonstrated cache correction; full Commander rules and strategy
+coverage remain unproven.
+
+The earlier combat-history source milestone passed 1,222 distinct focused tests in
 separate 1,192- and 30-case JVM runs with identical production inputs. It records
 confirmed blocks, remembers departed blockers, excludes cancelled choices, and
 keeps copied games independent. The 86 new contracts cover paid reassignment,

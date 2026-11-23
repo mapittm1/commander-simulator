@@ -1,0 +1,334 @@
+{
+  "status": "source_corrected_packaging_pending",
+  "baseline_commit": "3c26aabc999e05594d3431558770c953ddda8b40",
+  "baseline": {
+    "status": "baseline_completed",
+    "counts": {
+      "total": 16,
+      "passed": 10,
+      "failed": 6,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.activeCopyBoardChangesAreVisibleOutsideDecisionScope",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.clearInvalidatesOnlyTheCurrentScope",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.commonSnapshotBoardChangesAreVisibleOutsideDecisionScope",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.completedScopeDoesNotPublishItsEntries",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.concurrentExplicitScopesStayIndependent",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.explicitIdentityComparisonRemainsSupported",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.failedNestedScopeRestoresOuterValues",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.failedScopeDoesNotLeakItsEntries",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.liveBoardChangesAreVisibleOutsideDecisionScope",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.nestedScopeRestoresOuterValues",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.nullResultsAreMemoizedInsideScope",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.outsideScopeDoesNotReuseMutatedArgumentState",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.outsideScopeRecomputesRatherThanKeepingGameArguments",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.sameScopeMemoizesRepeatedArguments",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.separateScopesRecompute",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderAiCacheLifetimeTest.unscopedThreadsCannotReuseOneAnothersResults",
+        "status": "FAIL"
+      }
+    ],
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-combat-reblocking",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "b16da6f8be23e54596ea9a0276217231de027fa8fc50ba63f29f7557766de4da",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "2c016f3c990b6722eb8cbcacff393a6642d0b9668bae972daf442bd83ea170a4",
+      "native_tests": {
+        "total": 2361,
+        "passed": 2361,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "00cffc906eee06d0b70bc15b3eb6939dacbd06f18a4bb90a761bba0c8b2256cf",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "production_origin_classes": [
+      "forge.ai.AiCache",
+      "forge.ai.AiController",
+      "forge.ai.ComputerUtil",
+      "forge.game.Game",
+      "forge.game.GameSnapshot",
+      "forge.ai.simulation.GameCopier"
+    ],
+    "testng_status": 1,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-snapshot-memory-research\\CommanderAiCacheLifetimeTest.java": "96cad09729bd2a651bc47a60657ad64c578d204efe74d017dd450225366020d8"
+    },
+    "driver_sha256": "5a3bd985c595c34a116c9aace2804bbd694ee89fe335395d2b77dc206b715943",
+    "report_sha256": "0b474886fc8b7d0c018533a7f74377f85d86db83bfc0da614133d69025ed10d7",
+    "failures": [
+      "java.lang.AssertionError: An unscoped helper must observe the current board did not expect [0] but found [0]",
+      "java.lang.AssertionError: An unscoped helper must observe the current board did not expect [0] but found [0]",
+      "java.lang.AssertionError: An unscoped helper must observe the current board did not expect [0] but found [0]",
+      "java.lang.AssertionError: expected [9] but found [4]",
+      "java.lang.AssertionError: expected [2] but found [1]",
+      "java.lang.AssertionError: expected [2] but found [1]"
+    ],
+    "scope": "Explicit decision/preview lifetime versus unscoped results; nested success/failure and thread isolation; actual native live/active/common snapshot board changes. No private cache-layout assertions or GC-dependent unit assertions."
+  },
+  "baseline_report_sha256": "0b474886fc8b7d0c018533a7f74377f85d86db83bfc0da614133d69025ed10d7",
+  "failed_native_build": {
+    "status": "failed_not_activated",
+    "build": "data/engine-builds/27d33d22731543b98bf284231ca912c4",
+    "counts": {
+      "total": 2447,
+      "passed": 2433,
+      "failed": 14,
+      "skipped": 0
+    },
+    "failures": [
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.commonTokenOnlyDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\nat java.base/java.util.List.of(List.java:812)\nat forge.game.card.CardState.<init>(CardState.java:124)\nat forge.game.card.Card.<init>(Card.java:431)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:332)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:300)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:284)\nat forge.game.ability.effects.TokenEffectBase.makeTokenTable(TokenEffectBase.java:161)\nat forge.game.ability.effects.TokenEffectBase.makeTokenTable(TokenEffectBase.java:71)\nat forge.game.ability.effects.TokenEffect.resolve(TokenEffect.java:130)\nat forge.game.ability.SpellApiBased.resolve(SpellApiBased.java:44)\nat forge.game.ability.AbilityUtils.resolveApiAbility(AbilityUtils.java:1402)\nat forge.game.ability.AbilityUtils.resolve(AbilityUtils.java:1338)\nat forge.game.zone.MagicStack.resolveStack(MagicStack.java:703)\nat forge.ai.CommanderTokenBlockingHistoryTest.settle(CommanderTokenBlockingHistoryTest.java:198)\nat forge.ai.CommanderTokenBlockingHistoryTest.setup(CommanderTokenBlockingHistoryTest.java:123)\nat forge.ai.CommanderTokenBlockingHistoryTest.check(CommanderTokenBlockingHistoryTest.java:50)\nat forge.ai.CommanderTokenBlockingHistoryTest.commonTokenOnlyDamage(CommanderTokenBlockingHistoryTest.java:43)\nat java.base/java.lang.invoke.LambdaForm$DMH/0x0000000801019000.invokeVirtual(LambdaForm$DMH)\nat java.base/java.lang.invoke.LambdaForm$MH/0x0000000801007c00.invoke(LambdaForm$MH)\nat java.base/java.lang.invoke.Invokers$Holder.invokeExact_MT(Invokers$Holder)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:154)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\nat java.base/java.lang.reflect.Method.invoke(Method.java:578)\nat org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)\nat org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)\nat org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)\nat org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)\nat org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)\nat org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)\nat org.testng.TestRunner$$Lambda$1120/0x00000008017cf860.accept(Unknown Source)\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.commonTokenOnlyState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\nat com.google.common.collect.ObjectCountHashMap.init(ObjectCountHashMap.java:151)\nat com.google.common.collect.ObjectCountHashMap.<init>(ObjectCountHashMap.java:140)\nat com.google.common.collect.ObjectCountHashMap.<init>(ObjectCountHashMap.java:136)\nat com.google.common.collect.HashMultiset.newBackingMap(HashMultiset.java:71)\nat com.google.common.collect.AbstractMapBasedMultiset.<init>(AbstractMapBasedMultiset.java:56)\nat com.google.common.collect.HashMultiset.<init>(HashMultiset.java:66)\nat com.google.common.collect.HashMultiset.create(HashMultiset.java:48)\nat com.google.common.collect.HashMultiset.create(HashMultiset.java:37)\nat forge.game.GameEntity.<init>(GameEntity.java:56)\nat forge.game.card.Card.<init>(Card.java:425)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:332)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:300)\nat forge.game.card.CardCopyService.getLKICopy(CardCopyService.java:284)\nat forge.game.zone.Zone.updateLKI(Zone.java:407)\nat forge.game.card.CardZoneTable.triggerChangesZoneAll(CardZoneTable.java:122)\nat forge.game.card.CardZoneTable.triggerChangesZoneAll(CardZoneTable.java:102)\nat forge.game.ability.effects.TokenEffect.resolve(TokenEffect.java:134)\nat forge.game.ability.SpellApiBased.resolve(SpellApiBased.java:44)\nat forge.game.ability.AbilityUtils.resolveApiAbility(AbilityUtils.java:1402)\nat forge.game.ability.AbilityUtils.resolve(AbilityUtils.java:1338)\nat forge.game.zone.MagicStack.resolveStack(MagicStack.java:703)\nat forge.ai.CommanderTokenBlockingHistoryTest.settle(CommanderTokenBlockingHistoryTest.java:198)\nat forge.ai.CommanderTokenBlockingHistoryTest.setup(CommanderTokenBlockingHistoryTest.java:123)\nat forge.ai.CommanderTokenBlockingHistoryTest.check(CommanderTokenBlockingHistoryTest.java:50)\nat forge.ai.CommanderTokenBlockingHistoryTest.commonTokenOnlyState(CommanderTokenBlockingHistoryTest.java:42)\nat java.base/java.lang.invoke.LambdaForm$DMH/0x0000000801019000.invokeVirtual(LambdaForm$DMH)\nat java.base/java.lang.invoke.LambdaForm$MH/0x00000008013cc800.invoke(LambdaForm$MH)\nat java.base/java.lang.invoke.Invokers$Holder.invokeExact_MT(Invokers$Holder)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:154)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\nat java.base/java.lang.reflect.Method.invoke(Method.java:578)\nat org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedEarlierCreatureDiedDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\nat java.base/java.util.stream.StreamSupport.stream(StreamSupport.java:69)\nat forge.util.IterableUtil.lambda$filter$4(IterableUtil.java:38)\nat forge.util.IterableUtil$$Lambda$1407/0x000000080191c208.iterator(Unknown Source)\nat forge.util.collect.FCollection.addAll(FCollection.java:642)\nat forge.util.collect.FCollection.<init>(FCollection.java:1491)\nat forge.game.card.CardCollection.<init>(CardCollection.java:124)\nat forge.game.card.CardLists.filter(CardLists.java:331)\nat forge.game.GameEntity.getAttachedCards(GameEntity.java:168)\nat forge.game.GameEntity.hasCardAttachments(GameEntity.java:185)\nat forge.game.GameAction.stateBasedAction_Role(GameAction.java:1768)\nat forge.game.GameAction.checkStateEffects(GameAction.java:1541)\nat forge.game.GameAction.checkStateEffects(GameAction.java:1452)\nat forge.ai.CommanderTokenBlockingHistoryTest.settle(CommanderTokenBlockingHistoryTest.java:196)\nat forge.ai.CommanderTokenBlockingHistoryTest.kill(CommanderTokenBlockingHistoryTest.java:165)\nat forge.ai.CommanderTokenBlockingHistoryTest.setup(CommanderTokenBlockingHistoryTest.java:112)\nat forge.ai.CommanderTokenBlockingHistoryTest.check(CommanderTokenBlockingHistoryTest.java:50)\nat forge.ai.CommanderTokenBlockingHistoryTest.copiedEarlierCreatureDiedDamage(CommanderTokenBlockingHistoryTest.java:39)\nat java.base/java.lang.invoke.LambdaForm$DMH/0x0000000801019000.invokeVirtual(LambdaForm$DMH)\nat java.base/java.lang.invoke.LambdaForm$MH/0x0000000801a44c00.invoke(LambdaForm$MH)\nat java.base/java.lang.invoke.Invokers$Holder.invokeExact_MT(Invokers$Holder)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:154)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\nat java.base/java.lang.reflect.Method.invoke(Method.java:578)\nat org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)\nat org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)\nat org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)\nat org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)\nat org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)\nat org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)\nat org.testng.TestRunner$$Lambda$1120/0x00000008017cf860.accept(Unknown Source)\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedEarlierCreatureDiedState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\nat forge.util.collect.FCollection.<init>(FCollection.java:1462)\nat forge.game.card.CardCollection.<init>(CardCollection.java:17)\nat forge.game.player.PlayerCollection.getCardsIn(PlayerCollection.java:33)\nat forge.game.Game.getCardsIn(Game.java:682)\nat forge.game.GameAction.checkStateEffects(GameAction.java:1503)\nat forge.game.GameAction.checkStateEffects(GameAction.java:1452)\nat forge.ai.CommanderTokenBlockingHistoryTest.settle(CommanderTokenBlockingHistoryTest.java:196)\nat forge.ai.CommanderTokenBlockingHistoryTest.kill(CommanderTokenBlockingHistoryTest.java:165)\nat forge.ai.CommanderTokenBlockingHistoryTest.setup(CommanderTokenBlockingHistoryTest.java:112)\nat forge.ai.CommanderTokenBlockingHistoryTest.check(CommanderTokenBlockingHistoryTest.java:50)\nat forge.ai.CommanderTokenBlockingHistoryTest.copiedEarlierCreatureDiedState(CommanderTokenBlockingHistoryTest.java:38)\nat java.base/java.lang.invoke.LambdaForm$DMH/0x0000000801019000.invokeVirtual(LambdaForm$DMH)\nat java.base/java.lang.invoke.LambdaForm$MH/0x0000000801a45c00.invoke(LambdaForm$MH)\nat java.base/java.lang.invoke.Invokers$Holder.invokeExact_MT(Invokers$Holder)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invokeImpl(DirectMethodHandleAccessor.java:154)\nat java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)\nat java.base/java.lang.reflect.Method.invoke(Method.java:578)\nat org.testng.internal.invokers.MethodInvocationHelper.invokeMethod(MethodInvocationHelper.java:141)\nat org.testng.internal.invokers.TestInvoker.invokeMethod(TestInvoker.java:686)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethod(TestInvoker.java:230)\nat org.testng.internal.invokers.MethodRunner.runInSequence(MethodRunner.java:63)\nat org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke(TestInvoker.java:992)\nat org.testng.internal.invokers.TestInvoker.invokeTestMethods(TestInvoker.java:203)\nat org.testng.internal.invokers.TestMethodWorker.invokeTestMethods(TestMethodWorker.java:154)\nat org.testng.internal.invokers.TestMethodWorker.run(TestMethodWorker.java:134)\nat org.testng.TestRunner$$Lambda$1120/0x00000008017cf860.accept(Unknown Source)\nat java.base/java.util.ArrayList.forEach(ArrayList.java:1511)\nat org.testng.TestRunner.privateRun(TestRunner.java:739)\nat org.testng.TestRunner.run(TestRunner.java:614)\nat org.testng.SuiteRunner.runTest(SuiteRunner.java:421)\nat org.testng.SuiteRunner.runSequentially(SuiteRunner.java:413)\nat org.testng.SuiteRunner.privateRun(SuiteRunner.java:373)\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedTokenEnteredAlreadyBlockedThenDiedDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedTokenEnteredAlreadyBlockedThenDiedState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedTokenOnlyDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.copiedTokenOnlyState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalEarlierCreatureDiedDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalEarlierCreatureDiedState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalTokenEnteredAlreadyBlockedThenDiedDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalTokenEnteredAlreadyBlockedThenDiedState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalTokenOnlyDamage",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      },
+      {
+        "method": "forge.ai.CommanderTokenBlockingHistoryTest.originalTokenOnlyState",
+        "exception": "java.lang.OutOfMemoryError",
+        "message": "\n              Java heap space\n            ",
+        "stack": "\n              java.lang.OutOfMemoryError: Java heap space\n\n            "
+      }
+    ],
+    "report_sha256": "7b741602935aca47177889bf9498a1a868861c177dfaf8ee6dc825e15e755187",
+    "log_sha256": "fbe09276482f91b3aa6bc8da7159c7a69a485930118ba02cfb9afac72f71f168",
+    "selected_runtime_unchanged": true,
+    "limits_unchanged": {
+      "heap_mib": 2048,
+      "maven_seconds": 600
+    },
+    "next_action": "Bounded allocation profiling of the failing mixed source suite; no restart of the terminal failed build and no failure omission."
+  },
+  "ownership": {
+    "recording_sha256": "3348c7ddaeff419a6e6cc95455fe7810eb4d0d12f6066e82654ac761506ed053",
+    "recording_bytes": 4787636,
+    "paths_sha256": "f57ea60d636398fcac055b1e24e14c90a91beae6871209f60543ee4b50dcd854",
+    "owners_sha256": "3ade79de58c767ce0cd7700dfb10deba999b5861c9b824dc8bebd9f10d0cf672",
+    "sampled_paths": 250,
+    "paths_to_static_AiCache_dataMap": 188,
+    "distinct_game_objects_on_recorded_paths": 176,
+    "scope": "Actual sampled strong-reference chains to the named static AiCache class; counts are sampled path coverage, not total retained objects."
+  },
+  "excluded_lazy_prototype": {
+    "status": "not_promoted_insufficient_for_mixed_suite",
+    "memory_workload": "Original96MiB million-table workload fails; prototype passes identical workload and4096 public mutations.",
+    "semantic_contracts": 16,
+    "semantic_baseline_and_prototype": "passed with strengthened atomic failure after proposed removal",
+    "cross_version_tables_per_direction": 4,
+    "cross_version_directions": 2,
+    "mixed_source": {
+      "total": 1222,
+      "passed": 1209,
+      "failed": 13,
+      "skipped": 0
+    },
+    "failures": "All13 are java.lang.OutOfMemoryError in token-history methods. No full-suite pass claimed.",
+    "prototype_source": "data/development/commander-snapshot-memory-research/prototype-source/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+    "prototype_source_sha256": "10aea257be43b6feaf2c8ed9f56f5e8efb434507190b4e76ae4263f028bb3fa9",
+    "research_source_restored_to_prior_four_file_epoch": true,
+    "next_action": "Retained ownership profiling of original failing source. Lazy allocation may be useful separately but is not the demonstrated engine fix."
+  },
+  "legacy_preview_scope_migration": {
+    "status": "prepared_for_old_and_new_implementation_check",
+    "original_sha256": "2fe4b24c4fddb9d5d4c17a44deda2262cf86839147a78f0b91610c1fedbaf519",
+    "migrated_sha256": "d60562bd5d3776b57267ee560c17f3c11d4ecc111d914e12ce2004782c5d2cec",
+    "all_existing_test_method_bodies_and_assertions_byte_identical_after_line_normalization": true,
+    "change": "IHookable surrounds each existing method with the same explicit live decision scope now used by AiController. Nested previews, failed previews, preview clearing and simultaneous threads retain every original assertion. Process-wide implicit memoization is intentionally removed because it pins completed games and returns stale native board evaluations.",
+    "failed_prior_source_counts": {
+      "total": 1238,
+      "passed": 1234,
+      "failed": 4,
+      "skipped": 0
+    },
+    "failed_prior_source_note": "No heap failures; four legacy implicit-scope setup expectations fail. No outcome assertions weakened."
+  },
+  "prior_cache_prototype_source": {
+    "counts": {
+      "total": 1238,
+      "passed": 1234,
+      "failed": 4,
+      "skipped": 0
+    },
+    "report_sha256": "aea151b031c9a4e66d0dba3178623d01cfd286bb7f4d806cf9a251d8b53e1f66",
+    "interpretation": "No heap failures. Four legacy preview setup expectations failed; existing bodies/assertions preserved while explicit live-decision setup was added and independently validated against both implementations."
+  },
+  "limits": [
+    "Source only; selected2361 runtime unchanged. Native2463, packaged1306, broader3937/256 and45-live/2359-subtest counts are future checks, not passing results.",
+    "The cache change prevents process-wide strong game-reference retention and unscoped stale game evaluations; it is not a general security audit or full MTG rules/strategy certification.",
+    "The lazy FSnapshotTable experiment is preserved but excluded; it reduced empty-table memory but still left13 mixed-suite heap failures."
+  ]
+}

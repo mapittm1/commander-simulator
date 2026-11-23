@@ -4,10 +4,23 @@ import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import org.testng.annotations.Test;
+import org.testng.IHookable;
+import org.testng.IHookCallBack;
+import org.testng.ITestResult;
 import static org.testng.Assert.*;
 
 /** Preview caches must have a bounded lifetime without invalidating the live decision cache. */
-public class CommanderPreviewCacheTest {
+public class CommanderPreviewCacheTest implements IHookable {
+    // Match the explicit live-decision lifetime used by AiController. Every
+    // existing nested-preview assertion remains inside that owning decision.
+    @Override
+    public void run(IHookCallBack callback, ITestResult result) {
+        AiCache.withIsolatedCache(() -> {
+            callback.runTestMethod(result);
+            return null;
+        });
+    }
+
     private int value(String key, int supplied) {
         return AiCache.getCached(key, () -> supplied, null, "same-argument");
     }
