@@ -25,6 +25,9 @@ class BattleCombatInputTests(unittest.TestCase):
         self.root = self.enterContext(reviewed_workspace())
         self.base = self.root / "engine/tests/AITest.java"
         self.fixture = self.root / "engine/tests/CommanderBattleCombatTest.java"
+        self.restoration = (
+            self.root / "engine/tests/CommanderDefenderRestorationTest.java"
+        )
         self.jar = (
             self.root
             / "data/engine-builds/m2/org/testng/testng/7.10.2/testng-7.10.2.jar"
@@ -33,6 +36,7 @@ class BattleCombatInputTests(unittest.TestCase):
         self.jar.parent.mkdir(parents=True)
         self.base.write_bytes(b"fixed test helper")
         self.fixture.write_bytes(b"fixed Battle fixture")
+        self.restoration.write_bytes(b"fixed restoration fixture")
         self.jar.write_bytes(b"fixed dependency")
         self.recipe = {
             "packaged_ai_base_sha256": file_hash(self.base),
@@ -41,7 +45,10 @@ class BattleCombatInputTests(unittest.TestCase):
                 "sha256": file_hash(self.jar),
             },
         }
-        self.review = {"fixture_sha256": file_hash(self.fixture)}
+        self.review = {
+            "fixture_sha256": file_hash(self.fixture),
+            "restoration_fixture_sha256": file_hash(self.restoration),
+        }
         self.write_reviews()
         self.enterContext(patch.object(battle_combat_worker, "PROJECT", self.root))
 
@@ -56,9 +63,9 @@ class BattleCombatInputTests(unittest.TestCase):
             )
 
     def test_valid_review_returns_only_the_fixed_sources_and_dependency(self):
-        """A valid review admits the two canonical source paths and pinned dependency."""
+        """A valid review admits the three canonical source paths and pinned dependency."""
         sources, dependency = battle_combat_worker.reviewed_inputs()
-        self.assertEqual(sources, [self.base, self.fixture])
+        self.assertEqual(sources, [self.base, self.fixture, self.restoration])
         self.assertEqual(dependency, self.jar)
 
     def test_changed_battle_fixture_is_rejected(self):
@@ -89,6 +96,19 @@ class BattleCombatInputTests(unittest.TestCase):
     def test_missing_fixture_review_cannot_approve_a_source(self):
         """An absent fixture digest fails closed before compilation."""
         self.review.clear()
+        self.write_reviews()
+        with self.assertRaisesRegex(ValueError, "source changed"):
+            battle_combat_worker.reviewed_inputs()
+
+    def test_changed_restoration_fixture_is_rejected(self):
+        """The supplemental class also requires its own reviewed digest."""
+        self.restoration.write_bytes(b"changed restoration fixture")
+        with self.assertRaisesRegex(ValueError, "source changed"):
+            battle_combat_worker.reviewed_inputs()
+
+    def test_missing_restoration_review_is_rejected(self):
+        """The older one-fixture review cannot approve an additional executable source."""
+        del self.review["restoration_fixture_sha256"]
         self.write_reviews()
         with self.assertRaisesRegex(ValueError, "source changed"):
             battle_combat_worker.reviewed_inputs()

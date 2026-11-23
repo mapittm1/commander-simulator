@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+The packaged Battle family now passes 134 cases, retaining 110 and adding 24
+paid type-restoration and countered-restoration checks. Song of the Dryads,
+Disenchant and Counterspell exercise original, copied and nested pending stacks;
+regaining a type does not restore the old attack. See the
+[restoration evidence](engine/defender_restoration_evidence.json). These supplemental
+tests leave production code and the 1,902-method engine build unchanged.
+
 Combat now remembers a defender's legal type when each attacking group forms,
 keeps independent copies of that history, and retires it when the defender leaves
 combat or combat ends. An attacked Battle becoming a Forest no longer redirects

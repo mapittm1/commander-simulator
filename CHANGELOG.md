@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add 24 paid defender-type restoration regressions to the packaged Battle family;
+  all 134 methods pass. Cover Disenchant and Counterspell after native flash-enabled
+  Song of the Dryads, including copied and nested pending stacks. Check unchanged
+  defense/loyalty, correct player damage and unresolved original stacks. Preserve
+  12-, 122- and 134-case phase evidence. Add fail-closed checks for missing or
+  changed supplemental source reviews. Production and the 1,902-method build stay
+  unchanged; all-card rules and strategy correctness remain open.
+
 - Activate the reviewed defender-type correction after all 45 live tests and
   1,798 subtests pass, with repeated 781/65/194/110 packaged families. Preserve
   all 1,870 prior native methods in the 1,902-test build and retain 644 focused

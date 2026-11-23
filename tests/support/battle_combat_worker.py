@@ -19,7 +19,10 @@ from tests.support.packaged_rules import (  # pylint: disable=wrong-import-posit
     run_rules,
 )
 
-TEST_CLASSES = ("forge.ai.CommanderBattleCombatTest",)
+TEST_CLASSES = (
+    "forge.ai.CommanderBattleCombatTest",
+    "forge.ai.CommanderDefenderRestorationTest",
+)
 NATIVE_CLASSES = (
     "forge.ai.ComputerUtil",
     "forge.ai.AiController",
@@ -70,8 +73,13 @@ def reviewed_inputs() -> tuple[list[Path], Path]:
     sources = [
         PROJECT / "engine/tests/AITest.java",
         PROJECT / "engine/tests/CommanderBattleCombatTest.java",
+        PROJECT / "engine/tests/CommanderDefenderRestorationTest.java",
     ]
-    hashes = (recipe.get("packaged_ai_base_sha256"), review.get("fixture_sha256"))
+    hashes = (
+        recipe.get("packaged_ai_base_sha256"),
+        review.get("fixture_sha256"),
+        review.get("restoration_fixture_sha256"),
+    )
     for source, expected_hash in zip(sources, hashes):
         if file_hash(source) != expected_hash:
             raise ValueError("Reviewed Battle combat source changed")

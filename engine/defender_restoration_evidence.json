@@ -1,0 +1,905 @@
+{
+  "status": "validated_packaged_regression_extension",
+  "scope": "Selected paid defender-type restoration rules and game-copy contracts; not exhaustive Commander card/rules/AI certification.",
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-defender-type",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "42d2562b0000f15a2daf3e640166fdc9a69e077b65e742728307d5f0e08b633c",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "ac051d14b4242872203d67abb69a8fba6019e34f81f42755903cd91f0d1c9627",
+    "native_tests": {
+      "total": 1902,
+      "passed": 1902,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "12ad368d877d3aebd8e72d005d7e96d1dcc59162933402126c87334a7bfc1466",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "production_changed": false,
+  "build_native_methods": 1902,
+  "packaged_family": {
+    "counts": {
+      "total": 134,
+      "passed": 134,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_methods": 110,
+    "added_methods": 24,
+    "production_class_origins": [
+      "forge.ai.ComputerUtil",
+      "forge.ai.AiController",
+      "forge.ai.PlayerControllerAi",
+      "forge.ai.simulation.GameCopier",
+      "forge.game.Game",
+      "forge.game.GameAction",
+      "forge.game.card.Card",
+      "forge.game.card.CardCopyService",
+      "forge.game.card.CardDamageTable",
+      "forge.game.card.CardFactoryUtil",
+      "forge.game.card.CardProperty",
+      "forge.game.combat.Combat",
+      "forge.game.combat.CombatUtil",
+      "forge.game.phase.PhaseHandler",
+      "forge.game.trigger.TriggerHandler",
+      "forge.game.spellability.SpellAbility",
+      "forge.game.cost.CostPayment",
+      "forge.game.ability.AbilityUtils",
+      "forge.game.ability.effects.AttachEffect",
+      "forge.game.staticability.StaticAbilityContinuous",
+      "forge.game.staticability.StaticAbilityCastWithFlash",
+      "forge.game.ability.effects.CountersRemoveEffect",
+      "forge.game.ability.effects.FogEffect",
+      "forge.game.ability.effects.PlayEffect",
+      "forge.game.ability.effects.ChangeZoneEffect",
+      "forge.game.ability.effects.CounterEffect",
+      "forge.game.ability.effects.DestroyEffect",
+      "forge.game.ability.effects.TokenEffect"
+    ],
+    "methods": [
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.blockedCombatKillsBothCreaturesWithoutDamagingTheBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtBlockedRemovedBattleTriggersForBlockerDamageOnly",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtBlockedRemovedWalkerTriggersOnceForBlockerAndPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtLiveBattleTriggersForDefenseDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtLiveWalkerTriggersOnceForWalkerAndPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtRemovedBattleWithOrdinaryTrampleDoesNotTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtRemovedBattleWithOverPlaneswalkersDoesNotTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtRemovedWalkerTriggersForPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignedJitteAtRemovedWalkerWithOrdinaryTrampleDoesNotTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtLiveBattleRetainsDefenseDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtLiveWalkerRetainsLoyaltyAndPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtRemovedBattleWithOrdinaryTrampleSettlesWithoutDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtRemovedBattleWithOverPlaneswalkersSettlesWithoutDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtRemovedWalkerWithOrdinaryTrampleSettlesWithoutDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedAssignmentAtRemovedWalkerWithOverPlaneswalkersRetainsPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedAssignmentAtRemovedBattleSettlesBlockerDamageOnly",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedAssignmentAtRemovedWalkerRetainsBlockerAndPlayerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedChangedBattleOrdinaryKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedChangedBattleOverPlaneswalkersKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedChangedWalkerOrdinaryKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedChangedWalkerOverPlaneswalkersKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedCombatLeavesBothOriginalCreaturesAlive",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedChangedBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedChangedBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedChangedWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedChangedWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedCombatDamageLeavesTheOriginalDefenseUntouched",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedCounteredBattleTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedCounteredWalkerTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedCounterspellTargetsTheCopiedDefeatTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedDeclaredAttackRetainsTheBattleAndItsDefendingPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedDoubleStrikerStillDamagesTheBattleInBothSteps",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedFirstStrikeAttackerDoesNotDamageItsBlockerTwice",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedGainedDoubleStrikePermitsNormalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedHistoryTracksBothFirstStrikeAttackers",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedJitteGetsNoCountersForAnAbsentBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedJitteTriggersForLegalOverPlaneswalkerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedLossOfFirstStrikeDoesNotPermitAnotherDamageStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedOverPlaneswalkersStillDamagesARemovedWalkersController",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedPaidHexmageActivationResolvesOnlyInTheCopiedWorld",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedPendingDefeatRetainsTheBattleUntilItsTriggerResolves",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedTrampleCombatLeavesOriginalDefenseAndBlockerUntouched",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.copiedUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.departedFirstStrikerHistoryDoesNotBreakACopyAfterPaidUnsummon",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.destroyingTheBattleBeforeItsDefeatTriggerPreventsTheBackFaceCast",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.firstStrikeBlockerKillsTheAttackerBeforeNormalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.lethalNativeCombatDefeatsTheSiegeAndCastsItsBackFace",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedChangedBattleOrdinaryKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedChangedBattleOverPlaneswalkersKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedChangedWalkerOrdinaryKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedChangedWalkerOverPlaneswalkersKeepsBlockerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedRemovedBattleDoesNotRedirectTrampleToAPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeBlockedRemovedWalkerAssignsOnlyToBlockerAndPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeChangedBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeChangedBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeChangedWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeChangedWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeCounteredBattleTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeCounteredRemovalRetainsTheLiveWalkersLoyaltyRequirement",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeCounteredWalkerTypeChangeKeepsLiveRequirements",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeDefenderEnumerationExcludesOnlyTheProtector",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeDoubleStrikerStillDamagesTheBattleInBothSteps",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeFirstStrikeAttackerDoesNotDamageItsBlockerTwice",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeGainedDoubleStrikePermitsNormalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeHexmageSacrificeDefeatsTheBattleAndCastsTransformed",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeHistoryTracksBothFirstStrikeAttackers",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeJitteGetsNoCountersForAnAbsentBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeJitteGetsNoCountersForAnAbsentWalkerWithOrdinaryTrample",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeJitteGetsNoCountersForOverPlaneswalkersAtAnAbsentBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeJitteTriggersForLegalOverPlaneswalkerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeLiveBattleDoesNotRedirectOverPlaneswalkerDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeLiveWalkerReceivesLethalBeforeOverPlaneswalkerSpillover",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeLossOfFirstStrikeDoesNotPermitAnotherDamageStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeOrdinaryTrampleAtALiveWalkerDoesNotSpillToAPlayer",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeOverPlaneswalkersDoesNotRedirectDamageFromARemovedBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeOverPlaneswalkersStillDamagesARemovedWalkersController",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeRemovedBattleRetainsAttackerButDealsNoOrdinaryTrampleDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeRemovedWalkerDealsNoOrdinaryTrampleDamageToItsController",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeStrikeHistoryPreventsAFirstStrikerDealingNormalDamageAgain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nativeUnblockedFirstStrikerDoesNotDefeatTheBattleInTheNormalStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedBattleOrdinaryPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedBattleOverPlaneswalkersPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedCounteredBattlePreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedCounteredWalkerPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedWalkerOrdinaryPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedPendingCopiedWalkerOverPlaneswalkersPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.nestedStrikeCopiesResolveIndependentlyOfEachOtherAndTheOriginal",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.onlyTheProtectorMayBlockAnAttackOnTheBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.paidFogPreventsBattleDamageAndTheDefeatTrigger",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedBattleOrdinaryPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedBattleOverPlaneswalkersPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedCounteredBattlePreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedCounteredWalkerPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedWalkerOrdinaryPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.pendingCopiedWalkerOverPlaneswalkersPreservesDefenderHistory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.stiflingTheDefeatTriggerPutsTheZeroDefenseBattleInTheGraveyard",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.trampleThroughABlockerDefeatsOnlyTheBattle",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderBattleCombatTest.unblockedCombatRemovesDefenseWithoutReducingAnyPlayersLife",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedCounteredBattleRestorationPreservesRemovedCombat",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedCounteredWalkerRestorationPreservesRemovedCombat",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedRestoredBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedRestoredBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedRestoredWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.copiedRestoredWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeCounteredBattleRestorationPreservesRemovedCombat",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeCounteredWalkerRestorationPreservesRemovedCombat",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeRestoredBattleOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeRestoredBattleOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeRestoredWalkerOrdinaryTrampleRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nativeRestoredWalkerOverPlaneswalkersRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingBattleCounteredRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingBattleOrdinaryRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingBattleOverPlaneswalkersRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingWalkerCounteredRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingWalkerOrdinaryRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.nestedPendingWalkerOverPlaneswalkersRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingBattleCounteredRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingBattleOrdinaryRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingBattleOverPlaneswalkersRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingWalkerCounteredRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingWalkerOrdinaryRestorationRetainsLegalDamage",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderDefenderRestorationTest.pendingWalkerOverPlaneswalkersRestorationRetainsLegalDamage",
+        "status": "PASS"
+      }
+    ]
+  },
+  "primary_rules": {
+    "url": "https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf",
+    "effective": "2026-09-25",
+    "sections": [
+      "506.4",
+      "506.4c",
+      "702.19e",
+      "702.19f"
+    ],
+    "expectation": "Type loss removes an attacked Battle or planeswalker from combat. Regaining that type does not redeclare the attack. Unblocked ordinary trample deals no damage; trample over a departed planeswalker reaches its defending player."
+  },
+  "contracts": [
+    "Actual native paid Invasion of Gobakhan, then supplied mature attacker, legal defender and unblocked declaration.",
+    "Native Song of the Dryads casting is rejected during combat without flash, then permitted with supplied Vedalken Orrery; three mana are paid.",
+    "Disenchant pays two mana; positive restoration returns the old defender type but leaves all three defense/loyalty counters intact after damage.",
+    "Counterspell pays two mana and targets pending Disenchant; both spells reach the graveyard and Song remains attached.",
+    "Both defender types and both trample forms cover original and post-resolution copied worlds. Over-planeswalkers also covers countered restoration.",
+    "The same six scenarios cover a pending-response copy and a nested pending-response copy. Original stacks and types remain unresolved while copied stacks resolve.",
+    "Copied damage cannot change original player life or defender counters; expected player damage is full attacker power only for departed planeswalker/over-planeswalkers combinations."
+  ],
+  "limits": [
+    "Legal setup, mature attacks, source actions, target choices and priority checkpoints are supplied; autonomous selection and strategy are not established.",
+    "Pending copies are internal AI snapshots, not extra player priority windows.",
+    "No blockers, control transfers, simultaneous type changes or arbitrary replacement compositions are added by this supplemental class.",
+    "The additional 24 methods run in packaged pytest. The unchanged production build still contains 1902 selected methods, including the prior 110-case Battle class.",
+    "The prior full 45-test/1798-subtest runtime validation remains historical. Only the affected packaged family and the offline gate were rerun for this test-only extension."
+  ],
+  "current_phase": {
+    "run": "data/runs/1cd482a8c75c4d16a49d1b1849205e66",
+    "worker_budget_seconds": 90,
+    "process": {
+      "process": {
+        "status": "finished",
+        "bytes": 20230,
+        "returncode": 0,
+        "elapsed_seconds": 17.578,
+        "support_source_hashes": {
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "7c8572af9042e62e3b1d1fb822e4a79abd465296a14331f73acbbefb040d6375",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "7609aba25346f656973eb36931855160fccde4586fefdc224b0054a2b42b096c",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "ac051d14b4242872203d67abb69a8fba6019e34f81f42755903cd91f0d1c9627",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "c705e85530b90c1a492c01b259a1959da2350324b6c1c31d1767a33d7b4f3248"
+        }
+      },
+      "worker_sha256": "23c30c6e7c7f104c4b9e43ea8d1a361a37e39c7479a0e8ad401bae2128215b24"
+    },
+    "summary": {
+      "counts": {
+        "total": 134,
+        "passed": 134,
+        "failed": 0,
+        "skipped": 0
+      },
+      "testng_status": 0,
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CommanderBattleCombatTest.java": "2f18db4076208ed235d8020897c3288a110d9c4d904cc80006ccd71a58b5bc5a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CommanderDefenderRestorationTest.java": "95c922d0ad8293d2b88a1ecdf85bb7b7ff0e89444505c86d02b3449aceb2fdc1"
+      },
+      "classes": {
+        "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+        "forge/ai/CommanderBattleCombatTest$Activation.class": "52be2541c37728055475fcb9c555b6e5020585eae802f20cecc4a4ae3f1b3bcb",
+        "forge/ai/CommanderBattleCombatTest$Attack.class": "115d75e441a541188d5a9b3aed27696f647a1edd5ba63742ed9a4c03658d78f9",
+        "forge/ai/CommanderBattleCombatTest$Board.class": "0520016bd222e58d4aea68828619758057e4c6378697c08591f347815ec7e3fd",
+        "forge/ai/CommanderBattleCombatTest$World.class": "e04b286b38d873afc6bc01c9dfe981aa068f0dc63588e70b890849c7c5b5fb89",
+        "forge/ai/CommanderBattleCombatTest.class": "ff14c120b72680b9fc21c54a2ef43192650e98f2a519bd7eb91c95aacbe73c23",
+        "forge/ai/CommanderDefenderRestorationTest$Board.class": "1fdaebe7106d126f79e87183e4a280548ed7e34b5a4c53e538935cb939a03700",
+        "forge/ai/CommanderDefenderRestorationTest$Defender.class": "6e272a7dd444560225f5c9f46946d0d56d97d680d6d602e8574d70d732c86e36",
+        "forge/ai/CommanderDefenderRestorationTest$Removal.class": "224e93225d69e495aa9340264c1f1801f6319046f85f4510eae45480b64590c3",
+        "forge/ai/CommanderDefenderRestorationTest$Restoration.class": "f6570ac4afa5a1a4a7fbc6d78eaaaeba326438d7c79aee76ef0027cf25ff5827",
+        "forge/ai/CommanderDefenderRestorationTest$Trample.class": "c7a70fd4eb2f041c8f0a163c4975eb3e8597e15be30ce143f5b6b9cd777a149d",
+        "forge/ai/CommanderDefenderRestorationTest$World.class": "264a7427330368ec74932c6718318a5393bfb98ca328e5910551cc64daf6039a",
+        "forge/ai/CommanderDefenderRestorationTest.class": "ad3a4c9e78977acc06ab22361076f85ae1a68b2a9ba7393a23cbe7734c735737"
+      },
+      "report_sha256": "d016dcae51fa2d263abd13094dffaab4b226c858cbdbe77bc0cdbc3e0440e32f",
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "partial_successes": 0,
+      "production_classes_from_packaged_jar": [
+        "forge.ai.ComputerUtil",
+        "forge.ai.AiController",
+        "forge.ai.PlayerControllerAi",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.Game",
+        "forge.game.GameAction",
+        "forge.game.card.Card",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.CardDamageTable",
+        "forge.game.card.CardFactoryUtil",
+        "forge.game.card.CardProperty",
+        "forge.game.combat.Combat",
+        "forge.game.combat.CombatUtil",
+        "forge.game.phase.PhaseHandler",
+        "forge.game.trigger.TriggerHandler",
+        "forge.game.spellability.SpellAbility",
+        "forge.game.cost.CostPayment",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.ability.effects.AttachEffect",
+        "forge.game.staticability.StaticAbilityContinuous",
+        "forge.game.staticability.StaticAbilityCastWithFlash",
+        "forge.game.ability.effects.CountersRemoveEffect",
+        "forge.game.ability.effects.FogEffect",
+        "forge.game.ability.effects.PlayEffect",
+        "forge.game.ability.effects.ChangeZoneEffect",
+        "forge.game.ability.effects.CounterEffect",
+        "forge.game.ability.effects.DestroyEffect",
+        "forge.game.ability.effects.TokenEffect"
+      ],
+      "compiler_log_sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+    },
+    "artifacts": [
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/battle-combat.json",
+        "sha256": "259b09749c69a029dd153644ad076b3b72d1f8bdb43d37853e03ef0d937b1ae1"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/battle-combat-summary.json",
+        "sha256": "5d499988aef22b3908618d18d7dd4661e0c9df7e77e29865bb0b1ca3bd2983d7"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/battle-combat-methods.json",
+        "sha256": "224d2fcb9146e82e9c322c5b989090388357174ae61eeb62d4aca5294e24032c"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/rules-inputs.json",
+        "sha256": "db5e3d3c90006903d27b36f0b1e346c2451ff10d4f64cad83c66f95a492531b9"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/rules-process.json",
+        "sha256": "52e321949d167a8179ed2ef49fe711a17864a34a26c8c1afa23daebe22d18b57"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/rules-reports/testng-results.xml",
+        "sha256": "d016dcae51fa2d263abd13094dffaab4b226c858cbdbe77bc0cdbc3e0440e32f"
+      },
+      {
+        "path": "data/runs/1cd482a8c75c4d16a49d1b1849205e66/battle-combat-worker.log",
+        "sha256": "46793068d77096b7ed37395eb887c566a3f3f5b3190d7588dcb23dd37e61b566"
+      }
+    ],
+    "input_snapshot": {
+      "path": "data/development/commander-defender-restoration-research/phase134-inputs/manifest.json",
+      "sha256": "84ce9ad48aa9fac2b2be31e88cf862cad0df070fa4d84334109a6050ad0c8cda"
+    }
+  },
+  "prior_phases": [
+    {
+      "name": "Original twelve-case paid restoration research",
+      "counts": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 5470,
+        "returncode": 0,
+        "elapsed_seconds": 12.828
+      },
+      "production_origins_verified": 129,
+      "artifacts": [
+        {
+          "path": "data/development/commander-defender-restoration-research/packaged-defender-restore12-baseline/evidence.json",
+          "sha256": "1e386e7658eb2980d6ba88c0ad6358c3189b04eb830678bd81ce27beaece7d98"
+        },
+        {
+          "path": "data/development/commander-defender-restoration-research/packaged-defender-restore12-baseline/process.json",
+          "sha256": "3d89d4534cd6e36c70cc44686bfc947b9f428945e648265363d725e318e2a4cd"
+        },
+        {
+          "path": "data/development/commander-defender-restoration-research/packaged-defender-restore12-baseline/rules-inputs.json",
+          "sha256": "c6cf2e08c17f781acb5a02eab1594e07dc63303baf71569a79fdd579c08032dc"
+        },
+        {
+          "path": "data/development/commander-defender-restoration-research/packaged-defender-restore12-baseline/reports/testng-results.xml",
+          "sha256": "e28836704aa34e1d92c984eb64c0488af14b3d024aa81b40531bbd6c18321157"
+        },
+        {
+          "path": "data/development/commander-defender-restoration-research/packaged-defender-restore12-baseline/native.log",
+          "sha256": "f811ed7efaa66acc8fab072f3f448fe951ba2136610a7810aeab99a49b31ed80"
+        }
+      ],
+      "driver": {
+        "path": "data/development/commander-defender-restoration-research/run_baseline.py",
+        "sha256": "c6ac22217c2dd9638ebf4de0834143a01aa2b610fed4071825acbb0ab09da37b"
+      }
+    },
+    {
+      "name": "Readable twelve-case supplemental fixture; complete family 122",
+      "counts": {
+        "total": 122,
+        "passed": 122,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "process": {
+          "status": "finished",
+          "bytes": 20230,
+          "returncode": 0,
+          "elapsed_seconds": 17.125,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "7c8572af9042e62e3b1d1fb822e4a79abd465296a14331f73acbbefb040d6375",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "7609aba25346f656973eb36931855160fccde4586fefdc224b0054a2b42b096c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "ac051d14b4242872203d67abb69a8fba6019e34f81f42755903cd91f0d1c9627",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "2c831cdf1570b6d40b562c946085a91c601c4b335edf575e27feda95b2016b13"
+          }
+        },
+        "worker_sha256": "23c30c6e7c7f104c4b9e43ea8d1a361a37e39c7479a0e8ad401bae2128215b24"
+      },
+      "artifacts": [
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/battle-combat.json",
+          "sha256": "17940d5f67258a9fc2a3fe70006bcbcea93e6d27c1853f31d1c97d45e68563ef"
+        },
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/battle-combat-summary.json",
+          "sha256": "ce8175cacd54f41b0f1df6ee86708f26c0ab3a5338e299c55971e640ca0bc1ed"
+        },
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/battle-combat-methods.json",
+          "sha256": "49ee45aa13de8970acf5d20a083f426e834349b414beaf3a16fb174dcb8478b8"
+        },
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/rules-inputs.json",
+          "sha256": "8e12f3452ef79502016dd25fa8bc62985e1916fa0464e04438fed387b358e9e8"
+        },
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/rules-process.json",
+          "sha256": "60c137a57501513f1ef57f803bf91fcfec970f34e5b5db710c820e3dbc0ca44e"
+        },
+        {
+          "path": "data/runs/1e497e88acf446c48a47451d82078605/rules-reports/testng-results.xml",
+          "sha256": "63817700ec2f40b06b546b745e4c1cbcaa124812e8f865b00b880289a8c250a2"
+        }
+      ],
+      "restored_input_snapshot": {
+        "path": "data/development/commander-defender-restoration-research/phase122-reconstructed-inputs/manifest.json",
+        "sha256": "7c099b929dd7f24c4d21526a1d8c31e7fde9c3f09fc8ffd36536efee9e3b17f3"
+      }
+    }
+  ],
+  "fixed_sources": {
+    "engine/tests/CommanderDefenderRestorationTest.java": "95c922d0ad8293d2b88a1ecdf85bb7b7ff0e89444505c86d02b3449aceb2fdc1",
+    "engine/battle_combat_tests.json": "c705e85530b90c1a492c01b259a1959da2350324b6c1c31d1767a33d7b4f3248",
+    "tests/support/battle_combat_worker.py": "23c30c6e7c7f104c4b9e43ea8d1a361a37e39c7479a0e8ad401bae2128215b24",
+    "tests/integration/test_battle_combat_integration.py": "5b3c3445f7c8e066bf0900d324cdcbd22e6298c3924c040970a816fc93c20967",
+    "tests/unit/test_battle_combat_inputs.py": "ac151451da95e3ebaf44b1e7069d5be15b971bdbd7b392a9a0828682ecd31629"
+  }
+}

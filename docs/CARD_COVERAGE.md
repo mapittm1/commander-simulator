@@ -180,11 +180,25 @@ Full card, rules, combat and strategy correctness remain unverified.
 
 ## Battle combat and Siege defeat
 
-The expanded packaged pytest family exercises 110 native Battle paths against
-the reviewed defender-type runtime. All 110 pass, with 28 production
+The expanded packaged pytest family exercises 134 native Battle paths against
+the reviewed defender-type runtime. All 134 pass, with 28 production
 class origins checked against the selected JAR and hash-bound source, compilation,
-profile and method receipts. The fixed fixture is
-[CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java).
+profile and method receipts. The fixed fixtures are
+[CommanderBattleCombatTest.java](../engine/tests/CommanderBattleCombatTest.java)
+and [CommanderDefenderRestorationTest.java](../engine/tests/CommanderDefenderRestorationTest.java).
+
+The supplemental 24 methods exercise paid Song of the Dryads with flash, followed
+by paid Disenchant and optional Counterspell. Both defender types and both trample
+forms cover original/post-resolution copied worlds; over-planeswalkers also covers
+countered restoration. Those same six scenarios run with pending-response copies
+and nested pending-response copies. Returning a type leaves the old attack removed:
+all three defense/loyalty counters survive, and only trample over a departed
+planeswalker damages its defending player. Copied resolution leaves the original
+stack pending, its permanent a Forest, and original life/counters untouched.
+See the [bound restoration evidence](../engine/defender_restoration_evidence.json).
+The expectations follow rules 506.4/506.4c and 702.19e/f in the pinned
+[Comprehensive Rules](https://media.wizards.com/2026/downloads/MagicCompRules%2020260925.pdf).
+These partial supplied states do not establish autonomous decisions or all rules.
 
 | Witness | Required result |
 | --- | --- |
@@ -213,20 +227,23 @@ the explicit preserve-combat overload; all ten then pass. Both exact fixtures,
 drivers and raw report hashes remain preserved. This is a fixture correction,
 not an engine defect or a production change.
 
-The fixed Java source is pinned in
-[battle_combat_tests.json](../engine/battle_combat_tests.json) and the native build
-recipe. The shared helper and TestNG dependency retain their existing pins;
-review manifests are included in worker support-source hashes. Six offline
-boundary tests reject altered fixture/helper/dependency bytes, redirected
-dependency paths and missing review hashes. The quality gate passes 426 tests and
-520 subtests, skipping 45 opt-in integration tests.
+Both fixed Java fixtures are pinned in
+[battle_combat_tests.json](../engine/battle_combat_tests.json); the prior 110-method
+class also retains its existing native build recipe pin. The shared helper and
+TestNG dependency retain their pins; review manifests are included in worker
+support-source hashes. Eight offline boundary tests reject altered fixtures,
+helper/dependency bytes, redirected dependency paths and missing review hashes.
+The quality gate passes 428 tests and 520 subtests, skipping 45 opt-in integration
+tests.
 
 The initial ten-case test-only milestone is preserved in its
-[historical evidence](../engine/battle_combat_evidence.json). The current 110-case
+[historical evidence](../engine/battle_combat_evidence.json). The prior 110-case
 family is included in the 1,902-test engine build and the full 45-test integration
 run described above. See the [current validation](../engine/defender_typechange_evidence.json)
 and [repeatable command](INTERACTION_TESTS.md#battle-combat-and-siege-defeat).
-Full card, rules, combat and AI correctness remain unverified.
+The additional 24 cases run as packaged regressions and do not change the
+1,902-method production build; the full live suite was not rerun for this test-only
+extension. Full card, rules, combat and AI correctness remain unverified.
 
 ## Historical Battle-protector snapshots
 

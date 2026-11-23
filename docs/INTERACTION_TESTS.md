@@ -31,10 +31,11 @@ Set `COMMANDER_JAVAC` when `javac` is not on PATH, as described above. Ordinary
 quality checks skip this family unless the opt-in environment flag is enabled.
 It is separate from the `engine-interactions` CLI suite.
 
-All 110 native cases pass against the reviewed defender-type engine. The family
-retains 78 prior witnesses and adds 32 type-change, blocked and pending/nested
-spell-copy contracts. Native paid Aura casting, flash-timing checks and
-Counterspell responses complement strike history, assigned damage and Siege
+All 134 native cases pass against the reviewed defender-type engine. The family
+retains 110 witnesses and adds 24 paid restoration contracts, including copied
+and nested pending Disenchant/Counterspell stacks. The prior 110 include 32
+type-change, blocked and pending/nested spell-copy contracts. Native paid Aura
+casting, flash-timing checks and Counterspell responses complement strike history, assigned damage and Siege
 defeat. See the [resolved type-loss gap](../engine/defender_typechange_gap.json).
 
 They cover legal defender enumeration, copied combat, damage to defense counters,
@@ -45,7 +46,11 @@ The family does not establish autonomous combat strategy or every Battle
 interaction. Fixed source/dependency checks, compilation integrity, 28 production
 class origins and hash-bound method receipts use the existing 90-second worker
 budget. See [detailed cases and limits](CARD_COVERAGE.md#battle-combat-and-siege-defeat)
-and [current validation evidence](../engine/defender_typechange_evidence.json).
+and [restoration evidence](../engine/defender_restoration_evidence.json).
+The additional fixture supplements the unchanged 1,902-method production build.
+The prior [full runtime validation](../engine/defender_typechange_evidence.json)
+remains a separate milestone; the full live suite was not rerun for this test-only
+extension.
 
 ## Current scope: Equipment, damage effects, countering, and target legality
 
