@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the inspection AI candidate with 1,971 native methods, retaining all
+  1,938 and adding 33. Independent packaged families pass 814/65/194/146 cases;
+  broader gameplay/serialization pass 3,445/256. Verify 2,164 production sources
+  match the source-tested candidate, 505 frozen implementation inputs, preserved
+  prior methods and unchanged card scripts/default AI. Extract the fixed fixture
+  digest registry from build orchestration to meet the module-size standard.
+  Full live validation and activation remain pending; the selected runtime stays
+  unchanged. See engine/inspection_ai_packaged_evidence.json.
+
 - Add a source-validated generic inspection AI correction: 745 focused checks
   retain 712 and add 33 paid activation, privacy, copied-memory, free-access and
   target-selection controls. Preserve the packaged 8-pass/12-fail baseline and
