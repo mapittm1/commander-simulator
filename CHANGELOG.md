@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Activate generic Recruit evaluation and last-drawn payment provenance after
+  all 1,042 source and 2,267 native checks pass, retaining 2,212 and adding 55.
+  Independent/repeated packaged families pass 1110/65/194/146; broader gameplay
+  and serialization pass 3,741/256; all 45 live tests and 2,163 subtests pass.
+  Verify post-move readiness and construction of 32,636 starting identities
+  with seven nonstarting meld exclusions. Preserve original failures, copied
+  history, current-turn/hand/flag/timestamp eligibility and actual paid outcomes.
+  Card scripts and Default/Cautious profile files are unchanged. Default counter
+  policy, optional Recruit and full Commander rules/strategy remain open. See
+  engine/last_drawn_payment_evidence.json.
+
 - Validate generic last-drawn payment/provenance with all 1,042 focused source
   checks, retaining 1,021 and adding 21 original/active-copy/common-snapshot
   contracts. Share current-turn/current-hand/drawn-flag/timestamp eligibility

@@ -27,42 +27,39 @@ difference.
 
 ## Card coverage
 
-The combined Recruit/draw-provenance candidate passes all 1,042 focused source
-checks, retaining 1,021 and adding 21 actual LastDrawn payment cases. Both copy
-routes rebind the last drawn card and preserve its draw flag. Native cost admission
-and AI payment share a current-turn, current-hand and card-timestamp check, rejecting
-previous-turn cards and cards that left and returned. See the [preserved failures](engine/last_drawn_payment_gap.json)
-and [source validation](engine/last_drawn_payment_native_evidence.json).
+The selected runtime evaluates paid Recruit actions and preserves copied draw
+history, drawn-card flags and last-drawn provenance. Native cost admission and
+AI payment share a current-turn, current-hand and card-timestamp check, rejecting
+previous-turn cards and cards that left and returned to the hand.
 
-The recipe now prepares a fresh build with 2,267 expected native tests and a
-1,110-case packaged family. These are validation targets, not completed results;
-the selected runtime remains the 2,212-test delayed-reveal build below.
+All 1,042 focused source checks and 2,267 native tests pass, retaining all 2,212
+prior native methods and adding 55. Independent and repeated packaged families
+pass 1110/65/194/146; broader gameplay/serialization pass 3,741/256. All 45 live
+tests and 2,163 subtests pass. Post-move health is ready, and construction passes
+for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [preserved last-drawn failures](engine/last_drawn_payment_gap.json),
+[source validation](engine/last_drawn_payment_native_evidence.json),
+[packaged checks](engine/last_drawn_payment_packaged_evidence.json), and
+[activation evidence](engine/last_drawn_payment_evidence.json).
 
-An isolated Recruit/draw-history prototype passes all 1,021 focused source checks,
-retaining 987 and adding 34. Recruit admission compares complete paid native
-outcomes; both copy paths preserve draw counters without firing draw events.
-New cases cover actual paid effects, empty-library loss, conditional skipping,
-draw prohibition, Laboratory Maniac, Platinum Angel, Notion Thief and Reed Richards.
-See the [source checkpoint](engine/recruit_planning_native_evidence.json).
+The 21 supplied last-drawn cases cover actual mana/tap/exact-discard/draw payment
+and original/active-copy/common-snapshot independence. Recruit tests isolate
+supported composition under a willing counter policy. The default probabilistic
+counter policy and optional Recruit decisions still need work. Card construction
+and selected passing tests do not establish complete Commander rules or strategy.
+Card scripts and Default/Cautious profile files are unchanged.
 
-Packaging and activation are pending; the selected runtime below retains the
-[recorded Recruit gap](engine/recruit_planning_gap.json). Failed native phases,
-a fixture compilation error and an unused-import Checkstyle failure are preserved.
-Controlled willing-profile choices isolate Recruit from probabilistic counter
-policy; they do not establish default strategy. Optional Recruit triggers,
-last-drawn-card references and wider rules/history contexts remain further work.
-
-The selected runtime routes the active delayed-reveal wrapper through shared
+The earlier delayed-reveal milestone routed the active delayed-reveal wrapper through shared
 per-card rights. Only current matching views in declared/current zones resolve;
 stale agents and foreign/copied view aliases cannot redirect fresh information.
 Audience and zone/owner display groups are captured before callbacks, preserving
 outside-game restrictions, original/current-agent memories and single/multi-zone
 prefixes. No private histories are copied or card-name exceptions added.
 
-All 987 focused source checks and 2,212 native build tests pass, retaining all
+That milestone passed 987 focused source checks and 2,212 native build tests, retaining all
 2,181 prior native methods and adding 31. Independent and repeated packaged
 families pass 1055/65/194/146; broader gameplay/serialization pass 3,686/256.
-All 45 live tests and 2,108 subtests pass. Post-move health is ready; construction
+Its 45 live tests and 2,108 subtests passed. Post-move health is ready; construction
 passes for 32,636 starting identities with seven nonstarting meld exclusions.
 See the [source evidence](engine/delayed_private_reveal_native_evidence.json),
 [packaged milestone](engine/delayed_private_reveal_packaged_evidence.json), and
