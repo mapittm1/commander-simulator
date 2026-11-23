@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a source-validated generic information correction: 799 checks retain 745 and
+  add 54. Preserve chosen library order and retire matching position knowledge
+  when a card is explicitly forgotten. Value only authorized hands, positions and
+  faces; use bounded native paid outcomes so cast-trigger draws, granted mana and
+  harmful cast damage remain part of decisions. Preserve the original 26/4-case
+  baselines and later memory/material-context failures without weakening their
+  expectations. Packaging and full runtime validation remain pending; selected
+  engine, scripts and default AI are unchanged. Full-card correctness remains open.
+  See engine/information_choice_native_evidence.json.
+
 - Record two packaged information baselines against the selected inspection
   runtime: 26 cases pass 20/fail 6, and four own-library-order cases pass 2/fail 2.
   Preserve exact fixtures, driver/source snapshots, production origins and report

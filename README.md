@@ -32,7 +32,11 @@ Fresh packaged baselines expose additional information-choice and ordering gaps:
 Paid resolution and privacy controls pass; actual choices and retention of an
 announced own-library order need further work. See the
 [open gap and exact witnesses](engine/information_choice_gap.json).
-An isolated prototype is under validation; the selected runtime below is unchanged.
+An isolated generic correction passes all 799 source checks, retaining 745 and
+adding 54. It preserves chosen library order, explicit forgetting, private hand/
+position knowledge and native beneficial/harmful cast effects. See the
+[source evidence](engine/information_choice_native_evidence.json). Packaging and
+full runtime validation remain pending; the selected runtime below is unchanged.
 
 The selected runtime now supports primary face-down inspection decisions for
 Smoke Teller and Aven Soulgazer through a generic policy. It avoids paying to

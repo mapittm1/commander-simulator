@@ -1,0 +1,260 @@
+--- a/forge-ai/src/main/java/forge/ai/AiCardMemory.java
++++ b/forge-ai/src/main/java/forge/ai/AiCardMemory.java
+@@ -91,6 +91,18 @@
+ 
+     private final Map<Player, LibraryKnowledge> libraryKnowledge = Maps.newHashMap();
+ 
++    /** Position knowledge is tied to its owner and explicit library-order revision. */
++    public boolean isLibraryPositionKnown(Player owner, int index) {
++        LibraryKnowledge known = libraryKnowledge.get(owner);
++        return index >= 0 && known != null && known.owner() == owner && known.isCurrent()
++                && known.positions().containsKey(index);
++    }
++
++    public static boolean isLibraryPositionKnown(Player observer, Player owner, int index) {
++        return observer.getController() instanceof PlayerControllerAi controller
++                && controller.getAi().getCardMemory().isLibraryPositionKnown(owner, index);
++    }
++
+     public void rememberLibraryPositions(Player owner, Map<Integer, Card> disclosed) {
+         long revision = owner.getZone(ZoneType.Library).getLibraryOrderRevision();
+         Map<Integer, CardIdentity> positions = Maps.newHashMap();
+@@ -270,7 +282,17 @@
+         if (!isRememberedCard(c, set)) {
+             return false;
+         }
+-        return storedMemorySet(set).remove(c);
++        boolean removed = storedMemorySet(set).remove(c);
++        if (removed && set == MemorySet.REVEALED_CARDS) {
++            CardIdentity forgotten = CardIdentity.of(c);
++            libraryKnowledge.replaceAll((owner, known) -> {
++                Map<Integer, CardIdentity> remaining = Maps.newHashMap(known.positions());
++                remaining.values().removeIf(forgotten::equals);
++                return new LibraryKnowledge(owner, known.revision(), remaining);
++            });
++            libraryKnowledge.values().removeIf(known -> known.positions().isEmpty());
++        }
++        return removed;
+     }
+ 
+     /**
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -2037,7 +2037,7 @@
+                 return true;
+             }
+             final Card h = spellAbility.getHostCard();
+-            return h != null && ((ComputerUtilCard.isCardRemAIDeck(h) && !flatMc) || ComboAssembly.deadOnArrival(player, spellAbility)
++            return h != null && ((ComputerUtilCard.isCardRemAIDeck(h) && !flatMc && !InformationEffects.supportsPrimary(spellAbility)) || ComboAssembly.deadOnArrival(player, spellAbility)
+                     || (flatMc && LoopRunner.held(player, spellAbility))
+                     || (flatMc && SurpriseEntry.isEntryAbility(spellAbility) && !SurpriseEntry.offered(player, spellAbility))
+                     || (flatMc && FlatMonteCarloPicker.needlessTrick(player, spellAbility))
+@@ -2636,7 +2636,7 @@
+      */
+     public boolean isFlatMcOnlyPlay(final SpellAbility sa) {
+         final Card h = sa == null ? null : sa.getHostCard();
+-        return h != null && ComputerUtilCard.isCardRemAIDeck(h) && flatMonteCarloActive()
++        return h != null && ComputerUtilCard.isCardRemAIDeck(h) && flatMonteCarloActive() && !InformationEffects.supportsPrimary(sa)
+                 && !deckPlan(player).combos.isKeyCard(h) && !TutorPlan.hasPlanTarget(player, sa);
+     }
+ 
+--- /dev/null
++++ b/forge-ai/src/main/java/forge/ai/InformationEffects.java
+@@ -0,0 +1,100 @@
++package forge.ai;
++
++import forge.game.ability.ApiType;
++import forge.game.card.Card;
++import forge.game.player.Player;
++import forge.game.spellability.SpellAbility;
++import forge.game.staticability.StaticAbility;
++import forge.game.zone.ZoneType;
++import java.util.ArrayList;
++import java.util.List;
++import java.util.Set;
++
++/** Bounded information policy using authorized access and explicit remembered positions. */
++public final class InformationEffects {
++    public static final int INFORMATION_PERMANENT_VALUE = 4;
++    private static final String OWN_TOP = "Card.TopLibrary+YouCtrl";
++    private static final String ENEMY_FACE = "Creature.faceDown+YouDontCtrl";
++    private static final String ENEMY_HAND = "Card.OppCtrl";
++    private static final Set<String> STATIC_KEYS = Set.of("Mode", "Affected", "AffectedZone", "MayLookAt", "Description");
++    private static final Set<String> ROOT_KEYS = Set.of("SP", "Cost", "Defined", "ValidTgts", "TargetMin", "TargetMax", "MinTgts", "MaxTgts", "SubAbility", "StackDescription", "SpellDescription", "TgtPrompt");
++
++    private InformationEffects() { }
++
++    public static boolean supportsPrimary(SpellAbility action) {
++        return action != null && action.isSpell() && (isInspectionChain(action)
++                || action.getApi() == ApiType.PermanentNoncreature && isPureInformationPermanent(action.getHostCard()));
++    }
++
++    public static boolean isPureInformationPermanent(Card card) {
++        if (card.isCreature() || card.isLand() || card.getStaticAbilities().isEmpty()
++                || !card.getManaAbilities().isEmpty() || !card.getKeywords().isEmpty() || !card.getTriggers().isEmpty()
++                || !card.getReplacementEffects().isEmpty()
++                || card.getNonManaAbilities().stream().anyMatch(SpellAbility::isActivatedAbility)) return false;
++        for (StaticAbility ability : card.getStaticAbilities()) {
++            if (!STATIC_KEYS.containsAll(ability.getMapParams().keySet())
++                    || !"Continuous".equals(ability.getParam("Mode"))
++                    || !"You".equals(ability.getParam("MayLookAt"))
++                    || !ability.hasParam("Affected") || !ability.hasParam("AffectedZone")) return false;
++            List<String> zones = List.of(ability.getParam("AffectedZone").split(","));
++            for (String shape : ability.getParam("Affected").split(",")) {
++                String zone = switch (shape) {
++                    case OWN_TOP -> "Library";
++                    case ENEMY_FACE -> "Battlefield";
++                    case ENEMY_HAND -> "Hand";
++                    default -> null;
++                };
++                if (zone == null || !zones.contains(zone)) return false;
++            }
++        }
++        return true;
++    }
++
++    public static boolean isInspectionChain(SpellAbility action) {
++        return inspectionParts(action) != null;
++    }
++
++    private static List<SpellAbility> inspectionParts(SpellAbility action) {
++        if (action == null || !action.isSpell() || action.getApi() != ApiType.Pump
++                || !ROOT_KEYS.containsAll(action.getMapParams().keySet())) return null;
++        List<SpellAbility> parts = new ArrayList<>();
++        SpellAbility part = action.getSubAbility();
++        for (int depth = 0; part != null && depth < 32; depth++, part = part.getSubAbility()) {
++            if (part.getApi() != ApiType.LookAt && part.getApi() != ApiType.RearrangeTopOfLibrary) return null;
++            parts.add(part);
++        }
++        return part == null && !parts.isEmpty() ? parts : null;
++    }
++
++    public static AiAbilityDecision chooseInspectionTargets(Player observer, SpellAbility action) {
++        if (!isInspectionChain(action)) return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++        // Enumerate legal targets and execute paid native outcomes, including public cast triggers.
++        // Information identity/position value is read only from the projected authorized memory.
++        return forge.ai.simulation.PaidOutcomePlanner.choose(observer, action);
++    }
++
++    private static boolean identityKnown(Player observer, Card card) {
++        return card.getView().canBeShownTo(observer.getView())
++                || AiCardMemory.isRememberedCard(observer, card, AiCardMemory.MemorySet.REVEALED_CARDS);
++    }
++
++    private static boolean librarySlotKnown(Player observer, Player owner, int index) {
++        return AiCardMemory.isLibraryPositionKnown(observer, owner, index)
++                || owner.getCardsIn(ZoneType.Library).get(index).getView().canBeShownTo(observer.getView());
++    }
++
++    public static int knownInformationValue(Player observer) {
++        int hand = 0;
++        int library = 0;
++        for (Player owner : observer.getGame().getPlayers()) {
++            if (owner.isOpponentOf(observer)) {
++                for (Card card : owner.getCardsIn(ZoneType.Hand)) if (identityKnown(observer, card)) hand += 2;
++            }
++            for (int index = 0; index < owner.getCardsIn(ZoneType.Library).size() && library < 8; index++) {
++                if (librarySlotKnown(observer, owner, index)) library++;
++            }
++        }
++        // Separate small budgets prevent a large library from crowding out hand or face information.
++        return InspectionKnowledge.knownFaceDownValue(observer) + Math.min(hand, 12) + Math.min(library, 8);
++    }
++}
+--- a/forge-ai/src/main/java/forge/ai/ability/PermanentNoncreatureAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/PermanentNoncreatureAi.java
+@@ -3,6 +3,7 @@
+ import forge.ai.AiAbilityDecision;
+ import forge.ai.AiPlayDecision;
+ import forge.ai.ComputerUtilAbility;
++import forge.ai.InformationEffects;
+ import forge.game.Game;
+ import forge.game.ability.AbilityFactory;
+ import forge.game.card.Card;
+@@ -24,6 +25,9 @@
+      */
+     @Override
+     protected AiAbilityDecision checkApiLogic(final Player ai, final SpellAbility sa) {
++        if (InformationEffects.isPureInformationPermanent(sa.getHostCard())) {
++            return forge.ai.simulation.PaidOutcomePlanner.choose(ai, sa);
++        }
+         AiAbilityDecision decision = super.checkApiLogic(ai, sa);
+         if (!decision.willingToPlay()) {
+             return decision;
+--- a/forge-ai/src/main/java/forge/ai/ability/PumpAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/PumpAi.java
+@@ -89,6 +89,7 @@
+ 
+     @Override
+     protected boolean checkPhaseRestrictions(final Player ai, final SpellAbility sa, final PhaseHandler ph) {
++        if (InformationEffects.isInspectionChain(sa)) return true;
+         final Game game = ai.getGame();
+         if (game.getStack().isEmpty()) {
+             boolean isBeforeMyAttack = ph.getPhase().isBefore(PhaseType.COMBAT_DECLARE_ATTACKERS) && ph.isPlayerTurn(ai);
+@@ -116,6 +117,7 @@
+ 
+     @Override
+     protected AiAbilityDecision checkApiLogic(Player ai, SpellAbility sa) {
++        if (InformationEffects.isInspectionChain(sa)) return InformationEffects.chooseInspectionTargets(ai, sa);
+         if (forge.ai.simulation.StackResponsePlanner.targetsStack(sa)) {
+             return forge.ai.simulation.StackResponsePlanner.choose(ai, sa);
+         }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+@@ -1,7 +1,7 @@
+ package forge.ai.simulation;
+ 
+ import forge.ai.AiDeckStatistics;
+-import forge.ai.InspectionKnowledge;
++import forge.ai.InformationEffects;
+ import forge.ai.CreatureEvaluator;
+ import forge.card.mana.ManaAtom;
+ import forge.game.Game;
+@@ -241,7 +241,7 @@
+             }
+         }
+ 
+-        int inspectionValue = InspectionKnowledge.knownFaceDownValue(aiPlayer);
++        int inspectionValue = InformationEffects.knownInformationValue(aiPlayer);
+         score += inspectionValue;
+         availableScore += inspectionValue;
+         debugPrint("Score = " + score);
+@@ -317,6 +317,9 @@
+         }
+         // TODO treat cards like Captive Audience negative
+         // e.g. a 5 CMC permanent results in 200, whereas a 5/5 creature is ~225
++        // A pure information source has small retained option value, not generic material value.
++        // New authorized information is credited separately; redundant copies cannot manufacture gain.
++        if (InformationEffects.isPureInformationPermanent(c)) return InformationEffects.INFORMATION_PERMANENT_VALUE;
+         int value = 50 + 30 * c.getCMC();
+         if (c.isPlaneswalker()) {
+             value += 2 * c.getCounters(CounterEnumType.LOYALTY);
+--- a/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RearrangeTopOfLibraryEffect.java
+@@ -1,6 +1,8 @@
+ package forge.game.ability.effects;
+ 
+ import java.util.List;
++import java.util.HashMap;
++import java.util.Map;
+ 
+ import com.google.common.collect.Iterables;
+ import forge.game.ability.AbilityUtils;
+@@ -105,6 +107,17 @@
+         for (Card next : orderedCards) {
+             player.getGame().getAction().moveToLibrary(next, 0, sa);
+         }
++        // The chooser knows the announced order. Do not infer positions for any unobserved card.
++        // Each insertion used index zero, so the resulting prefix reverses orderedCards.
++        Map<Integer, Card> disclosed = new HashMap<>();
++        CardCollectionView library = player.getCardsIn(ZoneType.Library);
++        for (int index = 0; index < orderedCards.size() && index < library.size(); index++) {
++            Card announced = orderedCards.get(orderedCards.size() - 1 - index);
++            Card current = library.get(index);
++            if (current.getId() == announced.getId()) disclosed.put(index, current);
++        }
++        activator.getController().observeLibraryTop(player, disclosed);
++        // A subsequent hidden shuffle changes the library revision and invalidates these positions.
+         if (mayshuffle && activator.getController().confirmAction(sa, null, Localizer.getInstance().getMessage("lblDoyouWantShuffleTheLibrary"), null)) {
+             player.shuffle(sa);
+         }

@@ -22,6 +22,11 @@ from tools.build_sticker_engine import PRIORITY_PACKAGE, PRIORITY_TESTS
 SOURCES = {
     "AITest": "packaged_ai_base_sha256",
     "InspectionTestSupport": "inspection_test_support_sha256",
+    "InformationChoiceTestSupport": "information_choice_test_support_sha256",
+    "CommanderInformationChoiceTest": "commander_information_choice_test_sha256",
+    "CommanderInformationOrderingTest": "commander_information_ordering_test_sha256",
+    "CommanderInformationValueTest": "commander_information_value_test_sha256",
+    "CommanderInformationContextTest": "commander_information_context_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -127,11 +132,15 @@ TEST_CLASS_PACKAGES = {"CommanderModalBudgetTest": "forge.ai.simulation"}
 TEST_CLASSES = tuple(
     f"{TEST_CLASS_PACKAGES.get(name, 'forge.ai')}.{name}"
     for name in SOURCES
-    if name not in {"AITest", "InspectionTestSupport"}
+    if name not in {"AITest", "InspectionTestSupport", "InformationChoiceTestSupport"}
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
     "forge.game.ability.effects.LookAtEffect",
     "forge.ai.InspectionKnowledge",
+    "forge.ai.InformationEffects",
+    "forge.ai.ability.PumpAi",
+    "forge.ai.ability.PermanentNoncreatureAi",
+    "forge.game.ability.effects.RearrangeTopOfLibraryEffect",
     "forge.ai.ability.LookAtAi",
     "forge.ai.simulation.PossibleTargetSelector",
     "forge.game.ability.effects.ChangeTextEffect",
@@ -276,7 +285,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 814-case packaged family."""
+    """Execute the existing fixed 868-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
@@ -285,6 +294,7 @@ def main() -> None:
         (
             "forge.ai.AITest",
             "forge.ai.InspectionTestSupport",
+            "forge.ai.InformationChoiceTestSupport",
             PRIORITY_PACKAGE + "PriorityTestBase",
         ),
         NATIVE_CLASSES,
