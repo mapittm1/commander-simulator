@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add pending multiplayer attack regression witnesses: the corrected 50-case
+  candidate baseline passes 38 and misses 12 ground-attack opportunities; the
+  corrected 40-case suite passes 34 and misses six group attacks. All eight
+  controlled trigger/damage outcomes and four sequential counterattack outcomes
+  pass. Preserve and reject two generic fallback prototypes that recover attacks
+  but fail six defensive declarations against cumulative counterattacks. Record
+  fixture corrections and all failed phases; keep recipes, selected runtime,
+  fixed full-game seeds and conformance checks unchanged. See
+  engine/multiplayer_attack_opportunity_gap.json.
+
 - Preserve the cache-lifetime candidate's incomplete live gate: 44 tests and
   all 2,359 subtests pass, while the limited full-game conformance check remains
   inconclusive because no fixed-seed game exercises Goreclaw's required attack

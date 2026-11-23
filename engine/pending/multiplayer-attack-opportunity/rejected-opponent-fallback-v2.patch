@@ -1,0 +1,55 @@
+--- a/forge-ai/src/main/java/forge/ai/AiAttackController.java
++++ b/forge-ai/src/main/java/forge/ai/AiAttackController.java
+@@ -91,8 +91,13 @@
+     } // constructor
+ 
+     public AiAttackController(final Player ai, boolean nextTurn) {
++        this(ai, nextTurn, choosePreferredDefenderPlayer(ai, true));
++    }
++
++    /** Evaluate the ordinary attack heuristic against a specified legal opponent. */
++    public AiAttackController(final Player ai, final boolean nextTurn, final Player opponent) {
+         this.ai = ai;
+-        defendingOpponent = choosePreferredDefenderPlayer(ai, true);
++        defendingOpponent = opponent;
+         myList = ai.getCreaturesInPlay();
+         this.nextTurn = nextTurn;
+         refreshCombatants(defendingOpponent);
+@@ -1007,6 +1012,9 @@
+                 if (LOG_AI_ATTACKS)
+                     System.out.println("Assault");
+                 List<Card> left = new ArrayList<>(attackersLeft);
++                // An undefended target does not make the other opponents harmless.
++                // Reserve blockers before committing an otherwise decisive attack.
++                left = notNeededAsBlockers(combat.getAttackers(), left);
+                 CardLists.sortByPowerDesc(left);
+                 for (Card attacker : left) {
+                     if (attackMax != null && combat.getAttackers().size() >= attackMax)
+--- a/forge-ai/src/main/java/forge/ai/AiController.java
++++ b/forge-ai/src/main/java/forge/ai/AiController.java
+@@ -1580,6 +1580,25 @@
+             limit = AITimeoutTracker.arm(AITimeoutTracker.deadlineNanos(id, timeoutNanos), false);
+             lastAttackAggression = aiAtk.declareAttackers(combat);
+ 
++            // If the threat-preferred opponent deters every attack, reconsider the
++            // other opponents through the same blocking and defensive heuristics.
++            // The existing armed deadline also bounds this multiplayer search.
++            if (attacker == player && !attacker.isControlled() && combat.getAttackers().isEmpty()
++                    && attacker.getOpponents().size() > 1) {
++                for (final Player opponent : attacker.getOpponents()) {
++                    AITimeoutTracker.check();
++                    final AiAttackController alternative = new AiAttackController(attacker, false, opponent);
++                    lastAttackAggression = alternative.declareAttackers(combat);
++                    if (!CombatUtil.validateAttackers(combat)) {
++                        combat.clearAttackers();
++                    }
++                    if (!combat.getAttackers().isEmpty()) {
++                        alternative.reinforceWithBanding(combat);
++                        break;
++                    }
++                }
++            }
++
+             aiAtk.reinforceWithBanding(combat);
+             if (attacker == player && attacker.isControlled()) {
+                 forge.ai.simulation.ControlledAttackPlanner.refine(attacker, combat);

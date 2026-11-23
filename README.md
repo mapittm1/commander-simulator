@@ -52,6 +52,16 @@ absence/contradiction checks are unchanged. The candidate is not activated;
 the selected runtime below remains unchanged. See the
 [preserved live witness and diagnostic evidence](engine/ai_cache_lifetime_live_evidence.json).
 
+Further controlled tests separate correct combat rules from the planning gap:
+eight native outcomes exercise Goreclaw's resolved trigger and ordinary creature
+damage, while 12 autonomous ground-attack opportunities remain missed. Six group
+attack cases expose the same limitation. Two generic fallback prototypes recover
+those attacks but fail six defensive controls by overlooking successive opponents'
+counterattacks. Four native counterattack outcomes prove that keeping a blocker
+survives at 1 life while attacking loses. Both prototypes remain rejected; the
+selected engine and existing full-game checks are unchanged. See the
+[pending regression fixtures and evidence](engine/multiplayer_attack_opportunity_gap.json).
+
 The baseline reproduced six cache-lifetime failures, including stale evaluations
 after a Forest entered play in original and copied games. Recorded reference
 paths identify the static cache as an owner of completed game graphs. Preserve

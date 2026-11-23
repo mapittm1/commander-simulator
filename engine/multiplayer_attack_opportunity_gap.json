@@ -1,0 +1,3801 @@
+{
+  "status": "gap_reproduced_two_prototypes_rejected_no_activation",
+  "baseline_commit": "213be07d576572249c8f8a4438beccb170fd6cc8",
+  "candidate_build_id": "f43aaae43d114d029ac856f29931775a",
+  "candidate_archive_sha256": "2a4694edfe9ff575b7e4ef19a7d9807af976a7cc56f9cefeb5a804c8e203414c",
+  "selected_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-combat-reblocking",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "b16da6f8be23e54596ea9a0276217231de027fa8fc50ba63f29f7557766de4da",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "2c016f3c990b6722eb8cbcacff393a6642d0b9668bae972daf442bd83ea170a4",
+    "native_tests": {
+      "total": 2361,
+      "passed": 2361,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "00cffc906eee06d0b70bc15b3eb6939dacbd06f18a4bb90a761bba0c8b2256cf",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "findings": [
+    "Unmodified candidate misses 12 open-opponent ground attacks (two creatures, three AI modes, original/copied state). All-open and flying positive controls and sick/tapped/defender negative controls pass.",
+    "Eight explicit native combat outcomes pass: Goreclaw attack trigger grants power five/trample and deals five damage; Grizzly Bears deals two; holding deals zero. This verifies controlled outcomes, not autonomous choice.",
+    "Six additional legal group-attack opportunities are missed by baseline. Mandatory attacks, optional unpayable taxes, global attack prohibition and hopeless blocked-board controls pass.",
+    "Both generic reconsideration prototypes recover the opportunities. Both expose six unsafe counterattack declarations. v2 reuses existing blocker reservation, which evaluates opponents independently rather than accumulating successive combats.",
+    "Four actual sequential native counterattack outcomes establish the corrected safety premise: holding Goreclaw against two nontrampling Craw Wurms survives at one life; attacking leads to elimination at minus five life. Results hold in original/copied state."
+  ],
+  "fixture_corrections": [
+    "Initial all-open control incorrectly required one particular equally open opponent; corrected only that arbitrary seat requirement in v2, preserving its original 33/17 report.",
+    "Initial guard control used trampling Colossal Dreadmaws, so holding a three-toughness blocker was not sufficient to establish survival. Corrected only guard attackers to nontrampling Craw Wurms and added four actual native outcomes. Preserve all original 36-case phases; do not cite their guard results as survival proof.",
+    "Driver setup had a prototype filename typo. Baseline finished once; the attempted prototype command reported missing file before execution. Corrected prototype ran once in a fresh phase after that terminal shell result."
+  ],
+  "next_requirements": [
+    "Evaluate cumulative native counterattacks before the actor next untaps, including surviving blockers, deaths, damage and decision beneficiary.",
+    "Retain legality, taxes, mandatory/group declarations, copied-state isolation, normal native trigger/damage resolution, timeout and random-provider restoration controls.",
+    "Do not force named-card attacks, change fixed full-game seeds, retry for a favorable witness or weaken existing conformance checks.",
+    "Run source, sealed-build, packaged, broader and full-live gates before activating any correction."
+  ],
+  "limits": [
+    "Partial supplied boards do not certify universally optimal multiplayer strategy, full decks or full card rules support.",
+    "No production source, build recipe, selected engine lock, card script or AI profile was changed.",
+    "Rejected patch files are preserved review artifacts and are not selected by a build recipe.",
+    "Native TestNG failures are preserved even though the diagnostic worker process exits normally after writing its report."
+  ],
+  "phases": {
+    "candidate-opportunity50-baseline": {
+      "counts": {
+        "total": 50,
+        "passed": 33,
+        "failed": 17,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 9305,
+        "returncode": 0,
+        "elapsed_seconds": 10.25
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-baseline/reports/testng-results.xml",
+      "report_sha256": "e40a15240f67e74604e99ab827fc6283027d2a8556dd47e21668d5d56d5f915a",
+      "log_sha256": "7836e96462cf44e7a558e426a5d9bc35a372eeea3400e8528e4d5ee8131b703e",
+      "evidence_sha256": "c13aefc26e771365409b9e4895f3c5a140d5e5869d117b2b13da71a93ea7f237",
+      "inputs_sha256": "42a988c932640f96f3d6d69270b1e733823aa4ae6b6c410bc8ceaf48522611b5",
+      "driver_sha256": "1bedeed50f20b033c2a968db63c148452114efa8dc23892f9bc3e16d8000d525",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-opportunity50-baseline-v2": {
+      "counts": {
+        "total": 50,
+        "passed": 38,
+        "failed": 12,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 8655,
+        "returncode": 0,
+        "elapsed_seconds": 10.329
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-baseline-v2/reports/testng-results.xml",
+      "report_sha256": "914bca04b1d6fb42a742758d0019a857dd4bf44f75cc3d0c5d86546d0cf798ca",
+      "log_sha256": "8b3423c669a30c51ecfc7b711f4d138fce168a7c3adc9388d14817ee2e7abd99",
+      "evidence_sha256": "51ec48a0938129d027c2d053c721d8dd3732d4cfbb8dee8a1a244588394e4803",
+      "inputs_sha256": "c95a3c72f2d192716b4a414b2d663bd72d74279144bcfbea971f9673a8bf2d41",
+      "driver_sha256": "45b64387bcdeee2f5def29a8fbcebe95d5513b699502f8b2cfdc205529a452dd",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-opportunity50-prototype-v1": {
+      "counts": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 7107,
+        "returncode": 0,
+        "elapsed_seconds": 10.515
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-prototype-v1/reports/testng-results.xml",
+      "report_sha256": "adcb17cb8d182a5d40c77b604137550eecbb79796a6cdb173d35a7271d7dd6b5",
+      "log_sha256": "15c37fb9c2f29dd5ed3f125710c889da7083bfd74da193169e7c81423012aeea",
+      "evidence_sha256": "b423558ee226396a325079eafe5daf04cb4b3e1e207571ce1bc06020e1219e1f",
+      "inputs_sha256": "792d80621e32e4abb0895adfc4fc4472589c89a4bcf43a6c52ac00ed08b2a40b",
+      "driver_sha256": "d02d9683b1d9d0061b60b02ddf03549f2bdf0dbf6ead78652c754ea5da97e3ef",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-opportunity50-prototype-v2": {
+      "counts": {
+        "total": 50,
+        "passed": 50,
+        "failed": 0,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 7107,
+        "returncode": 0,
+        "elapsed_seconds": 10.766
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-opportunity50-prototype-v2/reports/testng-results.xml",
+      "report_sha256": "3c2cb8ff97db618be8ac63e4a4b67ec5f857214928258427cbde8e78c8fce2ef",
+      "log_sha256": "a7bc765b974e2af368858342cde8e23d2efbe306bbf3043bad4be3d977aa56e7",
+      "evidence_sha256": "9890e329089be12dcd340fc8f8eb70fc40d51dc6d36c86fca9682d90c628f502",
+      "inputs_sha256": "ad448e1f03559a3cffb2b619e297ddc654400433bdd25b0dd8e86e18d4e05104",
+      "driver_sha256": "7cd11e028583b7cea740f5b6c1b510458dda7ff164ff89d5d013fdbe37c9a7b8",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                goreclaw\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                bears\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                flying\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                open\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                sick\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tapped\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                defender\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                goreclaw\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "explicitNativeCombatOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                bears\n              ",
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-safety36-baseline": {
+      "counts": {
+        "total": 36,
+        "passed": 30,
+        "failed": 6,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 6482,
+        "returncode": 0,
+        "elapsed_seconds": 10.094
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-safety36-baseline/reports/testng-results.xml",
+      "report_sha256": "4531c3ab31a04ef7f8e6bd4555869ae7f85c4136c22d3609ed7affeae0d5d945",
+      "log_sha256": "642c4b1cf1803127e9904b050f63d07a53b7bd28d2528bf33a966c989dcc4b9d",
+      "evidence_sha256": "5ce4e4316234065a38faa90e527a14eda4b405fd0c1bd83b6175e1c82a0e9d1c",
+      "inputs_sha256": "7e0f48652d42f633d77678d2f7bc9890cd8b95f0b37db300f36854e38026895d",
+      "driver_sha256": "5ba106a5c91ba96f277e3d1b2fe4eedc2e7870132a38d4434bee582f1936c7a9",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-safety36-prototype-v1": {
+      "counts": {
+        "total": 36,
+        "passed": 30,
+        "failed": 6,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 7088,
+        "returncode": 0,
+        "elapsed_seconds": 10.484
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-safety36-prototype-v1/reports/testng-results.xml",
+      "report_sha256": "e27956b154b072d95cd7ad643641affc8210564aab3aba6610772f88b0b0c617",
+      "log_sha256": "a639ba8edbc324eb305dc5ef87086160cad87a6f229ef4c2f9f6ee166b53eaad",
+      "evidence_sha256": "6f668bea74056aa0ea078902ec8887389e95c52d99907c23903c13b01b8ec739",
+      "inputs_sha256": "7354431c9dcfbe5d247ffefeb0bbfc741a7afa0fab135993fc11618929d06ba6",
+      "driver_sha256": "9b4a9338f59a8d4f9cdb39d5e5a2552e867ba9a93a9738ffdd524c1beff56310",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-safety36-prototype-v2": {
+      "counts": {
+        "total": 36,
+        "passed": 30,
+        "failed": 6,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 7088,
+        "returncode": 0,
+        "elapsed_seconds": 10.406
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-safety36-prototype-v2/reports/testng-results.xml",
+      "report_sha256": "5b4ea8f4e115a0544e714b4394ee43205c71eeeb60f26f3fbae05368881f01fb",
+      "log_sha256": "0c0e0605252e475022062196c1456ccb875ef41974062f914d809d36c6959a3b",
+      "evidence_sha256": "53d94f3e0e2a66697ced69ef006bc8a9107c8961a87f5c245293cae977955eeb",
+      "inputs_sha256": "d4f22614b98d4abcd5569a8693724ec369299d664b07d416024683cf1ebe033a",
+      "driver_sha256": "c71e15f153669c5638a79818dbfd4ec65e2c32a67018af25e2dd04550e7576fc",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-safety40-baseline-v2": {
+      "counts": {
+        "total": 40,
+        "passed": 34,
+        "failed": 6,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 6746,
+        "returncode": 0,
+        "elapsed_seconds": 10.219
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-safety40-baseline-v2/reports/testng-results.xml",
+      "report_sha256": "ac438eb9ac016bab40bd2af87cc906c6833a1fc94ad94eec6389eab403cdf6a0",
+      "log_sha256": "8e4f37776d1fdc7cbe699b688ebd850f1d91813e7cf83590921fe358c26a7f0b",
+      "evidence_sha256": "c28f0ec5abd7f31a96bc2be2d3f686f0e919d82f9a03f546e3012c9541981beb",
+      "inputs_sha256": "2485cebda5b2c4de4b2247082c228b6105cf7fdc9447851e2d5299aaf0072a85",
+      "driver_sha256": "3604167c89033a4febc8d4a6e626ef76a442a48bd166357e78cf3c0914b21c8e",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    },
+    "candidate-safety40-prototype-v2-corrected": {
+      "counts": {
+        "total": 40,
+        "passed": 34,
+        "failed": 6,
+        "skipped": 0
+      },
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 7352,
+        "returncode": 0,
+        "elapsed_seconds": 10.641
+      },
+      "report": "data/development/commander-multiplayer-attack-research/candidate-safety40-prototype-v2-corrected/reports/testng-results.xml",
+      "report_sha256": "e144bdae0a230b2c26952e97ec8dcb55405d64886b79d78d6d1efc3cff2f997a",
+      "log_sha256": "90f53d8ca9d7d54dd3f509856f7b8390e68b3294bf29c4aad43850782b6188f0",
+      "evidence_sha256": "a98bd46a2e45b8976e304b29359ba744c385ab266c07214add1fbd16628af047",
+      "inputs_sha256": "245349b1576515bec62b89bc0b0a83e5fda35d046e9c60208cf760370f4239fc",
+      "driver_sha256": "6266be209b88168b0219b3c1a6dee2ef21a859812b769b111f39e7d6211edbfd",
+      "cases": [
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                0\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                1\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                false\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "FAIL",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                guard\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                tax\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                peace\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                forced\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                group\n              "
+          ]
+        },
+        {
+          "method": "actualNativeDecision",
+          "status": "PASS",
+          "parameters": [
+            "\n                2\n              ",
+            "\n                true\n              ",
+            "\n                allblocked\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                false\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                false\n              ",
+            "\n                true\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                true\n              ",
+            "\n                false\n              "
+          ]
+        },
+        {
+          "method": "nativeCounterattackOutcome",
+          "status": "PASS",
+          "parameters": [
+            "\n                true\n              ",
+            "\n                true\n              "
+          ]
+        }
+      ]
+    }
+  },
+  "reviewed_files": {
+    "engine/pending/multiplayer-attack-opportunity/CommanderMultiplayerAttackOpportunityTest.java": "b9dec0ead3731e55ec944daf77a892ee588ac0ed4d857abb4b5f26c74fe2dc16",
+    "engine/pending/multiplayer-attack-opportunity/CommanderMultiplayerAttackSafetyTest.java": "1624714b938ca27f5e94cedf719e6dbef627c362a08c06d6dea822e68519e70e",
+    "engine/pending/multiplayer-attack-opportunity/rejected-opponent-fallback-v1.patch": "a49eab49ffaca1ea3b6396186a4476bceb11193a441bf594b36b9114b580837c",
+    "engine/pending/multiplayer-attack-opportunity/rejected-opponent-fallback-v2.patch": "f4835499d9d3487de435c194aa3962311d898770636e996019eed77eb8f502ff"
+  }
+}
