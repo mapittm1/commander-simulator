@@ -27,48 +27,34 @@ difference.
 
 ## Card coverage
 
-The latest source correction preserves placement and removal history in generic
-player-mapped private receipts without repeating counter events. It passes all
-53 expanded cases, 408 related cases and 1,657 mixed source cases (1,604 retained).
-The registered two-file patch targets 2,882 native/1,725 packaged methods
-and 143 production origins. Fresh runtime gates remain pending; the selected
-Aura runtime below remains affected. See
-[counter-history source evidence](engine/counter_history_evidence.json).
+The selected runtime is `2.0.16-583714b-reviewed-counter-history`.
+It preserves counter placement and removal history in independent tables and
+private historical receipts, mapping players and cards into each copied game
+without placing counters again or repeating triggers. Paid witnesses verify
+Hornbeetle tokens, Danny Pink draws, Pummeler energy payments, Blaster Hulk cost
+reductions, Generatorium draws and Reservoir tokens. They also check independent
+copies, pending spells, changed zones/controllers/types, per-player filters,
+private historical cards and native cleanup. The 53-case baseline passes 17
+original controls and fails 36 copies; the correction passes all 53 and all 408
+retained related cases. Original nine/41-case phases, the placement-only prototype,
+and setup failures remain preserved. See [source evidence](engine/counter_history_evidence.json).
 
-The selected runtime is `2.0.16-583714b-reviewed-aura-entry`.
-It includes 48 paid Replenish witnesses for simultaneous Aura entry: both
-graveyard orders, Coronet's requirement for an existing Aura, a creature
-returning in the same batch, hexproof versus protection, and one/two simulation
-copies made before casting or while the spell is on the stack. Actual zones,
-attachments, power/toughness and original/copy independence are checked.
-No defect was demonstrated in these cases; production classes, card resources
-and AI profiles are byte-identical to the preceding exert-state runtime.
+Combined source validation passes 1,657 cases, retaining all 1,604 previous cases.
+The installed build passes 2,882 native methods, retaining all 2,829. Independent
+packaged validation passes 1,725/65/194/146 cases in 305.906 seconds
+under unchanged limits; broader checks pass 4,356 gameplay/256 serialization
+cases. All 45 full integration tests and 2,778 subtests pass in 1250.359
+seconds at unchanged seeds 42/0/4096. Catalog construction passes 32,636 identities
+with seven reviewed nonstarting meld results. Installation preserves the prior
+runtime and sealed build, verifies runtime bytes and checks post-install health.
+See [activation evidence](engine/counter_history_activation_evidence.json).
 
-Combined source validation passes 1,604 cases, retaining all 1,556 prior cases.
-The installed build passes 2,829 native methods, retaining all 2,781. Normal
-packaged validation passes 1,672/65/194/146 cases in
-307.187 seconds under unchanged limits. Broader checks pass
-4,303 gameplay/256 serialization cases; all 45 full integration tests and
-2,725 subtests pass in 1260.859 seconds at unchanged seeds 42/0/4096.
-Catalog construction passes 32,636 identities with seven reviewed nonstarting
-meld results. Installation preserves the prior runtime and sealed candidate,
-verifies resource bytes and checks post-install health. See
-[activation evidence](engine/simultaneous_aura_activation_evidence.json),
-[source registration](engine/simultaneous_aura_registration_evidence.json) and
-[original diagnostic evidence](engine/simultaneous_aura_evidence.json).
-
-The preceding exert, World and Harnessed/Class corrections remain included;
-[preceding activation evidence](engine/exert_snapshot_activation_evidence.json)
-preserves their validation. Supplied attack/exert choices do not establish
-default AI strategy. Full card, rules and AI correctness remain incomplete;
-construction and passing selected interactions do not certify complete support.
-
-A newly confirmed turn-counter history gap affects this selected runtime.
-All three paid original controls pass, but six one/two-copy cases fail: history
-queries lose earlier placements, Hornbeetle creates zero rather than two Insects,
-and Danny Pink incorrectly draws again on a second placement. Current counters
-remain present. A generic correction is pending; see
-[counter-history failures](engine/counter_history_gaps.json).
+The supplied counter-history gap is corrected in this selected runtime. Only
+Game and GameCopier production families change; card scripts and AI profiles
+are unchanged. Prior Aura/exert/World/Harnessed/Class corrections and their
+[evidence](engine/simultaneous_aura_activation_evidence.json) remain preserved.
+Complete counter, card, rules and AI correctness remain unproven; supplied
+interactions and catalog construction do not certify complete support.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

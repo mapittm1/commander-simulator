@@ -9,38 +9,23 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The latest source preserves added/removed counter history in independent mapped
-receipts without replaying events. The 53-case baseline passes 17 originals and
-fails 36 copies; correction passes 53/408 related/1,657 source cases, retaining
-1,604 source cases. Two generic production files change, with native/packaged
-targets of 2,882/1,725 and 143 origins. Fresh runtime validation is pending; the
-selected Aura runtime remains affected. See
-[source evidence](counter_history_evidence.json).
+The selected runtime is the reviewed counter-history milestone. Two generic
+production files preserve placement/removal receipts in independent mapped
+collections without replaying counter events. The 53-case baseline passes 17
+original controls and fails 36 copies; correction passes all 53, all 408 related
+cases and 1,657 source cases, retaining 1,604. The installed build passes 2,882
+native methods, retaining all 2,829; normal packaged checks pass 1,725/65/194/146,
+broader checks pass 4,356/256 and full integrations pass 45 tests/2,778 subtests.
+Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+meld results. Prior runtime and sealed build remain preserved; installation
+verifies resource bytes and health. See [activation evidence](counter_history_activation_evidence.json)
+and [source evidence](counter_history_evidence.json).
 
-The selected runtime is the reviewed Aura-entry coverage milestone. All 48 paid
-Replenish witnesses pass, including both graveyard orders, attachment eligibility,
-hexproof/protection and before-cast/on-stack simulation copies. No production
-correction was needed: production class bytes, cards and AI profiles match the
-preceding exert-state runtime. Combined source validation passes 1,604 cases;
-the installed build passes 2,829 native methods, retaining all 2,781 previous ones.
-Normal packaged checks pass 1,672/65/194/146, broader checks pass 4,303/256,
-and full integrations pass 45 tests/2,725 subtests under unchanged limits/seeds.
-Catalog construction passes 32,636 identities with seven reviewed nonstarting
-meld results. Installation preserves both prior runtime and sealed build,
-verifies resource bytes and checks health. See
-[activation evidence](simultaneous_aura_activation_evidence.json),
-[registration evidence](simultaneous_aura_registration_evidence.json) and
-[original diagnostics](simultaneous_aura_evidence.json).
-
-Previous exert/World/Harnessed/Class corrections and their evidence remain
-preserved. These supplied cases and catalog construction do not prove complete
-card, rules or AI strategy correctness.
-
-A confirmed turn-counter history gap remains in the selected runtime: all three
-paid original controls pass, while six one/two-copy cases lose earlier placements
-and change Hornbeetle tokens/Danny Pink draws. Current counter totals survive.
-Preserve the failed original phase and corrected-mana control phase; production
-correction is pending. See [gap evidence](counter_history_gaps.json).
+Paid casts/activations verify actual token/draw/cost outcomes, pending-spell
+copies, private receipt isolation, zone/controller/type changes, player filters
+and native cleanup. No card scripts or AI profiles change. The supplied gap is
+corrected, while full counter/card/rules/AI support remains unproven. Preserve
+all earlier phases, failures and setup-error artifacts.
 
 The earlier milestones below describe validation and selections at their time.
 

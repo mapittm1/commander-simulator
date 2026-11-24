@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated counter-history milestone: 1,657 source, 2,882 native
+  (all 2,829 previous methods retained), independent packaged 1,725/65/194/146
+  in 305.906s, broader 4,356 gameplay/256 serialization and 45 full
+  tests/2,778 subtests in 1250.359s at unchanged seeds/limits. Catalog
+  construction passes 32,636 identities plus seven reviewed nonstarting meld
+  results. Preserve prior runtime and sealed build; verify installed bytes and
+  health, archive the lock and bind receipts in engine/counter_history_activation_evidence.json.
+  Resolve the selected counter-history gap while retaining all original failures
+  and intermediate/setup-error phases. Only two production families change;
+  scripts and AI profiles are unchanged. Complete card/rules/AI support remains unproven.
+
 - Register the generic two-file counter-history correction: independent mapped
   placement/removal receipts preserve actual token/draw/cost/activation outcomes
   without repeating counter events. Baseline 53 passes 17 original controls and

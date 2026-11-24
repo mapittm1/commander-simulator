@@ -1,15 +1,15 @@
 {
   "scope": "Independent native gameplay and serialization compilation using the source-tested candidate; temporary reviewed test-only policies are restored byte-for-byte. Not all-card certification.",
   "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
-  "recipe_sha256": "b3f4616343da6066432ba72e78d21de1ed346f3834829b8dd06ca8841d255b55",
+  "recipe_sha256": "f5216b69faf31aa9e7bad685b5f74bc7ce5c6ae246aa497727ab60249a15716b",
   "test_only_policies": {
     "engine/patches/star-trek-commandeer-validation.patch": "2acafd29317c738cbe0e15ca9fb84aa6030520de266a8a447b54a2f645edbb91",
     "engine/patches/bauble-ai-classification-validation.patch": "1015d713605580e97c9d137481d533d20c6fe140d0d063a0f5fac104c691f4f4"
   },
-  "frozen_inputs_sha256": "86d85ea8ee2b128b43f4fe0e7a1b4268522b53b3102d128a9da572a1f11b115e",
+  "frozen_inputs_sha256": "6f0081e198140e86c6c33b8c4543715caaadcb93dbd8d0c27c27fc524a272a7b",
   "candidate_source_reused": true,
   "production_sources": 2168,
-  "byte_identical_production_sources": 2153,
+  "byte_identical_production_sources": 2152,
   "reviewed_line_ending_paths": [
     "forge-ai/src/main/java/forge/ai/AiAttackController.java",
     "forge-ai/src/main/java/forge/ai/AiCache.java",
@@ -17,6 +17,7 @@
     "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
     "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
     "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+    "forge-game/src/main/java/forge/game/Game.java",
     "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
     "forge-game/src/main/java/forge/game/card/Card.java",
     "forge-game/src/main/java/forge/game/card/CardCopyService.java",
@@ -27,7 +28,7 @@
     "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
     "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
   ],
-  "candidate_production_inputs_sha256": "4a09d7608757be97eb5915ca313035258762c012e09cc237a6d5b4b45b6e15f4",
+  "candidate_production_inputs_sha256": "cf9012cbc868557d64ebe1add80921455f8647da5f95589f7cc65610eaea51e7",
   "test_policy_originals_restored": true,
   "test_policy_files": {
     "forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": {
@@ -37,8 +38,8 @@
   },
   "suites": {
     "gameplay": {
-      "total": 4303,
-      "passed": 4303,
+      "total": 4356,
+      "passed": 4356,
       "failed": 0,
       "skipped": 0,
       "classes": [
@@ -84,6 +85,7 @@
         "forge.ai.CommanderControlledInformationTest",
         "forge.ai.CommanderCostModifierExpressionTest",
         "forge.ai.CommanderCostModifierPreviewTest",
+        "forge.ai.CommanderCounterHistoryTest",
         "forge.ai.CommanderCrystalSprayRulesTest",
         "forge.ai.CommanderCrystalSprayStackTest",
         "forge.ai.CommanderCrystalSprayTest",
@@ -403,16 +405,16 @@
         "forge.gamesimulationtests.priority.TurnBasedActionCastPriorityTest",
         "forge.gamesimulationtests.priority.UntapStepCastTest"
       ],
-      "selected_classes": 360,
+      "selected_classes": 361,
       "process": {
         "status": "finished",
-        "bytes": 219003,
+        "bytes": 219079,
         "returncode": 0,
-        "elapsed_seconds": 297.907
+        "elapsed_seconds": 300.844
       },
-      "local_run_id": "native-gameplay-46cdd75ffdb34eeb9207a21af948f80c",
-      "testng_results_sha256": "a562d17c7c47bbada1514ee46d3466674f751572318d911531074fa5fcde9421",
-      "log_sha256": "00f64180c701b2226b1f5458bc028beace1a9b6b760071b4e05a2703d685ef9b"
+      "local_run_id": "native-gameplay-1a7869737bb34c98a7d97168d16c1ff3",
+      "testng_results_sha256": "49be59917e24b6734acc0bfa8c3000b3d2a0c4ec47b110deaa7c0197e8749efd",
+      "log_sha256": "772fa09a176861adeec55a699f80b9245425d34d4cc0e529fa4470946fac86f3"
     },
     "serialization": {
       "total": 256,
@@ -442,11 +444,11 @@
         "status": "finished",
         "bytes": 29816,
         "returncode": 0,
-        "elapsed_seconds": 92.719
+        "elapsed_seconds": 92.844
       },
-      "local_run_id": "native-serialization-ec6fc0c3d10440f9bb58cabe65267fd3",
-      "testng_results_sha256": "2382081bb056d125828fde27647e8312a52b8a1d07d669671d65b4ec3b04d064",
-      "log_sha256": "db00862639d418077e2d41b0b99def26b9a5a00a775c4c728b6cfa45be29f86e"
+      "local_run_id": "native-serialization-52e9ca15780241588714a3cc56f02fc1",
+      "testng_results_sha256": "2af341c9d1b811f9c6b3877b048ff60084dc8cc63b3eb8c7cb85bfd33bbb2fd1",
+      "log_sha256": "7a5fe923ede9141744ed8a9a30a04f4e00fb832daff8782904f45416ea429d9c"
     }
   }
 }
