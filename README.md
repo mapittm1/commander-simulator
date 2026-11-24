@@ -27,54 +27,38 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source preserves exert counts and independent player-mapped
-untap restrictions in simulation and private historical copies, without exerting
-again or duplicating triggers. The 34-case baseline passes 9 controls/fails 25;
-the generic three-file correction passes all 34, all 408 related cases and all
-1,556 mixed source cases (1,522 retained). Paid witnesses cover Arena of Glory
-mana spent on Furnace Whelp, repeated exertion, untap spells, legal land re-entry,
-Donate, ordinary Mirage Mirror copies, native attack-cost/trigger/combat outcomes,
-and independent expiry for two exerting players. Attack declarations and exert
-choices are supplied; these cases do not establish default AI choice correctness.
+The selected runtime is `2.0.16-583714b-reviewed-exert-state`.
+It preserves exert counts and independent player-mapped untap restrictions in
+simulation and private historical copies without repeating exert costs or
+triggers. Ordinary copies and new objects keep their reset behavior; untap
+spells retain the restriction, and multiple exertions expire at the same next
+untap. Restrictions from two exerting players expire independently after control
+changes. Paid witnesses include Arena of Glory mana spent on Furnace Whelp,
+repeated exertion, legal land re-entry, Donate, Mirage Mirror, native optional
+attack costs, printed damage/life gain and combat damage. Attack declarations
+and exert choices are supplied; default AI choice correctness remains unproven.
 
-Register the exact patch and fixtures for a fresh 2,781-native build, packaged
-1,624/65/194/146 cases and 140 production-class origins. Independent packaged,
-broader 4,255/256, full-game and catalog gates remain pending. Card scripts and
-AI profiles are unchanged. The installed World runtime below still has the exert
-gap. See [exert source evidence](engine/exert_snapshot_evidence.json).
+The preserved 34-case baseline passes 9 controls/fails 25 snapshot/history cases.
+The correction passes all 34, all 408 related cases and all 1,556 mixed source
+cases (1,522 retained). Three generic production files change; card scripts and
+AI profiles are unchanged. Original failures and research setup errors remain
+preserved. See [source evidence](engine/exert_snapshot_evidence.json).
 
-The selected runtime is `2.0.16-583714b-reviewed-world-snapshot`.
-It preserves existing World-permanent age in simulation snapshots and private
-history. Ordinary copy spells and paid re-entry start a new age; control changes
-and ability suppression/restoration retain it. Paid cases cover phase-in survivors,
-Copy Enchantment, Boomerang/re-entry, Donate, Song of the Dryads/Naturalize,
-simultaneous Replenish entry and independent Mirage Mirror expiration. The
-preserved 31-case baseline passes 14 controls/fails 17 snapshot/history cases;
-the correction passes all 31, all 374 related cases and all 1,522 mixed source
-cases (1,491 retained). Three generic production files change; card scripts and
-AI profiles are unchanged. The earlier unused-import Checkstyle stop is preserved.
-
-The installed milestone passes all 2,747 native methods, retaining all 2,716
-previously selected methods. Normal packaged validation passes 1,590/65/194/146
-cases in 285.188 seconds with unchanged resource limits; broader checks pass
-4,221 gameplay/256 serialization cases. All 45 full integration tests and 2,643
-subtests pass in 1241.469 seconds at unchanged seeds 42/0/4096. Catalog
+The installed milestone passes all 2,781 native methods, retaining all 2,747
+previously selected methods. Normal packaged validation passes 1,624/65/194/146
+cases in 300.844 seconds with unchanged resource limits; broader checks pass
+4,255 gameplay/256 serialization cases. All 45 full integration tests and 2,677
+subtests pass in 1248.547 seconds at unchanged seeds 42/0/4096. Catalog
 construction passes 32,636 identities with seven reviewed nonstarting meld
 results. Installation preserves the prior runtime and sealed build and verifies
-post-install health. See [source evidence](engine/world_snapshot_evidence.json)
-and [activation evidence](engine/world_snapshot_activation_evidence.json).
-The preceding Harnessed/Class corrections remain included; their original
-failures and validation are preserved in
-[the preceding milestone](engine/snapshot_designation_activation_evidence.json).
+resource bytes and post-install health. See
+[activation evidence](engine/exert_snapshot_activation_evidence.json).
+The preceding World and Harnessed/Class corrections remain included; their
+original evidence is preserved in [the preceding milestone](engine/world_snapshot_activation_evidence.json).
 
-A separate paid exertion snapshot gap remains confirmed. Both original Arena of
-Glory controls pass, including actual exert mana spent on Furnace Whelp and the
-first/second owner untaps; all six one/two-copy cases fail. Copied exert counters
-or per-player restrictions are missing, and copy-first cases untap Arena too soon.
-This World milestone does not fix that defect. See
-[exert snapshot evidence](engine/exert_snapshot_gaps.json). Full card, rules and AI
-strategy correctness remain incomplete; catalog construction and supplied
-passing cases do not certify complete support.
+The supplied exert snapshot/history gap is corrected in this selected runtime.
+Full card, rules and AI strategy correctness remain incomplete; catalog
+construction and selected passing cases do not certify complete support.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

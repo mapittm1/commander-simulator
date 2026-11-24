@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated exert snapshot milestone: 1,556 mixed source, 2,781
+  native (all 2,747 previous methods retained), normal packaged
+  1,624/65/194/146 in 300.844s, broader 4,255 gameplay/256 serialization,
+  and 45 full tests/2,677 subtests in 1248.547s at unchanged seeds and limits.
+  Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+  meld exclusions. Preserve the prior runtime and sealed build, verify installed
+  resource bytes and health, archive the lock and bind receipts in
+  engine/exert_snapshot_activation_evidence.json. Resolve the selected exert-gap
+  status while retaining all original failures and setup-error artifacts. No
+  card-script or AI-profile changes. Supplied attack/exert choices do not prove
+  default AI strategy; complete card/rules/AI support remains unproven.
+
 - Preserve exert counts and fresh player-mapped restrictions in simulation and
   historical snapshots without repeating costs or firing exert triggers. Retain
   new-object/ordinary-copy resets, repeated exertion expiring at one untap,
