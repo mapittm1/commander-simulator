@@ -586,7 +586,35 @@ along with 155 related and 1,409 mixed source cases. Native permission checks
 include both `canPlay` and `checkRestrictions`; preserve the initial probe that
 used only the first API. See [source evidence](deferred_repeat_evidence.json).
 
-Fresh sealed 2,634, independent packaged 1,477/65/194/146 with the same 133 unique
-production origins, broader 4,108/256, fixed-seed complete games and catalog gates
-remain pending. Existing AI card-admission flags and strategy are not certified
-by these paid rules tests. The prior packaged timeout remains a failed gate.
+The fresh artifact passes 2,634 native cases, retaining all 2,624 earlier methods;
+compiled changes are confined to `RepeatEachEffect` and its new callback.
+Independent broader checks pass 4,108 gameplay and 256 serialization cases.
+Packaged 65/194/146 cases pass on Java 17 and a separately pinned Java 21 profile;
+the 1,477-case family times out at 90 seconds on both. The Java 21 profile changes
+only executable/JVM integrity pins; archive, cards, AI profiles, cases and worker
+limits are unchanged. No upgrade, full-game/catalog phase or activation followed.
+See [runtime evidence](deferred_repeat_runtime_evidence.json). Existing AI
+admission/strategy is not certified by paid rules witnesses.
+
+
+## Pending prepared-state snapshots
+
+Prepared creatures link a command-zone effect to an exiled alternate spell.
+Copy the live link only after remembered objects are mapped; preserve the exiled
+`PreparedSpell` face and use a mapped leaves-play command. Historical prepared
+links must be private and their cast-origin zones must use the target player,
+not an original-world player with an identical name. The existing history-zone
+mapper now handles that cast origin too.
+
+All 18 paid entry/state/spell/re-entry/cleanup/history cases pass after correction,
+along with 279 related and 1,427 mixed source cases. The original baseline passes
+four controls/fails 14 copied or historical cases; the strengthened cast-origin
+intermediate probe passes 16/fails two before its correction. Preserve the
+initial API-argument compile error and missing related-fixture origin check.
+See [prepared_state_evidence.json](prepared_state_evidence.json).
+
+Source registration targets sealed 2,652, packaged 1,495/65/194/146 with 134
+production origins, broader 4,126/256 and unchanged fixed-seed full games/catalog.
+All runtime gates remain pending. The prior 17/21 packaged timeouts are retained;
+no selected-runtime activation occurred. Supplied witnesses do not certify all
+prepared triggers, strategic choices or complete card/rules correctness.

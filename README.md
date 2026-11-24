@@ -27,16 +27,29 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source preserves deferred per-player repeats in copied games.
-Normally paid Azor and Sphinx's Decree test the same generic callback: both
-original controls pass, eight copied cases fail before correction, and all ten
-pass afterward. Each checks three opponents' next-turn instant/sorcery
-restrictions, permitted creature casting, following-turn expiry and independent
-copies. All 155 related and 1,409 mixed source cases pass, retaining 1,399 and
-adding ten. Fresh sealed 2,634, packaged 1,477/65/194/146, broader 4,108/256 and
-full-game/catalog gates remain pending. These are rules witnesses; they do not
-establish autonomous admission or strategy for every card. See
-[deferred-repeat evidence](engine/deferred_repeat_evidence.json).
+The latest reviewed source preserves prepared creature/effect/spell references
+and the exiled prepared-spell face in copied games, with cleanup mapped into its
+own world. Historical prepared references are private, and historical cast-origin
+zones use the copied player. Paid Infirmary Healer/Stream of Life cases cover
+entry, actual mana/life gain, consumption, re-entry, cleanup, one/two copies and
+independent histories. The baseline passes four controls and fails 14 copied or
+historical cases; the corrected prototype passes all 18, all 279 related cases,
+and all 1,427 mixed source cases (1,409 retained plus 18). Fresh sealed 2,652,
+packaged 1,495/65/194/146, broader 4,126/256 and full-game/catalog gates remain
+pending. These supplied states do not certify every prepared trigger, strategy
+or card interaction. See [prepared-state evidence](engine/prepared_state_evidence.json).
+
+The preceding deferred-repeat build passes all 2,634 native tests, retains all
+2,624 previous cases, and changes only `RepeatEachEffect` and its mapped callback.
+Independent broader checks pass 4,108 gameplay and 256 serialization cases.
+Its 1,477-case packaged family times out at the unchanged 90-second worker limit
+on both the pinned Java 17 runtime and a separately pinned Java 21 comparison;
+65/194/146 cases pass on each. Neither failed gate is overridden, Java 21 was
+not adopted, and no full-game/catalog phase or activation was performed. The
+source correction preserves per-player deferred restrictions tested with Azor
+and Sphinx's Decree; the paid witnesses do not certify autonomous admission or
+strategy. See [source evidence](engine/deferred_repeat_evidence.json) and
+[runtime evidence](engine/deferred_repeat_runtime_evidence.json).
 
 The preceding skipped-phase candidate passes all 2,624 sealed native cases,
 retaining 2,609 and adding 15, with compiled changes confined to `SkipPhaseEffect`

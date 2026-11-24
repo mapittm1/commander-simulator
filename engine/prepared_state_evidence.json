@@ -1,0 +1,318 @@
+{
+  "status": "source_registered_sealed_build_pending",
+  "source_commit": "d55c03e1d339b26ee23dc79df2a1cca3f20a2c1b",
+  "behavior": [
+    "Map prepared creature/effect/spell links after remembered objects are copied; preserve the exiled prepared spell face.",
+    "Copy leaves-play cleanup explicitly into its own game.",
+    "Keep historical prepared links private and map historical cast-origin zones into the target world."
+  ],
+  "production_files_changed": [
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java"
+  ],
+  "production_sources": 2168,
+  "new_production_sources": [],
+  "patch": {
+    "path": "engine/patches/commander-prepared-state.patch",
+    "sha256": "1c5c29c8e1f3d014ece36e7479e2443300ad32e21177855b3c5020b9b2fcecb5"
+  },
+  "fixtures": {
+    "PreparedTestSupport": {
+      "path": "engine/tests/PreparedTestSupport.java",
+      "sha256": "23507144a0de66eca87b22e72f3d2ede7b83d6241c42211c3c6709402dee565f"
+    },
+    "CommanderPreparedStateTest": {
+      "path": "engine/tests/CommanderPreparedStateTest.java",
+      "sha256": "1124d27acefbacdfff641b3c5a814c342c928b74c778bbfd1a0cfb8441aa7daa"
+    },
+    "CommanderPreparedCastTest": {
+      "path": "engine/tests/CommanderPreparedCastTest.java",
+      "sha256": "fc3b18809f5d70d63b648f881749a18a67288231449a7ff55b2d1c3fa4108bc4"
+    },
+    "CommanderPreparedHistoryTest": {
+      "path": "engine/tests/CommanderPreparedHistoryTest.java",
+      "sha256": "27af6ecc3cb4ad000daf9615b3df84489e00dd347e95c4e043a35acd17e496ad"
+    }
+  },
+  "normalized_patch_replay": true,
+  "phases": {
+    "baseline-native8-v1": {
+      "counts": {
+        "total": 8,
+        "passed": 2,
+        "failed": 6,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native8-v1/evidence.json",
+        "sha256": "c93ca1d378f40166380e022efe800a9426914f3b6347219857d26fad484d8626"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native8-v1/process.json",
+        "sha256": "b43a0f7eed529b78705c0f32dac9a46c0e5aaa69840b575aae41054cf55a41ea"
+      },
+      "methods_sha256": "4b8897493cf3db3aa72572054f2ebda2385e19c9fe15f89508fbf6268c816309"
+    },
+    "prototype-native8-v1": {
+      "counts": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native8-v1/evidence.json",
+        "sha256": "265d8b9afcc025ab587189e7ac711a3b3348a88885d061f1a02ec10de7c83254"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native8-v1/process.json",
+        "sha256": "b7b96be58315fe28e96358466a6380ee968d50aa73e3aac480f10c4aaca0a92d"
+      },
+      "methods_sha256": "1e147293284f802671c313ce6cfb1cfcd05157ce1c6634da8cde8733e6a5b2b8"
+    },
+    "baseline-native16-v2": {
+      "counts": {
+        "total": 16,
+        "passed": 4,
+        "failed": 12,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native16-v2/evidence.json",
+        "sha256": "d829b24efc5295286ab416aa81019fd7dcfcb9d0379146bd82b66f1969829359"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native16-v2/process.json",
+        "sha256": "d5a5b8bfdac64a2b51c575c363fd3a2a59d0f2b3f58c376592967ca067f33cee"
+      },
+      "methods_sha256": "fdb6c04204a6d520909a54404e4c4baf274e23d796ac95292b5a2f911b4027d9"
+    },
+    "prototype-native16-v2": {
+      "counts": {
+        "total": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native16-v2/evidence.json",
+        "sha256": "3082d15a28a72d2c3de08e4c061b2c6de028969c536e04fce37b05d3f41db097"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native16-v2/process.json",
+        "sha256": "34df6e702742cfaac2a3d96022bb3126778982dc3284bb8545c6911045f75f60"
+      },
+      "methods_sha256": "aa04fb21b8009c1d4e02a3e3b39eb6844cc06ad7d52773ef1fc6b554348b43cd"
+    },
+    "prototype-related277-v2": {
+      "counts": {
+        "total": 277,
+        "passed": 277,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-related277-v2/evidence.json",
+        "sha256": "3351a55fa07914be3e9a2af51b3c7cbc26a62f7c1c82c67bdffd59436944d42f"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-related277-v2/process.json",
+        "sha256": "2c77d9aba9dabedebd3dd8ed1423e5a569d010786002b40a0e8ebe8cd7c8364a"
+      },
+      "methods_sha256": "111e5a7bb65d08e4071e48e78dc85aa6214dfd9e69271e309e83846abeefe8e7"
+    },
+    "baseline-native18-v1": {
+      "counts": {
+        "total": 18,
+        "passed": 4,
+        "failed": 14,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native18-v1/evidence.json",
+        "sha256": "8a68056b397aa1309107e037fe80cc3a85452e2cf9835ee1f4465400be28850e"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native18-v1/process.json",
+        "sha256": "be02b78961182a07f178e7677e683f60ae9aa6d20be402265b6b809f14608abf"
+      },
+      "methods_sha256": "4c6c1351755e7bf0e61ecb34fa0da0c463abbb345a45c1971ea73ef434e90cdb"
+    },
+    "prototype-native18-v1": {
+      "counts": {
+        "total": 18,
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v1/evidence.json",
+        "sha256": "3cbc165303ec7deff05603fc54d391a7222f3518b293e2e1242ce659da795ea4"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v1/process.json",
+        "sha256": "052f3039038cf1426f85a190fa6963b157de6faa835ebca5571e03711f1d9cea"
+      },
+      "methods_sha256": "aaececcc2a28b676fd9b969505e7902dc302569a9946dd6d3c5894f706ffd9d4"
+    },
+    "prototype-native18-v2": {
+      "counts": {
+        "total": 18,
+        "passed": 16,
+        "failed": 2,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v2/evidence.json",
+        "sha256": "ad439a1f7e3ac65c70786e1e1e4899eac8564f826bf62aebf2211895a4cd8173"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v2/process.json",
+        "sha256": "0193766625866ee222799ba491dd3410cebf289fa0b76ef7a439a1cee93b1878"
+      },
+      "methods_sha256": "d843718a34bc211d8bdaf48b3bd9b8f9104a782f6c8158d3bf17204dfb35af9c"
+    },
+    "prototype-native18-v3": {
+      "counts": {
+        "total": 18,
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v3/evidence.json",
+        "sha256": "82b5d78dea63dfd7de0044bb556e9a8ea83ba387097e6f947e6e7638a0f8bac1"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-native18-v3/process.json",
+        "sha256": "274cfbcf455139e0776bf14b655596c95489545d6de95860e29c104fbb930cd7"
+      },
+      "methods_sha256": "aaececcc2a28b676fd9b969505e7902dc302569a9946dd6d3c5894f706ffd9d4"
+    },
+    "prototype-related279-v1": {
+      "counts": {
+        "total": 279,
+        "passed": 279,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-related279-v1/evidence.json",
+        "sha256": "aa05fc8426fa9796e9020876e7f45046a1353eaea0bbd8ba319eb5a24040208a"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-related279-v1/process.json",
+        "sha256": "8e5d9e24c789cd7ba7e4eda095f13314e6ee60d3d7bc1dfd5b26421bbdb6e9c5"
+      },
+      "methods_sha256": "9ec552acf2b8ab9d1cb99a3661a9bda89a49aded59ffa5ba4140d5abf467a087"
+    }
+  },
+  "fixture_api_correction": {
+    "prior_phase": "baseline-native16-v1",
+    "prior_status": "compiler_failure_no_native_tests",
+    "reason": "Pinned native getAlternativeCosts requires explicit altCostOnly boolean; use false as the existing paid-command-zone witness does.",
+    "assertions_unchanged": true,
+    "budgets_unchanged": true,
+    "original_fixture": "fixture-originals/CommanderPreparedCastTest-v1.java"
+  },
+  "related_harness_correction": {
+    "prior_phase": "prototype-related277-v1",
+    "prior_status": "origin_check_failure_before_tests",
+    "reason": "The legacy1477-case compile list does not include every retained native history/stack fixture. Add all20 selected fixture sources, verify each against the sealed source, and preserve the exact277-method expected counter.",
+    "assertions_and_budgets_unchanged": true
+  },
+  "historical_cast_origin_gap": {
+    "phase": "prototype-native18-v2",
+    "counts": {
+      "total": 18,
+      "passed": 16,
+      "failed": 2,
+      "skipped": 0
+    },
+    "behavior": "Historical prepared-card cast-origin zones retain original-world player identity despite matching player name.",
+    "correction": "Use the existing historyZone mapper for castFrom, preserving zone type and mapped owner.",
+    "production_delta_from_prototype_v1": [
+      "CardCopyService.java:setCastFrom(historyZone(...))"
+    ],
+    "assertions_unchanged_in_next_phase": true
+  },
+  "preserved_setup_logs": [
+    {
+      "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/baseline-native16-v1/rules-compiler.log",
+      "sha256": "28dfc9e9a64b0c618b08166cc38ccbd4cac2a4ec3765c852052621356c59bea9"
+    },
+    {
+      "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/prototype-related277-v1/native.log",
+      "sha256": "f05161f996edfadd2ce71ff23caf9eedca959ff978251d1d914e186893ef08ef"
+    }
+  ],
+  "source": {
+    "counts": {
+      "total": 1427,
+      "passed": 1427,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_cases": 1409,
+    "new_cases": 18,
+    "methods_unique": 1427,
+    "artifacts": [
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/testng-results.xml",
+        "sha256": "60d1ba737ab7444b6e136d07c73c8772f0d5f864f177295e7f3f3f98f7a5f487"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/maven-build.log",
+        "sha256": "107f3928ff6f988661f7ad4c594d4700d145d237e7f433a8807d256fca8d4b9b"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/evidence.json",
+        "sha256": "2dddf43bc883ff958f4dbae93f9c93e5d71299b776dc2e927beb1df5df2d2fba"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/production-inputs.json",
+        "sha256": "6bf9da8fea7b3f18543bcfe6bd904cc0c48d0a9772576df874bac88602f63776"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/test-inputs.json",
+        "sha256": "0ac69501bd8f89105cd411b9e5b4f207cb25f2a7846029e9c4c8208cb1bb079a"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/card-inputs.json",
+        "sha256": "1691ba5bcfa9cfc1fce0a98b724c3aa33635daaac4b05b928e7fb882580d3873"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/prepared-state-research/source1427-v1/selection.json",
+        "sha256": "2519b165c1ed00aad02719bfc3be1e4a24e3b7842dc7a608106aa2a3ecb5cf74"
+      }
+    ]
+  },
+  "pending_targets": {
+    "sealed_native": 2652,
+    "packaged": [
+      1495,
+      65,
+      194,
+      146
+    ],
+    "packaged_origins": 134,
+    "broader": [
+      4126,
+      256
+    ],
+    "full_live_tests": 45,
+    "full_live_expected_subtests": 2548
+  },
+  "selected_runtime_unchanged": true,
+  "preceding_runtime_evidence": {
+    "path": "engine/deferred_repeat_runtime_evidence.json",
+    "sha256": "01305befd6d71cf78f903a371b0a811fc9b56c9ca896e3a0a5d3874ace63bc8c"
+  },
+  "limits": [
+    "Paid printed Infirmary Healer/Stream of Life validates supplied generic prepared states, permissions, mana, consumption, re-entry and historical isolation; not every prepared trigger/strategy combination.",
+    "Fresh sealed build and independent packaged/broader, fixed-seed complete games and catalog gates remain pending. Both preceding17/21 largest-family timeouts remain failed gates.",
+    "No runtime activation or Java upgrade; full-card rules/AI correctness remains unproven."
+  ]
+}

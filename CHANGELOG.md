@@ -6,6 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve generic prepared state across copied games: map the creature/effect/
+  spell links after remembered objects, retain the exiled prepared face, and map
+  leaves-play cleanup. Keep historical prepared memories private and rebind
+  historical cast-origin zones to the target player. Paid Infirmary Healer and
+  Stream of Life cases verify actual payment/resolution, consumption, normal
+  re-entry and independent one/two-copy cleanup/history. The baseline passes
+  four/fails 14; the final prototype passes all 18. Retain the strengthened
+  cast-origin probe's 16-pass/two-fail intermediate result. All 279 related and
+  1,427 mixed source cases pass (1,409 retained plus 18). Preserve setup/API and
+  compile-source-list corrections. Register fresh native 2,652 and packaged
+  1,495 targets; all full-runtime gates remain pending. See
+  engine/prepared_state_evidence.json.
+
+- Verify the deferred-repeat artifact with all 2,634 native and independent
+  4,108 gameplay/256 serialization cases. The 1,477-case packaged family times
+  out at the original 90-second limit on both Java 17 and a separately pinned
+  Java 21 comparison; all 65/194/146 other cases pass on each. Preserve both
+  failures, keep Java 21 unadopted, and perform no full-game/catalog phase or
+  activation. See engine/deferred_repeat_runtime_evidence.json.
+
 - Preserve generic deferred per-player repeats in snapshots by explicitly mapping
   source, player and repeated subability. Paid Azor/Sphinx's Decree witnesses
   require next-turn instant/sorcery restrictions for all three opponents, allow

@@ -1,0 +1,116 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -228,6 +228,13 @@
+             }
+         }
+ 
++        // Prepared effects point at an exiled spell; bind after remembered objects.
++        for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
++            if (entry.getKey().isPrepared()) {
++                entry.getValue().copySnapshotPreparedFrom(entry.getKey(), context);
++            }
++        }
++
+         // Undo effects first before calculating them below, to avoid them applying twice.
+         // The effects hold the card they came from as it was when the state was last checked, and GameAction checks
+         // with the copies a zone change made ("TODO filter out old copies from zone change"): such a source is a
+@@ -635,6 +642,11 @@
+ 
+         newCard.copySnapshotCastFormFrom(c);
+ 
++        if (zone == ZoneType.Exile && c.getCurrentStateName() == CardStateName.PreparedSpell) {
++            newCard.setState(CardStateName.PreparedSpell, false);
++        }
++
++
+         if (zone == ZoneType.Exile && c.isFaceDown()) {
+             // Face-down exile state (foretell, "exile face down" effects) must
+             // survive the copy: cards rebuilt from their paper card default to
+--- a/forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java
+@@ -4,6 +4,7 @@
+ 
+ import forge.card.CardStateName;
+ import forge.game.Game;
++import forge.game.SnapshotCommand;
+ import forge.game.GameLogEntryType;
+ import forge.game.GameType;
+ import forge.game.ability.AbilityFactory;
+@@ -15,6 +16,7 @@
+ import forge.game.event.GameEventCardPlotted;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilitySnapshot;
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerHandler;
+ import forge.game.trigger.TriggerType;
+@@ -85,7 +87,7 @@
+                                     "AffectedDefined$ Remembered | AffectedZone$ Exile";
+                             eff.addStaticAbility(mayPlay);
+                             game.getAction().moveToCommand(eff, sa);
+-                            gameCard.addLeavesPlayCommand(() -> gameCard.setPrepared(null));
++                            gameCard.addLeavesPlayCommand(new ClearPreparationCommand(gameCard));
+                         }
+                         gameCard.setPrepared(eff);
+                         break;
+@@ -147,4 +149,24 @@
+             gameCard.updateAbilityTextForView();
+         }
+     }
++
++    /** Clear the prepared spell and effect only in the world whose card left play. */
++    private static final class ClearPreparationCommand implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card card;
++
++        private ClearPreparationCommand(final Card card) {
++            this.card = card;
++        }
++
++        @Override
++        public void run() {
++            card.setPrepared(null);
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(final SpellAbilitySnapshot context) {
++            return new ClearPreparationCommand(context.map(card));
++        }
++    }
+ }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -6886,6 +6886,13 @@
+         view.updatePreparedSpell(this);
+     }
+ 
++    /** Bind preparation only after the copied effect's remembered spell is mapped. */
++    public void copySnapshotPreparedFrom(Card source,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        preparedEffect = context.map(source.preparedEffect);
++        view.updatePreparedSpell(this);
++    }
++
+     public final boolean isManifested() {
+         return manifestedSA != null;
+     }
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -474,7 +474,7 @@
+ 
+         newCopy.setPlotted(copyFrom.isPlotted());
+ 
+-        newCopy.setPrepared(copyFrom.getPrepared());
++        newCopy.setPrepared(historyCard(copyFrom.getPrepared(), cachedMap));
+ 
+         newCopy.setMeldedWith(historyCard(copyFrom.getMeldedWith(), cachedMap));
+ 
+@@ -495,7 +495,7 @@
+                 ability.setActivatingPlayer(historyPlayer(ability.getActivatingPlayer()));
+             }
+         }
+-        newCopy.setCastFrom(copyFrom.getCastFrom());
++        newCopy.setCastFrom(historyZone(copyFrom.getCastFrom()));
+ 
+         if (historyMap != null) {
+             for (Card linked : copyFrom.getUntilLeavesBattlefield()) {
