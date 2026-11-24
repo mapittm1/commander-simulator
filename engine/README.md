@@ -9,6 +9,20 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+The latest source correction copies exert counts and independent player-mapped
+restrictions into simulation and historical worlds without repeating exert
+payments or triggers. All 34 expanded cases, 408 related cases and 1,556 mixed
+source cases pass; the preserved 34-case baseline passes 9/fails 25. Paid cases
+cover mana spent on creatures, repeated exertion, untap effects, re-entry,
+control/ordinary-copy boundaries, native attack payment/triggers/combat and
+independent two-player expiry. Attack/exert choices are supplied, not a proof of
+default AI strategy. Preserve all original failures and research setup errors.
+See the [patch](patches/commander-exert-state.patch) and
+[source evidence](exert_snapshot_evidence.json). Fresh 2,781 native,
+1,624/65/194/146 packaged, broader, fixed-seed full-game and catalog gates remain
+pending; the installed World milestone is unchanged and affected. Complete
+card/rules/AI correctness remains unproven.
+
 The selected runtime is the reviewed World snapshot milestone. Three generic
 files preserve World age in simulation and historical copies while retaining
 ordinary-copy/new-object behavior. All 31 expanded cases, 374 related cases,

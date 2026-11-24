@@ -27,6 +27,22 @@ difference.
 
 ## Card coverage
 
+The latest reviewed source preserves exert counts and independent player-mapped
+untap restrictions in simulation and private historical copies, without exerting
+again or duplicating triggers. The 34-case baseline passes 9 controls/fails 25;
+the generic three-file correction passes all 34, all 408 related cases and all
+1,556 mixed source cases (1,522 retained). Paid witnesses cover Arena of Glory
+mana spent on Furnace Whelp, repeated exertion, untap spells, legal land re-entry,
+Donate, ordinary Mirage Mirror copies, native attack-cost/trigger/combat outcomes,
+and independent expiry for two exerting players. Attack declarations and exert
+choices are supplied; these cases do not establish default AI choice correctness.
+
+Register the exact patch and fixtures for a fresh 2,781-native build, packaged
+1,624/65/194/146 cases and 140 production-class origins. Independent packaged,
+broader 4,255/256, full-game and catalog gates remain pending. Card scripts and
+AI profiles are unchanged. The installed World runtime below still has the exert
+gap. See [exert source evidence](engine/exert_snapshot_evidence.json).
+
 The selected runtime is `2.0.16-583714b-reviewed-world-snapshot`.
 It preserves existing World-permanent age in simulation snapshots and private
 history. Ordinary copy spells and paid re-entry start a new age; control changes

@@ -1,0 +1,278 @@
+{
+  "status": "source_registered_fresh_runtime_gates_pending",
+  "source_commit": "342fc8661501896bd937b46d78e8fb420ca5b7e0",
+  "behavior": [
+    "Preserve exert count and a fresh player-mapped restriction collection in simulation and private historical snapshots without performing another exert action.",
+    "Keep ordinary-copy/new-object resets, multiple exertions expiring at one untap, untap effects retaining the restriction, and independent player-specific expiry after control changes.",
+    "Paid attack witnesses use a supplied legal declaration and exert choice, native optional-cost payment, printed damage/life-gain triggers and native combat damage; snapshots must not duplicate triggers."
+  ],
+  "production_files_changed": [
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java"
+  ],
+  "production_sources": 2168,
+  "new_production_sources": [],
+  "patch": {
+    "path": "engine/patches/commander-exert-state.patch",
+    "sha256": "e646eb6aefc72c6d2ddf9d649b9548ca34b55ddb9702dd7e7f3c97d943cdefea"
+  },
+  "fixtures": {
+    "ExertTestSupport": {
+      "path": "engine/tests/ExertTestSupport.java",
+      "sha256": "b9d91805716ff88dc0f28da9bc95dbc8342e72c613129fc685204df5e052a559"
+    },
+    "CommanderExertStateTest": {
+      "path": "engine/tests/CommanderExertStateTest.java",
+      "sha256": "b5ae9335b56aef14b659d1d642b490d0515b96699843d457fbc3b8c105b902d8"
+    },
+    "CommanderExertTransitionsTest": {
+      "path": "engine/tests/CommanderExertTransitionsTest.java",
+      "sha256": "786a2359731be0bcb07b906362d163082adc2aed02511cb613900cf291de253f"
+    }
+  },
+  "phases": {
+    "baseline-exert8-v1": {
+      "counts": {
+        "total": 8,
+        "passed": 2,
+        "failed": 6,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/evidence.json",
+        "sha256": "ed89b49b8a59b96e2069ca247700f3a5cbe2106d611a7a3fb8b0c542512ff4ad"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/process.json",
+        "sha256": "354879d76062e855f1f61c43f04aeeb872e93c0139ad0463b7d48930819179ca"
+      },
+      "report_sha256": "febe758a09a9fba5570d017baf00b2f632cbb4ddf2ca2f6798fa24370521e6f0"
+    },
+    "prototype-exert8-v1": {
+      "counts": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert8-v1/evidence.json",
+        "sha256": "d55e302e89af4e6592735b8eb2904e4223b6e76d0e5ae8271088d5fefcef7f7f"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert8-v1/process.json",
+        "sha256": "06d3dee5f130ec63c79d7c66dde20ff57aec503b88f1678705150cdd9a29b215"
+      },
+      "report_sha256": "07d2fa3da152fe4859ba8856a30c1d30a086353eaf4f524ae4cdeee2588f8d5a"
+    },
+    "baseline-exert26-v1": {
+      "counts": {
+        "total": 26,
+        "passed": 7,
+        "failed": 19,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert26-v1/evidence.json",
+        "sha256": "f393268e1addee1fde7bb3178562a13944881158a3941d35bccae0e0e9106313"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert26-v1/process.json",
+        "sha256": "9de2d06c3211e20886c2d8f65947b055b01ae82d225c5bf2055f1679515d9b8b"
+      },
+      "report_sha256": "9efc9bfe7d9e8fe395bcdb612e6340a8dd8b0fa27a31921ff0e3097dbf356a2f"
+    },
+    "prototype-exert26-v1": {
+      "counts": {
+        "total": 26,
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert26-v1/evidence.json",
+        "sha256": "5f364a53b6ecaca5466560b76df99fc9e53b8ce32df69a17a63cdb3613a9367b"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert26-v1/process.json",
+        "sha256": "577ec6b6edc40ee9a11e71655b00ad2e25f5d9582b0038994540336416c1dc15"
+      },
+      "report_sha256": "51ed46f6b335ee3f962a9719e9d485b9daca1e5b7936ea0e532d8473c3f21a10"
+    },
+    "baseline-exert31-v2": {
+      "counts": {
+        "total": 31,
+        "passed": 8,
+        "failed": 23,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert31-v2/evidence.json",
+        "sha256": "6f16f3d77e87471e894d726db8222c084c72b4e69bf9a6f0ae406cbb5bb64067"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert31-v2/process.json",
+        "sha256": "054bbc9b12c5a8b27babdbbbe83d4d62eca7c87f62b0aa4fe1854f2bc7992870"
+      },
+      "report_sha256": "6daaab4bbb3c1e610df05613a3b9c35d74362facc39527ba2d9b4665ef0b843e"
+    },
+    "prototype-exert31-v2": {
+      "counts": {
+        "total": 31,
+        "passed": 31,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert31-v2/evidence.json",
+        "sha256": "0f3bc5fb84a120e36fe7da9409e4ce692a2ee4196e669c2a9268fa72eca99829"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert31-v2/process.json",
+        "sha256": "0c5de003f1acc3d4b011ac3c159cc4c5f3c3a1eb479248f73b483df51f91ebdd"
+      },
+      "report_sha256": "051b5df0b0f39918cdc22479756eae5f7f4c7c41dea73a0cc369b2ad690120bf"
+    },
+    "baseline-exert34-v3": {
+      "counts": {
+        "total": 34,
+        "passed": 9,
+        "failed": 25,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert34-v3/evidence.json",
+        "sha256": "e9092efc452cb2406423c05ab6badf4aefca746170a5a4b2a91bc7a4b5c20475"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert34-v3/process.json",
+        "sha256": "9cbeb13c5ac59e36d0cf5e4f1c431dd2c6f64921366b680e7187590651766176"
+      },
+      "report_sha256": "f15442713f5c64fe47c1883cd4a405bcc23cdc27a1e9e3c9d57f73b515da78fb"
+    },
+    "prototype-exert34-v3": {
+      "counts": {
+        "total": 34,
+        "passed": 34,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert34-v3/evidence.json",
+        "sha256": "c805dbb4400de00ab5b0be149be81b3e572a9d41d85c971642885e0afa391077"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-exert34-v3/process.json",
+        "sha256": "25446215cc3845a4da6b6ce7767a8893fe504fcf3a479bce8b8b4068a0ff855b"
+      },
+      "report_sha256": "c0481abcc466af259a2e332c6f48d9ddbacc13dd83c0fe225f92d89f5d665b84"
+    },
+    "prototype-related408-v2": {
+      "counts": {
+        "total": 408,
+        "passed": 408,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-related408-v2/evidence.json",
+        "sha256": "b6d85690076b3fac9475bab021d268646856d731eccc2d0dd787c4160e331649"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-related408-v2/process.json",
+        "sha256": "57f7f8af0cb4390231f538ae2e4e665682c17010eabb66beeb124d5978d87ef7"
+      },
+      "report_sha256": "36af494ba5c3ec097357be4548fe8174382c7c36ceba45fa86996ad59bb12f5b"
+    }
+  },
+  "source": {
+    "counts": {
+      "total": 1556,
+      "passed": 1556,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_cases": 1522,
+    "new_cases": 34,
+    "artifacts": [
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/evidence.json",
+        "sha256": "b639b37c2c8db638c2bef2c109588ebaae0339a282f242285db2001ae10a0d06"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/testng-results.xml",
+        "sha256": "d2b28e9fa693452b0049c60f431a2d7dbdece5188440158a848c38065ab3d37b"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/maven-build.log",
+        "sha256": "6592e72d0f0ca1a18d88f2e62543f49747002eb74df73740d5332be0c87c0889"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/production-inputs.json",
+        "sha256": "4a09d7608757be97eb5915ca313035258762c012e09cc237a6d5b4b45b6e15f4"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/test-inputs.json",
+        "sha256": "ad415013b061a2f28d9b65601fda5180338dcb20159917ee39940c1920d0eac7"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/card-inputs.json",
+        "sha256": "818d1b12c0bbcc8ce1a464802ca5ba5aab5d17cf215c55c1f65e6e608fdbeb87"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source1556-v1/selection.json",
+        "sha256": "6af06104072ddd12f1fbea7f042aad0e3951c2d60b1d7a81fdc9907779d4255b"
+      }
+    ]
+  },
+  "baseline_retention": {
+    "path": "data/development/commander-multiplayer-attack-research/exert-state-research/expanded-baseline-audit-v3.json",
+    "sha256": "3760c5700f96ead27f9b19fad4d0a8cf08af00f6a22d62f73c47576f39cabd1b"
+  },
+  "research_setup_failures": [
+    {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/prototype-related408-v1/setup-failure.json",
+      "sha256": "69d8c7172b86f7a75e2802251ff37fa9c00771097ac1897533c4a8763fbe31bb"
+    },
+    {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source-driver-preparation-failure-v1.json",
+      "sha256": "dfa338cc0f44c35d9f4acc80176acaec99e0aec8b199cff710dec7f45e19f42e"
+    }
+  ],
+  "normalized_patch_replay": true,
+  "card_name_conditions_added": false,
+  "card_scripts_and_profiles_unchanged": true,
+  "pending_targets": {
+    "sealed_native": 2781,
+    "packaged": [
+      1624,
+      65,
+      194,
+      146
+    ],
+    "packaged_origins": 140,
+    "broader": [
+      4255,
+      256
+    ],
+    "full_tests": 45,
+    "full_expected_subtests": 2677,
+    "catalog_constructed": 32636,
+    "nonstarting_meld_results": 7
+  },
+  "selected_runtime_unchanged": true,
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020260417.pdf"
+  ],
+  "rules_sections": [
+    "701.43a",
+    "701.43b",
+    "701.43c"
+  ],
+  "limits": [
+    "All 34 supplied paid state/history/transition/attack/multiple-player witnesses and 408 related cases pass; all 1,556 mixed source cases pass.",
+    "Fresh sealed/native, independent packaged, broader, fixed-seed complete games and catalog gates remain pending. The installed 2,747-case World milestone still has the confirmed exert gap.",
+    "Supplied attack/exert choices do not establish default AI strategy; passing witnesses do not establish complete exert mechanics or all-card rules/AI correctness."
+  ]
+}

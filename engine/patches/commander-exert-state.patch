@@ -1,0 +1,40 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8718,6 +8718,17 @@
+         view.set(TrackableProperty.ImprintedCards, imprintedCards == null ? null : CardView.getCollection(imprintedCards));
+     }
+ 
++    /** Copy exert counts and player-specific untap restrictions without firing exert triggers. */
++    public void copySnapshotExertionFrom(Card original, IEntityMap map) {
++        exertThisTurn = original.exertThisTurn;
++        PlayerCollection players = new PlayerCollection();
++        for (Player player : original.exertedByPlayer) {
++            players.add(map.map(player));
++        }
++        exertedByPlayer = players;
++        view.updateExertedThisTurn(this, exertThisTurn > 0);
++    }
++
+     /** Preserve phasing state without performing a phase action or emitting its events. */
+     public void copySnapshotPhasingFrom(Card original, IEntityMap map) {
+         setPhasedOut(map.map(original.phasedOut));
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -409,6 +409,7 @@
+ 
+         newCopy.setColor(copyFrom.getColor());
+         newCopy.copySnapshotPhasingFrom(copyFrom, historyGraph(cachedMap));
++        newCopy.copySnapshotExertionFrom(copyFrom, historyGraph(cachedMap));
+         newCopy.copySnapshotProtectorFrom(copyFrom, historyGraph(cachedMap));
+         newCopy.setTapped(copyFrom.isTapped());
+         newCopy.setSickness(copyFrom.isFirstTurnControlled());
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -311,6 +311,7 @@
+             entry.getValue().copySnapshotChoicesFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotProtectorFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotPhasingFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotExertionFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotImprintedFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotControlFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotBlockingFrom(entry.getKey(), context);

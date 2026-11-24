@@ -84,6 +84,9 @@ SOURCES = {
     "WorldTestSupport": "world_test_support_sha256",
     "CommanderWorldStateTest": "commander_world_state_test_sha256",
     "CommanderWorldTransitionsTest": "commander_world_transitions_test_sha256",
+    "ExertTestSupport": "exert_test_support_sha256",
+    "CommanderExertStateTest": "commander_exert_state_test_sha256",
+    "CommanderExertTransitionsTest": "commander_exert_transitions_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -199,6 +202,7 @@ TEST_CLASSES = tuple(
         "HarnessedTestSupport",
         "ClassTestSupport",
         "WorldTestSupport",
+        "ExertTestSupport",
     }
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
@@ -223,6 +227,9 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.ClassLevelUpEffect",
     "forge.game.ability.effects.PhasesEffect",
     "forge.game.ability.effects.CloneEffect",
+    "forge.game.cost.CostExert",
+    "forge.game.phase.Untap",
+    "forge.game.combat.CombatUtil",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -378,7 +385,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1590-case packaged family."""
+    """Execute the existing fixed 1624-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
@@ -401,6 +408,7 @@ def main() -> None:
             "forge.ai.HarnessedTestSupport",
             "forge.ai.ClassTestSupport",
             "forge.ai.WorldTestSupport",
+            "forge.ai.ExertTestSupport",
             PRIORITY_PACKAGE + "PriorityTestBase",
         ),
         NATIVE_CLASSES,

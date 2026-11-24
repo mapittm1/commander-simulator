@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve exert counts and fresh player-mapped restrictions in simulation and
+  historical snapshots without repeating costs or firing exert triggers. Retain
+  new-object/ordinary-copy resets, repeated exertion expiring at one untap,
+  untap effects, control changes and independent expiry for two exerting players.
+  Paid creature-attack cases supply legal declarations/exert choices and verify
+  native costs, printed damage/life gain, combat damage and no duplicate triggers.
+  The 34-case baseline passes 9/fails 25; the prototype passes all 34, all 408
+  related cases and all 1,556 mixed source cases, retaining 1,522. Preserve original
+  eight bodies, intermediate 26/31 cases and research setup failures. Register
+  the three-file patch, exact fixtures, 2,781 native/1,624 packaged targets and
+  140 production origins. No card-script or AI-profile changes. Fresh runtime,
+  full-game and catalog gates remain pending; the installed 2,747-case World
+  runtime remains unchanged and affected. See engine/exert_snapshot_evidence.json.
+  Complete card/rules/AI support and default AI exert choices remain unproven.
+
 - Select the validated World snapshot milestone: 1,522 mixed source, 2,747
   native (all 2,716 previous methods retained), normal packaged
   1,590/65/194/146 in 285.188s, broader 4,221 gameplay/256 serialization,
