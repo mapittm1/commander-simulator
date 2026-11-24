@@ -1,0 +1,414 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -19,6 +19,7 @@
+ import forge.game.Game;
+ import forge.game.GameActionUtil;
+ import forge.game.ability.AbilityKey;
++import forge.game.ability.AbilityFactory;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.ApiType;
+ import forge.game.ability.effects.ReplaceManaEffect;
+@@ -42,6 +43,8 @@
+ import forge.game.staticability.StaticAbilityAdditionalActivations;
+ import forge.game.staticability.StaticAbilityManaConvert;
+ import forge.game.trigger.Trigger;
++import forge.game.trigger.TriggerWaiting;
++import forge.game.trigger.TriggerHandler;
+ import forge.game.trigger.TriggerType;
+ import forge.game.zone.Zone;
+ import forge.game.zone.ZoneType;
+@@ -148,7 +151,132 @@
+         return canPayManaCost(sa.getPayCosts(), sa, ai, extraMana, effect);
+     }
+     public static boolean canPayManaCost(final Cost cost, final SpellAbility sa, final Player ai, final int extraMana, final boolean effect) {
++        if (extraMana > 0) {
++            // A proposed X belongs to this forecast, including the independently capped waterbend part.
++            // Keep both the announced value and derived allowance off the original ability.
++            SpellAbility proposed = sa.copy(sa.getHostCard(), ai, false, true);
++            Cost adjusted = CostAdjustment.adjust(cost, proposed, effect);
++            if (adjusted != null && adjusted.getMaxWaterbend() != null
++                    && adjusted.getCostMana() != null && adjusted.getCostMana().getAmountOfX() > 0) {
++                proposed.setXManaCostPaid(extraMana);
++                return payManaCost(cost, proposed, ai, true, extraMana, true, effect);
++            }
++        }
+         return payManaCost(cost, sa, ai, true, extraMana, true, effect);
++    }
++
++    /** Forecast separate costs in their own payment context, without changing announced X. */
++    public static boolean canPayManaCostWithExtraBudget(final Cost cost, final SpellAbility sa,
++            final Player ai, final int extraMana, final boolean effect) {
++        if (extraMana < 0) throw new IllegalArgumentException("Extra mana budget must be nonnegative");
++        if (extraMana == 0) return payManaCost(cost, sa, ai, true, 0, true, effect);
++        return AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(0L),
++                () -> previewSeparateManaBudget(cost, sa, ai, extraMana, effect, false)));
++    }
++
++    /** Whether native cast/copy/target events may need the full pre-goal forecast. */
++    public static boolean requiresStackForecast(SpellAbility ability) {
++        TriggerHandler triggers = ability.getHostCard().getGame().getTriggerHandler();
++        if (!ability.isCopied() && triggers.hasActiveTrigger(TriggerType.SpellAbilityCast)) return true;
++        if (ability.isCopied() && triggers.hasActiveTrigger(TriggerType.SpellAbilityCopy)) return true;
++        if (ability.isSpell() && (triggers.hasActiveTrigger(TriggerType.SpellCastOrCopy)
++                || triggers.hasActiveTrigger(ability.isCopied() ? TriggerType.SpellCopy : TriggerType.SpellCast))) return true;
++        return !ability.getAllTargetChoices().isEmpty()
++                && triggers.hasActiveTrigger(TriggerType.BecomesTarget, TriggerType.BecomesTargetOnce);
++    }
++
++    /** Compatibility entry point for callers explicitly forecasting ward. */
++    public static boolean canPayManaCostWithWardCosts(Cost cost, SpellAbility ability, Player payer,
++            int extraMana, boolean effect) {
++        return canPayCostBeforeResolution(cost, ability, payer, extraMana, effect);
++    }
++
++    /** Forecast native cast/copy/target effects and costs without resolving the proposed goal. */
++    public static boolean canPayCostBeforeResolution(Cost cost, SpellAbility ability, Player payer,
++            int extraMana, boolean effect) {
++        if (extraMana < 0) throw new IllegalArgumentException("Extra mana budget must be nonnegative");
++        return AiCache.withIsolatedCache(() -> MyRandom.withRandom(new Random(0L),
++                () -> previewSeparateManaBudget(cost, ability, payer, extraMana, effect, true)));
++    }
++
++    private static boolean previewSeparateManaBudget(Cost cost, SpellAbility ability, Player payer,
++            int extraMana, boolean effect, boolean includeWard) {
++        GameCopier copier = new GameCopier(payer.getGame()).withStack(true);
++        Game copy = copier.makeCopy(null, payer);
++        Player copiedPayer = copier.find(payer);
++        SpellAbility goal = copier.find(ability);
++        Cost copiedCost = copier.findCost(cost);
++        // Native execution must retain the source-selection policy of the original forecast.
++        for (MemorySet set : List.of(MemorySet.HELD_MANA_SOURCES_FOR_MAIN2,
++                MemorySet.HELD_MANA_SOURCES_FOR_DECLBLK, MemorySet.HELD_MANA_SOURCES_FOR_ENEMY_DECLBLK,
++                MemorySet.HELD_MANA_SOURCES_FOR_NEXT_SPELL, MemorySet.PAYS_TAP_COST, MemorySet.PAYS_SAC_COST)) {
++            Set<Card> remembered = AiCardMemory.getMemorySet(payer, set);
++            if (remembered == null) continue;
++            for (Card original : remembered) {
++                Card live = payer.getGame().getCardState(original);
++                if (live != null && live.equalsWithGameTimestamp(original)) {
++                    AiCardMemory.rememberCard(copiedPayer, copier.find(live), set);
++                }
++            }
++        }
++        Set<ManaCostBeingPaid> unpaid = AiCardMemory.getMemorySet(payer, AiCardMemory.MemorySetMana.UNPAID_COSTS);
++        Set<ManaCostBeingPaid> copiedUnpaid = AiCardMemory.getMemorySet(copiedPayer, AiCardMemory.MemorySetMana.UNPAID_COSTS);
++        if (unpaid != null && copiedUnpaid != null) {
++            for (ManaCostBeingPaid remainder : unpaid) copiedUnpaid.add(new ManaCostBeingPaid(remainder));
++        }
++        copier.release();
++        TriggerWaiting placement = null;
++        if (goal.isSpell() && !goal.getHostCard().isInZone(ZoneType.Stack)) {
++            Card onStack = copy.getAction().moveToStack(goal.getHostCard(), goal);
++            if (includeWard) placement = copy.getTriggerHandler().holdCastPlacement(onStack);
++            goal.setHostCard(onStack);
++        }
++        if (!new CostPayment(copiedCost, goal).payComputerCosts(new AiCostDecision(copiedPayer, goal, effect, true))) {
++            return false;
++        }
++        if (includeWard) {
++            if (placement != null) copy.getTriggerHandler().commitCastPlacement(placement);
++            if (!resolveBeforeForecastGoal(copy, goal, copiedPayer)) return false;
++            if (copiedPayer.hasWon()) return true;
++        } else if (!goal.isCopied()) {
++            goal.applyPayingManaEffects();
++        }
++        if (extraMana == 0) return true;
++        // A separate triggered payment is not casting the original spell. Cast-only mana cannot pay it.
++        SpellAbility separate = AbilityFactory.getAbility("DB$ Draw | NumCards$ 0", goal.getHostCard());
++        separate.setActivatingPlayer(copiedPayer);
++        Cost budget = new Cost(ManaCost.get(extraMana), false);
++        return new CostPayment(budget, separate).payComputerCosts(new AiCostDecision(copiedPayer, separate, true, true));
++    }
++
++    private static final int MAX_FORECAST_STACK_RESOLUTIONS = 64;
++
++    /**
++     * Execute the native cast/target/cost-trigger segment, stopping before the forecast goal resolves.
++     * Native resolution preserves full costs, controller choices, trigger order and state-based actions.
++     * A bounded unsuccessful observation is not proof that every possible payment is impossible.
++     */
++    private static boolean resolveBeforeForecastGoal(Game game, SpellAbility goal, Player payer) {
++        Set<Integer> previousStackEntries = new HashSet<>();
++        for (var instance : game.getStack()) {
++            if (instance.getSpellAbility().getId() != goal.getId()) previousStackEntries.add(instance.getId());
++        }
++        if (game.getStack().getInstanceMatchingSpellAbilityID(goal) == null) game.getStack().add(goal);
++        Set<Card> affected = new HashSet<>();
++        for (int resolved = 0; resolved <= MAX_FORECAST_STACK_RESOLUTIONS; resolved++) {
++            game.getAction().checkStateEffects(false, affected);
++            game.getStack().addAllTriggeredAbilitiesToStack();
++            // A cast trigger can win before the proposed action needs to resolve.
++            if (payer.hasWon()) return true;
++            if (game.isGameOver() || !payer.isInGame() || game.getStack().isEmpty()) return false;
++            if (game.getStack().peekAbility().getId() == goal.getId()) return true;
++            // The goal may be countered before another cast trigger wins. Observe those new effects,
++            // but never resolve stack entries that were already below the proposed action.
++            if (previousStackEntries.contains(game.getStack().peek().getId())) return false;
++            if (resolved == MAX_FORECAST_STACK_RESOLUTIONS) return false;
++            game.getStack().resolveStack();
++        }
++        return false;
+     }
+ 
+     public static boolean payManaCost(ManaCostBeingPaid cost, final SpellAbility sa, final Player ai, final boolean effect) {
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+@@ -8,7 +8,6 @@
+ import java.util.function.Predicate;
+ 
+ import forge.card.MagicColor;
+-import forge.game.GameObject;
+ import forge.game.ability.ApiType;
+ import org.apache.commons.lang3.ObjectUtils;
+ import org.apache.commons.lang3.StringUtils;
+@@ -28,7 +27,6 @@
+ import forge.game.player.Player;
+ import forge.game.spellability.Spell;
+ import forge.game.spellability.SpellAbility;
+-import forge.game.spellability.TargetChoices;
+ import forge.game.zone.ZoneType;
+ import forge.util.IterableUtil;
+ import forge.util.MyRandom;
+@@ -570,6 +568,7 @@
+ 
+         // Check for stuff like Nether Void
+         int extraManaNeeded = 0;
++        boolean accountForNativeTriggers = false;
+         if (!effect) {
+             boolean cannotBeCountered = !sa.isCounterableBy(null);
+ 
+@@ -623,31 +622,9 @@
+                 }
+             }
+ 
+-            // Account for possible Ward after the spell is fully targeted
+-            // TODO: ideally, this should be done while targeting, so that a different target can be preferred if the best
+-            // one is warded and can't be paid for. (currently it will be stuck with the target until it could pay)
+-            if (!sa.isTrigger() && !cannotBeCountered) {
+-                Set<GameObject> distinctObjects = Sets.newHashSet();
+-                for (TargetChoices tc : sa.getAllTargetChoices()) {
+-                    for (Card tgt : tc.getTargetCards()) {
+-                        if (!distinctObjects.add(tgt)) {
+-                            continue;
+-                        }
+-                        // TODO some older cards don't use the keyword, so check for trigger instead
+-                        if (tgt.hasKeyword(Keyword.WARD) && tgt.isInPlay() && tgt.getController().isOpponentOf(sa.getHostCard().getController())) {
+-                            Cost wardCost = ComputerUtilCard.getTotalWardCost(tgt);
+-                            // don't use API converter since it might have special part logic not meant for Ward cost
+-                            SpellAbilityAi topAI = new SpellAbilityAi() {};
+-                            if (!topAI.willPayCosts(payer, sa, wardCost, sa.getHostCard())) {
+-                                return false;
+-                            }
+-                            if (wardCost.hasManaCost()) {
+-                                extraManaNeeded += wardCost.getTotalMana().getCMC();
+-                            }
+-                        }
+-                    }
+-                }
+-            }
++            // Let native event handling account for legacy taxes, counters and granted target triggers.
++            accountForNativeTriggers = !sa.isTrigger()
++                    && (extraManaNeeded > 0 || ComputerUtilMana.requiresStackForecast(sa));
+ 
+             // Bail early on Casualty in case there are no cards that would make sense to pay with
+             if (sa.getHostCard().hasKeyword(Keyword.CASUALTY)) {
+@@ -665,8 +642,11 @@
+         }
+ 
+         // TODO both of these call CostAdjustment.adjust, try to reuse instead
+-        return ComputerUtilMana.canPayManaCost(cost, sa, payer, extraManaNeeded, effect)
+-                && CostPayment.canPayAdditionalCosts(cost, sa, effect, payer);
++        // The native stack forecast already resolves cast-tax triggers; do not charge their estimates twice.
++        boolean manaPayable = accountForNativeTriggers
++                ? ComputerUtilMana.canPayCostBeforeResolution(cost, sa, payer, 0, effect)
++                : ComputerUtilMana.canPayManaCostWithExtraBudget(cost, sa, payer, extraManaNeeded, effect);
++        return manaPayable && CostPayment.canPayAdditionalCosts(cost, sa, effect, payer);
+     }
+ 
+     public static Set<String> getAvailableManaColors(Player ai, Card additionalLand) {
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -1822,13 +1822,13 @@
+             ManaCostBeingPaid remaining = new ManaCostBeingPaid(manaCost);
+             remaining.decreaseGenericMana(chosen.size());
+             if (ComputerUtilMana.canPayManaCostWithReservedCards(remaining, sa,
+-                    sa.getActivatingPlayer(), false, chosen.keySet())) {
++                    player, false, chosen.keySet())) {
+                 return chosen;
+             }
+             // A prefix can consume mana needed for colored or ordinary costs.
+             // Also try the native mana allocation first, then validate its complement.
+             CardCollection manaSources = ComputerUtilMana.getManaSourcesWithReservedCards(remaining,
+-                    sa, sa.getActivatingPlayer(), false, Set.of());
++                    sa, player, false, Set.of());
+             if (manaSources != null) {
+                 CardCollection alternatives = new CardCollection(ordered);
+                 alternatives.removeAll(manaSources);
+@@ -1838,7 +1838,7 @@
+                     ManaCostBeingPaid alternateRemainder = new ManaCostBeingPaid(manaCost);
+                     alternateRemainder.decreaseGenericMana(alternate.size());
+                     if (ComputerUtilMana.canPayManaCostWithReservedCards(alternateRemainder, sa,
+-                            sa.getActivatingPlayer(), false, alternate.keySet())) {
++                            player, false, alternate.keySet())) {
+                         return alternate;
+                     }
+                 }
+@@ -1849,7 +1849,7 @@
+ 
+     @Override
+     public Map<Card, ManaCostShard> chooseCardsForConvokeOrImprovise(SpellAbility sa, ManaCost manaCost, CardCollectionView untappedCards, boolean artifacts, boolean creatures, Integer maxReduction) {
+-        final Player ai = sa.getActivatingPlayer();
++        final Player ai = player;
+         final PhaseHandler ph = ai.getGame().getPhaseHandler();
+         if (artifacts && creatures) {
+             return chooseWaterbendPayment(sa, manaCost, untappedCards, maxReduction);
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -770,6 +770,12 @@
+         };
+     }
+ 
++    /** Map an independently supplied cost through the same snapshot identity graph as its ability. */
++    public forge.game.cost.Cost findCost(forge.game.cost.Cost cost) {
++        if (abilitySnapshot == null) throw new IllegalStateException("Cost mapping requires a complete game copy");
++        return abilitySnapshot.cost(cost);
++    }
++
+     public <T extends GameObject> T find(T o) {
+         if (origGame != null && origGame.EXPERIMENTAL_RESTORE_SNAPSHOT) {
+             return (T) snapshot.find(o);
+--- a/forge-game/src/main/java/forge/game/cost/Cost.java
++++ b/forge-game/src/main/java/forge/game/cost/Cost.java
+@@ -21,6 +21,7 @@
+ import forge.card.CardType;
+ import forge.card.mana.ManaCost;
+ import forge.game.CardTraitBase;
++import forge.game.ability.AbilityUtils;
+ import forge.game.card.Card;
+ import forge.game.card.CounterEnumType;
+ import forge.game.card.CounterType;
+@@ -1094,7 +1095,29 @@
+         }
+     }
+ 
++    /** Provisional affordability may inspect a choice that has not been announced yet. */
++    public boolean isXChoiceValid(SpellAbility ability) {
++        Integer chosen = ability.getXManaCostPaid();
++        return chosen == null || chosen >= minimumX(ability);
++    }
++
++    /** Successful payment must establish a value whenever the cost declares a positive minimum. */
++    public boolean isXChoiceComplete(SpellAbility ability) {
++        Integer chosen = ability.getXManaCostPaid();
++        return chosen == null ? minimumX(ability) == 0 : chosen >= minimumX(ability);
++    }
++
++    private int minimumX(SpellAbility ability) {
++        CostPartMana mana = getCostMana();
++        int minimum = mana == null ? 0 : mana.getXMin();
++        if (ability.hasParam("XMin")) {
++            minimum = Math.max(minimum, AbilityUtils.calculateAmount(ability.getHostCard(), ability.getParam("XMin"), ability));
++        }
++        return Math.max(0, minimum);
++    }
++
+     public boolean canPay(SpellAbility sa, Player payer, final boolean effect) {
++        if (!isXChoiceValid(sa)) return false;
+         for (final CostPart part : this.getCostParts()) {
+             if (!part.canPay(sa, payer, effect)) {
+                 return false;
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -263,6 +263,7 @@
+     }
+ 
+     public boolean payCost(final CostDecisionMakerBase decisionMaker) {
++        if (cost != null && !cost.isXChoiceValid(ability)) return false;
+         adjustedCost = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect());
+         List<CostPart> costParts = adjustedCost.getCostPartsWithZeroMana();
+ 
+@@ -293,6 +294,8 @@
+                 game.costPaymentStack.pop(); // cost is resolved
+             }
+         }
++
++        if (!adjustedCost.isXChoiceComplete(ability)) return false;
+ 
+         // clear lists used for undo
+         for (final CostPart part : this.paidCostParts) {
+@@ -351,9 +354,14 @@
+             this.ability.setActivatingPlayer(decisionMaker.getPlayer());
+         }
+ 
++        if (cost != null && !cost.isXChoiceValid(ability)) return false;
++
+         Map<CostPart, PaymentDecision> decisions = Maps.newHashMap();
+         // for Trinisphere make sure to include Zero
+-        List<CostPart> parts = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect()).getCostPartsWithZeroMana();
++        Cost payable = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect());
++        // AI choices are announced before execution; do not turn a pending minimum-X choice into zero.
++        if (!payable.isXChoiceComplete(ability)) return false;
++        List<CostPart> parts = payable.getCostPartsWithZeroMana();
+ 
+         List<CostSacrifice> sacrifices = parts.stream().filter(CostSacrifice.class::isInstance)
+                 .map(CostSacrifice.class::cast).toList();
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -446,7 +446,7 @@
+         waitingTriggers.clear();
+     }
+ 
+-    private boolean isTriggerActive(final Trigger regtrig) {
++    private boolean isTriggerEligible(final Trigger regtrig) {
+         if (!regtrig.phasesCheck(game)) {
+             return false; // It's not the right phase to go off.
+         }
+@@ -465,6 +465,11 @@
+             return false; // Host card isn't where it needs to be.
+         }
+ 
++        return true;
++    }
++
++    private boolean isTriggerActive(final Trigger regtrig) {
++        if (!isTriggerEligible(regtrig)) return false;
+         for (Trigger t : this.activeTriggers) {
+             // If an ID that matches this ID is already active, don't add it
+             if (regtrig.getId() == t.getId()) {
+@@ -666,6 +671,25 @@
+         } 
+     }
+ 
++    /** Inspect live trigger eligibility without changing registration caches or firing an event. */
++    public boolean hasActiveTrigger(TriggerType... modes) {
++        for (Card card : game.getCardsInGame()) {
++            if (containsActiveEventTrigger(card.getTriggers(), modes)) return true;
++        }
++        return containsActiveEventTrigger(delayedTriggers, modes)
++                || containsActiveEventTrigger(thisTurnDelayedTriggers, modes);
++    }
++
++    private boolean containsActiveEventTrigger(Iterable<Trigger> candidates, TriggerType... modes) {
++        for (Trigger trigger : candidates) {
++            if (!isTriggerEligible(trigger) || isTriggerSuppressed(trigger.getMode())) continue;
++            for (TriggerType mode : modes) {
++                if (trigger.getMode() == mode) return true;
++            }
++        }
++        return false;
++    }
++
+     public List<Trigger> getActiveTrigger(final TriggerType mode, final Map<AbilityKey, Object> runParams) {
+         return getActiveTrigger(new TriggerWaiting(mode, runParams));
+     }
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8557,6 +8557,9 @@
+     public void copySnapshotUsageFrom(Card original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
+         drawnThisTurn = original.drawnThisTurn;
++        // First-target and valiant events depend on the participants that targeted this object.
++        targetedFromThisTurn = new PlayerCollection();
++        for (Player participant : original.targetedFromThisTurn) targetedFromThisTurn.add(context.map(participant));
+         numberTurnActivations.copySnapshotFrom(original.numberTurnActivations, context);
+         numberGameActivations.copySnapshotFrom(original.numberGameActivations, context);
+         numberAbilityResolved.copySnapshotFrom(original.numberAbilityResolved, context);

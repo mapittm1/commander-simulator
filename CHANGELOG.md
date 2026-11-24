@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select native pre-goal forecasting from live cast/copy/target event eligibility,
+  including suppression and delayed triggers, instead of ward keywords. Preserve
+  native registration behavior and remap independent per-turn targeting histories
+  in copied cards. Cover Frost Titan, Kira, Chalice and suppressed tax estimates.
+  Fix rejection of wins from cast triggers, including wins after a countered goal,
+  while preserving older stack entries. Retain the failed Bontu airbend source
+  regression and all earlier cases: 768 focused and 2,653 source cases now pass.
+  Preserve the failed 2,611-source run, intermediate regressions, native outcome
+  controls and corrected fixture assumptions. Document the 64-resolution limit
+  with 63/64/65 native probes. Eight generic sources differ from the installed
+  baseline; no card/profile changes. README and evidence updated; fresh runtime
+  gates remain pending and complete card/rules correctness is still unproven.
+  See engine/target_tax_evidence.json.
+
 - Replace manual ward forecasting with bounded native stack-segment execution in
   a copied game, stopping before the forecast action resolves. Preserve native
   costs, choices, cast/target/cost triggers and state-based actions. Fix reuse of

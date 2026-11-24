@@ -1,0 +1,35 @@
+{
+  "final_prototype": "target-tax-prototype-v4-source",
+  "final_fixture": "target-tax-fixtures-v4/CommanderTargetTaxTest.java",
+  "final_focused_phase": "target-tax768-prototype-v11",
+  "retained_focused_cases": 588,
+  "new_cases": 180,
+  "production_files_changed_from_installed": 8,
+  "corrections": [
+    "Use live native cast/copy/target trigger eligibility instead of ward keywords to select pre-goal native stack execution. Legacy mana hints select that path rather than imposing another payment.",
+    "Query current traits, zones, phases, suppression and delayed triggers without firing events, modifying registration caches or depending on those caches being current. Preserve the existing registration duplicate-ID check.",
+    "Preserve an independent targetedFromThisTurn collection, remapping every targeting participant through the shared snapshot context. First-target and valiant flags survive original/one/two copies.",
+    "Treat a copied payer win from a cast trigger as successful even before the goal resolves; keep loss, draw and payer-elimination rejection.",
+    "If the goal is countered, observe remaining newly added cast effects that can still win; protect all stack-instance IDs that predated the proposed action.",
+    "A prior2611-source run reproduced the Bontu airbend winning-loop regression at opponent life1. Preserve that failed run and retain its control in the expanded source suite."
+  ],
+  "preserved_failures": {
+    "target-tax696-v1": "Initial boundary probe shared an Execute ability and therefore shared activation counts; own Frost Titan receives no stun counters from an opponent-only subeffect. Also exposed real forecast and copied-history failures.",
+    "target-tax696-baseline-v2": "682/696 with corrected boundary and own-target assertions:12 forecast and2 copied-history native failures.",
+    "target-tax696-prototype-v3": "694/696:2 retained depth0 ward-budget regressions from relying on a stale registration cache.",
+    "target-tax720-prototype-v4": "718/720: same2 retained regressions with stronger marker/participant and suppression controls.",
+    "source2611-v1": "2610/2611; the prior airbend/Bontu winning-loop control stops at opponent life1 because the forecast rejects every game-ending result.",
+    "target-tax756-baseline-v8": "753/756; independent native casts win before the goal resolves while3 forecasts reject the win.",
+    "target-tax768-baseline-v10": "765/768; native casts win from remaining cast triggers after Chalice counters the goal while3 forecasts reject that line."
+  },
+  "boundary_scope": "63 and64 harmless native effects admit the goal;65 exceeds the forecast bound. All three independently resolve in actual native gameplay. No-plan at the cap is not proof of illegal or impossible payment. Each trusted mechanic probe uses a unique Execute SVar; these are not printed card script claims.",
+  "fixture_corrections": "Preserve native target-tap checks. Correct only opponent-only stun expectations and distinct probe ability keys, retaining all original method IDs.",
+  "known_unverified": [
+    "Fresh build/native/packaged/broader/full/catalog/health runtime gates.",
+    "Triggered-ability target forecasting, response windows, and trigger sources introduced by the action costs require more controls.",
+    "Exhaustive payment search and experimental snapshot-restore mode."
+  ],
+  "full_card_rules_correctness_established": false,
+  "outcome_fixture": "pre-goal-outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java",
+  "outcome_scope": "42 native/forecast controls cover pre-goal wins, surviving casts, losses in two/four-player games, wins after a countered goal and preservation of older stack entries. No full-rules correctness claim."
+}

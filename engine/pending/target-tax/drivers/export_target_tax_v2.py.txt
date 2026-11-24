@@ -1,0 +1,107 @@
+from pathlib import Path
+import difflib
+import hashlib
+import json
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[4]
+WORK = Path(__file__).resolve().parent
+SOURCE = ROOT / "data/development/commander-blocking-history-research/source"
+BASE = WORK / "source2071-v1/input-snapshots"
+PUBLIC = ROOT / "engine/pending/target-tax"
+sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+source_result = json.loads((WORK / "source2653-v1/evidence.json").read_bytes())
+assert source_result["counts"] == dict(total=2653, passed=2653, failed=0, skipped=0)
+assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip() == "6bb5ec98200c81bccdc76cc08ccd84dc30ecbb8a"
+for manifest in ("production-inputs.json", "test-inputs.json", "card-inputs.json"):
+    assert all(sha(SOURCE / rel) == digest for rel, digest in json.loads((WORK / "source2653-v1" / manifest).read_bytes()).items())
+assert not PUBLIC.exists()
+PUBLIC.mkdir(parents=True)
+
+def copy_file(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, destination)
+    assert sha(source) == sha(destination)
+
+phases = ("target-tax696-v1", "target-tax696-baseline-v2", "target-tax696-prototype-v3", "target-tax720-prototype-v4", "target-tax726-prototype-v6", "target-tax726-baseline-v7", "target-tax756-baseline-v8", "target-tax756-prototype-v9", "target-tax768-baseline-v10", "target-tax768-prototype-v11", "source2611-v1", "source2653-v1")
+for phase in phases:
+    for name in ("evidence.json", "process.json", "production-inputs.json", "rules-inputs.json", "test-inputs.json", "card-inputs.json", "selection.json", "production-compiler.log", "rules-compiler.log"):
+        path = WORK / phase / name
+        if path.is_file():
+            copy_file(path, PUBLIC / phase / name)
+    wrapper = WORK / (phase + "-wrapper.log")
+    if wrapper.exists():
+        copy_file(wrapper, PUBLIC / phase / "wrapper.txt")
+    for path in (WORK / phase / "driver-inputs").glob("*"):
+        if path.is_file():
+            copy_file(path, PUBLIC / phase / "drivers" / (path.name + ".txt"))
+for pattern in ("run_target_tax*.py", "run_source2653_v1.py", "export_target_tax_v2.py"):
+    for path in WORK.glob(pattern):
+        copy_file(path, PUBLIC / "drivers" / (path.name + ".txt"))
+for name in ("target-tax-ci-v1.json", "target-tax-epoch-v1.json", "target-tax-frozen-v1.json", "target-tax-review-v2.json", "source2653-preparation-v1.json"):
+    copy_file(WORK / name, PUBLIC / name)
+for version in range(1, 5):
+    copy_file(WORK / f"target-tax-fixtures-v{version}/CommanderTargetTaxTest.java", PUBLIC / f"fixtures-v{version}/CommanderTargetTaxTest.java")
+for version in (1, 2):
+    copy_file(WORK / f"pre-goal-outcome-fixtures-v{version}/CommanderPreGoalOutcomeTest.java", PUBLIC / f"outcome-fixtures-v{version}/CommanderPreGoalOutcomeTest.java")
+files = json.loads((WORK / "source2653-preparation-v1.json").read_bytes())["production_files_changed_from_installed"]
+for version in (1, 2, 3, 4):
+    def current(rel):
+        return WORK / f"target-tax-prototype-v{version}-source" / Path(rel).name
+    patch = "".join("".join(difflib.unified_diff((BASE / rel).read_text(encoding="utf-8").splitlines(keepends=True), current(rel).read_text(encoding="utf-8").splitlines(keepends=True), fromfile="a/"+rel, tofile="b/"+rel)) for rel in files)
+    path = PUBLIC / ("prototype-v1.patch" if version == 4 else f"intermediate-prototype-v{version}.patch")
+    path.write_text(patch, encoding="utf-8", newline="\n")
+patch_path = PUBLIC / "prototype-v1.patch"
+check_root = WORK / "target-tax-patch-roundtrip-v1"
+assert not check_root.exists()
+check_root.mkdir()
+subprocess.run(["git", "init", "--quiet", str(check_root)], check=True)
+for rel in files:
+    copy_file(BASE / rel, check_root / rel)
+subprocess.run(["git", "apply", "--check", str(patch_path)], cwd=check_root, check=True)
+subprocess.run(["git", "apply", str(patch_path)], cwd=check_root, check=True)
+assert all((check_root / rel).read_bytes().replace(b"\r\n", b"\n") == (SOURCE / rel).read_bytes().replace(b"\r\n", b"\n") for rel in files)
+review = json.loads((WORK / "target-tax-review-v2.json").read_bytes())
+final = json.loads((WORK / "target-tax768-prototype-v11/evidence.json").read_bytes())
+previous = json.loads((WORK / "target-tax768-baseline-v10/evidence.json").read_bytes())
+assert {row["method"] for row in final["methods"]} == {row["method"] for row in previous["methods"]}
+assert final["counts"] == dict(total=768, passed=768, failed=0, skipped=0)
+assert previous["counts"] == dict(total=768, passed=765, failed=3, skipped=0)
+admission_before = json.loads((WORK / "target-tax726-baseline-v7/evidence.json").read_bytes())
+admission_after = json.loads((WORK / "target-tax726-prototype-v6/evidence.json").read_bytes())
+win_before = json.loads((WORK / "target-tax756-baseline-v8/evidence.json").read_bytes())
+win_after = json.loads((WORK / "target-tax756-prototype-v9/evidence.json").read_bytes())
+assert admission_before["counts"] == dict(total=726,passed=699,failed=27,skipped=0)
+assert admission_after["counts"] == dict(total=726,passed=726,failed=0,skipped=0)
+assert win_before["counts"] == dict(total=756,passed=753,failed=3,skipped=0)
+assert win_after["counts"] == dict(total=756,passed=756,failed=0,skipped=0)
+for before, after in ((admission_before, admission_after), (win_before, win_after)):
+    assert {row["method"] for row in before["methods"]} == {row["method"] for row in after["methods"]}
+assert {row["method"] for row in admission_after["methods"]} <= {row["method"] for row in final["methods"]}
+evidence = {
+    "status": "source_validated_unregistered_uninstalled_runtime_gates_pending",
+    "tested_head": "6bb5ec98200c81bccdc76cc08ccd84dc30ecbb8a",
+    "ci": json.loads((WORK / "target-tax-ci-v1.json").read_bytes()),
+    "selected_runtime_changed": False,
+    "selected_runtime": "2.0.16-583714b-reviewed-mana-chain",
+    "production_files": files,
+    "patch": {"path": patch_path.relative_to(ROOT).as_posix(), "sha256": sha(patch_path), "baseline": "Installed mana-chain source2071 snapshot. Aggregate includes pending X-cost, typed-ward, stack-segment and generic event/target-history corrections. Apply in place of all earlier pending aggregate patches, not in addition."},
+    "fixture": {"path": (PUBLIC / "fixtures-v4/CommanderTargetTaxTest.java").relative_to(ROOT).as_posix(), "sha256": sha(PUBLIC / "fixtures-v4/CommanderTargetTaxTest.java")},
+    "outcome_fixture": {"path": (PUBLIC / "outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java").relative_to(ROOT).as_posix(), "sha256": sha(PUBLIC / "outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java")},
+    "admission_comparison": {"baseline": admission_before["counts"], "prototype": admission_after["counts"], "identical_method_ids":True},
+    "pre_goal_win_comparison": {"baseline": win_before["counts"], "prototype": win_after["counts"], "identical_method_ids":True},
+    "retained_fixtures": ["engine/pending/ward-transition/fixtures-v6/CommanderWardTransitionTest.java", "engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java", "engine/pending/waterbend-x/fixtures-v10/CommanderWaterbendXTest.java"],
+    "focused_comparison": {"previous_prototype": previous["counts"], "prototype": final["counts"], "identical_method_ids": True, "note": "The final before/after comparison isolates3 rejected wins after countered goals. Earlier comparisons preserve27 event/history/suppression failures on726 fixtures and3 rejected pre-goal wins on756 fixtures. Test counts are not independent defect counts."},
+    "source_validation": {"counts": source_result["counts"], "retained_immediate_source_cases": 2473, "retained_failed_source_cases":2611, "new_cases": 180, "retained_installed_source_cases": 2071},
+    "scope": "Live native cast/copy/target event eligibility selects copied pre-goal execution. Preserve per-turn targeting participants with player remapping. Retain588 focused and2473 green source cases plus every case in the failed2611 attempt; add180 controls for legacy taxes, cast counters, first targeting/valiant markers, suppression and63/64/65-resolution boundaries. Boundary probes are trusted mechanic tests, not printed card claims. Include pre-goal wins, loss/survival, wins after countered goals, and older-stack protection. No card/profile edits; no complete card/rules correctness claim.",
+    "limits": {"focused_heap_mib":1536,"focused_cpus":2,"focused_seconds":90,"source_heap_mib":2048,"source_cpus":2,"source_seconds_per_suite":600,"native_stack_resolutions":64},
+    "corrections": review["corrections"],
+    "isolation_controls": "Preserve original target flags, player-role flags, life/mana, counters, trigger histories and cast history across source/one/two copies; retain existing RNG/cache/reservation checks.",
+    "known_unverified": review["known_unverified"],
+    "boundary_scope": review["boundary_scope"],
+    "outcome_scope": review["outcome_scope"],
+    "patch_roundtrip": "Explicit UTF-8; applied source bytes equal validated sources after CRLF-to-LF normalization only. A fresh runtime build from this patch remains pending.",
+    "artifacts": {path.relative_to(ROOT).as_posix(): sha(path) for path in sorted(PUBLIC.rglob("*")) if path.is_file()}}
+(ROOT / "engine/target_tax_evidence.json").write_text(json.dumps(evidence, indent=2)+"\n", encoding="utf-8", newline="\n")
+print(json.dumps({"artifacts":len(evidence["artifacts"]),"source_counts":source_result["counts"],"patch_roundtrip_verified":True}))

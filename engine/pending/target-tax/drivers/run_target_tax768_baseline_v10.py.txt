@@ -1,0 +1,150 @@
+"""Run paid turn-counter history controls with unchanged diagnostic resource limits."""
+from pathlib import Path
+import importlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[4]
+WORK = Path(__file__).resolve().parent
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import file_hash, jvm_library, read_settings
+from commander.engine.native_runtime import _engine_profile, _environment, require_bridge
+from tests.support import packaged_rules
+
+TEST_CLASSES = ("forge.ai.CommanderWaterbendFilterTest", "forge.ai.CommanderManaChainTest", "forge.ai.CommanderWaterbendXTest", "forge.ai.CommanderTypedWardTest", "forge.ai.CommanderWardTransitionTest", "forge.ai.CommanderTargetTaxTest", "forge.ai.CommanderPreGoalOutcomeTest")
+PHASE = "target-tax768-baseline-v10"
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def settings():
+    return read_settings()
+
+
+def worker(run):
+    engine_settings = settings()
+    engine = engine_settings.verify()
+    archive = engine_settings.home / engine["jar_name"]
+    production = json.loads((run / "production-inputs.json").read_bytes())
+    assert all(file_hash(WORK / "target-tax-prototype-v3-source" / name) == digest for name,digest in production["sources"].items())
+    assert production["classes"] == {p.relative_to(run / "production-classes").as_posix(): file_hash(p) for p in (run / "production-classes").rglob("*.class")}
+
+    metadata = json.loads((run / "rules-inputs.json").read_bytes())
+    assert all(file_hash(Path(name)) == digest for name, digest in metadata["inputs"].items())
+    assert metadata["classes"] == {
+        path.relative_to(run / "rules-classes").as_posix(): file_hash(path)
+        for path in (run / "rules-classes").rglob("*.class")
+    }
+    require_bridge()
+    java = importlib.import_module("jpype")
+    recipe = json.loads((ROOT / "engine/sticker_recipe.json").read_bytes())
+    dependency = ROOT / recipe["packaged_testng"]["path"]
+    java.startJVM(
+        jvm_library(engine_settings.java), "-Xmx1536m", "-XX:ActiveProcessorCount=2",
+        "-Djava.awt.headless=true", "-Dfile.encoding=UTF-8",
+        classpath=list(map(str, (run / "production-classes", archive, run / "rules-classes", dependency))),
+        convertStrings=True,
+    )
+    origins = (
+        "forge.game.trigger.TriggerHandler", "forge.game.mana.ManaCostBeingPaid", "forge.ai.PlayerControllerAi", "forge.ai.ComputerUtilCost",
+        "forge.ai.ComputerUtilMana$ManaPaymentAssessment", "forge.game.card.ActivationTable", "forge.game.staticability.StaticAbilityAdditionalActivations",
+        "forge.ai.ability.SetStateAi", "forge.ai.simulation.ComboGuard", "forge.ai.simulation.ComboPlan", "forge.game.cost.CostWaterbend", "forge.game.cost.CostPartMana", "forge.game.cost.Cost", "forge.game.cost.CostPayment", "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect", "forge.game.ability.effects.EarthbendEffect", "forge.game.player.Player", "forge.game.GameActionUtil", "forge.game.card.CardCopyService", "forge.game.card.Card", "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler", "forge.ai.simulation.GameCopier", "forge.game.GameEntityCounterTable", "forge.game.ability.AbilityUtils", "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator", "forge.game.Game", "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner", "forge.game.cost.CostExert", "forge.game.phase.Untap", "forge.game.combat.CombatUtil", "forge.game.combat.Combat",
+    )
+    for name in origins:
+        assert packaged_rules.class_origin(java, name).samefile(run / "production-classes" if name.startswith("forge.ai.ComputerUtilMana") or name in ("forge.game.cost.Cost", "forge.game.cost.CostPayment", "forge.ai.ComputerUtilCost", "forge.ai.simulation.GameCopier", "forge.ai.PlayerControllerAi", "forge.game.trigger.TriggerHandler", "forge.game.card.Card") else archive), name
+    for name in ("forge.ai.AITest", *TEST_CLASSES):
+        assert packaged_rules.class_origin(java, name).samefile(run / "rules-classes"), name
+    listener = java.JClass("org.testng.TestListenerAdapter")()
+    runner = java.JClass("org.testng.TestNG")()
+    runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass("java.lang.Class"))([java.JClass(name).class_ for name in TEST_CLASSES]))
+    runner.setOutputDirectory(str(run / "reports"))
+    runner.setUseDefaultListeners(True)
+    runner.run()
+    counts, methods = packaged_rules.test_results(listener)
+    assert counts["total"] == 768 and len({row["method"] for row in methods}) == 768
+    record = {
+        "counts": counts, "methods": methods, "engine": engine,
+        "configuration_failures": len(listener.getConfigurationFailures()),
+        "configuration_skips": len(listener.getConfigurationSkips()),
+        "testng_status": int(runner.getStatus()), "native_origins": list(origins),
+        "report_sha256": file_hash(run / "reports/testng-results.xml"),
+        "driver_sha256": file_hash(Path(__file__)), "inputs": metadata["inputs"],
+        "failures": [str(result.getThrowable()) for result in listener.getFailedTests()],
+        "scope": "Retain588 prior focused cases and add180 legacy target-tax, cast-counter, native policy, counterability and63/64/65 pre-goal resolution controls. Mechanic boundary probes are explicitly not printed card fixtures. Add42 native cast-trigger win/loss/survival and multiplayer payer-elimination controls. Not full card/rules correctness proof.",
+    }
+    assert all(file_hash(Path(name)) == digest for name, digest in metadata["inputs"].items())
+    assert record["configuration_failures"] == record["configuration_skips"] == 0
+    save(run / "evidence.json", record)
+    java.shutdownJVM()
+
+
+def parent():
+    # The caller must ALSO observe that the exact live exec handle is terminal.
+    frozen = json.loads((WORK / "target-tax-frozen-v1.json").read_bytes())
+    epoch = json.loads((WORK / "target-tax-epoch-v1.json").read_bytes())
+    assert len(frozen) == epoch["tracked_count"] and all(file_hash(ROOT / name) == sha for name, sha in frozen.items())
+    assert set(frozen) == {name for name in subprocess.check_output(["git", "ls-files", "-z"], cwd=ROOT).decode().split("\0") if name}
+    assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip() == epoch["head_sha"]
+    assert read_settings().home.name == "forge-583714b-mana-chain-reviewed"
+    ci = json.loads((WORK / "target-tax-ci-v1.json").read_bytes())
+    assert ci["head_sha"] == epoch["head_sha"] and ci["status"] == "completed" and ci["conclusion"] == "success"
+    engine_settings = settings()
+    assert engine_settings.verify()["native_tests"]["total"] == 3295
+    recipe = json.loads((ROOT / "engine/sticker_recipe.json").read_bytes())
+    base = ROOT / "engine/tests/AITest.java"
+    dependency = ROOT / recipe["packaged_testng"]["path"]
+    fixtures = [ROOT / "engine/tests/CommanderWaterbendFilterTest.java", ROOT / "engine/tests/CommanderManaChainTest.java", WORK / "x-fixtures-v10/CommanderWaterbendXTest.java", WORK / "typed-ward-fixtures-v4/CommanderTypedWardTest.java", WORK / "ward-transition-fixtures-v6/CommanderWardTransitionTest.java", WORK / "target-tax-fixtures-v4/CommanderTargetTaxTest.java", WORK / "pre-goal-outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java"]
+    assert file_hash(base) == recipe["packaged_ai_base_sha256"]
+    assert file_hash(dependency) == recipe["packaged_testng"]["sha256"]
+    run = WORK / PHASE
+    run.mkdir()
+    (run / "input-snapshots").mkdir()
+    for path in (base, *fixtures, Path(__file__)):
+        shutil.copyfile(path, run / "input-snapshots" / path.name)
+    os.environ["COMMANDER_JAVAC"] = "C:/Program Files/Java/jdk-19/bin/javac.exe"
+    packaged_rules.compile_rules(engine_settings, run, [base, *fixtures], dependency)
+    prototype = WORK / "target-tax-prototype-v3-source"
+    archive = engine_settings.home / engine_settings.verify()["jar_name"]
+    names = ["ComputerUtilMana.java", "ComputerUtilCost.java", "GameCopier.java", "Cost.java", "CostPayment.java", "PlayerControllerAi.java", "TriggerHandler.java", "Card.java"]
+    command = ["C:/Program Files/Java/jdk-19/bin/javac.exe", "-J-Xmx2048m", "-J-XX:ActiveProcessorCount=2", "--release", "17", "-encoding", "UTF-8", "-cp", str(archive), "-d", str(run / "production-classes"), *[str(prototype / name) for name in names]]
+    with (run / "production-compiler.log").open("wb") as output:
+        compiled = subprocess.run(command, cwd=ROOT, stdout=output, stderr=subprocess.STDOUT, timeout=90, check=False)
+    assert compiled.returncode == 0
+    classes = {p.relative_to(run / "production-classes").as_posix(): file_hash(p) for p in (run / "production-classes").rglob("*.class")}
+    assert classes and all(any(n == family + ".class" or n.startswith(family + "$") for family in ("forge/ai/ComputerUtilMana", "forge/ai/ComputerUtilCost", "forge/game/cost/Cost", "forge/game/cost/CostPayment", "forge/ai/simulation/GameCopier", "forge/ai/PlayerControllerAi", "forge/game/trigger/TriggerHandler", "forge/game/card/Card")) for n in classes)
+    save(run / "production-inputs.json", {"sources": {name:file_hash(prototype / name) for name in names}, "classes": classes, "command": command})
+    for name in names:shutil.copyfile(prototype / name, run / "input-snapshots" / name)
+
+    with _engine_profile(engine_settings, run):
+        process = run_bounded(
+            [sys.executable, "-I", str(Path(__file__)), "--worker", str(run)],
+            engine_settings.home, run / "native.log",
+            ProcessLimits(90, log_bytes=65536, environment=_environment(run)),
+        )
+    assert file_hash(Path(__file__)) == file_hash(run / "input-snapshots" / Path(__file__).name)
+    save(run / "process.json", process)
+    assert process["status"] == "finished" and process["returncode"] == 0, process
+    assert all(file_hash(ROOT / name) == digest for name, digest in frozen.items())
+    record = json.loads((run / "evidence.json").read_bytes())
+    print(json.dumps({"counts": record["counts"], "failures": record["failures"]}), flush=True)
+
+
+if __name__ == "__main__":
+    if len(sys.argv) == 3 and sys.argv[1] == "--worker":
+        run_path = Path(sys.argv[2]).resolve(strict=True)
+        assert run_path.parent == WORK and run_path.name == PHASE
+        worker(run_path)
+    else:
+        assert len(sys.argv) == 1
+        parent()

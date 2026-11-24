@@ -66,38 +66,51 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-The uninstalled X-cost/ward prototype passes 588 focused and 2,473 source cases,
-retaining all prior 498/2,383 cases. Against identical focused fixtures, the
-previous prototype passes 579/588. Its nine failures cover three interaction
-families at three copy depths; they are not nine independent defects. The earlier
-installed-runtime comparison remains in the typed-ward evidence.
+The uninstalled X-cost/event prototype passes 768 focused and 2,653 source cases,
+retaining all prior 588/2,473 green cases and every case from the failed 2,611-case
+attempt. That intermediate source run stopped a Bontu airbend loop at opponent
+life 1 because the forecast rejected a win from a cast trigger. The final source
+run retains and passes that control.
 
-The existing ward-target forecast now admits the action to the native stack in
-an isolated copied game and resolves effects above it, stopping before the action
-itself resolves. This uses native costs, controller choices, cast/target/cost
-triggers and state-based actions rather than manually recreating ward payments.
-It handles a creature dying between blight payments, tokens created to pay a later
-ward, poison or life-loss elimination, and collect-evidence resource consumption.
-Cast-tax estimates are not charged again after their native triggers resolve.
+Live native cast/copy/target trigger eligibility now selects pre-goal forecasting
+instead of requiring a ward keyword. The query includes phase/zone eligibility,
+suppression and delayed triggers without firing events or changing registration
+caches. Controls cover Frost Titan taxes, granted Kira counters, Chalice cast
+counters and suppressed tax estimates. Per-turn targeting participants are copied
+independently and remapped to copied players, preserving first-target and valiant
+markers. The event/history comparison passes 726/726 against 699/726 before these
+corrections; those are test cases, not independent defect counts.
 
-The 90 new controls include independent native casts at original/one/two copies.
-Isolation checks cover poison, counters, trigger/cast histories, life and mana;
-prior source-reservation and RNG/cache controls remain included. Six generic
-production sources differ from the installed baseline; this step changes two
-of those. Card scripts and AI profiles are unchanged.
+Native effects above the proposed action resolve in an isolated copied game.
+A cast-trigger win succeeds even before the action resolves, including a win from
+remaining cast effects after that action is countered. Losses and payer
+elimination are rejected; stack entries that predated the proposed action remain
+unresolved. Independent cast controls reproduced three rejected pre-goal wins and
+three rejected wins after a countered goal before their respective corrections.
+All prior ward, variable-X, cost-trigger, resource-generation and isolation cases
+remain included.
 
-The native segment has a 64-resolution bound. No-plan is an observation, not an
-impossibility proof. Broader admission for legacy non-Ward target costs, other
-cost contexts, responses and experimental snapshot restoration still need work.
-Fresh native, packaged, broader, full-game, catalog and health runtime gates remain
-pending. The installed runtime is unchanged, and complete card/rules correctness
-is unproven. See the [aggregate patch](engine/pending/ward-transition/prototype-v1.patch),
-[90 new cases](engine/pending/ward-transition/fixtures-v6/CommanderWardTransitionTest.java),
-and [transition evidence](engine/ward_transition_evidence.json). Retained
+The 180 new controls cover original/one/two copies, suppression, targeting history,
+win/loss/survival, older-stack protection and 63/64/65-resolution boundaries.
+Boundary probes use explicit trusted mechanics rather than printed-card script
+claims: 65 harmless effects resolve in actual gameplay while exceeding the
+forecast's 64-resolution bound. No-plan at that bound is not impossibility proof.
+
+Eight generic production sources differ from the installed baseline; this step
+changes four. Card scripts and AI profiles are unchanged. Fresh build, native,
+packaged, broader, full-game, catalog and health runtime gates remain pending.
+Triggered-ability forecasting, responses, trigger sources introduced by costs
+and experimental snapshot restoration require more controls. The installed
+runtime is unchanged, and complete card/rules correctness remains unproven.
+See the [aggregate patch](engine/pending/target-tax/prototype-v1.patch),
+[138 event/history cases](engine/pending/target-tax/fixtures-v4/CommanderTargetTaxTest.java),
+[42 outcome/ordering cases](engine/pending/target-tax/outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java)
+and [evidence](engine/target_tax_evidence.json). Retained
+[ward-transition](engine/ward_transition_evidence.json),
 [typed-ward](engine/typed_ward_evidence.json) and
 [X-cost](engine/waterbend_x_evidence.json) evidence preserve earlier milestones.
-The aggregate patch includes both earlier pending changes; apply it in place of
-those patches, not in addition.
+Apply this aggregate patch in place of the earlier pending aggregate patches,
+not in addition.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
