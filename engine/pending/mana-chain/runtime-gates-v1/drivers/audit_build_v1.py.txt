@@ -1,0 +1,64 @@
+"""Audit a fresh native build against the selected runtime and all validated source files."""
+from pathlib import Path
+from collections import Counter
+import hashlib
+import json
+import subprocess
+import xml.etree.ElementTree as ET
+import zipfile
+from commander.engine.forge_config import file_hash, read_settings
+ROOT=Path.cwd();WORK=Path(__file__).resolve().parent
+load=lambda p:json.loads(p.read_bytes())
+def save(path,value):
+    assert not path.exists(),path
+    path.write_text(json.dumps(value,indent=2)+"\n",encoding="utf-8",newline="\n")
+def methods(path):
+    rows=Counter()
+    for cls in ET.parse(path).findall(".//class"):
+        for method in cls.findall("test-method"):
+            if method.get("is-config")!="true":
+                assert method.get("status")=="PASS"
+                rows[cls.get("name")+"."+method.get("name")]+=1
+    return rows
+frozen=load(WORK/"source-frozen-inputs.json")
+assert len(frozen)==load(WORK/"source-epoch.json")["tracked_count"] and all(file_hash(ROOT/name)==digest for name,digest in frozen.items())
+assert subprocess.check_output(["git","rev-parse","HEAD"]).decode().strip()==load(WORK/"source-epoch.json")["head_sha"]
+assert not subprocess.check_output(["git","status","--porcelain"])
+selection=load(WORK/"build-selection.json");assert selection["returncode"]==0 and len(selection["new_build_directories"])==1
+build=ROOT/"data/engine-builds"/selection["new_build_directories"][0]
+settings=read_settings(build/"engine-config.json");candidate=settings.verify()
+selected_settings=read_settings();selected=selected_settings.verify()
+assert selected["native_tests"]["total"]==3247
+assert candidate["native_tests"]==dict(total=3295,passed=3295,failed=0,skipped=0)
+assert candidate["recipe_sha256"]==file_hash(ROOT/"engine/sticker_recipe.json")
+base=ROOT/"data/engine-builds"/load(ROOT/"engine/mana_activation_budget_activation_evidence.json")["build_id"]
+report=build/"source/forge-gui-desktop/target/surefire-reports/testng-results.xml"
+new=methods(report);old=methods(base/"source/forge-gui-desktop/target/surefire-reports/testng-results.xml")
+assert sum(new.values())==3295 and sum(old.values())==3247 and not(old-new)
+source=load(WORK.parent/"source2071-v1/evidence.json")
+assert source["counts"]==dict(total=2071,passed=2071,failed=0,skipped=0)
+expected=Counter(row["method"] for row in source["methods"] if row["method"].startswith("forge.ai.CommanderManaChainTest."))
+assert len(expected)==48 and new-old==expected
+reviewed=load(WORK.parent/"source2071-v1/production-inputs.json")
+actual={p.relative_to(build/"source").as_posix():file_hash(p) for p in (build/"source").glob("*/src/main/java/**/*.java")}
+assert actual.keys()==reviewed.keys() and len(actual)==2168
+endings=[]
+for name,digest in actual.items():
+    saved=WORK.parent/"source2071-v1/input-snapshots"/name
+    assert file_hash(saved)==reviewed[name]
+    assert (build/"source"/name).read_text(encoding="utf-8")==saved.read_text(encoding="utf-8"),name
+    if digest!=reviewed[name]:endings.append(name)
+with zipfile.ZipFile(selected_settings.home/selected["jar_name"]) as first,zipfile.ZipFile(settings.home/candidate["jar_name"]) as second:
+    a={n:hashlib.sha256(first.read(n)).hexdigest() for n in first.namelist() if n.endswith(".class")}
+    b={n:hashlib.sha256(second.read(n)).hexdigest() for n in second.namelist() if n.endswith(".class")}
+    changed=sorted(n for n in a.keys()&b.keys() if a[n]!=b[n]);added=sorted(b.keys()-a.keys());removed=sorted(a.keys()-b.keys())
+    families=("forge/ai/ComputerUtilMana","forge/game/mana/ManaCostBeingPaid")
+    expected_added={"forge/ai/ComputerUtilMana$"+name+".class" for name in ("FilterFrontier","FilterNode","FilterPlan","FilterSource","FilterStep")}
+    assert set(added)==expected_added and not removed,(added,removed)
+    assert all(any(n==family+".class" or n.startswith(family+"$") for family in families) for n in changed),changed
+    assert {family+".class" for family in families}<=set(changed),changed
+for n in ("Default.ai","Cautious.ai"):assert file_hash(selected_settings.home/"res/ai"/n)==file_hash(settings.home/"res/ai"/n)
+assert candidate["cards_sha256"]==selected["cards_sha256"]
+record={"status":"sealed_native_passed_independent_runtime_gates_pending","build_id":build.name,"candidate":candidate,"selected":selected,"native_retained":3247,"native_added":48,"native_report_sha256":file_hash(report),"production_sources":2168,"normalized_source_matches_reviewed2071":True,"line_ending_paths":endings,"changed_classes":changed,"added_classes":added,"removed_classes":removed,"cards_and_profiles_unchanged":True,"frozen_inputs_sha256":file_hash(WORK/"source-frozen-inputs.json"),"scope":"Fresh3295 native/source parity retaining all3247 prior native cases. Changes restricted to reviewed ComputerUtilMana and ManaCostBeingPaid families plus5 explicit new planner helper records. Independent2138/65/194/146 with168 origins, broader4769/256, full45/3191 and catalog gates remain required; selected runtime unchanged."}
+save(WORK/"candidate-selection.json",{"build":build.relative_to(ROOT).as_posix()});save(WORK/"build-audit.json",record)
+print(json.dumps({"native":candidate["native_tests"],"build":build.name,"changed_classes":changed}),flush=True)

@@ -1,0 +1,204 @@
+{
+  "status": "registered_source_validated_runtime_gates_pending",
+  "tested_head": "7e7c55d3c42f20102791c615cc8fd0c2c37cbc91",
+  "ci": {
+    "id": 45464721801,
+    "status": "completed",
+    "conclusion": "success",
+    "observed_separately_before_native_epoch": true
+  },
+  "selected_runtime": "2.0.16-583714b-reviewed-mana-activation",
+  "selected_native_tests": 3247,
+  "selected_runtime_changed": false,
+  "production_files": [
+    "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+    "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java"
+  ],
+  "corrections": [
+    "After ordinary planning fails, search isolated native game copies for plain chained mana-filter activations, then execute and recheck the found plan through native costs and stack handling. No card-name checks.",
+    "Keep ordinary source reservations and lethal-tap policy, mana spending restrictions and conversion, activation checks, native payment receipts and original-cost recovery after failed actual execution.",
+    "Preserve source ability actors/express choices and isolate RNG/cache during preview. Deep-copy unpaid shards, X-color payments and sunburst bookkeeping."
+  ],
+  "focused_comparison": {
+    "baseline": {
+      "counts": {
+        "total": 186,
+        "passed": 168,
+        "failed": 18,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3061,
+        "returncode": 0,
+        "elapsed_seconds": 14.375
+      }
+    },
+    "prototype": {
+      "counts": {
+        "total": 186,
+        "passed": 186,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3060,
+        "returncode": 0,
+        "elapsed_seconds": 39.344
+      }
+    },
+    "baseline_failure_classification": {
+      "automatic_payment_cases": 9,
+      "preview_contract_cases": 6,
+      "new_bookkeeping_api_absent_cases": 3
+    },
+    "note": "Three payable-preview failures include the same missing chain capability, so failure counts do not imply18 independent rules defects."
+  },
+  "source_validation": {
+    "counts": {
+      "total": 2071,
+      "passed": 2071,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process": null
+  },
+  "retained_source_cases": 2023,
+  "added_cases": 48,
+  "retained_focused_cases": 138,
+  "limits": {
+    "focused_heap_mib": 1536,
+    "focused_cpus": 2,
+    "focused_seconds": 90,
+    "source_heap_mib": 2048,
+    "source_cpus": 2,
+    "source_seconds_per_suite": 600,
+    "filter_search_copies": 64,
+    "filter_choice_combinations": 64,
+    "filter_combo_amount": 8,
+    "filter_actions": 32
+  },
+  "limitations": [
+    "Only the admitted plain mana-source/goal fallback is covered; bounded no-plan is not proof of impossibility.",
+    "Special mana, compound/nonmana activation costs, variable amounts and broader resource ordering require further work.",
+    "Fresh registered native build, independent packaged, broader gameplay/serialization, full integration, catalog construction and installed health gates are pending.",
+    "Complete card/rules/AI support remains unproven."
+  ],
+  "artifacts": {
+    "engine/pending/mana-chain/chain-ci-v1.json": "0919f7c282b9560c30fba5e61be366249e3666e8e4005d0b0c66431a2a6ae10f",
+    "engine/pending/mana-chain/chain-epoch-v1.json": "b08dcc3a2b8726c1acafc909ba030d8686551dc7fa60290aa88d6cc02308c45a",
+    "engine/pending/mana-chain/chain-fixture-review-v1.json": "763bd1cc939fa3ea1929cbb5914aa00ac778074e2c6bdf1c63b04befb829c6fa",
+    "engine/pending/mana-chain/chain-fixture-review-v2.json": "21e12dcda7a3744dc3a17cf36dcf130ee56885299aaa0bc3b4696613b6c588f7",
+    "engine/pending/mana-chain/chain-frozen-v1.json": "8fcb5718b506040e6323a1d6168a449218aa9258779e0bfc34e604de236b0613",
+    "engine/pending/mana-chain/chain-prototype-v1-review.json": "0c3304cd994c2186e7e2ba6a6095d6fd30921bdc24cb8389ad04a5afba11cd58",
+    "engine/pending/mana-chain/chain156-v1/evidence.json": "0b0b8843b71d01db4d6da2c4170204791cf061aab24f968749b59874ece21048",
+    "engine/pending/mana-chain/chain156-v1/process.json": "745ed6190d6f5091d5850678d3d77bbe3bf894b5e9f56aa46c4f4fbf63fc18e7",
+    "engine/pending/mana-chain/chain156-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain156-v1/rules-inputs.json": "61d787b9666086cb66c0dd16df7726244a4e01264504c01858d8703f0c4bd90c",
+    "engine/pending/mana-chain/chain156-v1/wrapper.txt": "d7835c9faaadb01630d563ecefae98c483ea2e0dcc7c3a13088b3c18ad76c5e4",
+    "engine/pending/mana-chain/chain171-prototype-v1/production-compiler.log": "d596f1acdc3a9fd206db0d3188277f036cf01e6af8e4af9a670f17779517b0db",
+    "engine/pending/mana-chain/chain171-prototype-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain171-prototype-v1/rules-inputs.json": "59e93afb0113f767387297c82bd7d38c6947e76d1c3413c296d05a8a5253be74",
+    "engine/pending/mana-chain/chain171-prototype-v1/wrapper.txt": "91d87d5767f46ae3c7687cef002e451a040bc170792cb370325002b2e8d72e95",
+    "engine/pending/mana-chain/chain171-prototype-v2/evidence.json": "17174acdc3773252822601dffb12b21cea367bd113f2089eb33dad4a05a91846",
+    "engine/pending/mana-chain/chain171-prototype-v2/process.json": "5d1ad6c45b0acee218907d6c527b6754139467f682a02fcede056ddd08b182e0",
+    "engine/pending/mana-chain/chain171-prototype-v2/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain171-prototype-v2/production-inputs.json": "69a7e68b7420d02a8990f25f99b76a79270dbe53d6eedfc0ab33cc75a49effdf",
+    "engine/pending/mana-chain/chain171-prototype-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain171-prototype-v2/rules-inputs.json": "59e93afb0113f767387297c82bd7d38c6947e76d1c3413c296d05a8a5253be74",
+    "engine/pending/mana-chain/chain171-prototype-v2/wrapper.txt": "00602f7ba7f391aa2ca453fdbd848d2a428171c1e8ca45702c570ba618b4b2c2",
+    "engine/pending/mana-chain/chain171-prototype-v3/evidence.json": "5ea02ab5fe210dc8e3db661d22f10a7ea34b88497efcf3b67101cbd3fd8ddaca",
+    "engine/pending/mana-chain/chain171-prototype-v3/process.json": "6c883ba7d56c23a6db5948cc564a0ef966a6209d8fbb86941843e6de9546f538",
+    "engine/pending/mana-chain/chain171-prototype-v3/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain171-prototype-v3/production-inputs.json": "4600a4e2d3af4641795159355587f34f4a9dcd5db0e85b136bbdd34640ea99e9",
+    "engine/pending/mana-chain/chain171-prototype-v3/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain171-prototype-v3/rules-inputs.json": "ab1afb4715a2de997cc5c384b3c4e47c992b18323ad76dc8407f24b2660d2e72",
+    "engine/pending/mana-chain/chain171-prototype-v3/wrapper.txt": "a22084b3534c6faa96f688c4a86159514e001cfb31403892a99545c51bce7780",
+    "engine/pending/mana-chain/chain171-v2/evidence.json": "39dd3a32283c24b631bf96bc19afa390e832eb91d0ae33b6c3432811db068565",
+    "engine/pending/mana-chain/chain171-v2/process.json": "a505dd61ace66a70774551decb9d42502c23dc139ce51dff78e2286c0be3a0bf",
+    "engine/pending/mana-chain/chain171-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain171-v2/rules-inputs.json": "c1dcd5f11b73985e65da1fa5eac48cd7e08d50ba02dc5baa10306abbe396f515",
+    "engine/pending/mana-chain/chain171-v2/wrapper.txt": "17e9ee893dc056f1a47b4dec5098da5949bd3b6b923bac0f74489c35cb482682",
+    "engine/pending/mana-chain/chain180-prototype-v4/evidence.json": "9cdffe761afb31375429307fc40c6361cc7faceac93208bb03b970b2ec80ef18",
+    "engine/pending/mana-chain/chain180-prototype-v4/process.json": "f1e994e21db1bc63357c574b554b4cea6037a00e9107cc0f2b35a08ffdcafe8b",
+    "engine/pending/mana-chain/chain180-prototype-v4/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain180-prototype-v4/production-inputs.json": "c024d1f32e4a66a3aa821da136d4367ddb0134e8bbe2f83b883490f2166fe054",
+    "engine/pending/mana-chain/chain180-prototype-v4/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain180-prototype-v4/rules-inputs.json": "36f386276d7917351123f8b077ef1eb54132ee55c6f82d27866309d95472558a",
+    "engine/pending/mana-chain/chain180-prototype-v4/wrapper.txt": "4d3792e5ca0a84cf398ae93cd4210d6bb8de2ce55e0f0bd147fb8cfd63f6a0b9",
+    "engine/pending/mana-chain/chain180-prototype-v5/evidence.json": "ea84d31170c5dfd25288c7f4d359f1db40eb58abd827c33f5edc5d0f014264ac",
+    "engine/pending/mana-chain/chain180-prototype-v5/process.json": "2ce1df34c306727481216d5e33c827d28f4f0e5670693e0cbaa53988dd2021f3",
+    "engine/pending/mana-chain/chain180-prototype-v5/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain180-prototype-v5/production-inputs.json": "d2e30484cebd1816c7131219a7dcd48af8bdfed2621de55b8e3d641bbb21bdcd",
+    "engine/pending/mana-chain/chain180-prototype-v5/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain180-prototype-v5/rules-inputs.json": "36f386276d7917351123f8b077ef1eb54132ee55c6f82d27866309d95472558a",
+    "engine/pending/mana-chain/chain180-prototype-v5/wrapper.txt": "e03a501917a02f6ad47dcf87477210f5063435745dd3cafb250e426d81ad9f1c",
+    "engine/pending/mana-chain/chain186-baseline-v1/evidence.json": "8907e205d151d35fb631bac54e0dfb15653f5eec903fbac271d3c818941ec1c6",
+    "engine/pending/mana-chain/chain186-baseline-v1/process.json": "4e7589c1d135489a711044d494b1fd2b50911547e68a5109d693e85aef3032b4",
+    "engine/pending/mana-chain/chain186-baseline-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain186-baseline-v1/rules-inputs.json": "8a9e71b1707652a7949e1d95896b53aa2ad61cb4a5ba8ff59f829a59a0919f34",
+    "engine/pending/mana-chain/chain186-baseline-v1/wrapper.txt": "76a11228e3d9280bf9b29be73bc72b070b2434ebd00be3851eb2672d5c48f0fa",
+    "engine/pending/mana-chain/chain186-prototype-v6/evidence.json": "4bf3dc3d909b58e1a77966babd5a5065475761a721525d5b756ffec105f3a690",
+    "engine/pending/mana-chain/chain186-prototype-v6/process.json": "bef4c32796847526bc798976c5135c08a3453a713dc3ae9f91d43d2f864784a2",
+    "engine/pending/mana-chain/chain186-prototype-v6/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain186-prototype-v6/production-inputs.json": "0ac8cf14166b64a2cdc0dfeee25fe923979c46affa85b6c7279c015c9c271c69",
+    "engine/pending/mana-chain/chain186-prototype-v6/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain186-prototype-v6/rules-inputs.json": "8a9e71b1707652a7949e1d95896b53aa2ad61cb4a5ba8ff59f829a59a0919f34",
+    "engine/pending/mana-chain/chain186-prototype-v6/wrapper.txt": "4ceb301ba6574871fc2b373001b8367fa9fbaa1a2a1a3f92f0faffa7ce4b0ea0",
+    "engine/pending/mana-chain/chain186-prototype-v7/evidence.json": "76586955e2051a86dae5b106fcbd9b962d7536c442882f2b34f86434c719691e",
+    "engine/pending/mana-chain/chain186-prototype-v7/process.json": "9ac92ef498f1e49c3b8de43fcd816f503a2796ce1411ab06d89ea2a212e751d2",
+    "engine/pending/mana-chain/chain186-prototype-v7/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/mana-chain/chain186-prototype-v7/production-inputs.json": "0346ae43bbc1fae521a0c56cef7d89b81ea85d4c0e7001c5d12b4fb0c195630e",
+    "engine/pending/mana-chain/chain186-prototype-v7/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/mana-chain/chain186-prototype-v7/rules-inputs.json": "8a9e71b1707652a7949e1d95896b53aa2ad61cb4a5ba8ff59f829a59a0919f34",
+    "engine/pending/mana-chain/chain186-prototype-v7/wrapper.txt": "61c046be8fa81732b841b0722870c22adeea82e10425a06aa1004c5cdf8ad6aa",
+    "engine/pending/mana-chain/drivers/run_chain156_v1.py.txt": "c25ba389b6bd68c495cf319181404152b3de0a921c47ee9f6add87f41b12b630",
+    "engine/pending/mana-chain/drivers/run_chain171_prototype_v1.py.txt": "7018ba883234af5029304252e5974b6a98f875cf53942a9a306270141936d684",
+    "engine/pending/mana-chain/drivers/run_chain171_prototype_v2.py.txt": "88f3ad821d75aee3c9a5905ff4f69c09ed59663b12112413664174273fb197e1",
+    "engine/pending/mana-chain/drivers/run_chain171_prototype_v3.py.txt": "49165b2706f29a483a5c233212ecd6f8aaab8b7019c49e8ca1eb903191e446df",
+    "engine/pending/mana-chain/drivers/run_chain171_v2.py.txt": "84577f6438badab9bcce4ab633c028afeaafcb707594843cfc78535fc1c1447b",
+    "engine/pending/mana-chain/drivers/run_chain180_prototype_v4.py.txt": "f966c8a3dd698843bd86444a1709fcc7eaa44c976aeae572c383521c8c63043a",
+    "engine/pending/mana-chain/drivers/run_chain180_prototype_v5.py.txt": "2220479e2cbc520bc2b61c2ebe191e39b1de5ccf4c887046dd87bd556a3c29b2",
+    "engine/pending/mana-chain/drivers/run_chain186_baseline_v1.py.txt": "6af109ee96fa0187b52f26135bb697abe92d9c6505f1bda92c0d57b1024e8d85",
+    "engine/pending/mana-chain/drivers/run_chain186_prototype_v6.py.txt": "fb439e8ebf1d107777d06841a1b1296d844531dd74e4e93a71cad44eaaf9dd73",
+    "engine/pending/mana-chain/drivers/run_chain186_prototype_v7.py.txt": "7a3b42c5ce15a758171a7c6cf324cf8abdd8974cc97e4366f7c802d518b6f927",
+    "engine/pending/mana-chain/drivers/run_source2071_v1.py.txt": "c3ba487ffc2fbf47aaf7201b2f0a22653a33e50f18297d92f8d4e6fb16a952a8",
+    "engine/pending/mana-chain/fixtures-v1/CommanderManaChainTest.java": "ddfbabd6eab27505b82839d1c6fb642241d495af0f4717c172cfefb7196c413c",
+    "engine/pending/mana-chain/fixtures-v2/CommanderManaChainTest.java": "04270800c2c9944560ebd925833b1bf3162a7bc62e2cdd9f8f4701e3db2faadb",
+    "engine/pending/mana-chain/fixtures-v3/CommanderManaChainTest.java": "d95079a94d29dca65f692f4fe2db2d85d62be22f6e05d525f940e2c6c332ff2e",
+    "engine/pending/mana-chain/fixtures-v4/CommanderManaChainTest.java": "dd6bee18546282ce740e86ed52fa9cbf777a8c553e351a9c05a30e330ebc8473",
+    "engine/pending/mana-chain/fixtures-v5/CommanderManaChainTest.java": "477f4fd922dce3be340cfeb7a25b2c7dc565404994edcfc3e57d63a7adea6c91",
+    "engine/pending/mana-chain/fixtures-v6/CommanderManaChainTest.java": "c2dc18a124d50c7f1b2fdc598515e4461b92c3b7bbd29420d5b2398263370325",
+    "engine/pending/mana-chain/prototype-v1.patch": "b847dd10fe5ff6b07c46f7a2d2ac9efc297d6baeb9562bf25722e5f9ff3cb402",
+    "engine/pending/mana-chain/prototype-v2.patch": "cc85bec5d7ab8c35c00b76b6ad0c4c91513b2079d17248813024fc5074d08c8a",
+    "engine/pending/mana-chain/prototype-v3.patch": "54ee967cb213bbe56c222d65bb516181eeb20078b23fadea2c21017c6213ed2f",
+    "engine/pending/mana-chain/prototype-v4.patch": "4a96d06e28877cb85e061f851c084bf34728e2540f562dc673083bae9db1a1db",
+    "engine/pending/mana-chain/prototype-v5.patch": "d2d9551008efe14891bebd443ec96f8cde57eb79cec19d9d7395f872da16f163",
+    "engine/pending/mana-chain/prototype-v6.patch": "f89d8a8c6e4774ec7bdb0384e2a6df1b3b1ffd7cb5e956a364a81126e79e260f",
+    "engine/pending/mana-chain/source2071-preparation-v1.json": "6576aa57b5d0370097837c05a2220c66f48e947c669d995a6fe0512454a5e417",
+    "engine/pending/mana-chain/source2071-v1/card-inputs.json": "7d5b85a10195d66446bbee5f56a949d8bf373682f8708b366da603508b8991c1",
+    "engine/pending/mana-chain/source2071-v1/evidence.json": "ce2b8543fa94f0d1565324e306669ecff449506df62276827044fed5d5eab350",
+    "engine/pending/mana-chain/source2071-v1/production-inputs.json": "efb3b0dce8b0c0eb8594b035c097f05d50890e91e50747346b3f4efd7fe350c4",
+    "engine/pending/mana-chain/source2071-v1/selection.json": "09fc4619d88d1439d775644376281ceaaf2ee18b59ae54a20afeac3fa12b22bc",
+    "engine/pending/mana-chain/source2071-v1/test-inputs.json": "a5121c21aa4cf21f791c52f7892501c9294793dbf3f623185c6348a2fac69d70",
+    "engine/pending/mana-chain/source2071-v1/wrapper.txt": "9857b6b5273e7bc951827a33f3ab006445f2060d42fbec46562c2947fddaf3b2"
+  },
+  "registered_patch": {
+    "path": "engine/patches/commander-mana-chain.patch",
+    "sha256": "f89d8a8c6e4774ec7bdb0384e2a6df1b3b1ffd7cb5e956a364a81126e79e260f"
+  },
+  "registered_fixture": {
+    "path": "engine/tests/CommanderManaChainTest.java",
+    "sha256": "c2dc18a124d50c7f1b2fdc598515e4461b92c3b7bbd29420d5b2398263370325"
+  },
+  "candidate_native_required": 3295,
+  "candidate_runtime_version": "2.0.16-583714b-reviewed-mana-chain",
+  "candidate_packaged_counts": [
+    2138,
+    65,
+    194,
+    146
+  ],
+  "candidate_packaged_origins": 168
+}

@@ -1,5 +1,5 @@
 {
-  "status": "registered_source_validated_runtime_gates_pending",
+  "status": "validated_milestone_activated",
   "tested_head": "7e7c55d3c42f20102791c615cc8fd0c2c37cbc91",
   "ci": {
     "id": 45464721801,
@@ -7,9 +7,9 @@
     "conclusion": "success",
     "observed_separately_before_native_epoch": true
   },
-  "selected_runtime": "2.0.16-583714b-reviewed-mana-activation",
-  "selected_native_tests": 3247,
-  "selected_runtime_changed": false,
+  "selected_runtime": "2.0.16-583714b-reviewed-mana-chain",
+  "selected_native_tests": 3295,
+  "selected_runtime_changed": true,
   "production_files": [
     "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
     "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java"
@@ -82,7 +82,6 @@
   "limitations": [
     "Only the admitted plain mana-source/goal fallback is covered; bounded no-plan is not proof of impossibility.",
     "Special mana, compound/nonmana activation costs, variable amounts and broader resource ordering require further work.",
-    "Fresh registered native build, independent packaged, broader gameplay/serialization, full integration, catalog construction and installed health gates are pending.",
     "Complete card/rules/AI support remains unproven."
   ],
   "artifacts": {
@@ -200,5 +199,13 @@
     194,
     146
   ],
-  "candidate_packaged_origins": 168
+  "candidate_packaged_origins": 168,
+  "runtime_evidence": {
+    "path": "engine/mana_chain_runtime_evidence.json",
+    "sha256": "5cbc2a248b16f3c0e82422df8c3dd249ada01c297484ac3c5c6ddd8e5c32fd54"
+  },
+  "activation_evidence": {
+    "path": "engine/mana_chain_activation_evidence.json",
+    "sha256": "a1558b70876d72fec20e7d97975fdc7a56a28a59ebbd40c75706a3fec61a9475"
+  }
 }

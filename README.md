@@ -27,58 +27,44 @@ difference.
 
 ## Card coverage
 
-The selected runtime is `2.0.16-583714b-reviewed-mana-activation`.
-Shared mana planning supports repeated plain color conversion and checks actual
-and projected activation budgets, including repeatable life and sacrifice
-sources. Snapshots preserve card entry turns across zones, so older permanents
-keep their actual entry-dependent costs. Two production source files and seven
-existing classes change; card scripts and AI profiles are unchanged.
+The selected runtime is `2.0.16-583714b-reviewed-mana-chain`.
+Shared mana planning now searches native game copies for admitted chained-filter
+payments after the ordinary planner fails. It handles tested floating-color seeds
+and scarce-color allocation, then rechecks and executes native costs. Previews
+preserve source ability choices, actors, randomness and cache state; payment
+bookkeeping copies unpaid shards, X-color payments and sunburst independently.
+Existing reserved-source/lethal-tap policy, activation-budget checks and snapshot
+entry turns remain enabled. Two production sources change: four existing classes
+plus five planner helper records. Card scripts and AI profiles are unchanged.
 
-All 138 focused and 2,023 source cases pass. The selected build passes 3,247
-native cases, retaining every previous 3,142. Independent packaged checks pass
-2,090/65/194/146 cases with 163 production origins verified. Broader suites pass
-4,721 gameplay and 256 serialization cases. Full integration passes 45 tests
-and 3,143 subtests in 1014.172 seconds at unchanged seeds and resource limits.
-Catalog construction passes 32,636 identities plus seven reviewed nonstarting
-meld results. Installed bytes and engine health are verified; previous runtimes
-and the sealed build remain available.
+All 186 focused and 2,071 source cases pass, retaining the prior 138/2,023.
+The installed build passes 3,295 native cases, retaining every prior 3,247.
+Independent packaged checks pass 2,138/65/194/146 cases with 168 production
+origins verified. Broader suites pass 4,769 gameplay and 256 serialization cases.
+Full integration passes 45 tests and 3,191 subtests in 1061.484 seconds at the
+unchanged seeds and resource limits. Catalog construction passes 32,636 identities
+plus seven reviewed nonstarting meld results. All 21,859 installed runtime files
+match the sealed build and installed health is ready; prior runtimes and the
+sealed build remain available. Build and validation use the same registered
+commit, with no later verifier-only input exception.
 
-The native mana assessment API reports bounded search observations: a payment
-found normally, a payment found without the sacrifice-value preference, or no
-payment found. Normal play retains that preference. No-plan is not proof that
-all payments are illegal; CLI/UI diagnostic integration remains unfinished.
+The installed predecessor passes 168/186 focused controls. Those failures include
+nine automatic-payment cases, six preview-contract cases and three checks for the
+new bookkeeping API; these are not 18 independent rules defects. Earlier compiler,
+search, preview and policy failures and corrected fixture versions are preserved.
+See the [patch](engine/patches/commander-mana-chain.patch),
+[48 new cases](engine/tests/CommanderManaChainTest.java),
+[source evidence](engine/mana_chain_evidence.json),
+[runtime evidence](engine/mana_chain_runtime_evidence.json) and
+[activation evidence](engine/mana_chain_activation_evidence.json).
 
-The earlier prototype fails 48 of the same 138 controls. That result, the failed
-161-origin Python assertion, corrected 163-origin gate, earlier fixture errors
-and all source versions remain preserved. The sealed native build and later
-validation use separately recorded commits; explicit input comparison proves
-that the verifier-only correction did not change engine inputs. See
-[source evidence](engine/mana_activation_budget_evidence.json),
-[runtime evidence](engine/mana_activation_budget_runtime_evidence.json) and
-[activation evidence](engine/mana_activation_budget_activation_evidence.json).
-
-Prior waterbend, earthbend, elemental, counter, Aura and other reviewed
-corrections remain included. Complete card/rules/AI support remains unproven.
-Chained filtering, more colored-cost allocations, variable-X waterbend,
+The fallback uses a bounded 64-copy search for admitted plain mana sources and
+goals. No-plan is an observation, not proof that a payment is impossible. Compound
+and special-mana dependencies, variable amounts, variable-X waterbend,
 activation-cost modifiers, state-dependent limits and user-facing assessment
-diagnostics require further work.
-
-A registered, uninstalled chained-mana correction passes 186 focused cases and all
-2,071 source cases, retaining the previous 138 and 2,023 respectively. Native
-ordered witnesses cover Prismite/Mystic Gate chains, floating blue mana and
-preserving scarce black mana. The installed engine passes 168/186; its failures
-include missing automatic allocations, preview contracts and the new bookkeeping
-API. The shared fallback preserves reserved-source/lethal-tap policy, preview
-state, randomness and cache isolation. It uses bounded native game copies and
-native cost execution, with no card-name exceptions. Its 64-copy search covers
-admitted plain mana sources and goals; it cannot certify that a refused payment
-is impossible. The build recipe now requires 3,295 native cases; packaged checks require
-2,138/65/194/146 cases and 168 production origins. Fresh runtime gates remain
-pending. See the
-[patch](engine/patches/commander-mana-chain.patch),
-[48 new cases](engine/tests/CommanderManaChainTest.java)
-and [comparison evidence](engine/mana_chain_evidence.json). The selected runtime
-above is unchanged.
+diagnostics require further work. Complete card/rules/AI support remains unproven.
+Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
+remain included.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

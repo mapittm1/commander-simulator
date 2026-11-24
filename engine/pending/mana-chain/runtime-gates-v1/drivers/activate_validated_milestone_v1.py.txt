@@ -1,0 +1,138 @@
+"""Install the validated chained-mana runtime, preserving prior selection and build."""
+from pathlib import Path
+import json
+import os
+import shutil
+import subprocess
+import sys
+from commander.engine.forge_config import EngineSettings, file_hash, read_settings
+ROOT = Path.cwd().resolve()
+WORK = Path(__file__).resolve().parent
+
+def load(path):
+    return json.loads(path.read_bytes())
+
+def save(path, value):
+    assert not path.exists(), path
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+def bound(path):
+    return {"path": path.relative_to(ROOT).as_posix(), "sha256": file_hash(path)}
+
+def inventory(home):
+    files = {}
+    for path in home.rglob("*"):
+        assert not path.is_symlink() and not path.is_junction(), path
+        if path.is_file():
+            files[path.relative_to(home).as_posix()] = file_hash(path)
+    return files
+
+assert ROOT == Path("C:/Users/mapit/OneDrive/Desktop/CommanderSimulator")
+ci = load(WORK / "current-ci-before-install-v1.json")
+assert ci["status"] == "completed" and ci["conclusion"] == "success"
+assert subprocess.check_output(["git", "rev-parse", "HEAD"]).decode().strip() == ci["head_sha"]
+assert not subprocess.check_output(["git", "status", "--porcelain"])
+frozen = load(WORK / "source-frozen-inputs.json")
+assert len(frozen) == load(WORK / "source-epoch.json")["tracked_count"]
+assert all(file_hash(ROOT / name) == digest for name, digest in frozen.items())
+for name, digest in load(WORK / "installation-driver-inputs-v1.json").items():
+    assert file_hash(WORK / name) == digest == file_hash(WORK / "installation-driver-snapshots-v1" / name)
+proof = load(WORK / "full-live-precheck-v1.json")
+assert proof["status"] == "all_required_candidate_milestone_gates_passed_activation_pending"
+assert proof["live"] == dict(tests=45, subtests=3191)
+assert proof["catalog"]["counts"] == dict(constructed=32636, script_unavailable=7)
+assert proof["method_totals"] == [2138, 65, 194, 146] and proof["combined_native_required"] == 3295
+assert proof["selected_native_retained"] == 3247 and proof["native_added_since_selected"] == 48
+for row in (proof["wrapper"], proof["wrapper_log"], proof["native_report"], proof["catalog"]["observations"], proof["broader"]):
+    assert file_hash(ROOT / row["path"]) == row["sha256"]
+for group in proof["groups"].values():
+    for row in group["artifacts"]:
+        assert file_hash(ROOT / row["path"]) == row["sha256"]
+build = (ROOT / "data/engine-builds" / proof["build_id"]).resolve(strict=True)
+assert build.parent == (ROOT / "data/engine-builds").resolve()
+settings = read_settings(build / "engine-config.json")
+candidate = settings.verify()
+assert candidate["native_tests"] == dict(total=3295, passed=3295, failed=0, skipped=0)
+assert candidate["recipe_sha256"] == file_hash(ROOT / "engine/sticker_recipe.json")
+audit = load(WORK / "build-audit.json")
+expected_changed = {"forge/ai/ComputerUtilMana$ManaPaymentAssessment.class", "forge/ai/ComputerUtilMana$ManaResourcePlan.class", "forge/ai/ComputerUtilMana.class", "forge/game/mana/ManaCostBeingPaid.class"}
+expected_added = {"forge/ai/ComputerUtilMana$" + name + ".class" for name in ("FilterFrontier", "FilterNode", "FilterPlan", "FilterSource", "FilterStep")}
+assert audit["build_id"] == build.name and audit["production_sources"] == 2168
+assert set(audit["changed_classes"]) == expected_changed
+assert set(audit["added_classes"]) == expected_added and not audit["removed_classes"]
+assert audit["cards_and_profiles_unchanged"]
+previous = read_settings().verify()
+assert previous["native_tests"]["total"] == 3247
+active = ROOT / "config/engine_config.json"
+assert active.read_bytes() == (WORK / "active-config-before-live-v1.json").read_bytes()
+assert not any((settings.home / name).exists() for name in (".commander-simulator.lock", "forge.profile.properties"))
+engine_root = (ROOT / "data/engines").resolve(strict=True)
+target = (engine_root / "forge-583714b-mana-chain-reviewed").resolve()
+archive = ROOT / "config/engine_locks/forge-583714b-mana-chain.json"
+artifact = ROOT / "engine/mana_chain_activation_evidence.json"
+immutable = ROOT / "engine/pending/mana-chain/activation-inputs"
+assert target.parent == engine_root and target.is_relative_to(ROOT)
+assert settings.home == (build / "runtime").resolve(strict=True)
+assert not any(path.exists() for path in (target, archive, artifact, immutable))
+source_inventory = inventory(settings.home)
+save(WORK / "installation-source-inventory-v1.json", source_inventory)
+shutil.copytree(settings.home, target)
+assert inventory(target) == source_inventory == inventory(settings.home)
+assert EngineSettings(target, settings.java, settings.lock_path).verify() == candidate
+paths = (active, ROOT / "config/engine_config.example.json", ROOT / "config/engine_lock.json", ROOT / "engine/native_test_evidence.json")
+assert all(path.resolve().is_relative_to(ROOT) and not path.is_symlink() for path in paths)
+originals = {path: path.read_bytes() for path in paths}
+backup = WORK / "activation-originals-v1"
+backup.mkdir()
+for index, (path, raw) in enumerate(originals.items()):
+    (backup / (str(index) + "-" + path.name)).write_bytes(raw)
+save(backup / "manifest.json", {str(path): file_hash(path) for path in originals})
+health_log = WORK / "activated-health-v1.json"
+assert not health_log.exists()
+try:
+    archive.write_bytes((build / "engine-lock.json").read_bytes())
+    (ROOT / "config/engine_lock.json").write_bytes(archive.read_bytes())
+    (ROOT / "engine/native_test_evidence.json").write_bytes((WORK / "native-test-evidence-v1.json").read_bytes())
+    selection = {"home": "../data/engines/forge-583714b-mana-chain-reviewed", "java": "../data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe"}
+    data = (json.dumps(selection, indent=2) + "\n").encode()
+    active.write_bytes(data)
+    (ROOT / "config/engine_config.example.json").write_bytes(data)
+    assert read_settings().verify() == candidate
+    with health_log.open("xb") as output:
+        process = subprocess.run([sys.executable, "commander_simulator.py", "engine-check"], cwd=ROOT, env=dict(os.environ, PYTHONUTF8="1", PYTHONPATH=str(ROOT)), stdout=output, stderr=subprocess.STDOUT, timeout=120, check=False)
+    assert process.returncode == 0 and load(health_log)["status"] == "ready"
+    assert read_settings().verify() == candidate
+    assert inventory(target) == source_inventory == inventory(settings.home)
+    changed = {name for name, digest in frozen.items() if file_hash(ROOT / name) != digest}
+    assert changed == {"config/engine_lock.json", "config/engine_config.example.json", "engine/native_test_evidence.json"}, changed
+    immutable.mkdir()
+    shutil.copyfile(ROOT / "engine/mana_chain_evidence.json", immutable / "evidence-before-activation.json")
+    source = ROOT / "engine/pending/mana-chain/source2071-v1"
+    source_record = load(source / "evidence.json")
+    assert source_record["counts"] == dict(total=2071, passed=2071, failed=0, skipped=0)
+    assert source_record["inputs_unchanged_during_run"]
+    record = {
+        "status": "validated_milestone_activated", "build_id": build.name,
+        "engine": candidate, "previous": previous,
+        "validation_epoch": load(WORK / "source-epoch.json"), "ci": ci,
+        "full_precheck": bound(WORK / "full-live-precheck-v1.json"),
+        "normal_packaged": bound(WORK / "packaged-evidence-v1.json"),
+        "source_evidence": bound(immutable / "evidence-before-activation.json"),
+        "live": proof["live"], "catalog": proof["catalog"],
+        "focused": dict(total=186, passed=186, failed=0, skipped=0),
+        "source": source_record["counts"], "broader": {"gameplay": 4769, "serialization": 256},
+        "packaged": [2138,65,194,146], "production_origins": 168,
+        "activation": {"runtime": target.relative_to(ROOT).as_posix(), "archived_lock": archive.relative_to(ROOT).as_posix(), "lock_sha256": file_hash(archive), "post_install_health": bound(health_log), "source_build_preserved": True, "resource_inventory": bound(WORK / "installation-source-inventory-v1.json"), "runtime_files": len(source_inventory), "rollback_manifest": bound(backup / "manifest.json")},
+        "changed_classes": audit["changed_classes"], "added_classes": audit["added_classes"], "removed_classes": audit["removed_classes"], "cards_and_profiles_unchanged": True,
+        "validated_source_evidence": bound(source / "evidence.json"),
+        "validated_source_manifests": {name: bound(source / name) for name in ("production-inputs.json", "test-inputs.json", "card-inputs.json")},
+        "known_followup_gaps": ["Broader compound/nonmana/special-mana and variable-amount dependency planning.", "Variable-X waterbend, activation-cost modifiers and state-dependent limits need further implementation and native controls.", "Bounded mana assessment is not yet wired to user-facing CLI/UI diagnostics.", "Complete card/rules/AI support remains unproven."],
+        "limits": ["All required gates for this186-case milestone passed, retaining every prior case and existing resource limit.", "Two generic production sources change: four existing classes plus five helper records; cards and AI profiles remain unchanged.", "Build and all pre-install validation use the same registered commit; no later verifier-only reuse or compatibility exception is needed.", "Bounded search failure does not prove a payment impossible. Admitted plain-source/goal coverage is incomplete.", "Prior runtimes, sealed build, failed prototypes and fixture corrections remain preserved."]
+    }
+    save(artifact, record)
+    print(json.dumps({"status": record["status"], "native": 3295, "runtime": str(target), "runtime_files": len(source_inventory)}), flush=True)
+except BaseException:
+    for path, raw in originals.items():
+        path.write_bytes(raw)
+    save(WORK / "activation-failed-restored-v1.json", {"status": "original_selection_and_metadata_restored", "target_preserved_for_inspection": str(target)})
+    raise

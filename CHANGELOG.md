@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated chained-mana runtime after all 186 focused, 2,071 source
+  and 3,295 native cases pass, retaining every prior case. Independent packaged
+  checks pass 2,138/65/194/146 with 168 origins; broader suites pass 4,769 gameplay
+  and 256 serialization cases. Full integration passes 45 tests/3,191 subtests
+  in 1061.484 seconds at unchanged seeds and limits. Catalog construction passes
+  32,636 identities plus seven reviewed nonstarting meld results. Verify all
+  21,859 copied runtime files and installed health; preserve the previous runtime,
+  sealed build, rollback metadata and earlier failed prototypes. Two generic
+  sources change four existing classes and add five helper records; card scripts
+  and AI profiles remain unchanged. This bounded plain-source fallback does not
+  complete full card/rules/AI support. See engine/mana_chain_activation_evidence.json.
+
 - Register the source-validated chained-mana patch and 48-case fixture in the
   engine recipe, native selector and independent packaged partitions. Require
   3,295 native cases and 2,138/65/194/146 packaged cases with 168 production
