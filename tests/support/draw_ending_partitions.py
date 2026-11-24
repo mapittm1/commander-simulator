@@ -182,6 +182,7 @@ PARTITIONS = {
         "forge.ai.CommanderEarthbendReturnTest",
         "forge.ai.CommanderWaterbendPaymentTest",
         "forge.ai.CommanderWaterbendFilterTest",
+        "forge.ai.CommanderManaChainTest",
     ),
 }
 
@@ -189,7 +190,7 @@ EXPECTED_COUNTS = {
     "information": 301,
     "combat_and_snapshots": 228,
     "text_casting_and_costs": 338,
-    "resolution": 1223,
+    "resolution": 1271,
 }
 
 

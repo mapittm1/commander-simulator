@@ -63,7 +63,7 @@ Chained filtering, more colored-cost allocations, variable-X waterbend,
 activation-cost modifiers, state-dependent limits and user-facing assessment
 diagnostics require further work.
 
-An uninstalled chained-mana prototype now passes 186 focused cases and all
+A registered, uninstalled chained-mana correction passes 186 focused cases and all
 2,071 source cases, retaining the previous 138 and 2,023 respectively. Native
 ordered witnesses cover Prismite/Mystic Gate chains, floating blue mana and
 preserving scarce black mana. The installed engine passes 168/186; its failures
@@ -72,9 +72,11 @@ API. The shared fallback preserves reserved-source/lethal-tap policy, preview
 state, randomness and cache isolation. It uses bounded native game copies and
 native cost execution, with no card-name exceptions. Its 64-copy search covers
 admitted plain mana sources and goals; it cannot certify that a refused payment
-is impossible. Fresh packaged/runtime gates remain pending. See the
-[patch](engine/pending/mana-chain/prototype-v6.patch),
-[48 new cases](engine/pending/mana-chain/fixtures-v6/CommanderManaChainTest.java)
+is impossible. The build recipe now requires 3,295 native cases; packaged checks require
+2,138/65/194/146 cases and 168 production origins. Fresh runtime gates remain
+pending. See the
+[patch](engine/patches/commander-mana-chain.patch),
+[48 new cases](engine/tests/CommanderManaChainTest.java)
 and [comparison evidence](engine/mana_chain_evidence.json). The selected runtime
 above is unchanged.
 

@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the source-validated chained-mana patch and 48-case fixture in the
+  engine recipe, native selector and independent packaged partitions. Require
+  3,295 native cases and 2,138/65/194/146 packaged cases with 168 production
+  origins, retaining every prior case. Fresh runtime gates remain pending; the
+  installed runtime is unchanged.
+
 - Preserve an uninstalled generic chained-mana fallback passing all 186 focused
   and 2,071 source cases, retaining every previous 138/2,023 case. Compare the
   installed engine's 168/186 result and classify payment, preview and absent-API
