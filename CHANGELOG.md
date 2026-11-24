@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 76 paid/native earthbend return controls after all pass in the selected
+  runtime and all 1,785 combined source cases pass, retaining 1,709. Cover death/
+  exile, source movement, ownership/control, pending spells/triggers, turn reset,
+  counter prevention/removal, competing and old/new-object return triggers,
+  Tracker Clues, Cremate/Stifle responses and Ephemerate blink. Preserve all
+  12/40/58/76-case phases and the corrected three Swords life-beneficiary
+  assertions. No production/card/AI changes. Register 3,010 native/1,853 packaged
+  targets and 151 production origins, including the matching opt-in integration
+  assertions. Fresh runtime/full/catalog gates and selection remain pending;
+  see engine/earthbend_return_evidence.json.
+
 - Select the validated elemental-history milestone: 1,709 source, 2,934 native
   (all 2,882 previous methods retained), independent packaged 1,777/65/194/146
   in 307.875s, broader 4,408 gameplay/256 serialization and all 45 full tests/

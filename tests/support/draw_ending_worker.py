@@ -91,6 +91,7 @@ SOURCES = {
     "CommanderCounterHistoryTest": "commander_counter_history_test_sha256",
     "CommanderAirbendPermissionTest": "commander_airbend_permission_test_sha256",
     "CommanderElementalBendHistoryTest": "commander_elemental_bend_history_test_sha256",
+    "CommanderEarthbendReturnTest": "commander_earthbend_return_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -315,6 +316,12 @@ NATIVE_CLASSES = (
     "forge.game.trigger.TriggerCounterTypeAddedAll",
     "forge.game.ability.effects.AirbendEffect",
     "forge.game.ability.effects.EarthbendEffect",
+    "forge.game.ability.effects.DestroyEffect",
+    "forge.game.ability.effects.CountersRemoveAllEffect",
+    "forge.game.ability.effects.InvestigateEffect",
+    "forge.game.staticability.StaticAbilityCantPutCounter",
+    "forge.game.ability.effects.TokenEffectBase",
+    "forge.game.ability.effects.ControlGainEffect",
     "forge.game.ability.effects.LifeGainEffect",
     "forge.game.combat.Combat",
     "forge.game.replacement.ReplacementHandler",
@@ -394,7 +401,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1777-case packaged family."""
+    """Execute the existing fixed 1853-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

@@ -9,6 +9,13 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+Earthbend return coverage is registered for a test-only candidate. All 76 paid/
+native cases and all 1,785 combined source cases pass, retaining 1,709. Targets
+are 3,010 native and 1,853 packaged cases with 151 production origins, pending
+fresh runtime validation. No production defect/correction or card/AI changes.
+Preserve the initial three incorrect Swords life assertions and all corrected
+phases in [earthbend evidence](earthbend_return_evidence.json).
+
 The selected runtime is the reviewed elemental-history milestone. Two generic
 production files preserve each player's independent elemental-action set without
 replaying bend events. The 25-case baseline passes 11/fails 14; correction passes

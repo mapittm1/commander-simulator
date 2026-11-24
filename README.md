@@ -27,6 +27,16 @@ difference.
 
 ## Card coverage
 
+Earthbend return coverage is registered for the next candidate: all 76 supplied
+cases pass the selected runtime, and all 1,785 combined source cases pass,
+retaining 1,709. Checks cover death/exile, ownership/control, counter effects,
+turn cleanup, competing/old delayed triggers, native landfall, Cremate/Stifle
+responses and blink. No production defect or correction was needed. The initial
+three Swords life-beneficiary assertion failures are preserved and corrected.
+Targets of 3,010 native and 1,853 packaged cases remain pending fresh runtime
+validation; the installed selection is unchanged. See
+[earthbend evidence](engine/earthbend_return_evidence.json).
+
 The selected runtime is `2.0.16-583714b-reviewed-elemental-history`.
 It preserves each player's independent set of elemental actions when copying a
 simulation, without replaying bending events. This corrects Avatar Aang failing
