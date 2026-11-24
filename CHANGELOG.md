@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated test-only earthbend-return milestone: 1,785 source,
+  3,010 native (all 2,934 previous methods retained), independent packaged
+  1,853/65/194/146 in 315.031s with all 151 origins verified, broader 4,484
+  gameplay/256 serialization and all 45 full tests/2,906 subtests in 1256.891s
+  at unchanged seeds/limits. Catalog construction passes 32,636 identities plus
+  seven reviewed nonstarting meld results. Verify installed bytes and health;
+  preserve the previous runtime and sealed build. All 76 supplied earthbend
+  cases pass without a production correction; every production class, card
+  script and AI profile is unchanged. Preserve the initial three incorrect
+  Swords life assertions, corrected phases and immutable validation inputs.
+  See engine/earthbend_return_activation_evidence.json. Full card/rules/AI
+  support remains unproven.
+
 - Register 76 paid/native earthbend return controls after all pass in the selected
   runtime and all 1,785 combined source cases pass, retaining 1,709. Cover death/
   exile, source movement, ownership/control, pending spells/triggers, turn reset,

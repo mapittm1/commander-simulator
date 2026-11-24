@@ -27,48 +27,32 @@ difference.
 
 ## Card coverage
 
-Earthbend return coverage is registered for the next candidate: all 76 supplied
-cases pass the selected runtime, and all 1,785 combined source cases pass,
-retaining 1,709. Checks cover death/exile, ownership/control, counter effects,
-turn cleanup, competing/old delayed triggers, native landfall, Cremate/Stifle
-responses and blink. No production defect or correction was needed. The initial
-three Swords life-beneficiary assertion failures are preserved and corrected.
-Targets of 3,010 native and 1,853 packaged cases remain pending fresh runtime
-validation; the installed selection is unchanged. See
-[earthbend evidence](engine/earthbend_return_evidence.json).
+The selected runtime is `2.0.16-583714b-reviewed-earthbend-return`.
+This test-only milestone adds 76 paid/native earthbend return cases. No production
+defect or correction was needed: every production class, card script and AI
+profile is unchanged from the prior reviewed elemental-history runtime.
 
-The selected runtime is `2.0.16-583714b-reviewed-elemental-history`.
-It preserves each player's independent set of elemental actions when copying a
-simulation, without replaying bending events. This corrects Avatar Aang failing
-to transform after the fourth distinct element in a copied game. The 25-case
-baseline passes 11/fails 14; the generic two-file correction passes all 25 and
-408 retained copy contracts. Tests cover actual paid bending, native combat,
-pending spells, repeated elements, turn reset and original/copy independence.
-See [source evidence](engine/elemental_bend_evidence.json).
+The cases verify death/exile returns, changed controllers and foreign ownership,
+source movement, pending spells and return triggers, turn cleanup, prevented or
+removed counters, repeated earthbending, old/new battlefield identities, native
+Tracker Clues, Cremate/Stifle responses and Ephemerate blink. Original and one/
+two-copy controls verify independent outcomes. The initial three incorrect
+Swords life-beneficiary assertions and all corrected phases remain preserved.
+See [earthbend source evidence](engine/earthbend_return_evidence.json).
 
-Combined source validation passes all 1,709 cases, retaining 1,657. The selected
-build passes all 2,934 native methods, retaining every prior 2,882. Independent
-packaged checks pass 1,777/65/194/146 cases in 307.875 seconds; broader suites pass
-4,408 gameplay/256 serialization cases. All 45 full integration tests and
-2,830 subtests pass in 1259.875 seconds at unchanged seeds 42/0/4096 and limits.
-Catalog construction passes 32,636 identities plus seven reviewed nonstarting
-meld results. Installation verifies copied bytes and post-install health while
-preserving the prior runtime and both candidate builds.
-See [activation evidence](engine/elemental_bend_activation_evidence.json).
+Combined source validation passes all 1,785 cases, retaining 1,709. The selected
+build passes all 3,010 native methods, retaining every prior 2,934. Independent
+packaged checks pass 1,853/65/194/146 cases in 315.031 seconds, with all 151
+production origins verified. Broader suites pass 4,484 gameplay/256 serialization
+cases. All 45 full integration tests and 2,906 subtests pass in 1256.891 seconds
+at unchanged seeds 42/0/4096 and resource limits. Catalog construction passes
+32,636 identities plus seven reviewed nonstarting meld results.
 
-The 52 registered additions include six departed-player counter receipts,
-21 Airbend permission/cost cases and 25 elemental-history cases. Airbend checks
-cover owner-only casts, normal timing, pending spells, cost increases/reductions
-and mandatory additional sacrifices. Only Player and GameCopier production
-families change; card scripts and AI profiles are unchanged. Prior counter,
-Aura, exert and other reviewed corrections remain included.
-
-The original combat-setup failure, corrected controls and first candidate's
-stale integration assertion failure are preserved. The corrected assertion
-requires all 145 production origins and all 1,777 packaged cases. The supplied
-elemental-history gap is corrected in the selected runtime; complete card,
-rules and AI correctness remain unproven. Catalog construction is not a proof
-of every interaction. See [gap history](engine/elemental_bend_gaps.json).
+Installation verifies copied bytes and post-install health while preserving the
+prior runtime and sealed build. See [activation evidence](engine/earthbend_return_activation_evidence.json).
+Prior elemental, counter, Aura, exert and other reviewed corrections remain
+included. Complete card, rules and AI correctness remain unproven; catalog
+construction and supplied interactions do not certify complete support.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

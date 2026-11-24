@@ -9,35 +9,23 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-Earthbend return coverage is registered for a test-only candidate. All 76 paid/
-native cases and all 1,785 combined source cases pass, retaining 1,709. Targets
-are 3,010 native and 1,853 packaged cases with 151 production origins, pending
-fresh runtime validation. No production defect/correction or card/AI changes.
+The selected runtime is the reviewed earthbend-return milestone. All 76 paid/
+native return cases pass; no production correction was needed. Every production
+class, card script and AI profile is unchanged. Cases cover death/exile, control/
+ownership/source changes, pending spells and triggers, cleanup, counter effects,
+competing and old/new-object delays, landfall, Cremate/Stifle responses and blink.
 Preserve the initial three incorrect Swords life assertions and all corrected
-phases in [earthbend evidence](earthbend_return_evidence.json).
+12/40/58/76-case phases in [source evidence](earthbend_return_evidence.json).
 
-The selected runtime is the reviewed elemental-history milestone. Two generic
-production files preserve each player's independent elemental-action set without
-replaying bend events. The 25-case baseline passes 11/fails 14; correction passes
-all 25 and 408 related contracts. Combined source validation passes 1,709 cases,
-retaining 1,657; all 2,934 native methods pass, retaining 2,882.
-
-Independent packaged checks pass 1,777/65/194/146 in 307.875s, broader suites pass
-4,408 gameplay/256 serialization and full integration passes 45 tests/2,830
-subtests in 1259.875s under unchanged seeds and limits. Catalog construction
-passes 32,636 identities plus seven reviewed nonstarting meld results.
-Installation verifies copied resources and health while preserving the previous
-runtime and both sealed candidate builds. See [activation evidence](elemental_bend_activation_evidence.json)
-and [source evidence](elemental_bend_evidence.json).
-
-The registered additions include six departed-counter, 21 Airbend permission/cost
-and 25 elemental-history cases. Only Player and GameCopier families change;
-card scripts and AI profiles are unchanged. Preserve the failed combat setup,
-corrected controls and first candidate's stale integration assertion failure.
-The latter failed after its first 301-case partition passed because the wrapper
-still expected 143 origins; the corrected gate requires all 145 and all 1,777
-cases. See [gap history](elemental_bend_gaps.json). Full card/rules/AI correctness
-remains unproven.
+Combined source validation passes 1,785 cases, retaining 1,709. All 3,010 native
+methods pass, retaining 2,934. Independent packaged checks pass 1,853/65/194/146
+in 315.031s, with all 151 production origins verified. Broader suites pass 4,484
+gameplay/256 serialization cases; full integration passes 45 tests/2,906
+subtests in 1256.891s at unchanged seeds and limits. Catalog construction passes
+32,636 identities plus seven reviewed nonstarting meld results. Installation
+verifies copied bytes and health while preserving the prior runtime and sealed
+build. See [activation evidence](earthbend_return_activation_evidence.json).
+Full card/rules/AI correctness remains unproven.
 
 The earlier milestones below describe validation and selections at their time.
 
