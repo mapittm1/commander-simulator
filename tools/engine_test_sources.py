@@ -178,6 +178,7 @@ REGRESSION_SOURCES = {
     "CommanderDepartedHistoryTest.java": "commander_departed_history_test_sha256",
     "CommanderDepartedPaidHistoryTest.java": "commander_departed_paid_history_test_sha256",
     "CommanderSkipPhaseDurationTest.java": "commander_skip_phase_duration_test_sha256",
+    "CommanderDeferredRepeatTest.java": "commander_deferred_repeat_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

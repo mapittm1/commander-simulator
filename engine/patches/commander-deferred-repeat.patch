@@ -1,0 +1,69 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java
+@@ -5,7 +5,7 @@
+ import com.google.common.collect.Lists;
+ import com.google.common.collect.Maps;
+ 
+-import forge.GameCommand;
++import forge.game.SnapshotCommand;
+ import forge.card.CardType;
+ import forge.game.Game;
+ import forge.game.GameEntityCounterTable;
+@@ -17,6 +17,7 @@
+ import forge.game.card.*;
+ import forge.game.player.Player;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilitySnapshot;
+ import forge.game.spellability.SpellAbilityStackInstance;
+ import forge.game.trigger.TriggerType;
+ import forge.game.trigger.WrappedAbility;
+@@ -173,14 +174,7 @@
+                     continue;
+                 }
+                 if (nextTurn) {
+-                    game.getCleanup().addUntil(p, (GameCommand) () -> {
+-                        List<Object> tempRemembered = Lists.newArrayList(IterableUtil.filter(source.getRemembered(), Player.class));
+-                        source.removeRemembered(tempRemembered);
+-                        source.addRemembered(p);
+-                        AbilityUtils.resolve(repeat);
+-                        source.removeRemembered(p);
+-                        source.addRemembered(tempRemembered);
+-                    });
++                    game.getCleanup().addUntil(p, new RepeatForPlayerCommand(source, p, repeat));
+                 } else {
+                     // to avoid risk of collision with other abilities swap out other Remembered Player while resolving
+                     List<Object> tempRemembered = Lists.newArrayList(IterableUtil.filter(source.getRemembered(), Player.class));
+@@ -227,4 +221,33 @@
+             sa.setSVar("Votes", saVote.getSVar("VoteNum" + o.toString()));
+         }
+     }
++
++    /** Resolve each deferred repeat against references in the queue's own world. */
++    private static final class RepeatForPlayerCommand implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card source;
++        private final Player player;
++        private final SpellAbility repeat;
++
++        private RepeatForPlayerCommand(final Card source, final Player player, final SpellAbility repeat) {
++            this.source = source;
++            this.player = player;
++            this.repeat = repeat;
++        }
++
++        @Override
++        public void run() {
++            List<Object> tempRemembered = Lists.newArrayList(IterableUtil.filter(source.getRemembered(), Player.class));
++            source.removeRemembered(tempRemembered);
++            source.addRemembered(player);
++            AbilityUtils.resolve(repeat);
++            source.removeRemembered(player);
++            source.addRemembered(tempRemembered);
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(final SpellAbilitySnapshot context) {
++            return new RepeatForPlayerCommand(context.map(source), context.map(player), context.copy(repeat));
++        }
++    }
+ }

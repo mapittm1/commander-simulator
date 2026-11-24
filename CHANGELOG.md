@@ -6,6 +6,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve generic deferred per-player repeats in snapshots by explicitly mapping
+  source, player and repeated subability. Paid Azor/Sphinx's Decree witnesses
+  require next-turn instant/sorcery restrictions for all three opponents, allow
+  creatures, and verify expiry on following turns in independently advanced
+  original/one/two-copy worlds. Two original controls pass while eight copied
+  cases fail before correction; all ten pass afterward. All 155 related and
+  1,409 mixed source cases pass, retaining 1,399 and adding ten. Preserve the
+  initial fixture's incomplete permission query and its full-native-API correction.
+  Register fresh sealed 2,634 and packaged 1,477 targets; runtime gates remain
+  pending. See engine/deferred_repeat_evidence.json.
+
+- Verify the skipped-phase artifact with 2,624 native, 4,098 gameplay and 256
+  serialization cases, retaining all 2,609 earlier native methods. Packaged
+  65/194/146 cases pass; preserve the 1,467-case family's 90-second timeout as a
+  failed gate. No full-game/catalog phase or activation was performed. See
+  engine/skipped_phase_snapshot_runtime_evidence.json.
+
 - Correct copied skipped-phase callbacks generically: deferred effect entry and
   expiry now map their effect/source references into the owning snapshot world.
   Three normally paid original-game controls pass while 12 copied cases fail

@@ -27,15 +27,27 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source corrects skipped-phase start and expiry callbacks in
-copied games. Normally paid Moment of Silence, False Peace and Empty City Ruse
-controls pass in the original; all 12 copied cases fail before the fix and all 15
-pass afterward, including one/two copies advanced in either order. Related
-scheduling/cleanup/goad/control checks pass 145 cases, and the mixed source suite
-passes all 1,399, retaining 1,384 and adding 15. Fresh sealed 2,624, independent
-packaged 1,467/65/194/146, broader 4,098/256 and full-game/catalog validation remain
-pending. The earlier packaged timeout below remains unresolved; no runtime was
-activated. See [skipped-phase evidence](engine/skipped_phase_snapshot_evidence.json).
+The latest reviewed source preserves deferred per-player repeats in copied games.
+Normally paid Azor and Sphinx's Decree test the same generic callback: both
+original controls pass, eight copied cases fail before correction, and all ten
+pass afterward. Each checks three opponents' next-turn instant/sorcery
+restrictions, permitted creature casting, following-turn expiry and independent
+copies. All 155 related and 1,409 mixed source cases pass, retaining 1,399 and
+adding ten. Fresh sealed 2,634, packaged 1,477/65/194/146, broader 4,108/256 and
+full-game/catalog gates remain pending. These are rules witnesses; they do not
+establish autonomous admission or strategy for every card. See
+[deferred-repeat evidence](engine/deferred_repeat_evidence.json).
+
+The preceding skipped-phase candidate passes all 2,624 sealed native cases,
+retaining 2,609 and adding 15, with compiled changes confined to `SkipPhaseEffect`
+and its two explicit callbacks. Independent broader checks pass 4,098 gameplay
+and 256 serialization cases; packaged free-casting/untap/battle checks pass
+65/194/146. Its 1,467-case packaged family times out at the unchanged 90-second
+worker limit, so full-game and catalog phases have not run and no runtime was
+activated. The source fix retains original duration scheduling for Moment of
+Silence, False Peace and Empty City Ruse, with 15 paid witnesses and 145 related
+checks. See [source evidence](engine/skipped_phase_snapshot_evidence.json) and
+[runtime evidence](engine/skipped_phase_snapshot_runtime_evidence.json).
 
 The preceding commander-history correction fixes a crash exposed by full games:
 a surviving player can retain damage from a commander whose owner has left.

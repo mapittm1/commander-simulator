@@ -566,7 +566,27 @@ source ability. All 15 unchanged witnesses pass afterward, along with 145
 related and 1,399 mixed source cases. See
 [skipped_phase_snapshot_evidence.json](skipped_phase_snapshot_evidence.json).
 
-Source registration targets sealed 2,624, packaged 1,467/65/194/146 with 133
-verified production origins, broader 4,098/256 and unchanged fixed-seed complete
-games. All those runtime gates remain pending. The previous packaged timeout is
-preserved; the selected combat-reblocking runtime remains unchanged.
+The fresh artifact passes 2,624 native cases, retains all 2,609 earlier methods,
+and changes only `SkipPhaseEffect` plus its two new callback classes. Independent
+broader checks pass 4,098 gameplay and 256 serialization cases, and packaged
+65/194/146 cases pass. The 1,467-case packaged family times out at its unchanged
+90-second limit. No full-game/catalog phase ran for this candidate; it remains
+unactivated. See [runtime evidence](skipped_phase_snapshot_runtime_evidence.json).
+
+
+## Pending deferred per-player repeats
+
+`RepeatEachEffect` scheduled its next-turn subability with a plain cleanup
+closure. Replace that closure with an explicit snapshot callback mapping the
+source, target player and repeated subability. The original remembered-player
+swap and normal duration scheduling remain intact. Normally paid Azor and
+Sphinx's Decree controls pass in the original; eight copied cases lose their
+restrictions before correction. All ten unchanged witnesses pass afterward,
+along with 155 related and 1,409 mixed source cases. Native permission checks
+include both `canPlay` and `checkRestrictions`; preserve the initial probe that
+used only the first API. See [source evidence](deferred_repeat_evidence.json).
+
+Fresh sealed 2,634, independent packaged 1,477/65/194/146 with the same 133 unique
+production origins, broader 4,108/256, fixed-seed complete games and catalog gates
+remain pending. Existing AI card-admission flags and strategy are not certified
+by these paid rules tests. The prior packaged timeout remains a failed gate.
