@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated Harnessed/Class snapshot milestone. Pass 1,491 mixed
+  source, 2,716 native (all 2,652 previous methods retained), normal packaged
+  1,559/65/194/146 in 326.031s, broader 4,190 gameplay/256 serialization, and
+  45 full integration tests/2,612 subtests in 1,343.313s at unchanged seeds and
+  resource limits. Catalog construction passes 32,636 identities plus seven
+  reviewed nonstarting meld exclusions. Preserve the prior runtime and sealed
+  build, archive the lock, verify post-install health, and bind receipts in
+  engine/snapshot_designation_activation_evidence.json. Resolve the selected
+  runtime's Harnessed/Class gap status while retaining original failures.
+- Preserve a newly confirmed paid World snapshot gap: two original controls
+  pass while six copied timestamp/survivor cases fail. The Abyss/Teferi's
+  Protection/Nether Void witness pays real costs and checks independent worlds.
+  Record exact fixture, methods, failures and local receipts in
+  engine/world_snapshot_gaps.json. No World correction is selected, and complete
+  card/rules/AI correctness remains unproven.
+
 - Preserve generic Harnessed designations and Class levels in simulated and
   historical states. Keep ordinary in-game copy/new-object resets, control-change
   retention and level/designation retention under type changes. Paid Mind/Soul

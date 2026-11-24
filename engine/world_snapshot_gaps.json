@@ -1,0 +1,180 @@
+{
+  "status": "confirmed_paid_snapshot_gap",
+  "selected_runtime_affected": true,
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-snapshot-designations",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "1fe71202134455a45f6c4786c4bd49eac114ef4d843cb17b603505e6f5e24986",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "65953e07bfc34ef5e8077b08481b67d5ed75aa8df8518808f9b6034af021d73c",
+    "native_tests": {
+      "total": 2716,
+      "passed": 2716,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "99291091da7e452c16802935d5b356fac7b8a1903ee5258c92386f22c914ccbc",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 8,
+    "passed": 2,
+    "failed": 6,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderWorldStateTest.oneCopyAdvancesBeforeOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.oneCopyOriginalAdvancesFirst",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.oneCopyPreservesWorldTimestamp",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.originalPaidWorldGetsTimestamp",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.originalPhasingRetainsLaterWorld",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.twoCopiesAdvanceBeforeOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.twoCopiesOriginalAdvancesFirst",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderWorldStateTest.twoCopiesPreserveWorldTimestamp",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    "java.util.NoSuchElementException: No value present",
+    "java.util.NoSuchElementException: No value present",
+    "java.lang.AssertionError: A simulation snapshot preserves how long a permanent has been a World expected [151] but found [-1]",
+    "java.util.NoSuchElementException: No value present",
+    "java.util.NoSuchElementException: No value present",
+    "java.lang.AssertionError: A simulation snapshot preserves how long a permanent has been a World expected [151] but found [-1]"
+  ],
+  "fixture": {
+    "path": "engine/pending/world-state/CommanderWorldStateTest.java",
+    "sha256": "9bfc6eea8ac56136f8ef73c9c4bf740e5f82f23b374ab254930704df8a9a7756"
+  },
+  "baseline": {
+    "evidence.json": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/evidence.json",
+      "sha256": "a240c90d6596a371464ef3906d8c45d725c08ec5f4b374f5ccf83b1463ecc5d1"
+    },
+    "process.json": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/process.json",
+      "sha256": "3650b0a67df0fd3ed349780c6616c3ea531d5470deaab0622497cf7f04adbeca"
+    },
+    "native.log": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/native.log",
+      "sha256": "3951c94b3c9bbb3e54c925f10a24fa9c9fd504808ea34d707efd9223c798fe4a"
+    },
+    "reports/testng-results.xml": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/reports/testng-results.xml",
+      "sha256": "2b82cbfe8ff4f4c23a19397887ae296d15be9b8131b4a860f6bf0707ea54d5f3"
+    },
+    "rules-inputs.json": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/rules-inputs.json",
+      "sha256": "7cf4d399a53d2f427b4c8e69183d3b2baaf93716fbfed1a03b84ead7d87b06a9"
+    }
+  },
+  "driver": {
+    "path": "data/development/commander-multiplayer-attack-research/world-state-research/run_baseline_world8_v2.py",
+    "sha256": "b921f24960b1c65f4be1b46ed929855c1ee3ca753bf37a01ce9e577615300ddf"
+  },
+  "source_lead": {
+    "path": "data/development/commander-multiplayer-attack-research/world-state-research/source-lead-v1.json",
+    "sha256": "1ce03369e1d9020be21cf5378c3ecd5c504759f3bfeaa99420d242620de33007"
+  },
+  "production_origins": [
+    "forge.game.card.Card",
+    "forge.game.card.CardCopyService",
+    "forge.game.card.CardZoneTable",
+    "forge.game.GameAction",
+    "forge.game.Game",
+    "forge.game.phase.PhaseHandler",
+    "forge.ai.simulation.GameCopier",
+    "forge.ai.simulation.GameSimulator",
+    "forge.game.ability.effects.PhasesEffect",
+    "forge.game.spellability.SpellAbilitySnapshot"
+  ],
+  "controls": [
+    "Pay 3B to cast The Abyss and verify its World timestamp.",
+    "Cast Ornithopter afterward to advance game time without restarting the World timestamp.",
+    "Pay 2W for Teferis Protection; phase The Abyss out, then another player pays 3B for Nether Void.",
+    "Advance actual turns through phase-in; the original game retains the later Nether Void."
+  ],
+  "observations": [
+    "Both original paid controls pass.",
+    "One/two simulation copies reset the World timestamp from 151 to -1.",
+    "Four copied phase-in cases fail to find the later Nether Void on the battlefield, in either advancement order; inspect native stacks for exact failure locations."
+  ],
+  "required_followup": [
+    "Preserve all8 baseline cases and original controls.",
+    "Correct generic snapshot/history state without card-name production conditions.",
+    "Keep ordinary in-game copy/new-object timestamp semantics separate from simulation copying.",
+    "Expand witnesses to historical states, ordinary copies, control/zone/type changes, and simultaneous World entry as appropriate.",
+    "Run focused, related, source, native, packaged, broader, fixed-seed full-game and catalog gates before selecting a World correction."
+  ],
+  "limits": "This eight-case paid diagnostic proves a bounded copied-state defect, not full World-mechanic coverage or complete card/rules correctness. The milestone activation fixes separate Harnessed/Class gaps, not this new World gap."
+}
