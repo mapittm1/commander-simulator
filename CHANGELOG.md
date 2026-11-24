@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated World snapshot milestone: 1,522 mixed source, 2,747
+  native (all 2,716 previous methods retained), normal packaged
+  1,590/65/194/146 in 285.188s, broader 4,221 gameplay/256 serialization,
+  and 45 full tests/2,643 subtests in 1241.469s at unchanged seeds and limits.
+  Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+  meld exclusions. Preserve the prior runtime and sealed build, verify installed
+  resource bytes and post-install health, archive the lock and bind receipts in
+  engine/world_snapshot_activation_evidence.json. Resolve the selected World's
+  snapshot-gap status while preserving all original failures.
+- Preserve a separate confirmed exert snapshot gap: both paid original Arena of
+  Glory controls pass, while six copied state/untap cases fail. Use actual exert
+  mana spent on Furnace Whelp and first/second owner untap outcomes. Record exact
+  fixtures, methods and receipts in engine/exert_snapshot_gaps.json. No exert
+  correction is selected; full card/rules/AI correctness remains unproven.
+
 - Preserve World age in generic simulation and historical snapshots. Keep new
   age for ordinary copies and paid re-entry, age retention through control and
   ability changes, simultaneous-entry ties, and independent temporary-copy

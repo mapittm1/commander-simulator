@@ -27,49 +27,38 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source preserves World-permanent age in simulation snapshots
-and private history. The expanded baseline passes 14 controls and fails 17
-snapshot/history cases; the generic three-file correction passes all 31 cases,
-all 374 related cases and all 1,522 mixed source cases (1,491 retained). Paid
-witnesses cover phasing and actual World-rule survivors, ordinary Copy Enchantment,
-Boomerang/re-entry, Donate, Song of the Dryads/Naturalize, simultaneous Replenish
-entry, and independent Mirage Mirror expiration. The earlier source build stopped
-on two unused test imports before tests ran; that failed log is preserved.
+The selected runtime is `2.0.16-583714b-reviewed-world-snapshot`.
+It preserves existing World-permanent age in simulation snapshots and private
+history. Ordinary copy spells and paid re-entry start a new age; control changes
+and ability suppression/restoration retain it. Paid cases cover phase-in survivors,
+Copy Enchantment, Boomerang/re-entry, Donate, Song of the Dryads/Naturalize,
+simultaneous Replenish entry and independent Mirage Mirror expiration. The
+preserved 31-case baseline passes 14 controls/fails 17 snapshot/history cases;
+the correction passes all 31, all 374 related cases and all 1,522 mixed source
+cases (1,491 retained). Three generic production files change; card scripts and
+AI profiles are unchanged. The earlier unused-import Checkstyle stop is preserved.
 
-Register the exact fixtures and patch for a fresh 2,747-native build, packaged
-1,590/65/194/146 cases, and 137 production-class origins. Independent packaged,
-broader 4,221/256, full-game and catalog gates remain pending. Card scripts and
-AI profiles are unchanged. The installed runtime below still has the World gap.
-See [World source evidence](engine/world_snapshot_evidence.json).
-
-The selected runtime is `2.0.16-583714b-reviewed-snapshot-designations`.
-It preserves existing harnessed designations and Class levels in simulation
-snapshots and private history, including when a type change suppresses abilities.
-Ordinary copy spells and new permanents keep their reset behavior. Paid Mind/Soul
-Stone and Wizard Class witnesses exercise actual costs, draws, phase outcomes,
-independent worlds, history, control changes, re-entry, and type restoration.
-The preserved 64-case baseline passes 20 controls/fails 44 copied cases; the
-correction passes all 64, all 343 related cases and all 1,491 mixed source cases.
-Only two generic production files change; card data and AI profiles are unchanged.
-
-The installed milestone passes all 2,716 native methods, retaining all 2,652
-previously selected methods. Its normal packaged gate passes 1,559/65/194/146
-cases in 326.031 seconds with unchanged resource limits. Broader checks pass
-4,190 gameplay/256 serialization cases. All 45 full integration tests and 2,612
-subtests pass in 1,343.313 seconds, including unchanged seeds 42/0/4096. Catalog
+The installed milestone passes all 2,747 native methods, retaining all 2,716
+previously selected methods. Normal packaged validation passes 1,590/65/194/146
+cases in 285.188 seconds with unchanged resource limits; broader checks pass
+4,221 gameplay/256 serialization cases. All 45 full integration tests and 2,643
+subtests pass in 1241.469 seconds at unchanged seeds 42/0/4096. Catalog
 construction passes 32,636 identities with seven reviewed nonstarting meld
 results. Installation preserves the prior runtime and sealed build and verifies
-post-install health. See [source evidence](engine/snapshot_designation_evidence.json)
-and [activation evidence](engine/snapshot_designation_activation_evidence.json).
+post-install health. See [source evidence](engine/world_snapshot_evidence.json)
+and [activation evidence](engine/world_snapshot_activation_evidence.json).
+The preceding Harnessed/Class corrections remain included; their original
+failures and validation are preserved in
+[the preceding milestone](engine/snapshot_designation_activation_evidence.json).
 
-A separate paid World-permanent snapshot gap is now confirmed. Both original
-controls pass, but all six one/two-copy cases fail: copied World timestamps reset
-to -1 and the later Nether Void is missing after the phase-in survivor check.
-The preserved fixture uses actual The Abyss, Teferi's Protection and Nether Void
-costs and independent original/copied advancement. This milestone does not fix
-that gap. See [World snapshot evidence](engine/world_snapshot_gaps.json).
-Full card, rules and AI strategy correctness remain incomplete; catalog
-construction and passing selected cases do not certify complete support.
+A separate paid exertion snapshot gap remains confirmed. Both original Arena of
+Glory controls pass, including actual exert mana spent on Furnace Whelp and the
+first/second owner untaps; all six one/two-copy cases fail. Copied exert counters
+or per-player restrictions are missing, and copy-first cases untap Arena too soon.
+This World milestone does not fix that defect. See
+[exert snapshot evidence](engine/exert_snapshot_gaps.json). Full card, rules and AI
+strategy correctness remain incomplete; catalog construction and supplied
+passing cases do not certify complete support.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

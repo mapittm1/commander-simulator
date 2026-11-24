@@ -1,0 +1,186 @@
+{
+  "status": "confirmed_paid_snapshot_gap",
+  "selected_runtime_affected": true,
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-world-snapshot",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "3491039ce12f297cf63f593b266d99c22092a57332f193f326fb159c330e605a",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "b3c130f2284a772293edfdddb7a9b440c3bb1569bb10dfc53aca84f6e58e6db1",
+    "native_tests": {
+      "total": 2747,
+      "passed": 2747,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "f655e15b2e50432bd290c2074c503c54fd337a22a03443a43eafa7319b8e429c",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 8,
+    "passed": 2,
+    "failed": 6,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderExertStateTest.oneCopyAdvancesBeforeOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.oneCopyOriginalAdvancesFirst",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.oneCopyRetainsExertState",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.originalPaysExertManaAndCastsCreature",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.originalSkipsOnlyFirstOwnerUntap",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.twoCopiesAdvanceBeforeOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.twoCopiesOriginalAdvancesFirst",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExertStateTest.twoCopiesRetainExertState",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    "java.lang.AssertionError: The first actual owner untap skips the exerted permanent expected [true] but found [false]",
+    "java.lang.AssertionError: Advancing one world must not consume the other's exert restriction expected [true] but found [false]",
+    "java.lang.AssertionError: expected [1] but found [0]",
+    "java.lang.AssertionError: The first actual owner untap skips the exerted permanent expected [true] but found [false]",
+    "java.lang.AssertionError: Advancing one world must not consume the other's exert restriction expected [true] but found [false]",
+    "java.lang.AssertionError: expected [1] but found [0]"
+  ],
+  "fixture": {
+    "path": "engine/pending/exert-state/CommanderExertStateTest.java",
+    "sha256": "f13e0ff3a5cbaca03f67b3d9b97693f0a08f3bed6a0f48153ab217d01657c6ec"
+  },
+  "baseline": {
+    "evidence.json": {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/evidence.json",
+      "sha256": "ed89b49b8a59b96e2069ca247700f3a5cbe2106d611a7a3fb8b0c542512ff4ad"
+    },
+    "process.json": {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/process.json",
+      "sha256": "354879d76062e855f1f61c43f04aeeb872e93c0139ad0463b7d48930819179ca"
+    },
+    "native.log": {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/native.log",
+      "sha256": "9081c5a783ffee10ffa6b09aaf56cc195de43f9d5eb1635c3838f82678848f23"
+    },
+    "reports/testng-results.xml": {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/reports/testng-results.xml",
+      "sha256": "febe758a09a9fba5570d017baf00b2f632cbb4ddf2ca2f6798fa24370521e6f0"
+    },
+    "rules-inputs.json": {
+      "path": "data/development/commander-multiplayer-attack-research/exert-state-research/baseline-exert8-v1/rules-inputs.json",
+      "sha256": "d140a1fc29393965e80183d405f11674ca220ddbeee5dcb9a6f5f92c6530cec6"
+    }
+  },
+  "driver": {
+    "path": "data/development/commander-multiplayer-attack-research/exert-state-research/run_baseline_exert8_v1.py",
+    "sha256": "f7cb0996a98228195348ff466eaf499f81221e543ca7f71fd0ee15ef183af36f"
+  },
+  "source_lead": {
+    "path": "data/development/commander-multiplayer-attack-research/exert-state-research/source-lead-v1.json",
+    "sha256": "3aa1c1dd390e7e380c27288da54ea266eb5de76fb93089e4a4fd82c2bb3736d9"
+  },
+  "production_origins": [
+    "forge.game.card.Card",
+    "forge.game.card.CardCopyService",
+    "forge.game.card.CardZoneTable",
+    "forge.game.GameAction",
+    "forge.game.Game",
+    "forge.game.phase.PhaseHandler",
+    "forge.game.phase.Untap",
+    "forge.ai.simulation.GameCopier",
+    "forge.ai.simulation.GameSimulator",
+    "forge.game.cost.CostExert",
+    "forge.game.spellability.SpellAbilitySnapshot"
+  ],
+  "controls": [
+    "Pay the native Arena of Glory exert mana ability and spend its mana on an actual Furnace Whelp cast; verify haste.",
+    "Original exert count and per-player restriction are present. The first actual owner untap skips Arena; the second untaps it normally."
+  ],
+  "observations": [
+    "Both original paid controls pass.",
+    "One/two copied states lose exert count (expected 1, observed 0) or the per-player exert restriction.",
+    "Copy-first cases untap Arena during the first owner untap. Original-first cases expose the missing copied restriction before advancing that copy; they do not prove cross-world mutation."
+  ],
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020260417.pdf"
+  ],
+  "rules_sections": [
+    "701.43a",
+    "701.43b",
+    "701.43c"
+  ],
+  "required_followup": [
+    "Preserve all eight baseline cases, actual costs, creature cast and original untap controls.",
+    "Implement generic snapshot/history copying with mapped players and independent collections, without production card-name conditions.",
+    "Expand history, repeated exertion, untap effects, zone/control transitions and real attack exertion as appropriate.",
+    "Run focused, related, source, sealed, packaged, broader, full integration and catalog gates before selecting an exert correction."
+  ],
+  "limits": "A bounded paid diagnostic proves an exert snapshot defect in the selected World milestone. No exert correction is adopted. It does not certify all exert mechanics or full card/rules/AI correctness."
+}

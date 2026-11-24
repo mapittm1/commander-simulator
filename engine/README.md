@@ -9,18 +9,21 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The latest source correction preserves existing World age in simulation and
-historical copies without changing ordinary in-game copy or new-object behavior.
-The 31-case baseline passes 14 controls/fails 17; the correction passes all 31,
-all 374 related and all 1,522 mixed source cases. Paid cases include phase-in
-survivors, private history, ordinary copies, re-entry, control changes, suppression
-and restoration, simultaneous World entry, and temporary-copy expiration. The
-initial source build stopped on two unused fixture imports; its failed artifacts
-remain preserved. See the [patch](patches/commander-world-snapshot.patch) and
-[source evidence](world_snapshot_evidence.json). Fresh 2,747 native, packaged
-1,590/65/194/146, broader, full-game and catalog gates remain pending. The selected
-2,716-case snapshot-designation runtime is unchanged and still has this World gap.
-Complete card/rules/AI correctness remains unproven.
+The selected runtime is the reviewed World snapshot milestone. Three generic
+files preserve World age in simulation and historical copies while retaining
+ordinary-copy/new-object behavior. All 31 expanded cases, 374 related cases,
+1,522 mixed source, 2,747 native, normal packaged 1,590/65/194/146, broader
+4,221/256 and 45 full integration tests/2,643 subtests pass. Catalog construction
+passes 32,636 identities with seven reviewed nonstarting meld results. Preserve
+the original failures and unused-import Checkstyle stop. The previous runtime
+and sealed build remain available; installation verifies resource bytes and
+health. See [activation evidence](world_snapshot_activation_evidence.json).
+
+A separate paid exert snapshot gap remains: both original Arena of Glory controls
+pass, but six copied state/untap cases fail. Its fixture pays native exert costs,
+spends that mana on Furnace Whelp and tests actual first/second owner untaps.
+See [exert evidence](exert_snapshot_gaps.json). No exert correction or complete
+card/rules/AI support is claimed.
 
 The earlier milestones below describe validation and selections at their time.
 
