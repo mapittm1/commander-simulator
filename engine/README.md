@@ -9,50 +9,41 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected runtime is `2.0.16-583714b-reviewed-waterbend-filter`.
-The generic filter correction carries outer payment reservations through nested
-mana generation, protects pending tap sources and supports simple fixed
-any-color/non-increasing filters. Direct sources take priority over costly
-conversion, and repeated sacrifice resources are planned independently.
-One production file changes; card scripts and AI profiles remain unchanged.
+The selected runtime is `2.0.16-583714b-reviewed-mana-activation`.
+Shared mana planning supports repeated plain color conversion and checks actual
+and projected activation budgets, including repeatable life and sacrifice
+sources. Snapshots preserve card entry turns across zones, so older permanents
+keep their actual entry-dependent costs. Two production source files and seven
+existing classes change; card scripts and AI profiles are unchanged.
 
-Its native assessment API reports a payment found with the current preference,
-a payment found with the sacrifice-value preference relaxed, or no payment found.
-These describe bounded native searches; no-plan is not proof that every payment
-is illegal. Normal play retains its strategy preference. The API is not yet
-connected to CLI/UI diagnostics.
-
-All 33 focused and 1,918 source cases pass. The selected build passes 3,142
-native cases, retaining all previous 3,109. Independent packaged checks pass
-1,985/65/194/146 cases with 161 production origins verified. Broader suites pass
-4,616 gameplay and 256 serialization cases. Full integration passes 45 tests
-and 3,038 subtests in 1023.093 seconds at unchanged seeds and resource limits.
+All 138 focused and 2,023 source cases pass. The selected build passes 3,247
+native cases, retaining every previous 3,142. Independent packaged checks pass
+2,090/65/194/146 cases with 163 production origins verified. Broader suites pass
+4,721 gameplay and 256 serialization cases. Full integration passes 45 tests
+and 3,143 subtests in 1014.172 seconds at unchanged seeds and resource limits.
 Catalog construction passes 32,636 identities plus seven reviewed nonstarting
-meld results. Installed bytes and engine health are verified.
+meld results. Installed bytes and engine health are verified; previous runtimes
+and the sealed build remain available.
 
-Native ordered witnesses demonstrate legal payments that the AI may choose to
-decline. Earlier failed automatic-play expectations, partial prototypes and
-corrected rollback/shuffle assertions remain preserved. Previous runtimes and
-sealed builds remain available. See [source evidence](waterbend_filter_evidence.json),
-[runtime evidence](waterbend_filter_runtime_evidence.json) and
-[activation evidence](waterbend_filter_activation_evidence.json).
+The native mana assessment API reports bounded search observations: a payment
+found normally, a payment found without the sacrifice-value preference, or no
+payment found. Normal play retains that preference. No-plan is not proof that
+all payments are illegal; CLI/UI diagnostic integration remains unfinished.
+
+The earlier prototype fails 48 of the same 138 controls. That result, the failed
+161-origin Python assertion, corrected 163-origin gate, earlier fixture errors
+and all source versions remain preserved. The sealed native build and later
+validation use separately recorded commits; explicit input comparison proves
+that the verifier-only correction did not change engine inputs. See
+[source evidence](mana_activation_budget_evidence.json),
+[runtime evidence](mana_activation_budget_runtime_evidence.json) and
+[activation evidence](mana_activation_budget_activation_evidence.json).
 
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed
-corrections remain included. Complete card/rules/AI support remains unproven;
-repeated/chained conversion, variable-X waterbend and user-facing diagnostic
-integration require further work.
-
-The repeated-mana correction is now registered after 138 focused and 2,023
-source cases pass, retaining every earlier case. Generic previews account for
-actual and planned activation budgets, including life and sacrifice sources;
-snapshots preserve entry turns so older permanents keep their actual costs.
-The earlier prototype fails 48 of the same 138 controls. A fresh candidate
-passes all 3,247 native cases, retaining the previous 3,142, with complete source
-parity and class changes restricted to the two reviewed source families.
-Independent 2,090/65/194/146 packaged cases with 163 origins, broader suites,
-full integration, catalog and installation gates remain pending.
-The installed runtime above is unchanged and affected by these gaps. See
-[activation-budget evidence](mana_activation_budget_evidence.json).
+corrections remain included. Complete card/rules/AI support remains unproven.
+Chained filtering, more colored-cost allocations, variable-X waterbend,
+activation-cost modifiers, state-dependent limits and user-facing assessment
+diagnostics require further work.
 
 The earlier milestones below describe validation and selections at their time.
 

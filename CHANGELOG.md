@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated shared mana-activation runtime after all 138 focused,
+  2,023 source and 3,247 native cases pass, retaining every prior 3,142 native
+  case. Independent 2,090/65/194/146 packaged checks verify 163 origins; broader
+  4,721 gameplay/256 serialization and full 45 tests/3,143 subtests pass at
+  unchanged seeds and limits. Catalog construction passes 32,636 identities
+  plus seven reviewed nonstarting meld results. Verify all copied runtime bytes
+  and installed health, retaining the prior runtime and sealed build. Two source
+  files/seven existing classes change; scripts and AI profiles are unchanged.
+  Preserve both validation epochs, the verifier-only input comparison, the
+  failed stale-origin assertion and all earlier prototype/fixture failures.
+  Chained/colored allocations, variable-X waterbend, cost modifiers, dynamic
+  limits, diagnostics and complete card/rules/AI support remain unfinished.
+  See engine/mana_activation_budget_activation_evidence.json.
+
 - Verify the fresh candidate's 3,247 native cases, retaining all previous 3,142,
   complete production-source parity and changes limited to the two reviewed
   families. Preserve the first packaged attempt: 706 method results pass, then
