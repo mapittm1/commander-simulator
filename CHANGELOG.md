@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated elemental-history milestone: 1,709 source, 2,934 native
+  (all 2,882 previous methods retained), independent packaged 1,777/65/194/146
+  in 307.875s, broader 4,408 gameplay/256 serialization and all 45 full tests/
+  2,830 subtests in 1259.875s at unchanged seeds/limits. Catalog construction
+  passes 32,636 identities plus seven reviewed nonstarting meld results.
+  Verify installed bytes/health and preserve the previous runtime and both
+  candidate builds. Resolve the selected elemental-history gap; register all
+  25 elemental, 21 Airbend and six supplementary departed-counter cases.
+  Only Player/GameCopier production families change; scripts and AI profiles
+  are unchanged. Preserve every earlier failed/setup phase, including the stale
+  integration assertions. See engine/elemental_bend_activation_evidence.json.
+  Full card/rules/AI support remains unproven.
+
 - Correct stale opt-in integration expectations after expanding the registry:
   require all 1,777 cases and all 145 production origins. Preserve the first
   packaged run: its 301 first-partition cases passed, but its old 143-class

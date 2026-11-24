@@ -9,45 +9,28 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-Generic elemental-history restoration is registered after all 1,709 combined
-source cases pass, retaining 1,657. The native/package targets are 2,934/1,777
-with 145 production origins, pending fresh runtime validation. See
-[source evidence](elemental_bend_evidence.json). The installed runtime is unchanged.
+The selected runtime is the reviewed elemental-history milestone. Two generic
+production files preserve each player's independent elemental-action set without
+replaying bend events. The 25-case baseline passes 11/fails 14; correction passes
+all 25 and 408 related contracts. Combined source validation passes 1,709 cases,
+retaining 1,657; all 2,934 native methods pass, retaining 2,882.
 
-A newly confirmed elemental-history gap remains in the selected runtime.
-The baseline passes 11/fails 14 of 25 paid/native cases; an independent
-Player/GameCopier prototype passes all 25 and all 408 related copy contracts.
-See [gap and prototype evidence](elemental_bend_gaps.json). Pending sources and
-patches are preserved under `pending/elemental-bend`; recipe registration is
-complete, while runtime activation remains pending.
-All 21 supplementary Airbend permission/cost cases pass without a production
-change; see [Airbend evidence](airbend_permission_evidence.json). These cases
-are now registered for the pending candidate and do not change installed totals.
+Independent packaged checks pass 1,777/65/194/146 in 307.875s, broader suites pass
+4,408 gameplay/256 serialization and full integration passes 45 tests/2,830
+subtests in 1259.875s under unchanged seeds and limits. Catalog construction
+passes 32,636 identities plus seven reviewed nonstarting meld results.
+Installation verifies copied resources and health while preserving the previous
+runtime and both sealed candidate builds. See [activation evidence](elemental_bend_activation_evidence.json)
+and [source evidence](elemental_bend_evidence.json).
 
-The selected runtime is the reviewed counter-history milestone. Two generic
-production files preserve placement/removal receipts in independent mapped
-collections without replaying counter events. The 53-case baseline passes 17
-original controls and fails 36 copies; correction passes all 53, all 408 related
-cases and 1,657 source cases, retaining 1,604. The installed build passes 2,882
-native methods, retaining all 2,829; normal packaged checks pass 1,725/65/194/146,
-broader checks pass 4,356/256 and full integrations pass 45 tests/2,778 subtests.
-Catalog construction passes 32,636 identities plus seven reviewed nonstarting
-meld results. Prior runtime and sealed build remain preserved; installation
-verifies resource bytes and health. See [activation evidence](counter_history_activation_evidence.json)
-and [source evidence](counter_history_evidence.json).
-
-Paid casts/activations verify actual token/draw/cost outcomes, pending-spell
-copies, private receipt isolation, zone/controller/type changes, player filters
-and native cleanup. No card scripts or AI profiles change. The supplied gap is
-corrected, while full counter/card/rules/AI support remains unproven. Preserve
-all earlier phases, failures and setup-error artifacts.
-
-Supplementary departed-payer/owner receipt tests pass all 59 cases, retaining 53
-existing methods and adding six original/one/two-copy controls. The prior runtime
-passes 19/fails 40; selected runtime passes all 59, including independent private
-history and actual Hornbeetle tokens. No production changes; the added six cases
-are registered for the pending candidate and do not change installed totals. See
-[supplementary evidence](counter_history_departed_evidence.json).
+The registered additions include six departed-counter, 21 Airbend permission/cost
+and 25 elemental-history cases. Only Player and GameCopier families change;
+card scripts and AI profiles are unchanged. Preserve the failed combat setup,
+corrected controls and first candidate's stale integration assertion failure.
+The latter failed after its first 301-case partition passed because the wrapper
+still expected 143 origins; the corrected gate requires all 145 and all 1,777
+cases. See [gap history](elemental_bend_gaps.json). Full card/rules/AI correctness
+remains unproven.
 
 The earlier milestones below describe validation and selections at their time.
 

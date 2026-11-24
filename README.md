@@ -27,70 +27,38 @@ difference.
 
 ## Card coverage
 
-The first fresh candidate passes all 2,934 native methods and source parity.
-Its first packaged attempt stopped on a stale integration assertion after the
-301-case first partition passed: the registry now has 145 production origins,
-while that assertion still expected 143. Three companion groups passed. The
-assertion and total-case expectations are corrected to 145/1,777; fresh packaged
-and full validation remain required. The failed run is preserved.
+The selected runtime is `2.0.16-583714b-reviewed-elemental-history`.
+It preserves each player's independent set of elemental actions when copying a
+simulation, without replaying bending events. This corrects Avatar Aang failing
+to transform after the fourth distinct element in a copied game. The 25-case
+baseline passes 11/fails 14; the generic two-file correction passes all 25 and
+408 retained copy contracts. Tests cover actual paid bending, native combat,
+pending spells, repeated elements, turn reset and original/copy independence.
+See [source evidence](engine/elemental_bend_evidence.json).
 
-The generic elemental-history fix is now registered for a fresh build. Combined
-source validation passes all 1,709 cases, retaining every prior 1,657 and adding
-six departed-counter, 21 Airbend permission and 25 elemental-history cases.
-The registered targets are 2,934 native and 1,777 packaged cases; these are
-pending gates, not completed runtime results. The installed runtime remains
-unchanged and affected. See [source evidence](engine/elemental_bend_evidence.json).
+Combined source validation passes all 1,709 cases, retaining 1,657. The selected
+build passes all 2,934 native methods, retaining every prior 2,882. Independent
+packaged checks pass 1,777/65/194/146 cases in 307.875 seconds; broader suites pass
+4,408 gameplay/256 serialization cases. All 45 full integration tests and
+2,830 subtests pass in 1259.875 seconds at unchanged seeds 42/0/4096 and limits.
+Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+meld results. Installation verifies copied bytes and post-install health while
+preserving the prior runtime and both candidate builds.
+See [activation evidence](engine/elemental_bend_activation_evidence.json).
 
-A supplementary review confirms an elemental-action history gap in the selected
-runtime: the 25-case baseline passes 11 and fails 14, while a generic two-file
-prototype passes all 25 and 408 retained copy contracts. The gap can prevent
-Avatar Aang from transforming after a copied game completes its fourth element.
-The prototype preserves each player's independent history without repeating
-bending events. It is not activated; fresh build and full gates remain pending.
-The original combat-setup failure and corrected controls are preserved in
-[elemental evidence](engine/elemental_bend_gaps.json).
+The 52 registered additions include six departed-player counter receipts,
+21 Airbend permission/cost cases and 25 elemental-history cases. Airbend checks
+cover owner-only casts, normal timing, pending spells, cost increases/reductions
+and mandatory additional sacrifices. Only Player and GameCopier production
+families change; card scripts and AI profiles are unchanged. Prior counter,
+Aura, exert and other reviewed corrections remain included.
 
-Separately, all 21 supplementary Airbend permission/cost cases pass in the selected
-runtime, including owner-only casts, timing, additional costs and copied pending
-spells. See [Airbend evidence](engine/airbend_permission_evidence.json). These cases
-are now registered for the pending candidate and do not change the installed
-sealed totals below.
-
-The selected runtime is `2.0.16-583714b-reviewed-counter-history`.
-It preserves counter placement and removal history in independent tables and
-private historical receipts, mapping players and cards into each copied game
-without placing counters again or repeating triggers. Paid witnesses verify
-Hornbeetle tokens, Danny Pink draws, Pummeler energy payments, Blaster Hulk cost
-reductions, Generatorium draws and Reservoir tokens. They also check independent
-copies, pending spells, changed zones/controllers/types, per-player filters,
-private historical cards and native cleanup. The 53-case baseline passes 17
-original controls and fails 36 copies; the correction passes all 53 and all 408
-retained related cases. Original nine/41-case phases, the placement-only prototype,
-and setup failures remain preserved. See [source evidence](engine/counter_history_evidence.json).
-
-Combined source validation passes 1,657 cases, retaining all 1,604 previous cases.
-The installed build passes 2,882 native methods, retaining all 2,829. Independent
-packaged validation passes 1,725/65/194/146 cases in 305.906 seconds
-under unchanged limits; broader checks pass 4,356 gameplay/256 serialization
-cases. All 45 full integration tests and 2,778 subtests pass in 1250.359
-seconds at unchanged seeds 42/0/4096. Catalog construction passes 32,636 identities
-with seven reviewed nonstarting meld results. Installation preserves the prior
-runtime and sealed build, verifies runtime bytes and checks post-install health.
-See [activation evidence](engine/counter_history_activation_evidence.json).
-
-The supplied counter-history gap is corrected in this selected runtime. Only
-Game and GameCopier production families change; card scripts and AI profiles
-are unchanged. Prior Aura/exert/World/Harnessed/Class corrections and their
-[evidence](engine/simultaneous_aura_activation_evidence.json) remain preserved.
-Complete counter, card, rules and AI correctness remain unproven; supplied
-interactions and catalog construction do not certify complete support.
-
-Supplementary departed-participant checks pass all 59 cases (53 retained plus
-six new) against the selected runtime. The prior runtime passes 19 original
-controls/fails 40 copies. These cases verify departed payer keys, private cards
-whose owners left the game, independent references and native end-step tokens.
-The six added cases are registered for the pending candidate and do not change
-the installed sealed counts above. See [supplementary evidence](engine/counter_history_departed_evidence.json).
+The original combat-setup failure, corrected controls and first candidate's
+stale integration assertion failure are preserved. The corrected assertion
+requires all 145 production origins and all 1,777 packaged cases. The supplied
+elemental-history gap is corrected in the selected runtime; complete card,
+rules and AI correctness remain unproven. Catalog construction is not a proof
+of every interaction. See [gap history](engine/elemental_bend_gaps.json).
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
