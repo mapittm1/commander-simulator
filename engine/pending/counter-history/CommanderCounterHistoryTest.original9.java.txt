@@ -1,0 +1,149 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.ai.simulation.GameSimulator;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.card.CounterEnumType;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Paid counter placements distinguish turn history from current counter totals. */
+public class CommanderCounterHistoryTest extends AITest {
+    private Player actor(Game game) {
+        return game.getPlayers().stream().filter(player -> player.getName().equals("counter-0"))
+                .findFirst().orElseThrow();
+    }
+
+    private Card named(Game game, String name, ZoneType zone) {
+        return actor(game).getCardsIn(zone, false).stream()
+                .filter(card -> card.getName().equals(name)).findFirst().orElseThrow();
+    }
+
+    private void absent(Game game, String name, ZoneType zone) {
+        assertTrue(actor(game).getCardsIn(zone, false).stream().noneMatch(card -> card.getName().equals(name)),
+                name + " must not be in " + zone);
+    }
+
+    private void beginCast(Game game, String name, Card target, int mana) {
+        SpellAbility ability = addCardToZone(name, actor(game), ZoneType.Hand).getFirstSpellAbility();
+        ability.setActivatingPlayer(actor(game));
+        if (target != null) ability.getTargets().add(target);
+        assertTrue(ability.canPlay() && ability.checkRestrictions(ability.getHostCard(), actor(game)));
+        assertTrue(ComputerUtil.playStack(ability, actor(game), game));
+        assertEquals(game.getStack().peekAbility().getPayingMana().size(), mana);
+    }
+
+    private void cast(Game game, String name, Card target, int mana) {
+        beginCast(game, name, target, mana);
+        GameSimulator.resolveStack(game, actor(game));
+    }
+
+    private Game setup() {
+        List<RegisteredPlayer> players = new ArrayList<>();
+        for (int index = 0; index < 4; index++) players.add(RegisteredPlayer.forCommander(new Deck())
+                .setPlayer(new LobbyPlayerAi("counter-" + index, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(players, rules, new Match(rules, players, "Turn counter history"));
+        game.setNoGUIUser();
+        game.setAge(GameStage.Play);
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int index = 0; index < 24; index++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        for (int index = 0; index < 8; index++) {
+            addCardToZone("Plains", actor(game), ZoneType.Battlefield);
+            addCardToZone("Forest", actor(game), ZoneType.Battlefield);
+            addCardToZone("Island", actor(game), ZoneType.Battlefield);
+        }
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(game), 5);
+        return game;
+    }
+
+
+    private Game snapshot(Game game, int depth) {
+        game.copyLastState();
+        for (int index = 0; index < depth; index++) game = new GameCopier(game).withStack(true).makeCopy(null, actor(game));
+        return game;
+    }
+
+    private void history(int depth) {
+        Game original = setup();
+        cast(original, "Grizzly Bears", null, 2);
+        Card bear = named(original, "Grizzly Bears", ZoneType.Battlefield);
+        cast(original, "Battlegrowth", bear, 1);
+        assertEquals(bear.getCounters(CounterEnumType.P1P1), 1);
+        assertEquals(original.getCounterAddedThisTurn(CounterEnumType.P1P1, bear), 1);
+        Game game = snapshot(original, depth);
+        Card copied = named(game, "Grizzly Bears", ZoneType.Battlefield);
+        assertEquals(copied.getCounters(CounterEnumType.P1P1), 1);
+        assertEquals(game.getCounterAddedThisTurn(CounterEnumType.P1P1, copied), 1,
+                "A simulation snapshot preserves earlier counter-placement history");
+        assertEquals(original.getCounterAddedThisTurn(CounterEnumType.P1P1, bear), 1);
+    }
+
+    private void insects(int depth) {
+        Game original = setup();
+        cast(original, "Iridescent Hornbeetle", null, 5);
+        cast(original, "Grizzly Bears", null, 2);
+        Card bear = named(original, "Grizzly Bears", ZoneType.Battlefield);
+        cast(original, "Battlegrowth", bear, 1);
+        cast(original, "Battlegrowth", bear, 1);
+        assertEquals(bear.getCounters(CounterEnumType.P1P1), 2);
+        assertEquals(original.getCounterAddedThisTurn(CounterEnumType.P1P1, bear), 2);
+        Game game = snapshot(original, depth);
+        assertTrue(game.getPhaseHandler().devAdvanceToPhase(PhaseType.END_OF_TURN,
+                () -> GameSimulator.resolveStack(game, actor(game))));
+        GameSimulator.resolveStack(game, actor(game));
+        List<Card> tokens = actor(game).getCardsIn(ZoneType.Battlefield).stream().filter(Card::isToken).toList();
+        assertEquals(tokens.size(), 2, "Native Hornbeetle trigger counts both paid placements earlier this turn");
+        for (Card token : tokens) {
+            assertEquals(token.getNetPower(), 1);
+            assertEquals(token.getNetToughness(), 1);
+            assertTrue(token.getType().hasCreatureType("Insect"));
+        }
+        if (depth > 0) assertTrue(actor(original).getCardsIn(ZoneType.Battlefield).stream().noneMatch(Card::isToken));
+    }
+
+    private void firstTime(int depth) {
+        Game original = setup();
+        cast(original, "Danny Pink", null, 4);
+        cast(original, "Grizzly Bears", null, 2);
+        Card bear = named(original, "Grizzly Bears", ZoneType.Battlefield);
+        int library = actor(original).getCardsIn(ZoneType.Library).size();
+        cast(original, "Battlegrowth", bear, 1);
+        assertEquals(actor(original).getCardsIn(ZoneType.Library).size(), library - 1,
+                "The first actual counter placement draws once");
+        Game game = snapshot(original, depth);
+        Card copied = named(game, "Grizzly Bears", ZoneType.Battlefield);
+        cast(game, "Battlegrowth", copied, 1);
+        assertEquals(copied.getCounters(CounterEnumType.P1P1), 2);
+        assertEquals(actor(game).getCardsIn(ZoneType.Library).size(), library - 1,
+                "A second placement on the same creature this turn does not trigger another Danny Pink draw");
+        if (depth > 0) {
+            assertEquals(bear.getCounters(CounterEnumType.P1P1), 1);
+            assertEquals(actor(original).getCardsIn(ZoneType.Library).size(), library - 1);
+        }
+    }
+    @Test public void historyDepth0() { history(0); }
+    @Test public void historyDepth1() { history(1); }
+    @Test public void historyDepth2() { history(2); }
+    @Test public void insectsDepth0() { insects(0); }
+    @Test public void insectsDepth1() { insects(1); }
+    @Test public void insectsDepth2() { insects(2); }
+    @Test public void firstTimeDepth0() { firstTime(0); }
+    @Test public void firstTimeDepth1() { firstTime(1); }
+    @Test public void firstTimeDepth2() { firstTime(2); }
+}

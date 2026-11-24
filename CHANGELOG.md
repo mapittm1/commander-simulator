@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Confirm a turn-counter history gap in the selected Aura-entry runtime: three
+  paid original controls pass and six one/two-snapshot cases fail, changing
+  history queries, Hornbeetle token counts and Danny Pink first-time draws.
+  Preserve the nine-case baseline, its earlier insufficient-green setup failure,
+  corrected setup and all native reports. No production correction yet; see
+  engine/counter_history_gaps.json and engine/pending/counter-history.
+
 - Select the validated Aura-entry coverage milestone: 1,604 mixed source,
   2,829 native (all 2,781 previous methods retained), normal packaged
   1,672/65/194/146 in 307.187s, broader 4,303 gameplay/256 serialization,

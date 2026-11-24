@@ -55,6 +55,13 @@ preserves their validation. Supplied attack/exert choices do not establish
 default AI strategy. Full card, rules and AI correctness remain incomplete;
 construction and passing selected interactions do not certify complete support.
 
+A newly confirmed turn-counter history gap affects this selected runtime.
+All three paid original controls pass, but six one/two-copy cases fail: history
+queries lose earlier placements, Hornbeetle creates zero rather than two Insects,
+and Danny Pink incorrectly draws again on a second placement. Current counters
+remain present. A generic correction is pending; see
+[counter-history failures](engine/counter_history_gaps.json).
+
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
 into the currently selected reviewed build without changing those old outcomes.

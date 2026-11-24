@@ -28,6 +28,12 @@ Previous exert/World/Harnessed/Class corrections and their evidence remain
 preserved. These supplied cases and catalog construction do not prove complete
 card, rules or AI strategy correctness.
 
+A confirmed turn-counter history gap remains in the selected runtime: all three
+paid original controls pass, while six one/two-copy cases lose earlier placements
+and change Hornbeetle tokens/Danny Pink draws. Current counter totals survive.
+Preserve the failed original phase and corrected-mana control phase; production
+correction is pending. See [gap evidence](counter_history_gaps.json).
+
 The earlier milestones below describe validation and selections at their time.
 
 The selected delayed-reveal runtime enforces current-view/zone identity and

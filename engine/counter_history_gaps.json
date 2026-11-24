@@ -1,0 +1,249 @@
+{
+  "status": "confirmed_in_selected_runtime",
+  "selected_runtime_affected": true,
+  "tested_head": "dc8ddf09642dc56e2afa56ad768ec68b571d2f37",
+  "selected_build": "0b6dfcce520e4a178f083cf3de1cb9b4",
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-aura-entry",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "e0e14aa54e0bd82840eef5a3eed3da91b8d44f01748b4d9b6cc1421d7df89764",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "b3f4616343da6066432ba72e78d21de1ed346f3834829b8dd06ca8841d255b55",
+    "native_tests": {
+      "total": 2829,
+      "passed": 2829,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "8cc50109d7775521e1c3e6efeda75b7ed1a869abe9291fdd9f079434a761d6fc",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "counts": {
+    "total": 9,
+    "passed": 3,
+    "failed": 6,
+    "skipped": 0
+  },
+  "fixture": {
+    "path": "engine/pending/counter-history/CommanderCounterHistoryTest.java",
+    "sha256": "77a51cabc3abb2b5ed672d9bd22259455d742eff323aaf60cab2c4896298b9ee"
+  },
+  "evidence_scope": [
+    "Three original-game controls pass; six corresponding one/two-snapshot cases fail.",
+    "Paid Battlegrowth places counters normally, but native turn-counter history query returns zero after snapshots.",
+    "Paid Iridescent Hornbeetle native end-step trigger creates two Insects in the original game and zero after one/two copies.",
+    "Paid Danny Pink first counter placement draws once; after a snapshot the second placement incorrectly draws again.",
+    "Current permanent counters are preserved; missing earlier-turn history changes actual token/draw outcomes."
+  ],
+  "resources": {
+    "heap_mib": 1536,
+    "active_processors": 2,
+    "worker_timeout_seconds": 90,
+    "compiler_timeout_seconds": 30
+  },
+  "phases": {
+    "baseline-counter9-v1": {
+      "counts": {
+        "total": 9,
+        "passed": 2,
+        "failed": 7,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: A second placement on the same creature this turn does not trigger another Danny Pink draw expected [23] but found [22]",
+        "java.lang.AssertionError: A second placement on the same creature this turn does not trigger another Danny Pink draw expected [23] but found [22]",
+        "java.lang.AssertionError: A simulation snapshot preserves earlier counter-placement history expected [1] but found [0]",
+        "java.lang.AssertionError: A simulation snapshot preserves earlier counter-placement history expected [1] but found [0]",
+        "java.lang.AssertionError: expected [true] but found [false]",
+        "java.lang.AssertionError: expected [true] but found [false]",
+        "java.lang.AssertionError: expected [true] but found [false]"
+      ],
+      "report_sha256": "6bc4cf3da7529954662a6c5d0ffa95bb425d7d0b9e8cff62ed07dc10ddeb5576",
+      "process": {
+        "status": "finished",
+        "bytes": 3056,
+        "returncode": 0,
+        "elapsed_seconds": 13.391
+      },
+      "evidence_sha256": "16807224d4f9b443cc5e2d51bd9f2e83a5dd363918cabf693594bc7288618538",
+      "driver_sha256": "c4d66ddc7003473dc411dcbcc512950988d810f254d279316431e99d0085abb4"
+    },
+    "baseline-counter9-v2": {
+      "counts": {
+        "total": 9,
+        "passed": 3,
+        "failed": 6,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.firstTimeDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.historyDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderCounterHistoryTest.insectsDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: A second placement on the same creature this turn does not trigger another Danny Pink draw expected [23] but found [22]",
+        "java.lang.AssertionError: A second placement on the same creature this turn does not trigger another Danny Pink draw expected [23] but found [22]",
+        "java.lang.AssertionError: A simulation snapshot preserves earlier counter-placement history expected [1] but found [0]",
+        "java.lang.AssertionError: A simulation snapshot preserves earlier counter-placement history expected [1] but found [0]",
+        "java.lang.AssertionError: Native Hornbeetle trigger counts both paid placements earlier this turn expected [2] but found [0]",
+        "java.lang.AssertionError: Native Hornbeetle trigger counts both paid placements earlier this turn expected [2] but found [0]"
+      ],
+      "report_sha256": "9ca044fc6a0ea3b02ffa9ff6675ee12731232876d002e1a4d22d6643cfad6e1d",
+      "process": {
+        "status": "finished",
+        "bytes": 3056,
+        "returncode": 0,
+        "elapsed_seconds": 12.313
+      },
+      "evidence_sha256": "a101f655f9ce954bdaf41c2bcc12ccfb9d29b1dbb7b882ddbbd98422ce6ddf4c",
+      "driver_sha256": "7040ccfee53c43fa3f882af68c9d7b7dad2dbe49b79f39db7b7c74ad3ef4e6cf"
+    }
+  },
+  "fixture_review": {
+    "v1_preserved": true,
+    "v1_counts": {
+      "total": 9,
+      "passed": 2,
+      "failed": 7,
+      "skipped": 0
+    },
+    "independent_confirmed_controls": [
+      "historyDepth0",
+      "firstTimeDepth0"
+    ],
+    "insect_control_issue": "Native payer spends all8 initialForests across5manaHornbeetle/2manaBears/first1manaBattlegrowth. Second green spell fails payment before any copy or token check.",
+    "v2_change": "Supply4additionalForests in only the insect family before paid casts; preserve all9method identities and assertions.",
+    "no_production_changes": true,
+    "limits": "Do not attribute the failedv1insect original control to an engine snapshot defect."
+  },
+  "primary_sources": [
+    "https://magic.wizards.com/en/news/feature/zendikar-rising-release-notes-2020-09-10",
+    "https://media.wizards.com/2023/downloads/WHO_Release_Notes_d82nmhwn23Ed/EN_WHO_Release_Notes_20231011.pdf"
+  ],
+  "candidate_correction": "Not implemented or tested yet. Planned generic correction: preserve per-type/per-player private historical placement receipts, mapped into each snapshot, without adding counters or repeating triggers.",
+  "production_changes": [],
+  "limits": [
+    "The v1 Hornbeetle cases failed before snapshot at the second spell payment; they are preserved and not used to attribute snapshot defects. V2 adds green mana only to that setup and preserves every method/assertion.",
+    "Original-game controls and all copied outcomes must remain in subsequent phases.",
+    "This confirms the supplied counter-history boundaries, not complete counter, card, rules or AI support."
+  ]
+}
