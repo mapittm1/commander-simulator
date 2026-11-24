@@ -1,0 +1,91 @@
+from pathlib import Path
+import difflib
+import hashlib
+import json
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[4]
+WORK = Path(__file__).resolve().parent
+SOURCE = ROOT / "data/development/commander-blocking-history-research/source"
+BASE = WORK / "source2071-v1/input-snapshots"
+PUBLIC = ROOT / "engine/pending/ward-transition"
+sha = lambda path: hashlib.sha256(path.read_bytes()).hexdigest()
+source_result = json.loads((WORK / "source2473-v1/evidence.json").read_bytes())
+assert source_result["counts"] == dict(total=2473, passed=2473, failed=0, skipped=0)
+assert subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT).decode().strip() == "16baa4f068bf9e3fe1285b25c9dcde7e71b115e2"
+for manifest in ("production-inputs.json", "test-inputs.json", "card-inputs.json"):
+    assert all(sha(SOURCE / rel) == digest for rel, digest in json.loads((WORK / "source2473-v1" / manifest).read_bytes()).items())
+assert not PUBLIC.exists()
+PUBLIC.mkdir(parents=True)
+
+def copy_file(source, destination):
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    shutil.copyfile(source, destination)
+    assert sha(source) == sha(destination)
+
+phases = ("ward-transition552-v1", "ward-transition552-v2", "ward-transition576-v3", "ward-transition576-previous-v4", "ward-transition588-v5", "ward-transition588-diagnostic-v6", "ward-transition588-v7", "ward-transition588-v8", "ward-transition588-v9", "ward-transition588-previous-v10", "source2473-v1")
+for phase in phases:
+    for name in ("evidence.json", "process.json", "production-inputs.json", "rules-inputs.json", "test-inputs.json", "card-inputs.json", "selection.json", "production-compiler.log", "rules-compiler.log"):
+        path = WORK / phase / name
+        if path.is_file():
+            copy_file(path, PUBLIC / phase / name)
+    wrapper = WORK / (phase + "-wrapper.log")
+    if wrapper.exists():
+        copy_file(wrapper, PUBLIC / phase / "wrapper.txt")
+    for path in (WORK / phase / "driver-inputs").glob("*"):
+        if path.is_file():
+            copy_file(path, PUBLIC / phase / "drivers" / (path.name + ".txt"))
+copy_file(WORK / "ward-transition588-diagnostic-v6/native.log", PUBLIC / "ward-transition588-diagnostic-v6/native.log.txt")
+for pattern in ("run_ward_transition*.py", "run_source2473_v1.py", "export_ward_transition_v1.py"):
+    for path in WORK.glob(pattern):
+        copy_file(path, PUBLIC / "drivers" / (path.name + ".txt"))
+for name in ("ward-transition-ci-v1.json", "ward-transition-epoch-v1.json", "ward-transition-frozen-v1.json", "ward-transition-review-v1.json", "ward-transition-review-v2.json", "source2473-preparation-v1.json"):
+    copy_file(WORK / name, PUBLIC / name)
+for version in range(1, 7):
+    copy_file(WORK / f"ward-transition-fixtures-v{version}/CommanderWardTransitionTest.java", PUBLIC / f"fixtures-v{version}/CommanderWardTransitionTest.java")
+files = json.loads((ROOT / "engine/typed_ward_evidence.json").read_bytes())["production_files"]
+for version in (4, 5):
+    def current(rel):
+        return WORK / f"typed-ward-prototype-v{version}-source" / Path(rel).name
+    patch = "".join("".join(difflib.unified_diff((BASE / rel).read_text(encoding="utf-8").splitlines(keepends=True), current(rel).read_text(encoding="utf-8").splitlines(keepends=True), fromfile="a/"+rel, tofile="b/"+rel)) for rel in files)
+    path = PUBLIC / ("prototype-v1.patch" if version == 5 else "intermediate-stack-segment-v1.patch")
+    path.write_text(patch, encoding="utf-8", newline="\n")
+patch_path = PUBLIC / "prototype-v1.patch"
+check_root = WORK / "ward-transition-patch-roundtrip-v1"
+assert not check_root.exists()
+check_root.mkdir()
+subprocess.run(["git", "init", "--quiet", str(check_root)], check=True)
+for rel in files:
+    copy_file(BASE / rel, check_root / rel)
+subprocess.run(["git", "apply", "--check", str(patch_path)], cwd=check_root, check=True)
+subprocess.run(["git", "apply", str(patch_path)], cwd=check_root, check=True)
+assert all((check_root / rel).read_bytes().replace(b"\r\n", b"\n") == (SOURCE / rel).read_bytes().replace(b"\r\n", b"\n") for rel in files)
+review = json.loads((WORK / "ward-transition-review-v2.json").read_bytes())
+final = json.loads((WORK / "ward-transition588-v9/evidence.json").read_bytes())
+previous = json.loads((WORK / "ward-transition588-previous-v10/evidence.json").read_bytes())
+assert {row["method"] for row in final["methods"]} == {row["method"] for row in previous["methods"]}
+assert final["counts"] == dict(total=588, passed=588, failed=0, skipped=0)
+assert previous["counts"] == dict(total=588, passed=579, failed=9, skipped=0)
+evidence = {
+    "status": "source_validated_unregistered_uninstalled_broader_trigger_admission_pending",
+    "tested_head": "16baa4f068bf9e3fe1285b25c9dcde7e71b115e2",
+    "ci": json.loads((WORK / "ward-transition-ci-v1.json").read_bytes()),
+    "selected_runtime_changed": False,
+    "selected_runtime": "2.0.16-583714b-reviewed-mana-chain",
+    "production_files": files,
+    "patch": {"path": patch_path.relative_to(ROOT).as_posix(), "sha256": sha(patch_path), "baseline": "Installed mana-chain source2071 snapshot. Aggregate includes pending X-cost, typed-ward and native stack-segment corrections. Apply in place of both earlier pending aggregate patches, not in addition."},
+    "fixture": {"path": (PUBLIC / "fixtures-v6/CommanderWardTransitionTest.java").relative_to(ROOT).as_posix(), "sha256": sha(PUBLIC / "fixtures-v6/CommanderWardTransitionTest.java")},
+    "retained_fixtures": ["engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java", "engine/pending/waterbend-x/fixtures-v10/CommanderWaterbendXTest.java"],
+    "focused_comparison": {"previous_prototype": previous["counts"], "prototype": final["counts"], "identical_method_ids": True, "note": "Nine failing predecessor cases cover three interaction families at three copy depths; they are not nine independent defects. Earlier installed-runtime comparison remains in typed_ward_evidence.json."},
+    "source_validation": {"counts": source_result["counts"], "retained_immediate_source_cases": 2383, "new_cases": 90, "retained_installed_source_cases": 2071},
+    "scope": "Native pre-goal stack resolution for the existing ward-target forecast path. Retains498 focused and2383 source cases and adds90 controls. Blight, collect-evidence, poison, cost-generated life loss and tokens, state actions, payer elimination and native-tax deduplication. No card/profile edits; no complete card/rules correctness claim.",
+    "limits": {"focused_heap_mib":1536,"focused_cpus":2,"focused_seconds":90,"source_heap_mib":2048,"source_cpus":2,"source_seconds_per_suite":600,"native_stack_resolutions":64},
+    "corrections": review["native_resolution_changes"],
+    "isolation_controls": review["isolation_controls"],
+    "known_unverified": review["unverified"],
+    "rules_sources": review["rule_sources"],
+    "patch_roundtrip": "Explicit UTF-8; applied source bytes equal validated sources after CRLF-to-LF normalization only. A fresh runtime build from this patch remains pending.",
+    "artifacts": {path.relative_to(ROOT).as_posix(): sha(path) for path in sorted(PUBLIC.rglob("*")) if path.is_file()}}
+(ROOT / "engine/ward_transition_evidence.json").write_text(json.dumps(evidence, indent=2)+"\n", encoding="utf-8", newline="\n")
+print(json.dumps({"artifacts":len(evidence["artifacts"]),"source_counts":source_result["counts"],"patch_roundtrip_verified":True}))

@@ -1,0 +1,28 @@
+{
+  "retained_focused_cases": 498,
+  "new_cases": 90,
+  "native_resolution_changes": [
+    "Replace manually captured ward costs with bounded native stack admission and pre-goal resolution, preserving native controller choices, cast/target/cost-generated triggers and state-based actions.",
+    "Stop before the goal resolves; reject a forecast when the goal is removed or the copied game ends. Bound to64 stack resolutions; no-plan is not impossibility proof.",
+    "Do not charge a heuristic cast-tax estimate after the native segment already resolves the actual tax trigger."
+  ],
+  "reproduced_failures": {
+    "ward-transition552-v1": "3 blightDoubleBear preview failures; all corresponding native casts passed.",
+    "ward-transition576-previous-v4": "9 predecessor failures covering creature reuse after death and payer elimination from life loss/poison.",
+    "ward-transition588-v7": "3 valid-target cast-tax preview failures; all corresponding native casts passed."
+  },
+  "fixture_errors_preserved": {
+    "ward-transition588-v5": "6 native failures: new target selector picked Nether Void enchantment for a creature-targeting spell.",
+    "ward-transition588-diagnostic-v6": "Same6 failures with native game logs proving invalid targeting.",
+    "correction": "Require Card.isCreature before excluding Roaming Throne; preserve all earlier case assertions."
+  },
+  "rule_sources": [
+    "https://magic.wizards.com/en/news/feature/lorwyn-eclipsed-release-notes"
+  ],
+  "unverified": [
+    "Fresh full runtime build and native/packaged/broader/full/catalog/health gates.",
+    "Native forecast admission still chosen only by the existing ward-target gate; legacy non-Ward target-cost detection needs broader controls.",
+    "Other cost contexts, responses, exhaustive payment search and experimental snapshot-restore mode."
+  ],
+  "full_rules_correctness_established": false
+}

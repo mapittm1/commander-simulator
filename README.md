@@ -66,32 +66,38 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-The uninstalled X-cost/typed-ward prototype passes 498 focused and 2,383 source
-cases, retaining all prior 363/2,248 cases. On the same focused fixtures the
-selected runtime passes 360/498: 33 failures concern new APIs, and 105 concern
-behavior or contracts. These are test cases, not independent defect counts.
-The prototype separates proposed X from follow-up costs and validates complete
-minimum-X choices before accepting payment or clearing undo information.
+The uninstalled X-cost/ward prototype passes 588 focused and 2,473 source cases,
+retaining all prior 498/2,383 cases. Against identical focused fixtures, the
+previous prototype passes 579/588. Its nine failures cover three interaction
+families at three copy depths; they are not nine independent defects. The earlier
+installed-runtime comparison remains in the typed-ward evidence.
 
-Ward forecasts now capture native target triggers and pay complete costs in a
-copied game, preserving the ward source's variables and the actual payer's
-resources. Independent casts cover waterbend, mana plus life, variable life,
-discard alternatives and sacrifice with exile replacement. Controls also cover
-doubled ward triggers, repeated targets, mana-derived uncounterability, ordinary
-AI life/discard policies, reserved sources and preview state/RNG/cache isolation.
-Six generic production sources change; card scripts and AI profiles are unchanged.
+The existing ward-target forecast now admits the action to the native stack in
+an isolated copied game and resolves effects above it, stopping before the action
+itself resolves. This uses native costs, controller choices, cast/target/cost
+triggers and state-based actions rather than manually recreating ward payments.
+It handles a creature dying between blight payments, tokens created to pay a later
+ward, poison or life-loss elimination, and collect-evidence resource consumption.
+Cast-tax estimates are not charged again after their native triggers resolve.
 
-Cost-generated triggers and state-based actions between payments, other ward
-cost families, unusual payer/controller differences, experimental snapshot
-restoration and broader target-trigger interactions still need controls. Payment
-search remains bounded; no-plan does not prove impossibility. Fresh native,
-packaged, broader, full-game, catalog and health gates remain pending. The
-installed runtime is unchanged, and complete card/rules correctness is unproven.
-See the [aggregate patch](engine/pending/typed-ward/prototype-v1.patch),
-[135 new cases](engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java),
-[typed-ward evidence](engine/typed_ward_evidence.json), and retained
-[X-cost evidence](engine/waterbend_x_evidence.json). The aggregate patch includes
-the pending X-cost changes; apply it in place of the earlier pending X-cost patch.
+The 90 new controls include independent native casts at original/one/two copies.
+Isolation checks cover poison, counters, trigger/cast histories, life and mana;
+prior source-reservation and RNG/cache controls remain included. Six generic
+production sources differ from the installed baseline; this step changes two
+of those. Card scripts and AI profiles are unchanged.
+
+The native segment has a 64-resolution bound. No-plan is an observation, not an
+impossibility proof. Broader admission for legacy non-Ward target costs, other
+cost contexts, responses and experimental snapshot restoration still need work.
+Fresh native, packaged, broader, full-game, catalog and health runtime gates remain
+pending. The installed runtime is unchanged, and complete card/rules correctness
+is unproven. See the [aggregate patch](engine/pending/ward-transition/prototype-v1.patch),
+[90 new cases](engine/pending/ward-transition/fixtures-v6/CommanderWardTransitionTest.java),
+and [transition evidence](engine/ward_transition_evidence.json). Retained
+[typed-ward](engine/typed_ward_evidence.json) and
+[X-cost](engine/waterbend_x_evidence.json) evidence preserve earlier milestones.
+The aggregate patch includes both earlier pending changes; apply it in place of
+those patches, not in addition.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

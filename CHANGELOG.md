@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Replace manual ward forecasting with bounded native stack-segment execution in
+  a copied game, stopping before the forecast action resolves. Preserve native
+  costs, choices, cast/target/cost triggers and state-based actions. Fix reuse of
+  creatures after blight kills them, missed payer elimination from poison/life
+  loss, and duplicate cast-tax estimates after actual trigger payment. Cover
+  collect evidence and tokens generated to pay later ward costs. All 588 focused
+  and 2,473 source cases pass; the previous prototype passes 579/588 on identical
+  fixtures. Preserve failed prototypes and the invalid-target fixture diagnosis.
+  Update source-isolation checks, README, and hashed patch evidence. Card scripts,
+  profiles and the installed runtime are unchanged. Broader trigger admission and
+  fresh runtime validation remain pending; full rules correctness is unproven.
+  See engine/ward_transition_evidence.json.
+
 - Extend the uninstalled X-cost prototype with complete native ward-cost contexts
   and correct payer resources for waterbend/convoke. Cover mixed mana/life,
   variable life, discard alternatives, sacrifice replacement, doubled triggers,
