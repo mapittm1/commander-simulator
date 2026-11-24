@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register generic repeated-mana activation-budget and entry-turn snapshot
+  corrections after all 138 focused and 2,023 source cases pass. Preserve all
+  1,933 immediate cases and the earlier prototype's 48/138 failures. Native
+  controls cover explicit and keyword/static budgets, life/sacrifice sources,
+  copied games and entry metadata across six zones. Keep the Power-Up setup
+  failures and copy-state discovery. Fresh native/packaged/broader/full/catalog
+  gates remain pending; the installed runtime is unchanged. See
+  engine/mana_activation_budget_evidence.json.
+
 - Reproduce automatic refusal of repeated Prismite conversion with independent
   native legal witnesses. Preserve a generic, uninstalled prototype passing all
   48 focused and 1,933 source cases, including insufficient-resource and native

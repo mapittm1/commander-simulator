@@ -224,6 +224,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-elemental-bend-history.patch",
                 "engine/patches/commander-waterbend-payment.patch",
                 "engine/patches/commander-waterbend-filter.patch",
+                "engine/patches/commander-repeated-mana-budget.patch",
                 "engine/patches/commander-trait-doctoring-ai.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",

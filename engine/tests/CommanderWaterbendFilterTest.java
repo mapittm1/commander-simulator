@@ -411,4 +411,420 @@ public class CommanderWaterbendFilterTest extends AITest {
     @Test public void assessmentNoPlanDepth0() { assessFilter(0, 1, "NO_PAYMENT_FOUND"); }
     @Test public void assessmentNoPlanDepth1() { assessFilter(1, 1, "NO_PAYMENT_FOUND"); }
     @Test public void assessmentNoPlanDepth2() { assessFilter(2, 1, "NO_PAYMENT_FOUND"); }
+
+    /** Six colorless mana can pay 2UU by activating the same untapped filter twice. */
+    private Game repeatSetup(int colorless, boolean directBlue) {
+        Game game = setup(false, "Prismite", 0, false);
+        for (Card card : actor(game).getCardsIn(ZoneType.Battlefield)) {
+            if (card.isLand() && !card.isTapped() && !directBlue) assertTrue(card.tap(null, actor(game)));
+        }
+        SpellAbility ironworks = named(game, "Krark-Clan Ironworks", ZoneType.Battlefield).getManaAbilities().get(0);
+        nativeSacrificeMana(game, ironworks, ironworks.getHostCard());
+        for (int index = 2; index < colorless; index++) {
+            Card wastes = addCardToZone("Wastes", actor(game), ZoneType.Battlefield);
+            SpellAbility mana = wastes.getManaAbilities().get(0);
+            mana.setActivatingPlayer(actor(game));
+            assertTrue(ComputerUtil.playNoStack(actor(game), mana, game, false));
+        }
+        assertEquals(actor(game).getManaPool().totalMana(), colorless);
+        addCardToZone("Concentrate", actor(game), ZoneType.Hand);
+        return game;
+    }
+
+    private void repeatedConversion(int depth, boolean ordered, boolean directBlue) {
+        int initialMana = directBlue ? 4 : 6;
+        Game original = repeatSetup(initialMana, directBlue);
+        Game game = copied(original, depth);
+        if (ordered) {
+            SpellAbility filter = named(game, "Prismite", ZoneType.Battlefield).getManaAbilities().get(0);
+            for (int index = 0; index < 2; index++) {
+                filter.setActivatingPlayer(actor(game));
+                filter.getManaPart().setExpressChoice("U");
+                assertTrue(ComputerUtil.playNoStack(actor(game), filter, game, false));
+                assertEquals(actor(game).getManaPool().totalMana(), 5 - index);
+            }
+        }
+        SpellAbility spell = named(game, "Concentrate", ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(actor(game));
+        assertTrue(ComputerUtil.playStack(spell, actor(game), game),
+                "2UU is payable using six C and two activations of Prismite, or four C plus an Island");
+        SpellAbility paid = game.getStack().peekAbility();
+        assertEquals(paid.getPayingMana().size(), 4);
+        assertEquals(paid.getPayingMana().stream().filter(m -> m.getSourceCard().getName().equals("Prismite")).count(),
+                directBlue ? 1L : 2L);
+        assertEquals(actor(game).getManaPool().totalMana(), 0);
+        settle(game);
+        assertEquals(actor(game).getCardsIn(ZoneType.Hand).size(), 4);
+        assertEquals(actor(game).getCardsIn(ZoneType.Library).size(), 21);
+        named(game, "Concentrate", ZoneType.Graveyard);
+        assertFalse(named(game, "Prismite", ZoneType.Battlefield).isTapped());
+        if (depth > 0) {
+            assertEquals(actor(original).getManaPool().totalMana(), initialMana);
+            assertEquals(actor(original).getCardsIn(ZoneType.Hand).size(), 2);
+            assertEquals(actor(original).getCardsIn(ZoneType.Library).size(), 24);
+        }
+    }
+
+    private void insufficientRepeat(int depth) {
+        Game original = repeatSetup(5, false);
+        Game game = copied(original, depth);
+        SpellAbility spell = named(game, "Concentrate", ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(actor(game));
+        java.util.Map<Integer, Boolean> before = board(game);
+        for (int repeat = 0; repeat < 3; repeat++) {
+            assertFalse(ComputerUtil.playStack(spell, actor(game), game));
+            assertEquals(board(game), before);
+            assertEquals(actor(game).getManaPool().totalMana(), 5);
+            assertEquals(actor(game).getCardsIn(ZoneType.Hand).size(), 2);
+            assertTrue(game.getStack().isEmpty());
+        }
+    }
+    @Test public void repeatedFilterDepth0() { repeatedConversion(0, false, false); }
+    @Test public void repeatedFilterDepth1() { repeatedConversion(1, false, false); }
+    @Test public void repeatedFilterDepth2() { repeatedConversion(2, false, false); }
+    @Test public void orderedRepeatedFilterDepth0() { repeatedConversion(0, true, false); }
+    @Test public void orderedRepeatedFilterDepth1() { repeatedConversion(1, true, false); }
+    @Test public void orderedRepeatedFilterDepth2() { repeatedConversion(2, true, false); }
+    @Test public void directBlueFilterDepth0() { repeatedConversion(0, false, true); }
+    @Test public void directBlueFilterDepth1() { repeatedConversion(1, false, true); }
+    @Test public void directBlueFilterDepth2() { repeatedConversion(2, false, true); }
+    @Test public void insufficientRepeatedFilterDepth0() { insufficientRepeat(0); }
+    @Test public void insufficientRepeatedFilterDepth1() { insufficientRepeat(1); }
+    @Test public void insufficientRepeatedFilterDepth2() { insufficientRepeat(2); }
+
+    /** Synthetic replacement contract: the filter produces C, so it cannot supply either U. */
+    private void replacedFilterOutput(int depth) {
+        Game original = repeatSetup(6, false);
+        Card filter = named(original, "Prismite", ZoneType.Battlefield);
+        filter.setSVar("OnlyColorless", "DB$ ReplaceMana | ReplaceType$ C");
+        filter.addReplacementEffect(forge.game.replacement.ReplacementHandler.parseReplacement(
+                "Event$ ProduceMana | ActiveZones$ Battlefield | ValidCard$ Card.Self | ValidSA$ Activated.ManaAbility | ReplaceWith$ OnlyColorless | Description$ Synthetic colorless replacement",
+                filter, true));
+        Game game = copied(original, depth);
+        SpellAbility conversion = named(game, "Prismite", ZoneType.Battlefield).getManaAbilities().get(0);
+        conversion.setActivatingPlayer(actor(game));
+        conversion.getManaPart().setExpressChoice("U");
+        assertTrue(ComputerUtil.playNoStack(actor(game), conversion, game, false));
+        assertEquals(actor(game).getManaPool().totalMana(), 5);
+        for (Mana mana : actor(game).getManaPool()) {
+            assertTrue(mana.isColorless(),
+                    "Confirm the native replacement actually changed the produced blue to colorless");
+        }
+        SpellAbility spell = named(game, "Concentrate", ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(actor(game));
+        java.util.Map<Integer, Boolean> before = board(game);
+        forge.game.mana.ManaCostBeingPaid cost = new forge.game.mana.ManaCostBeingPaid(spell.getPayCosts().getTotalMana());
+        for (int repeat = 0; repeat < 3; repeat++) {
+            assertEquals(assessNativeMana(game, spell, cost).toString(), "NO_PAYMENT_FOUND");
+            assertFalse(ComputerUtil.playStack(spell, actor(game), game));
+            assertEquals(actor(game).getManaPool().totalMana(), 5);
+            assertEquals(board(game), before);
+            assertTrue(game.getStack().isEmpty());
+        }
+        if (depth > 0) assertEquals(actor(original).getManaPool().totalMana(), 6);
+    }
+    @Test public void replacedFilterOutputDepth0() { replacedFilterOutput(0); }
+    @Test public void replacedFilterOutputDepth1() { replacedFilterOutput(1); }
+    @Test public void replacedFilterOutputDepth2() { replacedFilterOutput(2); }
+
+    /** Use the native mana-activation path so activation history is counted as well as mana. */
+    private void countedConversion(Game game, SpellAbility conversion) {
+        conversion.setActivatingPlayer(actor(game));
+        conversion.getManaPart().setExpressChoice("U");
+        assertTrue(conversion.canPlay());
+        int turnBefore = conversion.getActivationsThisTurn();
+        int gameBefore = conversion.getActivationsThisGame();
+        assertTrue(new forge.game.cost.CostPayment(conversion.getPayCosts(), conversion)
+                .payComputerCosts(new AiCostDecision(actor(game), conversion, false, true)));
+        game.getStack().addAndUnfreeze(conversion);
+        assertEquals(conversion.getActivationsThisTurn(), turnBefore + 1);
+        assertEquals(conversion.getActivationsThisGame(), gameBefore + 1);
+    }
+
+    /** Synthetic native restriction controls; unrestricted Prismite has no printed activation limit. */
+    private void limitedRepeat(int depth, boolean perGame, int limit, int alreadyUsed) {
+        limitedRepeat(depth, perGame, limit, alreadyUsed, null, false);
+    }
+
+    private void limitedRepeat(int depth, boolean perGame, int limit, int alreadyUsed, String flag, boolean minimum) {
+        Game original = repeatSetup(6, false);
+        SpellAbility originalFilter = named(original, "Prismite", ZoneType.Battlefield).getManaAbilities().get(0);
+        if (flag == null) {
+            if (perGame) originalFilter.getRestrictions().setGameLimitToCheck(Integer.toString(limit));
+            else originalFilter.getRestrictions().setLimitToCheck(Integer.toString(limit));
+        } else {
+            originalFilter.putParam(flag, "True");
+            if (flag.equals("PowerUp")) {
+                // Isolate activation budgets from Power-Up's entered-this-turn cost reduction.
+                originalFilter.getHostCard().setTurnInZone(original.getPhaseHandler().getTurn() - 1);
+                assertFalse(originalFilter.getHostCard().enteredThisTurn());
+            }
+            if (limit > 1) {
+                named(original, "Prismite", ZoneType.Battlefield).addStaticAbility(
+                        "Mode$ Activations | ValidCard$ Card.Self | ValidSA$ Activated | "
+                                + (minimum ? "MinLimit$ " + limit : "Additional$ " + (limit - 1)));
+            }
+        }
+        if (alreadyUsed == 1) {
+            countedConversion(original, originalFilter);
+            cast(original, "Opt", 1);
+            for (int index = 0; index < 2; index++) {
+                SpellAbility mana = addCardToZone("Wastes", actor(original), ZoneType.Battlefield).getManaAbilities().get(0);
+                mana.setActivatingPlayer(actor(original));
+                assertTrue(ComputerUtil.playNoStack(actor(original), mana, original, false));
+            }
+        }
+        assertEquals(actor(original).getManaPool().totalMana(), 6);
+        for (Mana mana : actor(original).getManaPool()) assertTrue(mana.isColorless());
+        Game game = copied(original, depth);
+        SpellAbility filter = named(game, "Prismite", ZoneType.Battlefield).getManaAbilities().get(0);
+        filter.setActivatingPlayer(actor(game));
+        assertEquals(filter.getActivationsThisTurn(), alreadyUsed);
+        assertEquals(filter.getActivationsThisGame(), alreadyUsed);
+        assertEquals(filter.getHostCard().getTurnInZone(), originalFilter.getHostCard().getTurnInZone());
+        assertEquals(filter.getHostCard().enteredThisTurn(), originalFilter.getHostCard().enteredThisTurn());
+        if (flag == null) {
+            assertEquals(perGame ? filter.getRestrictions().getGameLimitToCheck() : filter.getRestrictions().getLimitToCheck(), Integer.toString(limit));
+        } else {
+            assertTrue(filter.hasParam(flag));
+            assertEquals(forge.game.staticability.StaticAbilityAdditionalActivations.getLimit(
+                    filter.getHostCard(), filter, actor(game)), limit);
+        }
+        SpellAbility spell = named(game, "Concentrate", ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(actor(game));
+        forge.game.mana.ManaCostBeingPaid cost = new forge.game.mana.ManaCostBeingPaid(spell.getPayCosts().getTotalMana());
+        String beforeCost = cost.toString();
+        java.util.Map<Integer, Boolean> before = board(game);
+        int handBefore = actor(game).getCardsIn(ZoneType.Hand).size();
+        int libraryBefore = actor(game).getCardsIn(ZoneType.Library).size();
+        boolean affordable = limit - alreadyUsed >= 2;
+        for (int repeat = 0; repeat < 3; repeat++) {
+            assertEquals(assessNativeMana(game, spell, cost).toString(), affordable ? "PAYMENT_FOUND" : "NO_PAYMENT_FOUND");
+            assertEquals(cost.toString(), beforeCost);
+            assertEquals(board(game), before);
+            assertEquals(actor(game).getManaPool().totalMana(), 6);
+            assertEquals(filter.getActivationsThisTurn(), alreadyUsed);
+            assertEquals(filter.getActivationsThisGame(), alreadyUsed);
+        }
+        assertEquals(ComputerUtil.playStack(spell, actor(game), game), affordable);
+        if (affordable) {
+            assertEquals(game.getStack().peekAbility().getPayingMana().size(), 4);
+            assertEquals(game.getStack().peekAbility().getPayingMana().stream()
+                    .filter(m -> m.getSourceCard().getName().equals("Prismite")).count(), 2L);
+            assertEquals(filter.getActivationsThisTurn(), alreadyUsed + 2);
+            assertEquals(filter.getActivationsThisGame(), alreadyUsed + 2);
+            assertEquals(actor(game).getManaPool().totalMana(), 0);
+            settle(game);
+            assertEquals(actor(game).getCardsIn(ZoneType.Hand).size(), handBefore + 2);
+            assertEquals(actor(game).getCardsIn(ZoneType.Library).size(), libraryBefore - 3);
+        } else {
+            assertTrue(game.getStack().isEmpty());
+            assertEquals(board(game), before);
+            assertEquals(actor(game).getManaPool().totalMana(), 6);
+            assertEquals(actor(game).getCardsIn(ZoneType.Hand).size(), handBefore);
+            assertEquals(actor(game).getCardsIn(ZoneType.Library).size(), libraryBefore);
+            countedConversion(game, filter);
+        }
+        assertFalse(filter.canPlay(), "The final native activation reaches the declared turn/game limit");
+        if (depth > 0) {
+            assertEquals(originalFilter.getActivationsThisTurn(), alreadyUsed);
+            assertEquals(originalFilter.getActivationsThisGame(), alreadyUsed);
+            assertEquals(actor(original).getManaPool().totalMana(), 6);
+        }
+    }
+    @Test public void turnLimitOneDepth0() { limitedRepeat(0, false, 1, 0); }
+    @Test public void turnLimitOneDepth1() { limitedRepeat(1, false, 1, 0); }
+    @Test public void turnLimitOneDepth2() { limitedRepeat(2, false, 1, 0); }
+    @Test public void turnLimitTwoDepth0() { limitedRepeat(0, false, 2, 0); }
+    @Test public void turnLimitTwoDepth1() { limitedRepeat(1, false, 2, 0); }
+    @Test public void turnLimitTwoDepth2() { limitedRepeat(2, false, 2, 0); }
+    @Test public void turnLimitTwoUsedOneDepth0() { limitedRepeat(0, false, 2, 1); }
+    @Test public void turnLimitTwoUsedOneDepth1() { limitedRepeat(1, false, 2, 1); }
+    @Test public void turnLimitTwoUsedOneDepth2() { limitedRepeat(2, false, 2, 1); }
+    @Test public void turnLimitThreeUsedOneDepth0() { limitedRepeat(0, false, 3, 1); }
+    @Test public void turnLimitThreeUsedOneDepth1() { limitedRepeat(1, false, 3, 1); }
+    @Test public void turnLimitThreeUsedOneDepth2() { limitedRepeat(2, false, 3, 1); }
+    @Test public void gameLimitOneDepth0() { limitedRepeat(0, true, 1, 0); }
+    @Test public void gameLimitOneDepth1() { limitedRepeat(1, true, 1, 0); }
+    @Test public void gameLimitOneDepth2() { limitedRepeat(2, true, 1, 0); }
+    @Test public void gameLimitTwoDepth0() { limitedRepeat(0, true, 2, 0); }
+    @Test public void gameLimitTwoDepth1() { limitedRepeat(1, true, 2, 0); }
+    @Test public void gameLimitTwoDepth2() { limitedRepeat(2, true, 2, 0); }
+    @Test public void gameLimitTwoUsedOneDepth0() { limitedRepeat(0, true, 2, 1); }
+    @Test public void gameLimitTwoUsedOneDepth1() { limitedRepeat(1, true, 2, 1); }
+    @Test public void gameLimitTwoUsedOneDepth2() { limitedRepeat(2, true, 2, 1); }
+    @Test public void gameLimitThreeUsedOneDepth0() { limitedRepeat(0, true, 3, 1); }
+    @Test public void gameLimitThreeUsedOneDepth1() { limitedRepeat(1, true, 3, 1); }
+    @Test public void gameLimitThreeUsedOneDepth2() { limitedRepeat(2, true, 3, 1); }
+
+    // Synthetic ability flags exercise native keyword budgets and additional-activation statics.
+    @Test public void boastLimitDefaultDepth0() { limitedRepeat(0, false, 1, 0, "Boast", false); }
+    @Test public void boastLimitDefaultDepth1() { limitedRepeat(1, false, 1, 0, "Boast", false); }
+    @Test public void boastLimitDefaultDepth2() { limitedRepeat(2, false, 1, 0, "Boast", false); }
+    @Test public void boastLimitAdditionalDepth0() { limitedRepeat(0, false, 2, 0, "Boast", false); }
+    @Test public void boastLimitAdditionalDepth1() { limitedRepeat(1, false, 2, 0, "Boast", false); }
+    @Test public void boastLimitAdditionalDepth2() { limitedRepeat(2, false, 2, 0, "Boast", false); }
+    @Test public void boastLimitAdditionalUsedDepth0() { limitedRepeat(0, false, 2, 1, "Boast", false); }
+    @Test public void boastLimitAdditionalUsedDepth1() { limitedRepeat(1, false, 2, 1, "Boast", false); }
+    @Test public void boastLimitAdditionalUsedDepth2() { limitedRepeat(2, false, 2, 1, "Boast", false); }
+    @Test public void boastLimitMinimumUsedDepth0() { limitedRepeat(0, false, 3, 1, "Boast", true); }
+    @Test public void boastLimitMinimumUsedDepth1() { limitedRepeat(1, false, 3, 1, "Boast", true); }
+    @Test public void boastLimitMinimumUsedDepth2() { limitedRepeat(2, false, 3, 1, "Boast", true); }
+    @Test public void exhaustLimitDefaultDepth0() { limitedRepeat(0, true, 1, 0, "Exhaust", false); }
+    @Test public void exhaustLimitDefaultDepth1() { limitedRepeat(1, true, 1, 0, "Exhaust", false); }
+    @Test public void exhaustLimitDefaultDepth2() { limitedRepeat(2, true, 1, 0, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalDepth0() { limitedRepeat(0, true, 2, 0, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalDepth1() { limitedRepeat(1, true, 2, 0, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalDepth2() { limitedRepeat(2, true, 2, 0, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalUsedDepth0() { limitedRepeat(0, true, 2, 1, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalUsedDepth1() { limitedRepeat(1, true, 2, 1, "Exhaust", false); }
+    @Test public void exhaustLimitAdditionalUsedDepth2() { limitedRepeat(2, true, 2, 1, "Exhaust", false); }
+    @Test public void exhaustLimitMinimumUsedDepth0() { limitedRepeat(0, true, 3, 1, "Exhaust", true); }
+    @Test public void exhaustLimitMinimumUsedDepth1() { limitedRepeat(1, true, 3, 1, "Exhaust", true); }
+    @Test public void exhaustLimitMinimumUsedDepth2() { limitedRepeat(2, true, 3, 1, "Exhaust", true); }
+    @Test public void powerupLimitDefaultDepth0() { limitedRepeat(0, true, 1, 0, "PowerUp", false); }
+    @Test public void powerupLimitDefaultDepth1() { limitedRepeat(1, true, 1, 0, "PowerUp", false); }
+    @Test public void powerupLimitDefaultDepth2() { limitedRepeat(2, true, 1, 0, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalDepth0() { limitedRepeat(0, true, 2, 0, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalDepth1() { limitedRepeat(1, true, 2, 0, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalDepth2() { limitedRepeat(2, true, 2, 0, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalUsedDepth0() { limitedRepeat(0, true, 2, 1, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalUsedDepth1() { limitedRepeat(1, true, 2, 1, "PowerUp", false); }
+    @Test public void powerupLimitAdditionalUsedDepth2() { limitedRepeat(2, true, 2, 1, "PowerUp", false); }
+    @Test public void powerupLimitMinimumUsedDepth0() { limitedRepeat(0, true, 3, 1, "PowerUp", true); }
+    @Test public void powerupLimitMinimumUsedDepth1() { limitedRepeat(1, true, 3, 1, "PowerUp", true); }
+    @Test public void powerupLimitMinimumUsedDepth2() { limitedRepeat(2, true, 3, 1, "PowerUp", true); }
+
+    /** Preserve entry metadata across zones without replaying a new entry during snapshot construction. */
+    private void entryTurnSnapshot(int depth, boolean currentTurn) {
+        Game original = setup(false, "Prismite", 0, false);
+        int entryTurn = original.getPhaseHandler().getTurn() - (currentTurn ? 0 : 1);
+        List<Card> tracked = new ArrayList<>();
+        for (ZoneType zone : List.of(ZoneType.Battlefield, ZoneType.Hand, ZoneType.Library,
+                ZoneType.Graveyard, ZoneType.Exile, ZoneType.Command)) {
+            Card card = addCardToZone(zone == ZoneType.Command ? "Arcum Dagsson" : "Opt", actor(original), zone);
+            card.setTurnInZone(entryTurn);
+            tracked.add(card);
+        }
+        Game game = copied(original, depth);
+        for (Card card : tracked) {
+            Card mapped = actor(game).getCardsIn(card.getZone().getZoneType(), false).stream()
+                    .filter(value -> value.getId() == card.getId()).findFirst().orElseThrow();
+            assertEquals(mapped.getTurnInZone(), entryTurn);
+            assertEquals(mapped.enteredThisTurn(), currentTurn);
+            assertEquals(forge.game.card.CardCopyService.getLKICopy(mapped).getTurnInZone(), entryTurn);
+            if (depth > 0) {
+                assertNotSame(mapped, card);
+                mapped.setTurnInZone(entryTurn + 10);
+                assertEquals(card.getTurnInZone(), entryTurn);
+            }
+        }
+    }
+    @Test public void olderEntryMetadataDepth0() { entryTurnSnapshot(0, false); }
+    @Test public void olderEntryMetadataDepth1() { entryTurnSnapshot(1, false); }
+    @Test public void olderEntryMetadataDepth2() { entryTurnSnapshot(2, false); }
+    @Test public void currentEntryMetadataDepth0() { entryTurnSnapshot(0, true); }
+    @Test public void currentEntryMetadataDepth1() { entryTurnSnapshot(1, true); }
+    @Test public void currentEntryMetadataDepth2() { entryTurnSnapshot(2, true); }
+
+    private Game budgetSourceSetup(boolean sacrifice) {
+        List<RegisteredPlayer> players = new ArrayList<>();
+        for (int index = 0; index < 4; index++) players.add(RegisteredPlayer.forCommander(new Deck())
+                .setPlayer(new LobbyPlayerAi("filter-" + index, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(players, rules, new Match(rules, players, "Repeated mana activation budget"));
+        game.setNoGUIUser();
+        game.setAge(GameStage.Play);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(game), 5);
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int index = 0; index < 24; index++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        addCardToZone("Island", actor(game), ZoneType.Battlefield);
+        addCardToZone(sacrifice ? "Krark-Clan Ironworks" : "Treasonous Ogre", actor(game), ZoneType.Battlefield);
+        if (sacrifice) addTokens("c_a_clue_draw", 4, actor(game));
+        addCardToZone(sacrifice ? "Gilded Lotus" : "Divination", actor(game), ZoneType.Hand);
+        return game;
+    }
+
+    /** The projected budget applies to life and sacrifice sources, not only mana filters. */
+    private void repeatedBudgetSource(int depth, boolean sacrifice, boolean perGame, int limit) {
+        Game original = budgetSourceSetup(sacrifice);
+        String sourceName = sacrifice ? "Krark-Clan Ironworks" : "Treasonous Ogre";
+        SpellAbility originalSource = named(original, sourceName, ZoneType.Battlefield).getManaAbilities().get(0);
+        if (perGame) originalSource.getRestrictions().setGameLimitToCheck(Integer.toString(limit));
+        else originalSource.getRestrictions().setLimitToCheck(Integer.toString(limit));
+        Game game = copied(original, depth);
+        SpellAbility source = named(game, sourceName, ZoneType.Battlefield).getManaAbilities().get(0);
+        source.setActivatingPlayer(actor(game));
+        SpellAbility spell = named(game, sacrifice ? "Gilded Lotus" : "Divination", ZoneType.Hand).getFirstSpellAbility();
+        spell.setActivatingPlayer(actor(game));
+        forge.game.mana.ManaCostBeingPaid cost = new forge.game.mana.ManaCostBeingPaid(spell.getPayCosts().getTotalMana());
+        String costBefore = cost.toString();
+        java.util.Map<Integer, Boolean> before = board(game);
+        boolean affordable = limit == 2;
+        for (int repeat = 0; repeat < 3; repeat++) {
+            assertEquals(assessNativeMana(game, spell, cost).toString(), affordable ? "PAYMENT_FOUND" : "NO_PAYMENT_FOUND");
+            assertEquals(cost.toString(), costBefore);
+            assertEquals(board(game), before);
+            assertEquals(actor(game).getLife(), 100);
+            assertEquals(actor(game).getManaPool().totalMana(), 0);
+            assertEquals(source.getActivationsThisTurn(), 0);
+            assertEquals(source.getActivationsThisGame(), 0);
+        }
+        assertEquals(ComputerUtil.playStack(spell, actor(game), game), affordable);
+        if (affordable) {
+            SpellAbility paid = game.getStack().peekAbility();
+            assertEquals(paid.getPayingMana().size(), sacrifice ? 5 : 3);
+            assertEquals(paid.getPayingMana().stream().filter(m -> m.getSourceCard().getName().equals(sourceName)).count(),
+                    sacrifice ? 4L : 2L);
+            assertEquals(source.getActivationsThisTurn(), 2);
+            assertEquals(source.getActivationsThisGame(), 2);
+            assertFalse(source.canPlay());
+            assertEquals(actor(game).getLife(), sacrifice ? 100 : 94);
+            assertEquals(actor(game).getCardsIn(ZoneType.Battlefield).stream().filter(Card::isToken).count(), sacrifice ? 2L : 0L);
+            assertEquals(actor(game).getManaPool().totalMana(), 0);
+            settle(game);
+            if (sacrifice) named(game, "Gilded Lotus", ZoneType.Battlefield);
+            assertEquals(actor(game).getCardsIn(ZoneType.Hand).size(), sacrifice ? 0 : 2);
+            assertEquals(actor(game).getCardsIn(ZoneType.Library).size(), sacrifice ? 24 : 22);
+        } else {
+            assertTrue(game.getStack().isEmpty());
+            assertEquals(board(game), before);
+            assertEquals(actor(game).getLife(), 100);
+            assertEquals(actor(game).getManaPool().totalMana(), 0);
+            assertEquals(source.getActivationsThisTurn(), 0);
+            assertEquals(source.getActivationsThisGame(), 0);
+        }
+        if (depth > 0) {
+            assertEquals(actor(original).getLife(), 100);
+            assertEquals(originalSource.getActivationsThisTurn(), 0);
+            assertEquals(originalSource.getActivationsThisGame(), 0);
+            assertEquals(actor(original).getCardsIn(ZoneType.Hand).size(), 1);
+        }
+    }
+    @Test public void lifeTurnBudget1Depth0() { repeatedBudgetSource(0, false, false, 1); }
+    @Test public void lifeTurnBudget1Depth1() { repeatedBudgetSource(1, false, false, 1); }
+    @Test public void lifeTurnBudget1Depth2() { repeatedBudgetSource(2, false, false, 1); }
+    @Test public void lifeTurnBudget2Depth0() { repeatedBudgetSource(0, false, false, 2); }
+    @Test public void lifeTurnBudget2Depth1() { repeatedBudgetSource(1, false, false, 2); }
+    @Test public void lifeTurnBudget2Depth2() { repeatedBudgetSource(2, false, false, 2); }
+    @Test public void lifeGameBudget1Depth0() { repeatedBudgetSource(0, false, true, 1); }
+    @Test public void lifeGameBudget1Depth1() { repeatedBudgetSource(1, false, true, 1); }
+    @Test public void lifeGameBudget1Depth2() { repeatedBudgetSource(2, false, true, 1); }
+    @Test public void lifeGameBudget2Depth0() { repeatedBudgetSource(0, false, true, 2); }
+    @Test public void lifeGameBudget2Depth1() { repeatedBudgetSource(1, false, true, 2); }
+    @Test public void lifeGameBudget2Depth2() { repeatedBudgetSource(2, false, true, 2); }
+    @Test public void sacrificeTurnBudget1Depth0() { repeatedBudgetSource(0, true, false, 1); }
+    @Test public void sacrificeTurnBudget1Depth1() { repeatedBudgetSource(1, true, false, 1); }
+    @Test public void sacrificeTurnBudget1Depth2() { repeatedBudgetSource(2, true, false, 1); }
+    @Test public void sacrificeTurnBudget2Depth0() { repeatedBudgetSource(0, true, false, 2); }
+    @Test public void sacrificeTurnBudget2Depth1() { repeatedBudgetSource(1, true, false, 2); }
+    @Test public void sacrificeTurnBudget2Depth2() { repeatedBudgetSource(2, true, false, 2); }
+    @Test public void sacrificeGameBudget1Depth0() { repeatedBudgetSource(0, true, true, 1); }
+    @Test public void sacrificeGameBudget1Depth1() { repeatedBudgetSource(1, true, true, 1); }
+    @Test public void sacrificeGameBudget1Depth2() { repeatedBudgetSource(2, true, true, 1); }
+    @Test public void sacrificeGameBudget2Depth0() { repeatedBudgetSource(0, true, true, 2); }
+    @Test public void sacrificeGameBudget2Depth1() { repeatedBudgetSource(1, true, true, 2); }
+    @Test public void sacrificeGameBudget2Depth2() { repeatedBudgetSource(2, true, true, 2); }
 }

@@ -1,0 +1,102 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -38,6 +38,7 @@
+ import forge.game.spellability.AbilityManaPart;
+ import forge.game.spellability.AbilitySub;
+ import forge.game.spellability.SpellAbility;
++import forge.game.staticability.StaticAbilityAdditionalActivations;
+ import forge.game.staticability.StaticAbilityManaConvert;
+ import forge.game.trigger.Trigger;
+ import forge.game.trigger.TriggerType;
+@@ -907,6 +908,9 @@
+             }
+ 
+             saList.removeAll(saExcludeList);
++            if (test) {
++                saList.removeIf(source -> !hasProjectedActivationRemaining(source, paymentList));
++            }
+ 
+             if (!hasConverge && !sa.hasParam("AIManaPref") && !sa.getHostCard().hasSVar("AIManaPref")) {
+                 saList = sparingSourcesFirst(saList, sourcesForShards, sa, ai);
+@@ -986,7 +990,9 @@
+ 
+             final int manaCostToActivate = getManaToActivate(saPayment);
+             if (manaCostToActivate > 0) {
+-                if (test && !paymentList.isEmpty() && getManaToActivate(paymentList.get(paymentList.size() - 1)) > 0) {
++                if (test && !paymentList.isEmpty() && getManaToActivate(paymentList.get(paymentList.size() - 1)) > 0
++                        && !(paymentList.get(paymentList.size() - 1) == saPayment
++                            && isRepeatableColorFilter(saPayment, toPay))) {
+                     // chaining filters risks misplay
+                     saExcludeList.add(saPayment);
+                     continue;
+@@ -1019,7 +1025,10 @@
+                     }
+                 }
+ 
++                final int unpaidColorBefore = cost.getUnpaidShards(toPay);
+                 projectMana(saPayment, sa, ai, toPay, cost);
++                final boolean repeatColorFilter = isRepeatableColorFilter(saPayment, toPay)
++                        && cost.getUnpaidShards(toPay) < unpaidColorBefore;
+                 testLifeSpent += getLifeCost(saPayment);
+                 if (!tapGroups.isEmpty() && saPayment.getPayCosts().hasTapCost()) {
+                     projectedManaTaps.add(saPayment.getHostCard());
+@@ -1040,7 +1049,7 @@
+                 }
+ 
+                 // remove to prevent re-usage since resources don't get consumed, unless a sacrifice source has fodder left
+-                if (!ManaSacrifice.canUseAgainInTest(ai, saPayment)) {
++                if (!repeatColorFilter && !ManaSacrifice.canUseAgainInTest(ai, saPayment)) {
+                     sourcesForShards.values().removeIf(CardTraitPredicates.isHostCard(saPayment.getHostCard()));
+                 }
+             } else {
+@@ -2546,6 +2555,49 @@
+         return activation > 0 && ability.amountOfManaGenerated(true) <= activation;
+     }
+ 
++    /** Apply native activation limits to the uses already committed by a preview. */
++    private static boolean hasProjectedActivationRemaining(final SpellAbility ability,
++            final List<SpellAbility> paymentList) {
++        final String turnLimit = ability.getRestrictions().getLimitToCheck();
++        final String gameLimit = ability.getRestrictions().getGameLimitToCheck();
++        final boolean turnKeyword = ability.isBoast();
++        final boolean gameKeyword = ability.isExhaust() || ability.isPowerUp();
++        if (turnLimit == null && gameLimit == null && !turnKeyword && !gameKeyword) {
++            return true;
++        }
++        // ActivationTable preserves the engine's original-ability and static-grantor grouping.
++        final ActivationTable projected = new ActivationTable();
++        for (final SpellAbility used : paymentList) projected.add(used);
++        final int planned = projected.get(ability);
++        final long turnUsed = (long) ability.getActivationsThisTurn() + planned;
++        final long gameUsed = (long) ability.getActivationsThisGame() + planned;
++        final Card host = ability.getHostCard();
++        if (turnLimit != null && turnUsed >= AbilityUtils.calculateAmount(host, turnLimit, ability)) {
++            return false;
++        }
++        if (gameLimit != null && gameUsed >= AbilityUtils.calculateAmount(host, gameLimit, ability)) {
++            return false;
++        }
++        if (turnKeyword || gameKeyword) {
++            final int limit = StaticAbilityAdditionalActivations.getLimit(host, ability, ability.getActivatingPlayer());
++            if ((turnKeyword ? turnUsed : gameUsed) >= limit) return false;
++        }
++        return true;
++    }
++
++    /** Repeated color conversion consumes finite generic mana and cannot project a tap twice. */
++    private static boolean isRepeatableColorFilter(final SpellAbility ability, final ManaCostShard shard) {
++        if (shard == ManaCostShard.GENERIC || shard == ManaCostShard.X
++                || !isNonIncreasingManaFilter(ability) || !isFilterManaAbility(ability)
++                || !getManaCostToActivate(ability).isPureGeneric()) {
++            return false;
++        }
++        for (final CostPart part : ability.getPayCosts().getCostParts()) {
++            if (!(part instanceof CostPartMana)) return false;
++        }
++        return true;
++    }
++
+     private static int getManaToActivate(final SpellAbility ma) {
+         final ManaCost manaCost = getManaCostToActivate(ma);
+         return manaCost == null ? 0 : manaCost.getCMC();

@@ -254,6 +254,8 @@ NATIVE_CLASSES = (
     "forge.ai.simulation.TextChangeChoices",
     "forge.ai.ComputerUtilMana",
     "forge.ai.ComputerUtilMana$ManaPaymentAssessment",
+    "forge.game.card.ActivationTable",
+    "forge.game.staticability.StaticAbilityAdditionalActivations",
     "forge.game.mana.Mana",
     "forge.game.mana.ManaPool",
     "forge.game.mana.ManaRefundService",
@@ -413,7 +415,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1985-case packaged family."""
+    """Execute the existing fixed 2090-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

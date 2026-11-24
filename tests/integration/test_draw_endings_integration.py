@@ -41,8 +41,8 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         all_methods = []
         for partition in PARTITIONS:
             all_methods.extend(self.check_partition(settings, partition))
-        self.assertEqual(len(all_methods), 1985)
-        self.assertEqual(len(set(all_methods)), 1985)
+        self.assertEqual(len(all_methods), 2090)
+        self.assertEqual(len(set(all_methods)), 2090)
 
     def check_partition(self, settings, partition):
         """Check every fixed case and class origin in one bounded worker."""
