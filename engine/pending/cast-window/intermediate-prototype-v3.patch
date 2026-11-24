@@ -1,0 +1,120 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -40,6 +40,7 @@
+ import forge.game.spellability.AbilityManaPart;
+ import forge.game.spellability.AbilitySub;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilityStackInstance;
+ import forge.game.staticability.StaticAbilityAdditionalActivations;
+ import forge.game.staticability.StaticAbilityManaConvert;
+ import forge.game.trigger.Trigger;
+@@ -201,7 +202,11 @@
+ 
+     private static boolean previewSeparateManaBudget(Cost cost, SpellAbility ability, Player payer,
+             int extraMana, boolean effect, boolean includeWard) {
+-        GameCopier copier = new GameCopier(payer.getGame()).withStack(true);
++        // Java resolution/turn-processing continuations are not part of a copied game frame.
++        // Costs can be forecast now; pending triggers and state checks must wait for their native window.
++        boolean observePendingEffects = !payer.getGame().getStack().isResolving()
++                && !payer.getGame().getStack().isFrozen();
++        GameCopier copier = new GameCopier(payer.getGame()).withStack(true).withStateBasedActions(observePendingEffects);
+         Game copy = copier.makeCopy(null, payer);
+         Player copiedPayer = copier.find(payer);
+         SpellAbility goal = copier.find(ability);
+@@ -234,11 +239,11 @@
+         if (!new CostPayment(copiedCost, goal).payComputerCosts(new AiCostDecision(copiedPayer, goal, effect, true))) {
+             return false;
+         }
+-        if (includeWard) {
++        if (includeWard && observePendingEffects) {
+             if (placement != null) copy.getTriggerHandler().commitCastPlacement(placement);
+             if (!resolveBeforeForecastGoal(copy, goal, copiedPayer)) return false;
+             if (copiedPayer.hasWon()) return true;
+-        } else if (!goal.isCopied()) {
++        } else if (!includeWard && !goal.isCopied()) {
+             goal.applyPayingManaEffects();
+         }
+         if (extraMana == 0) return true;
+@@ -257,11 +262,15 @@
+      * A bounded unsuccessful observation is not proof that every possible payment is impossible.
+      */
+     private static boolean resolveBeforeForecastGoal(Game game, SpellAbility goal, Player payer) {
++        SpellAbilityStackInstance existing = game.getStack().getInstanceMatchingSpellAbilityID(goal);
++        int goalStackId = existing == null ? SpellAbilityStackInstance.nextId() : existing.getId();
+         Set<Integer> previousStackEntries = new HashSet<>();
+         for (var instance : game.getStack()) {
+-            if (instance.getSpellAbility().getId() != goal.getId()) previousStackEntries.add(instance.getId());
+-        }
+-        if (game.getStack().getInstanceMatchingSpellAbilityID(goal) == null) game.getStack().add(goal);
++            if (instance.getId() != goalStackId) previousStackEntries.add(instance.getId());
++        }
++        // Native activation creates a fresh ability and clears the original's announced choices.
++        // The stack entry is the stable identity across that handoff and subsequent X changes.
++        if (existing == null) game.getStack().add(goal, goalStackId);
+         Set<Card> affected = new HashSet<>();
+         for (int resolved = 0; resolved <= MAX_FORECAST_STACK_RESOLUTIONS; resolved++) {
+             game.getAction().checkStateEffects(false, affected);
+@@ -269,7 +278,7 @@
+             // A cast trigger can win before the proposed action needs to resolve.
+             if (payer.hasWon()) return true;
+             if (game.isGameOver() || !payer.isInGame() || game.getStack().isEmpty()) return false;
+-            if (game.getStack().peekAbility().getId() == goal.getId()) return true;
++            if (game.getStack().peek().getId() == goalStackId) return true;
+             // The goal may be countered before another cast trigger wins. Observe those new effects,
+             // but never resolve stack entries that were already below the proposed action.
+             if (previousStackEntries.contains(game.getStack().peek().getId())) return false;
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -60,6 +60,7 @@
+     private GameSnapshot snapshot = null;
+     /** Copy the spells on the stack too (see {@link GameSimulator#COPY_STACK}); decided per copier. */
+     private boolean copyStack = GameSimulator.COPY_STACK;
++    private boolean checkStateBasedActions = true;
+     private final Map<SpellAbility, SpellAbility> stackMap = new HashMap<>();
+ 
+     public GameCopier(Game origGame) {
+@@ -72,6 +73,21 @@
+     /** Makes {@link #makeCopy} copy the spells on the stack, so that a decision with a spell on the stack can be simulated. */
+     public GameCopier withStack(final boolean copy) {
+         this.copyStack = copy;
++        return this;
++    }
++
++    /**
++     * Preserve an in-progress native state for cost-only calculations. Such a copy cannot
++     * advance a phase; its Java resolution continuation is still owned by the original game.
++     */
++    public GameCopier withStateBasedActions(final boolean check) {
++        if (!check && (!origGame.getStack().isFrozen() && !origGame.getStack().isResolving())) {
++            throw new IllegalStateException("Deferred state checks require an in-progress native window");
++        }
++        if (!check && origGame.EXPERIMENTAL_RESTORE_SNAPSHOT) {
++            throw new IllegalStateException("Deferred state checks are unavailable for experimental restore snapshots");
++        }
++        this.checkStateBasedActions = check;
+         return this;
+     }
+ 
+@@ -106,6 +122,9 @@
+         return makeCopy(null, null);
+     }
+     public Game makeCopy(PhaseType advanceToPhase, Player aiPlayer) {
++        if (!checkStateBasedActions && advanceToPhase != null) {
++            throw new IllegalArgumentException("Cannot advance an in-progress state-only snapshot");
++        }
+         if (origGame.EXPERIMENTAL_RESTORE_SNAPSHOT) {
+             // How do we advance to phase when using restores?
+             return snapshot.makeCopy();
+@@ -252,7 +271,11 @@
+             newGame.getPhaseHandler().setCombat(new Combat(origPhaseHandler.getCombat(), gameObjectMap));
+         }
+ 
+-        newGame.getAction().checkStateEffects(true); //ensure state based effects and triggers are updated
++        if (checkStateBasedActions) {
++            newGame.getAction().checkStateEffects(true);
++        } else {
++            newGame.getAction().checkStaticAbilities(false);
++        }
+         newGame.getTriggerHandler().resetActiveTriggers();
+ 
+ 

@@ -208,6 +208,7 @@ REGRESSION_SOURCES = {
     "CommanderWardTransitionTest.java": "commander_ward_transition_test_sha256",
     "CommanderTargetTaxTest.java": "commander_target_tax_test_sha256",
     "CommanderPreGoalOutcomeTest.java": "commander_pre_goal_outcome_test_sha256",
+    "CommanderCastWindowTest.java": "commander_cast_window_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

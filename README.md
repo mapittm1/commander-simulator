@@ -66,55 +66,41 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-The registered, uninstalled X-cost/event prototype passes 768 focused and 2,653 source cases,
-retaining all prior 588/2,473 green cases and every case from the failed 2,611-case
-attempt. That intermediate source run stopped a Bontu airbend loop at opponent
-life 1 because the forecast rejected a win from a cast trigger. The final source
-run retains and passes that control.
+The registered cast-event correction passes 814 focused and 2,699 source cases.
+The first fresh build passed 3,872/3,877 native cases; that failed build remains
+preserved. Its four optional-X failures and cleanup-priority failure were
+reproduced with all earlier focused cases retained, then corrected generically.
 
-Live native cast/copy/target trigger eligibility now selects pre-goal forecasting
-instead of requiring a ward keyword. The query includes phase/zone eligibility,
-suppression and delayed triggers without firing events or changing registration
-caches. Controls cover Frost Titan taxes, granted Kira counters, Chalice cast
-counters and suppressed tax estimates. Per-turn targeting participants are copied
-independently and remapped to copied players, preserving first-target and valiant
-markers. The event/history comparison passes 726/726 against 699/726 before these
-corrections; those are test cases, not independent defect counts.
+Native activation creates a fresh ability object. Forecasts now follow its stable
+stack-entry ID and stop before resolving it, preserving the timing of resources
+used for later costs. During an already resolving/frozen native window, cost-only
+copies retain in-progress state without premature state-based actions or trigger
+resolution; the original continuation owns that timing. Ordinary copies retain
+their existing state checks. Deferred copies reject ordinary priority windows,
+phase advancement, experimental restore mode and reuse after the native window
+ends. They cannot resume a copied Java continuation or prove future trigger fees.
 
-Native effects above the proposed action resolve in an isolated copied game.
-A cast-trigger win succeeds even before the action resolves, including a win from
-remaining cast effects after that action is countered. Losses and payer
-elimination are rejected; stack entries that predated the proposed action remain
-unresolved. Independent cast controls reproduced three rejected pre-goal wins and
-three rejected wins after a countered goal before their respective corrections.
-All prior ward, variable-X, cost-trigger, resource-generation and isolation cases
-remain included.
+The 22 new controls cover native ability copying, unresolved-activation budgets,
+source isolation and guarded copy policies. All 16 optional-X and eight cleanup
+priority cases from the full build now pass, along with every prior focused and
+source case. The correction changes ComputerUtilMana and GameCopier; cards and
+AI profiles are unchanged. The registered recipe now targets 3,899 native cases,
+retaining every prior case, and 2,742 independent packaged cases under unchanged
+resource limits. These expected totals still require a fresh build and runtime
+gates; the selected runtime is unchanged.
 
-The 180 new controls cover original/one/two copies, suppression, targeting history,
-win/loss/survival, older-stack protection and 63/64/65-resolution boundaries.
-Boundary probes use explicit trusted mechanics rather than printed-card script
-claims: 65 harmless effects resolve in actual gameplay while exceeding the
-forecast's 64-resolution bound. No-plan at that bound is not impossibility proof.
-
-Eight generic production sources differ from the installed baseline. Card scripts
-and AI profiles are unchanged. The aggregate patch and five fixtures are now
-registered for a fresh build targeting 3,877 native cases, retaining all 3,295 prior
-cases. Independent packaged testing targets 2,720 cases with a separate 582-case
-event group under the existing worker limits. These are expected counts; fresh
-build, native,
-packaged, broader, full-game, catalog and health runtime gates remain pending.
-Triggered-ability forecasting, responses, trigger sources introduced by costs
-and experimental snapshot restoration require more controls. The installed
-runtime is unchanged, and complete card/rules correctness remains unproven.
-See the [registered aggregate patch](engine/patches/commander-cast-events.patch),
-[138 event/history cases](engine/pending/target-tax/fixtures-v4/CommanderTargetTaxTest.java),
-[42 outcome/ordering cases](engine/pending/target-tax/outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java)
-and [evidence](engine/target_tax_evidence.json). Retained
+See the [incremental correction](engine/patches/commander-cast-windows.patch),
+[22 new controls](engine/tests/CommanderCastWindowTest.java) and
+[failed-build/correction evidence](engine/cast_window_evidence.json). It applies
+after the [registered event aggregate](engine/patches/commander-cast-events.patch).
+Earlier [event/history](engine/target_tax_evidence.json),
 [ward-transition](engine/ward_transition_evidence.json),
 [typed-ward](engine/typed_ward_evidence.json) and
-[X-cost](engine/waterbend_x_evidence.json) evidence preserve earlier milestones.
-The registered aggregate replaces the earlier pending aggregates; they must not
-be applied together. See [registration evidence](engine/cast_events_registration_evidence.json).
+[X-cost](engine/waterbend_x_evidence.json) evidence remain preserved.
+Complete card/rules/AI correctness remains unproven. Triggered-ability forecasts,
+responses, trigger sources introduced by costs, exhaustive payment search and
+experimental restoration require further work. Bounded no-plan is an observation,
+not proof that a payment is impossible.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

@@ -100,6 +100,7 @@ SOURCES = {
     "CommanderWardTransitionTest": "commander_ward_transition_test_sha256",
     "CommanderTargetTaxTest": "commander_target_tax_test_sha256",
     "CommanderPreGoalOutcomeTest": "commander_pre_goal_outcome_test_sha256",
+    "CommanderCastWindowTest": "commander_cast_window_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -426,7 +427,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 2720-case packaged family."""
+    """Execute the fixed 2742-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

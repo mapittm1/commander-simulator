@@ -1,0 +1,10 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -201,6 +201,7 @@
+ 
+     private static boolean previewSeparateManaBudget(Cost cost, SpellAbility ability, Player payer,
+             int extraMana, boolean effect, boolean includeWard) {
++        if (payer.getLife() <= 0) System.out.println("CAST_WINDOW_DIAG ability="+ability.getHostCard().getName()+" resolving="+payer.getGame().getStack().isResolving()+" frozen="+payer.getGame().getStack().isFrozen()+" phase="+payer.getGame().getPhaseHandler().getPhase());
+         GameCopier copier = new GameCopier(payer.getGame()).withStack(true);
+         Game copy = copier.makeCopy(null, payer);
+         Player copiedPayer = copier.find(payer);

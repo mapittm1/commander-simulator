@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the first registered event build's 3,872/3,877 result and its five
+  regressions. Track native stack-entry IDs through activation copying and
+  preserve continuation timing with guarded cost-only snapshots. Default copies
+  retain state checks; deferred copies reject invalid windows, phase advancement,
+  experimental restoration and stale reuse. Add 22 native controls and retain all
+  optional-X/cleanup cases: 814 focused and 2,699 source cases pass. Register the
+  incremental correction and fixture, targeting 3,899 native and 2,742 packaged
+  cases under unchanged limits. README and hashed evidence updated. Fresh retry
+  and runtime gates remain pending; the selected runtime is unchanged.
+
 - Register the validated cast-event/X-cost aggregate and five fixed native
   regression fixtures. Pin their hashes in the recipe and build/source registries;
   target 3,877 native cases while retaining all 3,295 prior cases. Add a separate

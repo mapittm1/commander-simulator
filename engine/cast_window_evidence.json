@@ -1,0 +1,188 @@
+{
+  "status": "source_validated_incremental_correction_registered_fresh_retry_pending",
+  "failed_build": "673e909cc3a54bc9b1f0927a4c5cca9a",
+  "failed_build_counts": {
+    "total": 3877,
+    "passed": 3872,
+    "failed": 5,
+    "skipped": 0
+  },
+  "final_prototype": "cast-window-prototype-v4-source",
+  "final_fixture": "cast-window-fixtures-v2/CommanderCastWindowTest.java",
+  "focused_counts": {
+    "total": 814,
+    "passed": 814,
+    "failed": 0,
+    "skipped": 0
+  },
+  "retained_prior_focused_cases": 768,
+  "added_existing_native_cases": 24,
+  "new_control_cases": 22,
+  "corrections": [
+    "Track the native stack-entry ID through activated-ability copying and subsequent X changes, rather than looking for the cleared original ability ID.",
+    "At an in-progress resolving/frozen window, forecast current costs in a copied state without prematurely running state-based actions or pending effects; the original native continuation owns their timing.",
+    "Keep default snapshots unchanged. Permit state-only copies only during an in-progress window; reject phase advancement, experimental restore mode, and stale reuse after that window ends."
+  ],
+  "diagnostic": "Panglacial Wurm was being cast with resolving=true and frozen=true; the ordinary copy constructor ran state checks before Stunning Reversal finished its loss replacement.",
+  "preserved_comparisons": {
+    "cast-window792-baseline-v1": {
+      "total": 792,
+      "passed": 787,
+      "failed": 5
+    },
+    "cast-window792-prototype-v2": {
+      "total": 792,
+      "passed": 791,
+      "failed": 1
+    },
+    "cast-window792-prototype-v3": {
+      "total": 792,
+      "passed": 792,
+      "failed": 0
+    },
+    "cast-window813-prototype-v4": {
+      "total": 813,
+      "passed": 813,
+      "failed": 0
+    },
+    "cast-window814-baseline-v6": {
+      "total": 814,
+      "passed": 813,
+      "failed": 1
+    },
+    "cast-window814-prototype-v7": {
+      "total": 814,
+      "passed": 814,
+      "failed": 0,
+      "skipped": 0
+    }
+  },
+  "source_test_target": 2699,
+  "incremental_patch_baseline": "source2653-v1/input-snapshots (the registered cast-event aggregate)",
+  "changed_production_files": [
+    "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java"
+  ],
+  "new_registration_targets": {
+    "native": 3899,
+    "packaged": 2742,
+    "cast_event_group": 604,
+    "broader_gameplay": 5373,
+    "serialization": 256
+  },
+  "known_limits": [
+    "Fresh full native/build, independent packaged, broader, full-game, catalog and activation gates must be rerun after registering the correction.",
+    "In-progress copies forecast current costs only; they cannot resume a copied Java continuation or prove future trigger payments.",
+    "Triggered-ability forecasting, responses, trigger sources introduced by costs and experimental restore mode still need further coverage.",
+    "Bounded no-plan remains an observation; complete card/rules/AI correctness remains unproven."
+  ],
+  "tested_head": "b1c7698556f3a4c6a327c66d46d52bb1dc4d3a40",
+  "selected_runtime_changed": false,
+  "source_validation": {
+    "counts": {
+      "total": 2699,
+      "passed": 2699,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 2653,
+    "added_existing_native_cases": 24,
+    "new_control_cases": 22
+  },
+  "patch": {
+    "path": "engine/patches/commander-cast-windows.patch",
+    "sha256": "feb9b8e3c6f856403e97a8673fb3ec93318256a3a10800d6f392c418bbd1d30e",
+    "baseline": "Apply after the registered commander-cast-events.patch, not instead of it."
+  },
+  "fixture": {
+    "path": "engine/tests/CommanderCastWindowTest.java",
+    "sha256": "e95cf7441d6b2e7d2c8eafc8d297b333a31b83a79fe92ee9afc9c3cdd5fd353c"
+  },
+  "patch_roundtrip": "Explicit UTF-8; applied bytes match validated source after CRLF/LF normalization only.",
+  "limits_unchanged": {
+    "focused_heap_mib": 1536,
+    "focused_cpus": 2,
+    "focused_seconds": 90,
+    "native_heap_mib": 2048,
+    "native_cpus": 2,
+    "native_suite_seconds": 600
+  },
+  "artifacts": {
+    "engine/pending/cast-window/cast-window-review-v1.json": "8e98f982b27149b1452d3cae04a6469e9bc00d99949d1ed9ebf3fee1d0630949",
+    "engine/pending/cast-window/cast-window792-baseline-v1/evidence.json": "53f08058473a1fd7a604bb661bafbfac37c530660b00586a2509c4d8e51b6a5c",
+    "engine/pending/cast-window/cast-window792-baseline-v1/native.log.txt": "4350d1a2c13c5f1c72a1c821fd681f393c2e234e0951e2edd4f3c2dece8bec95",
+    "engine/pending/cast-window/cast-window792-baseline-v1/process.json": "d85ab2eb22d791ba6b6d0cf5d75e27a1489c5f2bf3edaa69fb78ccdb5a0cdece",
+    "engine/pending/cast-window/cast-window792-baseline-v1/production-compiler.log": "f2796f5b6deb2bc3376f10108cf4c835850217120021eba67817d3bf72d8fd07",
+    "engine/pending/cast-window/cast-window792-baseline-v1/production-inputs.json": "5eb24b0d96eada8dccf5b75198184f8f515f916311f6fe79628ad5509028aed9",
+    "engine/pending/cast-window/cast-window792-baseline-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window792-baseline-v1/rules-inputs.json": "2c9cff209f33d09f8bdf3899f608b5871b9e5bccc5f05bae1bb5c90b3f19fdf3",
+    "engine/pending/cast-window/cast-window792-baseline-v1/wrapper.txt": "5059f0f90d0155913e84e009de22584f5babddae416bd602aaca47ff45138791",
+    "engine/pending/cast-window/cast-window792-prototype-v2/evidence.json": "a4d9f23e48c962f5f9950fbca90bd04706ab8fd9d218cf73b14046a13e424911",
+    "engine/pending/cast-window/cast-window792-prototype-v2/process.json": "b34ad41acf7b5d2f32b4c2c3767bc3f56574ef2e196c9222c7c4a05759393937",
+    "engine/pending/cast-window/cast-window792-prototype-v2/production-compiler.log": "170d5802989daed7ee33b85f1a1ddba885496597ce1dc9bccb7afc3aef1fb19e",
+    "engine/pending/cast-window/cast-window792-prototype-v2/production-inputs.json": "ac83474cd0e43047b50d15b2d282c46c62cdded86c883a25524b0e8f22b735a1",
+    "engine/pending/cast-window/cast-window792-prototype-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window792-prototype-v2/rules-inputs.json": "2c9cff209f33d09f8bdf3899f608b5871b9e5bccc5f05bae1bb5c90b3f19fdf3",
+    "engine/pending/cast-window/cast-window792-prototype-v2/wrapper.txt": "0e15bde182fb128868b353e0b8934254108775e20f0d4366321bea3ca68ab503",
+    "engine/pending/cast-window/cast-window792-prototype-v3/evidence.json": "cc74fdc3877364e93f3fae80a6b6b7c445af916115f467b5270da7b1b2ba9fc4",
+    "engine/pending/cast-window/cast-window792-prototype-v3/process.json": "4d31f6ce341612597cf39a67ef0cef7c7c5c72a20ee62631d2e2f461b8dca848",
+    "engine/pending/cast-window/cast-window792-prototype-v3/production-compiler.log": "c00e0a1f4e320d0b7ff99001df92b12aa4a48df658461c72d02f3bc428bad76a",
+    "engine/pending/cast-window/cast-window792-prototype-v3/production-inputs.json": "c274b86842ea13299b6ede04c3ec707905e575cee434fa35abddda8e2e13b4bd",
+    "engine/pending/cast-window/cast-window792-prototype-v3/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window792-prototype-v3/rules-inputs.json": "2c9cff209f33d09f8bdf3899f608b5871b9e5bccc5f05bae1bb5c90b3f19fdf3",
+    "engine/pending/cast-window/cast-window792-prototype-v3/wrapper.txt": "0851f11665f5437051956b3e539e3e203507e276839132aa9b9460410e17c77b",
+    "engine/pending/cast-window/cast-window813-prototype-v4/evidence.json": "191e95f99c9fad68be666981634e053ef36c56cee08420f25619527e77866a31",
+    "engine/pending/cast-window/cast-window813-prototype-v4/process.json": "e4f08c0f38048db766b42caf0a0b21e711eb97588acb471460880b3f15cf03c6",
+    "engine/pending/cast-window/cast-window813-prototype-v4/production-compiler.log": "c00e0a1f4e320d0b7ff99001df92b12aa4a48df658461c72d02f3bc428bad76a",
+    "engine/pending/cast-window/cast-window813-prototype-v4/production-inputs.json": "d5226efcaf8adb5e8feb407a330d084454c622330a7953f720ce052f64cfdb90",
+    "engine/pending/cast-window/cast-window813-prototype-v4/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window813-prototype-v4/rules-inputs.json": "14dce47264d0743ddf8cb2e18bf66c33e0f1b995180530a6e78772757ef525b0",
+    "engine/pending/cast-window/cast-window813-prototype-v4/wrapper.txt": "adf27ef59fa528ff4d14ed4e209be024592c69abb00faba419e7348e364d1b22",
+    "engine/pending/cast-window/cast-window814-baseline-v6/evidence.json": "8d874e3674fb9221be716f8a48f04222a10dac1828006db36fe3c5e2b7818281",
+    "engine/pending/cast-window/cast-window814-baseline-v6/process.json": "3721a05b9d47443b5e29e656e863094a6345b63bec70bbcf86225179a53f4144",
+    "engine/pending/cast-window/cast-window814-baseline-v6/production-compiler.log": "c00e0a1f4e320d0b7ff99001df92b12aa4a48df658461c72d02f3bc428bad76a",
+    "engine/pending/cast-window/cast-window814-baseline-v6/production-inputs.json": "43931a3ed0c101d7d02f7cb2872c3b0026fd8a215eba7f8721a31f8151ff04cd",
+    "engine/pending/cast-window/cast-window814-baseline-v6/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window814-baseline-v6/rules-inputs.json": "34dd7ae405dd8c30a96d19d4f11c0b732a791908e71ef14169998da4d906d4b5",
+    "engine/pending/cast-window/cast-window814-baseline-v6/wrapper.txt": "7d95b6b88bfe9e45378528495e6aaa48e396788f85d098e3bfcc8116445694cf",
+    "engine/pending/cast-window/cast-window814-prototype-v7/evidence.json": "0ffd0661a050a17a574d6b905d625d83716e8c6130acda121f3c89bbdc2e2f7a",
+    "engine/pending/cast-window/cast-window814-prototype-v7/process.json": "c9fe3a1f5a5c07fab61cdf24d0a774948411e158d50fbed1ed8154f49537f58d",
+    "engine/pending/cast-window/cast-window814-prototype-v7/production-compiler.log": "6f83bf6934839e5827fc5254d152445d6d072da1db9ef3f48c71f3bb35ed524e",
+    "engine/pending/cast-window/cast-window814-prototype-v7/production-inputs.json": "7efdcf9567a0e024dc790037fdcf966685ad170e4eb11d3dc246fea50ab28fc0",
+    "engine/pending/cast-window/cast-window814-prototype-v7/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-window/cast-window814-prototype-v7/rules-inputs.json": "34dd7ae405dd8c30a96d19d4f11c0b732a791908e71ef14169998da4d906d4b5",
+    "engine/pending/cast-window/cast-window814-prototype-v7/wrapper.txt": "6c8ff1ad362f21b0fd5ceb162d2e53760db777807731d793ce63db49f906efb4",
+    "engine/pending/cast-window/drivers/run_cast_window792_baseline_v1.py.txt": "475fd1cea02c0c3408e0b5e40e8e896f307f69e9f71eff48f4ec29d2de7a72c2",
+    "engine/pending/cast-window/drivers/run_cast_window792_prototype_v2.py.txt": "9e6e36c17905491e2cebc41016511520c1b78cdb72de0962f757f042b9537235",
+    "engine/pending/cast-window/drivers/run_cast_window792_prototype_v3.py.txt": "9b8a2ef55f175f7bbf72b3eb5c7dced79be706ef8e6b290179cb246e68be087e",
+    "engine/pending/cast-window/drivers/run_cast_window813_baseline_v5.py.txt": "3e05abf06166e7159157f1b6a8608a5bbd2b8341a2f420f2785addc3a6cfee19",
+    "engine/pending/cast-window/drivers/run_cast_window813_prototype_v4.py.txt": "2b7e2d387ecef759e9d5d81fd311815e2bfdd3c688a5ea8a6f808c88c172ded4",
+    "engine/pending/cast-window/drivers/run_cast_window814_baseline_v6.py.txt": "f31d21f5a0ff85b6b41b26fd781312bd69fb15541a0253f654e43ac8f04b9b88",
+    "engine/pending/cast-window/drivers/run_cast_window814_prototype_v7.py.txt": "5e8693ad3c0303da02d1453899f500b107d5e478b32eed228c7f8d5922a2bfe7",
+    "engine/pending/cast-window/drivers/run_source2699_v1.py.txt": "f81e2d4377c3a275ff82dbee0f455823b6677e00d5925a4dd9a40efa0167e587",
+    "engine/pending/cast-window/fixtures-v1/CommanderCastWindowTest.java": "b656f68f6cc9597d07637b774e2f7f5ef7fb38bc4d685c995379bc824a1edb7d",
+    "engine/pending/cast-window/fixtures-v2/CommanderCastWindowTest.java": "e95cf7441d6b2e7d2c8eafc8d297b333a31b83a79fe92ee9afc9c3cdd5fd353c",
+    "engine/pending/cast-window/intermediate-prototype-v1.patch": "fd1ac5f833b9f5ae91c65af419e285dbf1eb329d13d0549fcf9f01952cfcf056",
+    "engine/pending/cast-window/intermediate-prototype-v2.patch": "e219d81f3a6dde9cbcf1bc11e0281c38e3393e0d9a992443886f7e098c468c1b",
+    "engine/pending/cast-window/intermediate-prototype-v3.patch": "308c6ecf91d5588360ad678c87c634f130c2f21afa81f82f8ea934408aff537b",
+    "engine/pending/cast-window/native3877-failed-v1/build-selection.json": "4263454950b95daa56e58451a02294b457c818f4eabefbdb7672f093df5d9d0a",
+    "engine/pending/cast-window/native3877-failed-v1/build-wrapper-v1.log": "8aba96d0257780987738efab7e388c631f5a149bce21593c87dbe1dd08b7471e",
+    "engine/pending/cast-window/native3877-failed-v1/maven-build.log.txt": "e48931c901d78ccd88cdd049cb0be16d94660aa91040bbd77ea3f3002e30a840",
+    "engine/pending/cast-window/native3877-failed-v1/native-failure-v1.json": "3e800d9e738b611d0f86dc3cc5d4cbb5d2105798a3fce90db8caa9d146d9a693",
+    "engine/pending/cast-window/native3877-failed-v1/source-ci.json": "1e576a841319bca054810ee1b7fbb5ccd1edea154a81d364ae3e993bc0898390",
+    "engine/pending/cast-window/native3877-failed-v1/source-epoch.json": "ff1507a0b5b4e0b8e2aad4f462a8cbe93ab766a89e303b6b5c6a5f3a78db6442",
+    "engine/pending/cast-window/native3877-failed-v1/source-frozen-inputs.json": "5cde39ee26059bdb072f03d94309a493841ba8523c0e5c3a1aa0b258e8d24b67",
+    "engine/pending/cast-window/native3877-failed-v1/testng-results.xml": "c04a9fb2814e15244390235c111e4f691c4b134ef9e93653db6bb277c9795d02",
+    "engine/pending/cast-window/prototype-v1.patch": "feb9b8e3c6f856403e97a8673fb3ec93318256a3a10800d6f392c418bbd1d30e",
+    "engine/pending/cast-window/source2699-preparation-v1.json": "b889dce05707707fe58b9b1a1204c9e7cc77d4ea5b35d3f732e059a50ef68b16",
+    "engine/pending/cast-window/source2699-v1/card-inputs.json": "e22d053fba0ca9b8d1af11acc6c78894203160b0bda4c2bb7c51f85dabc89a4b",
+    "engine/pending/cast-window/source2699-v1/drivers/build_sticker_engine.py.txt": "dbc057a7b293a248ba1eeb489de7b5571f4cca5003af5437862526204d6b947b",
+    "engine/pending/cast-window/source2699-v1/drivers/run_source2699_v1.py.txt": "f81e2d4377c3a275ff82dbee0f455823b6677e00d5925a4dd9a40efa0167e587",
+    "engine/pending/cast-window/source2699-v1/evidence.json": "68f7a3dc593047cdcd5aa723a99ed81ad6a31ab49dedbe64bcd427a4501c3b12",
+    "engine/pending/cast-window/source2699-v1/production-inputs.json": "0e666511a37861dc9ef30b0e8a72992bb99cde4e8e7039e0b26767ddcd0ae48f",
+    "engine/pending/cast-window/source2699-v1/selection.json": "caed256e26361ae9e4db6dcefcf7770e24e3183a813ed2f18187f3e0acaed009",
+    "engine/pending/cast-window/source2699-v1/test-inputs.json": "0f61c363b7076fbfc583444b858f288a10300198601932b9820a28afa46602d5",
+    "engine/pending/cast-window/source2699-v1/wrapper.txt": "e96674d7694b8bd305930b4732114442eea15d43617e6254c54ec28349fcf184"
+  },
+  "full_card_rules_correctness_established": false
+}
