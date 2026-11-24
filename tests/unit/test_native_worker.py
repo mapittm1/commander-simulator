@@ -7,7 +7,7 @@ from tempfile import TemporaryDirectory
 from unittest.mock import patch
 
 from commander.engine.forge_config import file_hash
-from tests.support.native_worker import run_test_worker
+from tests.support.native_worker import WorkerInvocation, run_test_worker
 
 
 @contextmanager
@@ -81,3 +81,16 @@ class NativeWorkerIdentityTests(unittest.TestCase):
         self.assertEqual(result["returncode"], 0)
         self.assertEqual(worker_hash, file_hash(self.worker))
         self.assertEqual(result["support_source_hashes"], {})
+
+    def test_fixed_worker_arguments_keep_existing_timeout(self):
+        """Forward trusted group selection as argv with the same process budget."""
+        settings = type("Settings", (), {"home": self.run_directory})()
+        run_test_worker(
+            settings,
+            self.run_directory,
+            WorkerInvocation(self.worker, ("information",)),
+            "native.log",
+        )
+        command, _, _, limits = self.process.call_args.args
+        self.assertEqual(command[-2:], [str(self.run_directory), "information"])
+        self.assertEqual(limits.timeout, 90)

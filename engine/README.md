@@ -615,6 +615,17 @@ See [prepared_state_evidence.json](prepared_state_evidence.json).
 
 Source registration targets sealed 2,652, packaged 1,495/65/194/146 with 134
 production origins, broader 4,126/256 and unchanged fixed-seed full games/catalog.
-All runtime gates remain pending. The prior 17/21 packaged timeouts are retained;
-no selected-runtime activation occurred. Supplied witnesses do not certify all
-prepared triggers, strategic choices or complete card/rules correctness.
+The fresh artifact passes all 2,652 native and independent 4,126 gameplay/256
+serialization cases. Packaged 65/194/146 pass; the original 1,495-case worker
+still times out at 90 seconds. All 1,495 cases pass in four diagnostic groups
+(301/228/338/628), with disjoint/exhaustive method counters matching the sealed
+report, unchanged assertions/limits, and all 134 origin checks per group.
+The normal harness now registers those fixed groups; twelve draft offline
+partition/argument tests pass. Registered harness runtime validation remains
+pending. Keep the combined 2,652 native JVM gate for cross-suite behavior.
+See [runtime evidence](prepared_state_runtime_evidence.json).
+
+Full fixed-seed games/catalog and activation remain pending. Earlier failed
+17/21 gates remain preserved; grouping changes worker boundaries and does not
+retroactively pass them. No selected-runtime activation occurred. Supplied
+witnesses do not certify all prepared triggers, strategy or complete rules.

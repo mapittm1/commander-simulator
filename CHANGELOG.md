@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Keep every packaged draw/rules case while splitting the oversized worker into
+  four fixed mechanic groups (301/228/338/628). Reject missing, repeated and
+  unregistered classes, retain all method/summary/origin assertions, and keep
+  worker 90s/2048 MiB/two CPU and whole-smoke 420s limits. Keep the combined
+  2,652-case native JVM gate. Twelve draft offline tests pass; diagnostic groups
+  pass all 1,495 in 193.375s. Registered harness runtime validation remains
+  pending, and the original single-worker timeout remains failed. The prepared
+  artifact also passes all 2,652 native and independent 4,126 gameplay/256
+  serialization cases, with 65/194/146 other packaged cases passed. Record
+  engine/prepared_state_runtime_evidence.json; full games/catalog/activation
+  remain pending and complete card/rules coverage is unproven.
+
 - Preserve generic prepared state across copied games: map the creature/effect/
   spell links after remembered objects, retain the exiled prepared face, and map
   leaves-play cleanup. Keep historical prepared memories private and rebind

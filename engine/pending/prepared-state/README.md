@@ -12,6 +12,10 @@ exiled prepared faces, gives cleanup a mapped callback, and uses private histori
 links plus mapped cast-origin zones. Infirmary Healer/Stream of Life supplies
 representative printed rules, not a special card-name branch in production.
 
-Fresh sealed 2,652 and independent packaged 1,495/65/194/146, broader/full-game/
-catalog gates remain pending. Previous 17/21 packaged timeouts remain failed.
-The selected runtime is unchanged; complete card/strategy support is unproven.
+Fresh sealed 2,652 and independent broader 4,126/256 pass. Packaged 65/194/146
+pass; the single1,495-case worker still times out90s. Four exhaustive diagnostic
+groups pass all1,495 with the same worker/heap/CPU limits. The normal harness
+registers these groups; its runtime validation, full games/catalog and activation
+remain pending. All prior failures are preserved; selected runtime is unchanged.
+See engine/prepared_state_runtime_evidence.json. Complete card correctness and
+strategy remain unproven.

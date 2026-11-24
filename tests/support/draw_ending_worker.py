@@ -10,6 +10,7 @@ sys.path.insert(0, str(PROJECT))
 # Fixed trusted test sources and dependencies; uploads cannot select executable code.
 # pylint: disable=wrong-import-position
 from commander.engine.forge_config import file_hash, read_settings
+from tests.support.draw_ending_partitions import select_partition, validate_partitions
 from tests.support.packaged_rules import (
     RuleFamily,
     class_origin,
@@ -366,8 +367,16 @@ def main() -> None:
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
+    validate_partitions(TEST_CLASSES)
+    if len(sys.argv) not in (2, 3):
+        raise ValueError("Expected a run directory and optional fixed rules group")
+    classes = (
+        select_partition(sys.argv[2], TEST_CLASSES)
+        if len(sys.argv) == 3
+        else TEST_CLASSES
+    )
     family = RuleFamily(
-        TEST_CLASSES,
+        classes,
         (
             "forge.ai.AITest",
             "forge.ai.InspectionTestSupport",

@@ -2,6 +2,7 @@
 
 import importlib
 import sys
+from dataclasses import dataclass
 from pathlib import Path
 
 from commander.engine.engine_process import ProcessLimits, run_bounded
@@ -16,24 +17,41 @@ from commander.engine.native_runtime import (
 )
 
 
+@dataclass(frozen=True)
+class WorkerInvocation:
+    """A trusted worker path and fixed internal arguments; uploads cannot supply them."""
+
+    path: Path
+    arguments: tuple[str, ...] = ()
+
+
 def run_test_worker(
     settings,
     run: Path,
-    worker: Path,
+    worker: Path | WorkerInvocation,
     log_name: str,
     support_sources: tuple[Path, ...] = (),
 ):
     """Retain source identity and use the normal isolated engine profile lifecycle."""
-    before = file_hash(worker)
+    invocation = (
+        worker if isinstance(worker, WorkerInvocation) else WorkerInvocation(worker)
+    )
+    before = file_hash(invocation.path)
     support_hashes = {str(path): file_hash(path) for path in support_sources}
     with _engine_profile(settings, run):
         process = run_bounded(
-            [sys.executable, "-I", str(worker), str(run)],
+            [
+                sys.executable,
+                "-I",
+                str(invocation.path),
+                str(run),
+                *invocation.arguments,
+            ],
             settings.home,
             run / log_name,
             ProcessLimits(90, environment=_environment(run)),
         )
-    if file_hash(worker) != before:
+    if file_hash(invocation.path) != before:
         raise ValueError("Fixed native test worker changed during execution")
     if any(file_hash(Path(path)) != digest for path, digest in support_hashes.items()):
         raise ValueError("Fixed native test support source changed during execution")

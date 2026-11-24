@@ -34,9 +34,17 @@ zones use the copied player. Paid Infirmary Healer/Stream of Life cases cover
 entry, actual mana/life gain, consumption, re-entry, cleanup, one/two copies and
 independent histories. The baseline passes four controls and fails 14 copied or
 historical cases; the corrected prototype passes all 18, all 279 related cases,
-and all 1,427 mixed source cases (1,409 retained plus 18). Fresh sealed 2,652,
-packaged 1,495/65/194/146, broader 4,126/256 and full-game/catalog gates remain
-pending. These supplied states do not certify every prepared trigger, strategy
+and all 1,427 mixed source cases (1,409 retained plus 18). The fresh artifact
+passes all 2,652 native cases and independent broader
+4,126 gameplay/256 serialization cases. Packaged 65/194/146 pass; the single
+1,495-case worker times out at its unchanged 90-second limit. Diagnostic groups
+retain every case and pass all 1,495 in 193 seconds with the same worker/heap/CPU
+limits and 134 production-origin checks per group. The normal harness now uses
+those four fixed groups and rejects missing, duplicate or unregistered classes;
+its registered runtime validation and full-game/catalog gates remain pending.
+The original timeout is preserved. See
+[runtime evidence](engine/prepared_state_runtime_evidence.json). These supplied
+states do not certify every prepared trigger, strategy
 or card interaction. See [prepared-state evidence](engine/prepared_state_evidence.json).
 
 The preceding deferred-repeat build passes all 2,634 native tests, retains all

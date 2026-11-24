@@ -9,9 +9,19 @@ import pytest
 from commander.engine.forge_config import read_settings
 from commander.engine.native_runtime import create_run
 from commander.paths import PROJECT_ROOT
-from tests.support.draw_ending_worker import NATIVE_CLASSES, _compile, _inputs
+from tests.support.draw_ending_partitions import (
+    EXPECTED_COUNTS,
+    PARTITIONS,
+    validate_partitions,
+)
+from tests.support.draw_ending_worker import (
+    NATIVE_CLASSES,
+    TEST_CLASSES,
+    _compile,
+    _inputs,
+)
 from tests.support.native_receipts import read_test_receipts
-from tests.support.native_worker import run_test_worker
+from tests.support.native_worker import WorkerInvocation, run_test_worker
 from tests.support.packaged_rules import SUPPORT_SOURCES
 
 pytestmark = pytest.mark.integration
@@ -27,27 +37,51 @@ class DrawEndingIntegrationTests(unittest.TestCase):
     def test_packaged_draw_ending_rules(self):
         """Require every fixed rules method to pass without skips or configuration failures."""
         settings = read_settings()
+        validate_partitions(TEST_CLASSES)
+        all_methods = []
+        for partition in PARTITIONS:
+            all_methods.extend(self.check_partition(settings, partition))
+        self.assertEqual(len(all_methods), 1495)
+        self.assertEqual(len(set(all_methods)), 1495)
+
+    def check_partition(self, settings, partition):
+        """Check every fixed case and class origin in one bounded worker."""
         run = create_run()
+        expected_count = EXPECTED_COUNTS[partition]
         _compile(settings, run, *_inputs())
         worker = PROJECT_ROOT / "tests/support/draw_ending_worker.py"
         process, _ = run_test_worker(
-            settings, run, worker, "draw-ending-worker.log", SUPPORT_SOURCES
+            settings,
+            run,
+            WorkerInvocation(worker, (partition,)),
+            "draw-ending-worker.log",
+            SUPPORT_SOURCES
+            + (PROJECT_ROOT / "tests/support/draw_ending_partitions.py",),
         )
         self.assertEqual(process["returncode"], 0, process)
         rows = read_test_receipts(
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 1495},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": expected_count},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 1495)
+        self.assertEqual(
+            {row["method"].rsplit(".", 1)[0] for row in methods},
+            set(PARTITIONS[partition]),
+        )
+        self.assertEqual(len({row["method"] for row in methods}), expected_count)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
             summary["counts"],
-            {"total": 1495, "passed": 1495, "failed": 0, "skipped": 0},
+            {
+                "total": expected_count,
+                "passed": expected_count,
+                "failed": 0,
+                "skipped": 0,
+            },
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (
@@ -62,4 +96,10 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         self.assertEqual(
             summary["production_classes_from_packaged_jar"], expected_classes
         )
-        print(json.dumps({"draw_ending_run": run.name}), flush=True)
+        print(
+            json.dumps(
+                {"draw_ending_partition": partition, "draw_ending_run": run.name}
+            ),
+            flush=True,
+        )
+        return [row["method"] for row in methods]
