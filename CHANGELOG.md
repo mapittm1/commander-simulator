@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Extend the waterbend correction through actual mana execution and payment
+  rollback. Reproduce sacrifice resource reuse and leaked taps after rejection;
+  all 93 focused/1,878 source cases now pass, retaining all previous 1,869 cases.
+  Preserve legal sacrifice of previously tapped artifacts and verify a fresh
+  payment after injected post-payment rejection. Baseline48 pass/45 fail;
+  all diagnostic/setup failures remain recorded. Register 3,103 native/1,946
+  packaged targets. The installed runtime remains unchanged and affected;
+  fresh runtime validation and activation remain pending.
+
 - Register the generic two-file waterbend correction: all 84 focused and 1,869
   combined source cases pass, retaining 1,785 and the earlier 1,866-case phase.
   Enforce the six-tap component cap, legal creature/mana-capable taps and joint

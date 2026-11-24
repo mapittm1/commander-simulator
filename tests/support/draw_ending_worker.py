@@ -405,7 +405,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1937-case packaged family."""
+    """Execute the existing fixed 1946-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

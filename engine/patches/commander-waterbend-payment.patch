@@ -1,3 +1,4 @@
+diff --git a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
 --- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
 +++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
 @@ -1793,10 +1793,67 @@
@@ -77,6 +78,7 @@
          if (kept.isEmpty() || !creatures || artifacts) {
              return chosen;
          }
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
 --- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
 +++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
 @@ -59,6 +59,44 @@
@@ -124,7 +126,20 @@
      public static boolean canPayManaCost(final SpellAbility sa, final Player ai, final int extraMana, final boolean effect) {
          return canPayManaCost(sa.getPayCosts(), sa, ai, extraMana, effect);
      }
-@@ -708,6 +746,11 @@
+@@ -73,8 +111,10 @@
+         return payManaCost(cost, sa, ai, false, 0, true, effect);
+     }
+     private static boolean payManaCost(final Cost cost, final SpellAbility sa, final Player ai, final boolean test, final int extraMana, boolean checkPlayable, final boolean effect) {
+-        ManaCostBeingPaid manaCost = calculateManaCost(cost, sa, ai, test, extraMana, effect);
+-        return payManaCost(manaCost, sa, ai, test, checkPlayable, effect) != null;
++        CardCollection waterbendTaps = new CardCollection();
++        ManaCostBeingPaid manaCost = calculateManaCost(cost, sa, ai, test, extraMana, effect, waterbendTaps);
++        return payManaCost(manaCost, sa, ai, test, checkPlayable, effect,
++                new HashSet<>(waterbendTaps)) != null;
+     }
+ 
+     /**
+@@ -708,6 +748,11 @@
  
      // returns null if unpayable
      private static List<SpellAbility> payManaCost(final ManaCostBeingPaid cost, final SpellAbility sa, final Player ai, final boolean test, boolean checkPlayable, boolean effect) {
@@ -136,7 +151,7 @@
          if ((sa.isOffering() && sa.getSacrificedAsOffering() == null) || (sa.isEmerge() && sa.getSacrificedAsEmerge() == null)) {
              // nothing was chosen
              return null;
-@@ -753,6 +796,11 @@
+@@ -753,6 +798,11 @@
          boolean purePhyrexian = cost.containsOnlyPhyrexianMana();
          boolean hasConverge = sa.getHostCard().hasConverge();
          Multimap<ManaCostShard, SpellAbility> sourcesForShards = getSourcesForShards(cost, sa, ai, test, checkPlayable, hasConverge);
@@ -148,7 +163,7 @@
  
          int testEnergyPool = ai.getCounters(CounterEnumType.ENERGY);
          int testLifeSpent = 0;
-@@ -765,8 +813,8 @@
+@@ -765,8 +815,8 @@
          List<CostTapType> tapGroups = effect || manaPart == null ? List.of() : sa.getPayCosts().getCostParts().stream()
                  .filter(CostTapType.class::isInstance).map(CostTapType.class::cast)
                  .filter(part -> part.paymentOrder() > manaPart.paymentOrder()).toList();
@@ -159,7 +174,7 @@
  
          // Loop over mana needed
          while (!cost.isPaid()) {
-@@ -838,7 +886,7 @@
+@@ -838,7 +888,7 @@
              }
  
              ManaResourcePlan resources = saPayment == null ? null : planManaResources(saPayment, sa, ai,
@@ -168,7 +183,7 @@
              if (saPayment != null && resources == null) {
                  saExcludeList.add(saPayment);
                  continue;
-@@ -1034,13 +1082,13 @@
+@@ -1034,13 +1084,13 @@
  
      private static ManaResourcePlan planManaResources(SpellAbility manaAbility, SpellAbility payingFor, Player payer,
              List<CostSacrifice> sacrificeCosts, List<CostTapType> tapGroups,
@@ -185,7 +200,7 @@
              unavailableForTaps.addAll(projectedTaps);
              unavailableForTaps.addAll(consumed);
              if (payingFor.getPayCosts().hasTapCost()) {
-@@ -1063,7 +1111,7 @@
+@@ -1063,7 +1113,7 @@
          }
  
          CardCollection manaSacrifices = null;
@@ -194,7 +209,7 @@
              CostSacrifice manaCost = manaAbility.getPayCosts().getCostPartByType(CostSacrifice.class);
              if (manaCost != null) {
                  manaSacrifices = chooseManaSacrifices(manaAbility, manaCost, payingFor, sacrificeCosts, payer,
-@@ -1374,7 +1422,7 @@
+@@ -1374,7 +1424,7 @@
                      }
                  }
                  if (!needed && canPayShardWithSpellAbility(shard, ai, m, filter, toFloat, true, toFloat.getXManaCostPaidByColor())) {
@@ -203,3 +218,122 @@
                      if (chosenPlan == null) {
                          continue;
                      }
+@@ -1832,6 +1882,12 @@
+      * @return ManaCost
+      */
+     public static ManaCostBeingPaid calculateManaCost(final Cost cost, final SpellAbility sa, final Player payer, final boolean test, final int extraMana, final boolean effect) {
++        return calculateManaCost(cost, sa, payer, test, extraMana, effect, null);
++    }
++
++    private static ManaCostBeingPaid calculateManaCost(final Cost cost, final SpellAbility sa,
++            final Player payer, final boolean test, final int extraMana, final boolean effect,
++            CardCollection waterbendTaps) {
+         Card host = sa.getHostCard();
+         Zone castFromBackup = null;
+         if (test && sa.isSpell() && !host.isInZone(ZoneType.Stack)) {
+@@ -1889,7 +1945,7 @@
+             }
+         }
+ 
+-        CostAdjustment.adjust(manaCost, sa, payer, null, test, effect);
++        CostAdjustment.adjust(manaCost, sa, payer, null, test, effect, waterbendTaps);
+ 
+         if ("NumTimes".equals(sa.getParam("Announce"))) { // e.g. the Adversary cycle
+             ManaCost mkCost = sa.getPayCosts().getTotalMana();
+diff --git a/forge-game/src/main/java/forge/game/cost/CostAdjustment.java b/forge-game/src/main/java/forge/game/cost/CostAdjustment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostAdjustment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostAdjustment.java
+@@ -171,8 +171,14 @@
+     // If cardsToDelveOut is null, will immediately exile the delved cards and remember them on the host card.
+     // Otherwise, will return them in cardsToDelveOut and the caller is responsible for doing the above.
+     public static boolean adjust(ManaCostBeingPaid cost, final SpellAbility sa, final Player payer, CardCollection cardsToDelveOut, boolean test, boolean effect) {
++        return adjust(cost, sa, payer, cardsToDelveOut, test, effect, null);
++    }
++
++    /** Collect actual waterbend taps for the remaining mana payment in this call only. */
++    public static boolean adjust(ManaCostBeingPaid cost, final SpellAbility sa, final Player payer,
++            CardCollection cardsToDelveOut, boolean test, boolean effect, CardCollection waterbendTaps) {
+         if (effect) {
+-            adjustCostByWaterbend(cost, sa, payer, test);
++            adjustCostByWaterbend(cost, sa, payer, test, waterbendTaps);
+         }
+         if (effect || sa.isTrigger() || sa.isReplacementAbility()) {
+             return true;
+@@ -292,7 +298,7 @@
+             adjustCostByConvokeOrImprovise(cost, sa, activator, false, true, test);
+         }
+ 
+-        adjustCostByWaterbend(cost, sa, payer, test);
++        adjustCostByWaterbend(cost, sa, payer, test, waterbendTaps);
+ 
+         // Reset card state (if changed)
+         if (isStateChangeToFaceDown) {
+@@ -326,14 +332,20 @@
+         return assistant.getController().helpPayForAssistSpell(cost, sa, genericLeft, requestedAmount);
+     }
+ 
+-    private static void adjustCostByWaterbend(ManaCostBeingPaid cost, SpellAbility sa, Player payer, boolean test) {
++    private static void adjustCostByWaterbend(ManaCostBeingPaid cost, SpellAbility sa, Player payer,
++            boolean test, CardCollection waterbendTaps) {
+         Integer maxWaterbend = sa.getMaxWaterbend();
+         if (maxWaterbend != null && maxWaterbend > 0) {
+-            adjustCostByConvokeOrImprovise(cost, sa, payer, true, true, test);
++            adjustCostByConvokeOrImprovise(cost, sa, payer, true, true, test, waterbendTaps);
+         }
+     }
+ 
+     private static void adjustCostByConvokeOrImprovise(ManaCostBeingPaid cost, final SpellAbility sa, final Player payer, boolean artifacts, boolean creatures, boolean test) {
++        adjustCostByConvokeOrImprovise(cost, sa, payer, artifacts, creatures, test, null);
++    }
++
++    private static void adjustCostByConvokeOrImprovise(ManaCostBeingPaid cost, final SpellAbility sa,
++            final Player payer, boolean artifacts, boolean creatures, boolean test, CardCollection waterbendTaps) {
+         if (creatures && !artifacts) {
+             sa.clearTappedForConvoke();
+         }
+@@ -360,6 +372,7 @@
+                 cost.toManaCost(), untappedCards, artifacts, creatures, maxReduction);
+ 
+         CardCollection tapped = new CardCollection();
++        CostPayment payment = artifacts && creatures && !test ? CostPayment.forManaCost(payer, sa) : null;
+         for (final Entry<Card, ManaCostShard> conv : convokedCards.entrySet()) {
+             Card c = conv.getKey();
+             if (creatures && !artifacts) {
+@@ -367,13 +380,20 @@
+             }
+             cost.decreaseShard(conv.getValue(), 1);
+             if (!test) {
+-                if (c.tap(sa, payer)) tapped.add(c);
++                if (c.tapForCost(sa, payer, payment)) {
++                    tapped.add(c);
++                    if (waterbendTaps != null) waterbendTaps.add(c);
++                }
+             }
+         }
+         if (!tapped.isEmpty()) {
+             final Map<AbilityKey, Object> runParams = AbilityKey.newMap();
+             runParams.put(AbilityKey.Cards, tapped);
+-            payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
++            if (payment == null) {
++                payer.getGame().getTriggerHandler().runTrigger(TriggerType.TapAll, runParams, false);
++            } else {
++                payment.runCostTrigger(TriggerType.TapAll, runParams);
++            }
+         }
+     }
+ 
+diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -138,6 +138,11 @@
+         return entry != null && entry.cost() instanceof CostPayEnergy ? activePayment(entry.payment(), cause) : null;
+     }
+ 
++    public static CostPayment forManaCost(Player payer, SpellAbility cause) {
++        var entry = payer.getGame().costPaymentStack.peek();
++        return entry != null && entry.cost() instanceof CostPartMana ? activePayment(entry.payment(), cause) : null;
++    }
++
+     public static CostPayment forTapCost(Player payer, SpellAbility cause) {
+         var entry = payer.getGame().costPaymentStack.peek();
+         return entry != null && (entry.cost() instanceof CostTap || entry.cost() instanceof CostTapType)

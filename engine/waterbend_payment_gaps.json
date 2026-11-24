@@ -69,7 +69,9 @@
   "problems": [
     "Legal optional waterbend payments involving untapped creatures are rejected by AI combat reservation.",
     "Artifact-only waterbend selection ignores the maximum reduction, allowing ordinary generic/tax cost to be paid by extra taps. Actual native casts accept two mana plus eight artifact taps when at least four mana plus no more than six waterbend taps are required.",
-    "Filtering every permanent with a mana ability also excludes legally tappable Mox Amber without a producible color, summoning-sick Ornithopter of Paradise, Springleaf Drum without fodder, and an active Drum whose two resources are better used separately."
+    "Filtering every permanent with a mana ability also excludes legally tappable Mox Amber without a producible color, summoning-sick Ornithopter of Paradise, Springleaf Drum without fodder, and an active Drum whose two resources are better used separately.",
+    "Actual mana execution may sacrifice an artifact already tapped for the same waterbend payment.",
+    "A rejected payment after successful native mana spending leaves the original waterbend taps behind."
   ],
   "source_review": [
     "PlayerControllerAi.chooseCardsForConvokeOrImprovise filters all mana-ability permanents before selection.",
@@ -2619,16 +2621,16 @@
   ],
   "latest_correction": {
     "evidence": "engine/waterbend_payment_evidence.json",
-    "focused_cases": 84,
+    "focused_cases": 93,
     "baseline": {
       "passed": 48,
-      "failed": 36
+      "failed": 45
     },
     "prototype": {
-      "passed": 84,
+      "passed": 93,
       "failed": 0
     },
-    "source_cases": 1869,
+    "source_cases": 1878,
     "activated": false
   }
 }

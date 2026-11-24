@@ -27,19 +27,20 @@ difference.
 
 ## Card coverage
 
-The generic waterbend correction is registered after all 84 focused cases and
-1,869 combined source cases pass, retaining 1,785 and the earlier 1,866-case
-source phase. The latest baseline passes 48/fails 36. Two generic AI files enforce
-the tap cap, consider legal creature/mana-source payments, reserve resources
-against conflicting mana/tap/sacrifice costs and preserve preview memory.
-Native-mana-first alternatives cover the tested ordering-sensitive payment; creatures
-remain available when mana can cover the remainder. Card scripts and AI profiles
-are unchanged. See [source evidence](engine/waterbend_payment_evidence.json).
+The generic waterbend correction passes all 93 focused and 1,878 combined source
+cases, retaining all 1,869 previous source cases. The latest installed-runtime
+baseline passes 48/fails 45. Four generic AI/payment files enforce the tap cap,
+plan normal mana separately, preserve preview memory and carry selected waterbend
+resources through actual payment. An artifact cannot pay a waterbend tap and
+then be sacrificed for mana during that payment. Previously tapped artifacts
+remain legal sacrifice candidates. Failed payments restore waterbend taps and
+permit a fresh attempt. Card scripts and AI profiles are unchanged.
+See [source evidence](engine/waterbend_payment_evidence.json).
 
-The registered targets are 3,094 native and 1,937 packaged cases with 154 verified
-production origins. Fresh runtime/full/catalog gates and selection remain pending;
-the installed runtime is unchanged and affected. Preserve all original failures,
-partial prototypes, compiler setup failure and later regression controls in
+The registered targets are 3,103 native and 1,946 packaged cases with 154
+production origins to verify. Fresh runtime/full/catalog gates and selection
+remain pending; the installed runtime is unchanged and affected. Preserve earlier
+failures, partial prototypes and setup errors in
 [gap history](engine/waterbend_payment_gaps.json).
 
 The selected runtime is `2.0.16-583714b-reviewed-earthbend-return`.

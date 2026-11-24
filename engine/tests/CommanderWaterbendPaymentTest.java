@@ -436,4 +436,125 @@ public class CommanderWaterbendPaymentTest extends AITest {
     @Test public void reserveArtifactManaDepth0() { reserveArtifactMana(0); }
     @Test public void reserveArtifactManaDepth1() { reserveArtifactMana(1); }
     @Test public void reserveArtifactManaDepth2() { reserveArtifactMana(2); }
+
+    private void sacrificeManaExecution(int depth) {
+        Game original = setup(6, 0, 0, true);
+        for (Card token : addTokens("c_a_clue_draw", 5, seat(original, 0))) {
+            assertTrue(token.isToken() && token.isArtifact());
+        }
+        cast(original, 0, "Krark-Clan Ironworks", null, 4);
+        assertEquals(tappedArtifacts(original), 0L);
+        Game game = snapshot(original, depth);
+        SpellAbility chosen = revival(game, true);
+        assertTrue(ComputerUtil.playStack(chosen, seat(game, 0), game), "An independent waterbend/mana allocation exists");
+        SpellAbility paid = game.getStack().peekAbility();
+        Set<SpellAbility> producers = new HashSet<>();
+        for (forge.game.mana.Mana mana : paid.getPayingMana()) {
+            if (mana.getSourceCard().getName().equals("Krark-Clan Ironworks")) {
+                assertNotNull(mana.getManaAbility());
+                assertNotNull(mana.getManaAbility().getSourceSA());
+                producers.add(mana.getManaAbility().getSourceSA());
+            }
+        }
+        assertFalse(producers.isEmpty(), "Use actual sacrifice-generated mana, not a synthetic payment");
+        int receipts = 0;
+        for (SpellAbility producer : producers) {
+            for (Card sacrificed : producer.getPaidList("Sacrificed")) {
+                receipts++;
+                assertFalse(sacrificed.isTapped(), "A starting-untapped artifact cannot first pay a waterbend tap and then pay this mana sacrifice: "
+                        + sacrificed.getName() + "; mana=" + paid.getPayingMana().size() + "; remaining tapped artifacts=" + tappedArtifacts(game));
+            }
+        }
+        assertTrue(receipts > 0, "Inspect actual native last-known sacrifice receipts");
+        settle(game);
+        assertEquals(seat(game, 0).getCardsIn(ZoneType.Hand).size(), 7);
+        assertTrue(seat(game, 0).isUnlimitedHandSize());
+        named(game, 0, "Spirit Water Revival", ZoneType.Exile);
+        if (depth > 0) {
+            assertEquals(tappedArtifacts(original), 0L);
+            named(original, 0, "Krark-Clan Ironworks", ZoneType.Battlefield);
+            assertEquals(seat(original, 0).getCardsIn(ZoneType.Hand).size(), 1);
+        }
+    }
+    @Test public void sacrificeManaExecutionDepth0() { sacrificeManaExecution(0); }
+    @Test public void sacrificeManaExecutionDepth1() { sacrificeManaExecution(1); }
+    @Test public void sacrificeManaExecutionDepth2() { sacrificeManaExecution(2); }
+
+    /** An artifact tapped before this payment may still be sacrificed for mana. */
+    private void preTappedSacrifice(int depth) {
+        Game original = setup(6, 0, 0, true);
+        addTokens("c_a_clue_draw", 6, seat(original, 0));
+        cast(original, 0, "Krark-Clan Ironworks", null, 4);
+        Card alreadyTapped = seat(original, 0).getCardsIn(ZoneType.Battlefield).stream()
+                .filter(Card::isToken).findFirst().orElseThrow();
+        assertTrue(alreadyTapped.tap(null, seat(original, 0)));
+        Game game = snapshot(original, depth);
+        SpellAbility chosen = revival(game, true);
+        assertTrue(ComputerUtil.playStack(chosen, seat(game, 0), game));
+        SpellAbility paid = game.getStack().peekAbility();
+        Set<SpellAbility> producers = new HashSet<>();
+        for (forge.game.mana.Mana mana : paid.getPayingMana()) {
+            if (mana.getSourceCard().getName().equals("Krark-Clan Ironworks")) {
+                producers.add(mana.getManaAbility().getSourceSA());
+            }
+        }
+        assertFalse(producers.isEmpty());
+        int receipts = 0;
+        for (SpellAbility producer : producers) {
+            for (Card sacrificed : producer.getPaidList("Sacrificed")) {
+                receipts++;
+                assertTrue(sacrificed.isTapped());
+                assertEquals(sacrificed.getId(), alreadyTapped.getId(),
+                        "Sacrifice the previously tapped Clue, reserving all six new waterbend taps");
+            }
+        }
+        assertEquals(receipts, 1);
+        assertEquals(tappedArtifacts(game), 6L);
+        settle(game);
+        resolved(game, true);
+        if (depth > 0) assertEquals(tappedArtifacts(original), 1L);
+    }
+
+    /** Inject rejection only after native payment succeeds, exercising its real refund path. */
+    private void rejectedPaidWaterbend(int depth) {
+        Game original = setup(3, 0, 6, true);
+        Game game = snapshot(original, depth);
+        Player actor = seat(game, 0);
+        Map<Integer, Boolean> before = tapped(game);
+        int[] paidCalls = {0};
+        actor.dangerouslySetController(new PlayerControllerAi(game, actor, actor.getLobbyPlayer()) {
+            @Override
+            public boolean payManaCost(ManaCost toPay, forge.game.cost.CostPartMana part,
+                    SpellAbility ability, String prompt, forge.game.mana.ManaConversionMatrix matrix,
+                    boolean effect) {
+                boolean paid = super.payManaCost(toPay, part, ability, prompt, matrix, effect);
+                if (paid && ability.getHostCard().getName().equals("Spirit Water Revival")) {
+                    paidCalls[0]++;
+                    assertEquals(tappedArtifacts(game), 6L, "Reject only after the native waterbend taps occur");
+                    assertEquals(ability.getPayingMana().size(), 3);
+                    return paidCalls[0] > 1;
+                }
+                return paid;
+            }
+        });
+        assertFalse(ComputerUtil.playStack(revival(game, true), actor, game));
+        assertEquals(paidCalls[0], 1);
+        assertEquals(tapped(game), before, "Failed payment restores waterbend and ordinary mana taps");
+        assertTrue(game.getStack().isEmpty());
+        assertEquals(actor.getCardsIn(ZoneType.Hand).size(), 1);
+        assertEquals(actor.getCardsIn(ZoneType.Library).size(), 24);
+        assertFalse(actor.isUnlimitedHandSize());
+        assertTrue(ComputerUtil.playStack(revival(game, true), actor, game),
+                "A fresh attempt can use the refunded cards without stale waterbend reservations");
+        assertEquals(paidCalls[0], 2);
+        settle(game);
+        resolved(game, true);
+        if (depth > 0) assertEquals(tapped(original), before);
+    }
+    @Test public void preTappedSacrificeDepth0() { preTappedSacrifice(0); }
+    @Test public void preTappedSacrificeDepth1() { preTappedSacrifice(1); }
+    @Test public void preTappedSacrificeDepth2() { preTappedSacrifice(2); }
+    @Test public void rejectedPaidWaterbendDepth0() { rejectedPaidWaterbend(0); }
+    @Test public void rejectedPaidWaterbendDepth1() { rejectedPaidWaterbend(1); }
+    @Test public void rejectedPaidWaterbendDepth2() { rejectedPaidWaterbend(2); }
 }
