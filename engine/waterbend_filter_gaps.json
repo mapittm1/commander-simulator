@@ -1,8 +1,8 @@
 {
-  "status": "source_validated_correction_registered_runtime_gates_pending",
+  "status": "validated_milestone_activated",
   "tested_head": "ccb2dada573c25df6456ada5f082f5222a15b405",
   "selected_engine": {
-    "forge_version": "2.0.16-583714b-reviewed-waterbend-payment",
+    "forge_version": "2.0.16-583714b-reviewed-waterbend-filter",
     "capabilities": [
       "sticker_kicker",
       "explicit_commander_colors",
@@ -44,18 +44,18 @@
       "hybrid_safety_paired_random_isolation"
     ],
     "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
-    "jar_sha256": "0695b004cdbdc118951461bd7d5e43bd8290fd98286352e70fe54b5d3735addf",
+    "jar_sha256": "d619bb30cab181fddc52efc7d271e0cf1ef8a09f08b9b32c363739b85cb1a280",
     "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
     "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
     "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
-    "recipe_sha256": "1106b2642aefed9aaf3ab6451739a0f816ba6ee2d5fe0fd5cc5c37e732e573a1",
+    "recipe_sha256": "39703456ec5678eeb9a12da7d75a127c07e4b61104622009dded0aa50311cae3",
     "native_tests": {
-      "total": 3109,
-      "passed": 3109,
+      "total": 3142,
+      "passed": 3142,
       "failed": 0,
       "skipped": 0
     },
-    "build_log_sha256": "ade41ddc5803d114192e20cea3701b7e03970c4e0dc67570ff2c6c62dd04ca2d",
+    "build_log_sha256": "a1e8eeb4ad2e4d492331a34d91fa2028dd748fa9be9100cfe4da6fa27bac9ca0",
     "edition_resources": {
       "files": 686,
       "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
@@ -64,24 +64,28 @@
     "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
     "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
   },
-  "selected_runtime_affected": true,
-  "selected_runtime_changed": false,
+  "selected_runtime_affected": false,
+  "selected_runtime_changed": true,
   "problems": [
     {
       "status": "native_confirmed",
-      "finding": "Nested Signet funding sacrifices a Clue already tapped for the same waterbend payment; recursive native mana/sacrifice LKI receipts reproduce this in original/one/two-copy games."
+      "finding": "Nested Signet funding sacrifices a Clue already tapped for the same waterbend payment; recursive native mana/sacrifice LKI receipts reproduce this in original/one/two-copy games.",
+      "current_status": "Resolved for supplied controls by the selected filter milestone"
     },
     {
       "status": "native_confirmed",
-      "finding": "Automatic mana source admission excludes simple any-color and non-increasing filters such as Prismite, rejecting payable ordinary and waterbend payments."
+      "finding": "Automatic mana source admission excludes simple any-color and non-increasing filters such as Prismite, rejecting payable ordinary and waterbend payments.",
+      "current_status": "Resolved for supplied controls by the selected filter milestone"
     },
     {
       "status": "native_confirmed_in_partial_prototype",
-      "finding": "After admitting these filters, existing priority can repeatedly convert mana while leaving a direct source available, exhausting resources. Prototypev4 restores the tested payments by preferring direct sources over non-increasing conversions."
+      "finding": "After admitting these filters, existing priority can repeatedly convert mana while leaving a direct source available, exhausting resources. Prototypev4 restores the tested payments by preferring direct sources over non-increasing conversions.",
+      "current_status": "Resolved for supplied controls by the selected filter milestone"
     },
     {
       "status": "separate_strategy_policy_not_illegal_payment",
-      "finding": "Three two-Clue automatic cases are still declined by ManaSacrifice.worthIt. Native ordered witnesses produce the required mana and resolve the spell; diagnostic traces report optional=true and spellWorth76. Do not classify this as unavailable mana or silently disable the policy to make tests pass."
+      "finding": "Three two-Clue automatic cases are still declined by ManaSacrifice.worthIt. Native ordered witnesses produce the required mana and resolve the spell; diagnostic traces report optional=true and spellWorth76. Do not classify this as unavailable mana or silently disable the policy to make tests pass.",
+      "current_status": "Assessment now separates native search findings from normal strategy preference; default refusal policy remains enabled"
     }
   ],
   "rules_basis": {
@@ -19125,14 +19129,12 @@
     },
     "source_cases": 1918,
     "registered": true,
-    "activated": false
+    "activated": true
   },
   "limits": [
-    "All original diagnostic1536MiB/2CPU/90s, compiler90s andsource2048MiB/2CPU/600s limits retained. No existing source cases were dropped.",
-    "Earlier prototype, diagnostic logging, incorrect fixture expectations, and wrapper setup failures remain preserved.",
-    "No new patch/test registry/runtime change has been made; prototypes remain partial and unactivated.",
-    "Resolve or explicitly separate legal resource availability from strategy policy, expand meaningful coverage, then fresh source/native/packaged/broader/full/catalog gates before activation.",
-    "Existing installed waterbend milestone remains selected but is affected by the newly confirmed nested-filter issue. Construction and supplied tests do not establish full card/rules/AI correctness."
+    "The selected filter milestone passes all required gates for the33 supplied controls; original failures and all versions remain archived.",
+    "Existing sacrifice-value strategy is retained. Found-without-value-policy is a scoped search observation, and no-plan-found is not proof of illegal payment.",
+    "All original budgets and prior source/native methods retained. User-facing diagnostics, repeated/chained conversion, variable-X and full card/rules/AI support remain unfinished."
   ],
   "quality": {
     "status": "passed",
@@ -19153,5 +19155,79 @@
     },
     "source1906": "Passes1885 retained+21 focused usingprototypev4/fixturesv7; it does not validate the laterv5/v6 code or27-case expansion.",
     "strategy_trace": "FILTER_POLICY_REJECT source=Krark-Clan Ironworks; spellWorth=76; optional=true after two Clue reservations."
-  }
+  },
+  "discovery_selected_engine": {
+    "forge_version": "2.0.16-583714b-reviewed-waterbend-payment",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "0695b004cdbdc118951461bd7d5e43bd8290fd98286352e70fe54b5d3735addf",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "1106b2642aefed9aaf3ab6451739a0f816ba6ee2d5fe0fd5cc5c37e732e573a1",
+    "native_tests": {
+      "total": 3109,
+      "passed": 3109,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "ade41ddc5803d114192e20cea3701b7e03970c4e0dc67570ff2c6c62dd04ca2d",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "activation": {
+    "path": "engine/waterbend_filter_activation_evidence.json",
+    "sha256": "a6dc9a951de5267b3c8c264f7d9981fcdaffa20346e0cf0da9b0dce0595173bf"
+  },
+  "discovery_epoch_limits": [
+    "All original diagnostic1536MiB/2CPU/90s, compiler90s andsource2048MiB/2CPU/600s limits retained. No existing source cases were dropped.",
+    "Earlier prototype, diagnostic logging, incorrect fixture expectations, and wrapper setup failures remain preserved.",
+    "No new patch/test registry/runtime change has been made; prototypes remain partial and unactivated.",
+    "Resolve or explicitly separate legal resource availability from strategy policy, expand meaningful coverage, then fresh source/native/packaged/broader/full/catalog gates before activation.",
+    "Existing installed waterbend milestone remains selected but is affected by the newly confirmed nested-filter issue. Construction and supplied tests do not establish full card/rules/AI correctness."
+  ]
 }

@@ -9,48 +9,38 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The generic mana-filter correction is registered after all 33 focused and 1,918
-source cases pass, retaining all 1,885 original and 1,906 intermediate cases.
-It carries outer reservations through nested funding, protects pending tap
-sources and supports simple any-color/non-increasing filters with direct-source
-priority. The assessment API reports a plan found normally, a plan found without
-the sacrifice-value preference, or no plan found. No-plan is not proof of an
-illegal payment. Normal play retains its sacrifice policy; the API is not yet
-connected to CLI/UI diagnostics. Earlier refusals and native legal witnesses are
-preserved in [source evidence](waterbend_filter_evidence.json).
+The selected runtime is `2.0.16-583714b-reviewed-waterbend-filter`.
+The generic filter correction carries outer payment reservations through nested
+mana generation, protects pending tap sources and supports simple fixed
+any-color/non-increasing filters. Direct sources take priority over costly
+conversion, and repeated sacrifice resources are planned independently.
+One production file changes; card scripts and AI profiles remain unchanged.
 
-Fresh targets are 3,142 native and 1,985/65/194/146 packaged cases with 161
-production origins to verify. Broader, full, catalog and activation gates remain
-pending; the installed runtime below is unchanged and affected by the filter bug.
-Repeated/chained conversions, variable-X waterbend and full rules/AI support
-still require further validation.
+Its native assessment API reports a payment found with the current preference,
+a payment found with the sacrifice-value preference relaxed, or no payment found.
+These describe bounded native searches; no-plan is not proof that every payment
+is illegal. Normal play retains its strategy preference. The API is not yet
+connected to CLI/UI diagnostics.
 
-The selected runtime is `2.0.16-583714b-reviewed-waterbend-payment`.
-Five generic AI/payment files enforce the waterbend tap cap, plan normal mana
-independently, reserve resources through actual payment and restore taps after
-rejection. Previously tapped artifacts remain legal sacrifice candidates.
-Transform heuristics honor the existing combo guard when Monte Carlo is disabled
-or falls back. Card scripts and AI profiles are unchanged.
-
-All 99 focused controls and 1,885 source cases pass. The selected build passes
-3,109 native cases, retaining every previous 3,010. Independent packaged checks
-pass 1,952/65/194/146 cases with all 157 production origins verified. Broader
-suites pass 4,583 gameplay and 256 serialization cases. Full integration passes
-45 tests and 3,005 subtests in 1030.922 seconds at unchanged seeds and limits.
+All 33 focused and 1,918 source cases pass. The selected build passes 3,142
+native cases, retaining all previous 3,109. Independent packaged checks pass
+1,985/65/194/146 cases with 161 production origins verified. Broader suites pass
+4,616 gameplay and 256 serialization cases. Full integration passes 45 tests
+and 3,038 subtests in 1023.093 seconds at unchanged seeds and resource limits.
 Catalog construction passes 32,636 identities plus seven reviewed nonstarting
 meld results. Installed bytes and engine health are verified.
 
-The first candidate's broader failure remains preserved: an affordable transform
-broke an active airbend combo. The additional shared guard correction passes the
-exact failed scenario and the complete broader suite. Previous runtimes, both
-sealed builds and all earlier failures remain available. See
-[source evidence](waterbend_payment_evidence.json),
-[runtime evidence](waterbend_payment_runtime_evidence.json) and
-[activation evidence](waterbend_payment_activation_evidence.json).
+Native ordered witnesses demonstrate legal payments that the AI may choose to
+decline. Earlier failed automatic-play expectations, partial prototypes and
+corrected rollback/shuffle assertions remain preserved. Previous runtimes and
+sealed builds remain available. See [source evidence](waterbend_filter_evidence.json),
+[runtime evidence](waterbend_filter_runtime_evidence.json) and
+[activation evidence](waterbend_filter_activation_evidence.json).
 
-Earlier earthbend, elemental, counter, Aura, exert and other reviewed corrections
-remain included. Construction and supplied tests do not certify complete card,
-rules or AI support; further interaction validation remains necessary.
+Prior waterbend, earthbend, elemental, counter, Aura and other reviewed
+corrections remain included. Complete card/rules/AI support remains unproven;
+repeated/chained conversion, variable-X waterbend and user-facing diagnostic
+integration require further work.
 
 The earlier milestones below describe validation and selections at their time.
 

@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated mana-filter runtime: all 33 focused/1,918 source,
+  3,142 native (previous 3,109 retained), independent 1,985/65/194/146 packaged
+  with 161 origins, broader 4,616 gameplay/256 serialization and full45tests/
+  3,038 subtests pass at unchanged seeds and limits. Catalog construction passes
+  32,636 identities plus seven reviewed nonstarting meld results. Verify copied
+  bytes and installed health; preserve the previous runtime and sealed build.
+  One production file changes and the assessment enum is added; card scripts
+  and AI profiles remain unchanged. Preserve all failures and corrected test
+  assumptions. Normal strategy preference remains enabled; scoped assessment
+  results do not certify exhaustive legal affordability. CLI/UI integration,
+  repeated/chained conversions, variable-X and full card/rules/AI support remain
+  unfinished. See engine/waterbend_filter_activation_evidence.json.
+
 - Register the generic mana-filter correction and scoped assessment API after
   all 33 focused/1,918 source cases pass, retaining 1,885 original and 1,906
   intermediate cases. Preserve reservations during nested funding, pending tap
