@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Confirm remaining nested mana-filter gaps: Signet funding may sacrifice an
+  artifact already tapped for waterbend; simple any-color/non-increasing filters
+  are excluded by automatic admission. Preserve every native baseline, partial
+  prototype and setup/fixture correction. The v4 prototype passes 21 controls
+  and 1,906 source cases, retaining all 1,885. The later 27-case/v6 prototype
+  passes 24; three automatic refusals come from sacrifice-value policy while
+  ordered native witnesses prove legal payments. Correct rollback expectations
+  under CR734.1: retained legal mana abilities keep their costs and mana. No
+  new correction is registered or selected; full card/rules/AI coverage remains
+  unfinished. See engine/waterbend_filter_gaps.json.
+
 - Select the validated waterbend-payment runtime: all 99 focused/1,885 source,
   3,109 native (previous 3,010 retained), independent 1,952/65/194/146 packaged
   with 157 origins, broader 4,583 gameplay/256 serialization, and full 45 tests/

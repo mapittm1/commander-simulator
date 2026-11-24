@@ -1,0 +1,118 @@
+diff --git a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -876,6 +876,9 @@
+                 if (toPay == ManaCostShard.GENERIC) {
+                     saList = requiredSourcesFirst(saList, cost, sa);
+                 }
++                List<SpellAbility> directFirst = Lists.newArrayList(saList);
++                directFirst.sort(Comparator.comparing(ComputerUtilMana::isNonIncreasingManaFilter));
++                saList = directFirst;
+             }
+ 
+             SpellAbility saPayment = saList.isEmpty() ? null : chooseManaAbility(cost, sa, ai, toPay, saList,
+@@ -888,7 +891,8 @@
+             }
+ 
+             ManaResourcePlan resources = saPayment == null ? null : planManaResources(saPayment, sa, ai,
+-                    sacrifices, tapGroups, projectedManaTaps, consumedManaSources, !reservedCards.isEmpty());
++                    sacrifices, tapGroups, projectedManaTaps, consumedManaSources,
++                    !reservedCards.isEmpty() || ManaSacrifice.isSacrificeMana(saPayment));
+             if (saPayment != null && resources == null) {
+                 saExcludeList.add(saPayment);
+                 continue;
+@@ -953,7 +957,8 @@
+                 // from a source the remaining cost can spare, so that its cost payment doesn't grab a
+                 // land that's needed for a colored shard.
+                 if (!test && !prepayFilterManaAbility(cost, sa, ai, saPayment, toPay, sourcesForShards,
+-                        paymentList, effect, sacrifices, tapGroups, resources)) {
++                        paymentList, effect, sacrifices, tapGroups, resources,
++                        projectedManaTaps, consumedManaSources)) {
+                     clearManaExpressChoices(saPayment);
+                     saExcludeList.add(saPayment);
+                     continue;
+@@ -1178,7 +1183,8 @@
+         untappable.addAll(consumed);
+ 
+         // Spare the other available mana sources where possible.
+-        candidates.sort(Comparator.comparing(card -> !card.getManaAbilities().isEmpty()));
++        candidates.sort(Comparator.comparing((Card card) -> !card.getManaAbilities().isEmpty())
++                .thenComparing(card -> card.equals(manaHost)));
+         for (Card card : candidates) {
+             if (selected.size() == amount) {
+                 break;
+@@ -1376,7 +1382,8 @@
+     private static boolean prepayFilterManaAbility(final ManaCostBeingPaid cost, final SpellAbility sa, final Player ai,
+             final SpellAbility filter, final ManaCostShard toPay, final Multimap<ManaCostShard, SpellAbility> sourcesForShards,
+             final List<SpellAbility> paymentList, final boolean effect,
+-            List<CostSacrifice> sacrifices, List<CostTapType> tapGroups, ManaResourcePlan filterPlan) {
++            List<CostSacrifice> sacrifices, List<CostTapType> tapGroups, ManaResourcePlan filterPlan,
++            Set<Card> projectedTaps, Set<Card> consumedSources) {
+         final Card filterHost = filter.getHostCard();
+         final ManaPool manapool = ai.getManaPool();
+ 
+@@ -1386,10 +1393,15 @@
+ 
+         final ManaCost toActivate = getManaCostToActivate(filter);
+         final Set<SpellAbility> tried = new HashSet<>();
+-        Set<Card> reserved = filterPlan.sacrifices() == null ? Set.of() : new HashSet<>(filterPlan.sacrifices());
+-        Set<Card> filterTaps = filterPlan.taps() == null ? new HashSet<>() : new HashSet<>(filterPlan.taps());
++        // Nested mana generation must not spend resources committed by the outer payment.
++        Set<Card> reserved = new HashSet<>(consumedSources);
++        if (filterPlan.sacrifices() != null) reserved.addAll(filterPlan.sacrifices());
++        Set<Card> filterTaps = new HashSet<>(projectedTaps);
++        if (filterPlan.taps() != null) filterTaps.addAll(filterPlan.taps());
+         if (filter.getPayCosts().hasTapCost()) {
+             filterTaps.add(filterHost);
++            // This source still has to pay its own tap cost after its mana is funded.
++            reserved.add(filterHost);
+         }
+         while (true) {
+             // what the floating mana leaves of the filter's cost; it stays in the pool to pay that cost
+@@ -1424,7 +1436,7 @@
+                     }
+                 }
+                 if (!needed && canPayShardWithSpellAbility(shard, ai, m, filter, toFloat, true, toFloat.getXManaCostPaidByColor())) {
+-                    chosenPlan = planManaResources(m, sa, ai, sacrifices, tapGroups, filterTaps, reserved, false);
++                    chosenPlan = planManaResources(m, sa, ai, sacrifices, tapGroups, filterTaps, reserved, true);
+                     if (chosenPlan == null) {
+                         continue;
+                     }
+@@ -2455,7 +2467,7 @@
+             if (a.getApi() != ApiType.Mana && a.getApi() != ApiType.ManaReflected) {
+                 continue;
+             }
+-            // a mana ability that itself costs mana is only usable if it's a simple net-positive
++            // Simple fixed-cost filters may trade mana quantity for a required color.
+             final Cost cost = a.getPayCosts();
+             if (cost.hasManaCost() && !isFilterManaAbility(a)) {
+                 continue;
+@@ -2490,6 +2502,12 @@
+     /**
+      * Amount of mana that has to be paid to activate a mana ability.
+      */
++    /** Use an available direct source before a color conversion that consumes at least its output. */
++    private static boolean isNonIncreasingManaFilter(final SpellAbility ability) {
++        int activation = getManaToActivate(ability);
++        return activation > 0 && ability.amountOfManaGenerated(true) <= activation;
++    }
++
+     private static int getManaToActivate(final SpellAbility ma) {
+         final ManaCost manaCost = getManaCostToActivate(ma);
+         return manaCost == null ? 0 : manaCost.getCMC();
+@@ -2521,12 +2539,13 @@
+             }
+         }
+         final AbilityManaPart mp = ma.getManaPart();
+-        if (mp == null || mp.isAnyMana() || mp.isSpecialMana() || mp.getOrigProduced().contains("Chosen")) {
++        if (mp == null || mp.isSpecialMana() || mp.getOrigProduced().contains("Chosen")) {
+             return false;
+         }
+         final int amount = AbilityUtils.calculateAmount(ma.getHostCard(), ma.getParamOrDefault("Amount", "1"), ma);
+         final int produced = mp.isComboMana() ? amount : mp.getOrigProduced().split(" ").length * amount;
+-        return produced > manaCost.getCMC();
++        // The payment planner accounts for the activation cost; a color conversion need not gain mana.
++        return produced > 0;
+     }
+ 
+     /**

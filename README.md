@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+New native filter tests expose a remaining payment bug in the selected runtime:
+nested Signet funding can reuse a waterbend-tapped artifact as sacrifice fuel.
+Simple any-color/non-increasing filters are also excluded by automatic source
+admission. A prototype passes 21 expanded controls and 1,906 source cases;
+the later 27-case version passes 24, with three automatic refusals traced to an
+AI sacrifice-value policy. Ordered native witnesses prove those lines are legal.
+All failures and partial prototypes are preserved in
+[filter gap evidence](engine/waterbend_filter_gaps.json). The correction is not
+registered or activated; broader validation and policy/affordability separation
+remain pending.
+
 The selected runtime is `2.0.16-583714b-reviewed-waterbend-payment`.
 Five generic AI/payment files enforce the waterbend tap cap, plan normal mana
 independently, reserve resources through actual payment and restore taps after
