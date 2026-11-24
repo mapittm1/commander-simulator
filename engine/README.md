@@ -9,6 +9,13 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+A newly confirmed waterbend payment gap affects the selected runtime. All 66
+native controls are preserved: baseline33 pass/33 fail; a partial one-file
+prototype passes54/fails12. Actual over-cap casts and rejected legal payments
+are reproduced in original/one/two-copy games. No recipe/runtime selection or
+production registration change yet. See [gap evidence](waterbend_payment_gaps.json)
+and pending sources under `pending/waterbend-payment`.
+
 The selected runtime is the reviewed earthbend-return milestone. All 76 paid/
 native return cases pass; no production correction was needed. Every production
 class, card script and AI profile is unchanged. Cases cover death/exile, control/

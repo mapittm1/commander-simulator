@@ -1,0 +1,27 @@
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -1800,6 +1800,15 @@
+         // Filter out mana sources that will interfere with payManaCost()
+         CardCollection untapped = CardLists.filter(untappedCards, c -> c.getManaAbilities().isEmpty());
+ 
++        if (artifacts && creatures) {
++            // Waterbend can tap creatures kept for combat, but cannot pay more
++            // generic mana than its own component of the total cost.
++            untapped.sort(Comparator.comparing(Card::isCreature));
++            int generic = manaCost.getGenericCost();
++            int limit = maxReduction == null ? generic : Math.min(generic, Math.max(0, maxReduction));
++            return ComputerUtilMana.getConvokeOrImproviseFromList(ManaCost.get(limit), untapped, true, true);
++        }
++
+         // before the AI attacks, any of its creatures may still be needed for combat, so they pay last
+         final CardCollection kept = new CardCollection();
+         if (ph.isPlayerTurn(ai) && ph.getPhase().isBefore(PhaseType.COMBAT_DECLARE_ATTACKERS)) {
+@@ -1823,7 +1832,7 @@
+             }
+         }
+         final Map<Card, ManaCostShard> chosen = ComputerUtilMana.getConvokeOrImproviseFromList(manaCost, untapped, artifacts, creatures);
+-        // improvise and waterbend don't record the cards they tap, which the AI checks before casting
++        // Improvise does not record the cards it taps, which the AI checks before casting
+         if (kept.isEmpty() || !creatures || artifacts) {
+             return chosen;
+         }

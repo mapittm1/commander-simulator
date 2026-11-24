@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Confirm native waterbend payment gaps in the selected runtime. Preserve all
+  24/48/51/60/66-case baselines: the latest passes 33/fails 33. Actual casts can
+  exceed the six-tap cap and underpay normal/tax costs; legal creature-assisted
+  and mana-capable-permanent payments are also rejected. The generic one-file
+  prototype passes 51/51 initial cases and 54/66 expanded cases, with 12 legal
+  payments still failing. It remains partial, unregistered and unactivated.
+  Retain original/one/two-copy outcomes, every version and all native reports
+  under engine/pending/waterbend-payment and engine/waterbend_payment_gaps.json.
+  Joint waterbend/mana allocation and full runtime gates remain required.
+
 - Select the validated test-only earthbend-return milestone: 1,785 source,
   3,010 native (all 2,934 previous methods retained), independent packaged
   1,853/65/194/146 in 315.031s with all 151 origins verified, broader 4,484

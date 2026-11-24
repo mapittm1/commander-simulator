@@ -1,0 +1,2620 @@
+{
+  "status": "confirmed_selected_runtime_gap_partial_prototype_only",
+  "selected_runtime_affected": true,
+  "tested_head": "a08d60244eb78b60438a28b4a24abd0f3cba9772",
+  "selected_build": "c8ee497bdc424a78ac0700ee9ec5db0c",
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-earthbend-return",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "0c2b674c6b48b8141b7784e96185477245bdc1f1399f83aec577738cf1ad47ac",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "450577930740b4652c3586e8a79a9dc146c4121b7aa9888a1ba2140a7645767c",
+    "native_tests": {
+      "total": 3010,
+      "passed": 3010,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "e228112ba63517f2385d2a4eaa5f846f877453d6d618f9468feb9e645265d474",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "problems": [
+    "Legal optional waterbend payments involving untapped creatures are rejected by AI combat reservation.",
+    "Artifact-only waterbend selection ignores the maximum reduction, allowing ordinary generic/tax cost to be paid by extra taps. Actual native casts accept two mana plus eight artifact taps when at least four mana plus no more than six waterbend taps are required.",
+    "Filtering every permanent with a mana ability also excludes legally tappable Mox Amber without a producible color, summoning-sick Ornithopter of Paradise, Springleaf Drum without fodder, and an active Drum whose two resources are better used separately."
+  ],
+  "source_review": [
+    "PlayerControllerAi.chooseCardsForConvokeOrImprovise filters all mana-ability permanents before selection.",
+    "Creatures reserved for combat are omitted when the same callback handles waterbend.",
+    "getConvokeOrImproviseFromList receives the entire generic cost while the supplied maxReduction is not applied.",
+    "The initial prototype caps the selected generic component and includes non-mana creatures; it deliberately preserves the old mana-source filter and therefore remains incomplete."
+  ],
+  "fixtures": {
+    "original24": {
+      "path": "engine/pending/waterbend-payment/original24/CommanderWaterbendPaymentTest.java",
+      "sha256": "cbc4fa06c640ff1ca708c6d79c242a8da94194ec10ebed113bdf197f70e79619"
+    },
+    "artifact48": {
+      "path": "engine/pending/waterbend-payment/artifact48/CommanderWaterbendPaymentTest.java",
+      "sha256": "d656c4d68efc7d71ee1c9cec9ee537e59de2b94cfb52c56f0f830ce87c255e77"
+    },
+    "actual51": {
+      "path": "engine/pending/waterbend-payment/actual51/CommanderWaterbendPaymentTest.java",
+      "sha256": "2ae472b9ddeab33ca6b9558369ea449da7cc412d684ae3a29e16398a9125050e"
+    },
+    "mana60": {
+      "path": "engine/pending/waterbend-payment/mana60/CommanderWaterbendPaymentTest.java",
+      "sha256": "f37da2d5c0fc52b614c67d53a47b26ae885bf4d94ae4b98010723d4e561b2737"
+    },
+    "overlap66": {
+      "path": "engine/pending/waterbend-payment/overlap66/CommanderWaterbendPaymentTest.java",
+      "sha256": "57fb802896cf19a8dc961f439a84492726788ad2661da7814b27685cf625b498"
+    }
+  },
+  "phases": {
+    "baseline-waterbend24-v1": {
+      "counts": {
+        "total": 24,
+        "passed": 12,
+        "failed": 12,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "2960411b90e6a7a43b5ac45d3db147197a20cad419cbf403c1aa528a4510b111",
+      "evidence_sha256": "e7092a866adfac623e8ea7f8f90afb2f3b8a099f2f2ef5d39283677e66b6f06f",
+      "driver_sha256": "379d0fb76e8e18190e215ba2d808696c86ef6dc77e1968fbc9bbf9320e6e3ea8",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v1\\CommanderWaterbendPaymentTest.java": "cbc4fa06c640ff1ca708c6d79c242a8da94194ec10ebed113bdf197f70e79619"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3059,
+        "returncode": 0,
+        "elapsed_seconds": 14.281
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/baseline-waterbend24-v1",
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v1\\CommanderWaterbendPaymentTest.java": "cbc4fa06c640ff1ca708c6d79c242a8da94194ec10ebed113bdf197f70e79619"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "4d3a9067e2b4edfaa489437b81fc6c53cc54c377e2a17f6ae33e8f4ff496000c"
+        }
+      }
+    },
+    "baseline-waterbend48-v2": {
+      "counts": {
+        "total": 48,
+        "passed": 30,
+        "failed": 18,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps expected [4] but found [3]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "e733441929997243428fb6c8087ee8943febb5685448f72d42771da652657909",
+      "evidence_sha256": "b81c35bebc0b81d428dfd23d036bd3ba8d9fd93435181703657b1704c7c0636a",
+      "driver_sha256": "371eda4b945ffcb0b75f5cfc1dea62d850c78619cfdf288e8884d7861c460967",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v2\\CommanderWaterbendPaymentTest.java": "d656c4d68efc7d71ee1c9cec9ee537e59de2b94cfb52c56f0f830ce87c255e77"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3059,
+        "returncode": 0,
+        "elapsed_seconds": 14.703
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/baseline-waterbend48-v2",
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v2\\CommanderWaterbendPaymentTest.java": "d656c4d68efc7d71ee1c9cec9ee537e59de2b94cfb52c56f0f830ce87c255e77"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "d966f9d4deb0f327f2160a60ef9dfa45aab4254fe5eb6a689c2f9a3b37d9b446"
+        }
+      }
+    },
+    "baseline-waterbend51-v3": {
+      "counts": {
+        "total": 51,
+        "passed": 30,
+        "failed": 21,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "82a4d7e572a6cdcbc2d8211f6b24ff2222aeabf76bd9b0ce0c6e37710da1ee17",
+      "evidence_sha256": "9311ec6260a88f7d22899e0fb7c0703ca80d3ffb539b142c7148efbcbc6a709a",
+      "driver_sha256": "70c7cd6dabc5f36c54f0f2c8f6a864903827b805cfff3251b68eef2449bd4f98",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v3\\CommanderWaterbendPaymentTest.java": "2ae472b9ddeab33ca6b9558369ea449da7cc412d684ae3a29e16398a9125050e"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3059,
+        "returncode": 0,
+        "elapsed_seconds": 14.843
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/baseline-waterbend51-v3",
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v3\\CommanderWaterbendPaymentTest.java": "2ae472b9ddeab33ca6b9558369ea449da7cc412d684ae3a29e16398a9125050e"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "918c6668d3ed7fbd60311650811364fa61127cde65756f911340fe34266acbab"
+        }
+      }
+    },
+    "prototype-waterbend51-v1": {
+      "counts": {
+        "total": 51,
+        "passed": 51,
+        "failed": 0,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "PASS"
+        }
+      ],
+      "failures": [],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 0,
+      "native_origins": [
+        "forge.ai.PlayerControllerAi",
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "5f755743bae6830eb4a178d3a34e3ad2882fe0ebb0e8f65c4b638fb835e71df6",
+      "evidence_sha256": "954d871b95b0696af40ebb8702a0188987e3d7e888f466a3b3103e81b9b4f661",
+      "driver_sha256": "4af337f5c1eee6a4172ccb9f3584e59e816b6333c821864ea41675c709330784",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v3\\CommanderWaterbendPaymentTest.java": "2ae472b9ddeab33ca6b9558369ea449da7cc412d684ae3a29e16398a9125050e"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3058,
+        "returncode": 0,
+        "elapsed_seconds": 14.593
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/prototype-waterbend51-v1",
+      "production-inputs.json": {
+        "sources": {
+          "PlayerControllerAi.java": "e37bbc106a940c8eb112200146c131cef5cf04bdb289d65aa27b1f84673a37dd"
+        },
+        "classes": {
+          "forge/ai/PlayerControllerAi$1.class": "a56a85b29d695347178aebbc0875c0472a78bf84caf6b68e486259bfa1e7f833",
+          "forge/ai/PlayerControllerAi.class": "a4a7bb6ae015bf812c799302f837196e2f716b1567f7f61b989eeba050fd75dc"
+        },
+        "command": [
+          "C:/Program Files/Java/jdk-19/bin/javac.exe",
+          "-J-Xmx2048m",
+          "-J-XX:ActiveProcessorCount=2",
+          "--release",
+          "17",
+          "-encoding",
+          "UTF-8",
+          "-cp",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engines\\forge-583714b-earthbend-return-reviewed\\forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "-d",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-waterbend51-v1\\production-classes",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-v1-source\\PlayerControllerAi.java"
+        ]
+      },
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v3\\CommanderWaterbendPaymentTest.java": "2ae472b9ddeab33ca6b9558369ea449da7cc412d684ae3a29e16398a9125050e"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "918c6668d3ed7fbd60311650811364fa61127cde65756f911340fe34266acbab"
+        }
+      }
+    },
+    "baseline-waterbend60-v4": {
+      "counts": {
+        "total": 60,
+        "passed": 30,
+        "failed": 30,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "3e5a697ccf33eb558cdca03196b9e13a04cfabf82b70e171be41ec22dacaaa3e",
+      "evidence_sha256": "99bb1ecd3f84f7b34915356ef972ec9e20517f6cb769dec4c059876b2ab431e8",
+      "driver_sha256": "6965aaa3d57883091e64c85b98787f40465ad4ac750144558dea422300f2984a",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v4\\CommanderWaterbendPaymentTest.java": "f37da2d5c0fc52b614c67d53a47b26ae885bf4d94ae4b98010723d4e561b2737"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3059,
+        "returncode": 0,
+        "elapsed_seconds": 14.859
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/baseline-waterbend60-v4",
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v4\\CommanderWaterbendPaymentTest.java": "f37da2d5c0fc52b614c67d53a47b26ae885bf4d94ae4b98010723d4e561b2737"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "1459be11a75fc94856be3ee57d5ae254409eaae929bc27bdf13497b0b1a7970a"
+        }
+      }
+    },
+    "prototype-waterbend60-v1": {
+      "counts": {
+        "total": 60,
+        "passed": 51,
+        "failed": 9,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "PASS"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.ai.PlayerControllerAi",
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "7a8dd687fd9e13a4a16608421fea3babda4492b902b7c8454933a412dd506801",
+      "evidence_sha256": "fab786105f32f6307ee6b8d5c1c2686a472c702fc2cb97b7ad01b7c271c1f18b",
+      "driver_sha256": "73786c6f02798e3d613ac8ea7c1398ea935bf7286ffd5e611c02d7ca7d47c3ee",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v4\\CommanderWaterbendPaymentTest.java": "f37da2d5c0fc52b614c67d53a47b26ae885bf4d94ae4b98010723d4e561b2737"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3058,
+        "returncode": 0,
+        "elapsed_seconds": 15.391
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/prototype-waterbend60-v1",
+      "production-inputs.json": {
+        "sources": {
+          "PlayerControllerAi.java": "e37bbc106a940c8eb112200146c131cef5cf04bdb289d65aa27b1f84673a37dd"
+        },
+        "classes": {
+          "forge/ai/PlayerControllerAi$1.class": "a56a85b29d695347178aebbc0875c0472a78bf84caf6b68e486259bfa1e7f833",
+          "forge/ai/PlayerControllerAi.class": "a4a7bb6ae015bf812c799302f837196e2f716b1567f7f61b989eeba050fd75dc"
+        },
+        "command": [
+          "C:/Program Files/Java/jdk-19/bin/javac.exe",
+          "-J-Xmx2048m",
+          "-J-XX:ActiveProcessorCount=2",
+          "--release",
+          "17",
+          "-encoding",
+          "UTF-8",
+          "-cp",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engines\\forge-583714b-earthbend-return-reviewed\\forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "-d",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-waterbend60-v1\\production-classes",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-v1-source\\PlayerControllerAi.java"
+        ]
+      },
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v4\\CommanderWaterbendPaymentTest.java": "f37da2d5c0fc52b614c67d53a47b26ae885bf4d94ae4b98010723d4e561b2737"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "1459be11a75fc94856be3ee57d5ae254409eaae929bc27bdf13497b0b1a7970a"
+        }
+      }
+    },
+    "baseline-waterbend66-v5": {
+      "counts": {
+        "total": 66,
+        "passed": 33,
+        "failed": 33,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "FAIL"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: An actual cast may not use extra artifacts to cover the normal/tax cost; accepted=true, mana=2, tapped artifacts=8 expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Waterbend cannot replace normal generic or colored mana expected [false] but found [true]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Normal mana remains payable separately from waterbend taps; actual mana=3, tapped artifacts=7 expected [4] but found [3]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "fe9cdfd3485ca3c435a92f5394db15188a7d0032921b9ec8d0f22d87f742fd39",
+      "evidence_sha256": "835517bcefd30823182f3eb34c336f505956e80a33c78771c12c51db4e85a9dd",
+      "driver_sha256": "03b5931e9fc30b7a5e058eef4f090c917cdb2cceb9a20f0367185fa0b5f84efe",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v5\\CommanderWaterbendPaymentTest.java": "57fb802896cf19a8dc961f439a84492726788ad2661da7814b27685cf625b498"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3059,
+        "returncode": 0,
+        "elapsed_seconds": 15.265
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/baseline-waterbend66-v5",
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v5\\CommanderWaterbendPaymentTest.java": "57fb802896cf19a8dc961f439a84492726788ad2661da7814b27685cf625b498"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "85b99742b7528ccbf7e4b13db28f02e91d0ec24986722aade2d212b15159bd1f"
+        }
+      }
+    },
+    "prototype-waterbend66-v1": {
+      "counts": {
+        "total": 66,
+        "passed": 54,
+        "failed": 12,
+        "skipped": 0
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.activeDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.actualOverCapRejectedDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactInsufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactLandOverlapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactOptionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactPendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactReductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.artifactTaxDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.basicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantAmberDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantDrumDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth0",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth1",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.dormantSickDepth2",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientBasicDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientCapDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.insufficientColoredDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.optionalDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.pendingDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.reductionDepth2",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth0",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth1",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderWaterbendPaymentTest.taxDepth2",
+          "status": "PASS"
+        }
+      ],
+      "failures": [
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]",
+        "java.lang.AssertionError: Pay the selected native cost using the actual available resources expected [true] but found [false]"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0,
+      "testng_status": 1,
+      "native_origins": [
+        "forge.ai.PlayerControllerAi",
+        "forge.game.cost.CostWaterbend",
+        "forge.game.cost.CostPartMana",
+        "forge.game.cost.Cost",
+        "forge.game.cost.CostPayment",
+        "forge.ai.ComputerUtilMana",
+        "forge.game.ability.effects.AirbendEffect",
+        "forge.game.ability.effects.EarthbendEffect",
+        "forge.game.player.Player",
+        "forge.game.GameActionUtil",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.game.GameEntityCounterTable",
+        "forge.game.ability.AbilityUtils",
+        "forge.game.trigger.TriggerCounterTypeAddedAll",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "report_sha256": "544686a8b108c265d54337cf892efbee0d967e38a8ee4d216046c1d10a2c63f1",
+      "evidence_sha256": "df7cb50e4795e6b25f01d18c487a083133738fd4d28bbbcb80590b80b910f687",
+      "driver_sha256": "6f7de9ef30160e9f211eafa93ccfa17f9d90109d8d005d0ccc91d6d34c4ce770",
+      "inputs": {
+        "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v5\\CommanderWaterbendPaymentTest.java": "57fb802896cf19a8dc961f439a84492726788ad2661da7814b27685cf625b498"
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 4043,
+        "returncode": 0,
+        "elapsed_seconds": 16.156
+      },
+      "local_artifacts": "data/development/commander-multiplayer-attack-research/waterbend-research/prototype-waterbend66-v1",
+      "production-inputs.json": {
+        "sources": {
+          "PlayerControllerAi.java": "e37bbc106a940c8eb112200146c131cef5cf04bdb289d65aa27b1f84673a37dd"
+        },
+        "classes": {
+          "forge/ai/PlayerControllerAi$1.class": "a56a85b29d695347178aebbc0875c0472a78bf84caf6b68e486259bfa1e7f833",
+          "forge/ai/PlayerControllerAi.class": "a4a7bb6ae015bf812c799302f837196e2f716b1567f7f61b989eeba050fd75dc"
+        },
+        "command": [
+          "C:/Program Files/Java/jdk-19/bin/javac.exe",
+          "-J-Xmx2048m",
+          "-J-XX:ActiveProcessorCount=2",
+          "--release",
+          "17",
+          "-encoding",
+          "UTF-8",
+          "-cp",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engines\\forge-583714b-earthbend-return-reviewed\\forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+          "-d",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-waterbend66-v1\\production-classes",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\prototype-v1-source\\PlayerControllerAi.java"
+        ]
+      },
+      "rules-inputs.json": {
+        "inputs": {
+          "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+          "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\waterbend-research\\fixtures-v5\\CommanderWaterbendPaymentTest.java": "57fb802896cf19a8dc961f439a84492726788ad2661da7814b27685cf625b498"
+        },
+        "classes": {
+          "forge/ai/AITest.class": "627896571a72011a000891d05cb7a6b17b62b206ee103c94150b104c5084671d",
+          "forge/ai/CommanderWaterbendPaymentTest.class": "85b99742b7528ccbf7e4b13db28f02e91d0ec24986722aade2d212b15159bd1f"
+        }
+      }
+    }
+  },
+  "prior_baseline_outcomes_retained": true,
+  "prototype51_outcomes_retained_in66": true,
+  "prototype": {
+    "status": "partial_not_registered_or_activated",
+    "patch": {
+      "path": "engine/pending/waterbend-payment/prototype-v1.patch",
+      "sha256": "2130ef3bd556ca7ac7d7975fd31be351905750c21b8e813cc2d7dfda0f7473fd"
+    },
+    "changes": "One PlayerControllerAi file; no card-specific branches. Passes all51 initial cases and54/66 expanded cases. Twelve legal payments still fail.",
+    "next": "Select waterbend taps jointly with the normal mana payment, excluding each selected resource from any conflicting mana/tap/sacrifice allocation and preserving preview state. Validate active Drum and artifact-land overlap controls and add auxiliary-tap collision controls."
+  },
+  "rules_basis": {
+    "source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+    "rules": [
+      "701.67a",
+      "701.67b",
+      "701.67c"
+    ],
+    "basis": "Only the generic waterbend component may be replaced with distinct untapped artifacts/creatures; other normal generic/colored costs still require mana. Spirit Water Revival offers optional waterbend6; explicitly select or decline it using native optional-cost enumeration. Spell tax/reduction affects total cost while tap-payment cap stays six.",
+    "scope": "24 actual paid spell/zero-mana setup and rejected-cast controls, including one/two copies and pending paid optional-cost state. No source-only defect inference.",
+    "production_changes": false
+  },
+  "scope": "66 actual paid/free setup/native optional costs, normal-vs-waterbend cap, tax/reduction, colored mana rejection, basic versus optional outcomes, pending paid stack/copies, dormant/active mana abilities and artifact-land non-double-counting.",
+  "limits": [
+    "All diagnostic budgets remain1536MiB/2CPU/90s; no cases or assertions removed.",
+    "Original/one/two-copy cases reproduce the behavior; this is not only a copy-history issue.",
+    "No recipe, production registration or selected-runtime changes in this discovery commit.",
+    "The prototype is partial: broader/source/fresh-build/packaged/full/catalog validation and activation remain pending.",
+    "Card construction and supplied passing interactions do not prove complete card/rules/AI correctness."
+  ]
+}
