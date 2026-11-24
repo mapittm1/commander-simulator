@@ -557,4 +557,44 @@ public class CommanderWaterbendPaymentTest extends AITest {
     @Test public void rejectedPaidWaterbendDepth0() { rejectedPaidWaterbend(0); }
     @Test public void rejectedPaidWaterbendDepth1() { rejectedPaidWaterbend(1); }
     @Test public void rejectedPaidWaterbendDepth2() { rejectedPaidWaterbend(2); }
+
+    /** Shared transform heuristics must retain an existing combo guard when Monte Carlo is off. */
+    private void airbendTransformFallback(int depth, boolean hasReducer) {
+        Game original = setup(0, 0, 0, true);
+        Player initial = seat(original, 0);
+        addCardToZone("Aang, Swift Savior", initial, ZoneType.Battlefield);
+        addCardToZone("Appa, Steadfast Guardian", initial, ZoneType.Battlefield);
+        addCardToZone("Bontu's Monument", initial, ZoneType.Battlefield);
+        if (hasReducer) addCardToZone("Doc Aurlock, Grizzled Genius", initial, ZoneType.Battlefield);
+        addTokens("w_1_1_ally", 10, initial);
+        List<String> deck = List.of("Aang, Swift Savior", "Appa, Steadfast Guardian",
+                "Doc Aurlock, Grizzled Genius", "Bontu's Monument");
+        for (int index = 0; index < 20; index++) addCardToZone(deck.get(index % deck.size()), initial, ZoneType.Library);
+        Game game = snapshot(original, depth);
+        Player actor = seat(game, 0);
+        AiController brain = ((PlayerControllerAi)actor.getController()).getAi();
+        brain.setFlatMonteCarloOverride(false);
+        Card aang = named(game, 0, "Aang, Swift Savior", ZoneType.Battlefield);
+        SpellAbility transform = aang.getSpellAbilities().stream()
+                .filter(ability -> forge.game.ability.ApiType.SetState.equals(ability.getApi()))
+                .findFirst().orElseThrow();
+        transform.setActivatingPlayer(actor);
+        assertTrue(transform.canPlay());
+        assertTrue(ComputerUtilCost.canPayCost(transform, actor, false),
+                "This guard is strategic; do not make the legal waterbend activation unaffordable");
+        assertTrue(brain.deckPlan(actor).combos.has(forge.ai.simulation.ComboPlan.Kind.FREE_CAST),
+                "Use an actual scanned combo deck before checking its existing guard");
+        String guard = forge.ai.simulation.ComboGuard.problem(actor, transform, null, brain.deckPlan(actor).combos);
+        assertEquals(guard, hasReducer ? "airbend-loop-transform" : null);
+        assertEquals(new forge.ai.ability.SetStateAi().canPlayWithSubs(actor, transform).willingToPlay(),
+                !hasReducer, "Fallback transform heuristics must agree with the existing live-loop guard");
+        assertEquals(tappedArtifacts(game), 0L);
+        assertTrue(game.getStack().isEmpty());
+    }
+    @Test public void liveAirbendFallbackDepth0() { airbendTransformFallback(0, true); }
+    @Test public void liveAirbendFallbackDepth1() { airbendTransformFallback(1, true); }
+    @Test public void liveAirbendFallbackDepth2() { airbendTransformFallback(2, true); }
+    @Test public void noReducerAirbendFallbackDepth0() { airbendTransformFallback(0, false); }
+    @Test public void noReducerAirbendFallbackDepth1() { airbendTransformFallback(1, false); }
+    @Test public void noReducerAirbendFallbackDepth2() { airbendTransformFallback(2, false); }
 }

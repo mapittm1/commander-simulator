@@ -318,6 +318,9 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.AirbendEffect",
     "forge.game.ability.effects.EarthbendEffect",
     "forge.game.cost.CostAdjustment",
+    "forge.ai.ability.SetStateAi",
+    "forge.ai.simulation.ComboGuard",
+    "forge.ai.simulation.ComboPlan",
     "forge.game.cost.CostWaterbend",
     "forge.game.cost.CostPartMana",
     "forge.game.ability.effects.DestroyEffect",
@@ -405,7 +408,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1946-case packaged family."""
+    """Execute the existing fixed 1952-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

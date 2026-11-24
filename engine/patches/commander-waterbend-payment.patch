@@ -337,3 +337,19 @@ diff --git a/forge-game/src/main/java/forge/game/cost/CostPayment.java b/forge-g
      public static CostPayment forTapCost(Player payer, SpellAbility cause) {
          var entry = payer.getGame().costPaymentStack.peek();
          return entry != null && (entry.cost() instanceof CostTap || entry.cost() instanceof CostTapType)
+diff --git a/forge-ai/src/main/java/forge/ai/ability/SetStateAi.java b/forge-ai/src/main/java/forge/ai/ability/SetStateAi.java
+--- a/forge-ai/src/main/java/forge/ai/ability/SetStateAi.java
++++ b/forge-ai/src/main/java/forge/ai/ability/SetStateAi.java
+@@ -37,6 +37,12 @@
+         }
+ 
+         if ("Transform".equals(mode) || "Flip".equals(mode)) {
++            // Keep the shared combo guard when rollouts are disabled or fall back to heuristics.
++            if (aiPlayer.getController() instanceof PlayerControllerAi controller
++                    && forge.ai.simulation.ComboGuard.problem(aiPlayer, sa, null,
++                            controller.getAi().deckPlan(aiPlayer).combos) != null) {
++                return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);
++            }
+             return new AiAbilityDecision(100, AiPlayDecision.WillPlay);
+         }
+         return new AiAbilityDecision(0, AiPlayDecision.CantPlayAi);

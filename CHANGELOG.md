@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the first waterbend candidate's 3,103 native/2,351 packaged passes
+  and 4,576 pass/1 fail broader gameplay result. Newly legal transforms exposed
+  an AI fallback bypassing the existing combo guard. Share that guard with
+  transform heuristics without rejecting legal payment. All 99 focused and
+  1,885 source cases pass, including the exact failed upstream combo scenario;
+  retain prior 1,878 cases and all diagnostic/setup failures. Register fresh
+  3,109 native/1,952 packaged targets and 157 origins. Broader, full, catalog
+  gates and activation remain pending; the installed runtime is unchanged.
+
 - Extend the waterbend correction through actual mana execution and payment
   rollback. Reproduce sacrifice resource reuse and leaked taps after rejection;
   all 93 focused/1,878 source cases now pass, retaining all previous 1,869 cases.

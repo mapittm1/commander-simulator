@@ -27,20 +27,21 @@ difference.
 
 ## Card coverage
 
-The generic waterbend correction passes all 93 focused and 1,878 combined source
-cases, retaining all 1,869 previous source cases. The latest installed-runtime
-baseline passes 48/fails 45. Four generic AI/payment files enforce the tap cap,
-plan normal mana separately, preserve preview memory and carry selected waterbend
-resources through actual payment. An artifact cannot pay a waterbend tap and
-then be sacrificed for mana during that payment. Previously tapped artifacts
-remain legal sacrifice candidates. Failed payments restore waterbend taps and
-permit a fresh attempt. Card scripts and AI profiles are unchanged.
+The generic waterbend correction passes all 99 focused and 1,885 combined source
+cases, retaining all 1,878 previous source cases. Five generic AI/payment files
+enforce the tap cap, reserve resources through actual mana payment and restore
+taps after rejection. Previously tapped artifacts remain legal sacrifice
+candidates. Transform heuristics now honor the existing combo guard even when
+Monte Carlo is disabled or falls back. Card scripts and AI profiles are unchanged.
 See [source evidence](engine/waterbend_payment_evidence.json).
 
-The registered targets are 3,103 native and 1,946 packaged cases with 154
-production origins to verify. Fresh runtime/full/catalog gates and selection
-remain pending; the installed runtime is unchanged and affected. Preserve earlier
-failures, partial prototypes and setup errors in
+The first candidate passed 3,103 native and 2,351 independent packaged cases, but
+failed one of 4,577 broader gameplay cases: an affordable transform broke an
+active airbend combo. The source correction passes that exact upstream scenario
+and six new fallback controls. Its fresh registered targets are 3,109 native and
+1,952 packaged cases with 157 production origins to verify. All new runtime gates
+and activation remain pending; the installed runtime is unchanged and affected.
+See [runtime evidence](engine/waterbend_payment_runtime_evidence.json) and
 [gap history](engine/waterbend_payment_gaps.json).
 
 The selected runtime is `2.0.16-583714b-reviewed-earthbend-return`.
