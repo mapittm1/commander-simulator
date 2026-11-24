@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the validated cast-event/X-cost aggregate and five fixed native
+  regression fixtures. Pin their hashes in the recipe and build/source registries;
+  target 3,877 native cases while retaining all 3,295 prior cases. Add a separate
+  582-case independent packaged group, bringing its expected total to 2,720 under
+  unchanged worker limits. Update README and registration evidence. Fresh build
+  and runtime gates remain pending; the selected runtime is unchanged.
+
 - Select native pre-goal forecasting from live cast/copy/target event eligibility,
   including suppression and delayed triggers, instead of ward keywords. Preserve
   native registration behavior and remap independent per-turn targeting histories

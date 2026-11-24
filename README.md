@@ -66,7 +66,7 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-The uninstalled X-cost/event prototype passes 768 focused and 2,653 source cases,
+The registered, uninstalled X-cost/event prototype passes 768 focused and 2,653 source cases,
 retaining all prior 588/2,473 green cases and every case from the failed 2,611-case
 attempt. That intermediate source run stopped a Bontu airbend loop at opponent
 life 1 because the forecast rejected a win from a cast trigger. The final source
@@ -96,21 +96,25 @@ Boundary probes use explicit trusted mechanics rather than printed-card script
 claims: 65 harmless effects resolve in actual gameplay while exceeding the
 forecast's 64-resolution bound. No-plan at that bound is not impossibility proof.
 
-Eight generic production sources differ from the installed baseline; this step
-changes four. Card scripts and AI profiles are unchanged. Fresh build, native,
+Eight generic production sources differ from the installed baseline. Card scripts
+and AI profiles are unchanged. The aggregate patch and five fixtures are now
+registered for a fresh build targeting 3,877 native cases, retaining all 3,295 prior
+cases. Independent packaged testing targets 2,720 cases with a separate 582-case
+event group under the existing worker limits. These are expected counts; fresh
+build, native,
 packaged, broader, full-game, catalog and health runtime gates remain pending.
 Triggered-ability forecasting, responses, trigger sources introduced by costs
 and experimental snapshot restoration require more controls. The installed
 runtime is unchanged, and complete card/rules correctness remains unproven.
-See the [aggregate patch](engine/pending/target-tax/prototype-v1.patch),
+See the [registered aggregate patch](engine/patches/commander-cast-events.patch),
 [138 event/history cases](engine/pending/target-tax/fixtures-v4/CommanderTargetTaxTest.java),
 [42 outcome/ordering cases](engine/pending/target-tax/outcome-fixtures-v2/CommanderPreGoalOutcomeTest.java)
 and [evidence](engine/target_tax_evidence.json). Retained
 [ward-transition](engine/ward_transition_evidence.json),
 [typed-ward](engine/typed_ward_evidence.json) and
 [X-cost](engine/waterbend_x_evidence.json) evidence preserve earlier milestones.
-Apply this aggregate patch in place of the earlier pending aggregate patches,
-not in addition.
+The registered aggregate replaces the earlier pending aggregates; they must not
+be applied together. See [registration evidence](engine/cast_events_registration_evidence.json).
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

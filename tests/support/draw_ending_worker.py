@@ -95,6 +95,11 @@ SOURCES = {
     "CommanderWaterbendPaymentTest": "commander_waterbend_payment_test_sha256",
     "CommanderWaterbendFilterTest": "commander_waterbend_filter_test_sha256",
     "CommanderManaChainTest": "commander_mana_chain_test_sha256",
+    "CommanderWaterbendXTest": "commander_waterbend_x_test_sha256",
+    "CommanderTypedWardTest": "commander_typed_ward_test_sha256",
+    "CommanderWardTransitionTest": "commander_ward_transition_test_sha256",
+    "CommanderTargetTaxTest": "commander_target_tax_test_sha256",
+    "CommanderPreGoalOutcomeTest": "commander_pre_goal_outcome_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -421,7 +426,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 2090-case packaged family."""
+    """Execute the fixed 2720-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

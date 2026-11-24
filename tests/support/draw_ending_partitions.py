@@ -184,6 +184,13 @@ PARTITIONS = {
         "forge.ai.CommanderWaterbendFilterTest",
         "forge.ai.CommanderManaChainTest",
     ),
+    "cast_events": (
+        "forge.ai.CommanderWaterbendXTest",
+        "forge.ai.CommanderTypedWardTest",
+        "forge.ai.CommanderWardTransitionTest",
+        "forge.ai.CommanderTargetTaxTest",
+        "forge.ai.CommanderPreGoalOutcomeTest",
+    ),
 }
 
 EXPECTED_COUNTS = {
@@ -191,6 +198,7 @@ EXPECTED_COUNTS = {
     "combat_and_snapshots": 228,
     "text_casting_and_costs": 338,
     "resolution": 1271,
+    "cast_events": 582,
 }
 
 
