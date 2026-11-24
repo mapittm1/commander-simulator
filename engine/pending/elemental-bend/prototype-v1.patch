@@ -1,0 +1,24 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -4492,6 +4492,11 @@
+         getGame().getTriggerHandler().runTrigger(type, runParams, false);
+     }
+ 
++    /** Restore this turn's completed elemental actions without firing new bend events. */
++    public void copySnapshotElementalBendFrom(Player original) {
++        elementalBendThisTurn = original.elementalBendThisTurn.clone();
++    }
++
+     public boolean hasAllElementBend() {
+         return elementalBendThisTurn.size() >= 4;
+     }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -143,6 +143,7 @@
+             newPlayer.setDilemmasFacedThisTurn(origPlayer.getDilemmasFacedThisTurn());
+             newPlayer.copyDiceHistoryFrom(origPlayer);
+             newPlayer.copyDrawHistoryFrom(origPlayer);
++            newPlayer.copySnapshotElementalBendFrom(origPlayer);
+             newPlayer.setLifeStartedThisTurnWith(origPlayer.getLifeStartedThisTurnWith());
+             newPlayer.setDamageReceivedThisTurn(origPlayer.getDamageReceivedThisTurn());
+             newPlayer.setLandsPlayedThisTurn(origPlayer.getLandsPlayedThisTurn());

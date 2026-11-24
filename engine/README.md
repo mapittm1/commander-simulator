@@ -9,6 +9,15 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+A newly confirmed elemental-history gap remains in the selected runtime.
+The baseline passes 11/fails 14 of 25 paid/native cases; an independent
+Player/GameCopier prototype passes all 25 and all 408 related copy contracts.
+See [gap and prototype evidence](elemental_bend_gaps.json). Pending sources and
+patches are under `pending/elemental-bend`; no recipe/runtime activation yet.
+All 21 supplementary Airbend permission/cost cases pass without a production
+change; see [Airbend evidence](airbend_permission_evidence.json). These cases
+remain supplementary and do not change sealed test counts.
+
 The selected runtime is the reviewed counter-history milestone. Two generic
 production files preserve placement/removal receipts in independent mapped
 collections without replaying counter events. The 53-case baseline passes 17

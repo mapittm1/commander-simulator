@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Confirm copied elemental-action history is lost in the selected runtime:
+  25 cases pass 11/fail 14; generic Player/GameCopier prototype passes 25/25
+  and 408/408 related contracts. Preserve the failed original combat setup,
+  corrected 12 controls, expanded pending-spell/cleanup/isolation checks and
+  prototype patch in engine/pending/elemental-bend and engine/elemental_bend_gaps.json.
+  Production activation and fresh build/full gates remain pending.
+- Preserve 21 passing supplementary Airbend permission/cost cases, retaining
+  the original 12, including owner-only casting, timing, mandatory additional
+  costs, cost increases/reductions and pending-spell copies. No production
+  change; suite registration remains pending and sealed counts stay unchanged.
+  See engine/airbend_permission_evidence.json.
+
 - Verify supplementary departed-player counter receipts: all 59 cases pass in
   the selected runtime, retaining the 53 existing bodies and adding six original/
   one/two-copy cases. The prior runtime passes 19 controls/fails 40 copies. Check

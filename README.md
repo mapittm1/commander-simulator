@@ -27,6 +27,20 @@ difference.
 
 ## Card coverage
 
+A supplementary review confirms an elemental-action history gap in the selected
+runtime: the 25-case baseline passes 11 and fails 14, while a generic two-file
+prototype passes all 25 and 408 retained copy contracts. The gap can prevent
+Avatar Aang from transforming after a copied game completes its fourth element.
+The prototype preserves each player's independent history without repeating
+bending events. It is not activated; fresh build and full gates remain pending.
+The original combat-setup failure and corrected controls are preserved in
+[elemental evidence](engine/elemental_bend_gaps.json).
+
+Separately, all 21 supplementary Airbend permission/cost cases pass in the selected
+runtime, including owner-only casts, timing, additional costs and copied pending
+spells. See [Airbend evidence](engine/airbend_permission_evidence.json). These cases
+await regular registration and do not change the sealed totals below.
+
 The selected runtime is `2.0.16-583714b-reviewed-counter-history`.
 It preserves counter placement and removal history in independent tables and
 private historical receipts, mapping players and cards into each copied game
