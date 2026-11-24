@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve an uninstalled generic variable-X waterbend/minimum-X prototype
+  passing 300 focused and 2,185 source cases, retaining every previous case.
+  Compare the selected runtime's 252/300 result. Native paid effects cover all
+  four variable-X waterbend cards; ordinary mana/exile minimums and legal zero-X
+  casts add controls. Copy the proposed-X forecast and enforce already announced
+  minimums at native cost boundaries, without card-name checks. Retain earlier
+  invalid-target and missing-refund fixture failures and corrected native
+  payment/refund controls. Unannounced-X completion and forecasting-budget
+  semantics need more controls before registration. Fresh runtime gates remain
+  pending; the installed runtime is unchanged. See engine/waterbend_x_evidence.json.
+
 - Select the validated chained-mana runtime after all 186 focused, 2,071 source
   and 3,295 native cases pass, retaining every prior case. Independent packaged
   checks pass 2,138/65/194/146 with 168 origins; broader suites pass 4,769 gameplay

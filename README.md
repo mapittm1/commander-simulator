@@ -66,6 +66,21 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
+An uninstalled variable-X waterbend prototype passes 300 focused and 2,185
+source cases, retaining the previous 186 and 2,071. The selected runtime passes
+252/300 of the same focused controls: proposed-X forecasts, existing-choice
+preview metadata and forbidden zero choices expose gaps. Independent native
+payments and effect checks cover all four variable-X waterbend cards; additional
+controls cover ordinary mana/exile minimums and legal zero-X casts. The prototype
+binds proposed X on a copied ability and validates already announced minimums at
+native cost boundaries. Three production sources change, with no card-name
+checks or script/profile changes. Minimum-X payments with an unannounced choice
+and other uses of the forecasting budget need further controls before
+registration. Fresh runtime gates remain pending; the selected runtime above is
+unchanged. See the [patch](engine/pending/waterbend-x/prototype-v1.patch),
+[114 new cases](engine/pending/waterbend-x/fixtures-v5/CommanderWaterbendXTest.java)
+and [evidence](engine/waterbend_x_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
 into the currently selected reviewed build without changing those old outcomes.
