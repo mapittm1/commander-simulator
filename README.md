@@ -27,6 +27,14 @@ difference.
 
 ## Card coverage
 
+Supplementary Aura-entry checks pass all 48 paid Replenish cases against the
+selected runtime: both graveyard orders, legal/illegal Coronet attachments,
+simultaneously returning creatures, hexproof versus protection, and copies made
+before casting or with the spell on the stack. No defect was demonstrated.
+These witnesses are retained under `engine/pending/simultaneous-aura/`; they
+are additional diagnostics, not part of the sealed native suite counts. See
+[Aura evidence](engine/simultaneous_aura_evidence.json).
+
 The selected runtime is `2.0.16-583714b-reviewed-exert-state`.
 It preserves exert counts and independent player-mapped untap restrictions in
 simulation and private historical copies without repeating exert costs or

@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify 48 supplementary paid Replenish Aura-entry cases against the selected
+  packaged runtime, retaining all 18 initial controls. Cover both graveyard
+  orders, original/one/two copies, on-stack copies, preexisting enchantment
+  requirements, simultaneous creature entry, hexproof and protection. All pass
+  within the unchanged 1536 MiB/two CPU/90-second diagnostic budget. No defect
+  demonstrated or production change made. Preserve fixtures and hash-bound
+  evidence in engine/pending/simultaneous-aura and
+  engine/simultaneous_aura_evidence.json; standard suite registration is pending.
+
 - Select the validated exert snapshot milestone: 1,556 mixed source, 2,781
   native (all 2,747 previous methods retained), normal packaged
   1,624/65/194/146 in 300.844s, broader 4,255 gameplay/256 serialization,

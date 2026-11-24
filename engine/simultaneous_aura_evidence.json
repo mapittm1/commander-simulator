@@ -1,0 +1,450 @@
+{
+  "status": "selected_runtime_passes_additional_coverage_no_defect_demonstrated",
+  "tested_head": "14e8929e16a350b36ad2f36612b5448faa5df265",
+  "selected_build": "0a38805fee614a34830ee4f643171318",
+  "engine": {
+    "forge_version": "2.0.16-583714b-reviewed-exert-state",
+    "capabilities": [
+      "sticker_kicker",
+      "explicit_commander_colors",
+      "native_companion_pregame",
+      "supplementary_ai_zones",
+      "sticker_snapshot_state",
+      "historical_lki_state",
+      "damage_history_state",
+      "participant_snapshot_state",
+      "starting_life_snapshot",
+      "stack_snapshot_state",
+      "cast_form_snapshot",
+      "usage_snapshot_state",
+      "scheduled_snapshot_state",
+      "delayed_trigger_snapshot",
+      "turn_schedule_snapshot",
+      "conditional_cleanup_snapshot",
+      "animation_snapshot_state",
+      "copy_frame_expiration",
+      "protection_expiration",
+      "keyword_exchange_expiration",
+      "blocking_prevention_snapshot",
+      "ring_text_snapshot",
+      "attachment_mana_cleanup",
+      "host_bound_return_snapshot",
+      "effect_cleanup_regeneration",
+      "detain_control_age_snapshot",
+      "player_control_snapshot",
+      "decision_beneficiary_planning",
+      "controlled_attack_planning",
+      "primary_control_future_planning",
+      "paid_spell_control_retargeting",
+      "composed_spell_control",
+      "cast_provenance_records",
+      "paid_mass_counter_planning",
+      "paid_exchange_pile_planning",
+      "divine_intervention_counter_trigger",
+      "expired_mana_reservation_isolation",
+      "hybrid_safety_paired_random_isolation"
+    ],
+    "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+    "jar_sha256": "7513acce11d6fbea18ceec0990dd8008f24509e11aeff0da962d11551e29260c",
+    "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+    "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+    "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+    "recipe_sha256": "a94b34edfd18aa7ad294ecf9384e921991821bfdcc8841e134d8c768ea3a9889",
+    "native_tests": {
+      "total": 2781,
+      "passed": 2781,
+      "failed": 0,
+      "skipped": 0
+    },
+    "build_log_sha256": "4ff1e8bc84eaeb4f2a6ea5c1b958cce838da69d673ff26b00ff8da9cd60ec7ae",
+    "edition_resources": {
+      "files": 686,
+      "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+    },
+    "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+    "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+    "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+  },
+  "production_changes": [],
+  "fixture": {
+    "path": "engine/pending/simultaneous-aura/CommanderSimultaneousAuraTest.java",
+    "sha256": "b2e88ac76c9b844c846f3af0fc038b840838973a1a78376bf77dae7c13b72243"
+  },
+  "rules_basis": {
+    "rules": "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf",
+    "clauses": [
+      "303.4f",
+      "303.4g"
+    ],
+    "replenish_ruling": "https://magic.wizards.com/en/news/feature/secrets-of-strixhaven-release-notes",
+    "interpretation": [
+      "Aura attachment must be legal as it enters; no legal attachment leaves it in its original zone.",
+      "A Replenish Aura cannot enchant an enchantment entering in that same batch.",
+      "Coronet on an already enchanted creature is a positive control; simultaneous Rancor cannot make an otherwise unenchanted creature eligible."
+    ],
+    "limits": "Check native outcomes before attributing a defect; no production changes."
+  },
+  "coverage": [
+    "Paid Replenish with Rancor and Daybreak Coronet, both graveyard insertion orders.",
+    "Existing unenchanted creature rejects Coronet; existing Spirit Link makes Coronet legal. Actual attached entities and power/toughness verified.",
+    "Only simultaneously returning Courser of Kruphix cannot receive Rancor; Rancor remains in graveyard.",
+    "Original game, one snapshot and two snapshots, before casting and while Replenish is on the stack.",
+    "Indirect entry can enchant opposing Gladecover Scout despite hexproof, but cannot attach white Spirit Link to Black Knight with protection from white.",
+    "Copied resolutions preserve original-game zones, attachment state and characteristics."
+  ],
+  "phases": {
+    "baseline-aura18-v1": {
+      "counts": {
+        "total": 18,
+        "passed": 18,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3058,
+        "returncode": 0,
+        "elapsed_seconds": 12.828
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth2Reverse",
+          "status": "PASS"
+        }
+      ],
+      "report_sha256": "e42f499128f81ba12d1cace224f443fdb179a549f54340260ad4b242347b2e5a",
+      "evidence_sha256": "103f0cc40d0806594d63e21c14d1805117948c1adeaca86c40213460b4535a53",
+      "process_sha256": "fe4c66d7bbf9a1b4b4bb5ab9e0790014dd6b95d6db615d6fb1ffdaca8809d4f9",
+      "driver_sha256": "b59c3b69483b8290ba4f80c53bd142d8a7a8ce56d3de7344092a695e87bdf87b",
+      "native_origins": [
+        "forge.game.ability.effects.AlterAttributeEffect",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0
+    },
+    "baseline-aura48-v2": {
+      "counts": {
+        "total": 48,
+        "passed": 48,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 3058,
+        "returncode": 0,
+        "elapsed_seconds": 14.562
+      },
+      "methods": [
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.alreadyEnchantedDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth0BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth0Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth1BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth1Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth2BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.hexproofDepth2Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.newCreatureDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth0BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth0Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth1BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth1Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth2BeforeCast",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.protectionDepth2Stack",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackalreadyEnchantedDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stacknewCreatureDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.stackunenchantedDepth2Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth0Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth0Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth1Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth1Reverse",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth2Forward",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderSimultaneousAuraTest.unenchantedDepth2Reverse",
+          "status": "PASS"
+        }
+      ],
+      "report_sha256": "89f3607628a62aa1ec06e4a7840ae717e462b2aee1361d34afbfd3337ffeffc7",
+      "evidence_sha256": "13aa10e395d34d2c28caa58998b072e0806376de0536226e95dbd2863e8e53bf",
+      "process_sha256": "ff2198eefd9af68a889c6d636a83b43675a28fb82f539f3376ac3130d53bd17f",
+      "driver_sha256": "ef2fab646a548819bab2e5f1b8ba8e657d61d879b8d15d5bc3bcc9d0d3ec9e5a",
+      "native_origins": [
+        "forge.game.ability.effects.AlterAttributeEffect",
+        "forge.game.card.CardCopyService",
+        "forge.game.card.Card",
+        "forge.game.spellability.SpellAbilitySnapshot",
+        "forge.game.phase.PhaseHandler",
+        "forge.ai.simulation.GameCopier",
+        "forge.ai.simulation.GameSimulator",
+        "forge.game.Game",
+        "forge.ai.AiController",
+        "forge.ai.simulation.MultiplayerAttackPlanner",
+        "forge.game.cost.CostExert",
+        "forge.game.phase.Untap",
+        "forge.game.combat.CombatUtil",
+        "forge.game.combat.Combat"
+      ],
+      "configuration_failures": 0,
+      "configuration_skips": 0
+    }
+  },
+  "research_directory": "data/development/commander-multiplayer-attack-research/simultaneous-aura-research",
+  "resources": {
+    "heap_mib": 1536,
+    "active_processors": 2,
+    "worker_timeout_seconds": 90,
+    "compiler_timeout_seconds": 30
+  },
+  "registration": "Supplementary witnesses retained in engine/pending; not yet registered in the sealed native suite or standard packaged partitions. Selected runtime native count remains2781.",
+  "limits": [
+    "No defect demonstrated in these cases; do not invent a production patch.",
+    "Only the specified choices/interactions were exercised. These passing cases do not prove complete Aura, card, rules or AI strategy support.",
+    "Diagnostic Java fixtures execute against the installed packaged JAR; no Maven rebuild or replacement runtime was needed."
+  ]
+}

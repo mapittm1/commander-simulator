@@ -26,6 +26,14 @@ costs, printed triggers/combat damage and independent two-player expiry. Attack
 and exert choices are supplied; no default AI strategy or complete exert/card/
 rules correctness is claimed. The supplied snapshot/history gap is corrected.
 
+Supplementary simultaneous Aura-entry diagnostics pass all 48 paid Replenish
+cases against the selected packaged runtime, retaining 18 initial controls.
+Actual zones, attachments, characteristics and original/copy independence are
+checked, including on-stack copies and hexproof/protection distinctions. No
+production defect was demonstrated. Fixtures are pending normal suite registration
+in `pending/simultaneous-aura/`; selected native counts remain unchanged. See
+[diagnostic evidence](simultaneous_aura_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 
 The selected delayed-reveal runtime enforces current-view/zone identity and
