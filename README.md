@@ -56,6 +56,13 @@ are unchanged. Prior Aura/exert/World/Harnessed/Class corrections and their
 Complete counter, card, rules and AI correctness remain unproven; supplied
 interactions and catalog construction do not certify complete support.
 
+Supplementary departed-participant checks pass all 59 cases (53 retained plus
+six new) against the selected runtime. The prior runtime passes 19 original
+controls/fails 40 copies. These cases verify departed payer keys, private cards
+whose owners left the game, independent references and native end-step tokens.
+The six added cases await regular suite registration and do not change the
+sealed counts above. See [supplementary evidence](engine/counter_history_departed_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
 into the currently selected reviewed build without changing those old outcomes.

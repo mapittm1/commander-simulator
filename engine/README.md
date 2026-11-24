@@ -27,6 +27,13 @@ and native cleanup. No card scripts or AI profiles change. The supplied gap is
 corrected, while full counter/card/rules/AI support remains unproven. Preserve
 all earlier phases, failures and setup-error artifacts.
 
+Supplementary departed-payer/owner receipt tests pass all 59 cases, retaining 53
+existing methods and adding six original/one/two-copy controls. The prior runtime
+passes 19/fails 40; selected runtime passes all 59, including independent private
+history and actual Hornbeetle tokens. No production changes; the added six cases
+are pending regular registration and do not change sealed native totals. See
+[supplementary evidence](counter_history_departed_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 
 The selected delayed-reveal runtime enforces current-view/zone identity and

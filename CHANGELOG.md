@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify supplementary departed-player counter receipts: all 59 cases pass in
+  the selected runtime, retaining the 53 existing bodies and adding six original/
+  one/two-copy cases. The prior runtime passes 19 controls/fails 40 copies. Check
+  private historical cards after their owner leaves, mapped departed payer keys,
+  reference independence and actual Hornbeetle tokens. No production changes;
+  the added six cases await regular suite registration and sealed counts stay
+  unchanged. Preserve fixtures/evidence in engine/pending/counter-history/departed
+  and engine/counter_history_departed_evidence.json.
+
 - Select the validated counter-history milestone: 1,657 source, 2,882 native
   (all 2,829 previous methods retained), independent packaged 1,725/65/194/146
   in 305.906s, broader 4,356 gameplay/256 serialization and 45 full
