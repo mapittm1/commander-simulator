@@ -41,8 +41,8 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         all_methods = []
         for partition in PARTITIONS:
             all_methods.extend(self.check_partition(settings, partition))
-        self.assertEqual(len(all_methods), 1952)
-        self.assertEqual(len(set(all_methods)), 1952)
+        self.assertEqual(len(all_methods), 1985)
+        self.assertEqual(len(set(all_methods)), 1985)
 
     def check_partition(self, settings, partition):
         """Check every fixed case and class origin in one bounded worker."""
@@ -91,7 +91,7 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         ):
             self.assertEqual(summary[key], 0)
         expected_classes = list(NATIVE_CLASSES)
-        self.assertEqual(len(expected_classes), 157)
+        self.assertEqual(len(expected_classes), 161)
         self.assertEqual(len(set(expected_classes)), len(expected_classes))
         self.assertEqual(
             summary["production_classes_from_packaged_jar"], expected_classes

@@ -93,6 +93,7 @@ SOURCES = {
     "CommanderElementalBendHistoryTest": "commander_elemental_bend_history_test_sha256",
     "CommanderEarthbendReturnTest": "commander_earthbend_return_test_sha256",
     "CommanderWaterbendPaymentTest": "commander_waterbend_payment_test_sha256",
+    "CommanderWaterbendFilterTest": "commander_waterbend_filter_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -252,6 +253,10 @@ NATIVE_CLASSES = (
     "forge.ai.ability.ChangeTextAi",
     "forge.ai.simulation.TextChangeChoices",
     "forge.ai.ComputerUtilMana",
+    "forge.ai.ComputerUtilMana$ManaPaymentAssessment",
+    "forge.game.mana.Mana",
+    "forge.game.mana.ManaPool",
+    "forge.game.mana.ManaRefundService",
     "forge.ai.SpellApiToAi",
     "forge.ai.ability.RecruitAi",
     "forge.ai.ability.SwitchBlockAi",
@@ -408,7 +413,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1952-case packaged family."""
+    """Execute the existing fixed 1985-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the generic mana-filter correction and scoped assessment API after
+  all 33 focused/1,918 source cases pass, retaining 1,885 original and 1,906
+  intermediate cases. Preserve reservations during nested funding, pending tap
+  sources and direct-source priority for simple any-color/non-increasing filters.
+  Distinguish plans found with the current or relaxed sacrifice-value preference
+  from unsuccessful searches. Preserve normal strategy policy, native ordered
+  legal witnesses, all previous failures and preview-memory purity. Register
+  3,142 native/1,985 packaged targets and 161 origins together. Fresh runtime
+  validation and activation remain pending; user-facing diagnostics and full
+  card/rules/AI support remain unfinished.
+
 - Confirm remaining nested mana-filter gaps: Signet funding may sacrifice an
   artifact already tapped for waterbend; simple any-color/non-increasing filters
   are excluded by automatic admission. Preserve every native baseline, partial
