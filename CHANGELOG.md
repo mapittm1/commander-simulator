@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve World age in generic simulation and historical snapshots. Keep new
+  age for ordinary copies and paid re-entry, age retention through control and
+  ability changes, simultaneous-entry ties, and independent temporary-copy
+  expiration. The expanded baseline passes 14/fails 17; the three-file prototype
+  passes all 31 paid/history/transition cases, all 374 related cases, and all
+  1,522 mixed source cases, retaining 1,491. Preserve the original eight cases,
+  intermediate 26 cases, all failed results, and the initial unused-import
+  Checkstyle stop. Register the exact patch/fixtures, 2,747 native target,
+  1,590 packaged cases and 137 production origins. No card-script or AI-profile
+  changes. Fresh runtime/full-game/catalog gates remain pending; the installed
+  2,716-case runtime remains unchanged and still has the World gap. See
+  engine/world_snapshot_evidence.json. Full rules/card/AI correctness is unproven.
+
 - Select the validated Harnessed/Class snapshot milestone. Pass 1,491 mixed
   source, 2,716 native (all 2,652 previous methods retained), normal packaged
   1,559/65/194/146 in 326.031s, broader 4,190 gameplay/256 serialization, and

@@ -1,0 +1,241 @@
+{
+  "status": "source_registered_fresh_runtime_gates_pending",
+  "source_commit": "51fb7e81e9ac5a8d085de23e4322f6e327a7eb2c",
+  "behavior": [
+    "Preserve existing World age in simulation snapshots and private historical state.",
+    "Keep fresh World age for ordinary copies and paid re-entry; retain age through control changes and ability suppression/restoration.",
+    "Preserve simultaneous-World ties and independent expiration of temporary World copy effects."
+  ],
+  "production_files_changed": [
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java"
+  ],
+  "production_sources": 2168,
+  "new_production_sources": [],
+  "patch": {
+    "path": "engine/patches/commander-world-snapshot.patch",
+    "sha256": "4743202bce6f77c272766473b79dfe0ebd73af37bb9f515d15ba04aae7d07cd5"
+  },
+  "fixtures": {
+    "WorldTestSupport": {
+      "path": "engine/tests/WorldTestSupport.java",
+      "sha256": "e698150db2c2fc779107d2df18b0c47ced541b8d66095f54d0ba673933238198"
+    },
+    "CommanderWorldStateTest": {
+      "path": "engine/tests/CommanderWorldStateTest.java",
+      "sha256": "2b9d823fef7764e8845b8ad6b3e30ed51622c723dcb820e1865c02252c05aa61"
+    },
+    "CommanderWorldTransitionsTest": {
+      "path": "engine/tests/CommanderWorldTransitionsTest.java",
+      "sha256": "05337ec9f609de35c767108b903e643cb5eeb2f308494e0e4f106b44d158282c"
+    }
+  },
+  "phases": {
+    "baseline-world8-v2": {
+      "counts": {
+        "total": 8,
+        "passed": 2,
+        "failed": 6,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/evidence.json",
+        "sha256": "a240c90d6596a371464ef3906d8c45d725c08ec5f4b374f5ccf83b1463ecc5d1"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world8-v2/process.json",
+        "sha256": "3650b0a67df0fd3ed349780c6616c3ea531d5470deaab0622497cf7f04adbeca"
+      },
+      "report_sha256": "2b82cbfe8ff4f4c23a19397887ae296d15be9b8131b4a860f6bf0707ea54d5f3"
+    },
+    "prototype-world8-v1": {
+      "counts": {
+        "total": 8,
+        "passed": 8,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world8-v1/evidence.json",
+        "sha256": "c9686725eb3039489a954ed19cf5905bfb963989d8b9bed76d179fc06f2ff55f"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world8-v1/process.json",
+        "sha256": "8df7527f1dccec0a1cdc410d50ef838fbcfc5e865395c26ba848cb915162d946"
+      },
+      "report_sha256": "c6e05bf2b541bbc325bf83d7d97b6f3b574fb0a351ea8de75dc7670758215350"
+    },
+    "baseline-world26-v1": {
+      "counts": {
+        "total": 26,
+        "passed": 9,
+        "failed": 17,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world26-v1/evidence.json",
+        "sha256": "6c7c0ce4c0534ec19d7ee7bd6d8637656c11e74e158e6c37faf087702c8841ce"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world26-v1/process.json",
+        "sha256": "2843ba15af14a505983b723711f888966d85644e20f79e13c97afdcbde413610"
+      },
+      "report_sha256": "26b03297a3d9b417fe68d78e8b948d0907140990c0748898ae648a15d2974ebe"
+    },
+    "prototype-world26-v1": {
+      "counts": {
+        "total": 26,
+        "passed": 26,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world26-v1/evidence.json",
+        "sha256": "ecfbb7030eddcc2f2c60fc2e2b968ae509ba3327068f70c3a946f9eb5284bd3e"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world26-v1/process.json",
+        "sha256": "cffdc47ab86be8640cd2206652ba45c3ab952c94f497a9c1f9cb819db9602b26"
+      },
+      "report_sha256": "5cc8909d54c7d92109d248aec879814d4a4370bb2fc982b12e61533a489f0774"
+    },
+    "baseline-world31-v2": {
+      "counts": {
+        "total": 31,
+        "passed": 14,
+        "failed": 17,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world31-v2/evidence.json",
+        "sha256": "e0fc867da53de2eb75043cda5e105f9366952a2574c4286988a7a3a3b9c5486e"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/baseline-world31-v2/process.json",
+        "sha256": "1f0b5a12d2fe3b4b63a1b43eff13429d218284b4bea2c7dc184c1f6f4e21eb8a"
+      },
+      "report_sha256": "0a0ec2266f0b2c9bd369d7fff23b96dd743d29ab0b2469953388323048b179a0"
+    },
+    "prototype-world31-v2": {
+      "counts": {
+        "total": 31,
+        "passed": 31,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world31-v2/evidence.json",
+        "sha256": "3968f0089a5a9e55dcc5cf392600168a7c7791d44163695656135b722bdcabfb"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-world31-v2/process.json",
+        "sha256": "b5261e57922165a5d7aad07faa7e2482f77a8c992ea96208f80e8541e5e99c05"
+      },
+      "report_sha256": "a75912b2ae0e3d80b6bf22336aca88dbaeb511595d2a52b07e260ac45da3980f"
+    },
+    "prototype-related374-v1": {
+      "counts": {
+        "total": 374,
+        "passed": 374,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-related374-v1/evidence.json",
+        "sha256": "46b4195366421275ab5aecb6584eaf48c88b61f10528761e1479f4450429fe81"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/prototype-related374-v1/process.json",
+        "sha256": "c4d095345e294a248fd130b73385af74117fdd2c9f62264c086181db56c613ca"
+      },
+      "report_sha256": "a3dcbcff9fb4394c18dfce1b0c2fb46a7a670d03aac450897d04702e68167828"
+    }
+  },
+  "source": {
+    "counts": {
+      "total": 1522,
+      "passed": 1522,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_cases": 1491,
+    "new_cases": 31,
+    "artifacts": [
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/evidence.json",
+        "sha256": "2968344f99293b87ae05353030c3bc66862882ca6507a1f4c98cfc277a354b86"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/testng-results.xml",
+        "sha256": "c1adf970ac6de10ece27c21cedf96d30e7c55369af1b24b6d2bba800b2f263ce"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/maven-build.log",
+        "sha256": "cfbe3758024d88c9584025316d29ec121cefe009d4611e1674a1c0f61cd34093"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/production-inputs.json",
+        "sha256": "c66fddaa79e241f265a1abd5f233de2a77b7c2a8b24095c17444874c96302794"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/test-inputs.json",
+        "sha256": "222bda44c072ee247660047d6aa72354ceb49591487b84271a819a2f6d07b6c9"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/card-inputs.json",
+        "sha256": "a1ed805b1d9eb165ad6404aa15fd438fb9a737c5e56b9c0a573c9d2998d4c629"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v2/selection.json",
+        "sha256": "5e08911030c160a643477af6d973d8f616f958099d4d62c11cd62213feead10e"
+      }
+    ]
+  },
+  "baseline_retention": {
+    "path": "data/development/commander-multiplayer-attack-research/world-state-research/expanded-baseline-audit-v2.json",
+    "sha256": "9a08791f6c674cfdbcaa26d79364140fdafdd82fff329799c819a339b48c2ade"
+  },
+  "unused_import_failure": {
+    "phase": "source1522-v1",
+    "log": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/source1522-v1/maven-build.log",
+      "sha256": "72b772fb592fa3c420ce87e0c15b6410767956579a94a1a7b9f0303604f45c65"
+    },
+    "correction": {
+      "path": "data/development/commander-multiplayer-attack-research/world-state-research/source-fixture-correction-v2.json",
+      "sha256": "9cd815408add734d0e62aa6ba0678ad3bf94036b7b4c560ee351b2cba0cbff90"
+    },
+    "tests_ran": false
+  },
+  "normalized_patch_replay": true,
+  "card_name_conditions_added": false,
+  "card_scripts_and_profiles_unchanged": true,
+  "pending_targets": {
+    "sealed_native": 2747,
+    "packaged": [
+      1590,
+      65,
+      194,
+      146
+    ],
+    "packaged_origins": 137,
+    "broader": [
+      4221,
+      256
+    ],
+    "full_tests": 45,
+    "full_expected_subtests": 2643,
+    "catalog_constructed": 32636,
+    "nonstarting_meld_results": 7
+  },
+  "selected_runtime_unchanged": true,
+  "rules_sources": [
+    "https://media.wizards.com/2026/downloads/MagicCompRules%2020260417.pdf"
+  ],
+  "limits": [
+    "All 31 supplied paid-state/history/copy/transition witnesses and 374 related cases pass in the prototype; all 1,522 mixed source cases pass.",
+    "Fresh sealed/native, independent packaged, broader, fixed-seed full games and catalog gates remain pending. The installed 2,716-case milestone still has the confirmed World gap.",
+    "Passing supplied witnesses does not establish complete World mechanics, all-card rules correctness or autonomous strategy correctness."
+  ]
+}

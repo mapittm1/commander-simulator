@@ -81,6 +81,9 @@ SOURCES = {
     "CommanderClassStateTest": "commander_class_state_test_sha256",
     "CommanderHarnessedTransitionsTest": "commander_harnessed_transitions_test_sha256",
     "CommanderClassTransitionsTest": "commander_class_transitions_test_sha256",
+    "WorldTestSupport": "world_test_support_sha256",
+    "CommanderWorldStateTest": "commander_world_state_test_sha256",
+    "CommanderWorldTransitionsTest": "commander_world_transitions_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -195,6 +198,7 @@ TEST_CLASSES = tuple(
         "PreparedTestSupport",
         "HarnessedTestSupport",
         "ClassTestSupport",
+        "WorldTestSupport",
     }
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
@@ -217,6 +221,8 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.SkipPhaseEffect",
     "forge.game.ability.effects.AlterAttributeEffect",
     "forge.game.ability.effects.ClassLevelUpEffect",
+    "forge.game.ability.effects.PhasesEffect",
+    "forge.game.ability.effects.CloneEffect",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -372,7 +378,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1559-case packaged family."""
+    """Execute the existing fixed 1590-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
@@ -394,6 +400,7 @@ def main() -> None:
             "forge.ai.PreparedTestSupport",
             "forge.ai.HarnessedTestSupport",
             "forge.ai.ClassTestSupport",
+            "forge.ai.WorldTestSupport",
             PRIORITY_PACKAGE + "PriorityTestBase",
         ),
         NATIVE_CLASSES,

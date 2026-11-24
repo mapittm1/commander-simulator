@@ -1,0 +1,34 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -7113,6 +7113,11 @@
+     public long getWorldTimestamp() {
+         return worldTimestamp;
+     }
++    /** Preserve existing World age only for simulation and historical snapshots. */
++    public void copySnapshotWorldFrom(final Card source) {
++        worldTimestamp = source.worldTimestamp;
++    }
++
+     public void updateWorldTimestamp(long ts) {
+         if (!getType().hasSupertype(Supertype.World)) {
+             worldTimestamp = -1;
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -416,6 +416,7 @@
+         newCopy.setUnearthed(copyFrom.isUnearthed());
+         newCopy.setMonstrous(copyFrom.isMonstrous());
+         newCopy.setHarnessed(copyFrom.isHarnessed());
++        newCopy.copySnapshotWorldFrom(copyFrom);
+         if (newCopy.getClassLevel() != copyFrom.getClassLevel()) {
+             newCopy.setClassLevel(copyFrom.getClassLevel());
+         }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -571,6 +571,7 @@
+         newCard.setChosenCommanderColor(c.getChosenCommanderColor());
+         // Simulation worlds retain existing noncopiable designations and Class level.
+         newCard.setHarnessed(c.isHarnessed());
++        newCard.copySnapshotWorldFrom(c);
+         if (newCard.getClassLevel() != c.getClassLevel()) {
+             newCard.setClassLevel(c.getClassLevel());
+         }

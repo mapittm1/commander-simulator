@@ -9,6 +9,21 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+The latest source correction preserves existing World age in simulation and
+historical copies without changing ordinary in-game copy or new-object behavior.
+The 31-case baseline passes 14 controls/fails 17; the correction passes all 31,
+all 374 related and all 1,522 mixed source cases. Paid cases include phase-in
+survivors, private history, ordinary copies, re-entry, control changes, suppression
+and restoration, simultaneous World entry, and temporary-copy expiration. The
+initial source build stopped on two unused fixture imports; its failed artifacts
+remain preserved. See the [patch](patches/commander-world-snapshot.patch) and
+[source evidence](world_snapshot_evidence.json). Fresh 2,747 native, packaged
+1,590/65/194/146, broader, full-game and catalog gates remain pending. The selected
+2,716-case snapshot-designation runtime is unchanged and still has this World gap.
+Complete card/rules/AI correctness remains unproven.
+
+The earlier milestones below describe validation and selections at their time.
+
 The selected delayed-reveal runtime enforces current-view/zone identity and
 shared disclosure rights, capturing audience and zone/owner groups before
 callbacks. All 987 focused source, 2,212 native, independent/repeated

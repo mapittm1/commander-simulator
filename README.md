@@ -27,6 +27,21 @@ difference.
 
 ## Card coverage
 
+The latest reviewed source preserves World-permanent age in simulation snapshots
+and private history. The expanded baseline passes 14 controls and fails 17
+snapshot/history cases; the generic three-file correction passes all 31 cases,
+all 374 related cases and all 1,522 mixed source cases (1,491 retained). Paid
+witnesses cover phasing and actual World-rule survivors, ordinary Copy Enchantment,
+Boomerang/re-entry, Donate, Song of the Dryads/Naturalize, simultaneous Replenish
+entry, and independent Mirage Mirror expiration. The earlier source build stopped
+on two unused test imports before tests ran; that failed log is preserved.
+
+Register the exact fixtures and patch for a fresh 2,747-native build, packaged
+1,590/65/194/146 cases, and 137 production-class origins. Independent packaged,
+broader 4,221/256, full-game and catalog gates remain pending. Card scripts and
+AI profiles are unchanged. The installed runtime below still has the World gap.
+See [World source evidence](engine/world_snapshot_evidence.json).
+
 The selected runtime is `2.0.16-583714b-reviewed-snapshot-designations`.
 It preserves existing harnessed designations and Class levels in simulation
 snapshots and private history, including when a type change suppresses abilities.

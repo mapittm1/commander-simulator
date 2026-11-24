@@ -171,6 +171,8 @@ PARTITIONS = {
         "forge.ai.CommanderClassStateTest",
         "forge.ai.CommanderHarnessedTransitionsTest",
         "forge.ai.CommanderClassTransitionsTest",
+        "forge.ai.CommanderWorldStateTest",
+        "forge.ai.CommanderWorldTransitionsTest",
     ),
 }
 
@@ -178,7 +180,7 @@ EXPECTED_COUNTS = {
     "information": 301,
     "combat_and_snapshots": 228,
     "text_casting_and_costs": 338,
-    "resolution": 692,
+    "resolution": 723,
 }
 
 
