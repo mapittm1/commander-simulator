@@ -27,49 +27,32 @@ difference.
 
 ## Card coverage
 
-The generic waterbend correction passes all 99 focused and 1,885 combined source
-cases, retaining all 1,878 previous source cases. Five generic AI/payment files
-enforce the tap cap, reserve resources through actual mana payment and restore
-taps after rejection. Previously tapped artifacts remain legal sacrifice
-candidates. Transform heuristics now honor the existing combo guard even when
-Monte Carlo is disabled or falls back. Card scripts and AI profiles are unchanged.
-See [source evidence](engine/waterbend_payment_evidence.json).
+The selected runtime is `2.0.16-583714b-reviewed-waterbend-payment`.
+Five generic AI/payment files enforce the waterbend tap cap, plan normal mana
+independently, reserve resources through actual payment and restore taps after
+rejection. Previously tapped artifacts remain legal sacrifice candidates.
+Transform heuristics honor the existing combo guard when Monte Carlo is disabled
+or falls back. Card scripts and AI profiles are unchanged.
 
-The first candidate passed 3,103 native and 2,351 independent packaged cases, but
-failed one of 4,577 broader gameplay cases: an affordable transform broke an
-active airbend combo. The source correction passes that exact upstream scenario
-and six new fallback controls. Its fresh registered targets are 3,109 native and
-1,952 packaged cases with 157 production origins to verify. All new runtime gates
-and activation remain pending; the installed runtime is unchanged and affected.
-See [runtime evidence](engine/waterbend_payment_runtime_evidence.json) and
-[gap history](engine/waterbend_payment_gaps.json).
+All 99 focused controls and 1,885 source cases pass. The selected build passes
+3,109 native cases, retaining every previous 3,010. Independent packaged checks
+pass 1,952/65/194/146 cases with all 157 production origins verified. Broader
+suites pass 4,583 gameplay and 256 serialization cases. Full integration passes
+45 tests and 3,005 subtests in 1030.922 seconds at unchanged seeds and limits.
+Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+meld results. Installed bytes and engine health are verified.
 
-The selected runtime is `2.0.16-583714b-reviewed-earthbend-return`.
-This test-only milestone adds 76 paid/native earthbend return cases. No production
-defect or correction was needed: every production class, card script and AI
-profile is unchanged from the prior reviewed elemental-history runtime.
+The first candidate's broader failure remains preserved: an affordable transform
+broke an active airbend combo. The additional shared guard correction passes the
+exact failed scenario and the complete broader suite. Previous runtimes, both
+sealed builds and all earlier failures remain available. See
+[source evidence](engine/waterbend_payment_evidence.json),
+[runtime evidence](engine/waterbend_payment_runtime_evidence.json) and
+[activation evidence](engine/waterbend_payment_activation_evidence.json).
 
-The cases verify death/exile returns, changed controllers and foreign ownership,
-source movement, pending spells and return triggers, turn cleanup, prevented or
-removed counters, repeated earthbending, old/new battlefield identities, native
-Tracker Clues, Cremate/Stifle responses and Ephemerate blink. Original and one/
-two-copy controls verify independent outcomes. The initial three incorrect
-Swords life-beneficiary assertions and all corrected phases remain preserved.
-See [earthbend source evidence](engine/earthbend_return_evidence.json).
-
-Combined source validation passes all 1,785 cases, retaining 1,709. The selected
-build passes all 3,010 native methods, retaining every prior 2,934. Independent
-packaged checks pass 1,853/65/194/146 cases in 315.031 seconds, with all 151
-production origins verified. Broader suites pass 4,484 gameplay/256 serialization
-cases. All 45 full integration tests and 2,906 subtests pass in 1256.891 seconds
-at unchanged seeds 42/0/4096 and resource limits. Catalog construction passes
-32,636 identities plus seven reviewed nonstarting meld results.
-
-Installation verifies copied bytes and post-install health while preserving the
-prior runtime and sealed build. See [activation evidence](engine/earthbend_return_activation_evidence.json).
-Prior elemental, counter, Aura, exert and other reviewed corrections remain
-included. Complete card, rules and AI correctness remain unproven; catalog
-construction and supplied interactions do not certify complete support.
+Earlier earthbend, elemental, counter, Aura, exert and other reviewed corrections
+remain included. Construction and supplied tests do not certify complete card,
+rules or AI support; further interaction validation remains necessary.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

@@ -9,34 +9,32 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-A two-file generic waterbend correction is registered after 84 focused and
-1,869 combined source cases pass, retaining 1,785 and the intermediate 1,866.
-It enforces the tap cap and independent normal mana allocation, includes legal
-mana-capable/creature taps, preserves caller preview memory and keeps creatures
-available when mana can cover the remainder. Native-mana-first alternatives
-cover non-prefix allocations. Baseline48 pass/36 fail; correction84 pass.
-Fresh 3,094 native/1,937 packaged and full runtime gates remain pending, with 154
-production origins registered. The installed runtime remains affected. Preserve
-all earlier failures and versions in [source evidence](waterbend_payment_evidence.json)
-and [gap history](waterbend_payment_gaps.json). No card scripts or AI profiles change.
+The selected runtime is `2.0.16-583714b-reviewed-waterbend-payment`.
+Five generic AI/payment files enforce the waterbend tap cap, plan normal mana
+independently, reserve resources through actual payment and restore taps after
+rejection. Previously tapped artifacts remain legal sacrifice candidates.
+Transform heuristics honor the existing combo guard when Monte Carlo is disabled
+or falls back. Card scripts and AI profiles are unchanged.
 
-The selected runtime is the reviewed earthbend-return milestone. All 76 paid/
-native return cases pass; no production correction was needed. Every production
-class, card script and AI profile is unchanged. Cases cover death/exile, control/
-ownership/source changes, pending spells and triggers, cleanup, counter effects,
-competing and old/new-object delays, landfall, Cremate/Stifle responses and blink.
-Preserve the initial three incorrect Swords life assertions and all corrected
-12/40/58/76-case phases in [source evidence](earthbend_return_evidence.json).
+All 99 focused controls and 1,885 source cases pass. The selected build passes
+3,109 native cases, retaining every previous 3,010. Independent packaged checks
+pass 1,952/65/194/146 cases with all 157 production origins verified. Broader
+suites pass 4,583 gameplay and 256 serialization cases. Full integration passes
+45 tests and 3,005 subtests in 1030.922 seconds at unchanged seeds and limits.
+Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+meld results. Installed bytes and engine health are verified.
 
-Combined source validation passes 1,785 cases, retaining 1,709. All 3,010 native
-methods pass, retaining 2,934. Independent packaged checks pass 1,853/65/194/146
-in 315.031s, with all 151 production origins verified. Broader suites pass 4,484
-gameplay/256 serialization cases; full integration passes 45 tests/2,906
-subtests in 1256.891s at unchanged seeds and limits. Catalog construction passes
-32,636 identities plus seven reviewed nonstarting meld results. Installation
-verifies copied bytes and health while preserving the prior runtime and sealed
-build. See [activation evidence](earthbend_return_activation_evidence.json).
-Full card/rules/AI correctness remains unproven.
+The first candidate's broader failure remains preserved: an affordable transform
+broke an active airbend combo. The additional shared guard correction passes the
+exact failed scenario and the complete broader suite. Previous runtimes, both
+sealed builds and all earlier failures remain available. See
+[source evidence](waterbend_payment_evidence.json),
+[runtime evidence](waterbend_payment_runtime_evidence.json) and
+[activation evidence](waterbend_payment_activation_evidence.json).
+
+Earlier earthbend, elemental, counter, Aura, exert and other reviewed corrections
+remain included. Construction and supplied tests do not certify complete card,
+rules or AI support; further interaction validation remains necessary.
 
 The earlier milestones below describe validation and selections at their time.
 

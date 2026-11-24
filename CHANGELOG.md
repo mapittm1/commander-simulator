@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated waterbend-payment runtime: all 99 focused/1,885 source,
+  3,109 native (previous 3,010 retained), independent 1,952/65/194/146 packaged
+  with 157 origins, broader 4,583 gameplay/256 serialization, and full 45 tests/
+  3,005 subtests pass at unchanged seeds and limits. Catalog construction passes
+  32,636 identities plus seven reviewed nonstarting meld results. Verify copied
+  bytes and installed health while preserving the previous runtime and both
+  sealed builds. Preserve the first candidate's broader combo failure and its
+  generic transform guard correction. Five production files change; card scripts
+  and AI profiles stay unchanged. Archive immutable source/resource/failure
+  evidence. Complete card/rules/AI correctness remains unproven.
+
 - Preserve the first waterbend candidate's 3,103 native/2,351 packaged passes
   and 4,576 pass/1 fail broader gameplay result. Newly legal transforms exposed
   an AI fallback bypassing the existing combo guard. Share that guard with
