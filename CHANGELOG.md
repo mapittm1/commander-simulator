@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reproduce automatic refusal of repeated Prismite conversion with independent
+  native legal witnesses. Preserve a generic, uninstalled prototype passing all
+  48 focused and 1,933 source cases, including insufficient-resource and native
+  replacement controls. Retain all earlier cases and failed fixture versions.
+  Activation-limit coverage and fresh runtime gates remain pending; the selected
+  engine is unchanged. See engine/repeated_mana_filter_evidence.json.
+
 - Select the validated mana-filter runtime: all 33 focused/1,918 source,
   3,142 native (previous 3,109 retained), independent 1,985/65/194/146 packaged
   with 161 origins, broader 4,616 gameplay/256 serialization and full45tests/

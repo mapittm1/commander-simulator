@@ -1,0 +1,284 @@
+{
+  "status": "source_validated_prototype_not_registered_or_installed",
+  "tested_head": "40d9fe5fc431d071b9feab7e5f636a753fda385f",
+  "ci": {
+    "id": 45446670229,
+    "status": "completed",
+    "conclusion": "success",
+    "observed_before_native_epoch": true
+  },
+  "selected_runtime": "2.0.16-583714b-reviewed-waterbend-filter",
+  "selected_native_tests": 3142,
+  "selected_runtime_changed": false,
+  "selected_runtime_affected_by_repeated_filter_gap": true,
+  "finding": "With six colorless mana and Prismite, Concentrate can be paid by activating the same filter twice. Ordered native witnesses resolve it; automatic payment refuses it in original/one/two-copy games on the selected runtime. Four colorless plus one Island is an independent passing boundary; five colorless without blue is refused without mutation.",
+  "prototype": "Retain a plain non-tapping, non-increasing, generic-cost filter when it reduces the requested colored shard; permit consecutive uses of that same filter in preview. Keep tap and chained-filter exclusions. Require strict shard progress so replacements cannot cause repeated no-progress conversion.",
+  "patch": {
+    "path": "engine/pending/repeated-mana-filter/prototype-v10.patch",
+    "sha256": "4494c975220c5350f1b31529f8fc061f2cad73b4f50f5cf97fba97a5d983a1a9"
+  },
+  "fixture": {
+    "path": "engine/pending/repeated-mana-filter/fixtures-v17/CommanderWaterbendFilterTest.java",
+    "sha256": "ee86ce4980e13d583681980edf952f1571c4c909fa0cd6cfdc7fbb00d5aa4fbc"
+  },
+  "phases": {
+    "baseline-filter45-v1": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter45-v1/evidence.json",
+        "sha256": "c36c028b1cf30276904b29c3cc20b0ab91b69d6a77181a397eb296922b3923cd"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter45-v1/process.json",
+        "sha256": "2e305da7eff1fa203ec09b736e6527c2d7735f0daec97a81543a5fac11541790"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter45-v1/rules-inputs.json",
+        "sha256": "5cf11ccca33945fd327454caf0471c0b5744c06a402e49b1f4754c6a69b95bf4"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter45-v1/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter45-v1/wrapper.txt",
+        "sha256": "e1cfc48b23a6d721f2bec766bff95da764ef82b39eee5474d96fc1305b684fe3"
+      }
+    },
+    "prototype-filter45-v9": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/evidence.json",
+        "sha256": "f5b3e9103c382d6be65c9acfda9099cc98ae6ed9c070d637eec275799325e0bc"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/process.json",
+        "sha256": "bff5bc279b684ba967cda86a2a813e5a58d6e588c4a930b5816ff58dc513910e"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/rules-inputs.json",
+        "sha256": "5cf11ccca33945fd327454caf0471c0b5744c06a402e49b1f4754c6a69b95bf4"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/production-inputs.json",
+        "sha256": "229bd41299820d6a615fd1122ce32e38ecfc2da5592c65601d8000296c889001"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter45-v9/wrapper.txt",
+        "sha256": "903553ca56c6f8fed1bdd950e4e39f5769b349cc779f1e8bcc218cd55847bf36"
+      }
+    },
+    "prototype-filter48-v10": {
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v10/rules-compiler.log",
+        "sha256": "e382f08bf023856a28da8a1cfe25989019c2519327bd02e4e7130f3406c3b920"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v10/wrapper.txt",
+        "sha256": "6a320530ba16bea80c218e098785918b3007a4d81b569f7b44a674d78d9adab3"
+      }
+    },
+    "prototype-filter48-v11": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/evidence.json",
+        "sha256": "5d3969a18b9d8bb4103fac96f3bb8564f5e4faa7722e55e69b98a2f9020786e1"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/process.json",
+        "sha256": "0001c83905d0133238cbcffc3431cc3082e6b383623c61edc81c6549a478b450"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/rules-inputs.json",
+        "sha256": "d0e4d4e78f210ea06d29fa371c0e22e8dd015fb3bf59654fa5cf7517405c4a89"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/production-inputs.json",
+        "sha256": "eecf0b42bef701d583863fd3050ea304120635306a9af8b32b0d24f72b0de176"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v11/wrapper.txt",
+        "sha256": "c25f9f0615dedfc5e3f75921edf2aaddee5e5425ed8d5cb624f1df679b78834c"
+      }
+    },
+    "prototype-filter48-v12": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/evidence.json",
+        "sha256": "be066544873fbe1e93f2a3bf95e0bd00b9ac35a28c82029f240f068fb7f9589c"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/process.json",
+        "sha256": "21fd4c749c8e75a0d52e8e645821f4360023854e7cc65fbf2ca115d3ffb3f6bf"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/rules-inputs.json",
+        "sha256": "f166061c1a014c5e34befb8d2332da67ae7e42de0ce4c0a4678d300d75ebaf60"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/production-inputs.json",
+        "sha256": "c71e4596768a7c928a4fcdc557c06fed025e422317eceb05df92cda2de523762"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v12/wrapper.txt",
+        "sha256": "b95c96a4ddb2fb5ba7cbd45f94754c353ed8bffab7a06958ae90de85e17b6129"
+      }
+    },
+    "prototype-filter48-v13": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/evidence.json",
+        "sha256": "11bfd063a2b3b08f3df2a37e55cfc4f8c1267040882ee3e47d76c2845547a0ca"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/process.json",
+        "sha256": "f32e4cd9d0ecf4c786f7fe2958475355ab0c0fb4a2e80d5c94f55064df0f61d3"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/rules-inputs.json",
+        "sha256": "8ddc7b89231d8ac838202e87720163a449ff7ae04412845bb666eb6a0bd8d4fc"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/production-inputs.json",
+        "sha256": "a7198b968a920316bd60da0a60e6de6bcfaf5ac724b3585f7212cbeaffb2d664"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v13/wrapper.txt",
+        "sha256": "b95c96a4ddb2fb5ba7cbd45f94754c353ed8bffab7a06958ae90de85e17b6129"
+      }
+    },
+    "prototype-filter48-v14": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/evidence.json",
+        "sha256": "83c5e25c506becbe23c1eaa167cb18662719deb837a32ad5e086bb9f4e3fa80e"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/process.json",
+        "sha256": "192e16de764b68308d004af9a27c69c9bb8158fdae4f54202488a0858237bffc"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/rules-inputs.json",
+        "sha256": "ce320732ffbb0810a4df59c882a6f8bf1b9099bad5066f7d3a9442a72d2ec80f"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/production-inputs.json",
+        "sha256": "385de6e5a1caca31897646436c802715364fcdea6177587803f5d0b4cada2824"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/prototype-filter48-v14/wrapper.txt",
+        "sha256": "201234abcefcfdb6c0e666815350481a4e2256436031e0551a49b95fd18665e2"
+      }
+    },
+    "baseline-filter48-v2": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter48-v2/evidence.json",
+        "sha256": "88e4072a794c564ba9d5bfb0b4ebf9bfee46e2e66752b1a01b5da1f9bd09ea19"
+      },
+      "process.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter48-v2/process.json",
+        "sha256": "6b3891ddab25421850f108a2ef35c6ad0759bbeba7806b1de029b0e5d6e0fea5"
+      },
+      "rules-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter48-v2/rules-inputs.json",
+        "sha256": "ce320732ffbb0810a4df59c882a6f8bf1b9099bad5066f7d3a9442a72d2ec80f"
+      },
+      "rules-compiler.log": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter48-v2/rules-compiler.log",
+        "sha256": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/baseline-filter48-v2/wrapper.txt",
+        "sha256": "7d9e9d276dc242d5ad1175348d08cbbdda0e590b1a89d401ab932a6d08882f14"
+      }
+    },
+    "source1930-v1": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/source1930-v1/evidence.json",
+        "sha256": "d0d005fc47ff2c156f5df084e44a198ab1599012c2223e3e67d54ad652e65bcc"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1930-v1/production-inputs.json",
+        "sha256": "9ce04c1638e629b202b923bd03bbfb4e3cae6fcc0cad861cc6c8c5c5e2891583"
+      },
+      "test-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1930-v1/test-inputs.json",
+        "sha256": "5a37a12f4d861bf195b4df660fc8063cc1a92ed26a1ed2d0292ec734eaf003b5"
+      },
+      "card-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1930-v1/card-inputs.json",
+        "sha256": "d863681eb0048b5063d80109517fffe145be359a4e1287718636d6581828e763"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/source1930-v1/wrapper.txt",
+        "sha256": "eabaf89cd7dbb3f88e292272832ed959d7f75b267484a580048390a57fa201b4"
+      }
+    },
+    "source1933-v1": {
+      "evidence.json": {
+        "path": "engine/pending/repeated-mana-filter/source1933-v1/evidence.json",
+        "sha256": "cc1d8f47e22a8fb1c8d022e242eaa50db1af2e46dcd3323f4967847132088daf"
+      },
+      "production-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1933-v1/production-inputs.json",
+        "sha256": "7d571d5d10b321511af8b3a2968b9dafc42111c875cbaf27523b56b23e272b46"
+      },
+      "test-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1933-v1/test-inputs.json",
+        "sha256": "e4eba4f003be53940e180a5c14a34536e8f6cdb34e0e1828f65df8614711ab6d"
+      },
+      "card-inputs.json": {
+        "path": "engine/pending/repeated-mana-filter/source1933-v1/card-inputs.json",
+        "sha256": "d863681eb0048b5063d80109517fffe145be359a4e1287718636d6581828e763"
+      },
+      "wrapper": {
+        "path": "engine/pending/repeated-mana-filter/source1933-v1/wrapper.txt",
+        "sha256": "1ce84f8bbc09579bd8c286a3baead73d99eff14e91eeaf57fb4d5001c530033c"
+      }
+    }
+  },
+  "final_counts": {
+    "focused": {
+      "total": 48,
+      "passed": 48,
+      "failed": 0,
+      "skipped": 0
+    },
+    "source": {
+      "total": 1933,
+      "passed": 1933,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_immediate_source": 1930,
+    "retained_registered_source": 1918,
+    "retained_original_source": 1885
+  },
+  "fixture_corrections": [
+    "v13 incorrectly used a nonexistent ManaPool.stream API; compilation failed before any native test. v14 uses Iterable iteration.",
+    "v14 compared the card color mask zero to a mana color atom; v15 uses Mana.isColorless(). Native output guard still correctly failed because the replacement was not active.",
+    "The ProduceMana replacement defaults to a tapping activation. v16 attempts an explicit selector, but ManaAbility is a property, not a standalone inclusive ability type. v17 uses Activated.ManaAbility. Native output then demonstrably becomes C and all three refusal/purity controls pass."
+  ],
+  "limits": [
+    "This is an unregistered, uninstalled source prototype. The installed3142-case runtime remains selected and still has the reproduced repeated-filter gap.",
+    "Explicit per-turn/per-game activation limits and static additional-activation restrictions require controls before registration or activation; supplied unrestricted Prismite cases do not prove bounded reusability.",
+    "Chained filters, colored activation costs, variable-X waterbend, activation-cost modifiers and user-facing assessment diagnostics remain unfinished.",
+    "Fresh registered native, packaged, broader, full integration, catalog, byte and health gates are still required before installation. All prior budgets and cases were retained.",
+    "Some inherited raw driver scope strings describe earlier33-case fixtures. The saved method results, frozen inputs and finalized48-case fixture determine this validation scope. Synthetic replacement controls are native contracts, not claims about a printed MTG card.",
+    "Source/catalog construction and supplied tests do not establish complete card/rules/AI support."
+  ]
+}

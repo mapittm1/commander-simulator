@@ -42,6 +42,13 @@ corrections remain included. Complete card/rules/AI support remains unproven;
 repeated/chained conversion, variable-X waterbend and user-facing diagnostic
 integration require further work.
 
+The selected runtime has a confirmed repeated-filter planning gap: it refuses
+a payment that requires two uses of Prismite, although ordered native payment
+resolves it. A preserved generic prototype passes 48 focused and 1,933 source
+cases, retaining every earlier case, including replacement and insufficient-mana
+controls. Activation-limit coverage and fresh runtime validation remain pending;
+the prototype is not registered or installed. See [repeated-filter evidence](repeated_mana_filter_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 
 The selected delayed-reveal runtime enforces current-view/zone identity and
@@ -545,6 +552,7 @@ passes. See [`mass_counter_evidence.json`](mass_counter_evidence.json) for exact
 source, build, baseline, report, profile and archive identities and material limits.
 The initial fresh build omitted the two new fixture copies; its 666-test result
 was rejected by the exact-count guard before packaging or activation.
+
 
 
 ## Pending multiplayer attack horizon

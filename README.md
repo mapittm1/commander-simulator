@@ -60,6 +60,13 @@ corrections remain included. Complete card/rules/AI support remains unproven;
 repeated/chained conversion, variable-X waterbend and user-facing diagnostic
 integration require further work.
 
+The selected runtime has a confirmed repeated-filter planning gap: it refuses
+a payment that requires two uses of Prismite, although ordered native payment
+resolves it. A preserved generic prototype passes 48 focused and 1,933 source
+cases, retaining every earlier case, including replacement and insufficient-mana
+controls. Activation-limit coverage and fresh runtime validation remain pending;
+the prototype is not registered or installed. See [repeated-filter evidence](engine/repeated_mana_filter_evidence.json).
+
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried
 into the currently selected reviewed build without changing those old outcomes.
