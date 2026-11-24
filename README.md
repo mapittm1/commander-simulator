@@ -27,6 +27,14 @@ difference.
 
 ## Card coverage
 
+The latest source correction preserves placement and removal history in generic
+player-mapped private receipts without repeating counter events. It passes all
+53 expanded cases, 408 related cases and 1,657 mixed source cases (1,604 retained).
+The registered two-file patch targets 2,882 native/1,725 packaged methods
+and 143 production origins. Fresh runtime gates remain pending; the selected
+Aura runtime below remains affected. See
+[counter-history source evidence](engine/counter_history_evidence.json).
+
 The selected runtime is `2.0.16-583714b-reviewed-aura-entry`.
 It includes 48 paid Replenish witnesses for simultaneous Aura entry: both
 graveyard orders, Coronet's requirement for an existing Aura, a creature

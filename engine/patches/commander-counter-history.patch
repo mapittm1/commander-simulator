@@ -1,0 +1,50 @@
+--- a/forge-game/src/main/java/forge/game/Game.java
++++ b/forge-game/src/main/java/forge/game/Game.java
+@@ -1449,6 +1449,28 @@
+         return result;
+     }
+ 
++    /** Preserve counter history in independent mapped receipts without repeating counter events. */
++    public void copySnapshotCounterHistoryFrom(Game original, IEntityMap map) {
++        Table<CounterType, Player, List<Pair<Card, Integer>>> copied = HashBasedTable.create();
++        for (Table.Cell<CounterType, Player, List<Pair<Card, Integer>>> cell : original.countersAddedThisTurn.cellSet()) {
++            List<Pair<Card, Integer>> receipts = new ArrayList<>();
++            for (Pair<Card, Integer> receipt : cell.getValue()) {
++                Card historical = CardCopyService.getLKICopyForGame(receipt.getKey(), map);
++                receipts.add(Pair.of(historical, receipt.getValue()));
++            }
++            copied.put(cell.getRowKey(), map.map(cell.getColumnKey()), receipts);
++        }
++        Multimap<CounterType, Pair<GameEntity, Integer>> removed = ArrayListMultimap.create();
++        for (Map.Entry<CounterType, Pair<GameEntity, Integer>> entry : original.countersRemovedThisTurn.entries()) {
++            Pair<GameEntity, Integer> receipt = entry.getValue();
++            GameEntity historical = receipt.getKey() instanceof Card card
++                    ? CardCopyService.getLKICopyForGame(card, map) : map.map(receipt.getKey());
++            removed.put(entry.getKey(), Pair.of(historical, receipt.getValue()));
++        }
++        countersAddedThisTurn = copied;
++        countersRemovedThisTurn = removed;
++    }
++
+     public void clearCountersThisTurn() {
+         countersAddedThisTurn.clear();
+         countersRemovedThisTurn.clear();
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -319,6 +319,7 @@
+             entry.getValue().copySnapshotDetainFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotCommandsFrom(entry.getKey(), context);
+         }
++        newGame.copySnapshotCounterHistoryFrom(origGame, context);
+         newGame.getUntap().copySnapshotCommandsFrom(origGame.getUntap(), context);
+         newGame.getUpkeep().copySnapshotCommandsFrom(origGame.getUpkeep(), context);
+         newGame.getBeginOfCombat().copySnapshotCommandsFrom(origGame.getBeginOfCombat(), context);
+@@ -355,7 +356,7 @@
+         newGame.AI_TIMEOUT = origGame.AI_TIMEOUT;
+         newGame.setAge(origGame.getAge());
+ 
+-        // TODO countersAddedThisTurn
++        // Turn-counter history is restored with the complete object graph.
+ 
+         if (origGame.getStartingPlayer() != null) {
+             newGame.setStartingPlayer(playerMap.get(origGame.getStartingPlayer()));

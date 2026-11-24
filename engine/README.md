@@ -9,6 +9,14 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+The latest source preserves added/removed counter history in independent mapped
+receipts without replaying events. The 53-case baseline passes 17 originals and
+fails 36 copies; correction passes 53/408 related/1,657 source cases, retaining
+1,604 source cases. Two generic production files change, with native/packaged
+targets of 2,882/1,725 and 143 origins. Fresh runtime validation is pending; the
+selected Aura runtime remains affected. See
+[source evidence](counter_history_evidence.json).
+
 The selected runtime is the reviewed Aura-entry coverage milestone. All 48 paid
 Replenish witnesses pass, including both graveyard orders, attachment eligibility,
 hexproof/protection and before-cast/on-stack simulation copies. No production

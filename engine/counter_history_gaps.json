@@ -1,5 +1,5 @@
 {
-  "status": "confirmed_in_selected_runtime",
+  "status": "source_correction_validated_runtime_pending",
   "selected_runtime_affected": true,
   "tested_head": "dc8ddf09642dc56e2afa56ad768ec68b571d2f37",
   "selected_build": "0b6dfcce520e4a178f083cf3de1cb9b4",
@@ -239,11 +239,27 @@
     "https://magic.wizards.com/en/news/feature/zendikar-rising-release-notes-2020-09-10",
     "https://media.wizards.com/2023/downloads/WHO_Release_Notes_d82nmhwn23Ed/EN_WHO_Release_Notes_20231011.pdf"
   ],
-  "candidate_correction": "Not implemented or tested yet. Planned generic correction: preserve per-type/per-player private historical placement receipts, mapped into each snapshot, without adding counters or repeating triggers.",
+  "candidate_correction": "Generic two-file source correction passes53counter/408related/1657source cases. Fresh runtime validation and installation pending; selected runtime remains affected.",
   "production_changes": [],
   "limits": [
     "The v1 Hornbeetle cases failed before snapshot at the second spell payment; they are preserved and not used to attribute snapshot defects. V2 adds green mana only to that setup and preserves every method/assertion.",
     "Original-game controls and all copied outcomes must remain in subsequent phases.",
     "This confirms the supplied counter-history boundaries, not complete counter, card, rules or AI support."
-  ]
+  ],
+  "expanded_baseline": {
+    "counts": {
+      "total": 53,
+      "passed": 17,
+      "failed": 36,
+      "skipped": 0
+    },
+    "phases_preserved": true
+  },
+  "validated_correction": {
+    "path": "engine/counter_history_evidence.json",
+    "sha256": "d9d76b06f3db4f70feffe00068c0f5f62a41f9c10248c9349dc56069041d489d",
+    "cases": 53,
+    "related": 408,
+    "source": 1657
+  }
 }

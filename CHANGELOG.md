@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the generic two-file counter-history correction: independent mapped
+  placement/removal receipts preserve actual token/draw/cost/activation outcomes
+  without repeating counter events. Baseline 53 passes 17 original controls and
+  fails 36 copies; correction passes all 53, all 408 related cases and all 1,657
+  mixed source cases, retaining 1,604. Preserve original nine/41-case phases,
+  partial placement-only prototype and setup failure. Register 2,882 native/
+  1,725 packaged targets and 143 production origins. No scripts or AI profiles
+  change. Fresh runtime/full/catalog gates remain pending and the installed
+  Aura runtime remains affected; see engine/counter_history_evidence.json.
+
 - Confirm a turn-counter history gap in the selected Aura-entry runtime: three
   paid original controls pass and six one/two-snapshot cases fail, changing
   history queries, Hornbeetle token counts and Danny Pink first-time draws.
