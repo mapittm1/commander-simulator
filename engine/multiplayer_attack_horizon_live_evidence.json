@@ -1,0 +1,323 @@
+{
+  "status": "live_failed_candidate_not_activated",
+  "source_commit": "9c85904f78be37880ff973aed496b0cda8e1a900",
+  "validation_commit": "40083e0604560c347bddf12292e41aee6e45afe3",
+  "candidate_build": "aea5df1b65294fb2abf7c802ae9e25fd",
+  "live": {
+    "tests_passed": 42,
+    "tests_failed": 3,
+    "native_subtests_passed": 2481,
+    "processes": {
+      "health": {
+        "status": "finished",
+        "returncode": 0,
+        "elapsed_seconds": 2.281,
+        "log_sha256": "e5825380b7ac74f07f85768463779878ca2f78d55f03753661105bbcdbf5904b"
+      },
+      "live": {
+        "status": "finished",
+        "returncode": 1,
+        "elapsed_seconds": 843.969,
+        "log_sha256": "75f038f7eb5bc6a19ba47c1273a2ea9383e6777e0c8b41e55154c587da63160e"
+      }
+    },
+    "log_sha256": "75f038f7eb5bc6a19ba47c1273a2ea9383e6777e0c8b41e55154c587da63160e",
+    "failed_tests": [
+      "tests/integration/test_cli_integration.py::LiveCliTests::test_import_play_and_resume_completed_pod",
+      "tests/integration/test_engine_integration.py::LiveEngineTests::test_four_player_game",
+      "tests/integration/test_engine_integration.py::LiveEngineTests::test_limited_rules_witnesses"
+    ]
+  },
+  "runs": {
+    "410e034e08d84913b595cf2b91adb889": {
+      "status": "engine_error",
+      "seed": 42,
+      "process": {
+        "status": "finished",
+        "bytes": 70206,
+        "returncode": 0,
+        "elapsed_seconds": 20.203
+      },
+      "batch_eligible": false,
+      "artifacts": {
+        "inputs.json": "d22a420a3e068a4161f8812f4b0ceb8b7ff1f4d3aa7182c7e9cbbec6e18612bb",
+        "result.json": "66e3b5886a7fb51a6d9503b1216f0b40f720d65c32a43453b2f48f423e256c4d",
+        "forge.log": "d4aaf6776d66ebabf419495be9cae423e2292d61fc6fc306333e37c82c245d6b"
+      },
+      "exception_excerpt": [
+        "Couldn't map Goreclaw, Terror of Qal Sisma (201)/105019660",
+        "java.lang.RuntimeException: Couldn't map Goreclaw, Terror of Qal Sisma (201)/105019660",
+        "\tat forge.ai.simulation.GameCopier.find(GameCopier.java:765)",
+        "\tat forge.ai.simulation.GameCopier$CopiedGameObjectMap.map(GameCopier.java:673)",
+        "\tat forge.game.IEntityMap.map(IEntityMap.java:27)",
+        "\tat forge.game.player.Player.lambda$copyCommandersToSnapshot$15(Player.java:3087)",
+        "\tat forge.game.player.Player.copyCommandersToSnapshot(Player.java:3110)",
+        "\tat forge.ai.simulation.GameCopier.makeCopy(GameCopier.java:189)",
+        "\tat forge.ai.simulation.GameSimulator.<init>(GameSimulator.java:115)",
+        "\tat forge.ai.simulation.GameSimulator.forRollout(GameSimulator.java:132)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom(MultiplayerAttackPlanner.java:176)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.score(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.consider(MultiplayerAttackPlanner.java:158)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.run(MultiplayerAttackPlanner.java:101)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2(MultiplayerAttackPlanner.java:45)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)"
+      ]
+    },
+    "8bcdf2202a3f459c90cd668ed6c48cda": {
+      "status": "engine_error",
+      "seed": 4096,
+      "process": {
+        "status": "finished",
+        "bytes": 56741,
+        "returncode": 0,
+        "elapsed_seconds": 17.421
+      },
+      "batch_eligible": false,
+      "artifacts": {
+        "inputs.json": "89d8b867fc511a3189543ce8992dc25b2a70ab3f40e86c890c953fd2112fb36c",
+        "result.json": "45e16945f35c2ec9c24a7788f75a0bcf79b9dff531626a641979bfd7630ed368",
+        "forge.log": "ee5f9aaaa20d0ae1b4a3d8ec5b845d70b21a1e7f7064b6761e19b81f09a4dee5"
+      },
+      "exception_excerpt": [
+        "Couldn't map Goreclaw, Terror of Qal Sisma (201)/1134448294",
+        "java.lang.RuntimeException: Couldn't map Goreclaw, Terror of Qal Sisma (201)/1134448294",
+        "\tat forge.ai.simulation.GameCopier.find(GameCopier.java:765)",
+        "\tat forge.ai.simulation.GameCopier$CopiedGameObjectMap.map(GameCopier.java:673)",
+        "\tat forge.game.IEntityMap.map(IEntityMap.java:27)",
+        "\tat forge.game.player.Player.lambda$copyCommandersToSnapshot$15(Player.java:3087)",
+        "\tat forge.game.player.Player.copyCommandersToSnapshot(Player.java:3110)",
+        "\tat forge.ai.simulation.GameCopier.makeCopy(GameCopier.java:189)",
+        "\tat forge.ai.simulation.GameSimulator.<init>(GameSimulator.java:115)",
+        "\tat forge.ai.simulation.GameSimulator.forRollout(GameSimulator.java:132)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom(MultiplayerAttackPlanner.java:176)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.score(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.consider(MultiplayerAttackPlanner.java:158)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.run(MultiplayerAttackPlanner.java:101)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2(MultiplayerAttackPlanner.java:45)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)"
+      ]
+    },
+    "1410717e49cf48ada0ae79c1526a4ea9": {
+      "status": "engine_error",
+      "seed": 42,
+      "process": {
+        "status": "finished",
+        "bytes": 68121,
+        "returncode": 0,
+        "elapsed_seconds": 22.656
+      },
+      "batch_eligible": false,
+      "artifacts": {
+        "inputs.json": "e05ca9d361f6e7221e090f109447a0e2246a22c308d435ba5bd4bb762c832cf6",
+        "result.json": "bad0792d4fce0892b9b7e80c5375616a40e0a7f8799c2533db803c4ed593cf87",
+        "forge.log": "3c3c65af3335df7ca3de09f22081c24d3c896a3ef44df2d81302458395e48a0f"
+      },
+      "exception_excerpt": [
+        "Couldn't map Goreclaw, Terror of Qal Sisma (201)/860254612",
+        "java.lang.RuntimeException: Couldn't map Goreclaw, Terror of Qal Sisma (201)/860254612",
+        "\tat forge.ai.simulation.GameCopier.find(GameCopier.java:765)",
+        "\tat forge.ai.simulation.GameCopier$CopiedGameObjectMap.map(GameCopier.java:673)",
+        "\tat forge.game.IEntityMap.map(IEntityMap.java:27)",
+        "\tat forge.game.player.Player.lambda$copyCommandersToSnapshot$15(Player.java:3087)",
+        "\tat forge.game.player.Player.copyCommandersToSnapshot(Player.java:3110)",
+        "\tat forge.ai.simulation.GameCopier.makeCopy(GameCopier.java:189)",
+        "\tat forge.ai.simulation.GameSimulator.<init>(GameSimulator.java:115)",
+        "\tat forge.ai.simulation.GameSimulator.forRollout(GameSimulator.java:132)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom(MultiplayerAttackPlanner.java:176)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.score(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.consider(MultiplayerAttackPlanner.java:158)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.run(MultiplayerAttackPlanner.java:101)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2(MultiplayerAttackPlanner.java:45)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)"
+      ]
+    },
+    "c2dd42197094458f90d7f3fa2144e5db": {
+      "status": "engine_error",
+      "seed": 42,
+      "process": {
+        "status": "finished",
+        "bytes": 53668,
+        "returncode": 0,
+        "elapsed_seconds": 16.89
+      },
+      "batch_eligible": false,
+      "artifacts": {
+        "inputs.json": "d542a2f7f8f0b8892269c8d385dc05ab35b1d4abdf7e85363ad518dcb1a8b3ba",
+        "result.json": "d6061b0b22e4f931ff5f365f6962f2cbf5961f27267218351dc2270c595f84eb",
+        "forge.log": "a17d1fd7945907895057fb4e0baa5b0ebf9674635e895e205d6599e0a80ab328"
+      },
+      "exception_excerpt": [
+        "Couldn't map Goreclaw, Terror of Qal Sisma (211)/395279580",
+        "java.lang.RuntimeException: Couldn't map Goreclaw, Terror of Qal Sisma (211)/395279580",
+        "\tat forge.ai.simulation.GameCopier.find(GameCopier.java:765)",
+        "\tat forge.ai.simulation.GameCopier$CopiedGameObjectMap.map(GameCopier.java:673)",
+        "\tat forge.game.IEntityMap.map(IEntityMap.java:27)",
+        "\tat forge.game.player.Player.lambda$copyCommandersToSnapshot$15(Player.java:3087)",
+        "\tat forge.game.player.Player.copyCommandersToSnapshot(Player.java:3110)",
+        "\tat forge.ai.simulation.GameCopier.makeCopy(GameCopier.java:189)",
+        "\tat forge.ai.simulation.GameSimulator.<init>(GameSimulator.java:115)",
+        "\tat forge.ai.simulation.GameSimulator.forRollout(GameSimulator.java:132)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom(MultiplayerAttackPlanner.java:176)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.score(MultiplayerAttackPlanner.java:172)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.consider(MultiplayerAttackPlanner.java:158)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner$Search.run(MultiplayerAttackPlanner.java:101)",
+        "\tat forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2(MultiplayerAttackPlanner.java:45)",
+        "\tat forge.util.MyRandom.withRandom(MyRandom.java:125)"
+      ]
+    },
+    "fb77cd45a6874c14af9f4cdcf43a120c": {
+      "status": "completed",
+      "seed": 0,
+      "process": {
+        "status": "finished",
+        "bytes": 69662,
+        "returncode": 0,
+        "elapsed_seconds": 17.828
+      },
+      "batch_eligible": true,
+      "artifacts": {
+        "inputs.json": "5b3ed7523ff3cb85b859753b5489becf7c6c97ab102e33f2d0962ef29562d574",
+        "result.json": "1cf48f445b8a940ef1a51fa11294fd715fd3e0eaefdd9d5f0398932decf9d606",
+        "forge.log": "975ce018c0f09974c2522a2219c692438eb406441dce373f6364499f62c79651"
+      },
+      "exception_excerpt": []
+    }
+  },
+  "conformance": {
+    "status": "inconclusive",
+    "seeds": [
+      42,
+      0,
+      4096
+    ],
+    "checks": [
+      {
+        "id": "commander_tax_recast",
+        "status": "not_exercised",
+        "scope": "Ruxa's contiguous basic-Forest payments, including at least one recast",
+        "evidence": [
+          {
+            "line": 1121,
+            "expected_cost": 4,
+            "observed_one_mana_activations": 4,
+            "distinct_sources": 4,
+            "seed": 0,
+            "run_id": "fb77cd45a6874c14af9f4cdcf43a120c"
+          }
+        ]
+      },
+      {
+        "id": "goreclaw_attack_trigger",
+        "status": "passed",
+        "scope": "Unblocked Goreclaw deals 5 player combat damage after its attack trigger resolves",
+        "evidence": [
+          {
+            "trigger_line": 638,
+            "resolve_line": 639,
+            "damage_line": 644,
+            "expected_damage": 5,
+            "observed_damage": 5,
+            "seed": 0,
+            "run_id": "fb77cd45a6874c14af9f4cdcf43a120c"
+          },
+          {
+            "trigger_line": 704,
+            "resolve_line": 705,
+            "damage_line": 710,
+            "expected_damage": 5,
+            "observed_damage": 5,
+            "seed": 0,
+            "run_id": "fb77cd45a6874c14af9f4cdcf43a120c"
+          }
+        ]
+      },
+      {
+        "id": "commander_loss_with_positive_life",
+        "status": "passed",
+        "scope": "A player loses to one commander's accumulated combat damage while still above zero life",
+        "evidence": [
+          {
+            "line": 1423,
+            "seat": 2,
+            "largest_single_commander_damage": 21,
+            "last_logged_life": 19,
+            "seed": 0,
+            "run_id": "fb77cd45a6874c14af9f4cdcf43a120c"
+          },
+          {
+            "line": 1425,
+            "seat": 4,
+            "largest_single_commander_damage": 24,
+            "last_logged_life": 16,
+            "seed": 0,
+            "run_id": "fb77cd45a6874c14af9f4cdcf43a120c"
+          }
+        ]
+      }
+    ],
+    "report_sha256": "1977bd7c57531bb0e973dcc4e3429b9107364d11100fbbf38922a1aedb0259a9"
+  },
+  "independent_catalog": {
+    "status": "passed",
+    "counts": {
+      "constructed": 32636,
+      "script_unavailable": 7
+    },
+    "unavailable_categories": {
+      "non_starting_meld_result": 7
+    },
+    "report_sha256": "93abe88c9169c016a07007df71028882889f8b2ade3f270e2f40b36c6eca97bd",
+    "process": {
+      "status": "finished",
+      "returncode": 0,
+      "elapsed_seconds": 25.703,
+      "log_sha256": "93abe88c9169c016a07007df71028882889f8b2ade3f270e2f40b36c6eca97bd",
+      "scope": "Independent catalog validation despite failed live witness; does not satisfy failed gameplay gate or authorize activation."
+    }
+  },
+  "diagnosis": "Surviving players retain commander-damage keys after the source owner leaves. Player.copyCommandersToSnapshot resolves a no-longer-live commander then calls the strict live map. GameCopier.find throws instead of preserving a historical counterpart. All captured errors reach that mapping from MultiplayerAttackPlanner source copying.",
+  "baseline": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "prototype": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "related": {
+    "total": 285,
+    "passed": 285,
+    "failed": 0,
+    "skipped": 0
+  },
+  "paid_baseline": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "paid_prototype": {
+    "total": 12,
+    "passed": 12,
+    "failed": 0,
+    "skipped": 0
+  },
+  "limits": [
+    "The source correction is undergoing full source validation. No new corrected sealed artifact, full live pass or activation is claimed.",
+    "The catalog is constructor/parser evidence only and cannot override the failed live gate.",
+    "Keep all three fixed seeds, absent-witness checks, raw failed logs and failed-game exclusion from batch aggregates.",
+    "Skipped-phase callback copying is a separately prepared, unconfirmed lead; no native witness was executed for it."
+  ]
+}

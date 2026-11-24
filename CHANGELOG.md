@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fix historical commander damage copying after the source owner leaves. Reuse
+  the existing historical graph for commander references and ability/callback
+  state; preserve live-zone identity, historical sources, independent counters
+  and paid cast/mana provenance without dropping records or weakening strict
+  lookup. Add 24 named combat/paid-cast cases: both baselines pass six/fail six,
+  while all 285 related and 1,384 mixed source cases pass. Preserve fixture API,
+  command-zone permission and zone-reset premise corrections. A fresh sealed
+  2,609-native build and complete runtime gates remain pending. See
+  engine/departed_commander_history_evidence.json.
+
+- Preserve the multiplayer-horizon candidate's full live failure: 42 tests and
+  all 2,481 subtests pass, but three tests fail when actual games encounter a
+  departed commander-history mapping exception. Goreclaw's attack witness now
+  passes in seed 0; retain the unchanged three seeds and incomplete-game checks.
+  Independent catalog construction passes 32,636 starting identities with seven
+  nonstarting meld exclusions. Packaged 1,833 and broader 4,059/256 checks passed;
+  keep that candidate unactivated. See
+  engine/multiplayer_attack_horizon_live_evidence.json.
+
 - Build and audit the sealed multiplayer-horizon candidate: all 2,585 native
   tests pass, retaining 2,463 and adding 122. All 2,168 production sources match
   the reviewed source after line-ending normalization; changed/added classes

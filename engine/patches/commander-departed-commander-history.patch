@@ -1,0 +1,50 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -184,15 +184,21 @@
+ 
+         copyGameState(newGame, aiPlayer);
+ 
++        // Commander damage can outlive its source's owner. Share the same
++        // historical graph with abilities instead of requiring every old source
++        // to remain in a live zone of the copied game.
++        forge.game.spellability.SpellAbilitySnapshot context = createAbilitySnapshot(newGame, gameObjectMap);
++        context.bindCostStack(origGame.costPaymentStack, newGame.costPaymentStack);
++        abilitySnapshot = context;
+         for (Player origPlayer : origGame.getPlayers()) {
+             Player newPlayer = playerMap.get(origPlayer);
+-            origPlayer.copyCommandersToSnapshot(newPlayer, gameObjectMap::map);
+-            origPlayer.copyEffectCardsToSnapshot(newPlayer, gameObjectMap::map);
++            origPlayer.copyCommandersToSnapshot(newPlayer, context::map);
++            origPlayer.copyEffectCardsToSnapshot(newPlayer, context::map);
+             ((PlayerZoneBattlefield) newPlayer.getZone(ZoneType.Battlefield)).setTriggers(true);
+         }
+         newGame.getTriggerHandler().clearSuppression(TriggerType.ChangesZone);
+ 
+-        copyAbilityState(origGame, newGame, gameObjectMap);
++        copyAbilityState(origGame, newGame, context);
+ 
+         for (Card c : newGame.getCardsInGame()) {
+             Card origCard = (Card) reverseFind(c);
+@@ -252,7 +258,7 @@
+     }
+ 
+ 
+-    private void copyAbilityState(Game origGame, Game newGame, IEntityMap map) {
++    private forge.game.spellability.SpellAbilitySnapshot createAbilitySnapshot(Game newGame, IEntityMap map) {
+         IEntityMap objects = new IEntityMap() {
+             @Override public Game getGame() { return newGame; }
+             @Override public forge.game.combat.AttackingBand mapCombatBand(forge.game.combat.AttackingBand band) {
+@@ -263,8 +269,11 @@
+                 return map.map(value);
+             }
+         };
+-        forge.game.spellability.SpellAbilitySnapshot context = new forge.game.spellability.SpellAbilitySnapshot(objects, combatBands);
+-        context.bindCostStack(origGame.costPaymentStack, newGame.costPaymentStack);
++        return new forge.game.spellability.SpellAbilitySnapshot(objects, combatBands);
++    }
++
++    private void copyAbilityState(Game origGame, Game newGame,
++            forge.game.spellability.SpellAbilitySnapshot context) {
+         for (Map.Entry<Card, Card> entry : cardMap.entrySet()) {
+             entry.getValue().bindSnapshotStatesFrom(entry.getKey(), context);
+         }

@@ -175,6 +175,8 @@ REGRESSION_SOURCES = {
     "CommanderGoadCopyBoundaryTest.java": "commander_goad_copy_boundary_test_sha256",
     "CommanderGoadDurationCopyTest.java": "commander_goad_duration_copy_test_sha256",
     "CommanderForecastPlanningScopeTest.java": "commander_forecast_planning_scope_test_sha256",
+    "CommanderDepartedHistoryTest.java": "commander_departed_history_test_sha256",
+    "CommanderDepartedPaidHistoryTest.java": "commander_departed_paid_history_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

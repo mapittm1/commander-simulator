@@ -27,19 +27,26 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source adds native multiplayer attack planning that checks
-successive opponents' turns before committing attackers. It also preserves goad
-restrictions and their expiration independently in copied games, and isolates
-preview randomness from live undo. All 1,360 mixed source cases pass in one JVM,
-retaining 1,238 and adding 122. Separate isolated overlays pass the 122 focused
-cases and all 1,306 existing packaged cases at unchanged budgets. The build recipe
-now includes the named regressions. A fresh sealed candidate passes all 2,585
-native tests and matches the reviewed source; cards and AI profiles are unchanged.
-Its first packaged run passed all 1,833 native checks, but the wrapper retained a
-129-origin expectation for the now-132-class manifest. That guard is corrected;
-its rerun, broader and full-live validation remain pending. The selected runtime
-is unchanged. See [the sealed candidate evidence](engine/multiplayer_attack_horizon_native_evidence.json) and
-[the source correction and preserved failures](engine/multiplayer_attack_horizon_evidence.json).
+The latest reviewed source fixes a commander-history crash exposed by full games:
+a surviving player can retain damage from a commander whose owner has left.
+Copies now preserve that historical source through the shared graph used for
+abilities, instead of requiring a live card or discarding its damage. All 1,384
+mixed source tests pass in one JVM, retaining 1,360 and adding 24; 285 focused
+retained/new graph checks pass. The new cases include normal paid command-zone
+casts, real untap/combat, zone changes and independent copied history. Fresh
+sealed native 2,609, packaged 1,452/65/194/146, broader 4,083/256 and full-live
+validation remain pending. See
+[the source correction](engine/departed_commander_history_evidence.json).
+
+The preceding multiplayer-horizon candidate passed all 2,585 native tests,
+1,833 independent packaged checks and 4,059/256 broader checks. Its full live run
+passed 42 tests and all 2,481 subtests, but three tests failed after actual games
+hit the commander-history exception. Goreclaw's fixed-seed attack witness now
+appears; incomplete games still cannot satisfy the gate. Independent construction
+passed 32,636 starting identities with seven expected nonstarting meld exclusions.
+That candidate remains unactivated; the selected runtime is unchanged. See the
+[preserved live failure](engine/multiplayer_attack_horizon_live_evidence.json) and
+[packaged/broader receipts](engine/multiplayer_attack_horizon_packaged_evidence.json).
 
 The preceding cache-lifetime candidate removes an AI cache that retained completed games
 and could return stale board evaluations outside a decision. Memoized references

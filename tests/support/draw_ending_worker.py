@@ -66,6 +66,8 @@ SOURCES = {
     "CommanderGoadCopyBoundaryTest": "commander_goad_copy_boundary_test_sha256",
     "CommanderGoadDurationCopyTest": "commander_goad_duration_copy_test_sha256",
     "CommanderForecastPlanningScopeTest": "commander_forecast_planning_scope_test_sha256",
+    "CommanderDepartedHistoryTest": "commander_departed_history_test_sha256",
+    "CommanderDepartedPaidHistoryTest": "commander_departed_paid_history_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -351,7 +353,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1428-case packaged family."""
+    """Execute the existing fixed 1452-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

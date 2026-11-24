@@ -527,3 +527,20 @@ packaged native cases pass, but the first wrapper retained129 origins instead of
 132; its correction/rerun and broader/full-live checks remain pending. See
 [multiplayer_attack_horizon_native_evidence.json](multiplayer_attack_horizon_native_evidence.json).
 The selected runtime and its lock have not changed.
+
+
+## Pending departed commander history
+
+The multiplayer-horizon candidate passed its native, independent packaged and
+broader gates, then failed three full-live tests when surviving participants'
+commander-damage keys referenced a departed owner's card. Preserve that failed
+artifact and its [live evidence](multiplayer_attack_horizon_live_evidence.json).
+
+The next registered patch initializes one historical context before copying
+commander references and reuses it for paid abilities and scheduled state. It
+preserves historical damage and mapped owners, keeps current-zone resets, and
+does not change strict ordinary lookup. Both 12-case baselines pass six/fail six;
+all 285 related and 1,384 mixed source cases pass. See
+[departed_commander_history_evidence.json](departed_commander_history_evidence.json).
+A fresh sealed 2,609-native artifact, independent 1,452/65/194/146, broader
+4,083/256 and full-live gates remain pending. No runtime was activated.
