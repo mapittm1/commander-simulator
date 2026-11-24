@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the reviewed prepared-state milestone after all required gates pass:
+  1,427 mixed source, 2,652 native (all 2,361 previously selected methods retained),
+  packaged 1,495/65/194/146 in 315.782s, broader 4,126 gameplay/256 serialization,
+  and all 45 full tests/2,548 subtests at unchanged seeds 42/0/4096. Catalog
+  construction passes 32,636 identities with seven reviewed nonstarting meld
+  exclusions. Copy and verify the installed resources, preserve the prior
+  runtime/sealed build, and verify post-install health. Archive the lock and bind
+  activation evidence in engine/prepared_state_activation_evidence.json.
+- Preserve two newly confirmed paid snapshot gaps: harnessed Mind/Soul Stone
+  designations and Wizard Class levels. Each baseline passes two original
+  controls/fails four one/two-copy cases. Record exact fixtures and native results
+  in engine/snapshot_designation_gaps.json and pending/snapshot-designations.
+  No correction is claimed yet; full rules/card/AI coverage remains incomplete.
+
 - Keep every packaged draw/rules case while splitting the oversized worker into
   four fixed mechanic groups (301/228/338/628). Reject missing, repeated and
   unregistered classes, retain all method/summary/origin assertions, and keep

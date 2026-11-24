@@ -27,6 +27,27 @@ difference.
 
 ## Card coverage
 
+The selected runtime is now `2.0.16-583714b-reviewed-prepared-state`.
+This milestone passes 1,427 mixed source and 2,652 native tests, retaining all
+2,361 previously selected native methods. The normal packaged gate passes
+1,495/65/194/146 cases in 315 seconds with unchanged resource limits; broader
+checks pass 4,126 gameplay/256 serialization cases. All 45 full integration
+tests and 2,548 subtests pass, including the unchanged seeds 42/0/4096.
+Catalog construction passes 32,636 identities with seven reviewed nonstarting
+meld results. Installation preserves the old runtime and sealed build, and
+post-install health passes. See [activation evidence](engine/prepared_state_activation_evidence.json).
+
+Two paid snapshot gaps remain confirmed: harnessed designations on the Mind/Soul
+Stones and Wizard Class levels. Each baseline passes two original controls and
+fails four copied cases. The pending fixtures retain actual costs and draw
+assertions; the next correction must preserve ordinary in-game copy/new-object
+rules too. See [known gaps](engine/snapshot_designation_gaps.json). Full card,
+rules and AI strategy correctness remain incomplete.
+
+The earlier milestones below describe validation and selections at their time.
+Their failed artifacts remain preserved; later source corrections can be carried
+into the currently selected reviewed build without changing those old outcomes.
+
 The latest reviewed source preserves prepared creature/effect/spell references
 and the exiled prepared-spell face in copied games, with cleanup mapped into its
 own world. Historical prepared references are private, and historical cast-origin
@@ -40,9 +61,9 @@ passes all 2,652 native cases and independent broader
 1,495-case worker times out at its unchanged 90-second limit. Diagnostic groups
 retain every case and pass all 1,495 in 193 seconds with the same worker/heap/CPU
 limits and 134 production-origin checks per group. The normal harness now uses
-those four fixed groups and rejects missing, duplicate or unregistered classes;
-its registered runtime validation and full-game/catalog gates remain pending.
-The original timeout is preserved. See
+those four fixed groups and rejects missing, duplicate or unregistered classes.
+The registered packaged gate and full-game/catalog checks now pass, as recorded
+above. The original timeout remains preserved. See
 [runtime evidence](engine/prepared_state_runtime_evidence.json). These supplied
 states do not certify every prepared trigger, strategy
 or card interaction. See [prepared-state evidence](engine/prepared_state_evidence.json).
@@ -161,7 +182,7 @@ banding, multiple-blocking and full Commander correctness remain unproven. See
 [historical-blocking failures](engine/blocking_history_gap.json) and
 [source-only evidence](engine/blocking_history_native_evidence.json).
 
-The selected runtime correctly marks an attacker blocked when a native effect
+The earlier combat-reblocking runtime correctly marks an attacker blocked when a native effect
 assigns a blocker. That state persists if the blocker leaves before damage.
 The Block API evaluates the complete paid parent, so classic/hybrid AI can judge
 removing a blocker and assigning it to another attacker together.

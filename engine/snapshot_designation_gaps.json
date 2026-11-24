@@ -1,0 +1,117 @@
+{
+  "status": "confirmed_paid_snapshot_gaps_fix_pending",
+  "tested_build": "4a502ea4def1492a9076fbe5cf82735b",
+  "mechanics": {
+    "harnessed": "Paid Mind/Soul Stone controls pass; one/two simulation copies lose the existing designation.",
+    "class_level": "Paid Wizard Class level2/3 controls pass, including real mana and level2 draws; one/two copies reset to level1."
+  },
+  "baselines": {
+    "CommanderHarnessedStateTest": {
+      "fixture": {
+        "path": "engine/pending/snapshot-designations/CommanderHarnessedStateTest.java",
+        "sha256": "dab15d608d349d634d7cdf96892840b7e7c244ab7e7bd2481562a6af84b352aa"
+      },
+      "counts": {
+        "total": 6,
+        "passed": 2,
+        "failed": 4,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native6-v1/evidence.json",
+        "sha256": "81cc757191d240b9c273bd97ab16d579e0ca6f9862de9bcf4fbe3ce61eb10b1b"
+      },
+      "native_process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native6-v1/process.json",
+        "sha256": "ebc841aa2367d30425d60f80c584bb4cf3f04733c003114d9dacf92e33c16288"
+      },
+      "report_sha256": "6d44b45645a644102cdbf37319f1a915064981b950ac43483928d7734e263157",
+      "methods": [
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.mindStoneOneSimulationCopyRetainsDesignation",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.mindStoneOriginalPaysHarnessCosts",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.mindStoneTwoSimulationCopiesRetainDesignation",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.soulStoneOneSimulationCopyRetainsDesignation",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.soulStoneOriginalPaysHarnessCosts",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderHarnessedStateTest.soulStoneTwoSimulationCopiesRetainDesignation",
+          "status": "FAIL"
+        }
+      ]
+    },
+    "CommanderClassStateTest": {
+      "fixture": {
+        "path": "engine/pending/snapshot-designations/CommanderClassStateTest.java",
+        "sha256": "ceaa2c29bf3254e2af359725212653ddf212f6c14d6a649ca78a737407b34448"
+      },
+      "counts": {
+        "total": 6,
+        "passed": 2,
+        "failed": 4,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-class6-v1/evidence.json",
+        "sha256": "dc7b4db8e9ef6847a54a44985a64e8c9e785110e9fb4629ae206e33e4eb5e809"
+      },
+      "native_process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-class6-v1/process.json",
+        "sha256": "b30a2fe822c78c6ee41afafaaef15dedf3e53c571541ddfab076073fd216fa38"
+      },
+      "report_sha256": "fd7eb1f591f6a92372ba80239e665367427c270f9a5a53912c01b55cecacf975",
+      "methods": [
+        {
+          "method": "forge.ai.CommanderClassStateTest.oneSnapshotRetainsLevelThree",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderClassStateTest.oneSnapshotRetainsLevelTwo",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderClassStateTest.originalPaidLevelThree",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderClassStateTest.originalPaidLevelTwo",
+          "status": "PASS"
+        },
+        {
+          "method": "forge.ai.CommanderClassStateTest.twoSnapshotsRetainLevelThree",
+          "status": "FAIL"
+        },
+        {
+          "method": "forge.ai.CommanderClassStateTest.twoSnapshotsRetainLevelTwo",
+          "status": "FAIL"
+        }
+      ]
+    }
+  },
+  "rules_sources": [
+    "https://magic.wizards.com/en/news/feature/spider-man-release-notes",
+    "https://magic.wizards.com/en/news/feature/marvel-super-heroes-release-notes",
+    "https://magic.wizards.com/en/news/feature/adventures-forgotten-realms-release-notes-2021-07-09"
+  ],
+  "required_next_validation": [
+    "Preserve all12 current case identities, costs, assertions and baseline failures.",
+    "Implement generic state copying without card-name production conditions.",
+    "Expand to printed phase/draw consequences, independent worlds, historical memory, ordinary copy and zone/control transitions.",
+    "Ordinary in-game copies must not inherit noncopiable designations/levels; simulation copies preserve existing state.",
+    "Run focused/related/source/native/packaged/broader/full-game/catalog gates before adopting the follow-up fix."
+  ],
+  "limits": "State/cost controls prove these copied-state failures. They do not certify full mechanics or autonomous strategy. The selected milestone fixes earlier issues; complete card/rules/AI coverage remains open."
+}

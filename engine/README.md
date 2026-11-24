@@ -621,11 +621,37 @@ still times out at 90 seconds. All 1,495 cases pass in four diagnostic groups
 (301/228/338/628), with disjoint/exhaustive method counters matching the sealed
 report, unchanged assertions/limits, and all 134 origin checks per group.
 The normal harness now registers those fixed groups; twelve draft offline
-partition/argument tests pass. Registered harness runtime validation remains
-pending. Keep the combined 2,652 native JVM gate for cross-suite behavior.
+partition/argument tests pass. Registered harness and full-game/catalog gates subsequently passed; see the
+selection record below. Keep the combined 2,652 native JVM gate for cross-suite
+behavior.
 See [runtime evidence](prepared_state_runtime_evidence.json).
 
-Full fixed-seed games/catalog and activation remain pending. Earlier failed
+Those gates were pending at source registration; their later selected validation
+is recorded below. Earlier failed
 17/21 gates remain preserved; grouping changes worker boundaries and does not
 retroactively pass them. No selected-runtime activation occurred. Supplied
 witnesses do not certify all prepared triggers, strategy or complete rules.
+
+
+## Selected prepared-state milestone and follow-up gaps
+
+The prepared-state runtime is selected after normal packaged 1,495/65/194/146,
+broader 4,126/256, all45 full tests/2,548 subtests and catalog32,636/7 gates pass.
+All2,361 previously selected native methods are retained in2,652. The original
+single-worker timeout remains failed; fixed groups preserve all methods and
+resource limits. The installed resource inventory is verified against the sealed
+build, which is preserved alongside the prior runtime. Post-install health passes.
+See [activation evidence](prepared_state_activation_evidence.json).
+
+Paid follow-up witnesses confirm two remaining snapshot gaps. Harnessed Mind/Soul
+Stone originals retain designation but one/two simulation copies lose it. Wizard
+Class originals pay for levels2/3 and draw two at level2; one/two copies reset to
+level1. Each six-case baseline passes two/fails four, without configuration errors.
+The pending fixtures are not registered as passing native cases. Preserve all
+costs/assertions and expand to printed consequences, history and ordinary
+copy/new-object/control/zone distinctions before adopting a generic correction.
+See [gap evidence](snapshot_designation_gaps.json).
+
+Earlier pending/runtime statements above describe their historical candidate
+artifacts. The current milestone is validated and selected, while complete
+card/rules/AI correctness remains open.
