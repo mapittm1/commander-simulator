@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Select the validated Aura-entry coverage milestone: 1,604 mixed source,
+  2,829 native (all 2,781 previous methods retained), normal packaged
+  1,672/65/194/146 in 307.187s, broader 4,303 gameplay/256 serialization,
+  and 45 full tests/2,725 subtests in 1260.859s at unchanged seeds and limits.
+  Catalog construction passes 32,636 identities plus seven reviewed nonstarting
+  meld exclusions. Preserve prior runtime and sealed candidate; verify runtime
+  resource bytes and post-install health, archive the lock and bind receipts in
+  engine/simultaneous_aura_activation_evidence.json. All 48 paid Aura cases pass
+  without production changes; compiled production classes, cards and AI profiles
+  match the prior exert runtime. Complete card/rules/AI support remains unproven.
+
 - Register all 48 paid Aura-entry witnesses in the build and packaged suite;
   combined source validation passes 1,604 cases with all 1,556 previous methods
   retained. Set future candidate targets to 2,829 native/1,672 packaged cases,

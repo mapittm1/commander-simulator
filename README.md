@@ -27,53 +27,33 @@ difference.
 
 ## Card coverage
 
-The 48 Aura witnesses are now registered in the build and packaged recipes.
-Combined source validation passes all 1,604 cases, retaining 1,556. The next
-candidate targets 2,829 native methods and 1,672 packaged cases with unchanged
-limits. Fresh candidate validation is pending; the selected exert-state runtime
-and its historical counts remain unchanged. See
-[registration evidence](engine/simultaneous_aura_registration_evidence.json).
+The selected runtime is `2.0.16-583714b-reviewed-aura-entry`.
+It includes 48 paid Replenish witnesses for simultaneous Aura entry: both
+graveyard orders, Coronet's requirement for an existing Aura, a creature
+returning in the same batch, hexproof versus protection, and one/two simulation
+copies made before casting or while the spell is on the stack. Actual zones,
+attachments, power/toughness and original/copy independence are checked.
+No defect was demonstrated in these cases; production classes, card resources
+and AI profiles are byte-identical to the preceding exert-state runtime.
 
-Supplementary Aura-entry checks pass all 48 paid Replenish cases against the
-selected runtime: both graveyard orders, legal/illegal Coronet attachments,
-simultaneously returning creatures, hexproof versus protection, and copies made
-before casting or with the spell on the stack. No defect was demonstrated.
-Original witnesses remain under `engine/pending/simultaneous-aura/`; their
-diagnostic counts remain separate from the selected sealed native suite. See
-[Aura evidence](engine/simultaneous_aura_evidence.json).
+Combined source validation passes 1,604 cases, retaining all 1,556 prior cases.
+The installed build passes 2,829 native methods, retaining all 2,781. Normal
+packaged validation passes 1,672/65/194/146 cases in
+307.187 seconds under unchanged limits. Broader checks pass
+4,303 gameplay/256 serialization cases; all 45 full integration tests and
+2,725 subtests pass in 1260.859 seconds at unchanged seeds 42/0/4096.
+Catalog construction passes 32,636 identities with seven reviewed nonstarting
+meld results. Installation preserves the prior runtime and sealed candidate,
+verifies resource bytes and checks post-install health. See
+[activation evidence](engine/simultaneous_aura_activation_evidence.json),
+[source registration](engine/simultaneous_aura_registration_evidence.json) and
+[original diagnostic evidence](engine/simultaneous_aura_evidence.json).
 
-The selected runtime is `2.0.16-583714b-reviewed-exert-state`.
-It preserves exert counts and independent player-mapped untap restrictions in
-simulation and private historical copies without repeating exert costs or
-triggers. Ordinary copies and new objects keep their reset behavior; untap
-spells retain the restriction, and multiple exertions expire at the same next
-untap. Restrictions from two exerting players expire independently after control
-changes. Paid witnesses include Arena of Glory mana spent on Furnace Whelp,
-repeated exertion, legal land re-entry, Donate, Mirage Mirror, native optional
-attack costs, printed damage/life gain and combat damage. Attack declarations
-and exert choices are supplied; default AI choice correctness remains unproven.
-
-The preserved 34-case baseline passes 9 controls/fails 25 snapshot/history cases.
-The correction passes all 34, all 408 related cases and all 1,556 mixed source
-cases (1,522 retained). Three generic production files change; card scripts and
-AI profiles are unchanged. Original failures and research setup errors remain
-preserved. See [source evidence](engine/exert_snapshot_evidence.json).
-
-The installed milestone passes all 2,781 native methods, retaining all 2,747
-previously selected methods. Normal packaged validation passes 1,624/65/194/146
-cases in 300.844 seconds with unchanged resource limits; broader checks pass
-4,255 gameplay/256 serialization cases. All 45 full integration tests and 2,677
-subtests pass in 1248.547 seconds at unchanged seeds 42/0/4096. Catalog
-construction passes 32,636 identities with seven reviewed nonstarting meld
-results. Installation preserves the prior runtime and sealed build and verifies
-resource bytes and post-install health. See
-[activation evidence](engine/exert_snapshot_activation_evidence.json).
-The preceding World and Harnessed/Class corrections remain included; their
-original evidence is preserved in [the preceding milestone](engine/world_snapshot_activation_evidence.json).
-
-The supplied exert snapshot/history gap is corrected in this selected runtime.
-Full card, rules and AI strategy correctness remain incomplete; catalog
-construction and selected passing cases do not certify complete support.
+The preceding exert, World and Harnessed/Class corrections remain included;
+[preceding activation evidence](engine/exert_snapshot_activation_evidence.json)
+preserves their validation. Supplied attack/exert choices do not establish
+default AI strategy. Full card, rules and AI correctness remain incomplete;
+construction and passing selected interactions do not certify complete support.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

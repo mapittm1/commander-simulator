@@ -9,37 +9,24 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
-The selected runtime is the reviewed exert-state milestone. Three generic files
-preserve exert counts and independent player-mapped restrictions in simulation
-and historical copies without repeating costs or exert triggers. All 34 expanded
-cases, 408 related cases, 1,556 mixed source, 2,781 native, normal packaged
-1,624/65/194/146, broader 4,255/256 and 45 full integration tests/2,677 subtests pass.
+The selected runtime is the reviewed Aura-entry coverage milestone. All 48 paid
+Replenish witnesses pass, including both graveyard orders, attachment eligibility,
+hexproof/protection and before-cast/on-stack simulation copies. No production
+correction was needed: production class bytes, cards and AI profiles match the
+preceding exert-state runtime. Combined source validation passes 1,604 cases;
+the installed build passes 2,829 native methods, retaining all 2,781 previous ones.
+Normal packaged checks pass 1,672/65/194/146, broader checks pass 4,303/256,
+and full integrations pass 45 tests/2,725 subtests under unchanged limits/seeds.
 Catalog construction passes 32,636 identities with seven reviewed nonstarting
-meld results. Preserve original failures, intermediate fixtures and research
-setup errors. The previous runtime and sealed build remain available; installation
-verifies resource bytes and health. See
-[activation evidence](exert_snapshot_activation_evidence.json).
+meld results. Installation preserves both prior runtime and sealed build,
+verifies resource bytes and checks health. See
+[activation evidence](simultaneous_aura_activation_evidence.json),
+[registration evidence](simultaneous_aura_registration_evidence.json) and
+[original diagnostics](simultaneous_aura_evidence.json).
 
-Paid cases cover actual exert mana spent on creatures, repeated exertion, untap
-spells, legal re-entry, control/ordinary-copy boundaries, native optional attack
-costs, printed triggers/combat damage and independent two-player expiry. Attack
-and exert choices are supplied; no default AI strategy or complete exert/card/
-rules correctness is claimed. The supplied snapshot/history gap is corrected.
-
-Supplementary simultaneous Aura-entry diagnostics pass all 48 paid Replenish
-cases against the selected packaged runtime, retaining 18 initial controls.
-Actual zones, attachments, characteristics and original/copy independence are
-checked, including on-stack copies and hexproof/protection distinctions. No
-production defect was demonstrated. Original diagnostic fixtures remain preserved
-in `pending/simultaneous-aura/`; selected native counts remain unchanged. See
-[diagnostic evidence](simultaneous_aura_evidence.json).
-
-Aura witnesses are registered as `tests/CommanderSimultaneousAuraTest.java`.
-All 1,604 source cases pass, retaining 1,556. Future candidate targets are 2,829
-native/1,672 packaged methods and 141 checked production origins. No production
-code changes are needed; fresh runtime gates remain pending and the selected
-exert-state runtime remains unchanged. See
-[registration evidence](simultaneous_aura_registration_evidence.json).
+Previous exert/World/Harnessed/Class corrections and their evidence remain
+preserved. These supplied cases and catalog construction do not prove complete
+card, rules or AI strategy correctness.
 
 The earlier milestones below describe validation and selections at their time.
 
