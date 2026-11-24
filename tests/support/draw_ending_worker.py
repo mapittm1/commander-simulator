@@ -75,6 +75,12 @@ SOURCES = {
     "CommanderPreparedStateTest": "commander_prepared_state_test_sha256",
     "CommanderPreparedCastTest": "commander_prepared_cast_test_sha256",
     "CommanderPreparedHistoryTest": "commander_prepared_history_test_sha256",
+    "HarnessedTestSupport": "harnessed_test_support_sha256",
+    "ClassTestSupport": "class_test_support_sha256",
+    "CommanderHarnessedStateTest": "commander_harnessed_state_test_sha256",
+    "CommanderClassStateTest": "commander_class_state_test_sha256",
+    "CommanderHarnessedTransitionsTest": "commander_harnessed_transitions_test_sha256",
+    "CommanderClassTransitionsTest": "commander_class_transitions_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -187,6 +193,8 @@ TEST_CLASSES = tuple(
         "InformationChoiceTestSupport",
         "LibraryChoiceTestSupport",
         "PreparedTestSupport",
+        "HarnessedTestSupport",
+        "ClassTestSupport",
     }
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
@@ -208,6 +216,7 @@ NATIVE_CLASSES = (
     "forge.game.ability.effects.GoadEffect",
     "forge.game.ability.effects.SkipPhaseEffect",
     "forge.game.ability.effects.AlterAttributeEffect",
+    "forge.game.ability.effects.ClassLevelUpEffect",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -363,7 +372,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1495-case packaged family."""
+    """Execute the existing fixed 1559-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
@@ -383,6 +392,8 @@ def main() -> None:
             "forge.ai.InformationChoiceTestSupport",
             "forge.ai.LibraryChoiceTestSupport",
             "forge.ai.PreparedTestSupport",
+            "forge.ai.HarnessedTestSupport",
+            "forge.ai.ClassTestSupport",
             PRIORITY_PACKAGE + "PriorityTestBase",
         ),
         NATIVE_CLASSES,

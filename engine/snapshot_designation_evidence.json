@@ -1,0 +1,291 @@
+{
+  "status": "source_registered_fresh_runtime_gates_pending",
+  "source_commit": "fa5b11044407b793ee524a38ecff6d4083c45a77",
+  "behavior": [
+    "Preserve existing Harnessed designation and Class level in simulation and historical copies.",
+    "Keep ordinary copy/new-object reset behavior; preserve levels while type-changing effects suppress Class abilities.",
+    "Class-level view updates occur only when a copied value differs, avoiding unnecessary work on ordinary cards."
+  ],
+  "production_files_changed": [
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java"
+  ],
+  "production_sources": 2168,
+  "new_production_sources": [],
+  "patch": {
+    "path": "engine/patches/commander-snapshot-designations.patch",
+    "sha256": "1150f899745fba3d85d4c5283530da899ff4bf46beb00c44a569639df589b555"
+  },
+  "fixtures": {
+    "HarnessedTestSupport": {
+      "path": "engine/tests/HarnessedTestSupport.java",
+      "sha256": "d718744b727f52f7772afc34059d004436f3642214d41208984574b42827798f"
+    },
+    "ClassTestSupport": {
+      "path": "engine/tests/ClassTestSupport.java",
+      "sha256": "50db63f81579887e3da5ad8544f74cb3eef20b8e99acc2c23a8b237b16274deb"
+    },
+    "CommanderHarnessedStateTest": {
+      "path": "engine/tests/CommanderHarnessedStateTest.java",
+      "sha256": "851ee6d2099b4ed5c1eea63d62384f9a4969053b491c4fc539598bb782bd269a"
+    },
+    "CommanderClassStateTest": {
+      "path": "engine/tests/CommanderClassStateTest.java",
+      "sha256": "480692f2d9b246bf51c2c6ed9d06c6daef27506fc77c9d9f0ab8145334037fac"
+    },
+    "CommanderHarnessedTransitionsTest": {
+      "path": "engine/tests/CommanderHarnessedTransitionsTest.java",
+      "sha256": "0b6980d22584c7dab482462eefacf4afa6a58bd166a378a50d0f81c5b83d48e1"
+    },
+    "CommanderClassTransitionsTest": {
+      "path": "engine/tests/CommanderClassTransitionsTest.java",
+      "sha256": "70b81fcb05b9af9d03c7dad9cafb9b019ab8041657a23a42142395ca9f83d507"
+    }
+  },
+  "phases": {
+    "baseline-native6-v1": {
+      "counts": {
+        "total": 6,
+        "passed": 2,
+        "failed": 4,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native6-v1/evidence.json",
+        "sha256": "81cc757191d240b9c273bd97ab16d579e0ca6f9862de9bcf4fbe3ce61eb10b1b"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native6-v1/process.json",
+        "sha256": "ebc841aa2367d30425d60f80c584bb4cf3f04733c003114d9dacf92e33c16288"
+      },
+      "report_sha256": "6d44b45645a644102cdbf37319f1a915064981b950ac43483928d7734e263157"
+    },
+    "baseline-class6-v1": {
+      "counts": {
+        "total": 6,
+        "passed": 2,
+        "failed": 4,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-class6-v1/evidence.json",
+        "sha256": "dc7b4db8e9ef6847a54a44985a64e8c9e785110e9fb4629ae206e33e4eb5e809"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-class6-v1/process.json",
+        "sha256": "b30a2fe822c78c6ee41afafaaef15dedf3e53c571541ddfab076073fd216fa38"
+      },
+      "report_sha256": "fd7eb1f591f6a92372ba80239e665367427c270f9a5a53912c01b55cecacf975"
+    },
+    "prototype-native12-v1": {
+      "counts": {
+        "total": 12,
+        "passed": 12,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native12-v1/evidence.json",
+        "sha256": "e394f5ff6fe7f04addf16b3bc2b990754c061a7a6c3e85d130bd6f1eec4b9505"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native12-v1/process.json",
+        "sha256": "634a77e6fee88dd7a26ab3ab4a9073777fd43b2f62917314f6ac86e57d4e5049"
+      },
+      "report_sha256": "0dd1904b79887a3ef731c0e554382827c8d7e99bc2934ec89ba9202f8b00dc9d"
+    },
+    "baseline-native52-v1": {
+      "counts": {
+        "total": 52,
+        "passed": 16,
+        "failed": 36,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native52-v1/evidence.json",
+        "sha256": "ae2e957e53aa7fea4be2a45abfda570d695b5f7fbd2bcd3700e6d372e44b8ff9"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native52-v1/process.json",
+        "sha256": "4657e54903704f502354308e6a8fb91d5335892cb5db2f6def8b1868721f5abe"
+      },
+      "report_sha256": "b86b091c566784a9d6bb494020a53ff230cc778bf1a20760df214b916c00cacd"
+    },
+    "prototype-native52-v1": {
+      "counts": {
+        "total": 52,
+        "passed": 52,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native52-v1/evidence.json",
+        "sha256": "e6d82c282447ebd9dd7908e8c7da315728f69656e1f996ef2c4d5749a5cb119d"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native52-v1/process.json",
+        "sha256": "028ecd1c2b0d669f428680770f577a9bb52727fb1a08c65dbad9f4392fe85839"
+      },
+      "report_sha256": "23da0d58167078a0958eb7939addaac1e35cde0ee30a20c1d35eba4f20396eb6"
+    },
+    "prototype-related331-v1": {
+      "counts": {
+        "total": 331,
+        "passed": 331,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-related331-v1/evidence.json",
+        "sha256": "601c16129f9aaf243b16185d454d4b0421ce9c3690706b6437455817b05fe75e"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-related331-v1/process.json",
+        "sha256": "43c5fabc80f27c549108c35948d46dc816b1b384dfb101c56810bdd40f895c4d"
+      },
+      "report_sha256": "0bf06a97175935a90f2da3bdc0c4d0b00266333b463691c57b07258323b4d32e"
+    },
+    "baseline-native64-v2": {
+      "counts": {
+        "total": 64,
+        "passed": 20,
+        "failed": 44,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native64-v2/evidence.json",
+        "sha256": "b21d0c439e2abb6ec4242779d853d1913c94336f6cf2cfc260826f0de5173abf"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/baseline-native64-v2/process.json",
+        "sha256": "1badcd2f743f66f0b27d1993e3333dee32e636815db20bcc40a1b4db89440454"
+      },
+      "report_sha256": "e98ebe9e1e2ca2bc7a05de2fe8ee1d0d472fecb18b2fa9186fec36003225ef89"
+    },
+    "prototype-native64-v2": {
+      "counts": {
+        "total": 64,
+        "passed": 64,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native64-v2/evidence.json",
+        "sha256": "da5b9d26401c54fa0aa17d983b48162cf57a3d4b6309b4acb7a4570d3ffad2d3"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-native64-v2/process.json",
+        "sha256": "a0b411180204695f814324afb25eff6f8889ca23b17ab19d975cd9f5a40e7704"
+      },
+      "report_sha256": "c9581fa8c22f6721e4cf7867f12ec310ec9f503f79f0d932908c42755e1a3ccd"
+    },
+    "prototype-related343-v2": {
+      "counts": {
+        "total": 343,
+        "passed": 343,
+        "failed": 0,
+        "skipped": 0
+      },
+      "evidence": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-related343-v2/evidence.json",
+        "sha256": "9cb9ea0c9e8afd516b0867b56965765639387ba92bc817be34cf6ec49f01a318"
+      },
+      "process": {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/prototype-related343-v2/process.json",
+        "sha256": "745e1ac98278c2a6cdb089b84307874cee4b61004b7c246d172aa35f607f98ee"
+      },
+      "report_sha256": "38dedce0b481e33030210ca441ff62a1f7eab4423e638382935d759f84dacd8f"
+    }
+  },
+  "source": {
+    "counts": {
+      "total": 1491,
+      "passed": 1491,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_cases": 1427,
+    "new_cases": 64,
+    "artifacts": [
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/evidence.json",
+        "sha256": "12c7e3a6b5408e2d1938c7a3950f71a75e072639e07cdcdfb4676a44acacfffd"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/testng-results.xml",
+        "sha256": "f24245e0ce9b4852c879c7970262ba93e4544a1542c71b56f93faa7b604dc3c4"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/maven-build.log",
+        "sha256": "0df762813216e2435c974a13f205b1cd2dc0ac16dccd33e7df1b53cb9e6d58bb"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/production-inputs.json",
+        "sha256": "93e6351056dd16b52681ed1eb345699d35c51d9b5cb6db5d2a21f1e1750bdfa8"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/test-inputs.json",
+        "sha256": "b3c5d7f496953126e3be5d414de9cde1f758882fdfd7de916b5a51a005193eca"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/card-inputs.json",
+        "sha256": "1393206f0b508102838a40086a66264fec78379babbecb58a5ee281de2040ae1"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/source1491-v1/selection.json",
+        "sha256": "c91d802b93a7f9f082d148ff8ec7997fcd5a5da76e2966d40eaa14cb68873a03"
+      }
+    ]
+  },
+  "baseline_retention": [
+    {
+      "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/expanded-baseline-audit-v1.json",
+      "sha256": "1607b2c9910596a71c27a31f68e4d9a8b294e3bf8554f9120b242b29f9d20097"
+    },
+    {
+      "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/expanded-baseline-audit-v2.json",
+      "sha256": "422a03e6e8ac71ff66dc7ba11ec2eb668fb7549a646a32061cf3e7b45540e8bc"
+    }
+  ],
+  "helper_extraction": {
+    "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/helper-extraction-v1.json",
+    "sha256": "baa3cf7ed25675f5be08cfed378e13e3cc910d5234d1d74ab9a6b7e8b6522f0f"
+  },
+  "type_change_extension": {
+    "path": "data/development/commander-multiplayer-attack-research/harnessed-state-research/type-change-extension-v2.json",
+    "sha256": "e65234b080e1c0612c25e90ca616a92fe53852b7b316057305db2fc800e2ad82"
+  },
+  "normalized_patch_replay": true,
+  "card_name_conditions_added": false,
+  "card_scripts_and_profiles_unchanged": true,
+  "pending_targets": {
+    "sealed_native": 2716,
+    "packaged": [
+      1559,
+      65,
+      194,
+      146
+    ],
+    "packaged_origins": 135,
+    "broader": [
+      4190,
+      256
+    ],
+    "full_tests": 45,
+    "full_expected_subtests": 2612,
+    "catalog_constructed": 32636,
+    "nonstarting_meld_results": 7
+  },
+  "selected_runtime_unchanged": true,
+  "rules_sources": [
+    "https://magic.wizards.com/en/news/feature/spider-man-release-notes",
+    "https://magic.wizards.com/en/news/feature/marvel-super-heroes-release-notes",
+    "https://magic.wizards.com/en/news/feature/adventures-forgotten-realms-release-notes-2021-07-09",
+    "https://media.wizards.com/2025/downloads/MagicCompRules%2020250725.pdf"
+  ],
+  "limits": [
+    "All64 supplied paid-state/consequence/history/copy/zone/control/type-change witnesses and343 related cases pass in the prototype; all1491 mixed source cases pass.",
+    "Fresh sealed/native, independent packaged, broader, fixed-seed complete games and catalog gates remain pending. The selected2652 milestone still has these known copied-state gaps.",
+    "Supplied witnesses do not establish complete mechanics, all-card rules or autonomous strategy correctness."
+  ]
+}

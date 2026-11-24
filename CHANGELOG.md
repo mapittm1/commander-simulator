@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve generic Harnessed designations and Class levels in simulated and
+  historical states. Keep ordinary in-game copy/new-object resets, control-change
+  retention and level/designation retention under type changes. Paid Mind/Soul
+  Stone and Wizard Class witnesses include actual costs, phase/draw consequences,
+  private history, independent worlds and paid Song of the Dryads/Naturalize
+  restoration. Preserve all original 12 cases and the 52-case intermediate suite.
+  The final baseline passes 20/fails 44; the two-file correction passes all 64,
+  all 343 related and all 1,491 mixed source cases, retaining 1,427. No card-name
+  production conditions, card-script changes or AI-profile changes. Register the
+  fresh 2,716 native/1,559 packaged targets and 135 production-origin checks;
+  independent runtime/full-game/catalog gates remain pending. See
+  engine/snapshot_designation_evidence.json. The selected 2,652-case runtime
+  remains unchanged and still has the confirmed copied-state gaps.
+
 - Select the reviewed prepared-state milestone after all required gates pass:
   1,427 mixed source, 2,652 native (all 2,361 previously selected methods retained),
   packaged 1,495/65/194/146 in 315.782s, broader 4,126 gameplay/256 serialization,

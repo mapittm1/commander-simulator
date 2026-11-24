@@ -27,6 +27,19 @@ difference.
 
 ## Card coverage
 
+The latest reviewed source preserves existing harnessed designations and Class
+levels in simulation snapshots and private history, including when a type change
+suppresses the permanent's original abilities. Ordinary copy spells and new
+permanents keep their reset behavior. Paid Mind/Soul Stone and Wizard Class
+witnesses include real costs, phase/draw outcomes, independent worlds, history,
+control changes, re-entry, and Song of the Dryads/Naturalize restoration. The
+64-case baseline passes 20 controls/fails 44 copied cases; the correction passes
+all 64, all 343 related cases and all 1,491 mixed source cases (1,427 retained).
+Only two generic production files change; card data and AI profiles are unchanged.
+Fresh sealed 2,716, packaged 1,559/65/194/146, broader 4,190/256 and full-game/
+catalog gates remain pending. See [source evidence](engine/snapshot_designation_evidence.json).
+The selected runtime described below still needs this source correction installed.
+
 The selected runtime is now `2.0.16-583714b-reviewed-prepared-state`.
 This milestone passes 1,427 mixed source and 2,652 native tests, retaining all
 2,361 previously selected native methods. The normal packaged gate passes
@@ -39,9 +52,10 @@ post-install health passes. See [activation evidence](engine/prepared_state_acti
 
 Two paid snapshot gaps remain confirmed: harnessed designations on the Mind/Soul
 Stones and Wizard Class levels. Each baseline passes two original controls and
-fails four copied cases. The pending fixtures retain actual costs and draw
-assertions; the next correction must preserve ordinary in-game copy/new-object
-rules too. See [known gaps](engine/snapshot_designation_gaps.json). Full card,
+fails four copied cases. The original fixtures retain actual costs and draw
+assertions. The source correction above preserves ordinary copy/new-object
+behavior too; fresh runtime gates remain pending. See
+[known gaps](engine/snapshot_designation_gaps.json). Full card,
 rules and AI strategy correctness remain incomplete.
 
 The earlier milestones below describe validation and selections at their time.

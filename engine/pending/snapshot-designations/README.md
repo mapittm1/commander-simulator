@@ -12,4 +12,6 @@ copy permanent during that game. Expand printed phase/draw consequences and
 independent original/copied progression before treating either mechanic as fixed.
 
 See engine/snapshot_designation_gaps.json for primary rules references and exact
-baseline evidence. No production correction or full coverage claim is made here.
+baseline evidence. The generic correction is now validated in source; fresh sealed/packaged/broader/
+full-game/catalog gates remain pending. See engine/snapshot_designation_evidence.json.
+The selected runtime still has the baseline failures; no full coverage claim is made.

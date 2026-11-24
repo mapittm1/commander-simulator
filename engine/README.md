@@ -655,3 +655,26 @@ See [gap evidence](snapshot_designation_gaps.json).
 Earlier pending/runtime statements above describe their historical candidate
 artifacts. The current milestone is validated and selected, while complete
 card/rules/AI correctness remains open.
+
+
+## Pending designation and Class-level correction
+
+`GameCopier` and `CardCopyService` preserve the source's existing Harnessed
+flag and Class level. A different level updates its view; ordinary cards avoid
+unnecessary level-view work. These are simulation/history operations. Paid
+Sculpting Steel/Mirrormade controls and paid re-entry retain new-object resets.
+Control changes retain state, including after two snapshot copies. Paid Song of
+the Dryads suppresses the original type/abilities; Naturalize restores them with
+the retained designation/level and actual printed phase/draw consequences.
+
+The original12 named cost/state witnesses retain their assertions after helper
+extraction. The expanded52 baseline passes16/fails36; the final64 baseline
+passes20/fails44. The prototype passes12,52,64 and related331/343 cases. All1,491
+mixed source cases pass in the original 2,048-MiB/600s combined Maven JVM,
+retaining1,427 and adding64. No scripts/profiles or card-name branches change.
+See [source evidence](snapshot_designation_evidence.json).
+
+Fresh native2,716, packaged1,559/65/194/146 with135 production origins, broader
+4,190/256, full45 tests/2,612 expected subtests and catalog gates remain pending.
+The selected2,652-case milestone remains unchanged; these rules/AI witnesses
+cannot establish complete mechanics, all-card rules or autonomous strategy.

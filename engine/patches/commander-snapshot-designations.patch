@@ -1,0 +1,27 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -569,6 +569,11 @@
+         final Player owner = playerMap.get(c.getOwner());
+         final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);
+         newCard.setChosenCommanderColor(c.getChosenCommanderColor());
++        // Simulation worlds retain existing noncopiable designations and Class level.
++        newCard.setHarnessed(c.isHarnessed());
++        if (newCard.getClassLevel() != c.getClassLevel()) {
++            newCard.setClassLevel(c.getClassLevel());
++        }
+         newCard.setGameTimestamp(c.getGameTimestamp());
+         newCard.setLayerTimestamp(c.getLayerTimestamp());
+         newCard.setTransformedTimestamp(c.getTransformedTimestamp());
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -415,6 +415,10 @@
+         newCopy.setTributed(copyFrom.isTributed());
+         newCopy.setUnearthed(copyFrom.isUnearthed());
+         newCopy.setMonstrous(copyFrom.isMonstrous());
++        newCopy.setHarnessed(copyFrom.isHarnessed());
++        if (newCopy.getClassLevel() != copyFrom.getClassLevel()) {
++            newCopy.setClassLevel(copyFrom.getClassLevel());
++        }
+         newCopy.setRenowned(copyFrom.isRenowned());
+         // Historical state retains the designation; ordinary copiable characteristics do not.
+         newCopy.setRingBearer(copyFrom.isRingBearer());

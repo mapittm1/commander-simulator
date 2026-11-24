@@ -167,6 +167,10 @@ PARTITIONS = {
         "forge.ai.CommanderPreparedStateTest",
         "forge.ai.CommanderPreparedCastTest",
         "forge.ai.CommanderPreparedHistoryTest",
+        "forge.ai.CommanderHarnessedStateTest",
+        "forge.ai.CommanderClassStateTest",
+        "forge.ai.CommanderHarnessedTransitionsTest",
+        "forge.ai.CommanderClassTransitionsTest",
     ),
 }
 
@@ -174,7 +178,7 @@ EXPECTED_COUNTS = {
     "information": 301,
     "combat_and_snapshots": 228,
     "text_casting_and_costs": 338,
-    "resolution": 628,
+    "resolution": 692,
 }
 
 
