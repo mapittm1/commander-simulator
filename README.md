@@ -66,26 +66,32 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-The uninstalled variable-X/extra-budget prototype now passes 363 focused and
-2,248 source cases, retaining every prior 300/2,185 case. The selected runtime
-passes 267/363; 18 failures are checks for the new budget API, with the remaining
-cases covering reproduced prediction/minimum-choice gaps. The prototype keeps
-proposed X separate from follow-up mana, checks full minimum-X choices before
-successful payment, and retains undo information until validation finishes.
-Native copied-game forecasts preserve restricted mana, explicit increased costs,
-source reservations, lethal-tap policy, original state and RNG/cache isolation.
-Independent casts verify both paid ward and countered spells with cast-only mana.
-Five generic production sources change; scripts/profiles are unchanged.
+The uninstalled X-cost/typed-ward prototype passes 498 focused and 2,383 source
+cases, retaining all prior 363/2,248 cases. On the same focused fixtures the
+selected runtime passes 360/498: 33 failures concern new APIs, and 105 concern
+behavior or contracts. These are test cases, not independent defect counts.
+The prototype separates proposed X from follow-up costs and validates complete
+minimum-X choices before accepting payment or clearing undo information.
 
-Full typed ward payment remains the next registration gate: The Unagi of Kyoshi
-Island has waterbend ward, and Gisa/Captain Howler/Ovika combine mana and life.
-Those must be represented as full costs rather than only a generic mana budget.
-Other cost contexts, conditional counterability and the experimental restore path
-need more controls. Fresh native/packaged/broader/full/catalog/health gates remain
-pending. The installed runtime above is unchanged. See the
-[patch](engine/pending/waterbend-x/prototype-v4.patch),
-[177 new cases](engine/pending/waterbend-x/fixtures-v10/CommanderWaterbendXTest.java)
-and [evidence](engine/waterbend_x_evidence.json).
+Ward forecasts now capture native target triggers and pay complete costs in a
+copied game, preserving the ward source's variables and the actual payer's
+resources. Independent casts cover waterbend, mana plus life, variable life,
+discard alternatives and sacrifice with exile replacement. Controls also cover
+doubled ward triggers, repeated targets, mana-derived uncounterability, ordinary
+AI life/discard policies, reserved sources and preview state/RNG/cache isolation.
+Six generic production sources change; card scripts and AI profiles are unchanged.
+
+Cost-generated triggers and state-based actions between payments, other ward
+cost families, unusual payer/controller differences, experimental snapshot
+restoration and broader target-trigger interactions still need controls. Payment
+search remains bounded; no-plan does not prove impossibility. Fresh native,
+packaged, broader, full-game, catalog and health gates remain pending. The
+installed runtime is unchanged, and complete card/rules correctness is unproven.
+See the [aggregate patch](engine/pending/typed-ward/prototype-v1.patch),
+[135 new cases](engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java),
+[typed-ward evidence](engine/typed_ward_evidence.json), and retained
+[X-cost evidence](engine/waterbend_x_evidence.json). The aggregate patch includes
+the pending X-cost changes; apply it in place of the earlier pending X-cost patch.
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

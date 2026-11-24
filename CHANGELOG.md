@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Extend the uninstalled X-cost prototype with complete native ward-cost contexts
+  and correct payer resources for waterbend/convoke. Cover mixed mana/life,
+  variable life, discard alternatives, sacrifice replacement, doubled triggers,
+  repeated targets, mana-derived uncounterability and preview isolation. All 498
+  focused and 2,383 retained source cases pass. The installed runtime passes
+  360/498 controls; 33 failures concern new APIs and 105 concern behavior/contracts.
+  Preserve intermediate failures and verify the aggregate patch against its source
+  baseline. Update README with remaining cost-trigger/state-action, cost-family,
+  payer and runtime-validation gaps. Six generic sources change, with no card or
+  profile edits. The runtime remains unchanged; full rules correctness is unproven.
+  See engine/typed_ward_evidence.json.
+
 - Extend the uninstalled X-cost prototype to 363 focused and 2,248 source cases,
   retaining every prior case. Compare the selected runtime's 267/363 result and
   classify 18 absent-API checks separately. Separate proposed X from follow-up

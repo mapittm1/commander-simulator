@@ -1,0 +1,155 @@
+{
+  "status": "source_validated_unregistered_uninstalled_additional_cost_trigger_controls_pending",
+  "tested_head": "a76fc4af69e22a7fd4323745579918470a1eaae7",
+  "ci": {
+    "id": 45492765332,
+    "head_sha": "a76fc4af69e22a7fd4323745579918470a1eaae7",
+    "status": "completed",
+    "conclusion": "success",
+    "observed_separately_before_native_epoch": true
+  },
+  "selected_runtime_changed": false,
+  "selected_runtime": "2.0.16-583714b-reviewed-mana-chain",
+  "production_files": [
+    "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+    "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+    "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-game/src/main/java/forge/game/cost/Cost.java",
+    "forge-game/src/main/java/forge/game/cost/CostPayment.java"
+  ],
+  "patch": {
+    "path": "engine/pending/typed-ward/prototype-v1.patch",
+    "sha256": "6faf90cd0ffe5651ad7772fda2698b0d4e6d9ad9f0d35f80464bea202d54792a",
+    "baseline": "Installed mana-chain source2071 snapshot; contains pending X-cost and typed-ward changes. Replaces the pending waterbend-X aggregate patch; do not apply both."
+  },
+  "fixture": {
+    "path": "engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java",
+    "sha256": "709d1e701e9a801fc18011e50b89a8377d3312a54aa2f29b592029e5e0b6e743"
+  },
+  "retained_x_fixture": "engine/pending/waterbend-x/fixtures-v10/CommanderWaterbendXTest.java",
+  "focused_comparison": {
+    "baseline": {
+      "total": 498,
+      "passed": 360,
+      "failed": 138,
+      "skipped": 0
+    },
+    "prototype": {
+      "total": 498,
+      "passed": 498,
+      "failed": 0,
+      "skipped": 0
+    },
+    "baseline_failure_classification": {
+      "missing_new_api": 33,
+      "behavior_or_contract": 105
+    },
+    "note": "138 failing test cases are not 138 independent defects; the 105 non-API cases include the 78 retained X-cost cases and 27 typed-ward controls."
+  },
+  "source_validation": {
+    "counts": {
+      "total": 2383,
+      "passed": 2383,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_immediate_source_cases": 2248,
+    "new_cases": 135,
+    "retained_installed_source_cases": 2071
+  },
+  "scope": "Generic typed-ward forecasting and actual payer resource selection; 135 new controls at original/one/two copies. Prior 363 focused and 2248 source cases retained. Card scripts and AI profiles unchanged. Does not establish complete card/rules correctness.",
+  "limits": {
+    "focused_heap_mib": 1536,
+    "focused_cpus": 2,
+    "focused_seconds": 90,
+    "source_heap_mib": 2048,
+    "source_cpus": 2,
+    "source_seconds_per_suite": 600
+  },
+  "corrections": [
+    "Use the controller paying the cost for waterbend/convoke resources; the ward source ability belongs to an opponent.",
+    "Capture native target triggers, cost alternatives, source variables, trigger multiplication and APNAP ordering in a copied game.",
+    "Apply the native spent-mana hook before checking counterability.",
+    "Pay complete native costs sequentially using normal controller decisions, preserving source reservations and life/discard/sacrifice policies."
+  ],
+  "known_unverified": [
+    "State-based actions and cost-generated triggers between sequential ward payments.",
+    "Collect-evidence, blight and poison ward cost families.",
+    "Unusual payer/controller differences and full non-Ward target-trigger interactions.",
+    "Experimental snapshot-restore mode and exhaustive payment search."
+  ],
+  "registration": "Unregistered and uninstalled. Fresh runtime build, native, packaged, broader, full-game, catalog and health gates remain required.",
+  "patch_roundtrip_verified": true,
+  "artifacts": {
+    "engine/pending/typed-ward/drivers/run_source2383_v1.py.txt": "f3e5ddc88377ea311332b4dfd172cddf6db93b0f9a4488eee70016e0d33c1f7b",
+    "engine/pending/typed-ward/drivers/run_typed_ward429_v1.py.txt": "3116d8df215132f60ff12f70e4a86034ba3a4e90736c369c38776f29284a07f1",
+    "engine/pending/typed-ward/drivers/run_typed_ward459_v2.py.txt": "0ad5166663fc3ddc4295d5e8d3db57224bc73f250c3ab905fd76ea777bb7442c",
+    "engine/pending/typed-ward/drivers/run_typed_ward459_v3.py.txt": "f1fdf03a007f69e100b98912ecb61e02a95340f63570a1483056c2eef8e62689",
+    "engine/pending/typed-ward/drivers/run_typed_ward498_baseline_v1.py.txt": "43f9cfc6e45e990f60c19b31c2d093a2d2ac40fa073a1e2fe6697d5de26a4d83",
+    "engine/pending/typed-ward/drivers/run_typed_ward498_v4.py.txt": "b621b57c8a07eb0e9c92cba76c3171a821d757b3d1d1ce97332d620d42818c9f",
+    "engine/pending/typed-ward/drivers/run_typed_ward498_v5.py.txt": "2bd18937da4b650aff65996609f6c523b55be3dd99de5f2432772f6096d1b493",
+    "engine/pending/typed-ward/fixtures-v1/CommanderTypedWardTest.java": "b8a3f06ef2d1c8bd82a89ed022e56d3d41049e10e48f4861165cb9b791fb6cbb",
+    "engine/pending/typed-ward/fixtures-v2/CommanderTypedWardTest.java": "528e1abe851b26f815b940d998a2932236b77bab4830d759291b6a59729ff016",
+    "engine/pending/typed-ward/fixtures-v3/CommanderTypedWardTest.java": "b85ef0d6e03b768cf3f2cf6773fd0fa3a693fe2937651639ba0dfc102c653bb4",
+    "engine/pending/typed-ward/fixtures-v4/CommanderTypedWardTest.java": "709d1e701e9a801fc18011e50b89a8377d3312a54aa2f29b592029e5e0b6e743",
+    "engine/pending/typed-ward/intermediate-prototype-v1.patch": "20482d1d10a77337ce267ec0f8f1fbee0871df7c5ca42905419808a5227959b0",
+    "engine/pending/typed-ward/intermediate-prototype-v2.patch": "eefd355c8462d86a36d113a5f29f4a5f7e1fe1694aedfca8cb44e24838e722db",
+    "engine/pending/typed-ward/prototype-v1.patch": "6faf90cd0ffe5651ad7772fda2698b0d4e6d9ad9f0d35f80464bea202d54792a",
+    "engine/pending/typed-ward/source2383-v1/card-inputs.json": "650758d36fa5ca1e4b3abe7e7c20e9267ae0def93abd2837d56d780ea6078b57",
+    "engine/pending/typed-ward/source2383-v1/drivers/build_sticker_engine.py.txt": "c8a3de73ff26f2313da39dc71529aff0ed4f0cafed7ae2489679f0be8100f6a4",
+    "engine/pending/typed-ward/source2383-v1/drivers/run_source2383_v1.py.txt": "f3e5ddc88377ea311332b4dfd172cddf6db93b0f9a4488eee70016e0d33c1f7b",
+    "engine/pending/typed-ward/source2383-v1/evidence.json": "08280e8ff3540062c2948dd7407514bb315d6005b7a570147598b90b4782e005",
+    "engine/pending/typed-ward/source2383-v1/production-inputs.json": "15aebbc12624de2774aa54e90fe0be01548622d58d66cbadcb2c46cdc2e96f43",
+    "engine/pending/typed-ward/source2383-v1/selection.json": "4a09510f5a06fffdcfc7b480aec4470ad5e6190bb63bfa2217def0129395349c",
+    "engine/pending/typed-ward/source2383-v1/test-inputs.json": "39dc2dfad171d3dac469511e7ff8f7a5777ae8c758da6197ad8f0df11d15365f",
+    "engine/pending/typed-ward/source2383-v1/wrapper.txt": "8e16556b1cbc863e9c60b0b2aaf2b4b2ca0ba7cd9fafc6cf13e55b12fd3c2d05",
+    "engine/pending/typed-ward/typed-ward-ci-v1.json": "74962a61a20ad4106106084d82c1d3a989b3304370674f53da78c5cbca7b1001",
+    "engine/pending/typed-ward/typed-ward-epoch-v1.json": "54ae368ea7a8758c1df5ad38ebcbeb1e6a762fef863cb9ab74ccc61a9035884a",
+    "engine/pending/typed-ward/typed-ward-fixture-review-v2.json": "c59134370566b1145a1cffa22b7fcb7b162d72ae5aa9cb12108ee6d3e8cd4797",
+    "engine/pending/typed-ward/typed-ward-frozen-v1.json": "b13fac42f275aaeab2aefa2ffce9bf9b3323e5c61a26d5dbec75b785ab847a4c",
+    "engine/pending/typed-ward/typed-ward-review-v3.json": "4706e730f41eda61d86832e8153340075abd2e08ad18931e736189d26f16b9b8",
+    "engine/pending/typed-ward/typed-ward-review-v4.json": "4123084e2ef3da9927e5195b54c1e5cefada40e2dfead2e7419efa64c688bedf",
+    "engine/pending/typed-ward/typed-ward429-v1/evidence.json": "422f6364c1cb30d3abfb12eb7fdd840fb0484de3360686b758c80128c00ad31b",
+    "engine/pending/typed-ward/typed-ward429-v1/process.json": "0c2ee1774cf31a91bab4e82ea6a3d01ba83b7c663035c0475fdfa98e646baa49",
+    "engine/pending/typed-ward/typed-ward429-v1/production-compiler.log": "381084afa4e36e0b93d371c5c40eec3680f6ecf82da3460832d363c3dc1c0b25",
+    "engine/pending/typed-ward/typed-ward429-v1/production-inputs.json": "217bd7496fef29fc859f9d7db69379a78afc9d7765e51d34b1afa244748fedf5",
+    "engine/pending/typed-ward/typed-ward429-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward429-v1/rules-inputs.json": "57731abf8bb31759fcc5d52feef6bad0f9b67aa55d570c634518e824dd659260",
+    "engine/pending/typed-ward/typed-ward429-v1/wrapper.txt": "3e19b802efb1a3964a5b5ce81d6310e492e02e4e65741569d9357a910b99b06c",
+    "engine/pending/typed-ward/typed-ward459-v2/evidence.json": "da40b7eb65a3e3bd6aa9a7b7fb7197e0feb900db92679cd7b2b20678bc0cec79",
+    "engine/pending/typed-ward/typed-ward459-v2/process.json": "0b5139785adecec523972d45b5824c1bc2828613b53a8ead48d5330d7fc8b706",
+    "engine/pending/typed-ward/typed-ward459-v2/production-compiler.log": "8da6b82c7e40ca5528aeb7f2fa4c14dd73a0fea1687b765cd6e51b95c6a7117e",
+    "engine/pending/typed-ward/typed-ward459-v2/production-inputs.json": "47e57b0fb7ff2901d29228df9de68a0bcbd8514085cea545bcafce504ad6a4a7",
+    "engine/pending/typed-ward/typed-ward459-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward459-v2/rules-inputs.json": "df99c561b6908d44d1b7962792435bfe041545cb52dbd273c6bf6e445f8a2821",
+    "engine/pending/typed-ward/typed-ward459-v2/wrapper.txt": "d012af7f80a35e6eafd2f9ab05348fb149d6cff611319f1e15e09f0ab17980b7",
+    "engine/pending/typed-ward/typed-ward459-v3/evidence.json": "7e70ecfe6f8348229ecef7b1c41510dfe21d1a5a52c31305642a1582e45b9c9b",
+    "engine/pending/typed-ward/typed-ward459-v3/process.json": "af15daac4ae07ce79e238536440db7d50778e110c1f85fec9a5b6b243f70de4d",
+    "engine/pending/typed-ward/typed-ward459-v3/production-compiler.log": "3e4839055133da42d79febffbc75a6c42f126c9912343b9d59062acc8fa15fa8",
+    "engine/pending/typed-ward/typed-ward459-v3/production-inputs.json": "a9e1d1556f6760d743afcd45bf8eb9311d479a840adadcf7fbe7617963145a4b",
+    "engine/pending/typed-ward/typed-ward459-v3/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward459-v3/rules-inputs.json": "df99c561b6908d44d1b7962792435bfe041545cb52dbd273c6bf6e445f8a2821",
+    "engine/pending/typed-ward/typed-ward459-v3/wrapper.txt": "ab87d3ae8784dd0bc0d2cf75b5da356a764ee758a750c60c481e3319d994cd03",
+    "engine/pending/typed-ward/typed-ward498-baseline-v1/evidence.json": "d5f728970a5967319f066964dd53d12f96e95fc52c75e79ce6d729b130f8a6ac",
+    "engine/pending/typed-ward/typed-ward498-baseline-v1/process.json": "79a5b58e0968ebed8b50999d490481271ff9be2a2048ddd89c9cda1acdd68f22",
+    "engine/pending/typed-ward/typed-ward498-baseline-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward498-baseline-v1/rules-inputs.json": "a7b22ae6707e76c60845dd6f3306b3a605bffecb8aef12df408af3957c246f31",
+    "engine/pending/typed-ward/typed-ward498-baseline-v1/wrapper.txt": "ea54404d43b3e6b04782af589242925f4d99091cfe351329c6fdb0a7621d6ae6",
+    "engine/pending/typed-ward/typed-ward498-v4/evidence.json": "7cae30d6440a25f47d431b42101aa35f66fd8d77420ade949c75cb57e401d23c",
+    "engine/pending/typed-ward/typed-ward498-v4/process.json": "da2433743c75ec6359d3e587fd876679eb2e96b4a7d92870670fb3b44c6257f1",
+    "engine/pending/typed-ward/typed-ward498-v4/production-compiler.log": "3e4839055133da42d79febffbc75a6c42f126c9912343b9d59062acc8fa15fa8",
+    "engine/pending/typed-ward/typed-ward498-v4/production-inputs.json": "bcde8132f8519715be1d19a30be8890389cb4097ad70321b92cdeb24efd152c9",
+    "engine/pending/typed-ward/typed-ward498-v4/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward498-v4/rules-inputs.json": "a3264c98cc9d8b349e81d73671b31b4b0934aea7f3a1fb835d39d0d204c3c16d",
+    "engine/pending/typed-ward/typed-ward498-v4/wrapper.txt": "325325a1e18661ed2a97106afb3bfe5e3548a975280809b463d31b367ddbd91c",
+    "engine/pending/typed-ward/typed-ward498-v5/evidence.json": "904296f3c9bbc54851dbfbb7375a93ae0b14cfda4c3eecabf2bd61c39eabc134",
+    "engine/pending/typed-ward/typed-ward498-v5/process.json": "8aa17f9d001c243203fde7774226e1a15581d492b401fc983def09dde97b59fb",
+    "engine/pending/typed-ward/typed-ward498-v5/production-compiler.log": "5a7ed918e4d7575b84ebdb2de9ab0a48e86ddbb63792f636e89db40318fc2b93",
+    "engine/pending/typed-ward/typed-ward498-v5/production-inputs.json": "513e04b07f3d7c15a7977028cbab8f1cbe7c5ab2953c69e643536cb76772555a",
+    "engine/pending/typed-ward/typed-ward498-v5/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/typed-ward/typed-ward498-v5/rules-inputs.json": "a7b22ae6707e76c60845dd6f3306b3a605bffecb8aef12df408af3957c246f31",
+    "engine/pending/typed-ward/typed-ward498-v5/wrapper.txt": "523b3337f6adc82b6b0c36a4a43c76b12b14ca5aaa0b688d8a19732fd3cf23aa"
+  },
+  "patch_roundtrip_encoding": "Explicit UTF-8; applied sources equal validated source bytes after CRLF-to-LF normalization only. A fresh runtime build from the patch remains pending."
+}
