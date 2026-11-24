@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the generic two-file waterbend correction: all 84 focused and 1,869
+  combined source cases pass, retaining 1,785 and the earlier 1,866-case phase.
+  Enforce the six-tap component cap, legal creature/mana-capable taps and joint
+  normal mana allocation without reusing tap/sacrifice resources. Preserve
+  preview memory, existing creature reservation when independently affordable
+  and native-mana-first alternatives. Latest baseline48 pass/36 fail. Retain all
+  partial prototypes, compiler setup failure and later regression controls.
+  Register 3,094 native/1,937 packaged targets and 154 production origins with
+  matching integration assertions. No card scripts/AI profiles change; fresh
+  runtime/full/catalog gates and activation remain pending. The installed
+  runtime remains affected; see engine/waterbend_payment_evidence.json.
+
 - Confirm native waterbend payment gaps in the selected runtime. Preserve all
   24/48/51/60/66-case baselines: the latest passes 33/fails 33. Actual casts can
   exceed the six-tap cap and underpay normal/tax costs; legal creature-assisted

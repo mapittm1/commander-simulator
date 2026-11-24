@@ -200,6 +200,7 @@ REGRESSION_SOURCES = {
     "CommanderAirbendPermissionTest.java": "commander_airbend_permission_test_sha256",
     "CommanderElementalBendHistoryTest.java": "commander_elemental_bend_history_test_sha256",
     "CommanderEarthbendReturnTest.java": "commander_earthbend_return_test_sha256",
+    "CommanderWaterbendPaymentTest.java": "commander_waterbend_payment_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

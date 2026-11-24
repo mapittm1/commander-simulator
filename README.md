@@ -27,15 +27,20 @@ difference.
 
 ## Card coverage
 
-A new waterbend payment gap is confirmed in the selected runtime. The 66-case
-native baseline passes 33/fails 33: some legal creature-assisted payments are
-rejected, while artifact-only selection can exceed the six-tap limit and
-underpay normal/tax costs. Direct casts reproduce two mana plus eight taps
-where at least four mana and no more than six waterbend taps are required.
-A one-file generic prototype passes the first 51 cases and 54/66 expanded cases,
-but still rejects 12 legal payments involving mana-capable permanents. It is
-partial and is not registered or activated. All failures and versions remain
-preserved in [waterbend evidence](engine/waterbend_payment_gaps.json).
+The generic waterbend correction is registered after all 84 focused cases and
+1,869 combined source cases pass, retaining 1,785 and the earlier 1,866-case
+source phase. The latest baseline passes 48/fails 36. Two generic AI files enforce
+the tap cap, consider legal creature/mana-source payments, reserve resources
+against conflicting mana/tap/sacrifice costs and preserve preview memory.
+Native-mana-first alternatives cover the tested ordering-sensitive payment; creatures
+remain available when mana can cover the remainder. Card scripts and AI profiles
+are unchanged. See [source evidence](engine/waterbend_payment_evidence.json).
+
+The registered targets are 3,094 native and 1,937 packaged cases with 154 verified
+production origins. Fresh runtime/full/catalog gates and selection remain pending;
+the installed runtime is unchanged and affected. Preserve all original failures,
+partial prototypes, compiler setup failure and later regression controls in
+[gap history](engine/waterbend_payment_gaps.json).
 
 The selected runtime is `2.0.16-583714b-reviewed-earthbend-return`.
 This test-only milestone adds 76 paid/native earthbend return cases. No production

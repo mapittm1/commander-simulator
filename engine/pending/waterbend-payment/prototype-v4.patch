@@ -1,0 +1,175 @@
+--- a/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
++++ b/forge-ai/src/main/java/forge/ai/PlayerControllerAi.java
+@@ -1793,10 +1793,49 @@
+         return losses;
+     }
+ 
++    /** Choose waterbend taps only when the remaining mana has an independent payment. */
++    private Map<Card, ManaCostShard> chooseWaterbendPayment(SpellAbility sa, ManaCost manaCost,
++            CardCollectionView candidates, Integer maxReduction) {
++        CardCollection ordered = new CardCollection(candidates);
++        ordered.sort(Comparator.comparing((Card card) -> !card.getManaAbilities().isEmpty())
++                .thenComparing(Card::isCreature));
++        CardCollection noncreatures = CardLists.filter(ordered, card -> !card.isCreature());
++        Map<Card, ManaCostShard> chosen = findWaterbendPayment(sa, manaCost, noncreatures, maxReduction);
++        if (chosen != null) {
++            return chosen;
++        }
++        if (noncreatures.size() != ordered.size()) {
++            chosen = findWaterbendPayment(sa, manaCost, ordered, maxReduction);
++        }
++        return chosen == null ? Collections.emptyMap() : chosen;
++    }
++
++    /** Preserve available creatures when mana can cover what noncreature taps leave unpaid. */
++    private Map<Card, ManaCostShard> findWaterbendPayment(SpellAbility sa, ManaCost manaCost,
++            CardCollection ordered, Integer maxReduction) {
++        int maximum = maxReduction == null ? manaCost.getGenericCost()
++                : Math.min(manaCost.getGenericCost(), Math.max(0, maxReduction));
++        maximum = Math.min(maximum, ordered.size());
++        for (int amount = maximum; amount >= 0; amount--) {
++            Map<Card, ManaCostShard> chosen = ComputerUtilMana.getConvokeOrImproviseFromList(
++                    ManaCost.get(amount), ordered, true, true);
++            ManaCostBeingPaid remaining = new ManaCostBeingPaid(manaCost);
++            remaining.decreaseGenericMana(chosen.size());
++            if (ComputerUtilMana.canPayManaCostWithReservedCards(remaining, sa,
++                    sa.getActivatingPlayer(), false, chosen.keySet())) {
++                return chosen;
++            }
++        }
++        return null;
++    }
++
+     @Override
+     public Map<Card, ManaCostShard> chooseCardsForConvokeOrImprovise(SpellAbility sa, ManaCost manaCost, CardCollectionView untappedCards, boolean artifacts, boolean creatures, Integer maxReduction) {
+         final Player ai = sa.getActivatingPlayer();
+         final PhaseHandler ph = ai.getGame().getPhaseHandler();
++        if (artifacts && creatures) {
++            return chooseWaterbendPayment(sa, manaCost, untappedCards, maxReduction);
++        }
+         // Filter out mana sources that will interfere with payManaCost()
+         CardCollection untapped = CardLists.filter(untappedCards, c -> c.getManaAbilities().isEmpty());
+ 
+@@ -1823,7 +1862,7 @@
+             }
+         }
+         final Map<Card, ManaCostShard> chosen = ComputerUtilMana.getConvokeOrImproviseFromList(manaCost, untapped, artifacts, creatures);
+-        // improvise and waterbend don't record the cards they tap, which the AI checks before casting
++        // Improvise does not record the cards it taps, which the AI checks before casting
+         if (kept.isEmpty() || !creatures || artifacts) {
+             return chosen;
+         }
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -59,6 +59,32 @@
+         cost = new ManaCostBeingPaid(cost);
+         return payManaCost(cost, sa, ai, true, true, effect) != null;
+     }
++    /** Preview mana while reserving cards already allocated to another part of the payment. */
++    public static boolean canPayManaCostWithReservedCards(ManaCostBeingPaid cost, SpellAbility sa,
++            Player payer, boolean effect, Set<Card> reservedCards) {
++        Set<Card> taps = AiCardMemory.getMemorySet(payer, MemorySet.PAYS_TAP_COST);
++        Set<Card> sacrifices = AiCardMemory.getMemorySet(payer, MemorySet.PAYS_SAC_COST);
++        Set<ManaCostBeingPaid> unpaid = AiCardMemory.getMemorySet(payer, AiCardMemory.MemorySetMana.UNPAID_COSTS);
++        Set<Card> previousTaps = taps == null ? Set.of() : new HashSet<>(taps);
++        Set<Card> previousSacrifices = sacrifices == null ? Set.of() : new HashSet<>(sacrifices);
++        Set<ManaCostBeingPaid> previousUnpaid = unpaid == null ? Set.of() : new HashSet<>(unpaid);
++        try {
++            return payManaCost(new ManaCostBeingPaid(cost), sa, payer, true, true, effect,
++                    Set.copyOf(reservedCards)) != null;
++        } finally {
++            restorePreviewMemory(taps, previousTaps);
++            restorePreviewMemory(sacrifices, previousSacrifices);
++            restorePreviewMemory(unpaid, previousUnpaid);
++        }
++    }
++
++    private static <T> void restorePreviewMemory(Set<T> memory, Set<T> previous) {
++        if (memory != null) {
++            memory.clear();
++            memory.addAll(previous);
++        }
++    }
++
+     public static boolean canPayManaCost(final SpellAbility sa, final Player ai, final int extraMana, final boolean effect) {
+         return canPayManaCost(sa.getPayCosts(), sa, ai, extraMana, effect);
+     }
+@@ -708,6 +734,11 @@
+ 
+     // returns null if unpayable
+     private static List<SpellAbility> payManaCost(final ManaCostBeingPaid cost, final SpellAbility sa, final Player ai, final boolean test, boolean checkPlayable, boolean effect) {
++        return payManaCost(cost, sa, ai, test, checkPlayable, effect, Set.of());
++    }
++
++    private static List<SpellAbility> payManaCost(final ManaCostBeingPaid cost, final SpellAbility sa,
++            final Player ai, final boolean test, boolean checkPlayable, boolean effect, Set<Card> reservedCards) {
+         if ((sa.isOffering() && sa.getSacrificedAsOffering() == null) || (sa.isEmerge() && sa.getSacrificedAsEmerge() == null)) {
+             // nothing was chosen
+             return null;
+@@ -753,6 +784,11 @@
+         boolean purePhyrexian = cost.containsOnlyPhyrexianMana();
+         boolean hasConverge = sa.getHostCard().hasConverge();
+         Multimap<ManaCostShard, SpellAbility> sourcesForShards = getSourcesForShards(cost, sa, ai, test, checkPlayable, hasConverge);
++        if (sourcesForShards != null && !reservedCards.isEmpty()) {
++            sourcesForShards.values().removeIf(source -> reservedCards.contains(source.getHostCard())
++                    && (source.getPayCosts().hasTapCost()
++                        || ComputerUtilCost.isSacrificeSelfCost(source.getPayCosts())));
++        }
+ 
+         int testEnergyPool = ai.getCounters(CounterEnumType.ENERGY);
+         int testLifeSpent = 0;
+@@ -765,8 +801,8 @@
+         List<CostTapType> tapGroups = effect || manaPart == null ? List.of() : sa.getPayCosts().getCostParts().stream()
+                 .filter(CostTapType.class::isInstance).map(CostTapType.class::cast)
+                 .filter(part -> part.paymentOrder() > manaPart.paymentOrder()).toList();
+-        Set<Card> consumedManaSources = new HashSet<>();
+-        Set<Card> projectedManaTaps = new HashSet<>();
++        Set<Card> consumedManaSources = new HashSet<>(reservedCards);
++        Set<Card> projectedManaTaps = new HashSet<>(reservedCards);
+ 
+         // Loop over mana needed
+         while (!cost.isPaid()) {
+@@ -838,7 +874,7 @@
+             }
+ 
+             ManaResourcePlan resources = saPayment == null ? null : planManaResources(saPayment, sa, ai,
+-                    sacrifices, tapGroups, projectedManaTaps, consumedManaSources);
++                    sacrifices, tapGroups, projectedManaTaps, consumedManaSources, !reservedCards.isEmpty());
+             if (saPayment != null && resources == null) {
+                 saExcludeList.add(saPayment);
+                 continue;
+@@ -1034,13 +1070,13 @@
+ 
+     private static ManaResourcePlan planManaResources(SpellAbility manaAbility, SpellAbility payingFor, Player payer,
+             List<CostSacrifice> sacrificeCosts, List<CostTapType> tapGroups,
+-            Set<Card> projectedTaps, Set<Card> consumed) {
+-        if (sacrificeCosts.isEmpty() && tapGroups.isEmpty()) {
++            Set<Card> projectedTaps, Set<Card> consumed, boolean checkReservedResources) {
++        if (sacrificeCosts.isEmpty() && tapGroups.isEmpty() && !checkReservedResources) {
+             return ManaResourcePlan.EMPTY;
+         }
+         Set<Card> unavailableForTaps = new HashSet<>();
+         CardCollection manaTaps = null;
+-        if (!tapGroups.isEmpty()) {
++        if (!tapGroups.isEmpty() || checkReservedResources) {
+             unavailableForTaps.addAll(projectedTaps);
+             unavailableForTaps.addAll(consumed);
+             if (payingFor.getPayCosts().hasTapCost()) {
+@@ -1063,7 +1099,7 @@
+         }
+ 
+         CardCollection manaSacrifices = null;
+-        if (!sacrificeCosts.isEmpty() || !tapGroups.isEmpty()) {
++        if (!sacrificeCosts.isEmpty() || !tapGroups.isEmpty() || checkReservedResources) {
+             CostSacrifice manaCost = manaAbility.getPayCosts().getCostPartByType(CostSacrifice.class);
+             if (manaCost != null) {
+                 manaSacrifices = chooseManaSacrifices(manaAbility, manaCost, payingFor, sacrificeCosts, payer,
+@@ -1374,7 +1410,7 @@
+                     }
+                 }
+                 if (!needed && canPayShardWithSpellAbility(shard, ai, m, filter, toFloat, true, toFloat.getXManaCostPaidByColor())) {
+-                    chosenPlan = planManaResources(m, sa, ai, sacrifices, tapGroups, filterTaps, reserved);
++                    chosenPlan = planManaResources(m, sa, ai, sacrifices, tapGroups, filterTaps, reserved, false);
+                     if (chosenPlan == null) {
+                         continue;
+                     }
