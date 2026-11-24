@@ -1,0 +1,171 @@
+{
+  "status": "source_validated_unregistered_uninstalled_further_choice_controls_required",
+  "tested_head": "48e15633090cf1b29efbe6475b2ae526cecdc70f",
+  "ci": {
+    "id": 45482509753,
+    "status": "completed",
+    "conclusion": "success",
+    "observed_separately_before_native_epoch": true
+  },
+  "selected_runtime": "2.0.16-583714b-reviewed-mana-chain",
+  "selected_native_tests": 3295,
+  "selected_runtime_changed": false,
+  "production_files": [
+    "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+    "forge-game/src/main/java/forge/game/cost/Cost.java",
+    "forge-game/src/main/java/forge/game/cost/CostPayment.java"
+  ],
+  "patch": {
+    "path": "engine/pending/waterbend-x/prototype-v1.patch",
+    "sha256": "12d8d0f06b7cac2272ee3724c6a7788f0a9ed56118ecaf342d0733ed41467189"
+  },
+  "fixture": {
+    "path": "engine/pending/waterbend-x/fixtures-v5/CommanderWaterbendXTest.java",
+    "sha256": "2dbab087e13d73f54d34dc7dc17ce0dc113990b4ca6299b9ea6cdaf61824a17f"
+  },
+  "corrections": [
+    "For proposed-X forecasts whose adjusted cost includes waterbend and X, bind the proposed X on a copied native ability, including its waterbend allowance, and preserve the original chosen X and derived metadata.",
+    "Validate already announced X against native cost/ability minimums before paying resources, including direct native payment entry points. No card-name checks."
+  ],
+  "focused_comparison": {
+    "baseline": {
+      "counts": {
+        "total": 300,
+        "passed": 252,
+        "failed": 48,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 5821,
+        "returncode": 0,
+        "elapsed_seconds": 39.89
+      }
+    },
+    "prototype": {
+      "counts": {
+        "total": 300,
+        "passed": 300,
+        "failed": 0,
+        "skipped": 0
+      },
+      "process": {
+        "status": "finished",
+        "bytes": 5820,
+        "returncode": 0,
+        "elapsed_seconds": 40.047
+      }
+    },
+    "failure_case_groups": {
+      "requested_x": 12,
+      "maximum_x": 12,
+      "existing_choice_preview_metadata": 12,
+      "katara_zero_ai_or_direct_payment": 6,
+      "other_zero_mana_or_exile_minimum": 6
+    },
+    "note": "48 failures are cases across several cards and three copy depths, not48 independent engine defects."
+  },
+  "source_validation": {
+    "counts": {
+      "total": 2185,
+      "passed": 2185,
+      "failed": 0,
+      "skipped": 0
+    },
+    "process": null
+  },
+  "retained_source_cases": 2071,
+  "new_cases": 114,
+  "retained_focused_cases": 186,
+  "limits": {
+    "focused_heap_mib": 1536,
+    "focused_cpus": 2,
+    "focused_seconds": 90,
+    "source_heap_mib": 2048,
+    "source_cpus": 2,
+    "source_seconds_per_suite": 600
+  },
+  "rules_sources": [
+    {
+      "url": "https://magic.wizards.com/en/news/feature/avatar-the-last-airbender-release-notes",
+      "scope": "Wizards waterbend explanation and four variable-X waterbend card wordings, including Katara minimum-X restriction."
+    }
+  ],
+  "fixture_reviews": [
+    "Negative payment controls retain legal target counts; original invalid-target setup retained.",
+    "Direct payment failures require the native refundPayment lifecycle. Earlier missing-refund failures retained; no restoration assertion removed."
+  ],
+  "pending_before_registration": [
+    "Add native controls for minimum-X payments that reach the boundary with an unannounced X. The current isXChoiceValid helper deliberately permits a pending choice; successful payment must eventually establish a legal value.",
+    "Review interaction between proposed-X forecasts and the extraMana parameter also used for other forecasting budgets.",
+    "Register only after resolving concrete gaps; fresh native build, independent packaged, broader, full integration, catalog and installed-health gates remain required."
+  ],
+  "full_card_support_complete": false,
+  "artifacts": {
+    "engine/pending/waterbend-x/drivers/run_source2185_v1.py.txt": "fc8d60996624ce20cc7ed827ea80aeda12acdadb7c41dd1aa1c30e4511f3583b",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x261_v1.py.txt": "c760edc728bd548b92128ffd8ff0b4e5bde738de02ea02d32f12b62d7b245ac6",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x273_v2.py.txt": "74650d62b85f9192dead7556b1f3ca36dbcbf32324861fa3e53b718e76a98143",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x273_v3.py.txt": "3285f92a819c4c7ec2c55dff3038d260944153dd635c7acec7c2712f71f50942",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x285_prototype_v1.py.txt": "1c3191af5e1a4bc1d2d887d859e1670e7d9f3ea65f4b875217be6b04fc2d7105",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x285_v4.py.txt": "e4885967cf34f5c2789847154ff6aa31e9647fd404e6731a1406a64246b6a546",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x300_prototype_v2.py.txt": "6b594fdf9b7272c7f331aa5acbabe0b0ec937a891fe7d232bf6984c9768e3e21",
+    "engine/pending/waterbend-x/drivers/run_waterbend_x300_v5.py.txt": "c5fc924d3beb1234c491b132b37aa2800842b6e452e9393ce5b021228fdaed70",
+    "engine/pending/waterbend-x/fixtures-v1/CommanderWaterbendXTest.java": "eb65b56936d9a242beb73710cd73d5a803a4ec9667a5fb8436c69033dbf6fd3c",
+    "engine/pending/waterbend-x/fixtures-v2/CommanderWaterbendXTest.java": "dc05841d61d4aa6f2227105d1a86334f2e9d9b473adac44f537544ba90b40ad4",
+    "engine/pending/waterbend-x/fixtures-v3/CommanderWaterbendXTest.java": "b08b77926073695318858985b63979e941a764b743955b73889038df6553850d",
+    "engine/pending/waterbend-x/fixtures-v4/CommanderWaterbendXTest.java": "262e1fb919f9331da2661ee82973614bc9c7b4282f86d89df806a1866d4cfc4b",
+    "engine/pending/waterbend-x/fixtures-v5/CommanderWaterbendXTest.java": "2dbab087e13d73f54d34dc7dc17ce0dc113990b4ca6299b9ea6cdaf61824a17f",
+    "engine/pending/waterbend-x/prototype-v1.patch": "12d8d0f06b7cac2272ee3724c6a7788f0a9ed56118ecaf342d0733ed41467189",
+    "engine/pending/waterbend-x/source2185-preparation-v1.json": "aa7e2e205dfb1ad55ec29eac0ff70c16fa7675106f0f668e41ed255730b71563",
+    "engine/pending/waterbend-x/source2185-v1/card-inputs.json": "15629fc429813feddd30c41d6a717d4ea5916eafa9d0156d9bc77b3599af2b9f",
+    "engine/pending/waterbend-x/source2185-v1/evidence.json": "dd520d27458f8f9d602e2e316162a33ebcd7280bf6090c9882f0abae473f0817",
+    "engine/pending/waterbend-x/source2185-v1/production-inputs.json": "e191b07460bea097a4139d31f4f0df67415923cd8acdab807d629f4caef81b25",
+    "engine/pending/waterbend-x/source2185-v1/selection.json": "ad01787157d611225c01174a01df268a69e5e44d994a29067f40c7401b0aa2bb",
+    "engine/pending/waterbend-x/source2185-v1/test-inputs.json": "e963b53b4e854edd088a4311a974d90bad2ae9c8f2885e3e98773340f782dcc1",
+    "engine/pending/waterbend-x/source2185-v1/wrapper.txt": "6c92d3ca5ff52a4547c5b538f6fe955309a61da089f54338dda3e321b3fe514b",
+    "engine/pending/waterbend-x/waterbend-x261-v1/evidence.json": "a5212dddcd596fdc81620ec8bf8408e62f7d873f63abecca777e0931becbcec5",
+    "engine/pending/waterbend-x/waterbend-x261-v1/process.json": "4a40dae4ff4f5d90ad9df390b8008db77afdfbd929a100c255c6aff434b0acbd",
+    "engine/pending/waterbend-x/waterbend-x261-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x261-v1/rules-inputs.json": "af91715c1efccb51809884a045e72b0114530471dcf3f6a0307421324e129bca",
+    "engine/pending/waterbend-x/waterbend-x261-v1/wrapper.txt": "e9bd968333aee30bde56c5e7d63b979112d480ef0ce42b4fe86051b67e8c6e49",
+    "engine/pending/waterbend-x/waterbend-x273-v2/evidence.json": "9d8af0e5fb5b5a154ca4c588c9a95ebc705fe0c8356820c8ace2fd7f485cafe9",
+    "engine/pending/waterbend-x/waterbend-x273-v2/process.json": "fd2b17728568d4ceb3686956992d77ededc6e8482093fea2e7de54eaa05313c6",
+    "engine/pending/waterbend-x/waterbend-x273-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x273-v2/rules-inputs.json": "eca0a1e97eb55182490b44632cc3f6100642ded0830e38a915e6daa8e1244760",
+    "engine/pending/waterbend-x/waterbend-x273-v2/wrapper.txt": "87ac31efacafa7e335f67cfb361513eb163e6a0cbe16163b5062c9ea11fa71fa",
+    "engine/pending/waterbend-x/waterbend-x273-v3/evidence.json": "df021d5b4dce4868691bda18f6881ef2840a6b78d4657548e94aac29cd8f97ae",
+    "engine/pending/waterbend-x/waterbend-x273-v3/process.json": "e149dc997b574e3d211ebda43e836fbd70e4f7c43f89a7759e25474b451a3882",
+    "engine/pending/waterbend-x/waterbend-x273-v3/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x273-v3/rules-inputs.json": "0719017fa7150ab3bd5ff99c77e6d101fef5e76721484c7f168c61e0c53b0973",
+    "engine/pending/waterbend-x/waterbend-x273-v3/wrapper.txt": "1b5ce56471bbaf180eee9a4ccb9045de25306b620db61256084593d10ca852a3",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/evidence.json": "4bdf55ffa77ec3152943f2a8e1f918c93f0ee26528168ab9cc49b874be118aec",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/process.json": "03ec733d834d108b68d91a8d713120d547c920d2bbcfeab52ba3549d024eb3f8",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/production-inputs.json": "89eb78627c1088330b1c47e042ccbe652e330e24ee8b5e66ea57f4dc40e44974",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/rules-inputs.json": "41c61c49ec014e565a03fc076dca949edbeb2c032d276a765708ce24292dc68d",
+    "engine/pending/waterbend-x/waterbend-x285-prototype-v1/wrapper.txt": "317b1c6fae4680365da9cead2e7baa587be128fac4cc9f8aec2d9f4c77cda355",
+    "engine/pending/waterbend-x/waterbend-x285-v4/evidence.json": "dcd2a685ce9c7740f539d42a6b0677112309e79ac0a7dfa9d95886feda210122",
+    "engine/pending/waterbend-x/waterbend-x285-v4/process.json": "b82ed1e57828c7628cc753a8f4eb7d6300cedc6eba1ad20c91cb7b3a109de04a",
+    "engine/pending/waterbend-x/waterbend-x285-v4/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x285-v4/rules-inputs.json": "41c61c49ec014e565a03fc076dca949edbeb2c032d276a765708ce24292dc68d",
+    "engine/pending/waterbend-x/waterbend-x285-v4/wrapper.txt": "04ffbb29121c8bd0cbe4cddc5b01fba77327eb8b3cac5f55b8f3d4af906c5f43",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/evidence.json": "d4975471d129d69eef0afa06a9f0bad0d9ef303b8bdbf4fcacd4f551147cd40d",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/process.json": "b1c43f4ad9b2c951ce95b02c5c391f77a8c8a9252712305186bfdeb0ded7fee1",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/production-compiler.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/production-inputs.json": "4db67178b35bf82e033bd5adf1950c05cecd2f149fd9a278de7b4a1e497c92dc",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/rules-inputs.json": "ce4a2c113d18c62bf443d41856da8775b26aade42c579708c3d24e18e9b64068",
+    "engine/pending/waterbend-x/waterbend-x300-prototype-v2/wrapper.txt": "9ec27a8c9ec5b80d130295aea79cc524bb6add4490f7a2fa25eb0997643f0f47",
+    "engine/pending/waterbend-x/waterbend-x300-v5/evidence.json": "55c14d8714ee3a85fd5bb19091f8f4661c9d8f4b623ff532370ed1ed6a70b73f",
+    "engine/pending/waterbend-x/waterbend-x300-v5/process.json": "31d459bb42dfbc6faa54cdd8de3e694a0635a2f9813a894bb4850d256e0ae7d9",
+    "engine/pending/waterbend-x/waterbend-x300-v5/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/waterbend-x/waterbend-x300-v5/rules-inputs.json": "ce4a2c113d18c62bf443d41856da8775b26aade42c579708c3d24e18e9b64068",
+    "engine/pending/waterbend-x/waterbend-x300-v5/wrapper.txt": "e66cd1ede52743c732c1607cd5e6e4ee6fc2c0ddc3096d170b4df899812fb92f",
+    "engine/pending/waterbend-x/x-ci-v1.json": "67513864b9a2eafd74723d7d69d166a6cf53fc486dd1b5348220bab46a079149",
+    "engine/pending/waterbend-x/x-epoch-v1.json": "64cc281ab147954a8e025bc38f692e5a19c70bdba18eb5584fc9489fb8776839",
+    "engine/pending/waterbend-x/x-fixture-review-v2.json": "dd7f9f2aa33849245848adbb18796064f75f5379f42fd70b393229a96355c6d5",
+    "engine/pending/waterbend-x/x-fixture-review-v3.json": "b6ce4ca68ab5e6599a7ddbd82ab909fa2dd5e97f8781639b0d2203f1a633dbc5",
+    "engine/pending/waterbend-x/x-frozen-v1.json": "6fa66b2649bdb89e5edda5914ee51f9076d248bc1c52150fcb1ced8ebd4f5ec3"
+  }
+}

@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Extend the uninstalled X-cost prototype to 363 focused and 2,248 source cases,
+  retaining every prior case. Compare the selected runtime's 267/363 result and
+  classify 18 absent-API checks separately. Separate proposed X from follow-up
+  mana, require completed minimum-X choices, and validate generic payment before
+  undo cleanup. Native copied payment contexts respect cast-only restrictions,
+  explicit costs, source reservations and lethal-tap policy while preserving
+  original state and RNG/cache isolation. Preserve earlier unannounced-X,
+  ward-budget, restricted-mana and fixture-compile failures. Five generic sources
+  change; no card/profile changes. Full typed waterbend/mana-life ward controls
+  remain required before registration; fresh runtime gates remain pending and
+  the installed runtime is unchanged. See engine/waterbend_x_evidence.json.
+
 - Preserve an uninstalled generic variable-X waterbend/minimum-X prototype
   passing 300 focused and 2,185 source cases, retaining every previous case.
   Compare the selected runtime's 252/300 result. Native paid effects cover all

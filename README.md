@@ -66,19 +66,25 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
-An uninstalled variable-X waterbend prototype passes 300 focused and 2,185
-source cases, retaining the previous 186 and 2,071. The selected runtime passes
-252/300 of the same focused controls: proposed-X forecasts, existing-choice
-preview metadata and forbidden zero choices expose gaps. Independent native
-payments and effect checks cover all four variable-X waterbend cards; additional
-controls cover ordinary mana/exile minimums and legal zero-X casts. The prototype
-binds proposed X on a copied ability and validates already announced minimums at
-native cost boundaries. Three production sources change, with no card-name
-checks or script/profile changes. Minimum-X payments with an unannounced choice
-and other uses of the forecasting budget need further controls before
-registration. Fresh runtime gates remain pending; the selected runtime above is
-unchanged. See the [patch](engine/pending/waterbend-x/prototype-v1.patch),
-[114 new cases](engine/pending/waterbend-x/fixtures-v5/CommanderWaterbendXTest.java)
+The uninstalled variable-X/extra-budget prototype now passes 363 focused and
+2,248 source cases, retaining every prior 300/2,185 case. The selected runtime
+passes 267/363; 18 failures are checks for the new budget API, with the remaining
+cases covering reproduced prediction/minimum-choice gaps. The prototype keeps
+proposed X separate from follow-up mana, checks full minimum-X choices before
+successful payment, and retains undo information until validation finishes.
+Native copied-game forecasts preserve restricted mana, explicit increased costs,
+source reservations, lethal-tap policy, original state and RNG/cache isolation.
+Independent casts verify both paid ward and countered spells with cast-only mana.
+Five generic production sources change; scripts/profiles are unchanged.
+
+Full typed ward payment remains the next registration gate: The Unagi of Kyoshi
+Island has waterbend ward, and Gisa/Captain Howler/Ovika combine mana and life.
+Those must be represented as full costs rather than only a generic mana budget.
+Other cost contexts, conditional counterability and the experimental restore path
+need more controls. Fresh native/packaged/broader/full/catalog/health gates remain
+pending. The installed runtime above is unchanged. See the
+[patch](engine/pending/waterbend-x/prototype-v4.patch),
+[177 new cases](engine/pending/waterbend-x/fixtures-v10/CommanderWaterbendXTest.java)
 and [evidence](engine/waterbend_x_evidence.json).
 
 The earlier milestones below describe validation and selections at their time.

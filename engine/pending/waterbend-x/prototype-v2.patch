@@ -1,0 +1,117 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -148,7 +148,28 @@
+         return canPayManaCost(sa.getPayCosts(), sa, ai, extraMana, effect);
+     }
+     public static boolean canPayManaCost(final Cost cost, final SpellAbility sa, final Player ai, final int extraMana, final boolean effect) {
++        if (extraMana > 0) {
++            // A proposed X belongs to this forecast, including the independently capped waterbend part.
++            // Keep both the announced value and derived allowance off the original ability.
++            SpellAbility proposed = sa.copy(sa.getHostCard(), ai, false, true);
++            Cost adjusted = CostAdjustment.adjust(cost, proposed, effect);
++            if (adjusted != null && adjusted.getMaxWaterbend() != null
++                    && adjusted.getCostMana() != null && adjusted.getCostMana().getAmountOfX() > 0) {
++                proposed.setXManaCostPaid(extraMana);
++                return payManaCost(cost, proposed, ai, true, extraMana, true, effect);
++            }
++        }
+         return payManaCost(cost, sa, ai, true, extraMana, true, effect);
++    }
++
++    /** Forecast separate generic costs without changing announced X or applying the spell's reductions to them. */
++    public static boolean canPayManaCostWithExtraBudget(final Cost cost, final SpellAbility sa,
++            final Player ai, final int extraMana, final boolean effect) {
++        if (extraMana < 0) throw new IllegalArgumentException("Extra mana budget must be nonnegative");
++        CardCollection waterbendTaps = new CardCollection();
++        ManaCostBeingPaid remaining = calculateManaCost(cost, sa, ai, true, 0, effect, waterbendTaps);
++        remaining.increaseGenericMana(extraMana);
++        return payManaCost(remaining, sa, ai, true, true, effect, new HashSet<>(waterbendTaps)) != null;
+     }
+ 
+     public static boolean payManaCost(ManaCostBeingPaid cost, final SpellAbility sa, final Player ai, final boolean effect) {
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+@@ -665,7 +665,7 @@
+         }
+ 
+         // TODO both of these call CostAdjustment.adjust, try to reuse instead
+-        return ComputerUtilMana.canPayManaCost(cost, sa, payer, extraManaNeeded, effect)
++        return ComputerUtilMana.canPayManaCostWithExtraBudget(cost, sa, payer, extraManaNeeded, effect)
+                 && CostPayment.canPayAdditionalCosts(cost, sa, effect, payer);
+     }
+ 
+--- a/forge-game/src/main/java/forge/game/cost/Cost.java
++++ b/forge-game/src/main/java/forge/game/cost/Cost.java
+@@ -21,6 +21,7 @@
+ import forge.card.CardType;
+ import forge.card.mana.ManaCost;
+ import forge.game.CardTraitBase;
++import forge.game.ability.AbilityUtils;
+ import forge.game.card.Card;
+ import forge.game.card.CounterEnumType;
+ import forge.game.card.CounterType;
+@@ -1094,7 +1095,29 @@
+         }
+     }
+ 
++    /** Provisional affordability may inspect a choice that has not been announced yet. */
++    public boolean isXChoiceValid(SpellAbility ability) {
++        Integer chosen = ability.getXManaCostPaid();
++        return chosen == null || chosen >= minimumX(ability);
++    }
++
++    /** Successful payment must establish a value whenever the cost declares a positive minimum. */
++    public boolean isXChoiceComplete(SpellAbility ability) {
++        Integer chosen = ability.getXManaCostPaid();
++        return chosen == null ? minimumX(ability) == 0 : chosen >= minimumX(ability);
++    }
++
++    private int minimumX(SpellAbility ability) {
++        CostPartMana mana = getCostMana();
++        int minimum = mana == null ? 0 : mana.getXMin();
++        if (ability.hasParam("XMin")) {
++            minimum = Math.max(minimum, AbilityUtils.calculateAmount(ability.getHostCard(), ability.getParam("XMin"), ability));
++        }
++        return Math.max(0, minimum);
++    }
++
+     public boolean canPay(SpellAbility sa, Player payer, final boolean effect) {
++        if (!isXChoiceValid(sa)) return false;
+         for (final CostPart part : this.getCostParts()) {
+             if (!part.canPay(sa, payer, effect)) {
+                 return false;
+--- a/forge-game/src/main/java/forge/game/cost/CostPayment.java
++++ b/forge-game/src/main/java/forge/game/cost/CostPayment.java
+@@ -263,6 +263,7 @@
+     }
+ 
+     public boolean payCost(final CostDecisionMakerBase decisionMaker) {
++        if (cost != null && !cost.isXChoiceValid(ability)) return false;
+         adjustedCost = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect());
+         List<CostPart> costParts = adjustedCost.getCostPartsWithZeroMana();
+ 
+@@ -301,7 +302,7 @@
+             }
+         }
+ 
+-        return true;
++        return adjustedCost.isXChoiceComplete(ability);
+     }
+ 
+     public final boolean payComputerCosts(final CostDecisionMakerBase decisionMaker) {
+@@ -351,9 +352,14 @@
+             this.ability.setActivatingPlayer(decisionMaker.getPlayer());
+         }
+ 
++        if (cost != null && !cost.isXChoiceValid(ability)) return false;
++
+         Map<CostPart, PaymentDecision> decisions = Maps.newHashMap();
+         // for Trinisphere make sure to include Zero
+-        List<CostPart> parts = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect()).getCostPartsWithZeroMana();
++        Cost payable = CostAdjustment.adjust(cost, ability, decisionMaker.isEffect());
++        // AI choices are announced before execution; do not turn a pending minimum-X choice into zero.
++        if (!payable.isXChoiceComplete(ability)) return false;
++        List<CostPart> parts = payable.getCostPartsWithZeroMana();
+ 
+         List<CostSacrifice> sacrifices = parts.stream().filter(CostSacrifice.class::isInstance)
+                 .map(CostSacrifice.class::cast).toList();
