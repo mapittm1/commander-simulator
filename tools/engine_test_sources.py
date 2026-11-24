@@ -195,6 +195,7 @@ REGRESSION_SOURCES = {
     "ExertTestSupport.java": "exert_test_support_sha256",
     "CommanderExertStateTest.java": "commander_exert_state_test_sha256",
     "CommanderExertTransitionsTest.java": "commander_exert_transitions_test_sha256",
+    "CommanderSimultaneousAuraTest.java": "commander_simultaneous_aura_test_sha256",
     "CommanderInspectionAiTest.java": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest.java": "commander_inspection_knowledge_test_sha256",
     "CommanderRepeatedDiscardEntrypointTest.java": "commander_repeated_discard_entrypoint_test_sha256",

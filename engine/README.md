@@ -30,9 +30,16 @@ Supplementary simultaneous Aura-entry diagnostics pass all 48 paid Replenish
 cases against the selected packaged runtime, retaining 18 initial controls.
 Actual zones, attachments, characteristics and original/copy independence are
 checked, including on-stack copies and hexproof/protection distinctions. No
-production defect was demonstrated. Fixtures are pending normal suite registration
+production defect was demonstrated. Original diagnostic fixtures remain preserved
 in `pending/simultaneous-aura/`; selected native counts remain unchanged. See
 [diagnostic evidence](simultaneous_aura_evidence.json).
+
+Aura witnesses are registered as `tests/CommanderSimultaneousAuraTest.java`.
+All 1,604 source cases pass, retaining 1,556. Future candidate targets are 2,829
+native/1,672 packaged methods and 141 checked production origins. No production
+code changes are needed; fresh runtime gates remain pending and the selected
+exert-state runtime remains unchanged. See
+[registration evidence](simultaneous_aura_registration_evidence.json).
 
 The earlier milestones below describe validation and selections at their time.
 

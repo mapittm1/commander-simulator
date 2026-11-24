@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register all 48 paid Aura-entry witnesses in the build and packaged suite;
+  combined source validation passes 1,604 cases with all 1,556 previous methods
+  retained. Set future candidate targets to 2,829 native/1,672 packaged cases,
+  including 805 in the existing resolution partition and 141 production origins.
+  No production, card-script or AI-profile changes. Fresh sealed runtime and
+  independent packaged/broader/full/catalog gates remain pending; keep the
+  installed exert runtime and prior evidence unchanged. See
+  engine/simultaneous_aura_registration_evidence.json.
+
 - Verify 48 supplementary paid Replenish Aura-entry cases against the selected
   packaged runtime, retaining all 18 initial controls. Cover both graveyard
   orders, original/one/two copies, on-stack copies, preexisting enchantment

@@ -87,6 +87,7 @@ SOURCES = {
     "ExertTestSupport": "exert_test_support_sha256",
     "CommanderExertStateTest": "commander_exert_state_test_sha256",
     "CommanderExertTransitionsTest": "commander_exert_transitions_test_sha256",
+    "CommanderSimultaneousAuraTest": "commander_simultaneous_aura_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -306,6 +307,7 @@ NATIVE_CLASSES = (
     "forge.game.zone.MagicStack",
     "forge.game.ability.SpellAbilityEffect",
     "forge.game.ability.effects.ChangeZoneEffect",
+    "forge.game.ability.effects.ChangeZoneAllEffect",
     "forge.game.ability.effects.LifeGainEffect",
     "forge.game.combat.Combat",
     "forge.game.replacement.ReplacementHandler",
@@ -385,7 +387,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1624-case packaged family."""
+    """Execute the existing fixed 1672-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

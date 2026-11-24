@@ -27,12 +27,19 @@ difference.
 
 ## Card coverage
 
+The 48 Aura witnesses are now registered in the build and packaged recipes.
+Combined source validation passes all 1,604 cases, retaining 1,556. The next
+candidate targets 2,829 native methods and 1,672 packaged cases with unchanged
+limits. Fresh candidate validation is pending; the selected exert-state runtime
+and its historical counts remain unchanged. See
+[registration evidence](engine/simultaneous_aura_registration_evidence.json).
+
 Supplementary Aura-entry checks pass all 48 paid Replenish cases against the
 selected runtime: both graveyard orders, legal/illegal Coronet attachments,
 simultaneously returning creatures, hexproof versus protection, and copies made
 before casting or with the spell on the stack. No defect was demonstrated.
-These witnesses are retained under `engine/pending/simultaneous-aura/`; they
-are additional diagnostics, not part of the sealed native suite counts. See
+Original witnesses remain under `engine/pending/simultaneous-aura/`; their
+diagnostic counts remain separate from the selected sealed native suite. See
 [Aura evidence](engine/simultaneous_aura_evidence.json).
 
 The selected runtime is `2.0.16-583714b-reviewed-exert-state`.
