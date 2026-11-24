@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register generic elemental-action history restoration and the supplementary
+  counter/Airbend tests. Combined source validation passes 1,709/1,709, retaining
+  all 1,657 prior methods plus six departed-counter, 21 Airbend permission and
+  25 elemental cases. Register 2,934 native/1,777 packaged targets and 145 origins.
+  Preserve source manifests and reports in engine/elemental_bend_evidence.json.
+  Fresh build, packaged/broader/full/catalog validation and activation remain
+  pending; installed runtime remains affected. No scripts or AI profiles change.
+
 - Confirm copied elemental-action history is lost in the selected runtime:
   25 cases pass 11/fail 14; generic Player/GameCopier prototype passes 25/25
   and 408/408 related contracts. Preserve the failed original combat setup,

@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+The generic elemental-history fix is now registered for a fresh build. Combined
+source validation passes all 1,709 cases, retaining every prior 1,657 and adding
+six departed-counter, 21 Airbend permission and 25 elemental-history cases.
+The registered targets are 2,934 native and 1,777 packaged cases; these are
+pending gates, not completed runtime results. The installed runtime remains
+unchanged and affected. See [source evidence](engine/elemental_bend_evidence.json).
+
 A supplementary review confirms an elemental-action history gap in the selected
 runtime: the 25-case baseline passes 11 and fails 14, while a generic two-file
 prototype passes all 25 and 408 retained copy contracts. The gap can prevent
@@ -39,7 +46,8 @@ The original combat-setup failure and corrected controls are preserved in
 Separately, all 21 supplementary Airbend permission/cost cases pass in the selected
 runtime, including owner-only casts, timing, additional costs and copied pending
 spells. See [Airbend evidence](engine/airbend_permission_evidence.json). These cases
-await regular registration and do not change the sealed totals below.
+are now registered for the pending candidate and do not change the installed
+sealed totals below.
 
 The selected runtime is `2.0.16-583714b-reviewed-counter-history`.
 It preserves counter placement and removal history in independent tables and
@@ -74,8 +82,8 @@ Supplementary departed-participant checks pass all 59 cases (53 retained plus
 six new) against the selected runtime. The prior runtime passes 19 original
 controls/fails 40 copies. These cases verify departed payer keys, private cards
 whose owners left the game, independent references and native end-step tokens.
-The six added cases await regular suite registration and do not change the
-sealed counts above. See [supplementary evidence](engine/counter_history_departed_evidence.json).
+The six added cases are registered for the pending candidate and do not change
+the installed sealed counts above. See [supplementary evidence](engine/counter_history_departed_evidence.json).
 
 The earlier milestones below describe validation and selections at their time.
 Their failed artifacts remain preserved; later source corrections can be carried

@@ -9,14 +9,20 @@ and the Dilemma cast, combat-entry, and public-reveal fixes. The earlier patches
 and engine locks preserve the history of those
 changes. See the [official Forge Star Trek release](https://github.com/Card-Forge/forge/releases/tag/forge-2.0.16).
 
+Generic elemental-history restoration is registered after all 1,709 combined
+source cases pass, retaining 1,657. The native/package targets are 2,934/1,777
+with 145 production origins, pending fresh runtime validation. See
+[source evidence](elemental_bend_evidence.json). The installed runtime is unchanged.
+
 A newly confirmed elemental-history gap remains in the selected runtime.
 The baseline passes 11/fails 14 of 25 paid/native cases; an independent
 Player/GameCopier prototype passes all 25 and all 408 related copy contracts.
 See [gap and prototype evidence](elemental_bend_gaps.json). Pending sources and
-patches are under `pending/elemental-bend`; no recipe/runtime activation yet.
+patches are preserved under `pending/elemental-bend`; recipe registration is
+complete, while runtime activation remains pending.
 All 21 supplementary Airbend permission/cost cases pass without a production
 change; see [Airbend evidence](airbend_permission_evidence.json). These cases
-remain supplementary and do not change sealed test counts.
+are now registered for the pending candidate and do not change installed totals.
 
 The selected runtime is the reviewed counter-history milestone. Two generic
 production files preserve placement/removal receipts in independent mapped
@@ -40,7 +46,7 @@ Supplementary departed-payer/owner receipt tests pass all 59 cases, retaining 53
 existing methods and adding six original/one/two-copy controls. The prior runtime
 passes 19/fails 40; selected runtime passes all 59, including independent private
 history and actual Hornbeetle tokens. No production changes; the added six cases
-are pending regular registration and do not change sealed native totals. See
+are registered for the pending candidate and do not change installed totals. See
 [supplementary evidence](counter_history_departed_evidence.json).
 
 The earlier milestones below describe validation and selections at their time.

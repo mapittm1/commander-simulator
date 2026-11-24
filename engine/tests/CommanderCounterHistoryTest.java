@@ -526,4 +526,70 @@ public class CommanderCounterHistoryTest extends AITest {
     @Test public void filteredPutterDepth0() { filteredPutter(0); }
     @Test public void filteredPutterDepth1() { filteredPutter(1); }
     @Test public void filteredPutterDepth2() { filteredPutter(2); }
+
+    private void departedParticipant(int depth, boolean ownerLeaves) {
+        Game original = counterGame(true);
+        Player leaving = original.getPlayers().stream().filter(player -> player.getName().equals("counter-1"))
+                .findFirst().orElseThrow();
+        int leavingId = leaving.getId();
+        for (int index = 0; index < 8; index++) addCardToZone("Forest", leaving, ZoneType.Battlefield);
+        original.getPhaseHandler().devModeSet(PhaseType.MAIN1, leaving, 5);
+        Card owned = null;
+        if (ownerLeaves) {
+            castAs(original, leaving, "Grizzly Bears", null, 2);
+            owned = leaving.getCardsIn(ZoneType.Battlefield).stream()
+                    .filter(card -> card.getName().equals("Grizzly Bears")).findFirst().orElseThrow();
+            original.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(original), 5);
+            cast(original, "Battlegrowth", owned, 1);
+        } else {
+            castAs(original, leaving, "Battlegrowth", named(original, "Grizzly Bears", ZoneType.Battlefield), 1);
+            original.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(original), 5);
+        }
+        leaving.setLife(0, null);
+        original.getAction().checkStateEffects(true);
+        assertTrue(leaving.hasLost());
+        assertEquals(original.getPlayers().size(), 3);
+        assertFalse(original.isGameOver());
+        if (ownerLeaves) assertNull(original.getCardState(owned, null));
+        Game game = snapshot(original, depth);
+        Player departed = game.getPlayer(leavingId);
+        assertTrue(departed.hasLost());
+        assertFalse(game.getPlayers().contains(departed));
+        List<Pair<Card, Integer>> entries = receipts(game).get(CounterEnumType.P1P1,
+                ownerLeaves ? actor(game) : departed);
+        assertNotNull(entries);
+        Card historical;
+        if (ownerLeaves) {
+            assertEquals(entries.size(), 2);
+            historical = entries.stream().map(Pair::getKey)
+                    .filter(card -> card.getOwner().getId() == leavingId).findFirst().orElseThrow();
+            assertSame(historical.getOwner(), departed);
+            assertSame(historical.getController(), departed);
+        } else {
+            assertEquals(entries.size(), 1);
+            historical = entries.get(0).getKey();
+            assertSame(historical.getOwner(), actor(game));
+            assertSame(historical.getController(), actor(game));
+        }
+        assertSame(historical.getGame(), game);
+        assertTrue(game.getCardsIn(ZoneType.Battlefield).stream().noneMatch(card -> card == historical));
+        if (depth > 0) {
+            assertNotSame(departed, leaving);
+            List<Pair<Card, Integer>> old = receipts(original).get(CounterEnumType.P1P1,
+                    ownerLeaves ? actor(original) : leaving);
+            Card oldHistory = old.stream().map(Pair::getKey)
+                    .filter(card -> !ownerLeaves || card.getOwner().getId() == leavingId).findFirst().orElseThrow();
+            assertNotSame(historical, oldHistory);
+            historical.setTapped(true);
+            assertFalse(oldHistory.isTapped());
+        }
+        expectInsect(game, 1);
+        if (depth > 0) assertTrue(actor(original).getCardsIn(ZoneType.Battlefield).stream().noneMatch(Card::isToken));
+    }
+    @Test public void departedPutterDepth0() { departedParticipant(0, false); }
+    @Test public void departedPutterDepth1() { departedParticipant(1, false); }
+    @Test public void departedPutterDepth2() { departedParticipant(2, false); }
+    @Test public void departedOwnerDepth0() { departedParticipant(0, true); }
+    @Test public void departedOwnerDepth1() { departedParticipant(1, true); }
+    @Test public void departedOwnerDepth2() { departedParticipant(2, true); }
 }
