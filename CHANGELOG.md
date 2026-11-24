@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify the commander-history candidate with all 2,609 sealed native tests,
+  retaining every previous 2,585 method, and independent 4,083 gameplay/256
+  serialization checks. Three packaged families pass 65/194/146 cases; preserve
+  the 1,452-case family's 90-second timeout as a failed gate. Timing diagnostics
+  implicate nested spell planning and historical copying; a per-zone identity
+  memo also times out and remains an isolated, unadopted prototype. Preserve the
+  initial timing-listener setup failure separately. No full-game/catalog phase
+  or activation was performed for this candidate. See
+  engine/departed_commander_history_runtime_evidence.json.
+
 - Fix historical commander damage copying after the source owner leaves. Reuse
   the existing historical graph for commander references and ability/callback
   state; preserve live-zone identity, historical sources, independent counters

@@ -34,9 +34,16 @@ abilities, instead of requiring a live card or discarding its damage. All 1,384
 mixed source tests pass in one JVM, retaining 1,360 and adding 24; 285 focused
 retained/new graph checks pass. The new cases include normal paid command-zone
 casts, real untap/combat, zone changes and independent copied history. Fresh
-sealed native 2,609, packaged 1,452/65/194/146, broader 4,083/256 and full-live
-validation remain pending. See
-[the source correction](engine/departed_commander_history_evidence.json).
+sealed build `a72ec02aa4694b30b59958bda00f9a7a` passes all 2,609 native tests;
+all previous 2,585 identities are retained and compiled changes are confined to
+`GameCopier`. Independent broader checks pass 4,083 gameplay and 256 serialization
+cases. Packaged free-casting/untap/battle checks pass 65/194/146 cases, but the
+1,452-case packaged family times out at its unchanged 90-second worker limit.
+This candidate remains unactivated; full games and catalog validation have not
+been run for it. A timing probe completed 1,194 cases before timing out; an
+isolated zone-history memo prototype also timed out (1,197 completed) and was
+not adopted. See [the source correction](engine/departed_commander_history_evidence.json)
+and [runtime evidence](engine/departed_commander_history_runtime_evidence.json).
 
 The preceding multiplayer-horizon candidate passed all 2,585 native tests,
 1,833 independent packaged checks and 4,059/256 broader checks. Its full live run

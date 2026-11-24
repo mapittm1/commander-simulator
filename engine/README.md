@@ -542,5 +542,13 @@ preserves historical damage and mapped owners, keeps current-zone resets, and
 does not change strict ordinary lookup. Both 12-case baselines pass six/fail six;
 all 285 related and 1,384 mixed source cases pass. See
 [departed_commander_history_evidence.json](departed_commander_history_evidence.json).
-A fresh sealed 2,609-native artifact, independent 1,452/65/194/146, broader
-4,083/256 and full-live gates remain pending. No runtime was activated.
+The fresh sealed build passes all 2,609 native cases and retains all 2,585
+previous methods. Source parity covers 2,168 production files; compiled changes
+are confined to `GameCopier`, with no added classes or card/profile changes.
+Independent broader checks pass 4,083 gameplay and 256 serialization cases;
+packaged free-casting/untap/battle checks pass 65/194/146. The 1,452-case packaged
+family times out at its unchanged 90-second worker limit, so the full-game and
+catalog phases have not run for this candidate. Timing probes preserve the
+failed gate, callback setup failure, native stack and an unadopted zone-history
+memo prototype. See [runtime evidence](departed_commander_history_runtime_evidence.json).
+No runtime was activated.
