@@ -1,0 +1,77 @@
+--- a/forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java
++++ b/forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java
+@@ -1,6 +1,7 @@
+ package forge.game.ability.effects;
+ 
+ import forge.game.Game;
++import forge.game.SnapshotCommand;
+ import forge.game.ability.AbilityFactory;
+ import forge.game.ability.SpellAbilityEffect;
+ import forge.game.card.Card;
+@@ -9,6 +10,7 @@
+ import forge.game.replacement.ReplacementHandler;
+ import forge.game.replacement.ReplacementLayer;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilitySnapshot;
+ 
+ public class SkipPhaseEffect extends SpellAbilityEffect {
+ 
+@@ -92,14 +94,56 @@
+             re.setOverridingAbility(exile);
+         }
+         if (duration != null) {
+-            addUntilCommand(sa, () -> game.getAction().exileEffect(eff));
++            addUntilCommand(sa, new ExpireSkipPhaseCommand(eff));
+         }
+         eff.addReplacementEffect(re);
+ 
+         if (sa.hasParam("Start")) {
+-            game.getUpkeep().addUntil(player, () -> game.getAction().moveToCommand(eff, sa));
++            game.getUpkeep().addUntil(player, new BeginSkipPhaseCommand(eff, sa));
+         } else {
+             game.getAction().moveToCommand(eff, sa);
+         }
+     }
++
++    /** Keep expiry attached to the effect in the world that owns this queue. */
++    private static final class ExpireSkipPhaseCommand implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card effect;
++
++        private ExpireSkipPhaseCommand(final Card effect) {
++            this.effect = effect;
++        }
++
++        @Override
++        public void run() {
++            effect.getGame().getAction().exileEffect(effect);
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(final SpellAbilitySnapshot context) {
++            return new ExpireSkipPhaseCommand(context.map(effect));
++        }
++    }
++
++    /** Deferred entry and expiry must share the same copied effect object. */
++    private static final class BeginSkipPhaseCommand implements SnapshotCommand {
++        private static final long serialVersionUID = 1L;
++        private final Card effect;
++        private final SpellAbility source;
++
++        private BeginSkipPhaseCommand(final Card effect, final SpellAbility source) {
++            this.effect = effect;
++            this.source = source;
++        }
++
++        @Override
++        public void run() {
++            effect.getGame().getAction().moveToCommand(effect, source);
++        }
++
++        @Override
++        public SnapshotCommand copyForSnapshot(final SpellAbilitySnapshot context) {
++            return new BeginSkipPhaseCommand(context.map(effect), context.copy(source));
++        }
++    }
+ }

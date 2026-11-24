@@ -1,0 +1,1094 @@
+{
+  "status": "source_registered_sealed_build_pending",
+  "source_commit": "910641cd6bb6bf57552a0c89874a4d9deea7f759",
+  "behavior": "Snapshot-aware skipped-phase entry/expiry callbacks share mapped effect/source identity and execute only in their queue world. Original duration/target scheduling remains unchanged.",
+  "production_files_changed": [
+    "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java"
+  ],
+  "production_sources": 2168,
+  "patch": {
+    "path": "engine/patches/commander-skipped-phase-snapshot.patch",
+    "sha256": "575095953bb021a4e1b6caa790abf29102f67d64dc6d8a1494c4737f649aead1"
+  },
+  "fixture": {
+    "path": "engine/tests/CommanderSkipPhaseDurationTest.java",
+    "sha256": "2ff054a673022cc9b34a88b2ae6c8a82102c64c8da146fcd1a1d1e1e56747ec6"
+  },
+  "normalized_patch_replay": true,
+  "baseline": {
+    "counts": {
+      "total": 15,
+      "passed": 3,
+      "failed": 12,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyOriginalFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesOriginalFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyOriginalFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesOriginalFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyOriginalFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesCopyFirst",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesOriginalFirst",
+        "status": "FAIL"
+      }
+    ],
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-commander-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "b0af10fb37ebc2b9894ffc16e4fe2d66454c6f7c8bd09449949c4836e7c8eb7b",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "07425668197e32bfc50d48cb03503a3fcf3003e5fca027645cc4614b83ff631b",
+      "native_tests": {
+        "total": 2609,
+        "passed": 2609,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "377eec9cacee90ee6dc6f9e276b8d2272def3e735ef3db2e15f19cf52405ee11",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "testng_status": 1,
+    "native_origins": [
+      "forge.game.ability.effects.SkipPhaseEffect",
+      "forge.game.ability.SpellAbilityEffect",
+      "forge.game.phase.PhaseHandler",
+      "forge.ai.simulation.GameCopier",
+      "forge.ai.simulation.GameSimulator",
+      "forge.game.Game",
+      "forge.ai.AiController",
+      "forge.ai.simulation.MultiplayerAttackPlanner"
+    ],
+    "report_sha256": "396e49054cf293ad290db2aa99983f09f533a77e8ef0b95b09225b68ee24d087",
+    "driver_sha256": "22daf1f939c08504a81c7be78c81a7f054ab07d8e810994b544af49571ac28a5",
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\skip-phase-research\\CommanderSkipPhaseDurationTest.java": "2ff054a673022cc9b34a88b2ae6c8a82102c64c8da146fcd1a1d1e1e56747ec6"
+    },
+    "failures": [
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [MAIN2] but found [COMBAT_DECLARE_ATTACKERS]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [COMBAT_DECLARE_ATTACKERS] but found [MAIN2]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [COMBAT_DECLARE_ATTACKERS] but found [MAIN2]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [COMBAT_DECLARE_ATTACKERS] but found [MAIN2]",
+      "java.lang.AssertionError: Printed skip duration must govern the actual combat phase expected [COMBAT_DECLARE_ATTACKERS] but found [MAIN2]"
+    ],
+    "scope": "Paid printed spells, native turn/phase actions, one/two copied worlds and independent advancement. Baseline may fail; never interpret a normal diagnostic exit as all tests passing."
+  },
+  "prototype": {
+    "counts": {
+      "total": 15,
+      "passed": 15,
+      "failed": 0,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesOriginalFirst",
+        "status": "PASS"
+      }
+    ],
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-commander-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "b0af10fb37ebc2b9894ffc16e4fe2d66454c6f7c8bd09449949c4836e7c8eb7b",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "07425668197e32bfc50d48cb03503a3fcf3003e5fca027645cc4614b83ff631b",
+      "native_tests": {
+        "total": 2609,
+        "passed": 2609,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "377eec9cacee90ee6dc6f9e276b8d2272def3e735ef3db2e15f19cf52405ee11",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "testng_status": 0,
+    "native_origins": [
+      "forge.game.ability.effects.SkipPhaseEffect",
+      "forge.game.ability.SpellAbilityEffect",
+      "forge.game.phase.PhaseHandler",
+      "forge.ai.simulation.GameCopier",
+      "forge.ai.simulation.GameSimulator",
+      "forge.game.Game",
+      "forge.ai.AiController",
+      "forge.ai.simulation.MultiplayerAttackPlanner"
+    ],
+    "report_sha256": "2a2a4367780d3a7283dd636a6193ffa00b967415cf57f62e3967f47d77bbc117",
+    "driver_sha256": "375f1962fbb3690f47620243cc77f89ed992febb2ef9d7f660d5245a3e552fe9",
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\skip-phase-research\\CommanderSkipPhaseDurationTest.java": "2ff054a673022cc9b34a88b2ae6c8a82102c64c8da146fcd1a1d1e1e56747ec6"
+    },
+    "failures": [],
+    "scope": "Paid printed spells, native turn/phase actions, one/two copied worlds and independent advancement. Baseline may fail; never interpret a normal diagnostic exit as all tests passing."
+  },
+  "related": {
+    "counts": {
+      "total": 145,
+      "passed": 145,
+      "failed": 0,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.creatureWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.creatureWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.huntWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.huntWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.partialWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.partialWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.playerWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.playerWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.sledWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.sledWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.stackedWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.stackedWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.stepWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.stepWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.tuskerWithStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.BlockingPreventionGameCopyTest.tuskerWithoutStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.cursedMirrorLosesItsTemporaryCopyAndHasteTogether",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.departedCopyIncarnationCannotOverwriteTheNewArtifactsMemory",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.eiganjoTokensLoseOnlyTheirTemporaryHasteAndMenace",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.mirageMirrorReturnsToItsArtifactFrame",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.mirageMirrorReturnsToItsArtifactFrame",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.mirageMirrorReturnsToItsArtifactFrame",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.mirageMirrorReturnsToItsArtifactFrame",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.mirrorweaveRestoresAllAffectedCreaturesInOnlyTheCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.overlappingMirrorFramesBothExpireWithoutRemovingTheOriginalFrames",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.savedCopyMemoryIsReboundAndFiltersOnlyEliminatedOwnersCards",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.savedCopyMemoryIsReboundAndFiltersOnlyEliminatedOwnersCards",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.shapesharerExpiresAtItsControllersNextTurnRatherThanTheNextEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CloneDurationGameCopyTest.vesuvanCopyFrameEndsOnTheCopiedNativeFacedownEvent",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.oneCopyOneSourceRemovingCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.oneCopyOneSourceRemovingOriginal",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.oneCopyTwoSourcesRemovingCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.oneCopyTwoSourcesRemovingOriginal",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.twoCopiesOneSourceRemovingCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.twoCopiesOneSourceRemovingOriginal",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.twoCopiesTwoSourcesRemovingCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadCopyBoundaryTest.twoCopiesTwoSourcesRemovingOriginal",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadDurationCopyTest.oneCopyCopyExpiresFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadDurationCopyTest.oneCopyOriginalExpiresFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadDurationCopyTest.twoCopiesCopyExpiresFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderGoadDurationCopyTest.twoCopiesOriginalExpiresFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.emptyCityTwoCopiesOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.falsePeaceTwoCopiesOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOneCopyOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentOriginalControl",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesCopyFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderSkipPhaseDurationTest.momentTwoCopiesOriginalFirst",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatActiveNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatActiveStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatPendingNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.combatPendingStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.departedNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.departedStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulActiveNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulActiveStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulPendingNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.emrakulPendingStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.expiredNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.expiredStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.factoryHistoryNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.factoryHistoryStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.layerRemovalNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.layerRemovalStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverActiveNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverActiveStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverPendingNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.mindslaverPendingStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapActiveNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapActiveStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapPendingNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.overlapPendingStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.selfControlNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.selfControlStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstActiveNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstActiveStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstPendingNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.ControlTurnGameCopyTest.worstPendingStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.collectedWaitingTriggersKeepTheirOriginalControllerAndMultiplier",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.costReceiptCopiesRetainAliasesAndIndependentConversionMatrices",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.deferredRegistrationKeepsItsOriginalLifetime",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.deferredRegistrationKeepsItsOriginalLifetime",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.delayedSacrificeCreatedDuringEndStepWaitsForTheNextEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.delayedSneakSacrificeTracksTheRightIncarnation",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.delayedSneakSacrificeTracksTheRightIncarnation",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.ephemerateReboundsOnceAndBlinksItsCreatureAgain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.ghostwayReturnsBothRememberedCardsAtTheCopiedEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.ghostwayReturnsBothRememberedCardsAtTheCopiedEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.infuseRegistersItsSlowtripOnlyForTheFollowingTurn",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.kikiTokenIsSacrificedAfterSnapshotEvenWhenItsSourceLeaves",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.kikiTokenIsSacrificedAfterSnapshotEvenWhenItsSourceLeaves",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.kikiTokenIsSacrificedAfterSnapshotEvenWhenItsSourceLeaves",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.kikiTokenIsSacrificedAfterSnapshotEvenWhenItsSourceLeaves",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.pactDebtReachesTheCorrectCopiedPlayersNextUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.pactDebtReachesTheCorrectCopiedPlayersNextUpkeep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.suppressRestoresTheTargetPlayersHandAtThatPlayersNextEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.suppressRestoresTheTargetPlayersHandAtThatPlayersNextEndStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.triggerSuppressionFlagsAreRestoredWithoutSharingTheSet",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.DelayedGameCopyTest.waitingPayloadCopiesHaveMappedReferencesAndIndependentCollections",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.amassNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.amassStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.dyingFalseNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.dyingFalseStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.dyingTrueNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.dyingTrueStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.fogNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.fogStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.historicalCount",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.historicalShield",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenExpiryNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenExpiryStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenStateFalseNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenStateFalseStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenStateTrueNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenStateTrueStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenUseNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.regenUseStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.replayCounter",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.replayResolve",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.schemeHelperNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.schemeHelperStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.starfishNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.starfishStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.unearthFalseNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.unearthFalseStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.unearthTrueNoStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.EffectCleanupGameCopyTest.unearthTrueStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.consumingOneCopyDoesNotChangeAnotherCopiesTurnStack",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.finalFortuneRetainsTheExtraTurnsEndStepLoss",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.laterExtraTurnEffectsResolveBeforeEarlierOnes",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.midExtraTurnSnapshotKeepsTheCurrentTurnFlagAndPhaseCounters",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.moraugPhaseEntryUntapsOnlyTheCopiedPlayersCreatures",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.multipleAssaultsKeepEveryInsertedCombatAndMain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.relentlessAssaultRetainsTheInsertedCombatAndMainPhase",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.savorTheMomentSkipsOnlyTheScheduledUntapStep",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.timeStretchRetainsBothExtraTurnsAndIndependentCounts",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.TurnScheduleGameCopyTest.timeWarpRetainsItsTargetAndTheNormalTurnAfterward",
+        "status": "PASS"
+      }
+    ],
+    "engine": {
+      "forge_version": "2.0.16-583714b-reviewed-commander-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "b0af10fb37ebc2b9894ffc16e4fe2d66454c6f7c8bd09449949c4836e7c8eb7b",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "07425668197e32bfc50d48cb03503a3fcf3003e5fca027645cc4614b83ff631b",
+      "native_tests": {
+        "total": 2609,
+        "passed": 2609,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "377eec9cacee90ee6dc6f9e276b8d2272def3e735ef3db2e15f19cf52405ee11",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "testng_status": 0,
+    "native_origins": [
+      "forge.game.ability.effects.SkipPhaseEffect",
+      "forge.game.ability.SpellAbilityEffect",
+      "forge.game.phase.PhaseHandler",
+      "forge.ai.simulation.GameCopier",
+      "forge.ai.simulation.GameSimulator",
+      "forge.game.Game",
+      "forge.ai.AiController",
+      "forge.ai.simulation.MultiplayerAttackPlanner"
+    ],
+    "report_sha256": "810b552edf2f05017ec6d05ffc928a706ea68452eadb7f5557451e2251d1f856",
+    "driver_sha256": "3d8925b127b06a4f3e2b0a78c711beb7160ae3d54a5165b561ba7e3eb87701a3",
+    "inputs": {
+      "C:\\Program Files\\Java\\jdk-19\\bin\\javac.exe": "9bddef6ac83e3e51e6e9ee9e628204b82c447d9478cb45ed894e664d28c896ba",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\engine-builds\\m2\\org\\testng\\testng\\7.10.2\\testng-7.10.2.jar": "225fd56447f2e5e439db3b483a79cd9f294fad9f357f8352b12ee6a3411ebb15",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\AITest.java": "04cd04a0f1faa37411aa3101a0cd41c3baeb1c856d37f7b3001e46d2ba1a41ff",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\data\\development\\commander-multiplayer-attack-research\\skip-phase-research\\CommanderSkipPhaseDurationTest.java": "2ff054a673022cc9b34a88b2ae6c8a82102c64c8da146fcd1a1d1e1e56747ec6",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\TurnScheduleGameCopyTest.java": "51c2b5f6665c1795efd0dc38aa00db4870ba26a4f6fabb190f3565781f3334fb",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\DelayedGameCopyTest.java": "aa4454d98ed808a4c119863768fe203571fb1726eb780b9f3180582ce4f46756",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\EffectCleanupGameCopyTest.java": "70fb34a25b2dbc0133fa8fb3a25e4313682b2546c31bc794b261057295676070",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\ControlTurnGameCopyTest.java": "152581c329fac95880f835ded0baa4a2c3c05d7c705da7a9f44d976c8f942d0c",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\BlockingPreventionGameCopyTest.java": "a4ba13a8b3c328e68f1a3521e7046505eb01a6ccb0a5d7ed39b3777ea20af641",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CloneDurationGameCopyTest.java": "f231cbfa856e85c801a01f4e66c0b738dc55164fa6773485943d9afebd87b991",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CommanderGoadDurationCopyTest.java": "0cf90e4b65a55c9fc52e605e9ec9b2bbd561516130632de14afcd41d6caa5a1c",
+      "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\tests\\CommanderGoadCopyBoundaryTest.java": "bbf6c8267c366acdc8f62bb37bd670bfbac331dfeba62f802fc63c744b3131d6"
+    },
+    "failures": [],
+    "scope": "Paid printed spells, native turn/phase actions, one/two copied worlds and independent advancement. Baseline may fail; never interpret a normal diagnostic exit as all tests passing."
+  },
+  "source": {
+    "counts": {
+      "total": 1399,
+      "passed": 1399,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_prior_cases": 1384,
+    "new_cases": 15,
+    "methods_unique": 1399,
+    "artifacts": [
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/testng-results.xml",
+        "sha256": "4b2cf8aa57e9fd531166ba54cd82e330a82942e352c4c4cda3c91740381e830c"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/maven-build.log",
+        "sha256": "f517d0f932c1bb171fb9c6ee2a3fef23b18279941292c51c611e947a15c52baa"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/evidence.json",
+        "sha256": "30b2acf222348994c254485a00df39a30601c1810b0e39e10e78226c6364b840"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/production-inputs.json",
+        "sha256": "442f5d6b9399f4f24694d32ca4bc49fe484d413b9d506476ac1f506a2822f7eb"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/test-inputs.json",
+        "sha256": "129ba737a9106cf6e13edcb7e070f3e4f9f173f39a9bc3ab612d64f6a41d478a"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/card-inputs.json",
+        "sha256": "46145f6a00319af829c0a85a1fd0d27f5e88ac2b3148be8f9d09104f032f766a"
+      },
+      {
+        "path": "data/development/commander-multiplayer-attack-research/skip-phase-research/source1399-v1/selection.json",
+        "sha256": "7044c4279efa9007cca679fe10d41ab578b087a587eddb1595ec049c43d7d0de"
+      }
+    ]
+  },
+  "pending_targets": {
+    "sealed_native": 2624,
+    "packaged": [
+      1467,
+      65,
+      194,
+      146
+    ],
+    "packaged_origin_classes": 133,
+    "broader": [
+      4098,
+      256
+    ],
+    "full_live_tests": 45,
+    "full_live_expected_subtests": 2520
+  },
+  "selected_runtime_unchanged": true,
+  "preceding_packaged_timeout_preserved": "engine/departed_commander_history_runtime_evidence.json",
+  "limits": [
+    "Source and isolated native validation only; fresh sealed artifact, independent packaged/broader, complete fixed-seed games and construction still required.",
+    "The preceding commander-history candidate timed out in its unchanged 90s packaged family; no failed gate is overridden.",
+    "All-card rules and strategy correctness remain unproven."
+  ]
+}

@@ -27,7 +27,17 @@ difference.
 
 ## Card coverage
 
-The latest reviewed source fixes a commander-history crash exposed by full games:
+The latest reviewed source corrects skipped-phase start and expiry callbacks in
+copied games. Normally paid Moment of Silence, False Peace and Empty City Ruse
+controls pass in the original; all 12 copied cases fail before the fix and all 15
+pass afterward, including one/two copies advanced in either order. Related
+scheduling/cleanup/goad/control checks pass 145 cases, and the mixed source suite
+passes all 1,399, retaining 1,384 and adding 15. Fresh sealed 2,624, independent
+packaged 1,467/65/194/146, broader 4,098/256 and full-game/catalog validation remain
+pending. The earlier packaged timeout below remains unresolved; no runtime was
+activated. See [skipped-phase evidence](engine/skipped_phase_snapshot_evidence.json).
+
+The preceding commander-history correction fixes a crash exposed by full games:
 a surviving player can retain damage from a commander whose owner has left.
 Copies now preserve that historical source through the shared graph used for
 abilities, instead of requiring a live card or discarding its damage. All 1,384

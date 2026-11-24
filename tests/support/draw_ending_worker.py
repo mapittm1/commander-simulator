@@ -68,6 +68,7 @@ SOURCES = {
     "CommanderForecastPlanningScopeTest": "commander_forecast_planning_scope_test_sha256",
     "CommanderDepartedHistoryTest": "commander_departed_history_test_sha256",
     "CommanderDepartedPaidHistoryTest": "commander_departed_paid_history_test_sha256",
+    "CommanderSkipPhaseDurationTest": "commander_skip_phase_duration_test_sha256",
     "CommanderInspectionAiTest": "commander_inspection_ai_test_sha256",
     "CommanderInspectionKnowledgeTest": "commander_inspection_knowledge_test_sha256",
     "DrawEndingCoverageTest": "draw_ending_test_sha256",
@@ -198,6 +199,7 @@ NATIVE_CLASSES = (
     "forge.ai.AiAttackController",
     "forge.ai.simulation.MultiplayerAttackPlanner",
     "forge.game.ability.effects.GoadEffect",
+    "forge.game.ability.effects.SkipPhaseEffect",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -353,7 +355,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the existing fixed 1452-case packaged family."""
+    """Execute the existing fixed 1467-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

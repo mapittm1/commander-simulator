@@ -38,16 +38,16 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             settings,
             run,
             "draw-endings.json",
-            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 1452},
+            {"draw-ending-summary.json": 1, "draw-ending-methods.json": 1467},
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 1452)
+        self.assertEqual(len({row["method"] for row in methods}), 1467)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
             summary["counts"],
-            {"total": 1452, "passed": 1452, "failed": 0, "skipped": 0},
+            {"total": 1467, "passed": 1467, "failed": 0, "skipped": 0},
         )
         self.assertEqual(summary["testng_status"], 0)
         for key in (
@@ -57,7 +57,7 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         ):
             self.assertEqual(summary[key], 0)
         expected_classes = list(NATIVE_CLASSES)
-        self.assertEqual(len(expected_classes), 132)
+        self.assertEqual(len(expected_classes), 133)
         self.assertEqual(len(set(expected_classes)), len(expected_classes))
         self.assertEqual(
             summary["production_classes_from_packaged_jar"], expected_classes

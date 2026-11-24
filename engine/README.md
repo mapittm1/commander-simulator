@@ -552,3 +552,21 @@ catalog phases have not run for this candidate. Timing probes preserve the
 failed gate, callback setup failure, native stack and an unadopted zone-history
 memo prototype. See [runtime evidence](departed_commander_history_runtime_evidence.json).
 No runtime was activated.
+
+
+## Pending skipped-phase snapshots
+
+`SkipPhaseEffect` used ordinary closures for duration expiry and deferred startup;
+snapshot queues omit closures that cannot declare their copied references. Paid
+Moment of Silence, False Peace and Empty City Ruse expose both outcomes: an
+expired effect can skip a later combat, or a deferred effect can fail to start.
+All three original controls pass; all 12 copied cases fail before correction.
+The two snapshot-aware callbacks share the mapped effect and copy the deferred
+source ability. All 15 unchanged witnesses pass afterward, along with 145
+related and 1,399 mixed source cases. See
+[skipped_phase_snapshot_evidence.json](skipped_phase_snapshot_evidence.json).
+
+Source registration targets sealed 2,624, packaged 1,467/65/194/146 with 133
+verified production origins, broader 4,098/256 and unchanged fixed-seed complete
+games. All those runtime gates remain pending. The previous packaged timeout is
+preserved; the selected combat-reblocking runtime remains unchanged.

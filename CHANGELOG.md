@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct copied skipped-phase callbacks generically: deferred effect entry and
+  expiry now map their effect/source references into the owning snapshot world.
+  Three normally paid original-game controls pass while 12 copied cases fail
+  before correction; all 15 pass afterward. Retain both copy depths and world
+  advancement orders. Related scheduling/cleanup/goad/control checks pass 145,
+  and all 1,399 mixed source cases pass (1,384 retained plus 15 new). Register
+  the patch and fixed fixture for fresh sealed 2,624 and packaged 1,467; keep
+  all full-runtime gates pending and the prior 90s packaged timeout intact.
+  See engine/skipped_phase_snapshot_evidence.json.
+
 - Verify the commander-history candidate with all 2,609 sealed native tests,
   retaining every previous 2,585 method, and independent 4,083 gameplay/256
   serialization checks. Three packaged families pass 65/194/146 cases; preserve
