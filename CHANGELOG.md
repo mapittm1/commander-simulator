@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve an uninstalled generic chained-mana fallback passing all 186 focused
+  and 2,071 source cases, retaining every previous 138/2,023 case. Compare the
+  installed engine's 168/186 result and classify payment, preview and absent-API
+  failures separately. Native costs/stack execution cover chained filters,
+  floating-color seeds and scarce-color allocation. Preserve preview state,
+  RNG/cache isolation, payment metadata and existing reserved-source/lethal-tap
+  policy. Retain the failed compiler, search, preview and policy prototypes and
+  corrected fixtures. Resource limits are unchanged; the bounded search does
+  not prove impossible payments. Fresh registered/runtime gates and complete
+  card/rules/AI support remain pending. See engine/mana_chain_evidence.json.
+
 - Select the validated shared mana-activation runtime after all 138 focused,
   2,023 source and 3,247 native cases pass, retaining every prior 3,142 native
   case. Independent 2,090/65/194/146 packaged checks verify 163 origins; broader

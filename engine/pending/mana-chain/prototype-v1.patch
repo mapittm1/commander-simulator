@@ -1,0 +1,296 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -9,6 +9,7 @@
+ import com.google.common.collect.SetMultimap;
+ import forge.ai.AiCardMemory.MemorySet;
+ import forge.ai.ability.AnimateAi;
++import forge.ai.simulation.GameCopier;
+ import forge.card.ColorSet;
+ import forge.card.MagicColor;
+ import forge.card.mana.ManaAtom;
+@@ -100,6 +101,12 @@
+ 
+     private static List<SpellAbility> previewManaPayment(ManaCostBeingPaid cost, SpellAbility sa,
+             Player payer, boolean effect, Set<Card> reservedCards, boolean checkSacrificeValue) {
++        return previewManaPayment(cost, sa, payer, effect, reservedCards, checkSacrificeValue, true);
++    }
++
++    private static List<SpellAbility> previewManaPayment(ManaCostBeingPaid cost, SpellAbility sa,
++            Player payer, boolean effect, Set<Card> reservedCards, boolean checkSacrificeValue,
++            boolean searchFilters) {
+         Set<Card> taps = AiCardMemory.getMemorySet(payer, MemorySet.PAYS_TAP_COST);
+         Set<Card> sacrifices = AiCardMemory.getMemorySet(payer, MemorySet.PAYS_SAC_COST);
+         Set<ManaCostBeingPaid> unpaid = AiCardMemory.getMemorySet(payer, AiCardMemory.MemorySetMana.UNPAID_COSTS);
+@@ -107,8 +114,11 @@
+         Set<Card> previousSacrifices = sacrifices == null ? Set.of() : new HashSet<>(sacrifices);
+         Set<ManaCostBeingPaid> previousUnpaid = unpaid == null ? Set.of() : new HashSet<>(unpaid);
+         try {
+-            return payManaCost(new ManaCostBeingPaid(cost), sa, payer, true, true, effect,
+-                    Set.copyOf(reservedCards), checkSacrificeValue);
++            return searchFilters
++                    ? payManaCost(new ManaCostBeingPaid(cost), sa, payer, true, true, effect,
++                            Set.copyOf(reservedCards), checkSacrificeValue)
++                    : payManaCostGreedy(new ManaCostBeingPaid(cost), sa, payer, true, true, effect,
++                            Set.copyOf(reservedCards), checkSacrificeValue);
+         } finally {
+             restorePreviewMemory(taps, previousTaps);
+             restorePreviewMemory(sacrifices, previousSacrifices);
+@@ -788,26 +798,8 @@
+         return payManaCost(cost, sa, ai, test, checkPlayable, effect, reservedCards, true);
+     }
+ 
+-    private static List<SpellAbility> payManaCost(final ManaCostBeingPaid cost, final SpellAbility sa,
+-            final Player ai, final boolean test, boolean checkPlayable, boolean effect,
+-            Set<Card> reservedCards, boolean checkSacrificeValue) {
+-        if ((sa.isOffering() && sa.getSacrificedAsOffering() == null) || (sa.isEmerge() && sa.getSacrificedAsEmerge() == null)) {
+-            // nothing was chosen
+-            return null;
+-        }
+-
+-        // A filter's own cost is paid in the middle of another payment, which still needs what it has set aside.
+-        // The filter is among that; if it isn't, the ability is being activated on its own and starts afresh like any other.
+-        if (test || !sa.isManaAbility() || !AiCardMemory.isRememberedCard(ai, sa.getHostCard(), MemorySet.PAYS_TAP_COST)) {
+-            AiCardMemory.clearMemorySet(ai, MemorySet.PAYS_TAP_COST);
+-            AiCardMemory.clearMemorySet(ai, MemorySet.PAYS_SAC_COST);
+-        }
+-        adjustManaCostToAvoidNegEffects(cost, sa.getHostCard(), ai);
+-
+-        List<Mana> manaSpentToPay = test ? new ArrayList<>() : sa.getPayingMana();
+-        List<SpellAbility> paymentList = Lists.newArrayList();
++    private static void prepareManaPoolForPayment(Player ai, SpellAbility sa, boolean effect) {
+         final ManaPool manapool = ai.getManaPool();
+-
+         // Apply color/type conversion matrix if necessary (already done via autopay)
+         if (ai.getControllingPlayer() == null) {
+             manapool.restoreColorReplacements();
+@@ -824,6 +816,212 @@
+             }
+             StaticAbilityManaConvert.manaConvert(manapool, ai, sa.getHostCard(), effect && !sa.isCastFromPlayEffect() ? null : sa);
+         }
++
++    }
++
++    private record FilterSource(SpellAbility original, int index) {
++        SpellAbility find(Game game) {
++            for (Card card : game.getCardsInGame()) {
++                if (card.getId() != original.getHostCard().getId()) continue;
++                List<SpellAbility> abilities = card.getManaAbilities();
++                if (index >= abilities.size()) return null;
++                SpellAbility found = abilities.get(index);
++                return found.getMapParams().equals(original.getMapParams())
++                        && found.getPayCosts().toString().equals(original.getPayCosts().toString()) ? found : null;
++            }
++            return null;
++        }
++    }
++    private record FilterStep(FilterSource source, String choice) { }
++    private record FilterNode(Game game, Player payer, SpellAbility goal, List<FilterStep> steps) { }
++    private record FilterPlan(List<FilterStep> steps, ManaCostBeingPaid paidCost) { }
++
++    /** Plain sources only; native cost/effect execution supplies legality inside each isolated node. */
++    private static List<FilterSource> filterSearchSources(Player payer, Set<Card> reservedCards) {
++        List<FilterSource> result = new ArrayList<>();
++        int paidFilters = 0;
++        boolean coloredActivation = false;
++        for (Card card : CardCollection.combine(payer.getCardsIn(ZoneType.Battlefield),
++                payer.getCardsIn(ZoneType.Hand), payer.getCardsIn(ZoneType.Command))) {
++            List<SpellAbility> abilities = card.getManaAbilities();
++            for (int index = 0; index < abilities.size(); index++) {
++                SpellAbility ability = abilities.get(index);
++                Cost pay = ability.getPayCosts();
++                if (ability.getApi() != ApiType.Mana || ability.getSubAbility() != null || pay == null
++                        || ability.getGrantorStatic() != null || ability.getManaPart() == null
++                        || ability.getManaPart().isSpecialMana()
++                        || ability.getManaPart().getOrigProduced().contains("Chosen")
++                        || pay.getCostParts().stream().anyMatch(part -> !(part instanceof CostPartMana) && !(part instanceof CostTap))
++                        || pay.hasTapCost() && (card.isTapped() || reservedCards.contains(card))) continue;
++                int activation = getManaToActivate(ability);
++                if (activation > 0) {
++                    if (!isFilterManaAbility(ability)) continue;
++                    paidFilters++;
++                    coloredActivation |= !getManaCostToActivate(ability).isPureGeneric();
++                }
++                result.add(new FilterSource(ability, index));
++            }
++        }
++        return paidFilters > 1 || coloredActivation ? result : List.of();
++    }
++
++    private static List<String> filterChoices(SpellAbility ability) {
++        AbilityManaPart part = ability.getManaPart();
++        if (!part.isAnyMana() && !part.isComboMana()) return List.of("");
++        List<String> colors = new ArrayList<>();
++        for (byte color : ManaAtom.MANATYPES) {
++            String symbol = MagicColor.toShortString(color);
++            if (part.canProduce(symbol, ability)) colors.add(symbol);
++        }
++        if (!part.isComboMana()) return colors;
++        int amount = ability.amountOfManaGenerated(false);
++        if (amount <= 0 || amount > 8) return List.of();
++        List<String> choices = new ArrayList<>();
++        addFilterChoices(colors, amount, 0, new ArrayList<>(), choices);
++        return choices;
++    }
++
++    private static void addFilterChoices(List<String> colors, int left, int first,
++            List<String> selected, List<String> choices) {
++        if (choices.size() >= 64) return;
++        if (left == 0) { choices.add(String.join(" ", selected)); return; }
++        for (int index = first; index < colors.size(); index++) {
++            selected.add(colors.get(index));
++            addFilterChoices(colors, left - 1, index, selected, choices);
++            selected.remove(selected.size() - 1);
++        }
++    }
++
++    private static FilterNode filterCopy(FilterNode parent) {
++        GameCopier copier = new GameCopier(parent.game()).withStack(true);
++        Game game = copier.makeCopy(null, parent.payer());
++        Player payer = copier.find(parent.payer());
++        SpellAbility goal = copier.find(parent.goal());
++        copier.release();
++        return new FilterNode(game, payer, goal, parent.steps());
++    }
++
++    /** A false probe refunds partial pool debits too; native true probes already refund themselves. */
++    private static boolean filterPoolCovers(ManaCostBeingPaid cost, SpellAbility ability, Player payer) {
++        List<Mana> spent = new ArrayList<>();
++        boolean paid = payer.getManaPool().payManaCostFromPool(cost, ability, true, spent);
++        if (!paid) payer.getManaPool().refundMana(spent);
++        return paid;
++    }
++
++    private static boolean activateFilterStep(FilterStep step, Game game, Player payer, boolean effect) {
++        SpellAbility ability = step.source().find(game);
++        if (ability == null) return false;
++        ability.setActivatingPlayer(payer);
++        prepareManaPoolForPayment(payer, ability, effect);
++        ManaCostBeingPaid activation = calculateManaCost(ability.getPayCosts(), ability, payer, true, 0, effect);
++        if (!filterPoolCovers(activation, ability, payer) || !ability.canPlay()) return false;
++        ability.getManaPart().setExpressChoice(step.choice());
++        boolean newTap = rememberManaTap(payer, ability);
++        if (!new CostPayment(ability.getPayCosts(), ability).payComputerCosts(new AiCostDecision(payer, ability, effect, true))) {
++            releaseFailedManaTap(payer, ability, newTap);
++            return false;
++        }
++        game.getStack().addAndUnfreeze(ability);
++        return true;
++    }
++
++    /** Bounded native search is an observation of a found plan, never an impossibility certificate. */
++    private static FilterPlan findFilterPlan(ManaCostBeingPaid cost, SpellAbility goal, Player payer,
++            boolean effect, List<FilterSource> sources) {
++        ArrayDeque<FilterNode> queue = new ArrayDeque<>();
++        queue.add(filterCopy(new FilterNode(payer.getGame(), payer, goal, List.of())));
++        int copies = 1;
++        while (!queue.isEmpty() && copies <= 64) {
++            FilterNode node = queue.removeFirst();
++            prepareManaPoolForPayment(node.payer(), node.goal(), effect);
++            ManaCostBeingPaid remaining = new ManaCostBeingPaid(cost);
++            if (filterPoolCovers(remaining, node.goal(), node.payer())) {
++                return new FilterPlan(node.steps(), remaining);
++            }
++            if (node.steps().size() >= Math.min(32, sources.size() * 2 + 2)) continue;
++            for (FilterSource source : sources) {
++                SpellAbility mapped = source.find(node.game());
++                if (mapped == null) continue;
++                mapped.setActivatingPlayer(node.payer());
++                for (String choice : filterChoices(mapped)) {
++                    if (copies >= 64) break;
++                    FilterNode child = filterCopy(node);
++                    copies++;
++                    FilterStep step = new FilterStep(source, choice);
++                    if (!activateFilterStep(step, child.game(), child.payer(), effect)) continue;
++                    List<FilterStep> steps = new ArrayList<>(node.steps());
++                    steps.add(step);
++                    queue.addLast(new FilterNode(child.game(), child.payer(), child.goal(), List.copyOf(steps)));
++                }
++            }
++        }
++        return null;
++    }
++
++    private static List<SpellAbility> payManaCost(final ManaCostBeingPaid cost, final SpellAbility sa,
++            final Player ai, final boolean test, boolean checkPlayable, boolean effect,
++            Set<Card> reservedCards, boolean checkSacrificeValue) {
++        boolean plainGoal = !sa.isManaAbility() && !sa.isOffering() && !sa.isEmerge()
++                && sa.getPayCosts() != null
++                && sa.getPayCosts().getCostParts().stream().allMatch(CostPartMana.class::isInstance);
++        List<FilterSource> sources = plainGoal ? filterSearchSources(ai, reservedCards) : List.of();
++        if (sources.isEmpty()) return payManaCostGreedy(cost, sa, ai, test, checkPlayable, effect, reservedCards, checkSacrificeValue);
++        ManaCostBeingPaid initial = new ManaCostBeingPaid(cost);
++        List<SpellAbility> greedy = test
++                ? payManaCostGreedy(cost, sa, ai, true, checkPlayable, effect, reservedCards, checkSacrificeValue)
++                : previewManaPayment(cost, sa, ai, effect, reservedCards, checkSacrificeValue, false);
++        if (greedy != null) return test ? greedy
++                : payManaCostGreedy(cost, sa, ai, false, checkPlayable, effect, reservedCards, checkSacrificeValue);
++        adjustManaCostToAvoidNegEffects(initial, sa.getHostCard(), ai);
++        FilterPlan plan = findFilterPlan(initial, sa, ai, effect, sources);
++        if (plan == null) return test ? null
++                : payManaCostGreedy(cost, sa, ai, false, checkPlayable, effect, reservedCards, checkSacrificeValue);
++        if (test) {
++            Set<ManaCostBeingPaid> unpaid = AiCardMemory.getMemorySet(ai, AiCardMemory.MemorySetMana.UNPAID_COSTS);
++            if (unpaid != null) unpaid.remove(cost);
++            cost.copyFrom(plan.paidCost());
++            return plan.steps().stream().map(step -> step.source().original()).collect(Collectors.toList());
++        }
++        List<SpellAbility> payments = new ArrayList<>();
++        for (FilterStep step : plan.steps()) {
++            if (!activateFilterStep(step, ai.getGame(), ai, effect)) break;
++            payments.add(step.source().original());
++        }
++        prepareManaPoolForPayment(ai, sa, effect);
++        List<Mana> spent = sa.getPayingMana();
++        if (ai.getManaPool().payManaCostFromPool(cost, sa, false, spent)) {
++            CostPayment.handleOfferings(sa, false, true);
++            return payments;
++        }
++        ai.getManaPool().refundMana(spent);
++        List<SpellAbility> rest = payManaCostGreedy(cost, sa, ai, false, checkPlayable, effect, reservedCards, checkSacrificeValue);
++        if (rest == null) return null;
++        payments.addAll(rest);
++        return payments;
++    }
++
++    private static List<SpellAbility> payManaCostGreedy(final ManaCostBeingPaid cost, final SpellAbility sa,
++            final Player ai, final boolean test, boolean checkPlayable, boolean effect,
++            Set<Card> reservedCards, boolean checkSacrificeValue) {
++        if ((sa.isOffering() && sa.getSacrificedAsOffering() == null) || (sa.isEmerge() && sa.getSacrificedAsEmerge() == null)) {
++            // nothing was chosen
++            return null;
++        }
++
++        // A filter's own cost is paid in the middle of another payment, which still needs what it has set aside.
++        // The filter is among that; if it isn't, the ability is being activated on its own and starts afresh like any other.
++        if (test || !sa.isManaAbility() || !AiCardMemory.isRememberedCard(ai, sa.getHostCard(), MemorySet.PAYS_TAP_COST)) {
++            AiCardMemory.clearMemorySet(ai, MemorySet.PAYS_TAP_COST);
++            AiCardMemory.clearMemorySet(ai, MemorySet.PAYS_SAC_COST);
++        }
++        adjustManaCostToAvoidNegEffects(cost, sa.getHostCard(), ai);
++
++        List<Mana> manaSpentToPay = test ? new ArrayList<>() : sa.getPayingMana();
++        List<SpellAbility> paymentList = Lists.newArrayList();
++        final ManaPool manapool = ai.getManaPool();
++
++        prepareManaPoolForPayment(ai, sa, effect);
+ 
+         // not worth checking if it makes sense to not spend floating first
+         if (manapool.payManaCostFromPool(cost, sa, test, manaSpentToPay)) {
+--- a/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java
++++ b/forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java
+@@ -127,6 +127,15 @@
+      * @param manaCostBeingPaid
+      */
+     public ManaCostBeingPaid(ManaCostBeingPaid manaCostBeingPaid) {
++        copyFrom(manaCostBeingPaid);
++    }
++
++    /** Replace only payment bookkeeping, without sharing mutable shard or X-color state. */
++    public final void copyFrom(ManaCostBeingPaid manaCostBeingPaid) {
++        Objects.requireNonNull(manaCostBeingPaid);
++        if (manaCostBeingPaid == this) return;
++        unpaidShards.clear();
++        xManaCostPaidByColor = null;
+         for (Entry<ManaCostShard, ShardCount> m : manaCostBeingPaid.unpaidShards.entrySet()) {
+             unpaidShards.put(m.getKey(), new ShardCount(m.getValue()));
+         }
