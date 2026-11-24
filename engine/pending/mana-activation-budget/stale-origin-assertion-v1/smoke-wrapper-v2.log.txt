@@ -1,0 +1,27 @@
+uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuFuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"free_casting_run": "26a0cc85e5fb44dea01b5df7bd6701ab"}
+.uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"untap_run": "90542c7691a94261b8578db3e948e472"}
+.uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"battle_combat_run": "255232b8d0704ff4a70b0b53b70f10cf"}
+.
+================================== FAILURES ===================================
+_________ DrawEndingIntegrationTests.test_packaged_draw_ending_rules __________
+
+self = <test_draw_endings_integration.DrawEndingIntegrationTests testMethod=test_packaged_draw_ending_rules>
+
+    def test_packaged_draw_ending_rules(self):
+        """Require every fixed rules method to pass without skips or configuration failures."""
+        settings = read_settings()
+        validate_partitions(TEST_CLASSES)
+        all_methods = []
+        for partition in PARTITIONS:
+>           all_methods.extend(self.check_partition(settings, partition))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_draw_endings_integration.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_draw_endings_integration.py:94: in check_partition
+    self.assertEqual(len(expected_classes), 161)
+E   AssertionError: 163 != 161
+=========================== short test summary info ===========================
+FAILED tests/integration/test_draw_endings_integration.py::DrawEndingIntegrationTests::test_packaged_draw_ending_rules
+1 failed, 3 passed, 706 subtests passed in 97.37s (0:01:37)
+

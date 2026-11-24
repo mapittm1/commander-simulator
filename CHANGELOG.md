@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify the fresh candidate's 3,247 native cases, retaining all previous 3,142,
+  complete production-source parity and changes limited to the two reviewed
+  families. Preserve the first packaged attempt: 706 method results pass, then
+  an overlooked Python assertion expects 161 origins instead of the new 163.
+  Correct that assertion; the complete independent packaged and later gates
+  remain pending. The installed runtime is unchanged.
+
 - Register generic repeated-mana activation-budget and entry-turn snapshot
   corrections after all 138 focused and 2,023 source cases pass. Preserve all
   1,933 immediate cases and the earlier prototype's 48/138 failures. Native

@@ -64,9 +64,11 @@ The repeated-mana correction is now registered after 138 focused and 2,023
 source cases pass, retaining every earlier case. Generic previews account for
 actual and planned activation budgets, including life and sacrifice sources;
 snapshots preserve entry turns so older permanents keep their actual costs.
-The earlier prototype fails 48 of the same 138 controls. Fresh targets are
-3,247 native and 2,090/65/194/146 packaged cases with 163 origins to verify.
-Build, broader, full integration, catalog and installation gates remain pending.
+The earlier prototype fails 48 of the same 138 controls. A fresh candidate
+passes all 3,247 native cases, retaining the previous 3,142, with complete source
+parity and class changes restricted to the two reviewed source families.
+Independent 2,090/65/194/146 packaged cases with 163 origins, broader suites,
+full integration, catalog and installation gates remain pending.
 The installed runtime above is unchanged and affected by these gaps. See
 [activation-budget evidence](engine/mana_activation_budget_evidence.json).
 

@@ -91,7 +91,7 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         ):
             self.assertEqual(summary[key], 0)
         expected_classes = list(NATIVE_CLASSES)
-        self.assertEqual(len(expected_classes), 161)
+        self.assertEqual(len(expected_classes), 163)
         self.assertEqual(len(set(expected_classes)), len(expected_classes))
         self.assertEqual(
             summary["production_classes_from_packaged_jar"], expected_classes
