@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct stale opt-in integration expectations after expanding the registry:
+  require all 1,777 cases and all 145 production origins. Preserve the first
+  packaged run: its 301 first-partition cases passed, but its old 143-class
+  assertion stopped the suite. The three companion groups passed. No gameplay
+  failure or timeout; fresh validation remains required under the corrected
+  test epoch.
+
 - Register generic elemental-action history restoration and the supplementary
   counter/Airbend tests. Combined source validation passes 1,709/1,709, retaining
   all 1,657 prior methods plus six departed-counter, 21 Airbend permission and

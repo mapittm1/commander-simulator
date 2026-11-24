@@ -27,6 +27,13 @@ difference.
 
 ## Card coverage
 
+The first fresh candidate passes all 2,934 native methods and source parity.
+Its first packaged attempt stopped on a stale integration assertion after the
+301-case first partition passed: the registry now has 145 production origins,
+while that assertion still expected 143. Three companion groups passed. The
+assertion and total-case expectations are corrected to 145/1,777; fresh packaged
+and full validation remain required. The failed run is preserved.
+
 The generic elemental-history fix is now registered for a fresh build. Combined
 source validation passes all 1,709 cases, retaining every prior 1,657 and adding
 six departed-counter, 21 Airbend permission and 25 elemental-history cases.
