@@ -35,15 +35,22 @@ retained-callback-view failures in an earlier unpromoted membership experiment;
 its corrected fallback preserves native live views. These are contract tests,
 not full Oracle or legal card-history coverage.
 
-The first full source attempt stopped at Checkstyle on an unused fixture import
-before running tests. The import is corrected; all case bodies and reference
-vectors are unchanged. The expanded 3,363-source / 4,563-native / 3,406-packaged
-suite is pending, with
-1,256 cast cases and 178 required production origins. Linear printing and keyword
-membership experiments still exceed the original 1,271-case / 90-second resolution
-limit (90.016 / 90.015s) and remain unpromoted. The bounded combined profile is a
-diagnostic; estimated allocation volume and partial progress are not a completed
-gate. Production patches and the selected runtime remain unchanged. See [printing/membership evidence](engine/printing_membership_evidence.json).
+The expanded suite passes **3,363 source** and **4,563 native** cases, retaining
+all prior cases and parameters. All 2,168 production sources, 161 test files and
+316 tracked card files match reviewed inputs. Actual two-processor / 2 GiB
+Java-heap checks pass; production class bytes match the previous candidate.
+The normal packaged cast worker passes **1,256 cases** in 45.547 seconds, with
+native method/parameter counters matching and **178 production origins** verified.
+Earlier compiled rule/support classes retain identical bytes. The first source
+attempt's Checkstyle failure and import-only correction are preserved.
+See [printing/membership runtime evidence](engine/printing_membership_runtime_evidence.json).
+
+The full **3,406-case packaged gate remains incomplete**. Linear printing and
+keyword membership experiments still exceed the original 1,271-case / 90-second
+resolution limit (90.016 / 90.015s) and remain unpromoted. Broader/full-game/catalog/
+health/activation checks and complete card rules support remain pending.
+Production patches and the selected runtime are unchanged.
+See [printing/membership contract evidence](engine/printing_membership_evidence.json).
 
 The normal workflow now registers 87 additional contracts: 48 live trigger/devotion
 and 39 filtering cases. Baseline and corrected prototype each pass the same 535

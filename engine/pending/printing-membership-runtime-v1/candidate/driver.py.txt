@@ -1,0 +1,31 @@
+"""Build the complete fixed native suite after source3363 validation."""
+from pathlib import Path
+import sys,json,subprocess,hashlib,time,contextlib,traceback
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+WORK=Path(__file__).resolve().parent;EPOCH=WORK/'printing-import-source-epoch-v1';RUN=WORK/'printing-membership-candidate-v2'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(WORK/'source3363-v2/evidence.json')['counts']==dict(total=3363,passed=3363,failed=0,skipped=0)
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==head and ci['conclusion']=='success'
+frozen=load(EPOCH/'source-frozen-inputs.json');assert all(sha(ROOT/n)==h for n,h in frozen.items())
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+for name in ['source-ci.json','source-frozen-inputs.json','source-epoch.json']:(RUN/name).write_bytes((EPOCH/name).read_bytes())
+args=['tools/build_sticker_engine.py','--source-archive',str(ROOT/'data/coverage-research/forge-583714b.zip'),'--maven-archive',str(ROOT/'data/coverage-research/apache-maven-3.10.0-bin.zip'),'--jdk','C:/Program Files/Java/jdk-19','--runtime',str(ROOT/'data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe')]
+save(RUN/'command.json',args)
+existing={p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir()};started=time.monotonic();status='failed';error=None
+try:
+ sys.argv=args
+ with (RUN/'build-output.log').open('x',encoding='utf-8') as output,contextlib.redirect_stdout(output),contextlib.redirect_stderr(output):builder.main()
+ status='finished'
+except BaseException:
+ error=traceback.format_exc();raise
+finally:
+ new=sorted(p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir() and p.name not in existing)
+ record={'status':status,'elapsed_seconds':round(time.monotonic()-started,3),'new_builds':new,'error':error,'maven_limit_seconds':600,'source_suite_cases':3363,'expected_native_cases':4563}
+ save(RUN/'process.json',record)
+ assert sha(Path(__file__))==sha(RUN/'driver.py.txt');assert all(sha(ROOT/n)==h for n,h in frozen.items())
+ if status=='finished':
+  assert len(new)==1;build=ROOT/'data/engine-builds'/new[0];lock=load(build/'engine-lock.json');assert lock['native_tests']==dict(total=4563,passed=4563,failed=0,skipped=0)
+  save(RUN/'candidate-selection.json',{'build':build.relative_to(ROOT).as_posix(),'config':str(build/'engine-config.json'),'native_counts':lock['native_tests'],'installed':False});print(json.dumps(record),flush=True)

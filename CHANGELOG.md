@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the expanded printing/membership suite: 3,363 source and 4,563 native
+  cases pass with prior cases and parameters retained; 2,168 production sources,
+  161 test files and 316 card files match reviewed inputs. Production class bytes
+  match the prior candidate. The normal packaged cast worker passes 1,256 cases
+  in 45.547 seconds with 178 verified production origins and matching native
+  methods/parameters. Preserve the failed Checkstyle attempt; the full packaged
+  gate, resolution timeout and remaining runtime/rules validation stay open.
+  The selected runtime is unchanged.
+
 - Correct one unused import in the printing regression fixture after the full
   source build stopped at Checkstyle before executing native cases. Preserve the
   failed attempt, align canonical fixture bytes and update the recipe digest;
