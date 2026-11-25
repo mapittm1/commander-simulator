@@ -45,6 +45,20 @@ Earlier compiled rule/support classes retain identical bytes. The first source
 attempt's Checkstyle failure and import-only correction are preserved.
 See [printing/membership runtime evidence](engine/printing_membership_runtime_evidence.json).
 
+The remaining packaged information, combat/snapshot, casting-cost, free-casting,
+untap and Battle families pass **301 / 240 / 338 / 65 / 194 / 146 cases**.
+Every native method and parameter counter matches the sealed build, with packaged
+production origins and restored configuration verified. These checks supplement
+the separately validated 1,256-case cast family; they do not replace resolution.
+
+A bounded CPU/allocation profile identified repeated replacement prechecks as a
+hot path. An event-specific implicit replacement experiment preserves all 616
+existing contracts and 194 untap cases in paired baseline/prototype runs, including
+the pinned printing comparisons, but still times out on the original 1,271-case /
+90-second resolution workload (90.016s). It remains unpromoted; no speedup or full
+rules correctness is established. Allocation sampling estimates volume, not exact
+or retained memory. See [remaining runtime evidence](engine/remaining_runtime_evidence.json).
+
 The full **3,406-case packaged gate remains incomplete**. Linear printing and
 keyword membership experiments still exceed the original 1,271-case / 90-second
 resolution limit (90.016 / 90.015s) and remain unpromoted. Broader/full-game/catalog/

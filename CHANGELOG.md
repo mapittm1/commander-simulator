@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate six pending packaged families: 301 information, 240 combat/snapshot,
+  338 casting-cost, 65 free-casting, 194 untap and 146 Battle cases pass. Native
+  methods/parameters, packaged origins and configuration restoration are verified.
+  Preserve a bounded replacement-hot-path profile and an event-specific implicit
+  precheck experiment: paired baseline/prototype suites pass 616 and 194 cases,
+  but resolution still times out at the original 1,271-case / 90-second limit.
+  The optimization remains unpromoted; the full packaged gate, broader/live checks
+  and comprehensive rules correctness remain incomplete. Update runtime evidence.
+
 - Validate the expanded printing/membership suite: 3,363 source and 4,563 native
   cases pass with prior cases and parameters retained; 2,168 production sources,
   161 test files and 316 card files match reviewed inputs. Production class bytes

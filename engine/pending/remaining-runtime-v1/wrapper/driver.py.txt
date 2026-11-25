@@ -1,0 +1,121 @@
+"""Validate the six pending fixed packaged families without replacing resolution."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import subprocess
+import sys
+import time
+import unittest
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+WORK = Path(__file__).resolve().parent
+EPOCH = WORK / 'remaining-packaged-epoch-v1'
+CANDIDATE = WORK / 'printing-membership-candidate-v2'
+RUN = WORK / 'remaining-packaged-v1'
+PARTITIONS = ('information', 'combat_and_snapshots', 'text_casting_and_costs')
+
+
+def load(path):
+    return json.loads(path.read_bytes())
+
+
+def sha(path):
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+
+worker = sys.argv[1:] == ['--worker']
+assert worker or sys.argv[1:] == []
+frozen = load(EPOCH / 'source-frozen-inputs.json')
+assert all(sha(ROOT / name) == digest for name, digest in frozen.items()
+           if not worker or name != 'config/engine_config.json')
+assert load(CANDIDATE / 'build-audit.json')['production_class_bytes_match_3dfb']
+assert load(CANDIDATE / 'test-card-input-audit-v2.json')['native_case_count'] == 4563
+ci = load(EPOCH / 'source-ci.json')
+assert ci['status'] == 'completed' and ci['conclusion'] == 'success'
+assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == ci['head_sha']
+
+if worker:
+    assert (ROOT / 'config/engine_config.json').read_bytes() == (RUN / 'candidate-config.json').read_bytes()
+    os.environ['COMMANDER_ENGINE_INTEGRATION'] = '1'
+    os.environ['COMMANDER_JAVAC'] = 'C:/Program Files/Java/jdk-19/bin/javac.exe'
+    from commander.engine.forge_config import read_settings
+    from tests.integration.test_draw_endings_integration import DrawEndingIntegrationTests
+    from tests.integration.test_free_casting_integration import FreeCastingIntegrationTests
+    from tests.integration.test_untap_integration import UntapIntegrationTests
+    from tests.integration.test_battle_combat_integration import BattleCombatIntegrationTests
+    from tests.support.draw_ending_partitions import EXPECTED_COUNTS
+
+    assert {name: EXPECTED_COUNTS[name] for name in PARTITIONS} == {
+        'information': 301, 'combat_and_snapshots': 240, 'text_casting_and_costs': 338}
+    settings = read_settings(ROOT / load(CANDIDATE / 'candidate-selection.json')['build'] / 'engine-config.json')
+
+    class PendingDrawPartitions(DrawEndingIntegrationTests):
+        def test_packaged_draw_ending_rules(self):
+            methods = []
+            for name in PARTITIONS:
+                rows = self.check_partition(settings, name)
+                self.assertEqual(len(rows), EXPECTED_COUNTS[name])
+                methods.extend(rows)
+            self.assertEqual(len(methods), 879)
+            self.assertEqual(len(set(methods)), 879)
+
+    suite = unittest.TestSuite([
+        PendingDrawPartitions('test_packaged_draw_ending_rules'),
+        FreeCastingIntegrationTests('test_packaged_free_casting_rules'),
+        UntapIntegrationTests('test_packaged_untap_rules'),
+        BattleCombatIntegrationTests('test_packaged_battle_combat_rules'),
+    ])
+    result = unittest.TextTestRunner(stream=sys.stdout, verbosity=2).run(suite)
+    save(RUN / 'outcome.json', {
+        'successful': result.wasSuccessful(), 'tests_run': result.testsRun,
+        'failures': len(result.failures), 'errors': len(result.errors), 'skipped': len(result.skipped),
+        'case_counts': [301, 240, 338, 65, 194, 146],
+        'scope': 'Six pending families only. Cast1256 already validated separately; original resolution1271/90 remains failed. Not a complete packaged gate.'})
+    assert result.wasSuccessful() and result.testsRun == 4 and not result.skipped
+else:
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)
+    RUN.mkdir()
+    (RUN / 'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    for name in ('source-ci.json', 'source-epoch.json', 'source-frozen-inputs.json'):
+        (RUN / name).write_bytes((EPOCH / name).read_bytes())
+    active = (ROOT / 'config/engine_config.json').read_bytes()
+    existing = {p.name for p in (ROOT / 'data/runs').iterdir() if p.is_dir()}
+    from commander.engine.forge_config import read_settings
+    settings = read_settings(ROOT / load(CANDIDATE / 'candidate-selection.json')['build'] / 'engine-config.json')
+    selector = (json.dumps({'home': str(settings.home), 'java': str(settings.java),
+                            'lock': str(settings.lock_path)}, indent=2) + '\n').encode()
+    (RUN / 'active-config-before.json').write_bytes(active)
+    (RUN / 'candidate-config.json').write_bytes(selector)
+    started = time.monotonic()
+    record = None
+    try:
+        (ROOT / 'config/engine_config.json').write_bytes(selector)
+        with (RUN / 'output.log').open('xb') as output:
+            result = subprocess.run([sys.executable, '-I', str(Path(__file__)), '--worker'],
+                                    cwd=ROOT, stdout=output, stderr=subprocess.STDOUT,
+                                    timeout=420, check=False)
+        record = {'status': 'finished', 'returncode': result.returncode,
+                  'elapsed_seconds': round(time.monotonic() - started, 3)}
+    except subprocess.TimeoutExpired:
+        record = {'status': 'timeout', 'returncode': 1,
+                  'elapsed_seconds': round(time.monotonic() - started, 3)}
+    finally:
+        if (ROOT / 'config/engine_config.json').read_bytes() != selector:
+            raise RuntimeError('Configuration changed; original retained in backup')
+        (ROOT / 'config/engine_config.json').write_bytes(active)
+        assert all(sha(ROOT / name) == digest for name, digest in frozen.items())
+        assert sha(Path(__file__)) == sha(RUN / 'driver.py.txt')
+        if record is not None:
+            record.update({'new_run_directories': sorted(p.name for p in (ROOT / 'data/runs').iterdir()
+                                                         if p.is_dir() and p.name not in existing),
+                           'log_sha256': sha(RUN / 'output.log'), 'configuration_restored': True,
+                           'worker_limit_seconds': 90, 'wrapper_limit_seconds': 420})
+            save(RUN / 'process.json', record)
+            print(json.dumps(record), flush=True)
+    assert record['status'] == 'finished' and record['returncode'] == 0, record

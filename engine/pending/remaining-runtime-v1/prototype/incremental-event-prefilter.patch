@@ -1,0 +1,21 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -840,10 +840,14 @@
+                 || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) {
+             return true; // Unknown table implementations retain native callbacks.
+         }
+-        // Native implicit type/counter replacements cannot handle these events.
+-        if (event == ReplacementType.Tap || event == ReplacementType.ProduceMana) return false;
+-        // These live flags cover every implicit source in the native builder.
+-        return replacementFlags(true) != 0;
++        // Native implicit effects have fixed event modes. Keep their counter reads
++        // live, and avoid inspecting unrelated type/subtype flags for every event.
++        if (event == ReplacementType.Untap) return card.getCounters(CounterEnumType.STUN) > 0;
++        if (event == ReplacementType.DamageDone || event == ReplacementType.Destroy) {
++            return card.getCounters(CounterEnumType.SHIELD) > 0;
++        }
++        if (event == ReplacementType.Moved) return replacementFlags(true) != 0;
++        return false;
+     }
+ 
+     public FCollectionView<ReplacementEffect> getReplacementEffects() {
