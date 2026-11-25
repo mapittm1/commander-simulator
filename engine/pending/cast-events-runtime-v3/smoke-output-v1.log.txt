@@ -1,0 +1,29 @@
+uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"draw_ending_partition": "information", "draw_ending_run": "23691c8a8eb44c6f9205b97959374aab"}
+uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"draw_ending_partition": "combat_and_snapshots", "draw_ending_run": "8795ccd1c40043ae8ead805a8ea65043"}
+uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"draw_ending_partition": "text_casting_and_costs", "draw_ending_run": "363c4f4a63f746809355835846c2d506"}
+Fuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"free_casting_run": "796961fa782143c4b39add4724ae5951"}
+.uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"untap_run": "13e7caf2f8a440909572677f44b4f001"}
+.uuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu{"battle_combat_run": "7af325d1b45e43f698ea043ffa95eb46"}
+.
+================================== FAILURES ===================================
+_________ DrawEndingIntegrationTests.test_packaged_draw_ending_rules __________
+
+self = <test_draw_endings_integration.DrawEndingIntegrationTests testMethod=test_packaged_draw_ending_rules>
+
+    def test_packaged_draw_ending_rules(self):
+        """Require every fixed rules method to pass without skips or configuration failures."""
+        settings = read_settings()
+        validate_partitions(TEST_CLASSES)
+        all_methods = []
+        for partition in PARTITIONS:
+>           all_methods.extend(self.check_partition(settings, partition))
+                               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests\integration\test_draw_endings_integration.py:43: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _
+tests\integration\test_draw_endings_integration.py:61: in check_partition
+    self.assertEqual(process["returncode"], 0, process)
+E   AssertionError: 1 != 0 : {'status': 'timeout', 'bytes': 20649, 'returncode': 1, 'elapsed_seconds': 90.0, 'support_source_hashes': {'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py': '73b5c0c8c35cd04b5d589b6bab3db5f63054b2280464fafa55b984ca177aaf0a', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py': '70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py': 'a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py': 'ca621c39dd6bd55a3a9100d932633d210761ee053906a431903eed576ec4061c'}}
+=========================== short test summary info ===========================
+FAILED tests/integration/test_draw_endings_integration.py::DrawEndingIntegrationTests::test_packaged_draw_ending_rules
+1 failed, 3 passed, 1272 subtests passed in 337.57s (0:05:37)

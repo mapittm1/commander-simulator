@@ -1,0 +1,59 @@
+"""Instrument a preserved packaged timeout; never substitutes for the failed gate."""
+from pathlib import Path
+import importlib,json,sys,time,threading
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+from tests.support.draw_ending_partitions import PARTITIONS
+RUN=WORK/'resolution1271-diagnostic-v1';ORIGINAL=ROOT/'data/runs/9dca76ba50b943f599e548ef1a08bef4'
+SETTINGS=ROOT/'data/engine-builds/7b3b3424f34143a583f92467a6a172fc/engine-config.json'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=json.loads((ORIGINAL/'rules-inputs.json').read_bytes())
+ assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(name))==digest for name,digest in metadata['inputs'].items())
+ return metadata
+if '--worker' in sys.argv:
+ settings=read_settings(SETTINGS);engine=settings.verify();metadata=verify();require_bridge();java=importlib.import_module('jpype')
+ recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name']
+ assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(archive,ORIGINAL/'rules-classes',dependency))),convertStrings=True)
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(archive),name
+ for name in PARTITIONS['resolution']:assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ start=time.monotonic();events=RUN/'progress.jsonl';stacks=RUN/'stacks.txt';stop=threading.Event()
+ def record(kind,result):
+  name=str(result.getTestClass().getName())+'.'+str(result.getMethod().getMethodName())
+  assert len(name)<512
+  row=json.dumps({'seconds':round(time.monotonic()-start,3),'event':kind,'method':name})+'\n'
+  assert not events.exists() or events.stat().st_size+len(row.encode())<2097152
+  with events.open('a',encoding='utf-8',newline='\n') as f:f.write(row)
+ def sample():
+  for i in range(8):
+   if stop.wait(10):return
+   lines=['seconds='+str(round(time.monotonic()-start,3))]
+   for entry in java.JClass('java.lang.Thread').getAllStackTraces().entrySet():
+    frames=[str(f) for f in entry.getValue()]
+    if any('forge.' in f for f in frames):lines.extend([str(entry.getKey()),*frames[:48]])
+   text='\n'.join(lines)[:16000]+'\n'
+   with stacks.open('a',encoding='utf-8',newline='\n') as f:f.write(text)
+ observer=java.JProxy('org.testng.ITestListener',dict={name:(lambda result,kind=kind:record(kind,result)) for name,kind in [('onTestStart','START'),('onTestSuccess','PASS'),('onTestFailure','FAIL'),('onTestSkipped','SKIP'),('onTestFailedButWithinSuccessPercentage','PARTIAL'),('onTestFailedWithTimeout','TIMEOUT')]}|{'onStart':lambda context:None,'onFinish':lambda context:None})
+ thread=threading.Thread(target=sample,daemon=True);thread.start()
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.addListener(observer)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in PARTITIONS['resolution']]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+ try:runner.run()
+ finally:stop.set()
+ counts,methods=packaged_rules.test_results(listener);verify()
+ save(RUN/'outcome.json',{'counts':counts,'methods':methods,'engine':engine,'diagnostic_only':True,'runner_sha256':file_hash(Path(__file__))})
+ java.shutdownJVM()
+else:
+ assert len(sys.argv)==1;verify();RUN.mkdir();settings=read_settings(SETTINGS)
+ frozen=json.loads((WORK/'cast-events-candidate-v3/source-frozen-inputs.json').read_bytes());assert all(file_hash(ROOT/n)==v for n,v in frozen.items())
+ (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert all(file_hash(ROOT/n)==v for n,v in frozen.items());assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ rows=[json.loads(line) for line in (RUN/'progress.jsonl').read_text(encoding='utf-8').splitlines()] if (RUN/'progress.jsonl').exists() else []
+ print(json.dumps({'process':result,'events':len(rows),'last_events':rows[-6:],'diagnostic_only':True}),flush=True)

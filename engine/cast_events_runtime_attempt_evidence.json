@@ -1,0 +1,187 @@
+{
+  "scope": "Fresh cast-event build passed native/source/binary audit; independent packaged gate FAILED its unchanged resolution deadline. Diagnostic results do not substitute for that failed gate. Complete card/rules coverage remains incomplete.",
+  "build_id": "7b3b3424f34143a583f92467a6a172fc",
+  "build_head": "2a5ae0499bca7c58d377fcb6a2275d21cdca4a1d",
+  "build_ci": {
+    "id": 45517860228,
+    "head_sha": "2a5ae0499bca7c58d377fcb6a2275d21cdca4a1d",
+    "status": "completed",
+    "conclusion": "success",
+    "observed_separately_before_native_epoch": true
+  },
+  "native_counts": {
+    "total": 3935,
+    "passed": 3935,
+    "failed": 0,
+    "skipped": 0
+  },
+  "native_retained": {
+    "selected": 3295,
+    "first_failed_build_cases": 3877,
+    "prior_green_build": 3899
+  },
+  "normalized_production_source_parity": 2168,
+  "binary_changed_families": 8,
+  "binary_changed_class_count": 20,
+  "binary_added_classes": [],
+  "binary_removed_classes": [
+    "forge/ai/ComputerUtilCost$1.class"
+  ],
+  "cards_and_profiles_unchanged": true,
+  "packaged_gate": {
+    "status": "failed",
+    "tests_passed": 3,
+    "tests_failed": 1,
+    "completed_subtests": 1272,
+    "completed_draw_groups": {
+      "information": 301,
+      "combat_and_snapshots": 228,
+      "text_casting_and_costs": 338
+    },
+    "resolution": {
+      "expected": 1271,
+      "status": "timeout",
+      "seconds": 90.0,
+      "run_id": "9dca76ba50b943f599e548ef1a08bef4"
+    },
+    "cast_events": {
+      "expected": 640,
+      "status": "not_run_after_resolution_failure"
+    },
+    "other_families_passed": {
+      "free": 65,
+      "untap": 194,
+      "battle": 146
+    },
+    "configuration_restored": true
+  },
+  "diagnostic": {
+    "purpose": "Changed diagnostic observer adds per-method timing and bounded Java stack samples to the same1271-case group; no heap/CPU/time increases. Not a gate retry.",
+    "process": {
+      "status": "timeout",
+      "bytes": 20649,
+      "returncode": 1,
+      "elapsed_seconds": 90.016
+    },
+    "method_events": {
+      "START": 1077,
+      "PASS": 1076
+    },
+    "last_events": [
+      {
+        "seconds": 88.109,
+        "event": "PASS",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.rejectedPaidWaterbendDepth0"
+      },
+      {
+        "seconds": 88.109,
+        "event": "START",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.rejectedPaidWaterbendDepth1"
+      },
+      {
+        "seconds": 88.141,
+        "event": "PASS",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.rejectedPaidWaterbendDepth1"
+      },
+      {
+        "seconds": 88.141,
+        "event": "START",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.rejectedPaidWaterbendDepth2"
+      },
+      {
+        "seconds": 88.172,
+        "event": "PASS",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.rejectedPaidWaterbendDepth2"
+      },
+      {
+        "seconds": 88.172,
+        "event": "START",
+        "method": "forge.ai.CommanderWaterbendPaymentTest.reserveArtifactManaDepth0"
+      }
+    ],
+    "findings": "Progress continued through1076 methods. Samples show game copying, combat planning and native payment/replacement checks rather than a single stuck method. More profiling and implementation work required.",
+    "prior_selected_resolution_seconds": 85.437
+  },
+  "selected_runtime_unchanged": "forge-583714b-mana-chain-reviewed",
+  "remaining_gates": [
+    "Resolve performance under the existing resolution1271/90s gate.",
+    "Unrun cast_events640 group.",
+    "Broader5409/256, full45/3831, catalog and health.",
+    "No activation."
+  ],
+  "artifacts": {
+    "engine/pending/cast-events-runtime-v3/audit_build_v1.py.txt": "13068bb3b35ecb779d4618f32f17a72cee3e289b5e9ed906a8c6b2a58aaf2ff0",
+    "engine/pending/cast-events-runtime-v3/audit_packaged_v1.py.txt": "1a0d6628a285e7035784a166b13e3b6cd6c7438da690c26ed5f91bcb2eaf6dd0",
+    "engine/pending/cast-events-runtime-v3/build-audit.json": "769a679418aa84a6b2727b952fd3cf7fab04dc5d148abc5d8973cbb7c635ec7d",
+    "engine/pending/cast-events-runtime-v3/build-driver-inputs.json": "952910935f0cf5ff9eefcb7f55c782d3be41e104bd93cf433862dccb8b69e358",
+    "engine/pending/cast-events-runtime-v3/build-output.log.txt": "5fcf096d6c3dbaf12d8c0b683f9dc070b2519ce33d98cdc2c3818b01ece7603c",
+    "engine/pending/cast-events-runtime-v3/build-selection.json": "2db302e1a1812394e10b97f4e834e90f5af3ed467544106faa4cd4f814be273b",
+    "engine/pending/cast-events-runtime-v3/candidate-selection.json": "4581d475717250030e8a8fd3f674c076b97255d7c15c3f5c79ede36e8bd24158",
+    "engine/pending/cast-events-runtime-v3/native-testng-results.xml": "17bc5fdf821626653751128793bc8d168822f3e153352c4b424157f2673d7a8d",
+    "engine/pending/cast-events-runtime-v3/packaged-driver-inputs-v1.json": "4566d3c6814caf01b760e0e47eb0b630a170ea42d45f6035ec95b139fbbaebb4",
+    "engine/pending/cast-events-runtime-v3/run_build_v1.py.txt": "8f14b8fb120933abdde6f5d16877f1ba3a58c96f9090447be1e5734d9adfbcf3",
+    "engine/pending/cast-events-runtime-v3/smoke-output-v1.log.txt": "d9bbe608d54efe8e2f770b987e203a3abe2de1fd3641f121d82f1b73847be307",
+    "engine/pending/cast-events-runtime-v3/smoke-process-v1.json": "865cc15aaf1457dd916e2cd98a4c27562a9ee292e8d24cf441a43b58e1aaf53c",
+    "engine/pending/cast-events-runtime-v3/smoke_v1.py.txt": "7b53db47466d6708d531c75c2d2f530dfa70f852d1fff4121267c21f4aeba9a7",
+    "engine/pending/cast-events-runtime-v3/source-ci.json": "7afa1bb6d7d84384c43fcc02760e65adbf4661bb344e558a20099b970539d2af",
+    "engine/pending/cast-events-runtime-v3/source-epoch.json": "ba79670160397a8f3084bf25e6c04a32732f8ac9c199a21b0d0839451b2e7d23",
+    "engine/pending/cast-events-runtime-v3/source-frozen-inputs.json": "14a0d99e1c006bf1f8fab6f8e992e625c6631ea33fcf4c8740c71b97a119b130",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/rules-inputs.json": "375246cbb7abc0a12f483ed849032bdacd8c522bdca5507ddce4d89a2e7fe26b",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/rules-process.json": "f28e9f05aecfa88b0ff301cbf56f61b14d49088bc9fbb2b4f84bd70d18d347f1",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/rules-reports-testng-results.xml": "107b15ad2b327d55cd403d8453544f11ecd1645fada03ec29d0e440600b4f6aa",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/untap-methods.json": "aee3dfb86a9d0e6a4ab984725d712b12f69fd1fc4b0aa91ab9c05af6f6a63fda",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/untap-summary.json": "b0491fa8a0d3f019868490c566c858147737995a7745d571db9257595020c23a",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/untap-worker.log.txt": "0cfe0e7a93bb51c6604744d3129f64c90df7b0e306cd60acecde6c201d980a1e",
+    "engine/pending/cast-events-runtime-v3/13e7caf2f8a440909572677f44b4f001/untap.json": "0935e553c1303de85c2abf5f61c53409a518f109d1ba17e616d1e1d34c6182ce",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/draw-ending-summary.json": "b397b2af45272add7780500381bbe0931b8fdb90830d2b4e9a1ace78aae9f55e",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/draw-ending-worker.log.txt": "bbc2e04980abf310e56f9e4192f1896b4915ebb82352dea96670e67f732c11bc",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/draw-endings.json": "52c5a7fd833c3dc75846344a94e938abc1562ea5054d3123c2fbbe1b457a930c",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/rules-inputs.json": "e41efa5361739d2f3c3f64ae8fb04c271590b28586b121408b14ca7f6ec42a38",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/rules-process.json": "6a74b4f79ce5f44430c05bfde12ee786b795adf28d503c3658ccb880326a341e",
+    "engine/pending/cast-events-runtime-v3/23691c8a8eb44c6f9205b97959374aab/rules-reports-testng-results.xml": "f2aae08abe6b367d4f0b9e72a43f76e96d7c0593bdc980e8727bebd8805fc683",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/draw-ending-summary.json": "202dfcb7b431032148fd65e3d0cff4a45ec327ab90a8c5cbc30111cf36c2b09b",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/draw-ending-worker.log.txt": "57b313cc2622ea7595a04cf2df223a7ede73617e7d195a1ce1db7858f0b687a2",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/draw-endings.json": "3de85409eb86bb1e440a83ce5e8f86b5e38ee6e3bbf96f85586881b68a4051d6",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/rules-inputs.json": "e41efa5361739d2f3c3f64ae8fb04c271590b28586b121408b14ca7f6ec42a38",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/rules-process.json": "9196d3d0597b827123ee61d53acb0253af42fccc28737e1e2d7e9189391e5c14",
+    "engine/pending/cast-events-runtime-v3/363c4f4a63f746809355835846c2d506/rules-reports-testng-results.xml": "afeb34d11c659728404cd6dbcc56002676137a96e27b7b1e890f335c9aeeae8a",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/free-casting-methods.json": "0e20494fc23fb9820c5edc09150839b035532beb6d3d6db57ff7613196d5eae2",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/free-casting-summary.json": "47221ff6a4dc8fd6838beb1fd902a152cb222d6cc56e5d9efc9a5bb343dc82ef",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/free-casting-worker.log.txt": "a0736692d2f96ea1398cc6f34933e68ced7b8f966bb38804e3683196020fd667",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/free-casting.json": "3c3a61d59748b2984aa1ddcaaba7b217ed38b442cdc3ba447dbfde2baf2b64f8",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/rules-inputs.json": "5d55d2f3dbef18ad99c6205f4eeeff15bcdceeb6428bb803043462bdeb6c815c",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/rules-process.json": "ad78ecb4ab46a420b12212ae4406794d713acde190bee15a6c246ece1dd50378",
+    "engine/pending/cast-events-runtime-v3/796961fa782143c4b39add4724ae5951/rules-reports-testng-results.xml": "8e90c07143460e6d4557bdd1255bf16d781de95ecc08bbc15df75f3d3ca4a602",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/battle-combat-methods.json": "6dbcfd74792765019e2cd0929f9b6ac374e59929e92815b843ab1f22d059a655",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/battle-combat-summary.json": "c71e3b76a2994c127ee7ab2857b33bb094c1574f06ebb5063e6c61422f4f030f",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/battle-combat-worker.log.txt": "c725960b176f5f31a9247aa7eb639edfb92c318b3c8b85157d9360317a578005",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/battle-combat.json": "93bfca43ed112873cbbb292c3dc2f3eb8b02955c54ffb185ea452b8f56a8e2d4",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/rules-inputs.json": "5da6dd7aa48d8e4a284ac49d68522fed9c9cc5b5d15e04b886a057c32cc85b7e",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/rules-process.json": "cf0e4519d5533d5fdd5b982ee1c97676f4971e29ac7cb743e3d64d23018a8fbd",
+    "engine/pending/cast-events-runtime-v3/7af325d1b45e43f698ea043ffa95eb46/rules-reports-testng-results.xml": "50cbecfdf3fc3a227305c108bc41a4b3764d924ac920ff33c272b944a4d07401",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/draw-ending-methods.json": "8dc0109aacb1556922f8ac8446b618c699a2fc68f6a7c9622c06ecd56a8b43ca",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/draw-ending-summary.json": "9e55bfbad1d7e01d1a5226e906365d42e00cdc25b7224b48a0150973356e70e0",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/draw-ending-worker.log.txt": "0d271351acefeae708413220aa691418465ca88ad7360142d814c5eccbddc0a9",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/draw-endings.json": "8e2ddad78b5daaa3b228bd26a89752582f06e2fa198dd579e0fa678ef0687a40",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/rules-inputs.json": "e41efa5361739d2f3c3f64ae8fb04c271590b28586b121408b14ca7f6ec42a38",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/rules-process.json": "71d45fb09fe2e02649922e8efe95a9741f1f88331946a6adbec0032aeefaac11",
+    "engine/pending/cast-events-runtime-v3/8795ccd1c40043ae8ead805a8ea65043/rules-reports-testng-results.xml": "eafef4c220b3a0b672a8403f59adaf01a81202f941817771b3f7740eac6efb40",
+    "engine/pending/cast-events-runtime-v3/9dca76ba50b943f599e548ef1a08bef4/draw-ending-worker.log.txt": "762f51c33fce028a34193b3887dd2cf61c9ef05df858461364a30b292464f9c9",
+    "engine/pending/cast-events-runtime-v3/9dca76ba50b943f599e548ef1a08bef4/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/cast-events-runtime-v3/9dca76ba50b943f599e548ef1a08bef4/rules-inputs.json": "e41efa5361739d2f3c3f64ae8fb04c271590b28586b121408b14ca7f6ec42a38",
+    "engine/pending/cast-events-runtime-v3/9dca76ba50b943f599e548ef1a08bef4/rules-process.json": "270dfb5b9024078d3f3be975dcc8acc95d6f3cec12c6cc89b04f38d310a4b864",
+    "engine/pending/cast-events-runtime-v3/resolution1271-diagnostic-v1/driver.py.txt": "27667b76f2e02682b384084df12d0481a9173c6455c6045bc724111d0fb0c9d9",
+    "engine/pending/cast-events-runtime-v3/resolution1271-diagnostic-v1/native.log.txt": "706774d4fa98b27b2d46da69ec75513318c3403e5bdaa8be639058817422fd84",
+    "engine/pending/cast-events-runtime-v3/resolution1271-diagnostic-v1/process.json": "9cb1d3b90412a96a6e962209fa6e61367ac2aac8ce1616881db96f80fa65b87f",
+    "engine/pending/cast-events-runtime-v3/resolution1271-diagnostic-v1/progress.jsonl": "b62f00e00e02c3e0de93615e3ee36310cb0d1f4af712449c7221f28935842e41",
+    "engine/pending/cast-events-runtime-v3/resolution1271-diagnostic-v1/stacks.txt": "b3a09f1dc00691c168afc139e1c8b27a412186047513d7a788b21115368e9afd"
+  }
+}

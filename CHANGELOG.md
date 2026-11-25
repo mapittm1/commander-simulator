@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the fresh 3,935-case native build and source/binary parity audit,
+  retaining all prior cases. Record the failed independent packaged gate:
+  resolution (1,271 expected cases) reached its unchanged 90-second limit;
+  three earlier groups and three other families passed, totaling 1,272 subtests.
+  The 640-case cast-event group was not reached. Preserve an instrumented timing
+  and stack-sampling diagnostic that also timed out after 1,076 passing methods.
+  Keep these failures explicit; no unchanged retry, increased budget or omitted
+  cases. The selected runtime is restored and unchanged, candidate uninstalled;
+  performance investigation and remaining runtime gates are still required.
+
 - Preserve the 3,899-case fresh build and audit, plus the independent packaged
   probe that found a mana-ability admission regression (3/4 pass). Keep that
   runtime uninstalled. Add a generic non-stack action guard while preserving

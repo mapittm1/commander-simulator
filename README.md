@@ -66,6 +66,18 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
+The subsequent fresh build passes all 3,935 native cases, retains all prior
+cases, and matches all 2,168 reviewed production sources. Its independent
+packaged gate remains failed: the unchanged 1,271-case resolution group timed
+out at 90 seconds. The information, combat/snapshot and text/casting/cost groups,
+plus the three other packaged families, passed (1,272 completed subtests).
+The 640-case cast-event group was not reached. An instrumented diagnostic also
+hit the same deadline after 1,076 passing methods; it does not replace the
+failed gate. The timing trace shows work continuing across game copying, combat
+planning and payment checks. The selected runtime is restored and unchanged;
+this candidate is uninstalled. Broader/full-game/catalog gates remain pending.
+See the [preserved runtime attempt](engine/cast_events_runtime_attempt_evidence.json).
+
 The fresh cast-event build passes all 3,899 native cases and its source/binary
 parity audit. An additional independent packaged probe then exposed a real
 regression: a basic mana ability was rejected under an active cast trigger
@@ -80,9 +92,9 @@ Chalice of the Void, and funded/unfunded Monastery Flock face-up actions, using
 native execution and previews across original and twice-copied game states.
 All 850 focused and 2,735 source cases pass, retaining every earlier case. Card
 scripts and AI profiles are unchanged. The updated recipe targets 3,935 native
-and 2,778 independent packaged cases; a fresh build and runtime gates remain
-pending. The selected runtime is unchanged. These tests do not prove complete
-card or rules correctness.
+and 2,778 independent packaged cases. The native build passed; the failed
+packaged deadline and remaining runtime gates are described above. The selected
+runtime is unchanged. These tests do not prove complete card or rules correctness.
 
 See the [generic admission patch](engine/patches/commander-nonstack-admission.patch),
 [58 activation-window/admission controls](engine/tests/CommanderCastWindowTest.java)
@@ -108,8 +120,9 @@ priority cases from the full build now pass, along with every prior focused and
 source case. The correction changes ComputerUtilMana and GameCopier; cards and
 AI profiles are unchanged. The registered recipe now targets 3,899 native cases,
 retaining every prior case, and 2,742 independent packaged cases under unchanged
-resource limits. Those historical registration targets were met by the fresh build; the later
-admission correction above has its own pending build and runtime gates.
+resource limits. The historical native target was met by the fresh 3,899-case build. Its
+independent packaged gates were not completed before the additional admission
+probe found the regression described above.
 
 See the [incremental correction](engine/patches/commander-cast-windows.patch),
 [22 new controls](engine/tests/CommanderCastWindowTest.java) and
