@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the successful fresh 4,085-case native build and full 2,168-source
+  parity audit, retaining all prior native cases. Record the failed independent
+  packaged gate: resolution (1,271 expected cases) times out at its unchanged
+  90-second limit; six completed groups pass 1,284 subtests. The 778-case
+  cast-event group is not reached. Restore the original configuration and keep
+  the candidate uninstalled. Broader/full-game/catalog/activation remain pending;
+  preserve raw results and update README and hashed evidence.
+
 - Register the cache/planning patch and 150 additional fixed native cases,
   targeting 4,085 native and 2,928 packaged checks. Keep every existing partition
   member in order and retain the original 1,271-case resolution deadline. Copy

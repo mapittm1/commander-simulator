@@ -1,0 +1,37 @@
+from pathlib import Path
+import json,os,subprocess,sys,time
+from commander.engine.forge_config import read_settings,file_hash
+root=Path.cwd();work=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/cache-inputs-candidate-v1';history=root/'data/development/commander-blocking-history-research'
+load=lambda p:json.loads(p.read_bytes())
+ci=load(work/'source-ci.json')
+assert ci['status']=='completed' and ci['conclusion']=='success'
+for name,digest in load(work/'packaged-driver-inputs-v1.json').items():
+ assert file_hash(work/name)==digest==file_hash(work/'packaged-driver-snapshots-v1'/name)
+assert load(work/'build-audit.json')['native_retained']==3295
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=root).decode().strip()==ci['head_sha']
+frozen=load(work/'source-frozen-inputs.json')
+assert len(frozen)==load(work/'source-epoch.json')['tracked_count'] and all(file_hash(root/name)==sha for name,sha in frozen.items())
+build=root/load(work/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json')
+assert settings.verify()['native_tests']==dict(total=4085,passed=4085,failed=0,skipped=0)
+active=root/'config/engine_config.json';before=active.read_bytes()
+assert json.loads(before)['home']=='../data/engines/forge-583714b-mana-chain-reviewed'
+backup=work/'active-config-before-smoke-v1.json';assert not backup.exists();backup.write_bytes(before)
+selection=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode()
+environment=dict(os.environ,PYTHONUTF8='1',PYTHONPATH=str(root),COMMANDER_ENGINE_INTEGRATION='1',COMMANDER_JAVAC='C:/Program Files/Java/jdk-19/bin/javac.exe')
+log=work/'smoke-output-v1.log';assert not log.exists();started=time.monotonic()
+try:
+ active.write_bytes(selection)
+ with log.open('wb') as output:
+  result=subprocess.run([sys.executable,'-m','pytest','-q','-s','tests/integration/test_draw_endings_integration.py','tests/integration/test_free_casting_integration.py','tests/integration/test_untap_integration.py','tests/integration/test_battle_combat_integration.py'],cwd=root,env=environment,stdout=output,stderr=subprocess.STDOUT,timeout=420,check=False)
+ record={'status':'finished','returncode':result.returncode,'elapsed_seconds':round(time.monotonic()-started,3),'log_sha256':file_hash(log),'worker_budget_unchanged':90}
+ (work/'smoke-process-v1.json').write_bytes((json.dumps(record,indent=2)+'\n').encode())
+ print(log.read_text(encoding='utf-8')[-2200:])
+ if result.returncode:raise SystemExit(result.returncode)
+except subprocess.TimeoutExpired:
+ record={'status':'timeout','returncode':1,'elapsed_seconds':round(time.monotonic()-started,3),'log_sha256':file_hash(log),'worker_budget_unchanged':90,'wrapper_budget_unchanged':420}
+ (work/'smoke-process-v1.json').write_bytes((json.dumps(record,indent=2)+'\n').encode())
+ raise
+finally:
+ if active.read_bytes()!=selection:raise RuntimeError('Configuration changed during smoke; original preserved in backup')
+ active.write_bytes(before)
+ assert all(file_hash(root/name)==sha for name,sha in frozen.items())

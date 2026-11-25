@@ -1,0 +1,40 @@
+from pathlib import Path
+import json,os,subprocess,sys,time
+from commander.engine.forge_config import read_settings,file_hash
+root=Path.cwd();work=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/cache-inputs-candidate-v1';history=root/'data/development/commander-blocking-history-research';logs=root/'data/coverage-research'
+load=lambda p:json.loads(p.read_bytes())
+frozen=load(work/'source-frozen-inputs.json');assert len(frozen)==load(work/'source-epoch.json')['tracked_count'] and all(file_hash(root/n)==h for n,h in frozen.items())
+assert load(work/'smoke-process-v1.json')['returncode']==0
+for name,digest in load(work/'full-driver-inputs-v1.json').items():
+ assert file_hash(work/name)==digest==file_hash(work/'full-driver-snapshots-v1'/name)
+assert load(work/'packaged-evidence-v1.json')['status']=='normal_packaged_grouped_gate_passed_full_live_pending'
+
+ci=load(work/'source-ci.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+assert subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()==ci['head_sha']
+assert not subprocess.check_output(['git','status','--porcelain=v1'])
+broad=load(work/'native-test-evidence-v1.json');assert broad['suites']['gameplay']['passed']==5529 and broad['suites']['serialization']['passed']==256
+build=root/load(work/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json');engine=settings.verify()
+active=root/'config/engine_config.json';before=active.read_bytes();assert before==(work/'active-config-before-smoke-v1.json').read_bytes()
+backup=work/'active-config-before-live-v1.json';assert not backup.exists();backup.write_bytes(before)
+selection=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode()
+env=dict(os.environ,PYTHONUTF8='1',PYTHONPATH=str(root),COMMANDER_ENGINE_INTEGRATION='1',COMMANDER_INTERACTION_INTEGRATION='1',COMMANDER_JAVAC='C:/Program Files/Java/jdk-19/bin/javac.exe')
+records={}
+try:
+ active.write_bytes(selection)
+ for tag,command,timeout in [
+  ('health',[sys.executable,'commander_simulator.py','engine-check'],120),
+  ('live',[sys.executable,'-m','pytest','-q','-s','tests/integration'],1800),
+  ('catalog',[sys.executable,'commander_simulator.py','engine-card-probe'],300),
+ ]:
+  log=logs/('commander-mana-cache-inputs-candidate-v1-'+tag+'.txt');assert not log.exists();started=time.monotonic()
+  with log.open('wb') as out:result=subprocess.run(command,cwd=root,env=env,stdout=out,stderr=subprocess.STDOUT,timeout=timeout,check=False)
+  records[tag]={'status':'finished','returncode':result.returncode,'elapsed_seconds':round(time.monotonic()-started,3),'log_sha256':file_hash(log)}
+  phase=work/('live-'+tag+'-process-v1.json');assert not phase.exists();phase.write_bytes((json.dumps(records[tag],indent=2)+'\n').encode())
+  (work/'live-processes-v1.json').write_bytes((json.dumps(records,indent=2)+'\n').encode())
+  print(json.dumps({'stage':tag,**records[tag]}),flush=True)
+  if result.returncode:print(log.read_text(encoding='utf-8')[-4500:],flush=True);raise SystemExit(result.returncode)
+  assert all(file_hash(root/n)==h for n,h in frozen.items())
+finally:
+ if active.read_bytes()!=selection:raise RuntimeError('Configuration changed during live tests; original preserved in backup')
+ active.write_bytes(before)
+print('All live stages finished; previous reviewed selection restored.',flush=True)

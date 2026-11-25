@@ -27,6 +27,14 @@ difference.
 
 ## Card coverage
 
+The fresh registered follow-up passes all 4,085 native cases and the full
+2,168-source parity audit, retaining every earlier case. Its independent packaged
+gate fails: the unchanged 1,271-case resolution group times out at 90 seconds.
+Six other completed groups pass 1,284 subtests with verified class origins; the
+778-case cast-event group is not reached. The original configuration is restored
+and the candidate remains uninstalled. Broader/full-game/catalog/activation gates
+remain pending. See [runtime attempt evidence](engine/cache_runtime_attempt_evidence.json).
+
 The cache/planning follow-up is now registered for fresh builds with 150 additional
 native controls. The recipe targets 4,085 native and 2,928 packaged cases, with
 174 explicit production-class origins, including the private filter helper.
