@@ -26,7 +26,24 @@ difference.
 
 ## Card coverage
 
-The registered regression suite passes **3,147 source** and **4,347 native** cases,
+A pending generic snapshot correction preserves counters on cards in the command
+zone, graveyard, exile, hand, library and stack, as well as the battlefield.
+The same 448 focused cases produce 430 passes / 18 failures before the correction
+and 448 passes afterward. Counter storage is independent between copies;
+counter-derived statics use the existing reference-remapping pass. No counter
+placement events or new timestamps are emitted. Ordinary copy effects are separate.
+Most counter states are supplied directly; the Lightning Storm stack fixture pays
+and casts the spell but supplies its charge counters directly. These tests do not
+prove complete card histories or full Oracle coverage.
+
+The normal build now registers 48 additional cases: 27 counter-zone, 18 static
+gathering and 3 optional-keyword-metadata controls. Full 3,195-source / 4,395-native /
+3,238-packaged validation is pending; the cast subset is now 1,088 cases. The
+unchanged 1,271-case / 90-second resolution diagnostic still times out (90.016s)
+with this correction. Collector/metadata/static-gather optimizations remain
+unpromoted, and the selected runtime is unchanged. See [counter snapshot evidence](engine/counter_zone_snapshot_evidence.json).
+
+The preceding baseline regression suite passes **3,147 source** and **4,347 native** cases,
 retaining earlier cases and parameter values. All 2,168 production sources match;
 production class bytes match the prior candidate. Source/native resource checks
 verify two JVM processors and a 2 GiB maximum Java heap. The newly expanded

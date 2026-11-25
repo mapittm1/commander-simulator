@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add a pending generic world-copy correction for counters in every card zone,
+  using independent storage without placement events, new timestamps or rebuilding
+  counter statics. Paired 448-case checks improve from 430 pass / 18 fail to all
+  448 passing. Register 48 additional counter-zone/static-gather/opaque-metadata
+  controls in normal workflows (3,195 source / 4,395 native / 3,238 packaged;
+  full validation pending). Preserve the original 1,271-case / 90-second resolution
+  timeout at 90.016 seconds with the changed correction. Direct-state fixture
+  limits and unpromoted metadata/collector experiments remain explicit; the
+  installed engine is unchanged. Preserve exact focused inputs, outcomes and logs
+  in engine/counter_zone_snapshot_evidence.json and its bound artifacts.
+
 - Validate the registered contracts with all 3,147 source and 4,347 native cases
   passing, retaining earlier cases/parameters and matching all 2,168 production
   sources. Production class bytes match the prior candidate; cards/profiles are

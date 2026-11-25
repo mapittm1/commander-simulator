@@ -1,0 +1,46 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -1982,6 +1982,20 @@
+         } else {
+             payment.runCostTrigger(type, params);
+         }
++    }
++
++    /** Copy counter data without placement events, new timestamps, or rebuilding statics. */
++    public final void copySnapshotCountersFrom(final Card original) {
++        final Multiset<CounterType> originalCounters = original.getCounters();
++        if (originalCounters.isEmpty()) {
++            if (!counters.isEmpty()) {
++                counters = HashMultiset.create();
++                view.updateCounters(this);
++            }
++            return;
++        }
++        counters = HashMultiset.create(originalCounters);
++        view.updateCounters(this);
+     }
+ 
+     @Override
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -666,17 +666,15 @@
+                 newCard.addCloneState(e.getValue().copy(newCard, true), e.getKey());
+             }
+ 
+-            Multiset<CounterType> counters = c.getCounters();
+-            if (!counters.isEmpty()) {
+-                newCard.setCounters(HashMultiset.create(counters));
+-            }
+-
+             newCard.setSprocket(c.getSprocket());
+ 
+             newCard.setSVars(c.getSVars());
+             newCard.copyChangedSVarsFrom(c);
+         }
+ 
++        // Counters belong to the snapshot even outside the battlefield.
++        // Counter-derived statics are remapped with the other snapshot references below.
++        newCard.copySnapshotCountersFrom(c);
+         newCard.copySnapshotCastFormFrom(c);
+ 
+         if (zone == ZoneType.Exile && c.getCurrentStateName() == CardStateName.PreparedSpell) {

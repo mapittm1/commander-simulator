@@ -1,0 +1,85 @@
+{
+  "scope": "Pending generic world-snapshot correction. Focused evidence only; full source/native/packaged and deployment gates remain required.",
+  "baseline_head": "660b69b37c44cb0b7485df843c62e077ce85fcb9",
+  "baseline_build": "e4834adf80e444c29dabfc473f48a17c",
+  "baseline_focused_counts": {
+    "total": 448,
+    "passed": 430,
+    "failed": 18,
+    "skipped": 0
+  },
+  "corrected_focused_counts": {
+    "total": 448,
+    "passed": 448,
+    "failed": 0,
+    "skipped": 0
+  },
+  "failure_contract": "16 non-battlefield counter-copy failures plus 2 manabond hidden-static failures at copy depths 1/2; 430 controls pass unchanged.",
+  "correction": "Copy independent raw counter storage for every snapshot card, outside the battlefield-only branch; remap counter statics through the existing snapshot-reference pass. Do not emit placement events or create timestamps. Ordinary copy effects unchanged.",
+  "fixture_limits": [
+    "Most zone states use direct counter setup; hand/library counters are synthetic snapshot contracts, not legal placement histories.",
+    "Lightning Storm is actually paid and cast with three Mountains, then two charge counters are supplied directly; no claim of testing charge-counter activation history or full damage resolution.",
+    "Callback/static-command controls attach their custom callback after copying, not proof of arbitrary anonymous callback serialization.",
+    "Optional-metadata fixture uses fixed bounded local class bytes; it protects native fallback against an unpromoted optimization, not an installed-engine regression."
+  ],
+  "registered_counts": {
+    "source": 3195,
+    "native": 4395,
+    "packaged": 3238,
+    "cast_events": 1088,
+    "resolution": 1271
+  },
+  "registered_new_cases": {
+    "CommanderKeywordMetadataFailureTest": 3,
+    "CommanderStaticGatherTest": 18,
+    "CommanderCardCounterZoneCopyTest": 27
+  },
+  "resolution_diagnostic": {
+    "status": "timeout",
+    "bytes": 20649,
+    "returncode": 1,
+    "elapsed_seconds": 90.016
+  },
+  "runtime_status": "Selected mana-chain runtime unchanged; correction not installed. Original resolution gate remains 1271 cases / 90 seconds. No collector, CPU, heap or partition changes promoted.",
+  "artifacts": {
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/process.json": "4188c77b760184810105247fc1158a9fb3e651b74498e3de2d88cf19fbe747db",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/outcome.json": "0042349bed25f777b08a8144d1eaa7a8ef1a26e0e2762a1a114dc87f1ecd950f",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/inputs.json": "ef5db9249fa442f2747424b16b4e087a58889065cbcf474c7ef95056b9a9e951",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/driver.py.txt": "46d85755f3c1168d2db5db69fd261968b5b365d0ae9d212929b3d22d2b2106b2",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/test-classes.json": "dde1bd8b20eb5bcb47fe3e1d42d303ac6aab8d46e3a85e4b991a74d2ff9376f1",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/native.log": "c7a4a586ba30d07a1eddf95af4fea30357e51ec207c1e2847dff53cf987a18cb",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/compile-process.json": "6ebed4651e0b7069a8a9565ecc77c6c69b02f7635680897a392403473478846f",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/process.json": "6350d09d6f53e5d6837a2cafd1c557722009c5eb25eb830933bc7312f75fc495",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/outcome.json": "168c70d790d81a55b7d0f6139d75d0e15859d47f7e5f085fa316255d2d5b1ccf",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/inputs.json": "ef5db9249fa442f2747424b16b4e087a58889065cbcf474c7ef95056b9a9e951",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/driver.py.txt": "46d85755f3c1168d2db5db69fd261968b5b365d0ae9d212929b3d22d2b2106b2",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/test-classes.json": "dde1bd8b20eb5bcb47fe3e1d42d303ac6aab8d46e3a85e4b991a74d2ff9376f1",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/native.log": "a833ee572797a76149e38b1e4243bb6dc913d6ba746225d0b7801e7e81dca1b0",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/compile-process.json": "efdf04f7dcc3b59e619063eab7144f9d8558e6c844f7f6354ed1c87a237fcd68",
+    "engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/process.json": "9cb1d3b90412a96a6e962209fa6e61367ac2aac8ce1616881db96f80fa65b87f",
+    "engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/driver.py.txt": "84133e58a5e798f531548f613b8b96a950bf99e336de416a0a82b7125b98b1b8",
+    "engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/native.log": "27d681065e8d097a1a9e57d63ab4f7c488439a02222206b899695a7b6d8b91b1",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/process.json": "378bae719368e5b7029e49607226e414263907ff131072c44f2109b9147009b3",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/outcome.json": "bdb8fe5fe219a09063db4f1a8772617a991f1182d4364fad9492f508c0633a04",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/inputs.json": "7e8c8747edc2cabbdd572ad2e7ee87a7ab71d9bf8e18103a249047063ea24da6",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/driver.py.txt": "cbaee63d2fe7dfc46e45d24b28b5c71364ba8185c04e5089a54907006fb82419",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/test-classes.json": "190ca733af99e5b740a0205338b4c60b983928cd0d0acb9b764a0be2558ad01e",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/native.log": "f4abebf15f2014d6095298ee28abd931298078319afebd00e81f0defb2b1914e",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/compile-process.json": "c6f4645764b4600c9c3364fb904627762ddcf3d8856a334275df8b7acbe8e6f5",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/process.json": "1f59264b1e3a29ee3bc0bf9604e69553b3022a2305c28ba217a964865a772278",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/outcome.json": "739aaf4d475c9c50e15662f850139452efa9cff26e1bfe764c0e9853fab6358b",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/inputs.json": "8eaf76d48b239196b07d5c0cd3fb0d8e321bee34472f439481a0811484ecd25a",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/driver.py.txt": "7609c3755709d83212d898d6d1ca0100dd4839c2f5d8cb4f64de55a998cf787b",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/test-classes.json": "190ca733af99e5b740a0205338b4c60b983928cd0d0acb9b764a0be2558ad01e",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/native.log": "35e1c8dc572a928a5099d8bda77ae75bfefce54e217b39e202165913b5d7ae40",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/compile-process.json": "50c590a738fdada040f9bfa169154929654447ea03a87b8c211d87eb6f11da17",
+    "engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/counter-zone-snapshot-v1/prototype-proposal.json": "5965193b1d75641d7164b51b1b2475063e939b0ac49f1fcf6ec65b102b6d4510",
+    "engine/pending/counter-zone-snapshot-v1/prototype-inputs.json": "6276275d2e8fefa67050ea8399e07deaa17d525fcf1e147ab6f68298f56ccdfc",
+    "engine/pending/counter-zone-snapshot-v1/prototype-compile-process.json": "63ea28c5cfcec948467ac98e8cc9b58d3eeb2e6cbbf70737663198c34bdb02b3",
+    "engine/pending/counter-zone-snapshot-v1/prototype-compile-selection.json": "f46a700157513aa5c6e2f033f7bb5e0e607e70aaf650d665a62da737554bb687"
+  }
+}
