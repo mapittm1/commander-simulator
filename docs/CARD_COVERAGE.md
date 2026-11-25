@@ -1,5 +1,12 @@
 # Card support and evidence
 
+The normal test registries now include 96 additional keyword/untap/replacement
+contracts. Paired baseline and generic early-exit prototype runs pass all 400
+focused cases. Full registered 3,147-source / 4,347-native / 3,190-packaged runs
+remain pending, and the unchanged 1,271-case resolution diagnostic still times
+out at 90.016 seconds. Production patches and selected runtime are unchanged.
+See [registered contract evidence](../engine/replacement_eligibility_evidence.json).
+
 The earlier sticker-capable runtime used the official Forge source snapshot
 [`3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76`](https://github.com/Card-Forge/forge/commit/3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76),
 the reviewed Wicker Picker implementation from

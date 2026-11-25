@@ -114,6 +114,8 @@ SOURCES = {
     "CommanderReplacementPresenceTest": "commander_replacement_presence_test_sha256",
     "CommanderLiveTraitMutationTest": "commander_live_trait_mutation_test_sha256",
     "CommanderKeywordTraitPresenceTest": "commander_keyword_trait_presence_test_sha256",
+    "CommanderUntapPresenceTest": "commander_untap_presence_test_sha256",
+    "CommanderReplacementEligibilityTest": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
@@ -455,7 +457,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3094-case packaged family."""
+    """Execute the fixed 3190-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

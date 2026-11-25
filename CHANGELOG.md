@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 96 additional verified native contracts in the normal source/build/
+  packaged workflows: 24 keyword, 21 untap and 51 all-event replacement eligibility
+  cases. Paired baseline/prototype checks pass all 400 focused cases. Preserve
+  invalid fixture attempts separately and document their corrected preconditions;
+  do not classify harness failures as engine defects. Full 3,147-source /
+  4,347-native / 3,190-packaged runs remain pending. Preserve the unchanged
+  1,271-case resolution timeout at 90.016 seconds; keep production patches and
+  selected runtime unchanged.
+
 - Add 21 pending native untap controls for live callbacks, intrinsic/keyword/merged
   replacements, and actual stun-counter consumption across copy depths 0/1/2.
   Baseline and generic untap prototype both pass all 349 focused cases, retaining

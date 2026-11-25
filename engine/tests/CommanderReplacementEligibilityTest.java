@@ -1,0 +1,161 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.card.CardStateName;
+import forge.card.CardType;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.card.CardState;
+import forge.game.card.CardTraitChanges;
+import forge.game.card.CounterEnumType;
+import forge.game.keyword.KeywordInterface;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.replacement.ReplacementEffect;
+import forge.game.replacement.ReplacementHandler;
+import forge.game.replacement.ReplacementType;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Conservative admission must retain every event exposed by the native builder. */
+public class CommanderReplacementEligibilityTest extends AITest {
+    private Player actor(Game game) { return game.getPlayers().getFirst(); }
+    private Game setup() {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int index = 0; index < 4; index++) {
+            seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("eligibility-" + index, null)));
+        }
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Replacement eligibility"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int index = 0; index < 20; index++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        addCardToZone("Forest", actor(game), ZoneType.Battlefield);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(game), 5);
+        game.getAction().checkStaticAbilities(false); game.getTriggerHandler().resetActiveTriggers();
+        return game;
+    }
+    private Card subject(Game game, String scenario) {
+        if (scenario.endsWith("Split")) return actor(game).getCardsIn(ZoneType.Hand).getFirst();
+        return actor(game).getCardsIn(ZoneType.Battlefield).getFirst();
+    }
+    private ReplacementEffect drawEffect(Card card) {
+        return ReplacementHandler.parseReplacement("Event$ Draw | ActiveZones$ Battlefield | ValidPlayer$ You | Layer$ CantHappen", card, true);
+    }
+    private void configure(Game game, String scenario) {
+        Card card = scenario.endsWith("Split") ? addCardToZone("Fire // Ice", actor(game), ZoneType.Hand) : subject(game, scenario);
+        CardState state = card.getCurrentState();
+        switch (scenario) {
+            case "plain": break;
+            case "shield": card.setCounters(CounterEnumType.SHIELD, 1); break;
+            case "stun": card.setCounters(CounterEnumType.STUN, 1); break;
+            case "finality": card.setCounters(CounterEnumType.FINALITY, 1); break;
+            case "planeswalker": card.setCounters(CounterEnumType.LOYALTY, 3); state.setBaseLoyalty("3"); state.setType(CardType.parse("Planeswalker", false)); state.updateTypes(); break;
+            case "battle": card.setCounters(CounterEnumType.DEFENSE, 5); card.setProtectingPlayer(game.getPlayers().get(1)); state.setBaseDefense("5"); state.setType(CardType.parse("Battle", false)); state.updateTypes(); break;
+            case "saga": state.setType(CardType.parse("Enchantment - Saga", false)); state.updateTypes(); break;
+            case "readAhead":
+                state.setType(CardType.parse("Enchantment - Saga", false)); state.updateTypes();
+                state.addIntrinsicKeyword("Read ahead", false); card.updateKeywordsCache(); break;
+            case "adventure": state.setType(CardType.parse("Instant - Adventure", false)); break;
+            case "omen": state.setType(CardType.parse("Instant - Omen", false)); break;
+            case "vengeance": state.setType(CardType.parse("Instant - Vengeance", false)); break;
+            case "keyword":
+                KeywordInterface keyword = card.addIntrinsicKeyword("Flying");
+                keyword.getReplacements().add(drawEffect(card)); card.updateKeywordsCache(); break;
+            case "traits":
+                card.addChangedCardTraits(new CardTraitChanges(List.of(), List.of(), List.of(drawEffect(card)), List.of(), null), game.getNextTimestamp(), 0L, false); break;
+            case "textTraits":
+                card.getChangedCardTraitsByText().put(game.getNextTimestamp(), 0L, new CardTraitChanges(List.of(), List.of(), List.of(drawEffect(card)), List.of(), null)); break;
+            case "intrinsic": card.addReplacementEffect(drawEffect(card)); break;
+            case "leftSplit": card.getState(CardStateName.LeftSplit).addReplacementEffect(drawEffect(card)); break;
+            case "rightSplit": card.getState(CardStateName.RightSplit).addReplacementEffect(drawEffect(card)); break;
+            default: throw new IllegalArgumentException(scenario);
+        }
+    }
+    private void checkEvents(Card card, String scenario) {
+        assertNotNull(card, "Synthetic subject must survive native copy state checks: " + scenario);
+        CardState state = card.getCurrentState();
+        List<ReplacementEffect> effects = new ArrayList<>(state.getReplacementEffects());
+        if (scenario.equals("plain") || scenario.equals("readAhead")) assertTrue(effects.isEmpty(), scenario);
+        else assertFalse(effects.isEmpty(), "Non-vacuous native replacement source: " + scenario);
+        for (ReplacementType event : ReplacementType.values()) {
+            boolean nativeMatch = effects.stream().anyMatch(effect -> effect.getMode() == event);
+            if (nativeMatch) assertTrue(state.mayHaveReplacementEffects(event), scenario + " / " + event);
+        }
+        // Null means an unspecified query and must stay conservative.
+        assertTrue(state.mayHaveReplacementEffects(null));
+    }
+    private void check(String scenario, int depth) {
+        Game original = setup(); configure(original, scenario); original.copyLastState();
+        checkEvents(subject(original, scenario), scenario);
+        Game game = original;
+        for (int index = 0; index < depth; index++) {
+            GameCopier copier = new GameCopier(game).withStack(true);
+            game = copier.makeCopy(null, actor(game)); copier.release();
+            checkEvents(subject(game, scenario), scenario);
+        }
+        checkEvents(subject(original, scenario), scenario);
+    }
+    @Test public void plainDepth0() { check("plain", 0); }
+    @Test public void plainDepth1() { check("plain", 1); }
+    @Test public void plainDepth2() { check("plain", 2); }
+    @Test public void shieldDepth0() { check("shield", 0); }
+    @Test public void shieldDepth1() { check("shield", 1); }
+    @Test public void shieldDepth2() { check("shield", 2); }
+    @Test public void stunDepth0() { check("stun", 0); }
+    @Test public void stunDepth1() { check("stun", 1); }
+    @Test public void stunDepth2() { check("stun", 2); }
+    @Test public void finalityDepth0() { check("finality", 0); }
+    @Test public void finalityDepth1() { check("finality", 1); }
+    @Test public void finalityDepth2() { check("finality", 2); }
+    @Test public void planeswalkerDepth0() { check("planeswalker", 0); }
+    @Test public void planeswalkerDepth1() { check("planeswalker", 1); }
+    @Test public void planeswalkerDepth2() { check("planeswalker", 2); }
+    @Test public void battleDepth0() { check("battle", 0); }
+    @Test public void battleDepth1() { check("battle", 1); }
+    @Test public void battleDepth2() { check("battle", 2); }
+    @Test public void sagaDepth0() { check("saga", 0); }
+    @Test public void sagaDepth1() { check("saga", 1); }
+    @Test public void sagaDepth2() { check("saga", 2); }
+    @Test public void readAheadDepth0() { check("readAhead", 0); }
+    @Test public void readAheadDepth1() { check("readAhead", 1); }
+    @Test public void readAheadDepth2() { check("readAhead", 2); }
+    @Test public void adventureDepth0() { check("adventure", 0); }
+    @Test public void adventureDepth1() { check("adventure", 1); }
+    @Test public void adventureDepth2() { check("adventure", 2); }
+    @Test public void omenDepth0() { check("omen", 0); }
+    @Test public void omenDepth1() { check("omen", 1); }
+    @Test public void omenDepth2() { check("omen", 2); }
+    @Test public void vengeanceDepth0() { check("vengeance", 0); }
+    @Test public void vengeanceDepth1() { check("vengeance", 1); }
+    @Test public void vengeanceDepth2() { check("vengeance", 2); }
+    @Test public void keywordDepth0() { check("keyword", 0); }
+    @Test public void keywordDepth1() { check("keyword", 1); }
+    @Test public void keywordDepth2() { check("keyword", 2); }
+    @Test public void traitsDepth0() { check("traits", 0); }
+    @Test public void traitsDepth1() { check("traits", 1); }
+    @Test public void traitsDepth2() { check("traits", 2); }
+    @Test public void textTraitsDepth0() { check("textTraits", 0); }
+    @Test public void textTraitsDepth1() { check("textTraits", 1); }
+    @Test public void textTraitsDepth2() { check("textTraits", 2); }
+    @Test public void intrinsicDepth0() { check("intrinsic", 0); }
+    @Test public void intrinsicDepth1() { check("intrinsic", 1); }
+    @Test public void intrinsicDepth2() { check("intrinsic", 2); }
+    @Test public void leftSplitDepth0() { check("leftSplit", 0); }
+    @Test public void leftSplitDepth1() { check("leftSplit", 1); }
+    @Test public void leftSplitDepth2() { check("leftSplit", 2); }
+    @Test public void rightSplitDepth0() { check("rightSplit", 0); }
+    @Test public void rightSplitDepth1() { check("rightSplit", 1); }
+    @Test public void rightSplitDepth2() { check("rightSplit", 2); }
+}

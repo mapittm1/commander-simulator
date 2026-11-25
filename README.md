@@ -26,6 +26,14 @@ difference.
 
 ## Card coverage
 
+The normal source/build/packaged registries now retain **96 additional contracts**
+(24 keyword, 21 untap, 51 all-event replacement eligibility). Baseline and generic
+early-exit prototype both pass all **400 focused cases**. Full registered source
+(3,147), native (4,347) and packaged (3,190) runs remain pending. The unchanged
+1,271-case resolution diagnostic still times out at 90.016 seconds. Production
+patches and selected runtime are unchanged. See
+[registered contract evidence](engine/replacement_eligibility_evidence.json).
+
 A pending generic untap precheck passes **349 paired focused controls**, retaining
 all 328 earlier cases and adding 21 actual untap/stun/live-callback checks. It
 still times out on the unchanged 1,271-case resolution workload at 90.016 seconds.
