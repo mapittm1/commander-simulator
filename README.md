@@ -26,94 +26,23 @@ difference.
 
 ## Card coverage
 
-The normal source/build/packaged registries now retain **96 additional contracts**
-(24 keyword, 21 untap, 51 all-event replacement eligibility). Baseline and generic
-early-exit prototype both pass all **400 focused cases**. Full registered source
-(3,147), native (4,347) and packaged (3,190) runs remain pending. The unchanged
-1,271-case resolution diagnostic still times out at 90.016 seconds. Production
-patches and selected runtime are unchanged. See
-[registered contract evidence](engine/replacement_eligibility_evidence.json).
+The registered regression suite passes **3,147 source** and **4,347 native** cases,
+retaining earlier cases and parameter values. All 2,168 production sources match;
+production class bytes match the prior candidate. Source/native resource checks
+verify two JVM processors and a 2 GiB maximum Java heap. The newly expanded
+**1,040-case packaged cast subset** passes with 175 production origins verified.
+See [current validation evidence](engine/replacement_contracts_runtime_evidence.json).
 
-A pending generic untap precheck passes **349 paired focused controls**, retaining
-all 328 earlier cases and adding 21 actual untap/stun/live-callback checks. It
-still times out on the unchanged 1,271-case resolution workload at 90.016 seconds.
-An earlier guard-order experiment also times out (90.031 seconds). Neither is
-promoted into the production recipe or selected runtime. See
-[untap diagnostic evidence](engine/untap_presence_diagnostic_evidence.json).
+The full 3,190-case packaged gate remains unmet: the original 1,271-case resolution
+group has a preserved 90-second timeout on the identical production code. It was
+not retried unchanged. The candidate remains uninstalled and the original engine
+configuration is restored. Broader/full-game/catalog/health/activation and complete
+card/rules support remain pending. The generic early-exit optimization remains a
+separate unpromoted prototype.
 
-A pending keyword no-op prototype passes all **328 paired focused controls**,
-including 24 additional callback/read-ahead cases. Its unchanged 1,271-case
-resolution workload still times out at 90.016 seconds. A separate bounded CPU
-profile identifies keyword traversal as a candidate for further investigation;
-no speedup is established. The prototype is uninstalled and the production recipe
-is unchanged. See [diagnostic evidence](engine/keyword_noop_diagnostic_evidence.json).
-
-The keyword callback correction passes all **3,051 source** and **4,251 native**
-cases, retaining every earlier case and parameter. All 2,168 production sources
-match the reviewed snapshot; resource assertions verify two JVM processors and a
-2 GiB maximum Java heap. The correction preserves callbacks from keyword-collection
-subclasses even when their underlying map is empty. Six baseline callback failures
-become passing, alongside all 298 prior focused controls (304 total). See the
-[focused callback evidence](engine/opaque_keyword_traits_evidence.json).
-
-The mandatory independent packaged gate remains failed: the original 1,271-case
-resolution group times out at 90.015 seconds against its unchanged 90-second
-limit. Six completed groups pass 1,284 subtests; the 944-case cast-event group is
-not reached. The original configuration is restored and the candidate remains
-uninstalled. Broader/full-game/catalog/health/activation and complete card/rules
-support remain pending. See [runtime evidence](engine/opaque_keyword_runtime_evidence.json).
-
-The completed intrinsic-cache revision passes all 3,045 source and 4,245 native
-cases, retaining every earlier case/parameter. All 2,168 production sources match,
-and native resource assertions verify two JVM processors and a 2 GiB maximum heap.
-Its independent packaged gate still fails: the original 1,271-case resolution
-group exceeds 90 seconds. Six other groups pass 1,284 subtests; the 938-case
-cast-event group is not reached. The configuration is restored and this candidate
-remains uninstalled. Broader/full-game/catalog/health/activation remain pending.
-See [completed revision evidence](engine/intrinsic_cache_runtime_evidence.json).
-
-The cache simplification removes 66 redundant lines while preserving live guards,
-intrinsic-list stamps, native type/counter flags and independent returned
-collections. All 298 paired controls pass; four table-snapshot serialization
-checks retain identical bytes. This does not establish whole-game serialization
-compatibility or complete card/rules support. See
-[focused cache evidence](engine/intrinsic_cache_evidence.json).
-
-The preceding live-trait candidate passed all **3,045 source** and **4,245 native** cases,
-including 30 new regressions and every retained earlier case. The source/binary
-audit matches all 2,168 production sources. Source/native runs verify two actual
-JVM processors and a 2 GiB maximum Java heap. Mutable keyword/trait entries,
-removal predicates and custom callbacks are evaluated on every read so cached
-ability lists cannot hide their changes. These suites cover selected interaction
-contracts and do not establish complete card or rules support.
-
-The independent packaged gate still fails: the original 1,271-case resolution
-group times out at 90.031 seconds against its unchanged 90-second limit. Six
-completed groups pass 1,284 subtests with verified packaged class origins; the
-938-case cast-event group is not reached. The original configuration is restored,
-the candidate remains uninstalled, and broader/full-game/catalog/health/activation
-validation remains pending. See the
-[latest runtime evidence](engine/live_trait_runtime_evidence.json).
-
-The [focused regression evidence](engine/live_trait_mutation_evidence.json)
-preserves the 30 failing baseline cases, their corrected passes and all 232
-previous focused controls. The first full-source attempt stopped at Checkstyle;
-removing eight unused imports preserved every test body, and the corrected
-3,045-case source run passes.
-
-Earlier evidence remains available for the
-[snapshot views and trait admission](engine/trait_admission_evidence.json),
-[cache registration](engine/cache_registration_evidence.json),
-[cache runtime attempt](engine/cache_runtime_attempt_evidence.json),
-[replacement-cache inputs](engine/replacement_cache_evidence.json), and
-[bounded 4,215-case candidate](engine/bounded_trait_runtime_evidence.json).
-These records do not establish a passing mandatory resolution gate.
-
-Resource-history correction: an earlier 4,214-case Maven build used 32 processors.
-Older Maven “two CPU” labels do not establish two-processor validation. The launcher
-and native resource assertion are corrected; the current source/native reruns
-verify the actual limits. See the
-[resource correction evidence](engine/jvm_build_limits_evidence.json).
+The [changelog](CHANGELOG.md) and [coverage history](docs/CARD_COVERAGE.md) retain
+prior corrections and failed attempts. The earlier 4,214-case processor label was
+incorrect; see the [resource correction](engine/jvm_build_limits_evidence.json).
 
 The selected runtime is `2.0.16-583714b-reviewed-mana-chain`.
 Shared mana planning now searches native game copies for admitted chained-filter

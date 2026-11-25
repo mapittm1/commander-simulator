@@ -1,0 +1,34 @@
+"""Build the frozen reviewed recipe only after exact-head CI success."""
+from pathlib import Path
+import hashlib
+import json
+import subprocess
+import sys
+import time
+
+ROOT=Path.cwd()
+WORK=Path(__file__).resolve().parent
+sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
+load=lambda path:json.loads(path.read_bytes())
+ci=load(WORK/'source-ci.json')
+assert ci['status']=='completed' and ci['conclusion']=='success'
+assert subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()==ci['head_sha']
+assert not subprocess.check_output(['git','status','--porcelain=v1'])
+frozen=load(WORK/'source-frozen-inputs.json')
+assert len(frozen)==load(WORK/'source-epoch.json')['tracked_count'] and all(sha(ROOT/name)==digest for name,digest in frozen.items())
+for name,digest in load(WORK/'build-driver-inputs.json').items():
+    assert sha(WORK/name)==digest==sha(WORK/'build-driver-snapshots'/name)
+assert load(ROOT/'engine/sticker_recipe.json')['native_test_count']==4347
+source_proof=load(WORK.parent/'source3147-v1/evidence.json');assert source_proof['counts']==dict(total=3147,passed=3147,failed=0,skipped=0) and source_proof['actual_jvm_limit_case_passed']
+source_proof_path=WORK.parent/'source3147-v1/evidence.json';source_proof_sha256=sha(source_proof_path)
+existing={path.name for path in (ROOT/'data/engine-builds').iterdir() if path.is_dir()}
+command=[sys.executable,str(ROOT/'tools/build_sticker_engine.py'),'--source-archive',str(ROOT/'data/coverage-research/forge-583714b.zip'),'--maven-archive',str(ROOT/'data/coverage-research/apache-maven-3.10.0-bin.zip'),'--jdk','C:/Program Files/Java/jdk-19','--runtime',str(ROOT/'data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe')]
+log=WORK/'build-output.log';assert not log.exists()
+started=time.monotonic()
+with log.open('xb') as output:
+    result=subprocess.run(command,cwd=ROOT,stdout=output,stderr=subprocess.STDOUT)
+new=sorted(path.name for path in (ROOT/'data/engine-builds').iterdir() if path.is_dir() and path.name not in existing)
+record={'returncode':result.returncode,'elapsed_seconds':round(time.monotonic()-started,3),'new_build_directories':new,'log_sha256':sha(log),'source_proof_sha256':source_proof_sha256,'source_proof_unchanged':sha(source_proof_path)==source_proof_sha256,'frozen_implementation_unchanged':all(sha(ROOT/name)==digest for name,digest in frozen.items())}
+p=WORK/'build-selection.json';assert not p.exists();p.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps(record),flush=True)
+assert result.returncode==0 and len(new)==1 and record['frozen_implementation_unchanged'] and record['source_proof_unchanged'],record

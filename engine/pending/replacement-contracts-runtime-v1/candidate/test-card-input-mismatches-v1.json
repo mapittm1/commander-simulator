@@ -1,0 +1,14 @@
+{
+  "status": "input_comparison_failed",
+  "mismatches": [
+    {
+      "kind": "test",
+      "path": "forge-gui-desktop/src/test/java/forge/ai/CommanderReplacementCacheInputsTest.java",
+      "old_sha256": "1e22c4af7a4600de13748c2d5b0084f5202fc7a5acfae66db169a2c0abf49fe4",
+      "new_sha256": "ad59dc6e214fea2dd56999747e3cf48af5218d82cc5fdf72b4547acd53f83ba0",
+      "only_import_lines_differ": true,
+      "diff": "--- source-validation/forge-gui-desktop/src/test/java/forge/ai/CommanderReplacementCacheInputsTest.java\n+++ fresh-native/forge-gui-desktop/src/test/java/forge/ai/CommanderReplacementCacheInputsTest.java\n@@ -3,15 +3,24 @@\n import forge.ai.simulation.GameCopier;\n import forge.card.CardType;\n import forge.deck.Deck;\n-import forge.game.*;\n+import forge.game.Game;\n+import forge.game.GameRules;\n+import forge.game.GameStage;\n+import forge.game.GameType;\n+import forge.game.Match;\n import forge.game.card.Card;\n import forge.game.card.CardState;\n-import forge.game.player.*;\n+import forge.game.player.Player;\n+import forge.game.player.RegisteredPlayer;\n import forge.game.replacement.ReplacementEffect;\n import forge.game.zone.ZoneType;\n-import java.util.*;\n+import java.util.ArrayList;\n+import java.util.Collections;\n+import java.util.List;\n+import java.util.TreeMap;\n import org.testng.annotations.Test;\n-import static org.testng.Assert.*;\n+import static org.testng.Assert.assertEquals;\n+import static org.testng.Assert.assertFalse;\n \n /** A cached replacement list must equal a fresh rebuild of the same state. */\n public class CommanderReplacementCacheInputsTest extends AITest {\n"
+    }
+  ],
+  "scope": "File comparison only; no engine failure or semantic equivalence claim."
+}

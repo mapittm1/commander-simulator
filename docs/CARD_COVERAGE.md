@@ -1,11 +1,20 @@
 # Card support and evidence
 
-The normal test registries now include 96 additional keyword/untap/replacement
-contracts. Paired baseline and generic early-exit prototype runs pass all 400
-focused cases. Full registered 3,147-source / 4,347-native / 3,190-packaged runs
-remain pending, and the unchanged 1,271-case resolution diagnostic still times
-out at 90.016 seconds. Production patches and selected runtime are unchanged.
-See [registered contract evidence](../engine/replacement_eligibility_evidence.json).
+
+The registered contracts pass all **3,147 source** and **4,347 native** cases,
+retaining prior cases/parameters and matching all 2,168 production sources. The
+aligned source/native input audit matches 153 test files and 316 tracked card
+files exactly. Production class bytes match the prior candidate; cards/profiles
+are unchanged. Actual two-processor / 2 GiB JVM assertions pass.
+
+The standalone normal packaged cast subset passes **1,040 cases** with 175
+production origins verified (44.016 worker seconds). The full 3,190-case packaged
+gate remains unmet: the original 1,271-case resolution group has a preserved
+90-second timeout on identical production code and was not retried unchanged.
+The candidate remains uninstalled and the original configuration is restored.
+Broader/full-game/catalog/health/activation and complete card/rules verification
+remain required. See [current evidence](../engine/replacement_contracts_runtime_evidence.json)
+and the [registration evidence](../engine/replacement_eligibility_evidence.json).
 
 The earlier sticker-capable runtime used the official Forge source snapshot
 [`3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76`](https://github.com/Card-Forge/forge/commit/3e6c036e71b05b4d9d035df08b7a0c0dfa30cc76),

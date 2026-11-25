@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the registered contracts with all 3,147 source and 4,347 native cases
+  passing, retaining earlier cases/parameters and matching all 2,168 production
+  sources. Production class bytes match the prior candidate; cards/profiles are
+  unchanged. Actual two-processor / 2 GiB JVM assertions pass. The normal packaged
+  cast subset passes all 1,040 cases with 175 production origins verified in
+  44.016 worker seconds. Preserve an import-alignment audit failure and a wrong-
+  engine packaged driver attempt, their corrections, and exact evidence bytes.
+  Restore the original configuration and leave the candidate uninstalled. Do not
+  retry the unchanged failed 1,271-case / 90-second resolution gate; full packaged,
+  broader/full-game/catalog/health/activation and complete rules support remain
+  pending. Consolidate the README status while retaining historical evidence.
+
 - Register 96 additional verified native contracts in the normal source/build/
   packaged workflows: 24 keyword, 21 untap and 51 all-event replacement eligibility
   cases. Paired baseline/prototype checks pass all 400 focused cases. Preserve
