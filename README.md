@@ -26,6 +26,13 @@ difference.
 
 ## Card coverage
 
+A pending keyword no-op prototype passes all **328 paired focused controls**,
+including 24 additional callback/read-ahead cases. Its unchanged 1,271-case
+resolution workload still times out at 90.016 seconds. A separate bounded CPU
+profile identifies keyword traversal as a candidate for further investigation;
+no speedup is established. The prototype is uninstalled and the production recipe
+is unchanged. See [diagnostic evidence](engine/keyword_noop_diagnostic_evidence.json).
+
 The keyword callback correction passes all **3,051 source** and **4,251 native**
 cases, retaining every earlier case and parameter. All 2,168 production sources
 match the reviewed snapshot; resource assertions verify two JVM processors and a

@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve a pending keyword no-op prototype and 24 additional callback/read-ahead
+  controls: baseline and prototype both pass all 328 focused cases. The unchanged
+  1,271-case resolution workload still times out at 90.016 seconds. Preserve the
+  separate bounded CPU profile and exact artifact hashes; make no speedup or
+  complete rules-support claim. Production recipe and selected runtime unchanged.
+
 - Validate the opaque-keyword callback correction with all 3,051 source and 4,251
   native cases passing, retaining all prior cases/parameters and all 2,168
   production sources. Actual two-processor / 2 GiB JVM assertions pass. Preserve
