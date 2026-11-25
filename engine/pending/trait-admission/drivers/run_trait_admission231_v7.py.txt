@@ -1,0 +1,87 @@
+"""Instrument a preserved packaged timeout; never substitutes for the failed gate."""
+from pathlib import Path
+import importlib,json,sys,time,threading,os,collections,xml.etree.ElementTree as ET,zipfile
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+from tests.support.draw_ending_partitions import PARTITIONS
+BASELINE='--baseline' in sys.argv
+CONTROLS=True
+CLASSES=('forge.gamesimulationtests.util.CommanderSnapshotViewTest','forge.gamesimulationtests.util.PerfPatchUnitTest','forge.gamesimulationtests.util.PerfPatchFollowUpTableTest','forge.card.CommanderSagaTypeTest','forge.ai.CommanderReplacementPresenceTest')
+RUN=WORK/('trait-admission231-baseline-v7' if BASELINE else 'trait-admission231-prototype-v7');ORIGINAL=ROOT/'data/runs/51576bd7d3614c1ea372b8514bcc2f96'
+SETTINGS=ROOT/'data/engine-builds/500dd367a1874bf48b7d26f9cb736fa7/engine-config.json'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=json.loads((ORIGINAL/'rules-inputs.json').read_bytes())
+ assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(name))==digest for name,digest in metadata['inputs'].items())
+ return metadata
+def verify_new_inputs():
+ metadata=json.loads((RUN/'rules-inputs.json').read_bytes())
+ assert metadata['classes']=={p.relative_to(RUN/'rules-classes').as_posix():file_hash(p) for p in (RUN/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(name))==digest for name,digest in metadata['inputs'].items())
+ return metadata
+if '--worker' in sys.argv:
+ settings=read_settings(SETTINGS);engine=settings.verify();metadata=verify();verify_new_inputs();require_bridge();java=importlib.import_module('jpype')
+ recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name']
+ assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,((() if BASELINE else (WORK/'trait-admission-prototype-v6/classes',))+(archive,RUN/'rules-classes',ORIGINAL/'rules-classes',dependency)))),convertStrings=True)
+ prototype=WORK/'trait-admission-prototype-v6';inputs=json.loads((prototype/'inputs.json').read_bytes())
+ assert all(file_hash(prototype/name)==digest for name,digest in inputs['sources'].items())
+ assert inputs['classes']=={f.relative_to(prototype/'classes').as_posix():file_hash(f) for f in (prototype/'classes').rglob('*.class')}
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(prototype/'classes' if not BASELINE and name.replace('.','/')+'.class' in inputs['classes'] else archive),name
+ checked_classes=set(inputs['classes'])
+ if BASELINE:
+  with zipfile.ZipFile(archive) as jar:existing=set(jar.namelist())
+  assert not checked_classes-existing
+  checked_classes &= existing
+ for name in sorted(checked_classes):
+  binary=name[:-6].replace('/','.')
+  loaded=java.JClass('java.lang.Class').forName(binary)
+  location=loaded.getProtectionDomain().getCodeSource()
+  print(json.dumps({'requested':binary,'loaded':str(loaded.getName()),'origin':str(location.getLocation()) if location is not None else None}),flush=True)
+  assert location is not None,binary
+  assert Path(str(java.JClass('java.nio.file.Paths').get(location.getLocation().toURI()))).samefile(archive if BASELINE else prototype/'classes'),binary
+ for name in CLASSES:assert packaged_rules.class_origin(java,name).samefile(RUN/'rules-classes'),name
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in CLASSES]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+ runner.run()
+ counts,methods=packaged_rules.test_results(listener);verify();verify_new_inputs()
+ assert all(file_hash(prototype/name)==digest for name,digest in inputs['sources'].items())
+ save(RUN/'outcome.json',{'counts':counts,'methods':methods,'engine':engine,'diagnostic_only':True,'runner_sha256':file_hash(Path(__file__)),'failures':[str(result.getThrowable()) for result in listener.getFailedTests()],'configuration_failures':len(listener.getConfigurationFailures())})
+ if not BASELINE:
+  prior=json.loads((WORK/'trait-admission231-baseline-v7/outcome.json').read_bytes());assert prior['counts']==dict(total=231,passed=183,failed=48,skipped=0)
+  assert collections.Counter(row['method'] for row in methods)==collections.Counter(row['method'] for row in prior['methods'])
+ assert counts==dict(total=231,passed=183 if BASELINE else 231,failed=48 if BASELINE else 0,skipped=0)
+ assert len({row['method'] for row in methods})==counts['total']
+ if BASELINE:
+  failed_names={str(result.getMethod().getMethodName()) for result in listener.getFailedTests()}
+  assert len(failed_names)==48 and all(name.startswith('nested') for name in failed_names),failed_names
+ assert not listener.getConfigurationFailures()
+ java.shutdownJVM()
+else:
+ assert sys.argv[1:] in ([],['--baseline']);verify();RUN.mkdir();settings=read_settings(SETTINGS)
+ ci=json.loads((WORK/'resolution-performance-epoch-v2/source-ci.json').read_bytes());assert ci['head_sha']=='7889e094ebbb259037410104f85717935360c9d4' and ci['status']=='completed' and ci['conclusion']=='success'
+ frozen=json.loads((WORK/'resolution-performance-epoch-v2/source-frozen-inputs.json').read_bytes());assert all(file_hash(ROOT/n)==v for n,v in frozen.items())
+ (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path']
+ os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe'
+ packaged_rules.compile_rules(settings,RUN,[WORK/'snapshot-view-fixtures-v2/CommanderSnapshotViewTest.java',ROOT/'engine/tests/PerfPatchUnitTest.java',ROOT/'engine/tests/PerfPatchFollowUpTableTest.java',WORK/'saga-type-fixtures-v1/CommanderSagaTypeTest.java',ROOT/'engine/tests/AITest.java',WORK/'replacement-presence-fixtures-v6/CommanderReplacementPresenceTest.java'],dependency)
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker',*(['--baseline'] if BASELINE else [])],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();verify_new_inputs();assert all(file_hash(ROOT/n)==v for n,v in frozen.items());assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ rows=[json.loads(line) for line in (RUN/'progress.jsonl').read_text(encoding='utf-8').splitlines()] if (RUN/'progress.jsonl').exists() else []
+ outcome=json.loads((RUN/'outcome.json').read_bytes()) if (RUN/'outcome.json').exists() else {}
+ print(json.dumps({'process':result,'counts':outcome.get('counts'),'failures':outcome.get('failures'),'diagnostic_only':True}),flush=True)
+
+if '--worker' not in sys.argv:
+ import re
+ matches=re.findall(r'SNAPSHOT_WIRE sorted=(true|false);rows=(true|false);sha256=([a-f0-9]{64})',(RUN/'native.log').read_text(encoding='utf-8'))
+ assert len(matches)==4 and len({(a,b) for a,b,_ in matches})==4,matches
+ save(RUN/'wire-hashes.json',{a+'-'+b:c for a,b,c in matches})
+ if not BASELINE:
+  assert json.loads((RUN/'wire-hashes.json').read_bytes())==json.loads((WORK/'trait-admission231-baseline-v7/wire-hashes.json').read_bytes())
+ assert result['status']=='finished' and result['returncode']==0,result

@@ -1,0 +1,111 @@
+--- a/forge-core/src/main/java/forge/card/CardType.java
++++ b/forge-core/src/main/java/forge/card/CardType.java
+@@ -582,7 +582,9 @@
+ 
+     @Override
+     public boolean isSaga() {
+-        return hasSubtype("Saga");
++        // For this canonical spelling, a missing explicit subtype can be added
++        // only by the all-creature-types fallback. Keep that native fallback.
++        return subtypes.contains("Saga") || (allCreatureTypes && hasCreatureType("Saga"));
+     }
+ 
+     @Override
+--- a/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java
++++ b/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java
+@@ -97,13 +97,16 @@
+     /** Hash variant: an immutable-by-convention Guava HashBasedTable, copied on every write. */
+     private static final class HashSnap<R, C, V> extends Snap<R, C, V> {
+         private final Table<R, C, V> table;
++        private final int size;
+         private volatile Collection<V> values;
+ 
+         HashSnap(Table<R, C, V> table) {
+             this.table = table;
+-        }
+-
+-        @Override int size() { return table.size(); }
++            // Nested views are read-only; a published backing table never changes.
++            this.size = table.size();
++        }
++
++        @Override int size() { return size; }
+         @Override V get(Object r, Object c) { return table.get(r, c); }
+         @Override boolean contains(Object r, Object c) { return table.contains(r, c); }
+         @Override boolean containsRow(Object r) { return table.containsRow(r); }
+@@ -735,8 +738,8 @@
+ 
+     @Override public Map<C, V> row(R r) { return snap.row(r); }
+     @Override public Map<R, V> column(C c) { return snap.column(c); }
+-    @Override public Map<R, Map<C, V>> rowMap() { return Collections.unmodifiableMap(snap.table().rowMap()); }
+-    @Override public Map<C, Map<R, V>> columnMap() { return Collections.unmodifiableMap(snap.table().columnMap()); }
++    @Override public Map<R, Map<C, V>> rowMap() { return Tables.unmodifiableTable(snap.table()).rowMap(); }
++    @Override public Map<C, Map<R, V>> columnMap() { return Tables.unmodifiableTable(snap.table()).columnMap(); }
+     @Override public Set<R> rowKeySet() { return new KeyView<R>(true); }
+     @Override public Set<C> columnKeySet() { return new KeyView<C>(false); }
+     @Override public Collection<V> values() { return snap.values(); }
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -37,6 +37,7 @@
+ import forge.game.keyword.KeywordWithType;
+ import forge.game.player.Player;
+ import forge.game.replacement.ReplacementEffect;
++import forge.game.replacement.ReplacementType;
+ import forge.game.spellability.LandAbility;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.spellability.SpellPermanent;
+@@ -694,6 +695,16 @@
+         return abilities.add(a);
+     }
+ 
++    /** Live base-class trait sources; unknown subclasses retain normal callbacks. */
++    private boolean hasNoAdditionalTraits() {
++        return getClass() == CardState.class && card.getClass() == Card.class
++                && cachedKeywords.isEmpty()
++                && card.getChangedCardTraits().isEmpty()
++                && card.getChangedCardTraitsByText().isEmpty()
++                && !(getStateName() == CardStateName.Original
++                && (card.hasState(CardStateName.LeftSplit) || card.hasState(CardStateName.RightSplit)));
++    }
++
+     public final FCollectionView<Trigger> getTriggers() {
+         FCollection<Trigger> result = new FCollection<>(triggers);
+         if (getStateName().equals(CardStateName.Original)) {
+@@ -731,6 +742,10 @@
+      * (land type changes), and the keyword collection.
+      */
+     public final FCollectionView<StaticAbility> getStaticAbilities() {
++        // Land type changes can remove statics, but cannot introduce one.
++        if (staticAbilities.isEmpty() && hasNoAdditionalTraits()) {
++            return FCollection.<StaticAbility>getEmpty().shareCopy();
++        }
+         final Object traits = FSnapshotTable.versionOf(card.getChangedCardTraits());
+         final Object traitsByText = FSnapshotTable.versionOf(card.getChangedCardTraitsByText());
+         if (traits == null || traitsByText == null) {
+@@ -818,6 +833,13 @@
+         final boolean changed = staticAbilities.remove(stab);
+         staticAbilitiesVersion++;
+         return changed;
++    }
++
++    /** Only a live negative precheck; true still requires normal replacement checks. */
++    public final boolean mayHaveReplacementEffects(ReplacementType event) {
++        // Implicit type/counter replacements do not apply to these two events.
++        if (event != ReplacementType.Tap && event != ReplacementType.ProduceMana) return true;
++        return !replacementEffects.isEmpty() || !hasNoAdditionalTraits();
+     }
+ 
+     public FCollectionView<ReplacementEffect> getReplacementEffects() {
+--- a/forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java
++++ b/forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java
+@@ -119,6 +119,10 @@
+ 
+             // most cards have no replacement effects: skip them before the zone lookup and iterator creation.
+             // The collection is fetched once and reused below (it can be rebuilt on every call).
++            if (noLKIstate && c.getClass() == Card.class
++                    && !c.getCurrentState().mayHaveReplacementEffects(event)) {
++                return true;
++            }
+             final Card firstCard = c;
+             final FCollectionView<ReplacementEffect> firstEffects = c.getReplacementEffects();
+             if (noLKIstate && firstEffects.isEmpty()) {

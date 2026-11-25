@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fix writable inner maps escaping read-only snapshot row/column views; 48
+  mutation cases fail before correction and all 56 controls pass afterward.
+  Cache immutable table cell counts and preserve serialization bytes. Add
+  64 Saga predicate equivalence cases and nine callback/implicit-rule controls,
+  retaining all previous cases: 231 focused and 3,014 source checks pass.
+  Add conservative live trait prechecks with subclass safeguards and retain
+  the Vengeance cache flag. Register 4,214 native / 3,057 packaged targets and
+  175 origin checks. Preserve timed-out resolution diagnostics and corrected
+  fixture/audit failures. Resolution remains over its unchanged 90-second limit;
+  fresh runtime gates remain required and the selected engine stays unchanged.
+
 - Preserve the successful fresh 4,085-case native build and full 2,168-source
   parity audit, retaining all prior native cases. Record the failed independent
   packaged gate: resolution (1,271 expected cases) times out at its unchanged

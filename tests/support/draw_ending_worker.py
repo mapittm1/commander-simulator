@@ -19,6 +19,8 @@ from tests.support.packaged_rules import (
     test_results,
 )
 from tools.build_sticker_engine import (
+    CARD_PACKAGE,
+    CARD_TESTS,
     COLLECTION_PACKAGE,
     COLLECTION_TESTS,
     PRIORITY_PACKAGE,
@@ -106,6 +108,8 @@ SOURCES = {
     "CommanderTargetTaxTest": "commander_target_tax_test_sha256",
     "CommanderPreGoalOutcomeTest": "commander_pre_goal_outcome_test_sha256",
     "CommanderCastWindowTest": "commander_cast_window_test_sha256",
+    "CommanderSnapshotViewTest": "commander_snapshot_view_test_sha256",
+    "CommanderSagaTypeTest": "commander_saga_type_test_sha256",
     "CommanderReplacementPresenceTest": "commander_replacement_presence_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
@@ -215,6 +219,7 @@ SOURCES = {
 TEST_CLASS_PACKAGES = {
     "CommanderModalBudgetTest": "forge.ai.simulation",
     **{name: COLLECTION_PACKAGE.rstrip(".") for name in COLLECTION_TESTS},
+    **{name: CARD_PACKAGE.rstrip(".") for name in CARD_TESTS},
 }
 TEST_CLASSES = tuple(
     f"{TEST_CLASS_PACKAGES.get(name, 'forge.ai')}.{name}"
@@ -233,6 +238,7 @@ TEST_CLASSES = tuple(
     }
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
+    "forge.card.CardType",
     "forge.game.card.CardState",
     "forge.util.collect.FSnapshotTable",
     "forge.util.collect.FCollection",
@@ -446,7 +452,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 2928-case packaged family."""
+    """Execute the fixed 3057-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

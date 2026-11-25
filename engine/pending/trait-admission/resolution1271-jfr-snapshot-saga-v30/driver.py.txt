@@ -1,0 +1,67 @@
+"""Instrument a preserved packaged timeout; never substitutes for the failed gate."""
+from pathlib import Path
+import importlib,json,sys,time,threading,collections
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+from tests.support.draw_ending_partitions import PARTITIONS
+RUN=WORK/'resolution1271-jfr-snapshot-saga-v30';ORIGINAL=ROOT/'data/runs/51576bd7d3614c1ea372b8514bcc2f96'
+SETTINGS=ROOT/'data/engine-builds/500dd367a1874bf48b7d26f9cb736fa7/engine-config.json'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=json.loads((ORIGINAL/'rules-inputs.json').read_bytes())
+ assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(name))==digest for name,digest in metadata['inputs'].items())
+ return metadata
+if '--worker' in sys.argv:
+ settings=read_settings(SETTINGS);engine=settings.verify();metadata=verify();require_bridge();java=importlib.import_module('jpype')
+ recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name']
+ assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(WORK/'snapshot-saga-prototype-v1/classes',archive,ORIGINAL/'rules-classes',dependency))),convertStrings=True)
+ prototype=WORK/'snapshot-saga-prototype-v1';inputs=json.loads((prototype/'inputs.json').read_bytes())
+ assert all(file_hash(prototype/name)==digest for name,digest in inputs['sources'].items())
+ assert inputs['classes']=={f.relative_to(prototype/'classes').as_posix():file_hash(f) for f in (prototype/'classes').rglob('*.class')}
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(prototype/'classes' if name.replace('.','/')+'.class' in inputs['classes'] else archive),name
+ for name in inputs['classes']:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(prototype/'classes'),name
+ for name in PARTITIONS['resolution']:assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ stop=threading.Event()
+ recording=java.JClass('jdk.jfr.Recording')()
+ profile_settings=java.JClass('java.util.HashMap')()
+ profile_settings.put('jdk.ExecutionSample#enabled','true');profile_settings.put('jdk.ExecutionSample#period','10 ms')
+ recording.setSettings(profile_settings);recording.setMaxSize(16777216);recording.setMaxAge(java.JClass('java.time.Duration').ofSeconds(90));recording.start()
+ def dump_profile():
+  stop.wait(75)
+  recording.stop();recording.dump(java.JClass('java.nio.file.Paths').get(str(RUN/'cpu.jfr')))
+ profiler=threading.Thread(target=dump_profile,daemon=True);profiler.start()
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ counts_start=time.monotonic()
+ def sample_counts():
+  for index in range(4):
+   if stop.wait(20):return
+   passed=list(listener.getPassedTests());failed=list(listener.getFailedTests());skipped=list(listener.getSkippedTests())
+   row={'seconds':round(time.monotonic()-counts_start,3),'passed':len(passed),'failed':len(failed),'skipped':len(skipped),'configuration_failures':len(listener.getConfigurationFailures())}
+   if index==3:
+    row['passed_per_class']=dict(collections.Counter(str(item.getTestClass().getName()) for item in passed))
+    row['failure_details']=[str(item.getTestClass().getName())+'.'+str(item.getMethod().getMethodName())+':'+str(item.getThrowable())[:1024] for item in failed[:32]]
+   with (RUN/'native-counts.jsonl').open('a',encoding='utf-8',newline='\n') as output:output.write(json.dumps(row)+'\n')
+ counts_thread=threading.Thread(target=sample_counts,daemon=True);counts_thread.start()
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in PARTITIONS['resolution']]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+ try:runner.run()
+ finally:stop.set();profiler.join(5)
+ counts,methods=packaged_rules.test_results(listener);verify()
+ assert all(file_hash(prototype/name)==digest for name,digest in inputs['sources'].items())
+ save(RUN/'outcome.json',{'counts':counts,'methods':methods,'engine':engine,'diagnostic_only':True,'runner_sha256':file_hash(Path(__file__))})
+ java.shutdownJVM()
+else:
+ assert len(sys.argv)==1;verify();RUN.mkdir();settings=read_settings(SETTINGS)
+ ci=json.loads((WORK/'resolution-performance-epoch-v2/source-ci.json').read_bytes());assert ci['head_sha']=='7889e094ebbb259037410104f85717935360c9d4' and ci['status']=='completed' and ci['conclusion']=='success'
+ frozen=json.loads((WORK/'resolution-performance-epoch-v2/source-frozen-inputs.json').read_bytes());assert all(file_hash(ROOT/n)==v for n,v in frozen.items())
+ (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert all(file_hash(ROOT/n)==v for n,v in frozen.items());assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ rows=[json.loads(line) for line in (RUN/'progress.jsonl').read_text(encoding='utf-8').splitlines()] if (RUN/'progress.jsonl').exists() else []
+ print(json.dumps({'process':result,'profile_written':(RUN/'cpu.jfr').exists(),'per_method_observer':False,'diagnostic_only':True}),flush=True)

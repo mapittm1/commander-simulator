@@ -258,4 +258,6 @@ REGRESSION_SOURCES = {
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",
+    "CommanderSnapshotViewTest.java": "commander_snapshot_view_test_sha256",
+    "CommanderSagaTypeTest.java": "commander_saga_type_test_sha256",
 }

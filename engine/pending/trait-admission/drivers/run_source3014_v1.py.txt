@@ -1,0 +1,111 @@
+from pathlib import Path
+from types import SimpleNamespace
+import json,hashlib,shutil,time,sys,subprocess,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+WORK=Path(__file__).resolve().parent;SOURCE=ROOT/'data/development/commander-blocking-history-research/source';PRIOR=WORK.parent/'waterbend-research/source1885-v2'
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT).decode().strip()=='7889e094ebbb259037410104f85717935360c9d4'
+assert not subprocess.check_output(['git','status','--porcelain=v1'],cwd=ROOT)
+frozen=json.loads((WORK/'resolution-performance-epoch-v2/source-frozen-inputs.json').read_bytes())
+assert len(frozen)==json.loads((WORK/'resolution-performance-epoch-v2/source-epoch.json').read_bytes())['tracked_count'] and all(hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest for name,digest in frozen.items())
+assert json.loads((ROOT/'config/engine_config.json').read_bytes())['home'].endswith('forge-583714b-mana-chain-reviewed')
+ci=json.loads((WORK/'resolution-performance-epoch-v2/source-ci.json').read_bytes());assert ci['head_sha']=='7889e094ebbb259037410104f85717935360c9d4' and ci['status']=='completed' and ci['conclusion']=='success'
+RUN=WORK/'source3014-v1';RUN.mkdir();sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+classes=json.loads((WORK/'source2653-v1/selection.json').read_bytes())['classes']+['CommanderCastWindowTest','CommanderOptionalXTest','forge.gamesimulationtests.priority.EndTurnCleanupPriorityTest']
+classes+=['forge.card.CommanderSagaTypeTest','forge.gamesimulationtests.util.CommanderSnapshotViewTest','CommanderReplacementCacheInputsTest','CommanderReplacementPresenceTest','CommanderEmptyAttackTest','forge.gamesimulationtests.util.PerfPatchUnitTest','forge.gamesimulationtests.util.PerfPatchFollowUpTableTest']
+assert len(classes)==len(set(classes))
+production={p.relative_to(SOURCE).as_posix():sha(p) for p in SOURCE.glob('*/src/main/java/**/*.java')};assert len(production)==2168
+fixtures=json.loads((WORK/'source2653-v1/test-inputs.json').read_bytes())
+for name in ['CommanderCastWindowTest','CommanderOptionalXTest','CommanderReplacementPresenceTest','CommanderEmptyAttackTest','CommanderReplacementCacheInputsTest']:
+ rel='forge-gui-desktop/src/test/java/forge/ai/'+name+'.java';fixtures[rel]=sha(SOURCE/rel)
+rel='forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloStandardScenarioTest.java';fixtures[rel]=sha(SOURCE/rel)
+for name in ('PerfPatchUnitTest','PerfPatchFollowUpTableTest','CommanderSnapshotViewTest'):
+ rel='forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/'+name+'.java';fixtures[rel]=sha(SOURCE/rel)
+rel='forge-gui-desktop/src/test/java/forge/card/CommanderSagaTypeTest.java';fixtures[rel]=sha(SOURCE/rel)
+cards=json.loads((WORK/'source2653-v1/card-inputs.json').read_bytes())
+for name in ('k/krark_clan_ironworks.txt','j/jeweled_amulet.txt','s/seat_of_the_synod.txt','s/spirit_water_revival.txt','o/ornithopter.txt','m/memnite.txt','p/phyrexian_walker.txt','s/shield_sphere.txt','w/welding_jar.txt','t/tormods_crypt.txt','m/mishras_bauble.txt','u/urzas_bauble.txt','d/darksteel_relic.txt','a/accorders_shield.txt','b/bone_saw.txt','s/sapphire_medallion.txt','s/sphere_of_resistance.txt','m/mox_amber.txt','o/ornithopter_of_paradise.txt','s/springleaf_drum.txt','d/darksteel_citadel.txt','g/grizzly_bears.txt','i/island.txt','f/forest.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/name;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+token=SOURCE/'forge-gui/res/tokenscripts/c_a_clue_draw.txt';assert token.is_file();cards[token.relative_to(SOURCE).as_posix()]=sha(token)
+for rel in ('a/aang_swift_savior_aang_and_la_oceans_fury.txt','a/appa_steadfast_guardian.txt','d/doc_aurlock_grizzled_genius.txt','b/bontus_monument.txt','p/plains.txt','m/mountain.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+token=SOURCE/'forge-gui/res/tokenscripts/w_1_1_ally.txt';assert token.is_file();cards[token.relative_to(SOURCE).as_posix()]=sha(token)
+for rel in ('p/prismite.txt','a/azorius_signet.txt','w/wastes.txt','c/concentrate.txt','o/opt.txt','a/arcum_dagsson.txt','t/treasonous_ogre.txt','g/gilded_lotus.txt','d/divination.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file();cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('m/mystic_gate.txt','s/sunken_ruins.txt','n/notion_thief.txt','b/boomerang.txt','c/city_of_brass.txt','b/blue_suns_zenith.txt','s/swamp.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('k/katara_water_tribes_hope.txt','f/foggy_swamp_visions.txt','w/waterbenders_restoration.txt','c/crashing_wave.txt','l/lair_of_the_hydra.txt','c/corpseweft.txt','e/endless_one.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+p=SOURCE/'forge-gui/res/tokenscripts/b_x_x_zombie_horror.txt';assert p.is_file();cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('t/tolarian_terror.txt','c/curious_homunculus_voracious_reader.txt','h/hydro_channeler.txt','c/city_of_brass.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('t/the_unagi_of_kyoshi_island.txt','g/gisa_the_hellraiser.txt','c/captain_howler_sea_scourge.txt','t/titania_rugged_rumbler.txt','p/phyrexian_fleshgorger.txt','v/valgavoth_terror_eater.txt','s/squee_goblin_nabob.txt','r/roaming_throne.txt','b/boseiju_who_shelters_all.txt','s/seeds_of_strength.txt','p/plains.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+p=SOURCE/'forge-gui/res/tokenscripts/ub_2_2_zombie_rogue.txt';assert p.is_file();cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('a/auntie_ool_cursewretch.txt','a/axebane_ferox.txt','c/craw_wurm.txt','h/hill_giant.txt','n/nest_of_scarabs.txt','t/the_serpent_society.txt','n/nether_void.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+p=SOURCE/'forge-gui/res/tokenscripts/b_1_1_insect.txt';assert p.is_file();cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('f/frost_titan.txt','k/kira_great_glass_spinner.txt','c/chancellor_of_the_annex.txt','c/chalice_of_the_void.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('k/kambal_consul_of_allocation.txt','o/opt.txt','b/bontus_monument.txt','v/volcanic_hammer.txt'):
+ p=SOURCE/'forge-gui/res/cardsfolder'/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for name in ('PriorityTestBase','EndTurnCleanupPriorityTest'):
+ rel='forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority/'+name+'.java';fixtures[rel]=sha(SOURCE/rel)
+# Bind every literal card title used by these fixed Java fixtures that maps to a pinned script.
+import re
+card_root=SOURCE/'forge-gui/res/cardsfolder'
+for rel in ('forge-gui-desktop/src/test/java/forge/ai/CommanderOptionalXTest.java','forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority/PriorityTestBase.java','forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority/EndTurnCleanupPriorityTest.java','forge-gui-desktop/src/test/java/forge/ai/CommanderCastWindowTest.java'):
+ for title in re.findall(r'"([^"\n]+)"',(SOURCE/rel).read_text(encoding='utf-8')):
+  name=re.sub(r'[^a-z0-9_]', '',title.lower().replace(' ','_').replace('-','_'))
+  if not name:continue
+  path=card_root/name[0]/(name+'.txt')
+  assert path.resolve().is_relative_to(card_root.resolve())
+  if path.is_file():cards[path.relative_to(SOURCE).as_posix()]=sha(path)
+for rel in ('d/dark_ritual.txt','m/monastery_flock.txt'):
+ p=card_root/rel;assert p.is_file();cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+for rel in ('f/fire_ice.txt','m/mana_reflection.txt','c/contamination.txt','s/sol_ring.txt','g/gideon_jura.txt','s/smugglers_copter.txt','g/grizzly_bears.txt','f/forest.txt'):
+ p=card_root/rel;assert p.is_file(),p;cards[p.relative_to(SOURCE).as_posix()]=sha(p)
+snapshot=RUN/'input-snapshots';snapshot.mkdir()
+for name,inputs in (('production-inputs.json',production),('test-inputs.json',fixtures),('card-inputs.json',cards)):
+ (RUN/name).write_text(json.dumps(inputs,indent=2)+'\n',encoding='utf-8',newline='\n')
+ for rel,digest in inputs.items():
+  assert sha(SOURCE/rel)==digest
+  target=snapshot/rel;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(SOURCE/rel,target)
+(RUN/'driver-inputs').mkdir();shutil.copyfile(Path(__file__),RUN/'driver-inputs'/Path(__file__).name);shutil.copyfile(ROOT/'tools/build_sticker_engine.py',RUN/'driver-inputs/build_sticker_engine.py')
+checked=builder._checked
+
+def selected(command,cwd,output,name,timeout):
+ assert timeout==600
+ command=['-Dtest='+','.join(classes)+',OnePlaySafetyCheckerTest#testOnePlaySafetyOnlyChecksResolvingStack,FlatMonteCarloStandardScenarioTest#theAirbendLoopWithBontusMonumentDrainsTheOpponentOut' if arg.startswith('-Dtest=') else 'test' if arg=='package' else arg for arg in command]
+ (RUN/'selection.json').write_text(json.dumps({'classes':classes,'command':command,'timeout':timeout},indent=2)+'\n',encoding='utf-8',newline='\n')
+ return checked(command,cwd,output,name,timeout)
+started=time.time_ns()
+try:
+ builder._checked=selected
+ builder._compile(SimpleNamespace(jdk=Path('C:/Program Files/Java/jdk-19')),SOURCE,ROOT/'data/engine-builds/0cee9c7ab6b1414089c59bd962888e7b/maven',RUN)
+finally:
+ builder._checked=checked
+ assert sha(Path(__file__))==sha(RUN/'driver-inputs'/Path(__file__).name)
+ assert all(hashlib.sha256((ROOT/name).read_bytes()).hexdigest()==digest for name,digest in frozen.items())
+ assert all(sha(SOURCE/rel)==digest for inputs in (production,fixtures,cards) for rel,digest in inputs.items())
+ report=SOURCE/'forge-gui-desktop/target/surefire-reports/testng-results.xml'
+ if report.exists() and report.stat().st_mtime_ns>=started:
+  shutil.copytree(report.parent,RUN/'all-surefire-reports');shutil.copyfile(report,RUN/'testng-results.xml')
+  tree=ET.parse(report).getroot();counts={k:int(tree.attrib[k]) for k in ('total','passed','failed','skipped')}
+  rows=[{'method':cl.attrib['name']+'.'+m.attrib['name'],'status':m.attrib['status'],'parameters':[v.text for v in m.findall('./params/param/value')],'duration_ms':int(m.attrib.get('duration-ms','0')),'message':m.findtext('exception/message')} for cl in tree.findall('.//class') for m in cl.findall('test-method') if m.attrib.get('is-config')!='true']
+  prior=json.loads((PRIOR/'evidence.json').read_bytes());old={row['method'] for row in prior['methods']};assert len(old)==1885 and old<={row['method'] for row in rows}
+  assert len({row['method'] for row in rows})==3014, 'Every native case needs a unique result identifier'
+  immediate=json.loads((WORK/'source2653-v1/evidence.json').read_bytes());assert immediate['counts']==dict(total=2653,passed=2653,failed=0,skipped=0)
+  assert {row['method'] for row in immediate['methods']} <= {row['method'] for row in rows}
+  failed_prior=json.loads((WORK/'source2611-v1/evidence.json').read_bytes());assert failed_prior['counts']==dict(total=2611,passed=2610,failed=1,skipped=0)
+  assert {row['method'] for row in failed_prior['methods']} <= {row['method'] for row in rows}
+  retained=json.loads((WORK/'source2699-v1/evidence.json').read_bytes());assert {row['method'] for row in retained['methods']} <= {row['method'] for row in rows}
+  retained2735=json.loads((WORK/'source2735-v1/evidence.json').read_bytes());assert retained2735['counts']==dict(total=2735,passed=2735,failed=0,skipped=0)
+  assert {row['method'] for row in retained2735['methods']} <= {row['method'] for row in rows}
+  retained2849=json.loads((WORK/'source2849-v1/evidence.json').read_bytes());assert retained2849['counts']==dict(total=2849,passed=2849,failed=0,skipped=0)
+  assert {row['method'] for row in retained2849['methods']} <= {row['method'] for row in rows}
+  retained2885=json.loads((WORK/'source2885-v1/evidence.json').read_bytes());assert retained2885['counts']==dict(total=2885,passed=2885,failed=0,skipped=0)
+  assert {row['method'] for row in retained2885['methods']} <= {row['method'] for row in rows}
+  record={'retained_source2885_cases':2885,'new_since_source2885':129,'retained_source2849_cases':2849,'new_since_source2849':165,'retained_source2735_cases':2735,'new_since_source2735':279,'selected_production_changes':['forge-ai/src/main/java/forge/ai/ComputerUtilMana.java', 'forge-game/src/main/java/forge/game/card/Card.java', 'forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java','forge-game/src/main/java/forge/game/card/CardState.java','forge-core/src/main/java/forge/util/collect/FSnapshotTable.java','forge-core/src/main/java/forge/card/CardType.java','forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java'],'mandatory_packaged_resolution_gate':'still_failed90s; source suite does not substitute for it','retained_source2699_cases':2699,'retained_failed_source_cases':2611,'counts':counts,'methods':rows,'retained_prior_cases':1885,'retained_immediate_source_cases':2653,'new_cases_since_source2653':361,'production_sources':2168,'report_sha256':sha(RUN/'testng-results.xml'),'log_sha256':sha(RUN/'maven-build.log'),'inputs_unchanged_during_run':True,'runner_sha256':sha(Path(__file__)),'builder_sha256':sha(ROOT/'tools/build_sticker_engine.py'),'scope':'Retain all2885 previous source cases plus56 nested-view controls,64Saga equivalence controls and9additional live-trait callback/implicit-global controls (81trait cases vs72). Deep read-only views and immutable cell count; canonical Saga shortcut preserving allCreatureTypes fallback; conservative live static/Tap/ProduceMana empty-source checks with exact Card/CardState guards. No trigger shortcut. Preserve Vengeance512flag and serialization wire bytes. Seven production files fromsource2735, fourfromsource2885; cumulative13families vsselected3295. Source does not replace original1271/90 packaged gate (stillfailed). No card/profilechanges or activation. Same2048MiB/2CPU/600s budget.'}
+  (RUN/'evidence.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps({'counts':counts}),flush=True)
+ else:print('No fresh final TestNG report; inspect preserved Maven log.',flush=True)
+assert counts==dict(total=3014,passed=3014,failed=0,skipped=0),counts

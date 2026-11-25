@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+A new source-validated correction makes nested row/column snapshot maps read-only.
+Previously, inner-map writes could change shared table contents without updating
+the table version. The 56-case suite goes from 8 passing / 48 failing to 56 passing.
+All 231 focused and 3,014 source cases pass, retaining earlier cases; serialized
+bytes match the baseline. Related generic optimizations preserve native Saga
+predicate behavior, live trait changes and subclass callbacks. The recipe now
+targets 4,214 native and 3,057 packaged cases with 175 production origins. These
+are fresh-runtime targets: the original 1,271-case resolution group still exceeds
+90 seconds in overlay diagnostics. The selected runtime is unchanged. See
+[source and regression evidence](engine/trait_admission_evidence.json).
+
 The fresh registered follow-up passes all 4,085 native cases and the full
 2,168-source parity audit, retaining every earlier case. Its independent packaged
 gate fails: the unchanged 1,271-case resolution group times out at 90 seconds.

@@ -1,0 +1,33 @@
+from pathlib import Path
+from collections import Counter
+import json,sys,importlib
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+RUN=WORK/'resolution1271-jfr-snapshot-saga-v30';profile=RUN/'cpu.jfr'
+assert profile.stat().st_size<=16777216
+before=file_hash(profile);settings=read_settings(ROOT/'data/engine-builds/500dd367a1874bf48b7d26f9cb736fa7/engine-config.json');settings.verify()
+java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(profile)))
+leaf=Counter();inclusive=Counter();first_forge=Counter();samples=0;main_samples=0;events=0
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent();events+=1;assert events<=100000
+  if str(event.getEventType().getName())!='jdk.ExecutionSample':continue
+  samples+=1
+  thread=event.getThread('sampledThread')
+  if thread is None or str(thread.getJavaName())!='main':continue
+  main_samples+=1;stack=event.getStackTrace()
+  if stack is None:continue
+  names=[]
+  for frame in stack.getFrames():
+   method=frame.getMethod()
+   if method is not None:names.append(str(method.getType().getName())+'.'+str(method.getName()))
+  if names:leaf[names[0]]+=1
+  forge_names=[name for name in names if name.startswith('forge.')]
+  if forge_names:first_forge[forge_names[0]]+=1
+  inclusive.update(set(names))
+finally:reader.close();java.shutdownJVM()
+assert file_hash(profile)==before
+result={'profile_sha256':before,'profile_bytes':profile.stat().st_size,'events':events,'samples':samples,'main_thread_samples':main_samples,'leaf':leaf.most_common(80),'first_forge':first_forge.most_common(80),'inclusive':inclusive.most_common(100),'scope':'Sampling evidence only; not a timing gate or full rules correctness proof. No per-method Python callbacks in this diagnostic.'}
+text=json.dumps(result,indent=2)+'\n';assert len(text.encode())<131072
+out=RUN/'profile-summary.json';assert not out.exists();out.write_text(text,encoding='utf-8',newline='\n');print(json.dumps({'samples':samples,'main_samples':main_samples,'top_first_forge':first_forge.most_common(12)}),flush=True)

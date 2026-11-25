@@ -1,0 +1,31 @@
+{
+  "production_files_searched": 2168,
+  "hits": [
+    {
+      "file": "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+      "line": 738,
+      "text": "@Override public Map<R, Map<C, V>> rowMap() { return Collections.unmodifiableMap(snap.table().rowMap()); }"
+    },
+    {
+      "file": "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+      "line": 739,
+      "text": "@Override public Map<C, Map<R, V>> columnMap() { return Collections.unmodifiableMap(snap.table().columnMap()); }"
+    },
+    {
+      "file": "forge-game/src/main/java/forge/game/GameAction.java",
+      "line": 3060,
+      "text": "for (Map.Entry<GameEntity, Map<Card, Integer>> et : damageMap.columnMap().entrySet()) {"
+    },
+    {
+      "file": "forge-game/src/main/java/forge/game/GameAction.java",
+      "line": 3075,
+      "text": "for (Map.Entry<Card, Map<GameEntity, Integer>> et : damageMap.rowMap().entrySet()) {"
+    },
+    {
+      "file": "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+      "line": 435,
+      "text": "for (Map.Entry<GameEntity, Map<Card, Integer>> et : damageMap.columnMap().entrySet()) {"
+    }
+  ],
+  "scope": "Textual direct-call inventory, not a proof of all reflective/transitive consumers. Game/AI damage-map calls use CardDamageTable backed by mutable HashBasedTable, which is not modified by this fix."
+}

@@ -1,0 +1,34 @@
+from pathlib import Path
+import json,hashlib,difflib,subprocess,shutil,ast,collections,xml.etree.ElementTree as ET
+ROOT=Path.cwd();WORK=Path(__file__).resolve().parent;SOURCE=ROOT/'data/development/commander-blocking-history-research/source'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+proof=json.loads((WORK/'source3014-v1/evidence.json').read_bytes());assert proof['counts']==dict(total=3014,passed=3014,failed=0,skipped=0)
+assert not subprocess.check_output(['git','status','--porcelain'])
+for name in ('production-inputs.json','test-inputs.json','card-inputs.json'):
+ inputs=json.loads((WORK/'source3014-v1'/name).read_bytes());assert all(sha(SOURCE/n)==h for n,h in inputs.items())
+old=json.loads((WORK/'source2885-v1/production-inputs.json').read_bytes());new=json.loads((WORK/'source3014-v1/production-inputs.json').read_bytes());changed=sorted(n for n in old if old[n]!=new[n]);assert len(changed)==4,changed
+patch=''
+for n in changed:
+ patch+=''.join(difflib.unified_diff((WORK/'source2885-v1/input-snapshots'/n).read_text(encoding='utf-8').splitlines(keepends=True),(SOURCE/n).read_text(encoding='utf-8').splitlines(keepends=True),fromfile='a/'+n,tofile='b/'+n))
+p=ROOT/'engine/patches/commander-trait-admission.patch';assert not p.exists();p.write_text(patch,encoding='utf-8',newline='\n')
+subprocess.run(['git','apply','--reverse','--check','--directory=data/development/commander-blocking-history-research/source',str(p.relative_to(ROOT))],check=True)
+for relative,name in [('snapshot-view-fixtures-v2/CommanderSnapshotViewTest.java','CommanderSnapshotViewTest.java'),('saga-type-fixtures-v1/CommanderSagaTypeTest.java','CommanderSagaTypeTest.java'),('replacement-presence-fixtures-v6/CommanderReplacementPresenceTest.java','CommanderReplacementPresenceTest.java')]:shutil.copyfile(WORK/relative,ROOT/'engine/tests'/name)
+recipe_path=ROOT/'engine/sticker_recipe.json';recipe=json.loads(recipe_path.read_bytes());assert recipe['native_test_count']==4085
+recipe['native_test_count']=4214;recipe['runtime_version']='2.0.16-583714b-reviewed-trait-admission';recipe['patches'].append({'path':p.relative_to(ROOT).as_posix(),'sha256':sha(p)})
+for name,key in [('CommanderSnapshotViewTest.java','commander_snapshot_view_test_sha256'),('CommanderSagaTypeTest.java','commander_saga_type_test_sha256'),('CommanderReplacementPresenceTest.java','commander_replacement_presence_test_sha256')]:recipe[key]=sha(ROOT/'engine/tests'/name)
+recipe_path.write_text(json.dumps(recipe,indent=2)+'\n',encoding='utf-8',newline='\n')
+p=ROOT/'tools/engine_test_sources.py';s=p.read_text(encoding='utf-8');i=s.index('\n}',s.index('REGRESSION_SOURCES'));s=s[:i]+'\n    "CommanderSnapshotViewTest.java": "commander_snapshot_view_test_sha256",\n    "CommanderSagaTypeTest.java": "commander_saga_type_test_sha256",'+s[i:];p.write_text(s,encoding='utf-8',newline='\n')
+p=ROOT/'tools/build_sticker_engine.py';s=p.read_text(encoding='utf-8');s=s.replace('COLLECTION_TESTS = ("PerfPatchUnitTest", "PerfPatchFollowUpTableTest")','COLLECTION_TESTS = ("PerfPatchUnitTest", "PerfPatchFollowUpTableTest", "CommanderSnapshotViewTest")\nCARD_PACKAGE = "forge.card."\nCARD_TESTS = ("CommanderSagaTypeTest",)')
+s=s.replace('                "engine/patches/commander-cache-and-planning.patch",','                "engine/patches/commander-cache-and-planning.patch",\n                "engine/patches/commander-trait-admission.patch",')
+s=s.replace('    _copy_collection_regressions(source)','    _copy_collection_regressions(source)\n    _copy_card_regressions(source)')
+i=s.index('\ndef _compile(');helper='\ndef _copy_card_regressions(source: Path) -> None:\n    """Keep fixed card-type fixtures in their upstream package."""\n    folder = source / "forge-gui-desktop/src/test/java/forge/card"\n    folder.mkdir(parents=True, exist_ok=True)\n    for name in CARD_TESTS:\n        shutil.copyfile(PROJECT / "engine/tests" / f"{name}.java", folder / f"{name}.java")\n\n';s=s[:i]+helper+s[i:]
+s=s.replace('forge.gamesimulationtests.util.PerfPatchFollowUpTableTest,CommanderRepeatedDiscardEntrypointTest','forge.gamesimulationtests.util.PerfPatchFollowUpTableTest,forge.gamesimulationtests.util.CommanderSnapshotViewTest,forge.card.CommanderSagaTypeTest,CommanderRepeatedDiscardEntrypointTest');p.write_text(s,encoding='utf-8',newline='\n')
+p=ROOT/'tests/support/draw_ending_worker.py';s=p.read_text(encoding='utf-8');s=s.replace('    COLLECTION_PACKAGE,','    CARD_PACKAGE,\n    CARD_TESTS,\n    COLLECTION_PACKAGE,')
+s=s.replace('    "CommanderCastWindowTest": "commander_cast_window_test_sha256",','    "CommanderCastWindowTest": "commander_cast_window_test_sha256",\n    "CommanderSnapshotViewTest": "commander_snapshot_view_test_sha256",\n    "CommanderSagaTypeTest": "commander_saga_type_test_sha256",')
+s=s.replace('    **{name: COLLECTION_PACKAGE.rstrip(".") for name in COLLECTION_TESTS},','    **{name: COLLECTION_PACKAGE.rstrip(".") for name in COLLECTION_TESTS},\n    **{name: CARD_PACKAGE.rstrip(".") for name in CARD_TESTS},');s=s.replace('NATIVE_CLASSES = (','NATIVE_CLASSES = (\n    "forge.card.CardType",').replace('fixed 2928-case','fixed 3057-case');p.write_text(s,encoding='utf-8',newline='\n')
+p=ROOT/'tests/support/draw_ending_partitions.py';s=p.read_text(encoding='utf-8');s=s.replace('    "cast_events": (','    "cast_events": (\n        "forge.gamesimulationtests.util.CommanderSnapshotViewTest",\n        "forge.card.CommanderSagaTypeTest",').replace('"cast_events": 778','"cast_events": 907');p.write_text(s,encoding='utf-8',newline='\n')
+for rel in ('tests/integration/test_draw_endings_integration.py','tests/unit/test_draw_ending_partitions.py'):
+ p=ROOT/rel;s=p.read_text(encoding='utf-8').replace('2928','3057')
+ if 'integration' in rel:s=s.replace('len(expected_classes), 174','len(expected_classes), 175')
+ p.write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({'registered_native_target':4214,'packaged_target':3057,'cast_events':907,'source_proven':3014,'changed_production':changed}))

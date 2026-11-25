@@ -95,6 +95,15 @@ public class CommanderReplacementPresenceTest extends AITest {
         }
     }
 
+    private static final class StaticOverrideCard extends Card {
+        private StaticAbility additional;
+        StaticOverrideCard(Game game) { super(game.nextCardId(), game); }
+        @Override public void updateStaticAbilities(List<StaticAbility> list, CardState state) {
+            super.updateStaticAbilities(list, state);
+            if (additional != null) list.add(additional);
+        }
+    }
+
     private StaticAbility activationBan(Card host) {
         return new StaticAbility("Mode$ CantBeActivated | AffectedZone$ Battlefield | ValidCard$ Card.Self | ValidSA$ Activated",
                 host, host.getCurrentState());
@@ -107,6 +116,25 @@ public class CommanderReplacementPresenceTest extends AITest {
     }
 
     private void checkStatics(String mode, Game game, Card land, Player payer) {
+        if (mode.equals("staticOverride")) {
+            StaticOverrideCard effect = new StaticOverrideCard(game);
+            effect.setOwner(payer);
+            effect.setName("Static callback control");
+            effect.getCurrentState().setType(forge.card.CardType.parse("Artifact", false));
+            payer.getZone(ZoneType.Battlefield).add(effect);
+            assertTrue(effect.getStaticAbilities().isEmpty());
+            effect.additional = new StaticAbility("Mode$ CantBeActivated | AffectedZone$ Battlefield | ValidCard$ Land.YouCtrl | ValidSA$ Activated",
+                    effect, effect.getCurrentState());
+            effect.updateKeywordsCache();
+            assertTrue(effect.getStaticAbilities().contains(effect.additional));
+            game.getAction().checkStaticAbilities(false);
+            activationAllowed(land, payer, false);
+            effect.additional = null;
+            effect.updateKeywordsCache();
+            game.getAction().checkStaticAbilities(false);
+            activationAllowed(land, payer, true);
+            return;
+        }
         if (mode.equals("staticLeftSplit") || mode.equals("staticRightSplit")) {
             Card split = addCardToZone("Fire // Ice", payer, ZoneType.Hand);
             CardState original = split.getState(CardStateName.Original);
@@ -286,6 +314,16 @@ public class CommanderReplacementPresenceTest extends AITest {
             effect.effects.add(replacement);
             blocked(land, payer);
             replacement.setSuppressed(true);
+        } else if (mode.equals("implicitCounters")) {
+            land.setCounters(forge.game.card.CounterEnumType.SHIELD, 1);
+            land.setCounters(forge.game.card.CounterEnumType.STUN, 1);
+            land.setCounters(forge.game.card.CounterEnumType.FINALITY, 1);
+            assertEquals(land.getReplacementEffects().size(), 4);
+        } else if (mode.equals("implicitTypes")) {
+            Card spell = addCardToZone("Opt", payer, ZoneType.Hand);
+            spell.getCurrentState().setType(forge.card.CardType.parse("Instant Adventure Omen Vengeance", false));
+            spell.updateKeywordsCache();
+            assertEquals(spell.getReplacementEffects().size(), 3);
         } else if (mode.equals("reflection") || mode.equals("contamination")) {
             addCardToZone(mode.equals("reflection") ? "Mana Reflection" : "Contamination", payer, ZoneType.Battlefield);
             game.getAction().checkStaticAbilities(false);
@@ -385,4 +423,13 @@ public class CommanderReplacementPresenceTest extends AITest {
     @Test public void triggerRightSplitDepth0() { check("triggerRightSplit", 0); }
     @Test public void triggerRightSplitDepth1() { check("triggerRightSplit", 1); }
     @Test public void triggerRightSplitDepth2() { check("triggerRightSplit", 2); }
+    @Test public void staticOverrideDepth0() { check("staticOverride", 0); }
+    @Test public void staticOverrideDepth1() { check("staticOverride", 1); }
+    @Test public void staticOverrideDepth2() { check("staticOverride", 2); }
+    @Test public void implicitCountersDepth0() { check("implicitCounters", 0); }
+    @Test public void implicitCountersDepth1() { check("implicitCounters", 1); }
+    @Test public void implicitCountersDepth2() { check("implicitCounters", 2); }
+    @Test public void implicitTypesDepth0() { check("implicitTypes", 0); }
+    @Test public void implicitTypesDepth1() { check("implicitTypes", 1); }
+    @Test public void implicitTypesDepth2() { check("implicitTypes", 2); }
 }
