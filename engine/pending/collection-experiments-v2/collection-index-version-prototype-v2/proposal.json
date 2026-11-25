@@ -1,0 +1,20 @@
+{
+  "scope": "Unpromoted compact collection version/index state: derive the mask from its backing array and replace the sum of two increment-only transient version counters with one increment-only counter. Same public stamp arithmetic and APIs; no persisted fields change.",
+  "source_head": "33ff93af0cadbd902b7d61499635f8cdb5b0c6cd",
+  "source_manifest": "source3548-v1/production-inputs.json",
+  "changed_sources": [
+    "forge-core/src/main/java/forge/util/collect/FCollection.java"
+  ],
+  "predecessor": "collection-mask-prototype-v1",
+  "predecessor_result": "Identical allocation totals for mask removal alone; not promoted.",
+  "old_content_counter_mentions": [
+    "private transient int contentVersion;",
+    "return modCount + contentVersion;",
+    "contentVersion++;",
+    "contentVersion++;",
+    "contentVersion++;"
+  ],
+  "old_content_counter_increment_sites": 3,
+  "promoted": false,
+  "validation_pending": true
+}

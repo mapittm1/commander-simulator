@@ -1,0 +1,25 @@
+"""Compile isolated collection-layout and allocation controls after native validation."""
+from pathlib import Path
+import json,sys,subprocess
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent;CANDIDATE=WORK/'first-event-candidate-v1';EPOCH=WORK/'first-event-source-epoch-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+frozen=load(EPOCH/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['passed']==4748
+settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json');lock=settings.verify();archive=settings.home/lock['jar_name']
+for folder in ['collection-allocation-probe-v1','collection-mask-prototype-v1']:
+ run=WORK/folder;classes=run/'classes';classes.mkdir()
+ sources=list((run/'source').rglob('*.java')) if folder=='collection-mask-prototype-v1' else [run/'CollectionAllocationProbe.java']
+ assert len(sources)==1
+ command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',str(archive),'-d',str(classes),*map(str,sources)]
+ save(run/'compile-selection.json',{'command':command,'timeout_seconds':90,'jar_sha256':file_hash(archive),'source_sha256':file_hash(sources[0])})
+ result=run_bounded(command,ROOT,run/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(run)));save(run/'compile-process.json',result)
+ assert result['status']=='finished' and result['returncode']==0,result
+ save(run/'inputs.json',{p.relative_to(run).as_posix():file_hash(p) for p in run.rglob('*') if p.is_file() and p.name!='inputs.json'})
+ assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ print(json.dumps({'folder':folder,'process':result}),flush=True)

@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve per-player scry counts through the shared event-history helper. Three
+  baseline failures lose paid-scry qualification or another player's count. All six
+  controls pass after correction, including paid return, finality and enters-surveil
+  effects. Retain casting/combat/untap/dungeon/expend/event-history/upstream controls.
+- Register six scry_history cases separately; preserve all prior groups and original
+  1,271/90 workload. Fresh 3,554 source / 4,754 native / 3,597 main packaged validation
+  is pending; selected runtime remains unchanged. Supplied boards are not full legal
+  histories or experimental restore proof.
+
 - Copy native regression fixtures from the shared hash registry instead of a
   second filename list. Preserve all 280 registered sources and nine priority
   fixtures at their prior Java destinations. An offline check verifies declared
@@ -18,8 +27,19 @@ Historical entries below summarize verified Git milestones, not release versions
   casting / 273 combat / 194 untap / ten dungeon / six expend / nine upstream cases.
   Supplied boards do not establish full histories or experimental restore support.
 - Register twelve first_events cases separately; retain all earlier groups/counts
-  and original 1,271-case / 90-second workload. Fresh 3,548 source / 4,748 native /
-  3,591 main packaged validation remains pending; selected runtime is unchanged.
+  and original 1,271-case / 90-second workload. Fresh 3,548 source / 4,748 native
+  cases pass with exact retained methods/parameters, reviewed input manifests and
+  all 289 copied-fixture bytes verified. Broader 6,071 gameplay / 320 serialization
+  cases pass with exact membership, no skips and temporary policies restored.
+- Audit every non-resolution packaged group on that candidate, including twelve
+  history cases. Full 3,591 validation remains incomplete: original resolution
+  times out at 90.015 seconds without a completed report. Final live checks and
+  activation remain pending; selected runtime stays unchanged.
+- Preserve neutral standalone mask-removal and positive compact-version allocation
+  measurements: 800,000 bytes saved per 100,000 fixed escaping objects in each mode.
+  Combined semantic controls pass, but original 1,271/90 still times out without a
+  report. Keep both proposals unpromoted. Late-window sampling again points toward
+  trait gathering; sampled allocation volume is not retained memory or a speedup.
 
 - Preserve cumulative expend history in shared AI world copies without firing
   triggers again. Four baseline failures include missed fourth-mana life gain and

@@ -1,0 +1,36 @@
+"""Compare fixed escaping allocations without claiming a gameplay speedup."""
+from pathlib import Path
+from urllib.parse import urlsplit
+from urllib.request import url2pathname
+import json,os,re,subprocess,sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent;CANDIDATE=WORK/'first-event-candidate-v1';EPOCH=WORK/'first-event-source-epoch-v1'
+FIXTURE=WORK/'collection-allocation-probe-v1';PROTOTYPE=WORK/'collection-mask-prototype-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+mode=sys.argv[1];assert mode in ('baseline','prototype') and len(sys.argv)==2
+frozen=load(EPOCH/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+for folder in [FIXTURE,PROTOTYPE]:assert all(file_hash(folder/n)==h for n,h in load(folder/'inputs.json').items())
+settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json');lock=settings.verify();archive=settings.home/lock['jar_name']
+run=WORK/('collection-allocation-'+mode+'-v1');run.mkdir();(run/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+classpath=(() if mode=='baseline' else (PROTOTYPE/'classes',))+(archive,FIXTURE/'classes')
+command=[str(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Dfile.encoding=UTF-8','-cp',os.pathsep.join(map(str,classpath)),'forge.gamesimulationtests.util.CollectionAllocationProbe']
+save(run/'selection.json',{'command':command,'limit_seconds':90,'jar_sha256':file_hash(archive),'mode':mode})
+result=run_bounded(command,settings.home,run/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(run)));save(run/'process.json',result)
+assert result['status']=='finished' and result['returncode']==0,result
+text=(run/'native.log').read_text(encoding='utf-8');assert 'RUNTIME processors=2;max_heap_bytes=2147483648' in text
+for label,expected in [('COLLECTION_ORIGIN',archive if mode=='baseline' else PROTOTYPE/'classes'),('PROBE_ORIGIN',FIXTURE/'classes')]:
+ match=re.search('^'+label+' (.+)$',text,re.M);assert match,label
+ uri=urlsplit(match.group(1).strip());assert uri.scheme=='file' and not uri.netloc
+ assert Path(url2pathname(uri.path)).samefile(expected),(label,uri)
+rows=re.findall(r'ALLOCATION mode=(\w+);count=(\d+);bytes=(\d+)',text)
+assert len(rows)==3 and {r[0] for r in rows}=={'share_empty','share_populated','construct_empty'}
+values={name:{'count':int(count),'bytes':int(size)} for name,count,size in rows};assert all(r['count']==100000 and 0<r['bytes']<100000000 for r in values.values())
+save(run/'outcome.json',{'mode':mode,'rows':values,'native_jar_sha256':file_hash(archive),'actual_processors':2,'actual_max_heap_bytes':2147483648,'class_origins_verified':True,'scope':'Fixed escaping thread-allocation accounting only; not retained memory, workload speedup or rules coverage.'})
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items());assert file_hash(Path(__file__))==file_hash(run/'driver.py.txt')
+for folder in [FIXTURE,PROTOTYPE]:assert all(file_hash(folder/n)==h for n,h in load(folder/'inputs.json').items())
+print(json.dumps({'mode':mode,'process':result,'allocations':values}),flush=True)

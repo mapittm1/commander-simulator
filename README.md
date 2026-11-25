@@ -26,6 +26,21 @@ difference.
 
 ## Card coverage
 
+A generic scry-history correction now preserves each player's turn count in AI
+world copies. Three of six baseline controls fail: paid Opt no longer qualifies
+Proctor of Potential's graveyard ability after copying, and another player's
+count disappears. The correction passes **6/6**, including actual mana payment,
+finality counters, the returned creature's surveil trigger, positive/negative
+conditions and separate-player history. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / twelve event-history / nine upstream**
+controls. These supplied boards do not establish full legal histories or the
+experimental restore path.
+
+The recipe adds six cases in `scry_history`, preserving every previous group and
+original **1,271 / 90 seconds**. Fresh **3,554 source / 4,754 native / 3,597 main
+packaged** validation is pending; selected runtime is unchanged. See
+[scry correction evidence](engine/scry_history_evidence.json).
+
 A shared correction now preserves how often life gain, surveil and investigate
 occurred during the turn in copied games. Six of twelve baseline controls fail:
 Cleric of Life's Bond counters, Whispering Snitch drains and Erdwal Illuminator
@@ -37,8 +52,27 @@ boards do not establish complete legal histories or experimental restore support
 
 The recipe adds twelve cases in a separate `first_events` group. Every earlier
 group/count and original **1,271-case / 90-second** workload remains unchanged.
-Fresh **3,548 source / 4,748 native / 3,591 main packaged** validation is pending;
-selected runtime remains unchanged. See [history correction evidence](engine/first_event_history_evidence.json).
+Fresh **3,548 source / 4,748 native** validation passes with every earlier method
+and parameter retained. Reviewed inputs include 2,168 production, 169 test and 339
+card files; all 280 registered and nine priority fixture files match exact bytes.
+Packaged **301 information / 273 combat / 338 text-cost / 1,380 casting / ten
+dungeon / six expend / twelve history** cases pass receipt audits, plus separate
+**65 free-casting / 194 untap / 146 Battle** cases. Broader **6,071 gameplay / 320
+serialization** cases pass with exact membership and no skips.
+
+The full **3,591-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.015 seconds**, without a completed report.
+The selected runtime remains unchanged; final live checks, activation and complete
+card/rules coverage remain required. See [history correction evidence](engine/first_event_history_evidence.json)
+and [runtime evidence](engine/first_event_history_runtime_evidence.json).
+
+Allocation experiments remain unpromoted. Mask removal alone measures no saving;
+merging the two version counters as well saves **800,000 allocated bytes per
+100,000 objects** in each fixed escaping probe. The combined variant passes its
+semantic controls but still times out at original **1,271 / 90 seconds** without a
+completed report. These figures are not retained-memory or reliable speedup claims.
+A bounded late-window profile again points to static/replacement trait gathering.
+See [experiment evidence](engine/collection_experiments_v2_evidence.json).
 
 A generic expend-history correction now retains cumulative spell-mana spending in
 AI world copies. Four of six controls fail on the preceding candidate: Muerra's

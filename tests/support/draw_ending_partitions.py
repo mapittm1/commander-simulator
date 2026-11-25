@@ -219,6 +219,7 @@ PARTITIONS = {
     "dungeons": ("forge.ai.CommanderDungeonSnapshotTest",),
     "expended_mana": ("forge.ai.CommanderExpendHistoryTest",),
     "first_events": ("forge.ai.CommanderFirstEventHistoryTest",),
+    "scry_history": ("forge.ai.CommanderScryHistoryTest",),
 }
 
 EXPECTED_COUNTS = {
@@ -230,6 +231,7 @@ EXPECTED_COUNTS = {
     "dungeons": 10,
     "expended_mana": 6,
     "first_events": 12,
+    "scry_history": 6,
 }
 
 

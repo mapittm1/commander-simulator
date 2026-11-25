@@ -1,0 +1,696 @@
+{
+  "scope": "Fresh source/native, partial packaged and broader regression evidence. No full resolution or complete card-rules claim.",
+  "ci": {
+    "id": 45683185676,
+    "head_sha": "33ff93af0cadbd902b7d61499635f8cdb5b0c6cd",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native_audit": {
+    "build_id": "56c2d40ffc5e49778f883a5f640c83be",
+    "candidate": {
+      "forge_version": "2.0.16-583714b-reviewed-first-event-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation",
+        "dungeon_snapshot_state",
+        "expend_snapshot_history",
+        "first_event_snapshot_history"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "d37247727bfdec899ba5d602c0975f2aeb753dbd48b6a0f90a0d41941127f4e5",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "208f35a8b9c8c10b9311583ceaa3a131b55b7787ea85b6326f110d50c0c9a090",
+      "native_tests": {
+        "total": 4748,
+        "passed": 4748,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "780fc263f431889b0003c18878d8ac6d94d360b8faaff87a8f343486db227e54",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "source_counts": {
+      "total": 3548,
+      "passed": 3548,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_native_cases_retained": 4736,
+    "added_cases": 12,
+    "exact_native_method_and_parameter_counter_matches": true,
+    "input_audit": {
+      "production": {
+        "files": 2168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": [
+          "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+          "forge-ai/src/main/java/forge/ai/AiCache.java",
+          "forge-ai/src/main/java/forge/ai/AiController.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+          "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "forge-ai/src/main/java/forge/ai/ability/SetStateAi.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+          "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+          "forge-core/src/main/java/forge/card/CardType.java",
+          "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+          "forge-game/src/main/java/forge/game/Game.java",
+          "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+          "forge-game/src/main/java/forge/game/card/Card.java",
+          "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+          "forge-game/src/main/java/forge/game/card/CardState.java",
+          "forge-game/src/main/java/forge/game/combat/Combat.java",
+          "forge-game/src/main/java/forge/game/cost/Cost.java",
+          "forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
+          "forge-game/src/main/java/forge/game/cost/CostPayment.java",
+          "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java",
+          "forge-game/src/main/java/forge/game/player/Player.java",
+          "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+          "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+          "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+        ]
+      },
+      "test": {
+        "files": 169,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      },
+      "card": {
+        "files": 339,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      }
+    },
+    "fixture_copy_audit": {
+      "registered_fixture_files": 280,
+      "priority_fixture_files": 9,
+      "exact_reviewed_fixture_bytes_match": true
+    },
+    "production_classes_changed_from_357c": [
+      "forge/game/player/Player.class",
+      "forge/ai/simulation/GameCopier$1.class",
+      "forge/ai/simulation/GameCopier$2.class",
+      "forge/ai/simulation/GameCopier$3.class",
+      "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+      "forge/ai/simulation/GameCopier.class"
+    ],
+    "actual_processors": 2,
+    "actual_max_java_heap_bytes": 2147483648,
+    "selected_runtime_native_cases": 3295,
+    "installed": false,
+    "original_resolution_cases": 1271,
+    "original_resolution_worker_seconds": 90,
+    "scope": "Source/native regression and class/input audit only; independent packaged and final activation gates remain required."
+  },
+  "source": {
+    "counts": {
+      "total": 3548,
+      "passed": 3548,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 3536,
+    "new_cases": 12,
+    "exact_method_and_parameter_counter_matches": true,
+    "production_sources": 2168,
+    "test_inputs": 169,
+    "card_inputs": 339,
+    "changed_production_sources": [
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "inputs_unchanged_during_run": true,
+    "report_sha256": "c56c6b238fc2618ef50c31624071bec1d23958a830fcfef50996f9fcfecb754f",
+    "scope": "Source regressions only; fresh native4748, complete normal3591 including original1271/90, broader/live and activation remain required."
+  },
+  "packaged_partial": {
+    "build_id": "56c2d40ffc5e49778f883a5f640c83be",
+    "groups": {
+      "information": {
+        "run_id": "b238c1c3d6df4c399ed1b9d845470fa0",
+        "counts": {
+          "total": 301,
+          "passed": 301,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 14338,
+          "returncode": 0,
+          "elapsed_seconds": 23.593,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      },
+      "combat_and_snapshots": {
+        "run_id": "478659c45da844b3a63627c550a0f858",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10174,
+          "returncode": 0,
+          "elapsed_seconds": 38.594,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      },
+      "text_casting_and_costs": {
+        "run_id": "fe1733b84b1b4605ab77e1c7ad9f8b7a",
+        "counts": {
+          "total": 338,
+          "passed": 338,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 4805,
+          "returncode": 0,
+          "elapsed_seconds": 60.344,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      }
+    },
+    "total_cases": 912,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 240.922,
+    "configuration_restored": true,
+    "scope": "Audit only the three completed groups in the failed full3591 attempt. Original1271 resolution timed out; no full packaged pass.",
+    "full3591_packaged_passed": false,
+    "resolution_process": {
+      "status": "timeout",
+      "bytes": 19020,
+      "returncode": 1,
+      "elapsed_seconds": 90.015,
+      "support_source_hashes": {
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+      }
+    },
+    "resolution_run_id": "8d4cf0bdc2f143dc86f915ba62c8550b"
+  },
+  "packaged_remaining_groups": {
+    "build_id": "56c2d40ffc5e49778f883a5f640c83be",
+    "groups": {
+      "cast_events": {
+        "run_id": "0eb2bfef67064976a54c11a9703804c0",
+        "counts": {
+          "total": 1380,
+          "passed": 1380,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10944,
+          "returncode": 0,
+          "elapsed_seconds": 45.266,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      },
+      "dungeons": {
+        "run_id": "1be31a2d7cde44d4bd696a69f510d92c",
+        "counts": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.125,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      },
+      "expended_mana": {
+        "run_id": "de78efd3ae2941b5876f0f25db3b4ed6",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 12.719,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      },
+      "first_events": {
+        "run_id": "ab9f40ce6c294e20af5f52f5c3ec19ce",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 184,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.281,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c"
+          }
+        }
+      }
+    },
+    "total_cases": 1408,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 112.844,
+    "configuration_restored": true,
+    "scope": "Fixed1380 cast,10 dungeon and6 expend cases only; full3591 remains incomplete at original1271/90. Not full rules evidence."
+  },
+  "packaged_other": {
+    "build_id": "56c2d40ffc5e49778f883a5f640c83be",
+    "groups": {
+      "free_casting": {
+        "run_id": "78c86987e65a4f3495243be24370008e",
+        "counts": {
+          "total": 65,
+          "passed": 65,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 25,
+        "process": {
+          "status": "finished",
+          "bytes": 15875,
+          "returncode": 0,
+          "elapsed_seconds": 33.437,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "untap": {
+        "run_id": "bc9b9c2c053347b795de34eee7d7d447",
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 52,
+        "process": {
+          "status": "finished",
+          "bytes": 12668,
+          "returncode": 0,
+          "elapsed_seconds": 38.812,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "battle_combat": {
+        "run_id": "3faeac6d1b9346ada00ac6c396c77448",
+        "counts": {
+          "total": 146,
+          "passed": 146,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 30,
+        "process": {
+          "status": "finished",
+          "bytes": 20842,
+          "returncode": 0,
+          "elapsed_seconds": 16.157,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "208f35a8b9c8c10b9311583ceaa3a131b55b7787ea85b6326f110d50c0c9a090",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "f70be39624572210605772f0694d4be61a1000b912eaa4c11d5e4a3c347d0ce2"
+          }
+        }
+      }
+    },
+    "total_cases": 405,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 95.64,
+    "configuration_restored": true,
+    "scope": "Separate405 packaged cases only. Full3591 still incomplete at original1271/90."
+  },
+  "broader": {
+    "suites": {
+      "gameplay": {
+        "process": {
+          "status": "finished",
+          "bytes": 248010,
+          "returncode": 0,
+          "elapsed_seconds": 363.203
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 6071,
+          "passed": 6071,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "23eb37ae579eaabe1a598fd75d8ece928e98c140ef1b1f61ece60b5bbb515146"
+      },
+      "serialization": {
+        "process": {
+          "status": "finished",
+          "bytes": 29816,
+          "returncode": 0,
+          "elapsed_seconds": 89.906
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 320,
+          "passed": 320,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "fbce2d9547a4353dbe93ad9e178064f91ca5d9d65153f41dc6fa55e58e003bcd"
+      }
+    },
+    "passed": true,
+    "scope": "Broader gameplay/serialization only; no original1271/90 or all-card proof."
+  },
+  "installed": false,
+  "selected_runtime_native_cases": 3295,
+  "full3591_packaged_passed": false,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "remaining": [
+    "Original1271 resolution workload within90 seconds",
+    "Fresh final catalog/health/full-game checks for this candidate",
+    "Activation after all required gates",
+    "Complete paid-history and printed-card/rules coverage"
+  ],
+  "artifacts": {
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/card-inputs.json": "b7f315ba7c96b715200320b588e6d8c73c111364ac2b65c00de296108c7f8581",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/driver.py.txt": "259e67534c60c06b1cad0202a766420d00bbdb6e273eb68e36c8d3708dd20bac",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/evidence.json": "87023188fe9d7fe8232eca8e84394ee7900edfe32aa61b925222d27e11520197",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/maven-build.log": "730ad30c02d802961f2309c56427771a5a4dc85cb7070c2916ef17938b367b86",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/outcome.json": "c00d6438f95cc2fef8bb79f3f4c369808a5ad559af40ea463d0ff7bd0b2509e7",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/production-inputs.json": "014ff53a5f5fa1441e54ae66f57e18c3dbf9171a46b64c572ca83afa0dbb871e",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/selection.json": "7d25e3862173570a0db2cf370fe12f344917cf5bc87d5ca9ce1eaa8be64c8917",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/test-inputs.json": "33fdeb735c481ab527ebecad6df32076a35ea7c22ca5f7d22c568f824f70af77",
+    "engine/pending/first-event-history-runtime-v1/source3548-v1/testng-results.xml": "c56c6b238fc2618ef50c31624071bec1d23958a830fcfef50996f9fcfecb754f",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/build-audit.json": "125a43f900ec11450db5b62b8ad5ec2b3a71c0569f4510088e1f5b0daf55922d",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/build-output.log": "f79d121fb17da707a9fd74fbe713999b2c54ced17e1c11865a2bf79fe6ff62d8",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/candidate-selection.json": "150a574f4b20219c494d7490066b93027367178bc906a3d7e84b63cfb24d66bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/command.json": "a42dbba5f390b0763bd4ee4581f66920899eb22a967ae931c26c00ca6e48989f",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/driver.py.txt": "35a5153c21e625fcc5434ea712dff6c4095f1ac5a86b31bde4619dd066c7e6ae",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/process.json": "d984dd8b7100b6e1d9e1e1663e1228450c197cde226162997a0cea3709ce04fb",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-candidate-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/candidate-config.json": "696787b083a4b3bc9ee8545732c9055da3165d25f0a71b0c0055919aff608926",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/driver.py.txt": "7c189a39510fea7e117c6c7fc68db308dbf3f328ad4a80e3e086427f0b7bf9b1",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/outcome.json": "0c9fa05bbc543bca533a4554cca700a13892a1772a3014b2aab722ee8b1713af",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/output.log": "da0493a6f2cdd7a665dc96d8cf6d5490aa9ff29b80444f2474ebacf9095e3ff6",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/partial-audit.json": "56b300f6bbd8071655377c23c225365729f98656740373ae082a9a24e1fa9a8b",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/process.json": "669a91d60791394cf4eb551ec742c62bebd24d2f49e5375a22b6e372adb01b53",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-packaged-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/audit.json": "936d3c8c45793b81459679e6b58ce35f607d8571e3e850f40f84b40f299b1aa2",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/candidate-config.json": "696787b083a4b3bc9ee8545732c9055da3165d25f0a71b0c0055919aff608926",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/driver.py.txt": "19d243042ab36ff3632f50ff9910075a1391c4b12b01ae46e2029ba9efea5dd6",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/outcome.json": "b6f1ab7750651ef8f34b8132557c4a7bb97196aa2733a4f88ff974f1e9c7dd24",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/output.log": "068cb210b052b6add390fc5a0f9f9a07ddcf4f3af7a8693711e43f3836fc3a71",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/process.json": "5b19ea576814b0c0af0f2c8eb326e0f90d248fc8b87a8a15db9cf5bf3fececa4",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-remainder-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/audit.json": "8601888170c62d50de57918e7087d76463e9240584f54e6607a53da25a49f0ce",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/candidate-config.json": "696787b083a4b3bc9ee8545732c9055da3165d25f0a71b0c0055919aff608926",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/driver.py.txt": "a4d418eeb54b650beac7d33c403b5feb73c975439067523c43a359de2efd27e0",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/outcome.json": "15316c322504f3d20525156c8a29399e7ac2c6265a662717e974d082ca08c3be",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/output.log": "6a816bbd496ac93080da83bb740910b547147951e0fbdba49a77cf191c6b8c43",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/process.json": "6c29c7d19e808502b45494d6ce3f35bbf84d7d93a47531a1c9b4f252c16c36d3",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-other-packaged-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/applied-test-inputs.json": "3b69a5c3dc2f8414c9ab6ba26aaec92d92d75cb9322a14e939f2c21052e08832",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/driver.py.txt": "c2afb168bc88523c851bc716719eca5790ddbb3f45963da64d1b4e9b2736c5b3",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay/native-rules.log": "f64bc309267900a2dc4e0a8eaedec7b9cff1311422471a66f249b37b7d37099e",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay/outcome.json": "b7fe3434abe0685e1f23df170ae05ecbf1cfbc82f9f3286e347d5fada3a3baae",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay/process.json": "d65897f0fc1b4bfd9f4a668657334671428115005db19f03a4072915a4f11397",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay/selection.json": "b3ee3474e3aecf282b3116a58c28d8195df544def915d7834760250531c7c50f",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay/testng-results.xml": "23eb37ae579eaabe1a598fd75d8ece928e98c140ef1b1f61ece60b5bbb515146",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/gameplay-expected-cases.json": "1a7a1021de353530fe935f228a098a1a764fcbfccbef5618c0b813d4775d9e22",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/original-test-inputs.json": "4992edfcd10cb39dcda4fd80f1bbcfd393fd2a7df8a1c67f0bbdb15ecef45561",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/outcome.json": "1cf9e6c9ca74f839cd8c829b3815444a96b88136166a28b9b6aaaeb858bbe659",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/policy-applied/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "48fee858653cd7154c062e91dbbf22f5a0a5d33dedb48b6093aeff25528a9e18",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/policy-hashes.json": "e6f387302665533ea8aec60ae753c79c29a8b78b979d99f0f6337cf03be2d785",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/policy-originals/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "5d23b85edf2f94daba1858d56c8d09ba7000b8a19a740829b548eff390c35bc7",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/selection.json": "761275df9e18298444332ee418ceb326151d11147441d4560b940264855a7b74",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization/native-rules.log": "4b4b99f991e92636d3b0db8124fc05d2d30255711e4389749ec8622728568b6e",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization/outcome.json": "03c4e7cd88cfe643cb6dd5cc36ea13927ebe255695157cd3b6948b2d98343ae8",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization/process.json": "4e45357d5b4563361b6e2af10aafe7475f18a1c4302bba982cb8474230795fb5",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization/selection.json": "0d4963c3bf91bf1a9fb70066551bb0d48007c19d04955f32cc639529eca34763",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization/testng-results.xml": "fbce2d9547a4353dbe93ad9e178064f91ca5d9d65153f41dc6fa55e58e003bcd",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/serialization-expected-cases.json": "f8ae90cfb0f6f776bf9f8cf87e2b6eda3656db60d8607ed701557f102e0aabdf",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/source-ci.json": "7908657830258aaf8694404d3edc2a55cfecc7acbb8003f878c3e8d2a5ae32ac",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/source-epoch.json": "3f67cbda02ed24d45d4b303519789d716860dc15854cf95946545746d61cf8bc",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/source-frozen-inputs.json": "ee6ce2523002a437ab86547896cd560fce342ff083b5d7890e74e0fa745b3990",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/worker.log": "0d9d8063f59a0452a64b408d9de64b34eae2d30e705e9a123629207913b5ef72",
+    "engine/pending/first-event-history-runtime-v1/first-event-broad-v1/wrapper-process.json": "17cfd237faf754303ae74a0c1efbac1ef4326dbe813148bad22290f75c45dd88",
+    "engine/pending/first-event-history-runtime-v1/native-build/engine-lock.json": "c7f6d50816fe0f3b6db9b901ab4dabfd8ed391f3a88eb677ede7d9c1c0b432c3",
+    "engine/pending/first-event-history-runtime-v1/native-build/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/first-event-history-runtime-v1/native-build/maven-build.log": "780fc263f431889b0003c18878d8ac6d94d360b8faaff87a8f343486db227e54",
+    "engine/pending/first-event-history-runtime-v1/native-build/testng-results.xml": "efdd75c97a75721051805b853c84525ae1620c6eb6cddd48d5a4b7973d69aac6",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-methods-0000.json": "227a3e3b0b9f423ee813dbe181d4db380c51b070472375ecda06e8f278fa45f6",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-methods-0001.json": "d9235b460012d947cf464046711bf0989931fb9d49f341196703bfbb51699085",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-methods-0002.json": "ba352d48ad967c17db110794e344181e7024e2290ca0af12a80f36bd44f8f591",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-methods.json": "43db681ed884b449584364d6e8e2b141e3f213828e93dff6f430e2b2da6dc7af",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-summary.json": "bfc8a5c91308dcbbc50676025a826780a125d73d05ff6d9d35885d94863aaf54",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-ending-worker.log": "79e53698fa385823d6daa6e7c44fdeff32245811a792a8f425035ebf5b54281a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/draw-endings.json": "4767c99397bbd2caad007068c1acda48314a6003cd3d45a8c77c6fbf789cb694",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/rules-process.json": "e700923c4e2025dfb6381eb71b9b95ddde62cb6aaf89ea2841d25e409b55a0af",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/0eb2bfef67064976a54c11a9703804c0/rules-reports/testng-results.xml": "d3ab7f35b948291f102e1132a38eb817ea1bf2a80aeef09262f02fee248f50e3",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/draw-ending-methods.json": "6e917587b701936f8c1aec570a46bd854db8f75518e6698dccad6f59dca3e71d",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/draw-ending-summary.json": "fbd0a05b4840dd6f2fdb71e663a4e2d8bfbd6b8aed20ebce43590fcd14c24e20",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/draw-ending-worker.log": "57f0a41e74d08efe9cc5efe42314c4a2ac21a58995952d7351a1e70fc483ae65",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/draw-endings.json": "5ac208d72d0a20c77cbdcc2e874682490af318f95b841b1e5fc361bca3202cc1",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/rules-process.json": "31476f5b8b5357cb082e5e1c3c3b59ebb0d851b4024f114ff02befedfa07004e",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/1be31a2d7cde44d4bd696a69f510d92c/rules-reports/testng-results.xml": "c74e816e8803114f6e2beaffd4a4ca704b47f5de793eb2012bdbf8c16c6f95cd",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/battle-combat-methods.json": "6dbcfd74792765019e2cd0929f9b6ac374e59929e92815b843ab1f22d059a655",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/battle-combat-summary.json": "590efe90f0244f69bc3d172756d5edcf1513fe6b6d0812c33cb823b796b622ad",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/battle-combat-worker.log": "02ee74fa42de5798f98950f2acfc757d91f1f3f4a4de897d19534daed74ea790",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/battle-combat.json": "0a094e8d7d16e6bff68574daa427dac304b733e945bbb6f39e7e5ae128d3adab",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/rules-inputs.json": "66761287acc56c6276c221ff7854f42876820fab281ded1ae1b218e2a58ef8ee",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/rules-process.json": "50732fdd32696aff741c0f643bfb9e1259640109132ebd4c6455d58c521ad717",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/3faeac6d1b9346ada00ac6c396c77448/rules-reports/testng-results.xml": "cb19d42b627defd2a60a32894305fc5ac04115d8a625a25773aac6c7a2c63bca",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/draw-ending-methods.json": "d462e76b81f2b5403dc2f95f890a540489e30962e6f60158cd45c1a168ef0533",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/draw-ending-summary.json": "fcf1c46327a42c9edb0f4bb67d267fbd5f73958e5b2b567f63701d04c5e34981",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/draw-ending-worker.log": "ffd217f54ef359b29dd37dcac01c2b06e9f3bf7af7880e546e6d70bf11b29c8b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/draw-endings.json": "a6ff842fcef065a98c2651b1aa021182d99a20e83e719dc56493228db2540413",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/rules-process.json": "ab9922b85ada0edb6f1e675f9cf5ae2afecb341b4dc094b57cbf63c4bd68a829",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/478659c45da844b3a63627c550a0f858/rules-reports/testng-results.xml": "26fa3efbdfbc7abd2e70088bef7c296b1e36469eaea8b835ea26e7243953064f",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/free-casting-methods.json": "0e20494fc23fb9820c5edc09150839b035532beb6d3d6db57ff7613196d5eae2",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/free-casting-summary.json": "35a8f4de59a1a515687a0107093548f8ecc25df836a47a57a7145dc561da500b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/free-casting-worker.log": "f7d06e87aebfb2278f1e771d94ebac34100e0c8d1ffa73c68bc632363e0bdea8",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/free-casting.json": "49b7c846212a8fd3cc2bfb88bc6db3fe97bcf29c007b489924c2c99b02d65e79",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/rules-inputs.json": "fbe89d52123e7259d77ecfd10afef70e24a3c44fc6d56183f09ab278d9a409ed",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/rules-process.json": "93ea58da328502adfccac181fc7b23dc035a16f505a10517e5172f78030b93e9",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/78c86987e65a4f3495243be24370008e/rules-reports/testng-results.xml": "cf8f8ab14baaaf2c107032d94996541601af3cbc2c514215a39128408f54d395",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/8d4cf0bdc2f143dc86f915ba62c8550b/draw-ending-worker.log": "b7655fe18ce648e87bffab450a612e121c8568487e0052b8ce086bf531496339",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/8d4cf0bdc2f143dc86f915ba62c8550b/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/8d4cf0bdc2f143dc86f915ba62c8550b/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/8d4cf0bdc2f143dc86f915ba62c8550b/rules-process.json": "ae5e8dba57b3323ac7c7d4549d00a2455b143e4c3e7932583ad6ec5513936ba7",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/draw-ending-methods.json": "16bdf0419f9c6c8bf4ef5b20f3deb27a8a3e64fc2965a5e7b0310f460dee6248",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/draw-ending-summary.json": "fe9aa584e2a3ebf0dbdae890723a4dd0978302bdbe5d21c113a2b3f854d06407",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/draw-ending-worker.log": "8024e2869973a6385a93c2ad45e98671272df9717437ead1e5ccbf886a7deb06",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/draw-endings.json": "aa03047588c0f3bf56f92cb5a7d33aa14dec73a88d8ef45e1eaea5dbfc659dc1",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/rules-process.json": "87582e3af3ef66d70e005b1f8214fc347cf8f36d56249fe342e3af43ec311945",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/ab9f40ce6c294e20af5f52f5c3ec19ce/rules-reports/testng-results.xml": "32879691fba93b9407e5734e6cec6ef9f93ff35883ba2d248a4b91558ba6c253",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/draw-ending-summary.json": "bfe166ce87829b5ba28e9d257f726b43b4c17c066841022d0f1b32b41dd46dc4",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/draw-ending-worker.log": "286d048e3e9e459cf3774e32abb025e48a33c3ca001b4be18260516d1eb1bf56",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/draw-endings.json": "fe08be624129780bd433884b364e8d39c0b8c827bbe657c432dea199f15d627d",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/rules-process.json": "d95f73b4a1e30ea2d7fcf7d70bb328c8f6e0b79c475d22c4b1596e4832bb6b20",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/b238c1c3d6df4c399ed1b9d845470fa0/rules-reports/testng-results.xml": "40600291ed3a0dc5029f8107fda5265252ad500cd7634536b3f03cd0cf7bbf1c",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/rules-inputs.json": "babc6c0c35dbf9eef6d3710dc7f970625cf77f9ce64340439f7000497521e442",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/rules-process.json": "a3f040b118327919196c82ef29bfe882c11187f321e1a5d22cdea1e0bb969de2",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/rules-reports/testng-results.xml": "9bf68a838b1428567cdfec4b59dbdf90362ef1eecedb646816d0c3b4785478a8",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/untap-methods.json": "aee3dfb86a9d0e6a4ab984725d712b12f69fd1fc4b0aa91ab9c05af6f6a63fda",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/untap-summary.json": "6d74aed2dc3d82d8316ac6a0c9bb626267b9e11878a6af9670a7e8b9ada0d388",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/untap-worker.log": "7bb66707a38e92d679b84025f47f3cd6fabe673e3d25f0666f2ff559591c3679",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/bc9b9c2c053347b795de34eee7d7d447/untap.json": "a3a559534e7f0f4f5efca9efa6bdedc412aaf7b7c3dd5cfb0c58013793c8988a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/draw-ending-methods.json": "61c240518fb769744ed2c014a06fe1591b442188ad30c6d2859f5d9b11fe52b1",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/draw-ending-summary.json": "5cb1412b12cd0d470f06d4d6d9f42f313d680dc689d835a93028bcbfc94e700d",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/draw-ending-worker.log": "aaffeab33bbb424eed9eabc7ff85dc69588fc66cbfe4acfc1091b359734a2821",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/draw-endings.json": "a63d454ecc41a6f41333df63cceed08903365a32aa19f11f9d0225fce8cd355c",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/rules-process.json": "cfa1586407c426c2fe7042857bde896486187792c28a8f939b850e6d37591978",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/de78efd3ae2941b5876f0f25db3b4ed6/rules-reports/testng-results.xml": "0de94294427610a619051b1bdbff783325581d5bdd91a8f8133f65b5ef7c2fa6",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/draw-ending-summary.json": "2af305c47e311cd256b9d91e465cd8f31074d5473b0cba1c906e7f3483145e7c",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/draw-ending-worker.log": "43a2a3d1906c61344bc28ebabe2b0763c77a09cb627d2ee23289f3ac82d00e6c",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/draw-endings.json": "2d7e01f4925a5f041bb5db14240c3141cc46283e5e1e91e2df5724591e763cbe",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/rules-inputs.json": "2da42aeb251eb6c26af47b539985e0bea486e871ad64a03d311eea97b9d0910a",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/rules-process.json": "0475803c708f4db05672d0745e2b825508a89732764272f321fb2ba1d63ff880",
+    "engine/pending/first-event-history-runtime-v1/packaged-runs/fe1733b84b1b4605ab77e1c7ad9f8b7a/rules-reports/testng-results.xml": "12e9b4cd47e1c538c4c65903e2170e3a5d8dec57614efdb45f787b81b8d62577",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_source3548_v1.py.txt": "259e67534c60c06b1cad0202a766420d00bbdb6e273eb68e36c8d3708dd20bac",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_build4748_v1.py.txt": "35a5153c21e625fcc5434ea712dff6c4095f1ac5a86b31bde4619dd066c7e6ae",
+    "engine/pending/first-event-history-runtime-v1/drivers/audit_build4748_v1.py.txt": "c0f9496bd5c92b9e72db176b717adab76205aeb9cb5cf950f302109f3a27c9d7",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_first_event_packaged_v1.py.txt": "7c189a39510fea7e117c6c7fc68db308dbf3f328ad4a80e3e086427f0b7bf9b1",
+    "engine/pending/first-event-history-runtime-v1/drivers/audit_first_event_packaged_failure_v1.py.txt": "d5e96650e120d722ee0ad64536527e69a744a0f3c7b94b6ce9a1e8965a319610",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_first_event_remainder_v1.py.txt": "19d243042ab36ff3632f50ff9910075a1391c4b12b01ae46e2029ba9efea5dd6",
+    "engine/pending/first-event-history-runtime-v1/drivers/audit_first_event_remainder_v1.py.txt": "aaef10bb8ef4ffad028d12489922e9c51bc0f7555b57f8ce2d5fba71eee4194b",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_first_event_other_packaged_v1.py.txt": "a4d418eeb54b650beac7d33c403b5feb73c975439067523c43a359de2efd27e0",
+    "engine/pending/first-event-history-runtime-v1/drivers/audit_first_event_other_packaged_v1.py.txt": "d2ddaa4c87558d511bd416a03dfcce59e818c6253c4c4e4ec4dcda319f889584",
+    "engine/pending/first-event-history-runtime-v1/drivers/prepare_first_event_broad_v1.py.txt": "c574366639209e08397bbfd88681146126610664c63c1ac3aeb74cc3f143633c",
+    "engine/pending/first-event-history-runtime-v1/drivers/run_first_event_broad_v1.py.txt": "c2afb168bc88523c851bc716719eca5790ddbb3f45963da64d1b4e9b2736c5b3"
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "scope": "Unpromoted collection-layout proposal: derive hash mask from the same backing array instead of storing duplicate private transient state. No APIs, test selection, search limits or runtime resource settings change.",
+  "source_head": "33ff93af0cadbd902b7d61499635f8cdb5b0c6cd",
+  "source_manifest": "source3548-v1/production-inputs.json",
+  "changed_sources": [
+    "forge-core/src/main/java/forge/util/collect/FCollection.java"
+  ],
+  "motivation": "Fresh profile attributes large sampled allocation volume to FCollection/shareCopy; exact size or speed benefit is unproven until measured.",
+  "requires": [
+    "Paired allocation measurement",
+    "Retained collection/iteration/serialization contracts",
+    "Retained gameplay controls",
+    "Original resolution1271/90",
+    "Full native and packaged validation before activation"
+  ],
+  "promoted": false
+}

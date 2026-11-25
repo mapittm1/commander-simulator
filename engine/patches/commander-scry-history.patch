@@ -1,0 +1,14 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1423,9 +1423,10 @@
+         }
+     }
+ 
+-    /** Restore first-event counters without gaining life, surveilling or investigating again. */
++    /** Restore event counts without replaying life gain, scry, surveil or investigate. */
+     public final void copySnapshotFirstEventHistoryFrom(final Player original) {
+         lifeGainedTimesThisTurn = original.lifeGainedTimesThisTurn;
++        scryThisTurn = original.scryThisTurn;
+         surveilThisTurn = original.surveilThisTurn;
+         investigatedThisTurn = original.investigatedThisTurn;
+     }

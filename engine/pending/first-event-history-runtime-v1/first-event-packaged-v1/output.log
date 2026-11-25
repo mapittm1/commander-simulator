@@ -1,0 +1,27 @@
+test_packaged_draw_ending_rules (tests.integration.test_draw_endings_integration.DrawEndingIntegrationTests.test_packaged_draw_ending_rules)
+Require every fixed rules method to pass without skips or configuration failures. ... {"draw_ending_partition": "information", "draw_ending_run": "b238c1c3d6df4c399ed1b9d845470fa0"}
+{"draw_ending_partition": "combat_and_snapshots", "draw_ending_run": "478659c45da844b3a63627c550a0f858"}
+{"draw_ending_partition": "text_casting_and_costs", "draw_ending_run": "fe1733b84b1b4605ab77e1c7ad9f8b7a"}
+FAIL
+
+======================================================================
+FAIL: test_packaged_draw_ending_rules (tests.integration.test_draw_endings_integration.DrawEndingIntegrationTests.test_packaged_draw_ending_rules)
+Require every fixed rules method to pass without skips or configuration failures.
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\tests\integration\test_draw_endings_integration.py", line 43, in test_packaged_draw_ending_rules
+    all_methods.extend(self.check_partition(settings, partition))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\tests\integration\test_draw_endings_integration.py", line 61, in check_partition
+    self.assertEqual(process["returncode"], 0, process)
+AssertionError: 1 != 0 : {'status': 'timeout', 'bytes': 19020, 'returncode': 1, 'elapsed_seconds': 90.015, 'support_source_hashes': {'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py': 'aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py': '70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py': 'a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py': '6a082ce0900aae0c86794060207c0f6f6ca11cb36adea2daa5fd6ec8adee932c'}}
+
+----------------------------------------------------------------------
+Ran 1 test in 239.596s
+
+FAILED (failures=1)
+Traceback (most recent call last):
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_first_event_packaged_v1.py", line 40, in <module>
+    assert result.wasSuccessful() and result.testsRun==1 and not result.skipped
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

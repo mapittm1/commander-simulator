@@ -1,0 +1,72 @@
+"""Preserve exact dungeon snapshot failures/controls before proposing a generic correction."""
+from pathlib import Path
+from collections import Counter
+import importlib
+import json
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,read_settings,jvm_library
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+WORK=Path(__file__).resolve().parent;FIXTURE=WORK/'scry-history-fixture-v1'
+PROTOTYPE=WORK/'scry-history-prototype-v1';EPOCH=WORK/'first-event-source-epoch-v1'
+ORIGINAL=ROOT/'data/runs'/json.loads((WORK/'first-event-packaged-v1/partial-audit.json').read_bytes())['groups']['information']['run_id']
+CONFIG=ROOT/json.loads((WORK/'first-event-candidate-v1/candidate-selection.json').read_bytes())['build']/'engine-config.json'
+MODE=sys.argv[1];assert MODE in ('baseline','prototype') and sys.argv[2:] in ([],['--worker'])
+RUN=WORK/('scry-history6-'+MODE+'-v1')
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify(root=False):
+    assert all(file_hash(FIXTURE/n)==h for n,h in load(FIXTURE/'inputs.json').items())
+    metadata=load(ORIGINAL/'rules-inputs.json')
+    assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+    assert all(file_hash(Path(n))==h for n,h in metadata['inputs'].items())
+    if MODE=='prototype':assert all(file_hash(PROTOTYPE/n)==h for n,h in load(PROTOTYPE/'inputs.json').items())
+    if root:assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+if '--worker' in sys.argv:
+    verify();settings=read_settings(CONFIG);lock=settings.verify();assert lock['native_tests']['total']==4748
+    require_bridge();java=importlib.import_module('jpype')
+    recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+    archive=settings.home/lock['jar_name'];paths=(() if MODE=='baseline' else (PROTOTYPE/'classes',))+(archive,FIXTURE/'classes',ORIGINAL/'rules-classes',dependency)
+    java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,paths)),convertStrings=True)
+    runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and 0<runtime.maxMemory()<=2147483648
+    overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in load(PROTOTYPE/'inputs.json') if n.startswith('classes/') and n.endswith('.class')}
+    names=tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.game.ability.effects.VentureEffect','forge.game.ability.effects.ScryEffect','forge.game.ability.AbilityUtils')))
+    for name in names:assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+    for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+    name='forge.ai.CommanderScryHistoryTest'
+    assert packaged_rules.class_origin(java,name).samefile(FIXTURE/'classes')
+    assert packaged_rules.class_origin(java,'forge.ai.AITest').samefile(ORIGINAL/'rules-classes')
+    methods=re.findall(r'@Test\s+public void (\w+)\(', (FIXTURE/'CommanderScryHistoryTest.java').read_text(encoding='utf-8'))
+    assert len(methods)==len(set(methods))==6
+    expected=Counter((name+'.'+m,()) for m in methods)
+    runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_]))
+    runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+    counts,rows=packaged_rules.test_results(listener)
+    actual=Counter((cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for cls in ET.parse(RUN/'reports/testng-results.xml').findall('.//class') for m in cls.findall('test-method') if m.get('is-config')!='true')
+    failures=[{'method':cls.get('name')+'.'+m.get('name'),'message':m.findtext('exception/message')} for cls in ET.parse(RUN/'reports/testng-results.xml').findall('.//class') for m in cls.findall('test-method') if m.get('is-config')!='true' and m.get('status')!='PASS']
+    outcome={'mode':MODE,'counts':counts,'methods':rows,'failures':failures,'exact_case_counter_matches':actual==expected,
+        'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),
+        'production_origins':len(names),'actual_processors':int(runtime.availableProcessors()),'actual_max_java_heap_bytes':int(runtime.maxMemory()),
+        'scope':'Paid Opt/Consider followed by conditional native graveyard activation from supplied boards; repeated copies and separate-player supplied counts. No full preceding histories or all-rules claim.'}
+    save(RUN/'outcome.json',outcome)
+    assert actual==expected and counts['total']==6 and counts['skipped']==0
+    assert outcome['configuration_failures']==outcome['configuration_skips']==0
+    if MODE=='prototype':assert counts==dict(total=6,passed=6,failed=0,skipped=0) and outcome['testng_status']==0
+    else:assert outcome['testng_status']==int(counts['failed']>0)
+    verify();java.shutdownJVM()
+else:
+    verify(root=True);assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+    ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+    RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(CONFIG)
+    with _engine_profile(settings,RUN):
+        process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+    save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+    outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+    print(json.dumps({'mode':MODE,'process':process,'counts':outcome.get('counts'),'failures':outcome.get('failures')}),flush=True)
+    assert process['status']=='finished' and process['returncode']==0,process

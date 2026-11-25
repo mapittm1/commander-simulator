@@ -133,6 +133,7 @@ SOURCES = {
     "CommanderDungeonSnapshotTest": "commander_dungeon_snapshot_test_sha256",
     "CommanderExpendHistoryTest": "commander_expend_history_test_sha256",
     "CommanderFirstEventHistoryTest": "commander_first_event_history_test_sha256",
+    "CommanderScryHistoryTest": "commander_scry_history_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest": "commander_replacement_cache_inputs_test_sha256",
@@ -444,6 +445,7 @@ NATIVE_CLASSES = (
     "forge.game.trigger.TriggerLifeGained",
     "forge.game.trigger.TriggerSurveil",
     "forge.game.trigger.TriggerInvestigated",
+    "forge.game.ability.effects.ScryEffect",
 )
 
 
@@ -483,7 +485,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3591-case packaged family."""
+    """Execute the fixed 3597-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
