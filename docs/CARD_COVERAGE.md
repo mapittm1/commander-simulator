@@ -19,12 +19,20 @@ own lock and validation.
 
 ## Opaque keyword callbacks
 
-The registered follow-up delegates to native keyword-collection subclasses,
-even when their underlying map is empty. Six baseline callback failures are
-corrected; all 298 prior controls remain passing (304 total). Full 3,051-source /
-4,251-native and independent 3,094-case packaged validation remain pending.
-These controlled native extension contracts do not certify printed card behavior.
-See [callback evidence](../engine/opaque_keyword_traits_evidence.json).
+The callback correction passes all 3,051 source and 4,251 native cases with
+actual two-processor / 2 GiB JVM assertions. All earlier cases and parameter values
+are retained, and all 2,168 production sources match the reviewed snapshot.
+Opaque keyword-collection callbacks remain visible even with an empty underlying
+map. The six baseline failures become passing alongside 298 prior focused controls.
+These controlled native extension contracts do not certify every printed card.
+See [focused callback evidence](../engine/opaque_keyword_traits_evidence.json).
+
+The mandatory independent 1,271-case resolution gate still exceeds its original
+90-second limit. Six other groups pass 1,284 subtests; the 944-case cast-event
+group is not reached. Configuration is restored and the candidate remains
+uninstalled. Broader/full-game/catalog/health/activation and complete rules
+coverage remain pending. See
+[runtime evidence](../engine/opaque_keyword_runtime_evidence.json).
 
 ## Completed intrinsic-cache validation
 

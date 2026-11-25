@@ -26,12 +26,20 @@ difference.
 
 ## Card coverage
 
-A registered follow-up ensures that keyword-collection subclasses use their
-native ability/replacement callbacks even when their underlying map is empty.
-Six baseline failures are corrected, and all 298 prior focused controls remain
-passing (304 total). Full 3,051-source / 4,251-native and independent 3,094-case
-packaged validation remain pending for this revision. The selected runtime is
-unchanged. See [opaque keyword evidence](engine/opaque_keyword_traits_evidence.json).
+The keyword callback correction passes all **3,051 source** and **4,251 native**
+cases, retaining every earlier case and parameter. All 2,168 production sources
+match the reviewed snapshot; resource assertions verify two JVM processors and a
+2 GiB maximum Java heap. The correction preserves callbacks from keyword-collection
+subclasses even when their underlying map is empty. Six baseline callback failures
+become passing, alongside all 298 prior focused controls (304 total). See the
+[focused callback evidence](engine/opaque_keyword_traits_evidence.json).
+
+The mandatory independent packaged gate remains failed: the original 1,271-case
+resolution group times out at 90.015 seconds against its unchanged 90-second
+limit. Six completed groups pass 1,284 subtests; the 944-case cast-event group is
+not reached. The original configuration is restored and the candidate remains
+uninstalled. Broader/full-game/catalog/health/activation and complete card/rules
+support remain pending. See [runtime evidence](engine/opaque_keyword_runtime_evidence.json).
 
 The completed intrinsic-cache revision passes all 3,045 source and 4,245 native
 cases, retaining every earlier case/parameter. All 2,168 production sources match,

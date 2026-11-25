@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the opaque-keyword callback correction with all 3,051 source and 4,251
+  native cases passing, retaining all prior cases/parameters and all 2,168
+  production sources. Actual two-processor / 2 GiB JVM assertions pass. Preserve
+  the independent packaged resolution timeout (1,271 expected cases, 90.015
+  seconds), six completed groups with 1,284 passing subtests, and the 944-case
+  cast group not reached. Restore the original configuration, keep the candidate
+  uninstalled, and update coverage evidence/docs. Broader/full-game/catalog/
+  health/activation and complete rules support remain pending.
+
 - Honor opaque keyword-collection callbacks even when the underlying collection
   is empty. Six native callback failures become passing, and all 298 prior focused
   controls remain passing (304 total). Bind compiled test bytecode before and
