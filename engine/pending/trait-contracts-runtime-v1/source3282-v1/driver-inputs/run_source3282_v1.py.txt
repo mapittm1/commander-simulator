@@ -1,0 +1,59 @@
+"""Run every prior source contract plus87 registered live gathering/filter controls."""
+from pathlib import Path
+from types import SimpleNamespace
+from collections import Counter
+import json,hashlib,shutil,time,sys,subprocess,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+WORK=Path(__file__).resolve().parent;SOURCE=ROOT/'data/development/commander-blocking-history-research/source';PRIOR=WORK/'source3195-v1';EPOCH=WORK/'trait-filter-contracts-source-epoch-v1';RUN=WORK/'source3282-v1'
+NEW={'CommanderTraitGatherTest':48,'CommanderCardFilterContractTest':39}
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ci=json.loads((EPOCH/'source-ci.json').read_bytes());assert ci['head_sha']==head and ci['status']=='completed' and ci['conclusion']=='success'
+frozen=json.loads((EPOCH/'source-frozen-inputs.json').read_bytes());assert all(sha(ROOT/n)==h for n,h in frozen.items())
+production={p.relative_to(SOURCE).as_posix():sha(p) for p in SOURCE.glob('*/src/main/java/**/*.java')};assert len(production)==2168
+oldproduction=json.loads((PRIOR/'production-inputs.json').read_bytes());assert production.keys()==oldproduction.keys()
+changed=[n for n,h in production.items() if h!=oldproduction[n]];assert not changed and production==oldproduction
+fixtures=json.loads((PRIOR/'test-inputs.json').read_bytes());assert all(sha(SOURCE/n)==h for n,h in fixtures.items())
+for name in NEW:
+ rel='forge-gui-desktop/src/test/java/forge/ai/'+name+'.java';assert sha(SOURCE/rel)==sha(ROOT/'engine/tests'/(name+'.java'));fixtures[rel]=sha(SOURCE/rel)
+cards=json.loads((PRIOR/'card-inputs.json').read_bytes());assert all(sha(SOURCE/n)==h for n,h in cards.items())
+selection=json.loads((PRIOR/'selection.json').read_bytes());classes=selection['classes']+list(NEW);assert len(classes)==len(set(classes))
+RUN.mkdir();snapshot=RUN/'input-snapshots';snapshot.mkdir()
+for name,values in [('production-inputs.json',production),('test-inputs.json',fixtures),('card-inputs.json',cards)]:
+ save(RUN/name,values)
+ for rel,h in values.items():
+  dest=snapshot/rel;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(SOURCE/rel,dest);assert sha(dest)==h
+(RUN/'driver-inputs').mkdir();shutil.copyfile(Path(__file__),RUN/'driver-inputs'/Path(__file__).name);shutil.copyfile(ROOT/'tools/build_sticker_engine.py',RUN/'driver-inputs/build_sticker_engine.py')
+checked=builder._checked
+selectedarg=next(arg for arg in selection['command'] if arg.startswith('-Dtest='))+','+','.join(NEW)
+def selected(command,cwd,output,name,timeout):
+ assert timeout==600 and '-Xmx2048m' in command and '-XX:ActiveProcessorCount=2' in command
+ command=[selectedarg if arg.startswith('-Dtest=') else 'test' if arg=='package' else arg for arg in command]
+ save(RUN/'selection.json',{'classes':classes,'command':command,'timeout':timeout})
+ return checked(command,cwd,output,name,timeout)
+started=time.time_ns();counts=None
+try:
+ builder._checked=selected
+ builder._compile(SimpleNamespace(jdk=Path('C:/Program Files/Java/jdk-19')),SOURCE,ROOT/'data/engine-builds/0cee9c7ab6b1414089c59bd962888e7b/maven',RUN)
+finally:
+ builder._checked=checked
+ assert sha(Path(__file__))==sha(RUN/'driver-inputs'/Path(__file__).name)
+ assert all(sha(ROOT/n)==h for n,h in frozen.items())
+ assert all(sha(SOURCE/n)==h for values in (production,fixtures,cards) for n,h in values.items())
+ report=SOURCE/'forge-gui-desktop/target/surefire-reports/testng-results.xml'
+ if report.exists() and report.stat().st_mtime_ns>=started:
+  shutil.copytree(report.parent,RUN/'all-surefire-reports');shutil.copyfile(report,RUN/'testng-results.xml')
+  tree=ET.parse(report).getroot();counts={k:int(tree.attrib[k]) for k in ('total','passed','failed','skipped')}
+  rows=[{'method':cl.attrib['name']+'.'+m.attrib['name'],'status':m.attrib['status'],'parameters':[v.text for v in m.findall('./params/param/value')],'duration_ms':int(m.attrib.get('duration-ms','0')),'message':m.findtext('exception/message')} for cl in tree.findall('.//class') for m in cl.findall('test-method') if m.attrib.get('is-config')!='true']
+  prior=json.loads((PRIOR/'evidence.json').read_bytes());assert prior['counts']==dict(total=3195,passed=3195,failed=0,skipped=0)
+  save(RUN/'outcome.json',{'counts':counts,'methods':rows})
+  expected=Counter((r['method'],tuple(r['parameters'])) for r in prior['methods']);actual=Counter((r['method'],tuple(r['parameters'])) for r in rows);assert not expected-actual and len(actual)==3282 and sum(actual.values())==3282
+  assert all(r['status']=='PASS' for r in rows)
+  config_failures=[m.attrib for m in tree.findall('.//test-method') if m.get('is-config')=='true' and m.get('status')!='PASS'];assert not config_failures,config_failures
+  limits=[r for r in rows if r['method'].startswith('forge.gamesimulationtests.util.CommanderRuntimeLimitsTest.')];assert len(limits)==1 and limits[0]['status']=='PASS'
+  for name,count in NEW.items():assert sum(r['method'].startswith('forge.ai.'+name+'.') for r in rows)==count
+  record={'counts':counts,'methods':rows,'retained_source3195_cases':3195,'parameters_retained':True,'new_cases':87,'actual_jvm_limit_case_passed':True,'production_sources':2168,'changed_production_sources':changed,'report_sha256':sha(RUN/'testng-results.xml'),'log_sha256':sha(RUN/'maven-build.log'),'inputs_unchanged_during_run':True,'runner_sha256':sha(Path(__file__)),'scope':'All source contracts retained; 87 new controls. Full native4482/build/audit and independent packaged3325 gates plus broader/full-game/catalog/health/activation still required. No installed runtime change or full card correctness claim.'}
+  save(RUN/'evidence.json',record);print(json.dumps({'counts':counts,'retained':3195,'new_cases':87,'production_sources':2168}),flush=True)
+assert counts==dict(total=3282,passed=3282,failed=0,skipped=0),counts

@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the expanded contracts with all 3,282 source and 4,482 native cases
+  passing; retain prior cases/parameters and match 2,168 production sources, 158
+  test files and 316 card files. Production class bytes match the previous counter
+  candidate; actual two-processor / 2 GiB JVM assertions pass. Independently audit
+  all 1,175 packaged cast cases, native parameter counters, 177 production origins
+  and 399 earlier compiled class bytes (43.984 worker seconds). Preserve a wrapper-
+  only 1,177-count typo and verify completed receipts without rerunning the worker.
+  Preserve a combined metadata/gather/filter experiment: all 535 focused cases
+  pass, but the unchanged 1,271-case / 90-second gate times out at 90.015 seconds.
+  Keep it unpromoted and the candidate uninstalled. Hash-check seven historical
+  catalog gaps as non-starting meld results; no script/rules approval claim.
+  Full packaged/broader/full-game/catalog/health/activation and full coverage remain
+  pending. Record exact artifacts in engine/trait_contracts_runtime_evidence.json.
+
 - Register 87 native contracts for live trigger/devotion gathering and generic
   filtering; paired baseline/corrected-prototype checks pass all 535 focused cases.
   Preserve three custom-spliterator callback failures from the unrestricted filter

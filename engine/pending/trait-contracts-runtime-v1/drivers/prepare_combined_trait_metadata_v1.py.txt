@@ -1,0 +1,27 @@
+from pathlib import Path
+import json,shutil,hashlib,difflib
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';p=w/'combined-trait-filter-metadata-prototype-v1';gather=w/'trait-filter-prototype-v2';metadata=w/'replacement-eligibility-prototype-v2';source=r/'data/development/commander-blocking-history-research/source';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+for parent in [gather,metadata]:
+ assert all(sha(parent/n)==h for n,h in json.loads((parent/'inputs.json').read_bytes()).items())
+p.mkdir()
+for sub in ['baseline','source']:shutil.copytree(gather/sub,p/sub)
+for n in ['forge-game/src/main/java/forge/game/keyword/KeywordCollection.java','forge-game/src/main/java/forge/game/keyword/KeywordInstance.java']:
+ for sub in ['baseline','source']:(p/sub/n).parent.mkdir(parents=True,exist_ok=True)
+ shutil.copyfile(source/n,p/'baseline'/n);shutil.copyfile(metadata/'source'/n,p/'source'/n)
+n='forge-game/src/main/java/forge/game/card/CardState.java';text=(metadata/'source'/n).read_text(encoding='utf-8');base=(source/n).read_text(encoding='utf-8');start=base.index('    /** Live base-class trait sources;');end=base.index('    public final FCollectionView<Trigger> getTriggers()',start);strict=base[start:end];assert 'private boolean hasNoAdditionalTraits()' in strict
+anchor='    public final FCollectionView<Trigger> getTriggers() {';assert text.count(anchor)==1
+helpers='''    /** A live negative check; unknown trigger callback sources retain gathering. */
+    public final boolean mayHaveTriggers() {
+        return !triggers.isEmpty() || !hasNoAdditionalTraits();
+    }
+
+    /** Keyword class metadata may prove absence; live lists are rechecked each time. */
+    public final boolean mayHaveStaticAbilities() {
+        return !staticAbilities.isEmpty() || !hasNoAdditionalStaticTraits();
+    }
+
+''';text=text.replace(anchor,strict+helpers+anchor);(p/'source'/n).write_text(text,encoding='utf-8',newline='\n')
+assert 'copySnapshotCountersFrom' in (p/'source/forge-game/src/main/java/forge/game/card/Card.java').read_text(encoding='utf-8')
+paths=[f.relative_to(p/'source').as_posix() for f in (p/'source').rglob('*.java')];assert len(paths)==8
+proposal={'scope':'Combine profile-guided live gathering and known-source filtering with immutable keyword metadata access flags and all-event replacement negative checks. Only class metadata is cached; live mutable lists and rule-host flags are rechecked.','parents':['trait-filter-prototype-v2','replacement-eligibility-prototype-v2'],'files':paths,'retained':'Counter snapshot correction, unknown callback/native fallbacks, optional metadata LinkageError fallback, read-ahead rules-host flags and complete original resolution workload.','trigger_guard':'Original strict empty-keyword guard retained; trigger metadata optimization is not introduced.','status':'Prepared only, no compile or native run. Current fresh native build remains serialized and independent.','no_collector_or_budget_changes':True}
+(p/'proposal.json').write_text(json.dumps(proposal,indent=2)+'\n',encoding='utf-8',newline='\n');print('Prepared8-file combined prototype; production root/source unchanged. No JVM launched.')

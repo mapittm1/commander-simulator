@@ -1,0 +1,25 @@
+from pathlib import Path
+from collections import Counter
+import json,sys,xml.etree.ElementTree as E
+root=Path.cwd();sys.path.insert(0,str(root));w=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+from commander.engine.forge_config import read_settings,file_hash
+from tests.support.native_receipts import read_test_receipts
+from tests.support.draw_ending_partitions import PARTITIONS
+from tests.support.draw_ending_worker import NATIVE_CLASSES
+load=lambda p:json.loads(p.read_bytes())
+build=root/load(w/'trait-filter-contracts-candidate-v1/candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json');settings.verify();run=root/'data/runs'/load(w/'packaged-cast1175-v1/process.json')['new_run_directories'][0]
+rows=read_test_receipts(settings,run,'draw-endings.json',{'draw-ending-summary.json':1,'draw-ending-methods.json':1177});summary,methods=rows[0],rows[1:]
+def cases(report,classes=None):
+ return Counter((cl.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for cl in E.parse(report).findall('.//class') if classes is None or cl.get('name') in classes for m in cl.findall('test-method') if m.get('is-config')!='true')
+expected=cases(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(PARTITIONS['cast_events']));actual=cases(run/'rules-reports/testng-results.xml');assert expected==actual and sum(actual.values())==1177
+assert Counter(r['method'] for r in methods)==Counter({key[0]:n for key,n in expected.items()})
+assert all(r['status']=='PASS' for r in methods) and summary['counts']==dict(total=1177,passed=1177,failed=0,skipped=0)
+assert summary['production_classes_from_packaged_jar']==list(NATIVE_CLASSES) and len(NATIVE_CLASSES)==177
+assert all(summary[k]==0 for k in ['testng_status','configuration_failures','configuration_skips','partial_successes'])
+assert all(file_hash(Path(n))==h for n,h in summary['inputs'].items())
+assert file_hash(run/'rules-reports/testng-results.xml')==summary['report_sha256']
+assert (root/'config/engine_config.json').read_bytes()==(w/'packaged-cast1177-v1/active-config-before.json').read_bytes()
+execution=load(run/'rules-process.json');assert execution['process']['status']=='finished' and execution['process']['returncode']==0 and execution['process']['elapsed_seconds']<=90
+record={'run_id':run.name,'counts':summary['counts'],'native_method_and_parameter_counter_matches':True,'production_origins':177,'process':execution['process'],'configuration_restored':True,'scope':'Standalone1177 cast subset only. Full3325 gate and original1271/90 resolution remain unmet; no card/rules completeness claim.'}
+p=w/'trait-filter-contracts-candidate-v1/cast1177-audit-v1.json';assert not p.exists();p.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'counts':record['counts'],'native_parameter_counter_match':True,'production_origins':177,'worker_seconds':execution['process']['elapsed_seconds']}))

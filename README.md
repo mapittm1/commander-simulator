@@ -33,13 +33,22 @@ callback failures in an unrestricted filter prototype; the corrected experiment
 keeps unknown sources on the native path. Preserve an earlier fixture setup/log-
 limit failure separately. These are contract tests, not full card-history proof.
 
-The expanded 3,282-source / 4,482-native / 3,325-packaged suite is pending; the cast
-subset is now 1,175 cases with 177 required production origins. Static gathering,
-trigger/devotion and filtering prototypes still exceed the original 1,271-case /
-90-second resolution limit (latest 90.016s) and remain unpromoted. A bounded
-allocation profile identifies candidate work; its weights are estimates, not
-retained memory or completed timing results. Production patches and the selected
-runtime are unchanged. See [contract/profile evidence](engine/trait_gather_filter_evidence.json).
+The expanded suite passes all **3,282 source** and **4,482 native** cases, retaining
+prior cases and parameters. All 2,168 production sources, 158 test files and 316
+tracked card files match reviewed inputs; production class bytes match the prior
+counter-snapshot candidate. Actual two-processor / 2 GiB Java-heap checks pass.
+The packaged cast worker passes **1,175 cases**, with native method/parameter
+counters matching and **177 production origins** verified (43.984 worker seconds).
+Preserve a wrapper-only 1,177-count typo; the independent receipt audit verifies
+the registered 1,175 cases without rerunning the worker.
+
+The full 3,325-case packaged gate remains unmet. The combined live metadata /
+gathering / known-source filter prototype passes all 535 focused cases but still
+times out under the original 1,271-case / 90-second resolution limit (90.015s).
+All earlier compiled rule/support bytes are retained. The prototype is unpromoted;
+no speedup or complete rules correctness is established. Broader/full-game/catalog/
+health/activation remain pending. Production patches and the selected runtime
+are unchanged. See [expanded runtime evidence](engine/trait_contracts_runtime_evidence.json). See [contract/profile evidence](engine/trait_gather_filter_evidence.json).
 
 A reviewed candidate snapshot correction preserves counters on cards in the command
 zone, graveyard, exile, hand, library and stack, as well as the battlefield.

@@ -1,0 +1,31 @@
+"""Audit the completed1175 worker receipts after a wrapper-only1177 count typo."""
+from pathlib import Path
+from collections import Counter
+import json,sys,xml.etree.ElementTree as ET
+root=Path.cwd();sys.path.insert(0,str(root));w=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+from commander.engine.forge_config import read_settings,file_hash
+from tests.support.native_receipts import read_test_receipts
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+from tests.support.draw_ending_worker import NATIVE_CLASSES
+load=lambda p:json.loads(p.read_bytes())
+expected_count=EXPECTED_COUNTS['cast_events'];assert expected_count==1175
+candidate=w/'trait-filter-contracts-candidate-v1';build=root/load(candidate/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json');settings.verify()
+wrapper=w/'packaged-cast1177-v1';process=load(wrapper/'process.json');assert process['status']=='finished' and process['returncode']==1 and process['configuration_unchanged']
+assert len(process['new_run_directories'])==1;run=root/'data/runs'/process['new_run_directories'][0]
+assert load(wrapper/'outcome.json')=={'successful':False,'tests_run':1,'failures':1,'errors':0,'skipped':0,'scope':'Standalone1177-case cast_events subset using normal compile/worker/receipts and177 packaged class origins; not full3325 packaged gate.'}
+text=(wrapper/'output.log').read_text(encoding='utf-8');assert 'AssertionError: 1175 != 1177' in text and '"draw_ending_partition": "cast_events"' in text and run.name in text
+rows=read_test_receipts(settings,run,'draw-endings.json',{'draw-ending-summary.json':1,'draw-ending-methods.json':expected_count});summary,methods=rows[0],rows[1:]
+def cases(report,classes=None):
+ return Counter((cl.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for cl in ET.parse(report).findall('.//class') if classes is None or cl.get('name') in classes for m in cl.findall('test-method') if m.get('is-config')!='true')
+expected=cases(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(PARTITIONS['cast_events']));actual=cases(run/'rules-reports/testng-results.xml');assert expected==actual and sum(actual.values())==expected_count
+assert Counter(r['method'] for r in methods)==Counter({key[0]:n for key,n in expected.items()})
+assert all(r['status']=='PASS' for r in methods) and summary['counts']==dict(total=expected_count,passed=expected_count,failed=0,skipped=0)
+assert summary['production_classes_from_packaged_jar']==list(NATIVE_CLASSES) and len(NATIVE_CLASSES)==177
+assert all(summary[k]==0 for k in ['testng_status','configuration_failures','configuration_skips','partial_successes'])
+assert all(file_hash(Path(n))==h for n,h in summary['inputs'].items());assert file_hash(run/'rules-reports/testng-results.xml')==summary['report_sha256']
+assert (root/'config/engine_config.json').read_bytes()==(wrapper/'active-config-before.json').read_bytes()
+execution=load(run/'rules-process.json');assert execution['process']['status']=='finished' and execution['process']['returncode']==0 and execution['process']['elapsed_seconds']<=90
+old=root/'data/runs/20fe6e3b58d04b44a3bfa3aeb55654ed';old_classes=load(old/'rules-inputs.json')['classes'];new_classes=load(run/'rules-inputs.json')['classes']
+assert all(file_hash(old/'rules-classes'/n)==h for n,h in old_classes.items());assert all(file_hash(run/'rules-classes'/n)==h for n,h in new_classes.items());assert all(new_classes.get(n)==h for n,h in old_classes.items())
+record={'run_id':run.name,'counts':summary['counts'],'native_method_and_parameter_counter_matches':True,'production_origins':177,'process':execution['process'],'configuration_restored':True,'prior_compiled_rule_support_classes_retained_identically':len(old_classes),'wrapper_status':'Failed only on erroneous1177 literal after normal check_partition completed. Correct registered count1175 derived from fixed EXPECTED_COUNTS; wrapper failure/log/driver preserved. Native worker not rerun.','scope':'Audited standalone1175 packaged cast worker subset only. Full3325 gate and original1271/90 resolution remain unmet; no complete card/rules claim.'}
+p=candidate/'cast1175-audit-v2.json';assert not p.exists();p.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps({'counts':record['counts'],'native_parameter_counter_match':True,'production_origins':177,'retained_identical_old_test_support_classes':len(old_classes),'worker_seconds':execution['process']['elapsed_seconds'],'wrapper_count_error_preserved':True}))
