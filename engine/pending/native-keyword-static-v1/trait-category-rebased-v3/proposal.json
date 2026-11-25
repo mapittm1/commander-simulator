@@ -1,0 +1,30 @@
+{
+  "scope": "Rebase the unpromoted15-source diagnostic overlay onto source3566 while explicitly retaining the new game-long spell-count restoration. No new optimization or repeated timing pass is claimed.",
+  "source_manifest": "source3566-v1/production-inputs.json",
+  "changed_sources": [
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+    "forge-core/src/main/java/forge/card/CardDb.java",
+    "forge-core/src/main/java/forge/card/CardEdition.java",
+    "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+    "forge-game/src/main/java/forge/game/GameAction.java",
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+    "forge-game/src/main/java/forge/game/card/CardLists.java",
+    "forge-game/src/main/java/forge/game/card/CardState.java",
+    "forge-game/src/main/java/forge/game/keyword/KeywordCollection.java",
+    "forge-game/src/main/java/forge/game/keyword/KeywordInstance.java",
+    "forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java",
+    "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+    "forge-core/src/main/java/forge/util/collect/FCollection.java"
+  ],
+  "additional_hypothesis": "Nonempty trait tables with only unrelated categories force unnecessary static gathering.",
+  "baseline_native_cases": 4766,
+  "promoted": false,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "preparation_note": "First prototype compile rejected invariant Table value types for text traits. This revision uses a bounded wildcard; no native tests were restarted.",
+  "new_history_call_retained": true,
+  "validation_pending": true,
+  "original_resolution_retry_authorized_by_this_preparation": false
+}

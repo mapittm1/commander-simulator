@@ -1,0 +1,77 @@
+"""Audit the complete packaged group receipts against the fresh native suite."""
+from collections import Counter
+from pathlib import Path
+import json
+import re
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+from tests.support.draw_ending_worker import NATIVE_CLASSES
+from tests.support.native_receipts import read_test_receipts
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'game-spell-remainder-v1'
+CANDIDATE=WORK/'game-spell-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def cases(p,classes=None):
+    result=Counter()
+    for cls in ET.parse(p).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:continue
+        for m in cls.findall('test-method'):
+            assert m.get('status')=='PASS',(cls.get('name'),m.attrib)
+            if m.get('is-config')!='true':
+                result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return result
+frozen=load(RUN/'source-frozen-inputs.json')
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+outer=load(RUN/'process.json');process=outer['process']
+assert process['status']=='finished' and process['returncode']==0 and process['elapsed_seconds']<=420
+assert outer['configuration_restored'] and file_hash(RUN/'output.log')==outer['log_sha256']
+outcome=load(RUN/'outcome.json');assert outcome['successful'] and outcome['tests_run']==1 and not outcome['skipped']
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build']
+settings=read_settings(build/'engine-config.json')
+assert settings.verify()['native_tests']==dict(total=4766,passed=4766,failed=0,skipped=0)
+ids=re.findall(r'"draw_ending_partition": "([^"]+)", "draw_ending_run": "([a-f0-9]{32})"',(RUN/'output.log').read_text(encoding='utf-8'))
+assert Counter(n for n,_ in ids)==Counter({'cast_events':1,'dungeons':1,'expended_mana':1,'first_events':1,'scry_history':1,'spell_game_history':1})
+assert set(outer['new_run_directories'])=={rid for _,rid in ids}
+old=ROOT/'data/runs/4728266170f64ac38e69c74e964a5bec'
+oldclasses=load(old/'rules-inputs.json')['classes']
+assert all(file_hash(old/'rules-classes'/n)==h for n,h in oldclasses.items())
+results={}
+for name,rid in ids:
+    p=ROOT/'data/runs'/rid;count=EXPECTED_COUNTS[name]
+    rows=read_test_receipts(settings,p,'draw-endings.json',{'draw-ending-summary.json':1,'draw-ending-methods.json':count})
+    summary,methods=rows[0],rows[1:]
+    expected=cases(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(PARTITIONS[name]))
+    actual=cases(p/'rules-reports/testng-results.xml')
+    assert actual==expected and sum(actual.values())==count
+    methodcounts=Counter()
+    for (method,_),multiplicity in expected.items():methodcounts[method]+=multiplicity
+    assert Counter(r['method'] for r in methods)==methodcounts and all(r['status']=='PASS' for r in methods)
+    assert summary['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert all(summary[n]==0 for n in ('testng_status','configuration_failures','configuration_skips','partial_successes'))
+    assert summary['production_classes_from_packaged_jar']==list(NATIVE_CLASSES) and len(NATIVE_CLASSES)==186
+    assert file_hash(p/'rules-reports/testng-results.xml')==summary['report_sha256']
+    assert all(file_hash(Path(n))==h for n,h in summary['inputs'].items())
+    execution=load(p/'rules-process.json')
+    assert execution['worker_sha256']==file_hash(ROOT/'tests/support/draw_ending_worker.py')
+    assert execution['process']['status']=='finished' and execution['process']['returncode']==0
+    assert execution['process']['elapsed_seconds']<=90
+    assert all(file_hash(Path(n))==h for n,h in execution['process']['support_source_hashes'].items())
+    current=load(p/'rules-inputs.json')['classes']
+    assert all(file_hash(p/'rules-classes'/n)==h for n,h in current.items())
+    assert all(current.get(n)==h for n,h in oldclasses.items())
+    results[name]={'run_id':rid,'counts':summary['counts'],'native_method_and_parameter_counter_matches':True,
+        'production_origins':186,'prior_compiled_rule_support_classes_retained_identically':len(oldclasses),'process':execution['process']}
+assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'active-config-before.json').read_bytes()
+record={'build_id':build.name,'groups':results,'total_cases':sum(r['counts']['total'] for r in results.values()),
+    'original_resolution_cases':1271,'worker_limit_seconds':90,'wrapper_limit_seconds':420,
+    'whole_wrapper_seconds':process['elapsed_seconds'],'configuration_restored':True,
+    'scope':'Fixed1380 cast,10 dungeon,6 expend,12 first-event 6 scry and12 game-long spell-history cases only; full3609 remains incomplete at original1271/90. Not full rules evidence.'}
+assert record['total_cases']==1426
+out=RUN/'audit.json';assert not out.exists()
+out.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'total_cases':record['total_cases'],'case_counts':[r['counts']['total'] for r in results.values()],
+    'all_native_parameter_counters_match':True,'whole_wrapper_seconds':record['whole_wrapper_seconds']}),flush=True)

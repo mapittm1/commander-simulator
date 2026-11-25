@@ -1,0 +1,93 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.anotherPlayersUnusedDiscountStaysSeparate",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.copiedHistorySurvivesWithoutDiscountCard",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.discountAloneDoesNotPermitOtherPlayersTurn",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.emptyHistoryDoesNotInventForetellEvents",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.oneCopyDoesNotRestoreUsedDiscount",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.oneCopyKeepsUsedOffTurnDiscount",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.originalDiscountOnlyAppliesToFirstForetell",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.originalOffTurnForetellCombinesNativeModifiers",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.originalWithoutDiscountPaysBothActions",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.twoCopiesDoNotRestoreUsedDiscount",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.twoCopiesKeepUsedOffTurnDiscount",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.unusedDiscountSurvivesTwoCopies",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.anotherPlayersUnusedDiscountStaysSeparate",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.copiedHistorySurvivesWithoutDiscountCard",
+      "message": "\n              expected [2] but found [1]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.oneCopyDoesNotRestoreUsedDiscount",
+      "message": "\n              The actual foretell payment follows this player's first-action discount expected [2] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.oneCopyKeepsUsedOffTurnDiscount",
+      "message": "\n              The actual foretell payment follows this player's first-action discount expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.twoCopiesDoNotRestoreUsedDiscount",
+      "message": "\n              The actual foretell payment follows this player's first-action discount expected [2] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderForetellHistoryTest.twoCopiesKeepUsedOffTurnDiscount",
+      "message": "\n              The actual foretell payment follows this player's first-action discount expected [1] but found [0]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 188,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Native foretell special actions with actual payments, face-down exile, Ranar token triggers and separate-player/branch history from supplied boards. Includes native off-turn permission and combined cost modifiers. No full preceding legal history, turn scheduler, all-card or experimental restore claim."
+}

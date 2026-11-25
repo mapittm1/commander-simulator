@@ -6,15 +6,37 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve per-player foretell counts without replaying special actions or
+  triggers. Six baseline failures wrongly restore first-foretell discounts or
+  lose action history; all twelve native-payment/exile/trigger/permission controls
+  pass after correction, plus all 1,926 retained semantic-family cases.
+- Register twelve foretell_history cases separately; retain every earlier group
+  and original 1,271/90 workload. Fresh 3,578 source / 4,778 native / 3,621 main
+  packaged validation is pending. Supplied boards are not full legal histories,
+  turn-scheduler or experimental restore proof; selected runtime is unchanged.
+
+- Preserve an unpromoted live-membership keyword-static cache: fourteen new and
+  fifteen prior boundary contracts pass in baseline/prototype runs, plus 495
+  existing trait/collection and all 1,926 retained semantic-family cases. Mutable
+  APIs and opaque callback order are preserved; counts are workload evidence.
+- Diagnose keyword guards in three unchanged heavy methods, then observe 763,977
+  baseline versus 428 post-cache rebuilds. Original 1,271/90 still times out without
+  a report; no reliable speedup, full gate, retained-memory or full rules claim.
+
 - Preserve game-long spell counts after the existing turn-local snapshot copy.
   Five baseline failures incorrectly grant a free first-spell alternative or lose
   prior casts. All twelve paid-spell, turn-boundary, later-cast and isolation
   controls pass after correction; all retained semantic regression groups pass.
 - Register twelve spell_game_history cases separately; preserve all earlier groups
-  and original 1,271/90 workload. Fresh 3,566 source / 4,766 native / 3,609 main
-  packaged validation is pending. Supplied boards do not establish full legal
-  histories, turn scheduling or experimental restore support; selected runtime is
-  unchanged.
+  and original 1,271/90 workload. Fresh 3,566 source / 4,766 native cases pass with
+  exact retained methods/parameters, reviewed manifests and all 291 copied-fixture
+  bytes verified. Broader 6,089 gameplay / 320 serialization cases pass with exact
+  membership, no skips and policies restored. Supplied boards are not full legal
+  histories, turn scheduling or experimental restore proof.
+- Audit all 2,338 non-resolution main and 405 separate packaged cases on that
+  candidate. Full 3,609 remains incomplete: original resolution times out at
+  90.015 seconds without a report. Final live checks and activation remain
+  pending; selected runtime is unchanged.
 
 - Preserve an unpromoted live static-category experiment: fifteen baseline and
   corrected mutation/callback contracts pass, including side-effect ordering; all

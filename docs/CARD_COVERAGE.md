@@ -1,5 +1,20 @@
 # Card support and evidence
 
+A generic foretell-history correction now preserves each player's turn count in
+AI world copies. Six of twelve baseline controls fail: a used first-foretell
+discount becomes available again, and action counts disappear. The correction
+passes **12/12** using actual payments, native face-down exile, Ranar token
+triggers, Cosmos Charger's combined cost reduction/off-turn permission, negative
+permission checks, repeated copies and player/branch isolation. Foretelling stays
+a special action rather than a spell cast. All **1,926** retained semantic-family
+cases pass. Supplied boards do not establish full preceding legal histories,
+the complete turn scheduler or experimental restore support.
+
+The recipe adds twelve `foretell_history` cases, retaining every earlier group
+and original **1,271 / 90 seconds**. Fresh **3,578 source / 4,778 native / 3,621 main
+packaged** validation is pending; selected runtime is unchanged. See
+[foretell correction evidence](../engine/foretell_history_evidence.json).
+
 A generic game-long spell-history correction now preserves earlier-turn casts in
 AI world copies. Five of twelve baseline controls fail: copied games incorrectly
 offer Once Upon a Time's free first-spell alternative or undercount later paid
@@ -11,9 +26,19 @@ controls. Supplied boards do not prove full preceding legal histories, the compl
 turn scheduler or the experimental restore path.
 
 The recipe adds twelve `spell_game_history` cases, preserving every previous group
-and original **1,271 / 90 seconds**. Fresh **3,566 source / 4,766 native / 3,609 main
-packaged** validation is pending; the selected runtime is unchanged. See
-[game-long spell-history evidence](../engine/game_spell_history_evidence.json).
+and original **1,271 / 90 seconds**. Fresh **3,566 source / 4,766 native** cases pass
+with exact retained methods/parameters. Manifests contain **2,168 production / 171
+test / 341 card** inputs; all **282 registered + nine priority** fixture files match
+reviewed bytes. Production class changes are confined to Player and GameCopier
+families. All **2,338** non-resolution main cases and separate **65 free-casting /
+194 untap / 146 Battle** cases pass receipt audits. Broader **6,089 gameplay / 320
+serialization** cases pass with exact membership, no skips and policies restored.
+
+The full **3,609-case** gate remains incomplete: original resolution times out at
+**90.015 seconds**, without a completed report. Final live checks, activation
+and complete card/rules coverage remain open; the selected runtime is unchanged.
+See [game-long spell-history evidence](../engine/game_spell_history_evidence.json)
+and [runtime evidence](../engine/game_spell_history_runtime_evidence.json).
 
 A generic scry-history correction now preserves each player's turn count in AI
 world copies. Three of six baseline controls fail: paid Opt no longer qualifies
@@ -82,6 +107,20 @@ It retains **1,914** casting/combat/untap/history/upstream cases. Its single ori
 unpromoted pending full validation. These results are not a reliable speedup,
 full normal packaged gate or complete card-rules proof. See
 [trait-category evidence](../engine/trait_category_evidence.json).
+
+A separate positive keyword-static cache rechecks native list membership on every
+read and preserves existing mutable APIs and opaque callbacks. Both baseline and
+prototype pass **14** actual-effect/mutation/copied-host contracts and **15** earlier
+boundary controls. The prototype passes **495** existing trait/collection cases
+and all **1,926** retained semantic-family cases. These workload counts do not
+establish unique total coverage.
+
+Across three instrumented existing methods, observed static rebuilds fall from
+**763,977 to 428** while all assertions pass. The single original **1,271 / 90-second**
+trial still times out at **90.000 seconds**, without a completed
+report. The proposal remains unpromoted; these observations are not retained-memory,
+reliable speedup, full normal-gate or complete card-rules proof. See
+[native keyword-cache evidence](../engine/native_keyword_static_evidence.json).
 
 A generic expend-history correction now retains cumulative spell-mana spending in
 AI world copies. Four of six controls fail on the preceding candidate: Muerra's

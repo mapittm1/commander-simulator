@@ -1,0 +1,31 @@
+{
+  "scope": "Instrumented diagnostic only. Count actual static gather calls by runtime card class; do not add trait reads or game events. Three unchanged existing heavy methods only, not the original1271 workload or a speedup pass.",
+  "mode": "overlay",
+  "changed_sources": [
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+    "forge-core/src/main/java/forge/card/CardDb.java",
+    "forge-core/src/main/java/forge/card/CardEdition.java",
+    "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+    "forge-game/src/main/java/forge/game/GameAction.java",
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+    "forge-game/src/main/java/forge/game/card/CardLists.java",
+    "forge-game/src/main/java/forge/game/card/CardState.java",
+    "forge-game/src/main/java/forge/game/keyword/KeywordCollection.java",
+    "forge-game/src/main/java/forge/game/keyword/KeywordInstance.java",
+    "forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java",
+    "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+    "forge-core/src/main/java/forge/util/collect/FCollection.java"
+  ],
+  "baseline_source_suite": 3566,
+  "baseline_native_cases": 4766,
+  "preserves_game_spell_history_call": true,
+  "target_class": "forge.ai.CommanderExertTransitionsTest",
+  "target_methods": [
+    "repeatedDepth2",
+    "twoExertingPlayersDepth1",
+    "twoExertingPlayersDepth2"
+  ],
+  "promoted": false
+}

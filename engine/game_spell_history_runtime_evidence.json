@@ -1,0 +1,762 @@
+{
+  "scope": "Fresh source/native, partial packaged and broader regression evidence. No full resolution or complete card-rules claim.",
+  "ci": {
+    "id": 45701409783,
+    "head_sha": "dd64547eff82973acdeb537cc9bef8c9a67f59c8",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native_audit": {
+    "build_id": "9d5e9058e53b4d0abae3667e2596bb48",
+    "candidate": {
+      "forge_version": "2.0.16-583714b-reviewed-game-spell-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation",
+        "dungeon_snapshot_state",
+        "expend_snapshot_history",
+        "first_event_snapshot_history",
+        "scry_snapshot_history",
+        "game_spell_snapshot_history"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "e2816e9e2ef7d68a9f20a1a33e3e678b9c5eae89d256e4936c7b198e19c5f757",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "2c91ef2507348f30bb7086acfb3af42c0e02ac30ebc277dae36cebd0eaf4249b",
+      "native_tests": {
+        "total": 4766,
+        "passed": 4766,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "14ed23249b8ec8ad2ee0401adfd8d747879ce6bbfcc8f6b4f22290043853e453",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "source_counts": {
+      "total": 3566,
+      "passed": 3566,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_native_cases_retained": 4754,
+    "added_cases": 12,
+    "exact_native_method_and_parameter_counter_matches": true,
+    "input_audit": {
+      "production": {
+        "files": 2168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": [
+          "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+          "forge-ai/src/main/java/forge/ai/AiCache.java",
+          "forge-ai/src/main/java/forge/ai/AiController.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+          "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "forge-ai/src/main/java/forge/ai/ability/SetStateAi.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+          "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+          "forge-core/src/main/java/forge/card/CardType.java",
+          "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+          "forge-game/src/main/java/forge/game/Game.java",
+          "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+          "forge-game/src/main/java/forge/game/card/Card.java",
+          "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+          "forge-game/src/main/java/forge/game/card/CardState.java",
+          "forge-game/src/main/java/forge/game/combat/Combat.java",
+          "forge-game/src/main/java/forge/game/cost/Cost.java",
+          "forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
+          "forge-game/src/main/java/forge/game/cost/CostPayment.java",
+          "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java",
+          "forge-game/src/main/java/forge/game/player/Player.java",
+          "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+          "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+          "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+        ]
+      },
+      "test": {
+        "files": 171,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      },
+      "card": {
+        "files": 341,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      }
+    },
+    "fixture_copy_audit": {
+      "registered_fixture_files": 282,
+      "priority_fixture_files": 9,
+      "exact_reviewed_fixture_bytes_match": true
+    },
+    "production_classes_changed_from_0bda": [
+      "forge/game/player/Player.class",
+      "forge/ai/simulation/GameCopier$1.class",
+      "forge/ai/simulation/GameCopier$2.class",
+      "forge/ai/simulation/GameCopier$3.class",
+      "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+      "forge/ai/simulation/GameCopier.class"
+    ],
+    "actual_processors": 2,
+    "actual_max_java_heap_bytes": 2147483648,
+    "selected_runtime_native_cases": 3295,
+    "installed": false,
+    "original_resolution_cases": 1271,
+    "original_resolution_worker_seconds": 90,
+    "scope": "Source/native regression and class/input audit only; independent packaged and final activation gates remain required."
+  },
+  "source": {
+    "counts": {
+      "total": 3566,
+      "passed": 3566,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 3554,
+    "new_cases": 12,
+    "exact_method_and_parameter_counter_matches": true,
+    "production_sources": 2168,
+    "test_inputs": 171,
+    "card_inputs": 341,
+    "changed_production_sources": [
+      "forge-game/src/main/java/forge/game/player/Player.java",
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java"
+    ],
+    "inputs_unchanged_during_run": true,
+    "report_sha256": "022b7c624cd51e0fb013e72073c6a933f6d48baa60edf3a43bcb31de165d4a1a",
+    "scope": "Source regressions only; fresh native4766, complete normal3609 including original1271/90, broader/live and activation remain required."
+  },
+  "packaged_partial": {
+    "build_id": "9d5e9058e53b4d0abae3667e2596bb48",
+    "groups": {
+      "information": {
+        "run_id": "a5442b26446943b9b9de9359ce9b1c8d",
+        "counts": {
+          "total": 301,
+          "passed": 301,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 14338,
+          "returncode": 0,
+          "elapsed_seconds": 23.235,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "combat_and_snapshots": {
+        "run_id": "5fdb24ab51a242408c2be48a922784a9",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10174,
+          "returncode": 0,
+          "elapsed_seconds": 38.797,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "text_casting_and_costs": {
+        "run_id": "7f97cf1172fa488ca3704cbb64bd5481",
+        "counts": {
+          "total": 338,
+          "passed": 338,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 4805,
+          "returncode": 0,
+          "elapsed_seconds": 60.86,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      }
+    },
+    "total_cases": 912,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 241.328,
+    "configuration_restored": true,
+    "scope": "Audit only the three completed groups in the failed full3609 attempt. Original1271 resolution timed out; no full packaged pass.",
+    "full3609_packaged_passed": false,
+    "resolution_process": {
+      "status": "timeout",
+      "bytes": 19020,
+      "returncode": 1,
+      "elapsed_seconds": 90.015,
+      "support_source_hashes": {
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+      }
+    },
+    "resolution_run_id": "0282f8b83e43437482a8872596406454"
+  },
+  "packaged_remaining_groups": {
+    "build_id": "9d5e9058e53b4d0abae3667e2596bb48",
+    "groups": {
+      "cast_events": {
+        "run_id": "a98e81253f7f420b8de0893e2030df37",
+        "counts": {
+          "total": 1380,
+          "passed": 1380,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10944,
+          "returncode": 0,
+          "elapsed_seconds": 46.141,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "dungeons": {
+        "run_id": "32238d7490c7477ba1931cd68d7e5da6",
+        "counts": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 12.594,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "expended_mana": {
+        "run_id": "c4b2c708a09649a5ad7d140f1e10b4b2",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 12.922,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "first_events": {
+        "run_id": "1eb979dba5dd4cf9af7c74e70bb50a19",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.437,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "scry_history": {
+        "run_id": "3db9d1c7db1344cfac3455265e43c5de",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 13.063,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      },
+      "spell_game_history": {
+        "run_id": "e98b033562ba497285806349d36dc612",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 186,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 12.953,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "6d82b301ea254c3708274ebc4d2bbdccd8156137f176a80c6a01ecfa024eeb25"
+          }
+        }
+      }
+    },
+    "total_cases": 1426,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 153.297,
+    "configuration_restored": true,
+    "scope": "Fixed1380 cast,10 dungeon,6 expend,12 first-event 6 scry and12 game-long spell-history cases only; full3609 remains incomplete at original1271/90. Not full rules evidence."
+  },
+  "packaged_other": {
+    "build_id": "9d5e9058e53b4d0abae3667e2596bb48",
+    "groups": {
+      "free_casting": {
+        "run_id": "bee1487155c440c097c81f7206ad8655",
+        "counts": {
+          "total": 65,
+          "passed": 65,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 25,
+        "process": {
+          "status": "finished",
+          "bytes": 15875,
+          "returncode": 0,
+          "elapsed_seconds": 33.562,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "untap": {
+        "run_id": "544c9d71c15e42b78d9adb231bfcdb66",
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 52,
+        "process": {
+          "status": "finished",
+          "bytes": 12668,
+          "returncode": 0,
+          "elapsed_seconds": 38.484,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "battle_combat": {
+        "run_id": "5743b5a670e74c599e5dfe0baf081e11",
+        "counts": {
+          "total": 146,
+          "passed": 146,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 30,
+        "process": {
+          "status": "finished",
+          "bytes": 20842,
+          "returncode": 0,
+          "elapsed_seconds": 16.078,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "2c91ef2507348f30bb7086acfb3af42c0e02ac30ebc277dae36cebd0eaf4249b",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "f70be39624572210605772f0694d4be61a1000b912eaa4c11d5e4a3c347d0ce2"
+          }
+        }
+      }
+    },
+    "total_cases": 405,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 95.656,
+    "configuration_restored": true,
+    "scope": "Separate405 packaged cases only. Full3609 still incomplete at original1271/90."
+  },
+  "broader": {
+    "suites": {
+      "gameplay": {
+        "process": {
+          "status": "finished",
+          "bytes": 237728,
+          "returncode": 0,
+          "elapsed_seconds": 358.969
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 6089,
+          "passed": 6089,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "ab3edbb48bf58956cbeee766d5220ca28e7749806c36fe07ef4b0d7b6cf19f27"
+      },
+      "serialization": {
+        "process": {
+          "status": "finished",
+          "bytes": 29816,
+          "returncode": 0,
+          "elapsed_seconds": 89.641
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 320,
+          "passed": 320,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "030249c0a76f60eec97948dd5f5b0b2044d5fa2dabd4edfadcf29a93cb666cd9"
+      }
+    },
+    "passed": true,
+    "scope": "Broader gameplay/serialization only; no original1271/90 or all-card proof."
+  },
+  "installed": false,
+  "selected_runtime_native_cases": 3295,
+  "full3609_packaged_passed": false,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "remaining": [
+    "Original1271 resolution workload within90 seconds",
+    "Fresh final catalog/health/full-game checks for this candidate",
+    "Activation after all required gates",
+    "Complete paid-history and printed-card/rules coverage"
+  ],
+  "artifacts": {
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/card-inputs.json": "193678e8b48f907dae1f01a61d321a724d9a8a690b8ec042935d65ddbef38301",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/driver.py.txt": "19c3a6cbe88046759b34f40aad325776e5ebfdb938a432d52867bfc6eae0ccbe",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/evidence.json": "53c542935e81de6b15af98efa23dfbca5316df3f9d2404788a0f86c71de2f0bd",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/maven-build.log": "b2acae33c4e81329b604a340567f30d59ea767402143b08df788e9083ace041c",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/outcome.json": "3f19c7d74c16249f3b3c3abdfb394e02b11fe8d3427768ffef2daea2611aac58",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/production-inputs.json": "c4a3cf8e810e6d2d4896ec58df143defbccda100b8f41908ddf8eb3a650674b9",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/selection.json": "4b7a90a5c32d694aaa29c5d1375ed777f12d12ddd7930264f863de9b8ba28afc",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/test-inputs.json": "120d16f156a9918e7ddb8b6bdbb10f0413a7dac842893c8101cf8c7a54881c15",
+    "engine/pending/game-spell-history-runtime-v1/source3566-v1/testng-results.xml": "022b7c624cd51e0fb013e72073c6a933f6d48baa60edf3a43bcb31de165d4a1a",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/build-audit.json": "bec8cd707937ecf1526c3b00db7ce4e6dac8e7ec613635613363ca3a1420d97b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/build-output.log": "65870d642ca669a32c3a2d9465c62f1ead99fc97f4fbe67fd96e6a0afaee0a79",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/candidate-selection.json": "a4816fc57198add7aeec1049f795988d1d2e062cddf0eba275a5082956c064f6",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/command.json": "a42dbba5f390b0763bd4ee4581f66920899eb22a967ae931c26c00ca6e48989f",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/driver.py.txt": "b55086fb667b202069eb2662c98442f86bddee10568a97c17468f4792f5ff8cc",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/process.json": "a084bad35e767cfddf79f4368dc16b993f1654f9596edc04aa2bd2c2677d370d",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-candidate-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/candidate-config.json": "f4a26de52d9aa9e419c189d8b0b05d5840c7103be1c9716f28a40e6342f4c403",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/driver.py.txt": "44d428531b72bdc815f5f8ec59c0e89bc73dedfd94eaf1e70ee2429aaf4c8dd5",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/outcome.json": "eb6fe92eb665a8403fef13fd312ab1a8fdd92c2871b68a1ad0fed14796e05a4e",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/output.log": "f8efaa1cc11fba0abd03ea01edb6a7cdc064728e69a4b71cf9c748eb498b3291",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/partial-audit.json": "1ca4b97dc3c9595d21c39d50ebf5f0d063cdab59c357da4b4673ff44ebf8145b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/process.json": "fcc28931f877446dbfd5c9a15284c9122f4f979476348289dc0a1592d2b51bd6",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-packaged-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/audit.json": "4859e6006e26458a2d37427f91b5df826a151243279dc879dac3d28d49615a08",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/candidate-config.json": "f4a26de52d9aa9e419c189d8b0b05d5840c7103be1c9716f28a40e6342f4c403",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/driver.py.txt": "623b83e3ea605ba14489f2bc68785a890de8dc20116c89986fb5476c6df2a448",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/outcome.json": "7213b27143f9054b940b2ef57f15b3fec8b322b45575c7bec277d83996c83a96",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/output.log": "0e69e147e3b5ec3a2d5a09d77b3a0e8194388e024831028dedac8d5661088544",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/process.json": "58a48407699ab9ec3b80946a99f38b57b4e39da13d3a271a9f8936c7d41d1068",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-remainder-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/audit.json": "7dad3952c0ba612b2e473c31c69194284c57804f18dec6d342dde4fa6d55d771",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/candidate-config.json": "f4a26de52d9aa9e419c189d8b0b05d5840c7103be1c9716f28a40e6342f4c403",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/driver.py.txt": "d19a594928b7645af539299369ab766d4caa25b605c2590f5d6cf4dc2e3b4448",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/outcome.json": "66dde2baf272759aca585f050412ab06b244fe31bc76f6640ea0de68edd0fe0e",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/output.log": "d7539f41426c4df8fae296404bb121f4e5558f09d2d1ae8c9f713e92aeca051e",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/process.json": "e8481a4f1cb65a19338ae6bc44956a7c821f995def49bb44f24fafa3d8543bb9",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-other-packaged-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/applied-test-inputs.json": "6fffcc7f6ec203ec61cf3505f15e90d9bb421d259f42ed7bb33e2b9f3c9756bd",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/driver.py.txt": "dc13fd4016d2c63e63b85f99bf236fb438763ef3d288998a8bf52f5878eba7e0",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay/native-rules.log": "34c882c7aa96c4dc88e110604b4839adecb9564abec138fcd5990192fcbdf951",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay/outcome.json": "b5b8cba28affb364ea9619b467c78b2ece676da3be5716952d179cbe6cd05f4c",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay/process.json": "b9f786c5e5af772929bfff958087198cadffce0a6db4d9c1441265eef9621bfc",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay/selection.json": "73f62e8fae3d13f9f5b5d6fd81e312a5f3f67c3e1008eee783c72b6e7a3d64b4",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay/testng-results.xml": "ab3edbb48bf58956cbeee766d5220ca28e7749806c36fe07ef4b0d7b6cf19f27",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/gameplay-expected-cases.json": "f710fe9110fdc5c163383245a260d359ca1539dedcfd4a6baf8a159f293dbb63",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/original-test-inputs.json": "14f0d8881aee6a7c2b413a92e7ca9624949417b1be0e876134d15d238c780466",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/outcome.json": "621348c15576e9f73891f8d91424f0225390ece0d29ab74c33c68fdd6f51067b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/policy-applied/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "48fee858653cd7154c062e91dbbf22f5a0a5d33dedb48b6093aeff25528a9e18",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/policy-hashes.json": "e6f387302665533ea8aec60ae753c79c29a8b78b979d99f0f6337cf03be2d785",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/policy-originals/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "5d23b85edf2f94daba1858d56c8d09ba7000b8a19a740829b548eff390c35bc7",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/selection.json": "a12e4878fcbfbe9ea63dfc9da8e846b8d37ea6258d8dc4b1d4e41f60208e936a",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization/native-rules.log": "13f3e0d05bf4831a602688e6904f7522c7e056160fa38ddab8e6671537834b3b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization/outcome.json": "f6458eddb3be35c00c07f740fd960620b32f5960f0fbe61415b771d5a43dc607",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization/process.json": "f928838112bc925c605853d495ef35440646135fb59810a92ac5142b788a0cec",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization/selection.json": "14da979ca58d9bbfda1b13153e9b56e8ee2b8bf3ecbe9433e9275937f9d40405",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization/testng-results.xml": "030249c0a76f60eec97948dd5f5b0b2044d5fa2dabd4edfadcf29a93cb666cd9",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/serialization-expected-cases.json": "f8ae90cfb0f6f776bf9f8cf87e2b6eda3656db60d8607ed701557f102e0aabdf",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/source-ci.json": "d6c8ba545d364c2d49ba077c81a007d20e29b43e09b2901aa315fe0c16f96f85",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/source-epoch.json": "740105c2a32e5f311abd5e86dcfde9a4d50dc3661dce75cac6ec58f2485b6a8b",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/source-frozen-inputs.json": "c49515a29dc6ad2f565848b5cfc63de8e4516cbc441bd1e4ca0f748462b9db72",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/worker.log": "407eecabdf9f92d082837780700efc2aba7798a88280b249896d6936cecbfaab",
+    "engine/pending/game-spell-history-runtime-v1/game-spell-broad-v1/wrapper-process.json": "81175c5508722e53b223ffe5be9e1224b1f229ecf2d81524996f9e9285cf6058",
+    "engine/pending/game-spell-history-runtime-v1/native-build/engine-lock.json": "9544be5ef05d5c5e2307fd771ac794c5c2b8e2199465931d46241c6ed94bb6ae",
+    "engine/pending/game-spell-history-runtime-v1/native-build/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/game-spell-history-runtime-v1/native-build/maven-build.log": "14ed23249b8ec8ad2ee0401adfd8d747879ce6bbfcc8f6b4f22290043853e453",
+    "engine/pending/game-spell-history-runtime-v1/native-build/testng-results.xml": "87b4fdcef50d6c70835546431d11f0d8ed542dbc7e53ae9599546d1baec0131c",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/0282f8b83e43437482a8872596406454/draw-ending-worker.log": "8fae10f7772241c66dfe443d4e908e9e3b7b9c6a3f1740bedc00569605293ab7",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/0282f8b83e43437482a8872596406454/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/0282f8b83e43437482a8872596406454/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/0282f8b83e43437482a8872596406454/rules-process.json": "9467e890dfcae938f5ee21ef2980f4417f02a6eae0b13a15cb09432e6c3e39aa",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/draw-ending-methods.json": "16bdf0419f9c6c8bf4ef5b20f3deb27a8a3e64fc2965a5e7b0310f460dee6248",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/draw-ending-summary.json": "919e4a2f21c5141c816021f50e595a8b44f20b6a157b25d15b3c23209853c08f",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/draw-ending-worker.log": "d6aae43e4c341f4c6912b6c41b03959ff5acf7851f5555c3726c080579ed664d",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/draw-endings.json": "954e1faa5851134503c1cd9d0a5f6ddf1124d173689d8210394be04b88497255",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/rules-process.json": "a672dc7aa8174d6f254357052d06c578d587fe6e409f5859159db9a1a9280608",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/1eb979dba5dd4cf9af7c74e70bb50a19/rules-reports/testng-results.xml": "1224b95a380b0fbd1837c17a09e1e6295d995d6040842faa256de0f99374678e",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/draw-ending-methods.json": "6e917587b701936f8c1aec570a46bd854db8f75518e6698dccad6f59dca3e71d",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/draw-ending-summary.json": "280b3f3b5a5e260b02de779f4662c51444adc9055b7f8857aef2fd00eec6e25c",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/draw-ending-worker.log": "c89b6a7075e34da278e1f05a2205d57469e27049f4ed7d411d595578055dc1a8",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/draw-endings.json": "8476a2802cf49527ac951763bace31ec0fcdf8e25e71541a6c2a2630193766eb",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/rules-process.json": "e760ddbb90a0a2471f9d98aa075ac4c1c15364f433af986d9c1e408f901252d5",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/32238d7490c7477ba1931cd68d7e5da6/rules-reports/testng-results.xml": "8385cea27359cb9a51ad7652516b62bee4cab49423785b132f1a45a44522ddca",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/draw-ending-methods.json": "80990a9c51c2894b8a81738812260263f53d39b71ee2d95113b8ee051c271a23",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/draw-ending-summary.json": "a9ea7f46d5cd1726b39ce6be49349752185db7e7955885a51a2522b18e000193",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/draw-ending-worker.log": "630213c290e522064a1fa300d719c0ea111ca4f76f867d05aaf32a8ac29c68c0",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/draw-endings.json": "387bc354c0edd0d495373346a0ba32a9480587a0fc0b2fcf76b42ac7b1993940",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/rules-process.json": "e8597a6b4e92488bd2f69cb3d9f257c245fd74cc59101fc2b080a6b5f339e7d6",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/3db9d1c7db1344cfac3455265e43c5de/rules-reports/testng-results.xml": "24d79fc31fc9bc7ecbbb206c180196a3958619d0db5d573d4745f4d0c7b5fdc2",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/rules-inputs.json": "babc6c0c35dbf9eef6d3710dc7f970625cf77f9ce64340439f7000497521e442",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/rules-process.json": "9c8f78dbd2e690917d4bf4d87fc9f19ecd0970784f204519ead3b9b87461037a",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/rules-reports/testng-results.xml": "6e28e18b986b138e70fc58b3c0377bb0ca26947779f9d3f4408ca5b499e7fef3",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/untap-methods.json": "aee3dfb86a9d0e6a4ab984725d712b12f69fd1fc4b0aa91ab9c05af6f6a63fda",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/untap-summary.json": "9ce5db1ea4adc6be796733cbf88ebee139dfd7061a16bf4ad26db084dccad90b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/untap-worker.log": "74965868910feae22e37a828ca3437e996bf56070f096248675b6be571032eb9",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/544c9d71c15e42b78d9adb231bfcdb66/untap.json": "0a71aec2f9dcd6155a68f5eef2f40f008b91b24b91c8ff227318c22436a976ed",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/battle-combat-methods.json": "6dbcfd74792765019e2cd0929f9b6ac374e59929e92815b843ab1f22d059a655",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/battle-combat-summary.json": "f0e5c613485398a19ea6af0c8e5cb725188ba83509b5cf305af8b10572dc9370",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/battle-combat-worker.log": "2977290dd40b60fab641a069bb89ccf6928ba5f227a022247d41e9cf61c7bcb6",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/battle-combat.json": "d652e713ef74ecfa6c2de7516be507fc714f2ed299ea90bd4de982aeff9ab30c",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/rules-inputs.json": "66761287acc56c6276c221ff7854f42876820fab281ded1ae1b218e2a58ef8ee",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/rules-process.json": "a4799f3296045dad0d401cdf69068b73ec9c5102eef402499649d5110e530d13",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5743b5a670e74c599e5dfe0baf081e11/rules-reports/testng-results.xml": "e3559d0ea1b4e537904533f86c876a92fa6f7db708d4b3b5a453b7875266113d",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/draw-ending-methods.json": "d462e76b81f2b5403dc2f95f890a540489e30962e6f60158cd45c1a168ef0533",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/draw-ending-summary.json": "4b36314625918e438ac0680515c4fbfae86c301c0c9e083cb9b92a01d9409b76",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/draw-ending-worker.log": "dd925b94c70f9bf73696814840f53d7153fb9641262e7fd0f37a1c4c9d7379a1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/draw-endings.json": "cc68434517f33d76a07a72f7599f7ca38a2be2aa205d6eabd29056a55c859cf5",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/rules-process.json": "3bd989df1847a0317466433fc90ad54b7708f00eded0feed5f3ad8ecd63e1bc9",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/5fdb24ab51a242408c2be48a922784a9/rules-reports/testng-results.xml": "ed759e5696199992ef0a2db947d0a92f6cb1f2282e860d3de62048f83942e657",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/draw-ending-summary.json": "abf3211e9c8ccff61aa064719e9067967d5ad5b608a05e1e5249ef6eeb739f93",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/draw-ending-worker.log": "fad818adbecae0d599c52ca6dab77fc89e77ceef8bd8724a7c4705a9f50d78a1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/draw-endings.json": "11c3bc4005d4b7031d355b48afe64d035c6f15cfda856326ac5d0cb02fd8caf1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/rules-process.json": "2a4004af6c96d037b32f6935a11a615cb3fa5a32c0209151ce2b96875b923ad3",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/7f97cf1172fa488ca3704cbb64bd5481/rules-reports/testng-results.xml": "e383b3bbb9d6fb512855d070eef30f8722122f9e1163b36f7e104291eca1c0c1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/draw-ending-summary.json": "4608f484f9d9428e2648736122714784421832104f50df0d59c6f5fd9de787a9",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/draw-ending-worker.log": "00ab761befe3fde70422d58fa34092830849469d467ec32914584c070cdee46f",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/draw-endings.json": "d16cfc55359ad9b4f40f5fad220eafcc615b0c6ab2872f5b85f7637d93e1a2c1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/rules-process.json": "51ccb81202bf987e22b4893fa8783ec2c5fa53e253b7ffb5f10c09c0b41846a8",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a5442b26446943b9b9de9359ce9b1c8d/rules-reports/testng-results.xml": "62e417b422aa0f85fb3e0e0c2b220df7e0ff3b54fb1b949d6a23d062c3685d33",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-methods-0000.json": "227a3e3b0b9f423ee813dbe181d4db380c51b070472375ecda06e8f278fa45f6",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-methods-0001.json": "d9235b460012d947cf464046711bf0989931fb9d49f341196703bfbb51699085",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-methods-0002.json": "ba352d48ad967c17db110794e344181e7024e2290ca0af12a80f36bd44f8f591",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-methods.json": "43db681ed884b449584364d6e8e2b141e3f213828e93dff6f430e2b2da6dc7af",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-summary.json": "05fe13c1747ecf32374cf5446c219663769d951a64f6f6575d7751404e8c3189",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-ending-worker.log": "72c86d749b15ed525a43a435be52e97cfa1474453bd96e75acfdef047d3fcc96",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/draw-endings.json": "9651a2f27b1fe443161a5ffe28e29e58b2fd69d8cd6bd7d2ed88b0a91e7d5650",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/rules-process.json": "05312f5c9da41186312e806ac3f1686385cb778110c8246c596225b450a17303",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/a98e81253f7f420b8de0893e2030df37/rules-reports/testng-results.xml": "705ddcd8f47c5972050f9dac96debc508b08b5ed93c779fcf858666a3e12fbc3",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/free-casting-methods.json": "0e20494fc23fb9820c5edc09150839b035532beb6d3d6db57ff7613196d5eae2",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/free-casting-summary.json": "21d0dd1e0f19eead8615172cf2d0d02e950bea53a408ca43b3bf9e34eede7e4b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/free-casting-worker.log": "18508989b917c7a59ab1f69810241fe77c428916e2f98f4485a1d94b98a2ebc9",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/free-casting.json": "68d77ee02c4a84b137394bc1b4ff8a24d4180cf9d4336fbee2cc1c904d02410d",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/rules-inputs.json": "fbe89d52123e7259d77ecfd10afef70e24a3c44fc6d56183f09ab278d9a409ed",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/rules-process.json": "39f80ce81d7bea45268a4e7f36fd5dd98996ccc39d5eb71cb830c04eb814d81c",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/bee1487155c440c097c81f7206ad8655/rules-reports/testng-results.xml": "3c0c58b3e8aa6b03efec6cf5a971936be5d08d6e56242017b80d73aaa6b3806a",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/draw-ending-methods.json": "61c240518fb769744ed2c014a06fe1591b442188ad30c6d2859f5d9b11fe52b1",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/draw-ending-summary.json": "09d05d14e816bb87a7cc323625b558961fcd7d856f200c202952532131558058",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/draw-ending-worker.log": "804d715b602144c920a7ab330b2cf054ade4c613bd14fbf3230428076d0d6137",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/draw-endings.json": "fdc7e0b1ecd7330e893463d984fabd33883e714720da63e70afbff7d59edc547",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/rules-process.json": "2428ca62fb63b0d6e3568d03eb4e3f6f54a4ac2649eea24b456f8e7ecf2e1e57",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/c4b2c708a09649a5ad7d140f1e10b4b2/rules-reports/testng-results.xml": "b7f23ff2d21a9819f513b2b46447386153c01587bf7073961628bd80b528296c",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/draw-ending-methods.json": "e79a656fca704ed44615231dd7c5353de9711cc8004d256b7730445c7e4da29f",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/draw-ending-summary.json": "b2ab6507c83fb3bff7d3080e20ed246b41a914d2982dae24f7b68b41a5147800",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/draw-ending-worker.log": "0a484edf18f22b447aa595ab4ff2032b9153117bbf6d10a83bb81d249020ad49",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/draw-endings.json": "0e044c869993c25afce0322d5b9dca755b86e2900c3c14d48ec66734782a24e4",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/rules-inputs.json": "ecd6523424e6772c09f92ff8c8ab14afcb1d3b67863e7e098b2fd98ca35df588",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/rules-process.json": "2052b194c9b7ccb50066fe06771878496e5e33fc0e551b629b48c36a3c531879",
+    "engine/pending/game-spell-history-runtime-v1/packaged-runs/e98b033562ba497285806349d36dc612/rules-reports/testng-results.xml": "dac82e5ef0bbe502952cd32bd76a97f3bbca2e0c32c587d1affcaf42d79ff5fb",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_source3566_v1.py.txt": "19c3a6cbe88046759b34f40aad325776e5ebfdb938a432d52867bfc6eae0ccbe",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_build4766_v1.py.txt": "b55086fb667b202069eb2662c98442f86bddee10568a97c17468f4792f5ff8cc",
+    "engine/pending/game-spell-history-runtime-v1/drivers/audit_build4766_v1.py.txt": "ad6b990c690531ebc413e59144ac695c2902c8b4036d70af8c40084c9b462863",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_game_spell_packaged_v1.py.txt": "44d428531b72bdc815f5f8ec59c0e89bc73dedfd94eaf1e70ee2429aaf4c8dd5",
+    "engine/pending/game-spell-history-runtime-v1/drivers/audit_game_spell_packaged_failure_v1.py.txt": "a659e1d37ae1c89bb9556b0b3bf11a7f11aa397dd7204abddeff599dd671262e",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_game_spell_remainder_v1.py.txt": "623b83e3ea605ba14489f2bc68785a890de8dc20116c89986fb5476c6df2a448",
+    "engine/pending/game-spell-history-runtime-v1/drivers/audit_game_spell_remainder_v1.py.txt": "836328a860c5baa9fe91e78850d0f2c9c6363d00bc2bd9f7bf852194dd48fb63",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_game_spell_other_packaged_v1.py.txt": "d19a594928b7645af539299369ab766d4caa25b605c2590f5d6cf4dc2e3b4448",
+    "engine/pending/game-spell-history-runtime-v1/drivers/audit_game_spell_other_packaged_v1.py.txt": "04b1deb91c5254b301ec2b6b4c9d07be20dc77b2aab8f5422821c36573e47a14",
+    "engine/pending/game-spell-history-runtime-v1/drivers/prepare_game_spell_broad_v1.py.txt": "d974652a9a2f0293df29037143f4e2b8fc294b6f0716d6e79c490bd38753693c",
+    "engine/pending/game-spell-history-runtime-v1/drivers/run_game_spell_broad_v1.py.txt": "dc13fd4016d2c63e63b85f99bf236fb438763ef3d288998a8bf52f5878eba7e0"
+  }
+}

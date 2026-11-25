@@ -1,0 +1,31 @@
+"""Prepare observational gather counters for three previously profiled heavy cases."""
+from pathlib import Path
+import ast,hashlib,json,shutil
+R=Path.cwd();W=R/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';S=R/'data/development/commander-blocking-history-research/source';REBASED=W/'trait-category-rebased-v3'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+manifest=load(W/'source3566-v1/production-inputs.json');paths=load(REBASED/'proposal.json')['changed_sources'];name='forge-game/src/main/java/forge/game/card/CardState.java'
+assert len(paths)==15 and all(sha(S/n)==manifest[n] for n in paths)
+for mode in ('baseline','overlay'):
+ P=W/('static-gather-diagnostic-'+mode+'-v1');P.mkdir()
+ selected=[name] if mode=='baseline' else paths
+ for n in selected:
+  for folder,source in [('baseline',S/n),('source',S/n if mode=='baseline' else REBASED/'source'/n)]:
+   dest=P/folder/n;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,dest)
+ p=P/'source'/name;s=p.read_text(encoding='utf-8');a='    private FCollection<StaticAbility> buildStaticAbilities() {';assert s.count(a)==1
+ metrics='''    // Diagnostic only: count actual gather calls by runtime card class, without inspecting traits again.
+    private static final java.util.concurrent.ConcurrentHashMap<String,
+            java.util.concurrent.atomic.LongAdder> diagnosticStaticBuilds = new java.util.concurrent.ConcurrentHashMap<>();
+
+    public static java.util.Map<String, Long> staticGatherDiagnosticCounts() {
+        java.util.Map<String, Long> snapshot = new java.util.TreeMap<>();
+        diagnosticStaticBuilds.forEach((name, count) -> snapshot.put(name, count.sum()));
+        return snapshot;
+    }
+
+'''
+ s=s.replace(a,metrics+a+'\n        diagnosticStaticBuilds.computeIfAbsent(card.getClass().getName(),\n                name -> new java.util.concurrent.atomic.LongAdder()).increment();')
+ p.write_text(s,encoding='utf-8',newline='\n')
+ record={'scope':'Instrumented diagnostic only. Count actual static gather calls by runtime card class; do not add trait reads or game events. Three unchanged existing heavy methods only, not the original1271 workload or a speedup pass.','mode':mode,'changed_sources':selected,'baseline_source_suite':3566,'baseline_native_cases':4766,'preserves_game_spell_history_call':True,'target_class':'forge.ai.CommanderExertTransitionsTest','target_methods':['repeatedDepth2','twoExertingPlayersDepth1','twoExertingPlayersDepth2'],'promoted':False}
+ (P/'proposal.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+ s=(W/'compile_foretell_history_prototype_v1.py').read_text(encoding='utf-8').replace('foretell-history-prototype-v1',P.name);ast.parse(s);(W/('compile_static_gather_'+mode+'_v1.py')).write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({'diagnostic_overlays_prepared':2,'targeted_methods':3,'native_execution':False,'full_resolution_trial':False}))

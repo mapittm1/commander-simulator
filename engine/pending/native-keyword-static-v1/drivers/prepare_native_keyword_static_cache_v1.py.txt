@@ -1,0 +1,166 @@
+"""Prepare a live-membership native keyword cache without changing list APIs or frozen source."""
+from pathlib import Path
+import ast,hashlib,json,shutil
+R=Path.cwd();W=R/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';S=R/'data/development/commander-blocking-history-research/source';OLD=W/'trait-category-rebased-v3';P=W/'native-keyword-static-cache-v1';P.mkdir()
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+paths=load(OLD/'proposal.json')['changed_sources'];manifest=load(W/'source3566-v1/production-inputs.json');assert len(paths)==15 and all(sha(S/n)==manifest[n] for n in paths)
+for folder in ('baseline','source'):shutil.copytree(OLD/folder,P/folder)
+def change(name,old,new):
+ p=P/'source'/name;s=p.read_text(encoding='utf-8');assert s.count(old)==1,(name,old);p.write_text(s.replace(old,new),encoding='utf-8',newline='\n')
+instance='forge-game/src/main/java/forge/game/keyword/KeywordInstance.java'
+change(instance,'    final boolean hasNoStaticTraitsForCache() {','''    /** Compare native list membership without calling an overridden getter or applicator. */
+    final boolean nativeStaticTraitsMatch(StaticAbility[] expected) {
+        if ((inheritedTraitAccess & DEFAULT_STATIC_ACCESS) == 0
+                || staticAbilities.getClass() != java.util.ArrayList.class
+                || staticAbilities.size() != expected.length) return false;
+        for (int index = 0; index < expected.length; index++) {
+            if (staticAbilities.get(index) != expected[index]) return false;
+        }
+        return true;
+    }
+
+    /** Null means the original callback path is required; native ability objects remain live. */
+    final StaticAbility[] nativeStaticTraitsSnapshot() {
+        if ((inheritedTraitAccess & DEFAULT_STATIC_ACCESS) == 0
+                || staticAbilities.getClass() != java.util.ArrayList.class) return null;
+        for (int index = 0; index < staticAbilities.size(); index++) {
+            StaticAbility ability = staticAbilities.get(index);
+            if (ability == null || ability.getClass() != StaticAbility.class) return null;
+        }
+        return staticAbilities.toArray(new StaticAbility[staticAbilities.size()]);
+    }
+
+    final boolean hasNoStaticTraitsForCache() {''')
+collection='forge-game/src/main/java/forge/game/keyword/KeywordCollection.java'
+change(collection,'    /** Inspect live lists only when the standard keyword applicators are inherited. */','''    private static final StaticAbility[] NO_STATIC_TRAITS = new StaticAbility[0];
+    private static final NativeStaticSnapshot EMPTY_STATIC_SNAPSHOT =
+            new NativeStaticSnapshot(new KeywordInterface[0], new StaticAbility[0][]);
+
+    /** Immutable membership only; conditions, parameters and host state are never frozen. */
+    public static final class NativeStaticSnapshot {
+        private final KeywordInterface[] members;
+        private final StaticAbility[][] traits;
+
+        private NativeStaticSnapshot(KeywordInterface[] members, StaticAbility[][] traits) {
+            this.members = members;
+            this.traits = traits;
+        }
+
+        public boolean isEmpty() { return members.length == 0; }
+
+        private boolean memberMatches(KeywordInterface current, int index) {
+            if (!(current instanceof KeywordInstance<?> instance)) return false;
+            if (isEmpty()) return instance.nativeStaticTraitsMatch(NO_STATIC_TRAITS);
+            return index < members.length && current == members[index]
+                    && instance.nativeStaticTraitsMatch(traits[index]);
+        }
+
+        private boolean matches(KeywordCollection source) {
+            int index = 0;
+            if (!source.valuesExposed) {
+                for (KeywordInterface current : source.traitMembers()) {
+                    if (!memberMatches(current, index++)) return false;
+                }
+            } else {
+                // A retained view can mutate the map without the normal invalidation hooks.
+                for (KeywordInterface current : source.map.values()) {
+                    if (!memberMatches(current, index++)) return false;
+                }
+            }
+            return isEmpty() || index == members.length;
+        }
+    }
+
+    /** Return null for opaque behavior, or a live-validated immutable membership signature. */
+    public final NativeStaticSnapshot nativeStaticSnapshot(NativeStaticSnapshot previous) {
+        if (getClass() != KeywordCollection.class) return null;
+        if (map.isEmpty()) return EMPTY_STATIC_SNAPSHOT;
+        if (previous != null && previous.matches(this)) return previous;
+        KeywordInterface[] members = !valuesExposed ? traitMembers()
+                : map.values().toArray(new KeywordInterface[map.size()]);
+        boolean empty = true;
+        for (KeywordInterface current : members) {
+            if (!(current instanceof KeywordInstance<?> instance)
+                    || !instance.nativeStaticTraitsMatch(NO_STATIC_TRAITS)) {
+                empty = false;
+                break;
+            }
+        }
+        if (empty) return EMPTY_STATIC_SNAPSHOT;
+        StaticAbility[][] traits = new StaticAbility[members.length][];
+        for (int index = 0; index < members.length; index++) {
+            if (!(members[index] instanceof KeywordInstance<?> instance)) return null;
+            traits[index] = instance.nativeStaticTraitsSnapshot();
+            if (traits[index] == null) return null;
+        }
+        return new NativeStaticSnapshot(members, traits);
+    }
+
+    /** Inspect live lists only when the standard keyword applicators are inherited. */''')
+state='forge-game/src/main/java/forge/game/card/CardState.java'
+change(state,'''    private boolean hasNoAdditionalStaticTraits() {
+        return getClass() == CardState.class && card.getClass() == Card.class
+                && !(getStateName() == CardStateName.Original && card.hasAnySplitTraitState())
+                && hasNoStaticChanges(card.getChangedCardTraits())
+                && hasNoStaticChanges(card.getChangedCardTraitsByText())
+                && cachedKeywords.hasNoStaticTraitsForCache();
+    }''','''    private boolean hasNativeStaticSources() {
+        return getClass() == CardState.class && card.getClass() == Card.class
+                && !(getStateName() == CardStateName.Original && card.hasAnySplitTraitState())
+                && hasNoStaticChanges(card.getChangedCardTraits())
+                && hasNoStaticChanges(card.getChangedCardTraitsByText());
+    }
+
+    private boolean hasNoAdditionalStaticTraits() {
+        return hasNativeStaticSources() && cachedKeywords.hasNoStaticTraitsForCache();
+    }
+
+    private boolean hasNativeIntrinsicStatics() {
+        if (staticAbilities.getClass() != FCollection.class) return false;
+        for (int index = 0; index < staticAbilities.size(); index++) {
+            StaticAbility ability = staticAbilities.get(index);
+            if (ability == null || ability.getClass() != StaticAbility.class) return false;
+        }
+        return true;
+    }''')
+change(state,'''        if (!hasNoAdditionalStaticTraits()) return buildStaticAbilities();
+        // Land type changes can remove statics, but cannot introduce one.
+        if (staticAbilities.isEmpty()) {
+            return FCollection.<StaticAbility>getEmpty().shareCopy();
+        }''','''        if (!hasNativeStaticSources()) return buildStaticAbilities();
+        final StaticAbilitiesCache cache = staticCache;
+        final KeywordCollection.NativeStaticSnapshot keywords = cachedKeywords.nativeStaticSnapshot(
+                cache == null ? null : cache.keywords);
+        if (keywords == null) return buildStaticAbilities();
+        if (staticAbilities.isEmpty() && keywords.isEmpty()) {
+            return FCollection.<StaticAbility>getEmpty().shareCopy();
+        }
+        // Newly admitted positive-keyword cases cannot bypass opaque equality/hash callbacks.
+        if (!keywords.isEmpty() && !hasNativeIntrinsicStatics()) return buildStaticAbilities();''')
+change(state,'''        final boolean removeIntrinsic = card.hasRemoveIntrinsic();
+        final StaticAbilitiesCache cache = staticCache;
+        if (cache != null && cache.ownVersion == ownVersion
+                && cache.removeIntrinsic == removeIntrinsic) {''','''        final boolean removeIntrinsic = card.hasRemoveIntrinsic();
+        if (cache != null && cache.ownVersion == ownVersion
+                && cache.removeIntrinsic == removeIntrinsic && cache.keywords == keywords) {''')
+change(state,'        staticCache = new StaticAbilitiesCache(result, removeIntrinsic, ownVersion);','        staticCache = new StaticAbilitiesCache(result, removeIntrinsic, ownVersion, keywords);')
+change(state,'''        final int ownVersion;
+
+        StaticAbilitiesCache(FCollection<StaticAbility> value, boolean removeIntrinsic, int ownVersion) {
+            this.value = value;
+            this.removeIntrinsic = removeIntrinsic;
+            this.ownVersion = ownVersion;
+        }''','''        final int ownVersion;
+        final KeywordCollection.NativeStaticSnapshot keywords;
+
+        StaticAbilitiesCache(FCollection<StaticAbility> value, boolean removeIntrinsic, int ownVersion,
+                KeywordCollection.NativeStaticSnapshot keywords) {
+            this.value = value;
+            this.removeIntrinsic = removeIntrinsic;
+            this.ownVersion = ownVersion;
+            this.keywords = keywords;
+        }''')
+record={'scope':'Unpromoted positive native keyword-static membership cache on the rebased15-source overlay. Recheck live ArrayList length/order/references, native method metadata, current exposed membership, intrinsic stamps and existing merged/split guards. Opaque paths retain native callbacks; outputs remain mutable share copies.','changed_sources':paths,'baseline_source_suite':3566,'baseline_native_cases':4766,'preserves_game_spell_count_call':True,'no_foreTell_field_fix_in_this_overlay':True,'original_resolution_cases':1271,'resolution_worker_seconds':90,'promoted':False,'compiled':False,'validation_pending':True}
+(P/'proposal.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+s=(W/'compile_trait_category_rebased_v3.py').read_text(encoding='utf-8').replace('trait-category-rebased-v3',P.name);ast.parse(s);(W/'compile_native_keyword_static_cache_v1.py').write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({'prototype':P.name,'changed_sources':15,'compiled':False,'root_and_canonical_sources_unchanged':True}))
