@@ -36,9 +36,14 @@ cases. These direct-state fixtures do not establish complete paid card histories
 A native restriction-based empty-declaration shortcut preserves these cases but
 still exceeds the original 1,271-case / 90-second resolution limit (90.016s), so it
 remains unpromoted. Production patches and the selected runtime are unchanged.
-The expanded **3,396-source / 4,596-native / 3,439-packaged** workflow remains
-pending, with 273 combat/snapshot cases and 179 required production origins;
-1,256 cast cases and the original 1,271 resolution cases are retained.
+The **3,396-source** suite passes, retaining every prior case and parameter. The
+first **4,596-native** run also passed all cases, but sealing stopped because the
+recipe still expected 4,563. Correct that count and add a cross-registry unit
+guard, first reproduced failing and then passing. Sources, test/card inputs and
+production class bytes match the reviewed candidate. A fresh sealed build and the
+**3,439-packaged** workflow remain pending, with 273 combat/snapshot cases and 179
+required production origins; 1,256 cast and the original 1,271 resolution cases
+are retained. See [count correction evidence](engine/native_count_correction_evidence.json).
 See [unavailable-attacker evidence](engine/unavailable_attack_evidence.json).
 
 The preceding printing/membership expansion registered 81 contracts: 30 printing-selection

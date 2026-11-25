@@ -1,8 +1,10 @@
 """Fail closed when packaged rule partitions lose, duplicate or invent test classes."""
 
+import json
 import unittest
 from unittest.mock import patch
 
+from commander.paths import PROJECT_ROOT
 from tests.support.draw_ending_partitions import (
     EXPECTED_COUNTS,
     PARTITIONS,
@@ -23,6 +25,18 @@ class DrawEndingPartitionTests(unittest.TestCase):
         self.assertEqual(EXPECTED_COUNTS["cast_events"], 1256)
         for name, classes in PARTITIONS.items():
             self.assertEqual(select_partition(name, TEST_CLASSES), classes)
+
+    def test_recipe_native_total_matches_registered_families(self):
+        """Catch a stale sealing count when packaged fixture groups expand."""
+        recipe = json.loads((PROJECT_ROOT / "engine/sticker_recipe.json").read_bytes())
+        # The pinned Forge suite retains 752 cases outside these packaged families.
+        # Native report membership audits verify that boundary against actual methods.
+        other_native_cases = 752
+        other_packaged_cases = 65 + 194 + 146  # Free casting, untap, Battle combat.
+        expected = (
+            sum(EXPECTED_COUNTS.values()) + other_packaged_cases + other_native_cases
+        )
+        self.assertEqual(recipe["native_test_count"], expected)
 
     def test_omitted_class_is_rejected(self):
         """A smaller class list cannot become an accepted passing gate."""

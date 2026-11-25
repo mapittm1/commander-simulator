@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct the native sealing count from 4,563 to 4,596 after all 4,596 tests
+  passed but the stale expected count stopped packaging. Add a cross-registry
+  unit guard, verified failing before the correction and passing afterward;
+  retain the strict native validator and failed attempt. All 3,396 source cases
+  pass with prior methods/parameters retained. Audit 2,168 production sources,
+  162 test files and 316 card files; production class bytes match the preceding
+  candidate. A fresh corrected sealed build and remaining packaged/runtime gates
+  are still required. The selected runtime remains unchanged.
+
 - Register 33 native attack controls for unavailable creatures, haste, goad,
   mandatory and group attacks, and protected defenders across copy depths 0/1/2.
   Paired baseline/prototype runs pass 661 cases, retaining 628 prior contracts and

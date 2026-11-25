@@ -1,0 +1,21 @@
+F                                                                        [100%]
+================================== FAILURES ===================================
+_ DrawEndingPartitionTests.test_recipe_native_total_matches_registered_families _
+
+self = <test_draw_ending_partitions.DrawEndingPartitionTests testMethod=test_recipe_native_total_matches_registered_families>
+
+    def test_recipe_native_total_matches_registered_families(self):
+        """Catch a stale sealing count when packaged fixture groups expand."""
+        recipe = json.loads((PROJECT_ROOT / "engine/sticker_recipe.json").read_bytes())
+        # The pinned Forge suite retains 752 cases outside these packaged families.
+        # Native report membership audits verify that boundary against actual methods.
+        other_native_cases = 752
+        other_packaged_cases = 65 + 194 + 146  # Free casting, untap, Battle combat.
+        expected = sum(EXPECTED_COUNTS.values()) + other_packaged_cases + other_native_cases
+>       self.assertEqual(recipe["native_test_count"], expected)
+E       AssertionError: 4563 != 4596
+
+tests\unit\test_draw_ending_partitions.py:37: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_draw_ending_partitions.py::DrawEndingPartitionTests::test_recipe_native_total_matches_registered_families
+1 failed in 0.24s
