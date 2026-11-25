@@ -1,0 +1,23 @@
+--- a/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java
++++ b/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java
+@@ -524,6 +524,11 @@
+     // table
+     // ======================================================================================================
+ 
++    // New tables may share immutable empty content. A write still publishes a fresh
++    // snapshot, including writes that return to empty; version tokens never rewind.
++    private static final Snap<?, ?, ?> INITIAL_SORTED_SNAPSHOT =
++            new SortedSnap<Object, Object, Object>(SortedSnap.NO_DATA, 0);
++
+     private final boolean sorted;
+     private transient volatile Snap<R, C, V> snap;
+ 
+@@ -534,7 +539,7 @@
+ 
+     /** Replacement for TreeBasedTable.create() */
+     public static <R extends Comparable, C extends Comparable, V> FSnapshotTable<R, C, V> createTree() {
+-        return new FSnapshotTable<R, C, V>(true, new SortedSnap<R, C, V>(SortedSnap.NO_DATA, 0));
++        return new FSnapshotTable<R, C, V>(true, (Snap<R, C, V>) INITIAL_SORTED_SNAPSHOT);
+     }
+ 
+     /** Replacement for TreeBasedTable.create(table) */

@@ -1,0 +1,13 @@
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -41,7 +41,9 @@
+     }
+ 
+     private CardCopyService(Card copyFrom, Game toGame, IEntityMap historyMap) {
+-        this(copyFrom, toGame, historyMap, new java.util.IdentityHashMap<>());
++        // Ordinary copies use cachedMap by card ID; only cross-game histories use this map.
++        this(copyFrom, toGame, historyMap, historyMap == null
++                ? java.util.Collections.emptyMap() : new java.util.IdentityHashMap<>());
+     }
+ 
+     private CardCopyService(Card copyFrom, Game toGame, IEntityMap historyMap, Map<Card, Card> historicalObjects) {

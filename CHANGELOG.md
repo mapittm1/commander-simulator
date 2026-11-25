@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 43 native controls for live split/clone trait visibility and table
+  isolation, version tokens, serialization and concurrent use. Baseline and
+  experimental controls pass; expanded full source/native/package validation
+  remains pending (3,511/4,711/3,554). Preserve unpromoted guard/allocation
+  experiments, paired diagnostics and the corrected post-test launcher diagnostic.
+  Original 1,271-case / 90-second runs still time out: one finishes every assertion,
+  while an instrumented run remains inside TestNG. Do not claim a completed
+  timing pass or whole-game speedup from bounded allocation measurements.
+  Production patches and selected runtime remain unchanged.
+
 - Correct generic replacement eligibility: performance mode now respects explicit
   active zones instead of dropping tap, untap and mana replacements outside the
   battlefield/command zone. Preserve the failing 36/72 baseline, corrected 72/72

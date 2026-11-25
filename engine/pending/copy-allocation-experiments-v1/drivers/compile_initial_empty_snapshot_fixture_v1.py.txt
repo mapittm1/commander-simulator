@@ -1,0 +1,12 @@
+from pathlib import Path
+import sys,json
+r=Path.cwd();sys.path.insert(0,str(r))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';p=w/'initial-empty-snapshot-fixture-v1';selection=json.loads((w/'replacement-active-zone-candidate-v1/candidate-selection.json').read_bytes());settings=read_settings(r/selection['build']/'engine-config.json');lock=settings.verify();archive=settings.home/lock['jar_name'];recipe=json.loads((r/'engine/sticker_recipe.json').read_bytes());dependency=r/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256'];original=r/'data/runs/180e31e1b38e4e89b573dc19eb475940/rules-classes';classes=p/'classes';classes.mkdir()
+command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',';'.join(map(str,(archive,original,dependency))),'-d',str(classes),str(p/'CommanderInitialTableSnapshotTest.java')]
+def save(dest,value):dest.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+save(p/'compile-selection.json',{'command':command,'timeout_seconds':90,'jar_sha256':file_hash(archive),'dependency_sha256':file_hash(dependency)})
+result=run_bounded(command,r,p/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(p)));save(p/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+save(p/'inputs.json',{n.relative_to(p).as_posix():file_hash(n) for n in p.rglob('*') if n.is_file() and n.name!='inputs.json'});print(result)

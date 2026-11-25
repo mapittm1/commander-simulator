@@ -1,0 +1,66 @@
+"""Check an native snapshot skeleton overlay against the unchanged resolution workload."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,sys,subprocess,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+from tests.support.draw_ending_partitions import PARTITIONS
+RUN=WORK/'resolution1271-ordinary-history-map-v62';ORIGINAL=ROOT/'data/runs/180e31e1b38e4e89b573dc19eb475940';PROTOTYPE=WORK/'ordinary-history-map-prototype-v1';EPOCH=WORK/'merged-trait-guard-epoch-v1'
+SETTINGS=ROOT/json.loads((WORK/'replacement-active-zone-candidate-v1/candidate-selection.json').read_bytes())['build']/'engine-config.json'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=load(ORIGINAL/'rules-inputs.json')
+ assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(n))==h for n,h in metadata['inputs'].items())
+ inputs=load(PROTOTYPE/'inputs.json');assert all(file_hash(PROTOTYPE/n)==h for n,h in inputs.items())
+ old=ROOT/'data/runs/20fe6e3b58d04b44a3bfa3aeb55654ed'
+ archived=load(old/'rules-inputs.json')['classes']
+ assert all(file_hash(old/'rules-classes'/n)==h for n,h in archived.items())
+ assert all(metadata['classes'].get(n)==h for n,h in archived.items()), 'All earlier Java rule/support class bytes must be retained'
+ return inputs
+if '--worker' in sys.argv:
+ inputs=verify();settings=read_settings(SETTINGS);engine=settings.verify();require_bridge();java=importlib.import_module('jpype')
+ recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(PROTOTYPE/'classes',archive,ORIGINAL/'rules-classes',dependency))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()<=2147483648
+ overrides={n[len('classes/'):] for n in inputs if n.startswith('classes/')}
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+ for name in (*PARTITIONS['resolution'],'forge.ai.AITest'):assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in PARTITIONS['resolution']]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+ counts,methods=packaged_rules.test_results(listener)
+ report=SETTINGS.parent/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+ expected=Counter(cl.get('name')+'.'+m.get('name') for cl in ET.parse(report).findall('.//class') if cl.get('name') in PARTITIONS['resolution'] for m in cl.findall('test-method') if m.get('is-config')!='true');assert sum(expected.values())==1271
+ def case_parameters(path):
+  return Counter((cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for cls in ET.parse(path).findall('.//class') if cls.get('name') in PARTITIONS['resolution'] for m in cls.findall('test-method') if m.get('is-config')!='true')
+ parameter_counter_matches=case_parameters(report)==case_parameters(RUN/'reports/testng-results.xml')
+ assert parameter_counter_matches
+ outcome={'counts':counts,'methods':methods,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'expected_method_counter_matches':Counter(row['method'] for row in methods)==expected,'expected_parameter_counter_matches':parameter_counter_matches,'actual_processors':int(runtime.availableProcessors()),'max_java_heap_bytes':int(runtime.maxMemory()),'scope':'Changed overlay diagnostic only; independent fresh packaged gate remains mandatory.'}
+ save(RUN/'outcome.json',outcome);verify()
+ assert counts==dict(total=1271,passed=1271,failed=0,skipped=0) and outcome['expected_method_counter_matches']
+ assert outcome['testng_status']==0 and outcome['configuration_failures']==0 and outcome['configuration_skips']==0
+ java.shutdownJVM()
+else:
+ assert len(sys.argv)==1;verify();assert load(WORK/'ordinary-history-map757-prototype-v1/outcome.json')['counts']==dict(total=757,passed=757,failed=0,skipped=0)
+ assert load(WORK/'ordinary-history-map194-prototype-v1/outcome.json')['counts']==dict(total=194,passed=194,failed=0,skipped=0)
+ assert load(WORK/'merged-trait-guard36-baseline-v1/outcome.json')['counts']==dict(total=36,passed=36,failed=0,skipped=0)
+ assert load(WORK/'ordinary-history-map36-prototype-v1/outcome.json')['counts']==dict(total=36,passed=36,failed=0,skipped=0)
+ assert load(WORK/'initial-empty-snapshot7-baseline-v2/outcome.json')['counts']==dict(total=7,passed=7,failed=0,skipped=0)
+ assert load(WORK/'initial-empty-snapshot7-prototype-v2/outcome.json')['counts']==dict(total=7,passed=7,failed=0,skipped=0)
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+ frozen=load(EPOCH/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(SETTINGS)
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert all(file_hash(ROOT/n)==h for n,h in frozen.items());assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+ print(json.dumps({'process':result,'counts':outcome.get('counts'),'method_counter_matches':outcome.get('expected_method_counter_matches'),'diagnostic_only':True}),flush=True)
+
+ if '--worker' not in sys.argv: assert result['status']=='finished' and result['returncode']==0,result

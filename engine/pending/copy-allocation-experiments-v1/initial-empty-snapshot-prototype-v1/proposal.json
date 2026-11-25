@@ -1,0 +1,6 @@
+{
+  "parent": "merged-trait-guard-prototype-v1",
+  "change": "Share only the immutable initial empty sorted snapshot across newly constructed tables. Every changing write still creates a fresh snapshot/version; mutable table instances and live key views remain separate.",
+  "risk": "Table/view/type/concurrency/serialization isolation and no version-token reuse must be verified. Memory/performance benefit unproven.",
+  "baseline_source_sha256": "ead5a61ca24a066c5e59738c35781574af48135d8e51640272e50731e1d2573e"
+}

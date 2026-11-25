@@ -1,0 +1,6 @@
+{
+  "parent": "initial-empty-snapshot-prototype-v1",
+  "change": "Avoid allocating a private identity map in ordinary CardCopyService constructors. All historicalObjects reads/writes and recursive sharing are guarded by historyMap!=null and keep their existing mutable identity map.",
+  "risk": "Ordinary cache and cross-game identity history semantics must remain unchanged; workload speedup unproven.",
+  "baseline_source_sha256": "360a3a5521e10cd1ea92e9dc978cfadc75f8bb12c042c19396764b29959fa135"
+}

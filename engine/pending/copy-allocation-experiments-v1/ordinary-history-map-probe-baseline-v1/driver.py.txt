@@ -1,0 +1,17 @@
+from pathlib import Path
+import sys,json
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent;mode=sys.argv[1];assert mode in ('baseline','prototype')
+fixture=WORK/'ordinary-history-map-probe-v1';prototype=WORK/'ordinary-history-map-prototype-v1'
+for directory in (fixture,prototype):
+ inputs=json.loads((directory/'inputs.json').read_bytes());assert all(file_hash(directory/n)==h for n,h in inputs.items())
+settings=read_settings(ROOT/'data/engine-builds/870c6afd6a0a4830ac7f3c7719b86217/engine-config.json');lock=settings.verify();archive=settings.home/lock['jar_name']
+run=WORK/('ordinary-history-map-probe-'+mode+'-v1');run.mkdir()
+classpath=(() if mode=='baseline' else (prototype/'classes',))+(archive,fixture/'classes')
+command=[str(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Dfile.encoding=UTF-8','-cp',';'.join(map(str,classpath)),'forge.ai.ConstructorAllocationProbe']
+(run/'driver.py.txt').write_bytes(Path(__file__).read_bytes());(run/'selection.json').write_text(json.dumps({'command':command,'timeout_seconds':90,'jar_sha256':file_hash(archive)},indent=2)+'\n',encoding='utf-8')
+result=run_bounded(command,ROOT,run/'diagnostic.log',ProcessLimits(90,log_bytes=65536,environment=_environment(run)))
+(run/'process.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8');print(json.dumps(result));assert result['status']=='finished' and result['returncode']==0

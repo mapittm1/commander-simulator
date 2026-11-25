@@ -26,6 +26,18 @@ difference.
 
 ## Card coverage
 
+The normal build now registers **43 additional controls**: 36 live split/clone
+trait transitions and seven table isolation/version/serialization/concurrency
+contracts. They pass on the existing engine and experimental overlays; full
+expanded source/native/package validation is pending (expected totals
+3,511/4,711/3,554). The original 1,271-case / 90-second gate is unchanged.
+Unpromoted allocation experiments retain 757 interaction and 194 untap cases.
+One attempt completed all 1,271 assertions but timed out during finalization;
+a phase diagnostic remained inside TestNG at the deadline. Neither establishes
+a completed timing pass. Bounded factory allocation observations do not establish
+whole-game memory or performance. Production patches and the selected runtime
+are unchanged. See [experiment evidence](engine/copy_allocation_experiments_evidence.json).
+
 The replacement-effect correction now respects explicit active zones in performance
 mode. It passes all **3,468 source** and **4,668 native** cases, retaining every
 earlier case and parameter. The build audit confirms only the intended

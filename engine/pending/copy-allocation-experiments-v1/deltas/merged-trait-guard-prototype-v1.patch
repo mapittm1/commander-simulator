@@ -1,0 +1,47 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -533,6 +533,24 @@
+             return getOriginalState(state);
+         }
+         return clStates.get(state);
++    }
++
++    /** Read the active native state map once; unknown callbacks retain hasState calls. */
++    public final boolean hasAnySplitTraitState() {
++        if (getClass() != Card.class) {
++            return hasState(CardStateName.LeftSplit) || hasState(CardStateName.RightSplit);
++        }
++        final CardCloneStates active = getLastClonedState();
++        if (active == null) {
++            return states.containsKey(CardStateName.LeftSplit)
++                    || states.containsKey(CardStateName.RightSplit);
++        }
++        if (active.getClass() != CardCloneStates.class) {
++            // A containsKey callback may replace the active clone between reads.
++            return hasState(CardStateName.LeftSplit) || hasState(CardStateName.RightSplit);
++        }
++        return active.containsKey(CardStateName.LeftSplit)
++                || active.containsKey(CardStateName.RightSplit);
+     }
+ 
+     public boolean hasState(final CardStateName state) {
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -700,7 +700,7 @@
+         return card.getChangedCardTraits().isEmpty()
+                 && card.getChangedCardTraitsByText().isEmpty()
+                 && !(getStateName() == CardStateName.Original
+-                && (card.hasState(CardStateName.LeftSplit) || card.hasState(CardStateName.RightSplit)));
++                && card.hasAnySplitTraitState());
+     }
+ 
+     private boolean hasNoAdditionalStaticTraits() {
+@@ -721,7 +721,7 @@
+                 && card.getChangedCardTraits().isEmpty()
+                 && card.getChangedCardTraitsByText().isEmpty()
+                 && !(getStateName() == CardStateName.Original
+-                && (card.hasState(CardStateName.LeftSplit) || card.hasState(CardStateName.RightSplit)));
++                && card.hasAnySplitTraitState());
+     }
+ 
+     /** A live negative check; unknown trigger callback sources retain gathering. */
