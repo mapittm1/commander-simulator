@@ -27,6 +27,11 @@ difference.
 
 ## Card coverage
 
+The first full-source attempt stopped before tests because Checkstyle found eight
+unused imports in the new fixture. Those imports are removed; test bodies and the
+production correction are unchanged. The failed attempt is preserved in the
+live trait evidence, and full validation still remains pending.
+
 A new cache correction re-evaluates mutable keyword/trait entries, removal
 predicates and custom callbacks on every read. Thirty new regressions fail on the
 previous candidate and pass with the correction; all 232 prior focused controls

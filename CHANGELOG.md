@@ -6,6 +6,11 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Remove eight unused imports from the new live-trait fixture after the full
+  source attempt stopped at Checkstyle before executing tests. Keep every test
+  body and production change unchanged, update the pinned fixture hash and
+  preserve the failed build log. Full source/native/runtime validation pending.
+
 - Correct static/replacement cache reuse for mutable keyword and trait entries,
   changing removal predicates and custom callbacks. Preserve 30 failing baseline
   regressions and their corrected passes across original and copied games, plus
