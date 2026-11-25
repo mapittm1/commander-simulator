@@ -1,0 +1,108 @@
+from pathlib import Path
+w=Path('data/development/commander-multiplayer-attack-research/waterbend-filter-research');p=w/'keyword-membership-prototype-v1/source/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java';s=p.read_text(encoding='utf-8')
+for method in ['hasNoStaticTraitsForCache','hasNoReplacementTraitsForCache']:
+ start=s.index('    public final boolean '+method);end=s.index('\n    }',start)+6;body=s[start:end]
+ a='''        final Iterable<KeywordInterface> members = valuesExposed
+                ? map.values() : java.util.Arrays.asList(traitMembers());
+        for (KeywordInterface keyword : members) {''';assert a in body
+ check='hasNoStaticTraitsForCache' if method=='hasNoStaticTraitsForCache' else 'hasNoReplacementTraitsForCache'
+ b=f'''        if (!valuesExposed) {{
+            for (KeywordInterface keyword : traitMembers()) {{
+                if (!(keyword instanceof KeywordInstance<?> instance)
+                        || !instance.{check}()) return false;
+            }}
+            return true;
+        }}
+        for (KeywordInterface keyword : map.values()) {{'''
+ body=body.replace(a,b);s=s[:start]+body+s[end:]
+p.write_text(s,encoding='utf-8',newline='\n')
+base=(w/'trait-gather-fixtures-v1/CommanderTraitGatherTest.java').read_text(encoding='utf-8');start=base.index('    private Player actor(');end=base.index('    private static final class OpaqueKeywords');setup=base[start:end]
+f=w/'keyword-membership-fixtures-v1';f.mkdir();s='''package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.keyword.Keyword;
+import forge.game.keyword.KeywordCollection;
+import forge.game.keyword.KeywordInterface;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.replacement.ReplacementEffect;
+import forge.game.replacement.ReplacementHandler;
+import forge.game.replacement.ReplacementType;
+import forge.game.staticability.StaticAbility;
+import forge.game.staticability.StaticAbilityMode;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Membership mutation and exposed views must not hide live native card traits. */
+public class CommanderKeywordMembershipTest extends AITest {
+'''+setup+'''
+    private void observe(Card card, boolean expected) {
+        assertEquals(card.getStaticAbilities().stream().anyMatch(st -> st.checkMode(StaticAbilityMode.CantBeActivated)), expected);
+        assertEquals(card.getReplacementEffects().stream().anyMatch(re -> re.getMode() == ReplacementType.Tap), expected);
+        assertEquals(card.canTap(), !expected, "Native tap replacement visibility");
+    }
+    private void check(String mode, int depth) {
+        Game game = setup(depth); Card card = actor(game).getCardsIn(ZoneType.Battlefield).getFirst();
+        KeywordCollection keywords = new KeywordCollection(); KeywordInterface harmless = keywords.add("Flying");
+        KeywordInterface positive = Keyword.getInstance("Haste");
+        StaticAbility ban = new StaticAbility("Mode$ CantBeActivated | AffectedZone$ Battlefield | ValidCard$ Card.Self | ValidSA$ Activated", card, card.getCurrentState());
+        ReplacementEffect replacement = ReplacementHandler.parseReplacement("Event$ Tap | ActiveZones$ Battlefield | ValidCard$ Card.Self | Layer$ CantHappen", card, true);
+        positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement);
+        card.getCurrentState().setCachedKeywords(keywords); observe(card, false);
+        if (mode.equals("keyAddRetained") || mode.equals("sameSizeView")) {
+            Collection<KeywordInterface> retained = keywords.getValues(Keyword.HASTE);
+            observe(card, false);
+            if (mode.equals("sameSizeView")) assertTrue(keywords.getValues(Keyword.FLYING).remove(harmless));
+            assertTrue(retained.add(positive)); observe(card, true); assertTrue(retained.remove(positive)); observe(card, false);
+            retained.add(positive); observe(card, true); return;
+        }
+        if (mode.equals("addAll")) {
+            keywords.addAll(List.of("Haste")); positive = keywords.getValues(Keyword.HASTE).iterator().next();
+            positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement);
+        } else if (mode.equals("insertAll")) keywords.insertAll(List.of(positive));
+        else keywords.insert(positive);
+        observe(card, true);
+        if (mode.equals("copyIndependent")) {
+            KeywordCollection copied = keywords.copy(card, true); card.getCurrentState().setCachedKeywords(copied);
+            observe(card, true); keywords.clear(); observe(card, true); copied.removeAll(Keyword.HASTE); observe(card, false);
+            keywords.insert(positive); observe(card, false); return;
+        }
+        if (mode.equals("traitListsLive")) {
+            positive.getStaticAbilities().clear(); positive.getReplacements().clear(); observe(card, false);
+            positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement); observe(card, true); return;
+        }
+        if (mode.equals("insert") || mode.equals("insertAll") || mode.equals("addAll") || mode.equals("removeInstance")) keywords.remove(positive);
+        else if (mode.equals("removePrefix")) keywords.remove("Haste");
+        else if (mode.equals("removeEnum")) keywords.removeAll(Keyword.HASTE);
+        else if (mode.equals("removeInstances")) keywords.removeInstances(List.of(positive));
+        else if (mode.equals("clear")) keywords.clear();
+        else if (mode.equals("iteratorRemove")) {
+            Iterator<KeywordInterface> iterator = keywords.iterator();
+            while (iterator.hasNext()) if (iterator.next() == positive) iterator.remove();
+        } else if (mode.equals("valuesRemove")) keywords.getValues().remove(positive);
+        else if (mode.equals("valuesClear")) keywords.getValues().clear();
+        else if (mode.equals("keyClearRetained")) {
+            Collection<KeywordInterface> retained = keywords.getValues(Keyword.HASTE); retained.clear(); observe(card, false);
+            retained.add(positive); observe(card, true); return;
+        } else throw new IllegalArgumentException(mode);
+        observe(card, false); keywords.insert(positive); observe(card, true);
+    }
+'''
+modes=['insert','insertAll','addAll','removeInstance','removePrefix','removeEnum','removeInstances','clear','iteratorRemove','valuesRemove','valuesClear','keyAddRetained','keyClearRetained','sameSizeView','copyIndependent','traitListsLive']
+for mode in modes:
+ for depth in range(3):s+=f'    @Test public void {mode}Depth{depth}() {{ check("{mode}", {depth}); }}\n'
+s+='}\n';(f/'CommanderKeywordMembershipTest.java').write_text(s,encoding='utf-8',newline='\n')
+s=(w/'compile_linear_printing_v1.py').read_text(encoding='utf-8').replace('linear-printing-prototype-v1','keyword-membership-prototype-v1');(w/'compile_keyword_membership_v1.py').write_text(s,encoding='utf-8',newline='\n');print('Prepared48 native membership/view/copy/live-trait contracts; removed per-query array wrappers from metadata guard.')

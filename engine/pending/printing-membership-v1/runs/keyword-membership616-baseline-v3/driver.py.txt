@@ -1,0 +1,55 @@
+"""Compare a printing selector against pinned native behavior and prior535 controls."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,os,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+MODE=sys.argv[1];assert MODE in ('baseline','prototype')
+RUN=WORK/('keyword-membership616-'+MODE+'-v3');ORIGINAL=ROOT/'data/runs/b2b860bf2c4e4a248ec084a73ade5f16';PROTOTYPE=WORK/'keyword-membership-prototype-v2';EPOCH=WORK/'combined-trait-profile-epoch-v1';SETTINGS=ROOT/'data/engine-builds/3dfb2b244c0647cca9de46a6f6a443d3/engine-config.json';TEST=WORK/'printing-selection-fixtures-v2/CommanderPrintingSelectionTest.java'
+CLASSES=('forge.ai.CommanderKeywordTraitPresenceTest','forge.ai.CommanderUntapPresenceTest','forge.ai.CommanderReplacementEligibilityTest','forge.ai.CommanderKeywordMetadataFailureTest','forge.ai.CommanderStaticGatherTest','forge.ai.CommanderCardCounterZoneCopyTest','forge.ai.CommanderLiveTraitMutationTest','forge.gamesimulationtests.util.CommanderSnapshotViewTest','forge.gamesimulationtests.util.PerfPatchUnitTest','forge.gamesimulationtests.util.PerfPatchFollowUpTableTest','forge.card.CommanderSagaTypeTest','forge.ai.CommanderReplacementPresenceTest','forge.gamesimulationtests.util.CommanderRuntimeLimitsTest','forge.ai.CommanderReplacementCacheInputsTest','forge.ai.CommanderTraitGatherTest','forge.ai.CommanderCardFilterContractTest')
+PRINTING_METHODS=('original','latest','tieOriginal','tieLatest','tieRepeatedOriginal','tieRepeatedLatest','duplicateOriginal','duplicateLatest','coreRankBlack','blackAccepted','blackFallback','coreFilterFallback','missingEdition','allMissing','unknownPaper','unknownCollection','aliasCode','lowerCode','foil','artIndex','filterSelect','filterReject','before','after','boundary','addCard','addEdition','preferenceChange','nullRequest','realCatalogPreferencesAndRandomState')
+NEW_CLASS='forge.ai.CommanderPrintingSelectionTest'
+EXPECTED_TEST=WORK/'printing-selection-fixtures-v2/CommanderPrintingSelectionExpected.java'
+MEMBERSHIP_CLASS='forge.ai.CommanderKeywordMembershipTest'
+MEMBERSHIP_TEST=WORK/'keyword-membership-fixtures-v2/CommanderKeywordMembershipTest.java'
+MEMBERSHIP_METHODS=tuple(mode+'Depth'+str(depth) for mode in ('insert','insertAll','addAll','removeInstance','removePrefix','removeEnum','removeInstances','clear','iteratorRemove','valuesRemove','valuesClear','keyAddRetained','keyClearRetained','sameSizeView','copyIndependent','traitListsLive','redundantRetainedView') for depth in range(3))
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=load(ORIGINAL/'rules-inputs.json');assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')};assert all(file_hash(Path(n))==h for n,h in metadata['inputs'].items())
+ inputs=load(PROTOTYPE/'inputs.json');assert all(file_hash(PROTOTYPE/n)==h for n,h in inputs.items())
+ assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+ if (RUN/'inputs.json').exists():assert all(file_hash(Path(n))==h for n,h in load(RUN/'inputs.json').items())
+ if (RUN/'test-classes.json').exists():assert load(RUN/'test-classes.json')=={p.relative_to(RUN/'classes').as_posix():file_hash(p) for p in (RUN/'classes').rglob('*.class')}
+ return inputs
+if '--worker' in sys.argv:
+ inputs=verify();settings=read_settings(SETTINGS);engine=settings.verify();require_bridge();java=importlib.import_module('jpype');recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ cp=(() if MODE=='baseline' else (PROTOTYPE/'classes',))+(archive,RUN/'classes',ORIGINAL/'rules-classes',dependency)
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,cp)),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()<=2147483648
+ overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in inputs if n.startswith('classes/')}
+ for name in (*draw_ending_worker.NATIVE_CLASSES,'forge.card.CardDb'):
+  assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+ for name in (*CLASSES,'forge.ai.AITest'):assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ assert packaged_rules.class_origin(java,NEW_CLASS).samefile(RUN/'classes')
+ assert packaged_rules.class_origin(java,'forge.ai.CommanderPrintingSelectionExpected').samefile(RUN/'classes')
+ assert packaged_rules.class_origin(java,MEMBERSHIP_CLASS).samefile(RUN/'classes')
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in (*CLASSES,NEW_CLASS,MEMBERSHIP_CLASS)]));runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run();counts,methods=packaged_rules.test_results(listener)
+ expected=Counter(cl.get('name')+'.'+m.get('name') for cl in ET.parse(ORIGINAL/'rules-reports/testng-results.xml').findall('.//class') if cl.get('name') in CLASSES for m in cl.findall('test-method') if m.get('is-config')!='true');assert sum(expected.values())==535;expected.update(NEW_CLASS+'.'+name for name in PRINTING_METHODS);assert sum(expected.values())==565;expected.update(MEMBERSHIP_CLASS+'.'+name for name in MEMBERSHIP_METHODS);assert sum(expected.values())==616
+ fingerprints=list(java.JClass(NEW_CLASS).catalogFingerprints)
+ outcome={'counts':counts,'methods':methods,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'expected_method_counter_matches':Counter(row['method'] for row in methods)==expected,'actual_processors':int(runtime.availableProcessors()),'max_java_heap_bytes':int(runtime.maxMemory()),'failures':[str(item.getThrowable()) for item in listener.getFailedTests()],'catalog_fingerprints':fingerprints,'scope':'Prior565 contracts plus51 native membership/view/copy contracts and648 fixed printing/random-state vectors. Not full Oracle or runtime-gate proof.'};save(RUN/'outcome.json',outcome);verify()
+ assert counts==dict(total=616,passed=616,failed=0,skipped=0) and outcome['expected_method_counter_matches'];assert outcome['testng_status']==0 and outcome['configuration_failures']==0 and outcome['configuration_skips']==0;assert len(fingerprints)==648
+ if MODE=='prototype':
+  baseline=load(WORK/'keyword-membership616-baseline-v1/outcome.json');assert baseline['counts']==dict(total=616,passed=616,failed=0,skipped=0);assert fingerprints==baseline['catalog_fingerprints'];assert Counter(row['method'] for row in methods)==Counter(row['method'] for row in baseline['methods'])
+ java.shutdownJVM()
+else:
+ assert sys.argv[1:]==[MODE];verify();assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT);ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success';RUN.mkdir();(RUN/'classes').mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(SETTINGS);engine=settings.verify();archive=settings.home/engine['jar_name'];recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];compiler=Path('C:/Program Files/Java/jdk-19/bin/javac.exe')
+ save(RUN/'inputs.json',{str(p.resolve()):file_hash(p) for p in [TEST,MEMBERSHIP_TEST,EXPECTED_TEST,compiler,archive,dependency,Path(__file__)]})
+ result=run_bounded([str(compiler),'-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',os.pathsep.join(map(str,(archive,ORIGINAL/'rules-classes',dependency))),'-d',str(RUN/'classes'),str(TEST),str(MEMBERSHIP_TEST),str(EXPECTED_TEST)],ROOT,RUN/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)));save(RUN/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+ save(RUN/'test-classes.json',{p.relative_to(RUN/'classes').as_posix():file_hash(p) for p in (RUN/'classes').rglob('*.class')})
+ with _engine_profile(settings,RUN):result=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {};print(json.dumps({'process':result,'counts':outcome.get('counts'),'method_counter_matches':outcome.get('expected_method_counter_matches'),'failures':outcome.get('failures'),'catalog_vectors':len(outcome.get('catalog_fingerprints',[]))}),flush=True);assert result['status']=='finished' and result['returncode']==0,result

@@ -1,0 +1,152 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.keyword.Keyword;
+import forge.game.keyword.KeywordCollection;
+import forge.game.keyword.KeywordInterface;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.replacement.ReplacementEffect;
+import forge.game.replacement.ReplacementHandler;
+import forge.game.replacement.ReplacementType;
+import forge.game.staticability.StaticAbility;
+import forge.game.staticability.StaticAbilityMode;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Membership mutation and exposed views must not hide live native card traits. */
+public class CommanderKeywordMembershipTest extends AITest {
+    private Player actor(Game game) { return game.getPlayers().getFirst(); }
+    private Game setup(int depth) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i = 0; i < 4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("trait-gather-" + i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Live trait gathering"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int i = 0; i < 20; i++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        addCardToZone("Forest", actor(game), ZoneType.Battlefield);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(game), 5);
+        game.getAction().checkStaticAbilities(false); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();
+        for (int i = 0; i < depth; i++) {
+            GameCopier copier = new GameCopier(game).withStack(true);
+            game = copier.makeCopy(null, actor(game)); copier.release();
+        }
+        return game;
+    }
+
+    private void observe(Card card, boolean expected) {
+        assertEquals(card.getStaticAbilities().stream().anyMatch(st -> st.checkMode(StaticAbilityMode.CantBeActivated)), expected);
+        assertEquals(card.getReplacementEffects().stream().anyMatch(re -> re.getMode() == ReplacementType.Tap), expected);
+        assertEquals(card.canTap(), !expected, "Native tap replacement visibility");
+    }
+    private void check(String mode, int depth) {
+        Game game = setup(depth); Card card = actor(game).getCardsIn(ZoneType.Battlefield).getFirst();
+        KeywordCollection keywords = new KeywordCollection(); KeywordInterface harmless = keywords.add("Flying");
+        KeywordInterface positive = Keyword.getInstance("Haste");
+        StaticAbility ban = new StaticAbility("Mode$ CantBeActivated | AffectedZone$ Battlefield | ValidCard$ Card.Self | ValidSA$ Activated", card, card.getCurrentState());
+        ReplacementEffect replacement = ReplacementHandler.parseReplacement("Event$ Tap | ActiveZones$ Battlefield | ValidCard$ Card.Self | Layer$ CantHappen", card, true);
+        positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement);
+        card.getCurrentState().setCachedKeywords(keywords); observe(card, false);
+        if (mode.equals("keyAddRetained") || mode.equals("sameSizeView")) {
+            Collection<KeywordInterface> retained = keywords.getValues(Keyword.HASTE);
+            observe(card, false);
+            if (mode.equals("sameSizeView")) assertTrue(keywords.getValues(Keyword.FLYING).remove(harmless));
+            assertTrue(retained.add(positive)); observe(card, true); assertTrue(retained.remove(positive)); observe(card, false);
+            retained.add(positive); observe(card, true); return;
+        }
+        if (mode.equals("addAll")) {
+            keywords.addAll(List.of("Haste")); positive = keywords.getValues(Keyword.HASTE).iterator().next();
+            positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement);
+        } else if (mode.equals("insertAll")) keywords.insertAll(List.of(positive));
+        else keywords.insert(positive);
+        observe(card, true);
+        if (mode.equals("copyIndependent")) {
+            KeywordCollection copied = keywords.copy(card, true); card.getCurrentState().setCachedKeywords(copied);
+            observe(card, true); keywords.clear(); observe(card, true); copied.removeAll(Keyword.HASTE); observe(card, false);
+            keywords.insert(positive); observe(card, false); return;
+        }
+        if (mode.equals("traitListsLive")) {
+            positive.getStaticAbilities().clear(); positive.getReplacements().clear(); observe(card, false);
+            positive.getStaticAbilities().add(ban); positive.getReplacements().add(replacement); observe(card, true); return;
+        }
+        if (mode.equals("insert") || mode.equals("insertAll") || mode.equals("addAll") || mode.equals("removeInstance")) keywords.remove(positive);
+        else if (mode.equals("removePrefix")) keywords.remove("Haste");
+        else if (mode.equals("removeEnum")) keywords.removeAll(Keyword.HASTE);
+        else if (mode.equals("removeInstances")) keywords.removeInstances(List.of(positive));
+        else if (mode.equals("clear")) keywords.clear();
+        else if (mode.equals("iteratorRemove")) {
+            Iterator<KeywordInterface> iterator = keywords.iterator();
+            while (iterator.hasNext()) if (iterator.next() == positive) iterator.remove();
+        } else if (mode.equals("valuesRemove")) keywords.getValues().remove(positive);
+        else if (mode.equals("valuesClear")) keywords.getValues().clear();
+        else if (mode.equals("keyClearRetained")) {
+            Collection<KeywordInterface> retained = keywords.getValues(Keyword.HASTE); retained.clear(); observe(card, false);
+            retained.add(positive); observe(card, true); return;
+        } else throw new IllegalArgumentException(mode);
+        observe(card, false); keywords.insert(positive); observe(card, true);
+    }
+    @Test public void insertDepth0() { check("insert", 0); }
+    @Test public void insertDepth1() { check("insert", 1); }
+    @Test public void insertDepth2() { check("insert", 2); }
+    @Test public void insertAllDepth0() { check("insertAll", 0); }
+    @Test public void insertAllDepth1() { check("insertAll", 1); }
+    @Test public void insertAllDepth2() { check("insertAll", 2); }
+    @Test public void addAllDepth0() { check("addAll", 0); }
+    @Test public void addAllDepth1() { check("addAll", 1); }
+    @Test public void addAllDepth2() { check("addAll", 2); }
+    @Test public void removeInstanceDepth0() { check("removeInstance", 0); }
+    @Test public void removeInstanceDepth1() { check("removeInstance", 1); }
+    @Test public void removeInstanceDepth2() { check("removeInstance", 2); }
+    @Test public void removePrefixDepth0() { check("removePrefix", 0); }
+    @Test public void removePrefixDepth1() { check("removePrefix", 1); }
+    @Test public void removePrefixDepth2() { check("removePrefix", 2); }
+    @Test public void removeEnumDepth0() { check("removeEnum", 0); }
+    @Test public void removeEnumDepth1() { check("removeEnum", 1); }
+    @Test public void removeEnumDepth2() { check("removeEnum", 2); }
+    @Test public void removeInstancesDepth0() { check("removeInstances", 0); }
+    @Test public void removeInstancesDepth1() { check("removeInstances", 1); }
+    @Test public void removeInstancesDepth2() { check("removeInstances", 2); }
+    @Test public void clearDepth0() { check("clear", 0); }
+    @Test public void clearDepth1() { check("clear", 1); }
+    @Test public void clearDepth2() { check("clear", 2); }
+    @Test public void iteratorRemoveDepth0() { check("iteratorRemove", 0); }
+    @Test public void iteratorRemoveDepth1() { check("iteratorRemove", 1); }
+    @Test public void iteratorRemoveDepth2() { check("iteratorRemove", 2); }
+    @Test public void valuesRemoveDepth0() { check("valuesRemove", 0); }
+    @Test public void valuesRemoveDepth1() { check("valuesRemove", 1); }
+    @Test public void valuesRemoveDepth2() { check("valuesRemove", 2); }
+    @Test public void valuesClearDepth0() { check("valuesClear", 0); }
+    @Test public void valuesClearDepth1() { check("valuesClear", 1); }
+    @Test public void valuesClearDepth2() { check("valuesClear", 2); }
+    @Test public void keyAddRetainedDepth0() { check("keyAddRetained", 0); }
+    @Test public void keyAddRetainedDepth1() { check("keyAddRetained", 1); }
+    @Test public void keyAddRetainedDepth2() { check("keyAddRetained", 2); }
+    @Test public void keyClearRetainedDepth0() { check("keyClearRetained", 0); }
+    @Test public void keyClearRetainedDepth1() { check("keyClearRetained", 1); }
+    @Test public void keyClearRetainedDepth2() { check("keyClearRetained", 2); }
+    @Test public void sameSizeViewDepth0() { check("sameSizeView", 0); }
+    @Test public void sameSizeViewDepth1() { check("sameSizeView", 1); }
+    @Test public void sameSizeViewDepth2() { check("sameSizeView", 2); }
+    @Test public void copyIndependentDepth0() { check("copyIndependent", 0); }
+    @Test public void copyIndependentDepth1() { check("copyIndependent", 1); }
+    @Test public void copyIndependentDepth2() { check("copyIndependent", 2); }
+    @Test public void traitListsLiveDepth0() { check("traitListsLive", 0); }
+    @Test public void traitListsLiveDepth1() { check("traitListsLive", 1); }
+    @Test public void traitListsLiveDepth2() { check("traitListsLive", 2); }
+}

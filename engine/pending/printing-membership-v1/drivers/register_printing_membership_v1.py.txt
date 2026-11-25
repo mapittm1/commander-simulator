@@ -1,0 +1,18 @@
+from pathlib import Path
+import json,hashlib
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,s):p.write_text(s,encoding='utf-8',newline='\n')
+def replace(p,a,b):s=p.read_text(encoding='utf-8');assert a in s,(p,a);write(p,s.replace(a,b))
+for name in ['keyword-membership616-baseline-v3','keyword-membership616-prototype-v3']:assert json.loads((w/name/'outcome.json').read_bytes())['counts']==dict(total=616,passed=616,failed=0,skipped=0)
+fixtures=[('printing-selection-fixtures-v2','CommanderPrintingSelectionTest','commander_printing_selection_test_sha256'),('printing-selection-fixtures-v2','CommanderPrintingSelectionExpected','commander_printing_selection_expected_sha256'),('keyword-membership-fixtures-v2','CommanderKeywordMembershipTest','commander_keyword_membership_test_sha256')]
+p=r/'engine/sticker_recipe.json';recipe=json.loads(p.read_bytes());assert recipe['native_test_count']==4482;recipe['native_test_count']=4563
+for folder,name,key in fixtures:target=r/'engine/tests'/f'{name}.java';assert not target.exists();target.write_bytes((w/folder/f'{name}.java').read_bytes());recipe[key]=sha(target)
+write(p,json.dumps(recipe,indent=2)+'\n');builder=r/'tools/build_sticker_engine.py';replace(builder,'        "CommanderCardFilterContractTest.java",','        "CommanderCardFilterContractTest.java",\n'+''.join(f'        "{name}.java",\n' for _,name,_ in fixtures).rstrip());replace(builder,'CommanderCardFilterContractTest,CommanderUntapPresenceTest','CommanderCardFilterContractTest,CommanderPrintingSelectionTest,CommanderKeywordMembershipTest,CommanderUntapPresenceTest')
+for path,anchor,lines in [('tools/engine_test_sources.py','    "CommanderCardFilterContractTest.java": "commander_card_filter_contract_test_sha256",',''.join(f'    "{name}.java": "{key}",\n' for _,name,key in fixtures)),('tests/support/draw_ending_worker.py','    "CommanderCardFilterContractTest": "commander_card_filter_contract_test_sha256",',''.join(f'    "{name}": "{key}",\n' for _,name,key in fixtures)),('tests/support/draw_ending_partitions.py','        "forge.ai.CommanderCardFilterContractTest",','        "forge.ai.CommanderPrintingSelectionTest",\n        "forge.ai.CommanderKeywordMembershipTest",')]:replace(r/path,anchor,anchor+'\n'+lines.rstrip())
+replace(r/'tests/support/draw_ending_worker.py','        "AITest",','        "AITest",\n        "CommanderPrintingSelectionExpected",');replace(r/'tests/support/draw_ending_worker.py','    "forge.card.CardType",','    "forge.card.CardType",\n    "forge.card.CardDb",');replace(r/'tests/support/draw_ending_worker.py','fixed 3325-case','fixed 3406-case')
+replace(r/'tests/support/draw_ending_partitions.py','"cast_events": 1175','"cast_events": 1256')
+for path in ['tests/integration/test_draw_endings_integration.py','tests/unit/test_draw_ending_partitions.py']:replace(r/path,'3325','3406')
+replace(r/'tests/integration/test_draw_endings_integration.py','len(expected_classes), 177','len(expected_classes), 178');replace(r/'tests/unit/test_draw_ending_partitions.py','1175','1256')
+with (r/'.gitattributes').open('a',encoding='utf-8',newline='\n') as f:
+ for _,name,_ in fixtures:f.write(f'engine/tests/{name}.java -text whitespace=cr-at-eol\n')
+print('Registered81 native cases and pinned648-vector fixture; source3363/native4563/packaged3406/cast1256;178 origins. Production patches/runtime unchanged.')

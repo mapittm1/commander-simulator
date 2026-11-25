@@ -1,5 +1,21 @@
 # Card support and evidence
 
+The normal workflow now registers 81 additional contracts: 30 printing-selection
+and 51 keyword-membership cases. Baseline and corrected prototype each pass all
+616 focused cases. A separate pinned data fixture makes all 648 exact printing /
+random-state comparisons part of the native test, covering six names, six
+preferences, two art indices, three date modes and three seeds. Tests catch three
+retained-callback-view failures in an earlier unpromoted membership experiment;
+its corrected fallback preserves native live views. These are contract tests,
+not full Oracle or legal card-history coverage.
+
+The expanded 3,363-source / 4,563-native / 3,406-packaged suite is pending, with
+1,256 cast cases and 178 required production origins. Linear printing and keyword
+membership experiments still exceed the original 1,271-case / 90-second resolution
+limit (90.016 / 90.015s) and remain unpromoted. The bounded combined profile is a
+diagnostic; estimated allocation volume and partial progress are not a completed
+gate. Production patches and the selected runtime remain unchanged. See [printing/membership evidence](../engine/printing_membership_evidence.json).
+
 The normal workflow now registers 87 additional contracts: 48 live trigger/devotion
 and 39 filtering cases. Baseline and corrected prototype each pass the same 535
 focused cases, with prior cases retained. Tests caught three custom-spliterator
@@ -7,7 +23,7 @@ callback failures in an unrestricted filter prototype; the corrected experiment
 keeps unknown sources on the native path. Preserve an earlier fixture setup/log-
 limit failure separately. These are contract tests, not full card-history proof.
 
-The expanded suite passes all **3,282 source** and **4,482 native** cases, retaining
+The preceding validated suite passes all **3,282 source** and **4,482 native** cases, retaining
 prior cases and parameters. All 2,168 production sources, 158 test files and 316
 tracked card files match reviewed inputs; production class bytes match the prior
 counter-snapshot candidate. Actual two-processor / 2 GiB Java-heap checks pass.

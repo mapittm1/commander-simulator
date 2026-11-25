@@ -1,0 +1,1001 @@
+# Preserve exact reviewed bytes used by engine build checksums.
+# Unified diffs retain blank context lines, including a final context line.
+engine/patches/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/tests/*.java -text whitespace=cr-at-eol
+engine/sticker_recipe.json -text whitespace=cr-at-eol
+# Evidence hashes bind exact bytes; fixed native witness source uses portable LF.
+engine/native_test_evidence.json -text whitespace=cr-at-eol
+engine/history_state_evidence.json -text whitespace=cr-at-eol
+tests/support/history_worker.py text eol=lf
+tests/integration/test_history_integration.py text eol=lf
+engine/damage_state_evidence.json -text whitespace=cr-at-eol
+tests/support/damage_worker.py text eol=lf
+tests/integration/test_damage_integration.py text eol=lf
+engine/participant_state_evidence.json -text whitespace=cr-at-eol
+tests/support/participant_worker.py text eol=lf
+tests/integration/test_participant_integration.py text eol=lf
+engine/starting_life_evidence.json -text whitespace=cr-at-eol
+tests/support/starting_life_worker.py text eol=lf
+tests/integration/test_starting_life_integration.py text eol=lf
+# Activation evidence binds lock bytes; use portable LF on every checkout.
+config/engine_lock.json text eol=lf
+config/engine_locks/*.json text eol=lf
+
+engine/stack_state_evidence.json -text whitespace=cr-at-eol
+tests/support/stack_worker.py text eol=lf
+tests/integration/test_stack_integration.py text eol=lf
+
+engine/cast_form_evidence.json -text whitespace=cr-at-eol
+tests/support/cast_form_worker.py text eol=lf
+tests/integration/test_cast_form_integration.py text eol=lf
+
+engine/usage_state_evidence.json -text whitespace=cr-at-eol
+tests/support/usage_worker.py text eol=lf
+tests/integration/test_usage_integration.py text eol=lf
+
+engine/duration_state_evidence.json -text whitespace=cr-at-eol
+tests/support/duration_worker.py text eol=lf
+tests/integration/test_duration_integration.py text eol=lf
+
+engine/delayed_state_evidence.json -text whitespace=cr-at-eol
+tests/support/delayed_worker.py text eol=lf
+tests/integration/test_delayed_integration.py text eol=lf
+
+engine/turn_schedule_evidence.json -text whitespace=cr-at-eol
+tests/support/turn_schedule_worker.py text eol=lf
+tests/integration/test_turn_schedule_integration.py text eol=lf
+
+engine/conditional_state_evidence.json -text whitespace=cr-at-eol
+tests/support/conditional_worker.py text eol=lf
+tests/integration/test_conditional_integration.py text eol=lf
+
+engine/animation_state_evidence.json -text whitespace=cr-at-eol
+tests/support/animation_worker.py text eol=lf
+tests/integration/test_animation_integration.py text eol=lf
+
+engine/clone_state_evidence.json -text whitespace=cr-at-eol
+tests/support/clone_worker.py text eol=lf
+tests/integration/test_clone_duration_integration.py text eol=lf
+
+engine/protection_state_evidence.json -text whitespace=cr-at-eol
+tests/support/protection_worker.py text eol=lf
+tests/integration/test_protection_integration.py text eol=lf
+
+engine/keyword_expiration_evidence.json -text whitespace=cr-at-eol
+tests/support/keyword_expiration_worker.py text eol=lf
+tests/integration/test_keyword_expiration_integration.py text eol=lf
+
+engine/blocking_prevention_evidence.json -text whitespace=cr-at-eol
+tests/support/blocking_prevention_worker.py text eol=lf
+tests/integration/test_blocking_prevention_integration.py text eol=lf
+
+engine/ring_text_evidence.json -text whitespace=cr-at-eol
+tests/support/ring_text_worker.py text eol=lf
+tests/integration/test_ring_text_integration.py text eol=lf
+
+engine/attachment_mana_evidence.json -text whitespace=cr-at-eol
+tests/support/attachment_mana_worker.py text eol=lf
+tests/integration/test_attachment_mana_integration.py text eol=lf
+
+engine/host_return_evidence.json -text whitespace=cr-at-eol
+tests/support/host_return_worker.py text eol=lf
+tests/integration/test_host_return_integration.py text eol=lf
+
+engine/effect_cleanup_evidence.json -text whitespace=cr-at-eol
+tests/support/effect_cleanup_worker.py text eol=lf
+tests/integration/test_effect_cleanup_integration.py text eol=lf
+
+engine/detain_control_age_evidence.json -text whitespace=cr-at-eol
+tests/support/detain_worker.py text eol=lf
+tests/integration/test_detain_integration.py text eol=lf
+
+engine/player_control_evidence.json -text whitespace=cr-at-eol
+tests/support/control_turn_worker.py text eol=lf
+tests/integration/test_control_turn_integration.py text eol=lf
+
+engine/decision_perspective_evidence.json -text whitespace=cr-at-eol
+tests/support/decision_worker.py text eol=lf
+tests/integration/test_decision_integration.py text eol=lf
+
+engine/controlled_attack_evidence.json -text whitespace=cr-at-eol
+tests/support/attack_worker.py text eol=lf
+tests/integration/test_attack_integration.py text eol=lf
+
+engine/primary_control_evidence.json -text whitespace=cr-at-eol
+tests/support/primary_control_worker.py text eol=lf
+tests/integration/test_primary_control_integration.py text eol=lf
+
+# Exact reviewed registries participate in native provenance.
+config/engine_alias_reviews.json text eol=lf
+config/companion_condition_reviews.json text eol=lf
+
+engine/spell_control_evidence.json -text whitespace=cr-at-eol
+tests/support/spell_control_worker.py text eol=lf
+tests/integration/test_spell_control_integration.py text eol=lf
+
+engine/composed_control_evidence.json -text whitespace=cr-at-eol
+tests/support/composed_control_worker.py text eol=lf
+tests/integration/test_composed_control_integration.py text eol=lf
+
+engine/mass_counter_evidence.json -text whitespace=cr-at-eol
+tests/support/native_receipts.py text eol=lf
+tests/support/mass_counter_worker.py text eol=lf
+tests/integration/test_mass_counter_integration.py text eol=lf
+
+engine/exchange_pile_evidence.json -text whitespace=cr-at-eol
+tests/support/exchange_piles_worker.py text eol=lf
+tests/integration/test_exchange_piles_integration.py text eol=lf
+tools/build_sticker_engine.py text eol=lf
+
+engine/draw_ending_evidence.json -text whitespace=cr-at-eol
+tests/support/draw_ending_worker.py text eol=lf
+tests/integration/test_draw_endings_integration.py text eol=lf
+
+engine/mana_reservation_evidence.json -text whitespace=cr-at-eol
+commander/engine/engine_conformance.py text eol=lf
+tests/unit/test_conformance.py text eol=lf
+tests/integration/test_engine_integration.py text eol=lf
+
+engine/reflected_mana_evidence.json -text whitespace=cr-at-eol
+tests/unit/test_companion_reviews.py text eol=lf
+engine/mana_event_evidence.json -text whitespace=cr-at-eol
+engine/cast_recovery_evidence.json -text whitespace=cr-at-eol
+engine/sacrifice_allocation_evidence.json -text whitespace=cr-at-eol
+engine/activation_payment_evidence.json -text whitespace=cr-at-eol
+engine/tap_payment_evidence.json -text whitespace=cr-at-eol
+engine/combined_reservation_evidence.json -text whitespace=cr-at-eol
+engine/energy_discard_evidence.json -text whitespace=cr-at-eol
+engine/card_counter_evidence.json -text whitespace=cr-at-eol
+engine/sacrifice_payment_evidence.json -text whitespace=cr-at-eol
+engine/star_trek_evidence.json -text whitespace=cr-at-eol
+engine/dilemma_evidence.json -text whitespace=cr-at-eol
+engine/combat_entry_evidence.json -text whitespace=cr-at-eol
+engine/public_reveal_evidence.json -text whitespace=cr-at-eol
+
+# Preserve mixed indentation in the upstream Game.java context.
+engine/patches/commander-reverse-turn-order.patch whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+engine/learn_vote_evidence.json -text whitespace=cr-at-eol
+
+# Preserve the exact source and evidence of confirmed pending regressions.
+engine/pending/*.java -text whitespace=cr-at-eol
+engine/rinoa_return_gap.json -text whitespace=cr-at-eol
+
+# Keep the native method-identity regression portable.
+tests/unit/test_native_method_results.py text eol=lf
+engine/rinoa_return_evidence.json -text whitespace=cr-at-eol
+engine/prevented_return_gap.json -text whitespace=cr-at-eol
+
+# Per-archive companion review digests bind exact portable bytes.
+config/companion_condition_reviews/*.json text eol=lf
+engine/prevented_return_evidence.json -text whitespace=cr-at-eol
+commander/engine/companion_reviews.py text eol=lf
+engine/targeted_return_gap.json -text whitespace=cr-at-eol
+engine/targeted_return_evidence.json -text whitespace=cr-at-eol
+engine/optional_life_gain_gap.json -text whitespace=cr-at-eol
+engine/optional_life_gain_evidence.json -text whitespace=cr-at-eol
+engine/optional_draw_gap.json -text whitespace=cr-at-eol
+engine/optional_draw_evidence.json -text whitespace=cr-at-eol
+engine/optional_copy_gap.json -text whitespace=cr-at-eol
+engine/optional_copy_evidence.json -text whitespace=cr-at-eol
+engine/carpet_mana_gap.json -text whitespace=cr-at-eol
+engine/carpet_mana_evidence.json -text whitespace=cr-at-eol
+engine/optional_counters_gap.json -text whitespace=cr-at-eol
+engine/optional_counters_evidence.json -text whitespace=cr-at-eol
+engine/optional_x_gap.json -text whitespace=cr-at-eol
+engine/optional_x_evidence.json -text whitespace=cr-at-eol
+engine/priority_boarding_gap.json -text whitespace=cr-at-eol
+engine/priority_boarding_evidence.json -text whitespace=cr-at-eol
+engine/optional_play_gap.json -text whitespace=cr-at-eol
+engine/optional_play_evidence.json -text whitespace=cr-at-eol
+engine/discover_lki_evidence.json -text whitespace=cr-at-eol
+engine/discover_lki_packaged_evidence.json -text whitespace=cr-at-eol
+engine/discover_scalar_gap.json -text whitespace=cr-at-eol
+engine/discover_vehicle_evidence.json -text whitespace=cr-at-eol
+engine/discover_scalar_evidence.json -text whitespace=cr-at-eol
+engine/discover_vehicle_packaged_evidence.json -text whitespace=cr-at-eol
+engine/discover_cast_forms_evidence.json -text whitespace=cr-at-eol
+engine/discover_cast_forms_packaged_evidence.json -text whitespace=cr-at-eol
+engine/discover_tax_evidence.json -text whitespace=cr-at-eol
+engine/discover_tax_packaged_evidence.json -text whitespace=cr-at-eol
+engine/discover_sacrifice_evidence.json -text whitespace=cr-at-eol
+engine/switch_block_ai_gap.json -text whitespace=cr-at-eol
+engine/switch_block_ai_evidence.json -text whitespace=cr-at-eol
+engine/empower_ai_native_evidence.json -text whitespace=cr-at-eol
+engine/change_text_ai_gap.json -text whitespace=cr-at-eol
+engine/empower_ai_evidence.json -text whitespace=cr-at-eol
+engine/text_choice_native_evidence.json -text whitespace=cr-at-eol
+engine/text_choices_evidence.json -text whitespace=cr-at-eol
+engine/private_knowledge_native_evidence.json -text whitespace=cr-at-eol
+engine/private_knowledge_evidence.json -text whitespace=cr-at-eol
+engine/composite_text_ai_gap.json -text whitespace=cr-at-eol
+engine/pending/*.java -text whitespace=cr-at-eol
+engine/private_library_knowledge_gap.json -text whitespace=cr-at-eol
+engine/bauble_ai_gap.json -text whitespace=cr-at-eol
+engine/modal_text_native_evidence.json -text whitespace=cr-at-eol
+engine/modal_budget_gap.json -text whitespace=cr-at-eol
+engine/modal_text_evidence.json -text whitespace=cr-at-eol
+engine/spy_network_knowledge_gap.json -text whitespace=cr-at-eol
+engine/look_positions_native_evidence.json -text whitespace=cr-at-eol
+engine/look_positions_evidence.json -text whitespace=cr-at-eol
+engine/parent_text_native_evidence.json -text whitespace=cr-at-eol
+engine/parent_text_evidence.json -text whitespace=cr-at-eol
+engine/cipher_links_native_evidence.json -text whitespace=cr-at-eol
+engine/cipher_links_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderCipherCastingTest.java -text
+engine/cipher_casting_evidence.json -text
+engine/cipher_casting_native_evidence.json -text
+
+engine/tests/CommanderTraitDoctoringAiTest.java -text
+engine/tests/CommanderCipherCopyAiTest.java -text
+engine/tests/CommanderFreeCastChoiceCopyTest.java -text
+engine/tests/CommanderTextTargetIdentityTest.java -text
+engine/tests/CommanderCipherFreeCastBoundaryTest.java -text
+engine/tests/CommanderEffectCastPreviewTest.java -text
+engine/free_cast_native_evidence.json -text
+engine/free_cast_evidence.json -text
+tests/support/packaged_rules.py -text
+tests/support/free_casting_worker.py -text
+tests/support/native_worker.py -text
+tests/support/draw_ending_worker.py -text
+tests/integration/test_free_casting_integration.py -text
+tests/unit/test_native_worker.py -text
+
+engine/patches/commander-granted-cost-preview.patch -text
+engine/tests/CommanderGrantedCostPreviewTest.java -text
+engine/tests/CommanderGrantedCostBoundaryTest.java -text
+engine/granted_cost_native_evidence.json -text
+engine/granted_cost_evidence.json -text
+
+engine/patches/commander-cost-modifiers.patch -text
+engine/tests/CommanderCostModifierPreviewTest.java -text
+engine/tests/CommanderKefnetCostTest.java -text
+engine/tests/CommanderCostModifierExpressionTest.java -text
+engine/tests/CommanderRaisedCastCostTest.java -text
+engine/tests/CommanderHandCostModifierTest.java -text
+engine/tests/CommanderTransientCopySafetyTest.java -text
+engine/cost_modifier_native_evidence.json -text
+engine/cost_modifier_evidence.json -text
+
+engine/patches/commander-tap-or-untap.patch -text
+engine/tests/CommanderUntapResolutionTest.java -text
+engine/tests/CommanderUntapFollowupTest.java -text
+engine/tests/CommanderPreviewCacheTest.java -text
+engine/untap_native_evidence.json -text
+engine/untap_evidence.json -text
+
+tests/support/untap_worker.py -text
+tests/integration/test_untap_integration.py -text
+
+engine/patches/commander-discard-payment.patch -text
+engine/tests/CommanderActivatedUntapTest.java -text
+engine/tests/CommanderChainedUntapTest.java -text
+engine/discard_payment_native_evidence.json -text
+engine/discard_payment_evidence.json -text
+
+engine/patches/commander-mass-tap.patch -text
+engine/tests/CommanderMassTapTest.java -text
+engine/tests/CommanderMassTapChosenTypeTest.java -text
+engine/tests/CommanderRepeatedDiscardEntrypointTest.java -text
+engine/mass_tap_native_evidence.json -text
+engine/mass_tap_evidence.json -text
+
+engine/spell_choice_copy_gap.json -text
+
+engine/patches/commander-choice-context.patch -text
+engine/tests/CommanderChoiceContextTest.java -text
+engine/choice_context_native_evidence.json -text
+engine/choice_context_evidence.json -text
+
+engine/gift_context_gap.json -text
+
+engine/patches/commander-gift-context.patch -text
+engine/tests/CommanderGiftContextTest.java -text
+engine/gift_context_native_evidence.json -text
+engine/gift_context_evidence.json -text
+
+engine/phasing_context_gap.json -text
+
+engine/patches/commander-phasing-context.patch -text
+engine/tests/CommanderPhasingContextTest.java -text
+engine/phasing_context_native_evidence.json -text
+engine/phasing_context_evidence.json -text
+
+engine/battle_protector_gap.json -text
+
+engine/patches/commander-battle-protector.patch -text
+engine/tests/CommanderBattleProtectorTest.java -text
+engine/battle_protector_native_evidence.json -text
+engine/battle_protector_evidence.json -text
+
+engine/battle_combat_tests.json -text whitespace=cr-at-eol
+engine/battle_combat_evidence.json -text whitespace=cr-at-eol
+tests/support/battle_combat_worker.py text eol=lf
+tests/integration/test_battle_combat_integration.py text eol=lf
+tests/unit/test_battle_combat_inputs.py text eol=lf
+
+engine/combat_strike_gap.json -text whitespace=cr-at-eol
+
+engine/combat_strike_native_evidence.json -text whitespace=cr-at-eol
+engine/combat_strike_evidence.json -text whitespace=cr-at-eol
+
+engine/removed_defender_gap.json -text whitespace=cr-at-eol
+
+engine/removed_defender_native_evidence.json -text whitespace=cr-at-eol
+
+engine/removed_defender_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/removed_defender_evidence.json -text whitespace=cr-at-eol
+
+engine/damage_assignment_snapshot_gap.json -text whitespace=cr-at-eol
+
+engine/damage_assignment_snapshot_native_evidence.json -text whitespace=cr-at-eol
+
+engine/damage_assignment_snapshot_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/damage_assignment_snapshot_evidence.json -text whitespace=cr-at-eol
+
+engine/defender_typechange_gap.json -text whitespace=cr-at-eol
+
+engine/defender_typechange_native_evidence.json -text whitespace=cr-at-eol
+
+engine/defender_typechange_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/defender_typechange_evidence.json -text whitespace=cr-at-eol
+
+engine/defender_restoration_evidence.json -text whitespace=cr-at-eol
+
+engine/dual_combat_role_native_evidence.json -text whitespace=cr-at-eol
+engine/dual_combat_role_gap.json -text whitespace=cr-at-eol
+
+engine/dual_combat_role_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/dual_combat_role_evidence.json -text whitespace=cr-at-eol
+
+engine/inspection_ai_native_evidence.json -text whitespace=cr-at-eol
+tools/engine_test_sources.py text eol=lf
+
+engine/inspection_ai_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/inspection_ai_evidence.json -text whitespace=cr-at-eol
+
+engine/information_choice_gap.json -text whitespace=cr-at-eol
+engine/pending/information-choice/*.java -text whitespace=cr-at-eol
+
+engine/information_choice_native_evidence.json -text whitespace=cr-at-eol
+
+engine/information_choice_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/information_choice_evidence.json -text whitespace=cr-at-eol
+
+engine/library_choice_knowledge_gap.json -text whitespace=cr-at-eol
+engine/pending/library-choice-knowledge/*.java -text whitespace=cr-at-eol
+
+engine/library_choice_knowledge_native_evidence.json -text whitespace=cr-at-eol
+
+engine/library_choice_knowledge_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/library_choice_knowledge_evidence.json -text whitespace=cr-at-eol
+
+engine/library_knowledge_transition_gap.json -text whitespace=cr-at-eol
+engine/pending/library-knowledge-transition/*.java -text whitespace=cr-at-eol
+
+engine/library_knowledge_transition_native_evidence.json -text whitespace=cr-at-eol
+
+engine/library_knowledge_transition_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/library_knowledge_transition_evidence.json -text whitespace=cr-at-eol
+
+engine/autonomous_rearrange_gap.json -text whitespace=cr-at-eol
+engine/pending/autonomous-rearrange/*.java -text whitespace=cr-at-eol
+
+engine/autonomous_rearrange_native_evidence.json -text whitespace=cr-at-eol
+
+engine/autonomous_rearrange_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/autonomous_rearrange_evidence.json -text whitespace=cr-at-eol
+
+engine/controlled_information_gap.json -text whitespace=cr-at-eol
+engine/pending/controlled-information/*.java -text whitespace=cr-at-eol
+
+engine/controlled_information_native_evidence.json -text whitespace=cr-at-eol
+
+engine/controlled_information_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/controlled_information_evidence.json -text whitespace=cr-at-eol
+
+engine/direct_private_reveal_gap.json -text whitespace=cr-at-eol
+engine/pending/direct-private-reveal/*.java -text whitespace=cr-at-eol
+
+engine/direct_private_reveal_native_evidence.json -text whitespace=cr-at-eol
+
+engine/direct_private_reveal_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/direct_private_reveal_evidence.json -text whitespace=cr-at-eol
+
+engine/delayed_private_reveal_gap.json -text whitespace=cr-at-eol
+engine/pending/delayed-private-reveal/*.java -text whitespace=cr-at-eol
+
+engine/delayed_private_reveal_native_evidence.json -text whitespace=cr-at-eol
+
+engine/delayed_private_reveal_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/delayed_private_reveal_evidence.json -text whitespace=cr-at-eol
+
+engine/recruit_planning_gap.json -text whitespace=cr-at-eol
+engine/pending/recruit-planning/*.java -text whitespace=cr-at-eol
+
+engine/pending/recruit-planning/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/recruit_planning_native_evidence.json -text whitespace=cr-at-eol
+
+engine/last_drawn_payment_gap.json -text whitespace=cr-at-eol
+engine/last_drawn_payment_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/last-drawn-payment/*.java -text whitespace=cr-at-eol
+
+engine/last_drawn_payment_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/last_drawn_payment_evidence.json -text whitespace=cr-at-eol
+
+engine/draw_step_replacement_gap.json -text whitespace=cr-at-eol
+engine/draw_step_replacement_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/draw-step-replacement/*.java -text whitespace=cr-at-eol
+
+engine/draw_step_replacement_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/draw_step_replacement_evidence.json -text whitespace=cr-at-eol
+
+engine/combat_removal_gap.json -text whitespace=cr-at-eol
+engine/combat_removal_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/combat-removal/*.java -text whitespace=cr-at-eol
+
+engine/combat_removal_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/combat_removal_evidence.json -text whitespace=cr-at-eol
+
+engine/combat_reblocking_gap.json -text whitespace=cr-at-eol
+engine/combat_reblocking_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/combat-reblocking/*.java -text whitespace=cr-at-eol
+
+engine/combat_reblocking_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/combat_reblocking_evidence.json -text whitespace=cr-at-eol
+
+engine/blocking_history_gap.json -text whitespace=cr-at-eol
+engine/blocking_history_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/blocking-history/*.java -text whitespace=cr-at-eol
+
+engine/ai_cache_lifetime_gap.json -text whitespace=cr-at-eol
+engine/ai_cache_lifetime_native_evidence.json -text whitespace=cr-at-eol
+engine/pending/ai-cache-lifetime/*.java -text whitespace=cr-at-eol
+
+engine/ai_cache_lifetime_packaged_evidence.json -text whitespace=cr-at-eol
+
+engine/ai_cache_lifetime_live_evidence.json -text whitespace=cr-at-eol
+
+engine/multiplayer_attack_opportunity_gap.json -text whitespace=cr-at-eol
+engine/pending/multiplayer-attack-opportunity/*.java -text whitespace=cr-at-eol
+engine/pending/multiplayer-attack-opportunity/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/multiplayer_attack_horizon_evidence.json -text whitespace=cr-at-eol
+engine/pending/multiplayer-attack-horizon/*.java -text whitespace=cr-at-eol
+
+engine/multiplayer_attack_horizon_native_evidence.json -text whitespace=cr-at-eol
+
+engine/multiplayer_attack_horizon_packaged_evidence.json -text whitespace=cr-at-eol
+engine/multiplayer_attack_horizon_live_evidence.json -text whitespace=cr-at-eol
+engine/departed_commander_history_evidence.json -text whitespace=cr-at-eol
+engine/pending/departed-commander-history/*.java -text whitespace=cr-at-eol
+
+engine/departed_commander_history_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/skipped_phase_snapshot_evidence.json -text whitespace=cr-at-eol
+engine/pending/skipped-phase-snapshot/*.java -text whitespace=cr-at-eol
+
+engine/skipped_phase_snapshot_runtime_evidence.json -text whitespace=cr-at-eol
+engine/deferred_repeat_evidence.json -text whitespace=cr-at-eol
+engine/pending/deferred-repeat/*.java -text whitespace=cr-at-eol
+
+engine/deferred_repeat_runtime_evidence.json -text whitespace=cr-at-eol
+engine/prepared_state_evidence.json -text whitespace=cr-at-eol
+engine/pending/prepared-state/*.java -text whitespace=cr-at-eol
+engine/prepared_state_runtime_evidence.json -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-prepared-state.json -text whitespace=cr-at-eol
+engine/prepared_state_activation_evidence.json -text whitespace=cr-at-eol
+engine/snapshot_designation_gaps.json -text whitespace=cr-at-eol
+engine/pending/snapshot-designations/*.java -text whitespace=cr-at-eol
+
+engine/snapshot_designation_evidence.json -text whitespace=cr-at-eol
+engine/pending/snapshot-designations/expanded/*.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-snapshot-designations.json -text whitespace=cr-at-eol
+engine/snapshot_designation_activation_evidence.json -text whitespace=cr-at-eol
+engine/world_snapshot_gaps.json -text whitespace=cr-at-eol
+engine/pending/world-state/*.java -text whitespace=cr-at-eol
+
+engine/world_snapshot_evidence.json -text whitespace=cr-at-eol
+engine/pending/world-state/expanded/*.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-world-snapshot.json -text whitespace=cr-at-eol
+engine/world_snapshot_activation_evidence.json -text whitespace=cr-at-eol
+engine/exert_snapshot_gaps.json -text whitespace=cr-at-eol
+engine/pending/exert-state/*.java -text whitespace=cr-at-eol
+
+engine/exert_snapshot_evidence.json -text whitespace=cr-at-eol
+engine/pending/exert-state/expanded/*.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-exert-state.json -text whitespace=cr-at-eol
+engine/exert_snapshot_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/simultaneous-aura/* -text whitespace=cr-at-eol
+engine/simultaneous_aura_evidence.json -text whitespace=cr-at-eol
+
+engine/simultaneous_aura_registration_evidence.json -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-aura-entry.json -text whitespace=cr-at-eol
+engine/simultaneous_aura_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/counter_history_gaps.json -text whitespace=cr-at-eol
+engine/pending/counter-history/* -text whitespace=cr-at-eol
+
+engine/counter_history_evidence.json -text whitespace=cr-at-eol
+engine/pending/counter-history/expanded/*.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-counter-history.json -text whitespace=cr-at-eol
+engine/counter_history_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/counter_history_departed_evidence.json -text whitespace=cr-at-eol
+engine/pending/counter-history/departed/*.java -text whitespace=cr-at-eol
+
+engine/elemental_bend_gaps.json -text whitespace=cr-at-eol
+engine/airbend_permission_evidence.json -text whitespace=cr-at-eol
+engine/pending/elemental-bend/** -text whitespace=cr-at-eol
+engine/pending/airbend/** -text whitespace=cr-at-eol
+engine/pending/elemental-bend/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/elemental_bend_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderAirbendPermissionTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderElementalBendHistoryTest.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-elemental-history.json -text whitespace=cr-at-eol
+engine/elemental_bend_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/earthbend_return_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderEarthbendReturnTest.java -text whitespace=cr-at-eol
+engine/pending/earthbend-return/** -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-earthbend-return.json -text whitespace=cr-at-eol
+engine/earthbend_return_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/waterbend_payment_gaps.json -text whitespace=cr-at-eol
+engine/pending/waterbend-payment/** -text whitespace=cr-at-eol
+engine/pending/waterbend-payment/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/waterbend_payment_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderWaterbendPaymentTest.java -text whitespace=cr-at-eol
+
+engine/waterbend_payment_runtime_evidence.json -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-waterbend-payment.json -text whitespace=cr-at-eol
+engine/waterbend_payment_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/waterbend_filter_gaps.json -text whitespace=cr-at-eol
+engine/pending/waterbend-filter/** -text whitespace=cr-at-eol
+engine/pending/waterbend-filter/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/waterbend_filter_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderWaterbendFilterTest.java -text whitespace=cr-at-eol
+
+config/engine_locks/forge-583714b-waterbend-filter.json -text whitespace=cr-at-eol
+engine/waterbend_filter_activation_evidence.json -text whitespace=cr-at-eol
+engine/waterbend_filter_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/repeated-mana-filter/** -text whitespace=cr-at-eol
+engine/pending/repeated-mana-filter/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/repeated_mana_filter_evidence.json -text whitespace=cr-at-eol
+
+engine/patches/commander-repeated-mana-budget.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/mana-activation-budget/** -text whitespace=cr-at-eol
+engine/pending/mana-activation-budget/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/mana_activation_budget_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/mana-activation-budget/stale-origin-assertion-v1/*.log.txt -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+config/engine_locks/forge-583714b-mana-activation.json -text whitespace=cr-at-eol
+engine/mana_activation_budget_activation_evidence.json -text whitespace=cr-at-eol
+engine/mana_activation_budget_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/mana-chain/** -text whitespace=cr-at-eol
+engine/pending/mana-chain/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/mana_chain_evidence.json -text whitespace=cr-at-eol
+
+engine/patches/commander-mana-chain.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/tests/CommanderManaChainTest.java -text whitespace=cr-at-eol
+
+engine/pending/mana-chain/runtime-gates-v1/**/*.log.txt -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+config/engine_locks/forge-583714b-mana-chain.json -text whitespace=cr-at-eol
+engine/mana_chain_runtime_evidence.json -text whitespace=cr-at-eol
+engine/mana_chain_activation_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/waterbend-x/** -text whitespace=cr-at-eol
+engine/pending/waterbend-x/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/waterbend_x_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/typed-ward/** -text whitespace=cr-at-eol
+engine/pending/typed-ward/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/typed_ward_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/ward-transition/** -text whitespace=cr-at-eol
+engine/pending/ward-transition/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/ward-transition/**/*.log.txt -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/ward_transition_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/target-tax/** -text whitespace=cr-at-eol
+engine/pending/target-tax/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/target_tax_evidence.json -text whitespace=cr-at-eol
+
+engine/patches/commander-cast-events.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/tests/CommanderWaterbendXTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderTypedWardTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderWardTransitionTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderTargetTaxTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderPreGoalOutcomeTest.java -text whitespace=cr-at-eol
+engine/cast_events_registration_evidence.json -text whitespace=cr-at-eol
+
+engine/patches/commander-cast-windows.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/tests/CommanderCastWindowTest.java -text whitespace=cr-at-eol
+engine/pending/cast-window/** -text whitespace=cr-at-eol
+engine/pending/cast-window/*.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/cast-window/**/*.log.txt -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/cast-window/**/*.xml -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/cast_window_evidence.json -text whitespace=cr-at-eol
+
+engine/patches/commander-nonstack-admission.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/nonstack-admission/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/nonstack_admission_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/cast-events-runtime-v3/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/cast_events_runtime_attempt_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/replacement-cache/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/replacement_cache_evidence.json -text whitespace=cr-at-eol
+
+engine/cache_registration_evidence.json -text whitespace=cr-at-eol
+engine/pending/cache-registration/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/pending/cache-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/cache_runtime_attempt_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/trait-admission/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/trait_admission_evidence.json -text whitespace=cr-at-eol
+tools/build_sticker_engine.py text eol=lf
+tools/engine_test_sources.py text eol=lf
+tests/support/draw_ending_partitions.py text eol=lf
+tests/unit/test_draw_ending_partitions.py text eol=lf
+
+engine/pending/jvm-build-limits/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/jvm_build_limits_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/bounded-trait-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/bounded_trait_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/live-trait-mutations-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/live_trait_mutation_evidence.json -text whitespace=cr-at-eol
+engine/patches/commander-live-trait-sources.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/pending/live-trait-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/live_trait_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/intrinsic-cache-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/intrinsic_cache_evidence.json -text whitespace=cr-at-eol
+engine/patches/commander-intrinsic-cache-simplification.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/pending/intrinsic-cache-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/intrinsic_cache_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/opaque-keyword-traits-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/opaque_keyword_traits_evidence.json -text whitespace=cr-at-eol
+engine/patches/commander-opaque-keyword-traits.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+
+engine/pending/opaque-keyword-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/opaque_keyword_runtime_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/keyword-noop-diagnostic-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/keyword_noop_diagnostic_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/untap-presence-diagnostic-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/untap_presence_diagnostic_evidence.json -text whitespace=cr-at-eol
+
+engine/pending/replacement-eligibility-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/replacement_eligibility_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderUntapPresenceTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderReplacementEligibilityTest.java -text whitespace=cr-at-eol
+
+engine/pending/replacement-contracts-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/replacement_contracts_runtime_evidence.json -text whitespace=cr-at-eol
+engine/tests/CommanderKeywordMetadataFailureTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderStaticGatherTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderCardCounterZoneCopyTest.java -text whitespace=cr-at-eol
+engine/counter_zone_snapshot_evidence.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-baseline-v1/compile.log -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/card-counter-zone448-prototype-v1/compile.log -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/resolution1271-counter-snapshot-v45/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-legacy-prototype-v1/compile.log -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/test-classes.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/keyword-metadata403-prototype-v2/compile.log -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/prototype-proposal.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/prototype-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/prototype-compile-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-snapshot-v1/prototype-compile-selection.json -text whitespace=cr-at-eol
+engine/counter_zone_runtime_evidence.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/evidence.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/production-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/test-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/card-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/selection.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/maven-build.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/driver-inputs/run_source3195_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/source3195-v1/driver-inputs/build_sticker_engine.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/command.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/candidate-selection.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/build-audit.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/test-card-input-audit-v2.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/cast1088-audit-v1.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/source-ci.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/source-epoch.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/source-frozen-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/audit_build_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-candidate-v1/build-output.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/output.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/active-config-before.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-cast1088-v1/candidate-config.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/output.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/active-config-before.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/packaged-resolution1271-counter-v1/candidate-config.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/counter-zone-source-preparation-v2.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/prepare_counter_zone_source_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/prepare_counter_zone_source_v2.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/verify_native4395_inputs_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/audit_cast1088_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-methods-0000.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-methods-0001.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-methods-0002.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-methods.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-summary.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-ending-worker.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/draw-endings.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/rules-compiler.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/rules-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/20fe6e3b58d04b44a3bfa3aeb55654ed/rules-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/10bfb3a0d5564178827bf89d9f6c6b14/draw-ending-worker.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/10bfb3a0d5564178827bf89d9f6c6b14/rules-compiler.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/10bfb3a0d5564178827bf89d9f6c6b14/rules-inputs.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/runs/10bfb3a0d5564178827bf89d9f6c6b14/rules-process.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/native/engine-config.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/native/engine-lock.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/native/build-recipe.json -text whitespace=cr-at-eol
+engine/pending/counter-zone-runtime-v1/native/maven-build.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/counter-zone-runtime-v1/native/methods.json -text whitespace=cr-at-eol
+engine/tests/CommanderTraitGatherTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderCardFilterContractTest.java -text whitespace=cr-at-eol
+engine/trait_gather_filter_evidence.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/.gitattributes -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/engine/sticker_recipe.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tests/integration/test_draw_endings_integration.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tests/support/draw_ending_partitions.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tests/support/draw_ending_worker.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tests/unit/test_draw_ending_partitions.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tools/build_sticker_engine.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/frozen-root/tools/engine_test_sources.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/proposal.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/compile-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/static-gather-prototype-v2/unpromoted.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/proposal.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/compile-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-gather-prototype-v1/unpromoted.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/proposal.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/compile-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v1/unpromoted.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/proposal.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/compile-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/prototypes/trait-filter-prototype-v2/unpromoted.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/static-gather448-v2/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/static-gather448-v2/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/static-gather448-v2/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/static-gather448-v2/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-v46/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-v46/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-v46/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/profile-settings.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/sampled-counts.jsonl -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-static-gather-allocation-v47/runtime-profile-summary.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-baseline-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-gather496-prototype-v2/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-gather-v48/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-gather-v48/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-gather-v48/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter532-baseline-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-baseline-v2/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/test-classes.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/trait-filter535-prototype-v2/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-filter-v49/process.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-filter-v49/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/runs/resolution1271-trait-filter-v49/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-gather-filter-v1/fixtures/card-filter-fixtures-v1/CommanderCardFilterContractTest.java.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/fixtures/card-filter-fixtures-v2/CommanderCardFilterContractTest.java.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/fixtures/card-filter-fixtures-v3/CommanderCardFilterContractTest.java.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/fixtures/trait-gather-fixtures-v1/CommanderTraitGatherTest.java.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/prepare_static_gather_v2.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/prepare_trait_gather_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/prepare_trait_filter_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/compile_trait_gather_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/compile_trait_filter_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/compile_trait_filter_v2.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/decode_static_gather_allocations_v47.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/drivers/register_trait_filter_contracts_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/epoch/source-ci.json -text whitespace=cr-at-eol
+engine/pending/trait-gather-filter-v1/epoch/source-frozen-inputs.json -text whitespace=cr-at-eol
+engine/trait_contracts_runtime_evidence.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/evidence.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/production-inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/test-inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/card-inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/selection.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/maven-build.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/driver-inputs/run_source3282_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/source3282-v1/driver-inputs/build_sticker_engine.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/command.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/candidate-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/build-audit.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/test-card-input-audit-v2.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/cast1175-audit-v2.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/source-ci.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/source-epoch.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/source-frozen-inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/trait-filter-contracts-candidate-v1/build-output.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/output.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/active-config-before.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/packaged-cast1177-v1/candidate-config.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-metadata535-v1/process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-metadata535-v1/outcome.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-metadata535-v1/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-metadata535-v1/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/resolution1271-combined-trait-metadata-v50/process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/resolution1271-combined-trait-metadata-v50/driver.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/resolution1271-combined-trait-metadata-v50/native.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/proposal.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/compile-selection.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/compile-process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/compile.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/catalog-meld-triage-v1.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/run_build4482_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/audit_build4482_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/verify_native4482_inputs_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/run_packaged_cast1175_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/audit_cast1175_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/audit_cast1175_v2.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/prepare_combined_trait_metadata_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/drivers/compile_combined_trait_metadata_v1.py.txt -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-methods-0000.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-methods-0001.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-methods-0002.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-methods.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-summary.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-ending-worker.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/draw-endings.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/rules-compiler.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/rules-inputs.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/runs/b2b860bf2c4e4a248ec084a73ade5f16/rules-process.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/native/engine-config.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/native/engine-lock.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/native/build-recipe.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/native/maven-build.log -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol
+engine/pending/trait-contracts-runtime-v1/native/methods.json -text whitespace=cr-at-eol
+engine/pending/trait-contracts-runtime-v1/combined-trait-filter-metadata-prototype-v1/unpromoted.patch -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol

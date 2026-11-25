@@ -1,0 +1,105 @@
+from pathlib import Path
+import shutil,json
+w=Path('data/development/commander-multiplayer-attack-research/waterbend-filter-research');parent=w/'linear-printing-prototype-v1';p=w/'keyword-membership-prototype-v1';p.mkdir()
+for sub in ['source','baseline']:shutil.copytree(parent/sub,p/sub)
+f=p/'source/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java';s=f.read_text(encoding='utf-8');anchor='''    public KeywordCollection() {''';assert s.count(anchor)==1
+s=s.replace(anchor,'''    // Cache membership references only. Every trait-list query remains live.
+    private transient volatile KeywordInterface[] traitMembers;
+    private transient volatile boolean valuesExposed;
+
+    private void invalidateTraitMembers() {
+        traitMembers = null;
+    }
+
+    private KeywordInterface[] traitMembers() {
+        KeywordInterface[] members = traitMembers;
+        if (members == null) {
+            members = map.values().toArray(new KeywordInterface[map.size()]);
+            traitMembers = members;
+        }
+        return members;
+    }
+
+    private Collection<KeywordInterface> nativeIterationValues() {
+        return getClass() == KeywordCollection.class ? map.values() : getValues();
+    }
+
+'''+anchor)
+# Preserve native collection views; once any raw view escapes, use live traversal permanently.
+s=s.replace('''    public Collection<KeywordInterface> getValues() {
+        return map.values();''','''    public Collection<KeywordInterface> getValues() {
+        valuesExposed = true;
+        invalidateTraitMembers();
+        return map.values();''')
+s=s.replace('''    public Collection<KeywordInterface> getValues(final Keyword keyword) {
+        return map.get(keyword);''','''    public Collection<KeywordInterface> getValues(final Keyword keyword) {
+        valuesExposed = true;
+        invalidateTraitMembers();
+        return map.get(keyword);''')
+for a,b in [('for (KeywordInterface kw : getValues())','for (KeywordInterface kw : nativeIterationValues())'),('for (KeywordInterface k : getValues())','for (KeywordInterface k : nativeIterationValues())'),('for (KeywordInterface ki : getValues())','for (KeywordInterface ki : nativeIterationValues())'),('new KeywordCollectionView(getValues().stream()','new KeywordCollectionView(nativeIterationValues().stream()')]:s=s.replace(a,b)
+s=s.replace('''            list.add(inst);
+            return true;''','''            try {
+                list.add(inst);
+                return true;
+            } finally {
+                invalidateTraitMembers();
+            }''')
+s=s.replace('''                it.remove();
+                result = true;''','''                it.remove();
+                invalidateTraitMembers();
+                result = true;''')
+s=s.replace('''        return map.remove(keyword.getKeyword(), keyword);''','''        try {
+            return map.remove(keyword.getKeyword(), keyword);
+        } finally {
+            invalidateTraitMembers();
+        }''')
+s=s.replace('''        return !map.removeAll(kenum).isEmpty();''','''        try {
+            return !map.removeAll(kenum).isEmpty();
+        } finally {
+            invalidateTraitMembers();
+        }''')
+s=s.replace('''            if (map.remove(k.getKeyword(), k)) {
+                result = true;
+            }''','''            try {
+                if (map.remove(k.getKeyword(), k)) result = true;
+            } finally {
+                invalidateTraitMembers();
+            }''')
+s=s.replace('''    public void clear() {
+        map.clear();
+    }''','''    public void clear() {
+        try {
+            map.clear();
+        } finally {
+            invalidateTraitMembers();
+        }
+    }''')
+# An exposed view can mutate outside our methods; retain the original iterator path then.
+for method in ['hasNoStaticTraitsForCache','hasNoReplacementTraitsForCache']:
+ start=s.index('    public final boolean '+method);end=s.index('\n    }',start)+6;body=s[start:end]
+ a='''        for (KeywordInterface keyword : map.values()) {''';assert a in body
+ b='''        final Iterable<KeywordInterface> members = valuesExposed
+                ? map.values() : java.util.Arrays.asList(traitMembers());
+        for (KeywordInterface keyword : members) {'''
+ body=body.replace(a,b);s=s[:start]+body+s[end:]
+a='''    public Iterator<KeywordInterface> iterator() {
+        return this.map.values().iterator();
+    }''';b='''    public Iterator<KeywordInterface> iterator() {
+        final Iterator<KeywordInterface> delegate = map.values().iterator();
+        if (valuesExposed || getClass() != KeywordCollection.class) return delegate;
+        return new Iterator<>() {
+            @Override public boolean hasNext() { return delegate.hasNext(); }
+            @Override public KeywordInterface next() { return delegate.next(); }
+            @Override public void remove() {
+                try {
+                    delegate.remove();
+                } finally {
+                    invalidateTraitMembers();
+                }
+            }
+            @Override public void forEachRemaining(java.util.function.Consumer<? super KeywordInterface> action) {
+                delegate.forEachRemaining(action);
+            }
+        };
+    }''';assert a in s;s=s.replace(a,b);f.write_text(s,encoding='utf-8',newline='\n')
+(p/'proposal.json').write_text(json.dumps({'scope':'Cache only keyword membership references while no raw collection view has escaped. Query mutable trait lists every time. All structural mutators and iterator.remove invalidate references; exposed native views permanently retain live map traversal. Exact unknown subclass callbacks remain native.','parent':'linear-printing-prototype-v1','files':9,'basis':'Profilev51 metadata helpers traverse Guava iterators frequently. No temporal trait-absence cache or budget changes.','status':'Prepared only; new membership contracts required.'},indent=2)+'\n',encoding='utf-8',newline='\n');print('Prepared membership-reference prototype with escaped-view fallback; trait absence is not cached.')

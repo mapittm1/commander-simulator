@@ -119,6 +119,9 @@ SOURCES = {
     "CommanderCardCounterZoneCopyTest": "commander_card_counter_zone_copy_test_sha256",
     "CommanderTraitGatherTest": "commander_trait_gather_test_sha256",
     "CommanderCardFilterContractTest": "commander_card_filter_contract_test_sha256",
+    "CommanderPrintingSelectionTest": "commander_printing_selection_test_sha256",
+    "CommanderPrintingSelectionExpected": "commander_printing_selection_expected_sha256",
+    "CommanderKeywordMembershipTest": "commander_keyword_membership_test_sha256",
     "CommanderUntapPresenceTest": "commander_untap_presence_test_sha256",
     "CommanderReplacementEligibilityTest": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
@@ -237,6 +240,7 @@ TEST_CLASSES = tuple(
     if name
     not in {
         "AITest",
+        "CommanderPrintingSelectionExpected",
         "InspectionTestSupport",
         "InformationChoiceTestSupport",
         "LibraryChoiceTestSupport",
@@ -249,6 +253,7 @@ TEST_CLASSES = tuple(
 ) + tuple(PRIORITY_PACKAGE + name for name in PRIORITY_TESTS)
 NATIVE_CLASSES = (
     "forge.card.CardType",
+    "forge.card.CardDb",
     "forge.game.card.CardState",
     "forge.util.collect.FSnapshotTable",
     "forge.util.collect.FCollection",
@@ -464,7 +469,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3325-case packaged family."""
+    """Execute the fixed 3406-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

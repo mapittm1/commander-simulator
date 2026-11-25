@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 81 native printing/membership contracts and a pinned 648-vector data
+  fixture. Paired baseline/corrected-prototype checks pass all 616 focused cases
+  with identical printing identities and scoped random state. Preserve three
+  retained-redundancy-view failures in the earlier membership experiment and its
+  corrected native fallback. Preserve bounded combined CPU/allocation profiling
+  and distinct original-workload timeouts (90.016 diagnostic / 90.016 printing /
+  90.015 membership seconds). No trait-absence cache, speedup or complete rules
+  claim; experiments remain unpromoted. Full source3363/native4563/packaged3406
+  validation is pending, with 178 registered production origins. README and
+  coverage notes distinguish metadata/live-trait contracts from card histories.
+
 - Validate the expanded contracts with all 3,282 source and 4,482 native cases
   passing; retain prior cases/parameters and match 2,168 production sources, 158
   test files and 316 card files. Production class bytes match the previous counter

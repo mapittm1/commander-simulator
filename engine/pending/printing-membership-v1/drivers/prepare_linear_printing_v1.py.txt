@@ -1,0 +1,59 @@
+from pathlib import Path
+import shutil,json
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';parent=w/'combined-trait-filter-metadata-prototype-v1';p=w/'linear-printing-prototype-v1';p.mkdir()
+for sub in ['source','baseline']:shutil.copytree(parent/sub,p/sub)
+n='forge-core/src/main/java/forge/card/CardDb.java';base=r/'data/development/commander-blocking-history-research/source'/n
+for sub in ['source','baseline']:(p/sub/n).parent.mkdir(parents=True,exist_ok=True)
+shutil.copyfile(base,p/'baseline'/n);s=base.read_text(encoding='utf-8');anchor='''        /* 2. Retrieve cards based of [Frame]Set Preference''';assert s.count(anchor)==1
+s=s.replace(anchor,'''        final PaperCard linearChoice = selectNativePrinting(cards, artPref);
+        if (linearChoice != null) return preferTraditionalFrame(linearChoice, cr);
+
+'''+anchor)
+anchor='''    /* Picks by Card Art Preference give the traditional frame, unless a specific print was requested. */''';assert s.count(anchor)==1
+helper='''    /** Select without temporary edition lists/maps; unknown metadata keeps the native path. */
+    private PaperCard selectNativePrinting(final List<PaperCard> cards, final CardArtPreference preference) {
+        if (editions.getClass() != CardEdition.Collection.class) return null;
+        for (PaperCard card : cards) {
+            if (card.getClass() != PaperCard.class) return null;
+        }
+        CardEdition bestAny = null;
+        CardEdition bestAccepted = null;
+        PaperCard anyCard = null;
+        PaperCard acceptedCard = null;
+        for (PaperCard card : cards) {
+            final String code = card.getEdition();
+            final CardEdition edition = code.equals(CardEdition.UNKNOWN_CODE)
+                    ? CardEdition.UNKNOWN : editions.get(code);
+            if (edition == null) continue;
+            if (edition.getClass() != CardEdition.class || !code.equals(edition.getCode())) return null;
+            if (bestAny == null || precedesEdition(edition, bestAny, preference)) {
+                bestAny = edition;
+                anyCard = card;
+            } else if (code.equals(bestAny.getCode())) {
+                anyCard = card; // Native candidate map keeps the last printing in the winning edition.
+            }
+            if (!preference.accept(edition)) continue;
+            if (bestAccepted == null || precedesEdition(edition, bestAccepted, preference)) {
+                bestAccepted = edition;
+                acceptedCard = card;
+            } else if (code.equals(bestAccepted.getCode())) {
+                acceptedCard = card;
+            }
+        }
+        return bestAccepted == null ? anyCard : acceptedCard;
+    }
+
+    /** Match stable rank sorting after native date/name sorting and optional reversal. */
+    private static boolean precedesEdition(final CardEdition candidate, final CardEdition current,
+            final CardArtPreference preference) {
+        if (preference.blackBorderOnly) {
+            final int rank = Integer.compare(preference.getEditionRank(candidate), preference.getEditionRank(current));
+            if (rank != 0) return rank < 0;
+        }
+        final int order = candidate.compareTo(current);
+        // Reversing the stable native order makes the last equal item win for latest-first.
+        return preference.latestFirst ? order >= 0 : order < 0;
+    }
+
+'''
+s=s.replace(anchor,helper+anchor);(p/'source'/n).write_text(s,encoding='utf-8',newline='\n');(p/'proposal.json').write_text(json.dumps({'change':'Linear native printing selection, preserving latest/original tie direction, last-per-edition choice, accepted-edition fallback, black-border ranking, foil/traditional-frame postprocessing. Unknown PaperCard/edition collection types and noncanonical codes retain original algorithm.','parent':'combined-trait-filter-metadata-prototype-v1','files':9,'basis':'Combined allocation/CPU profile v51; no cache, edition/art override, RNG or budget changes.','status':'Prepared only.'},indent=2)+'\n',encoding='utf-8',newline='\n');print('Prepared linear printing selection with original-path fallback; nine production source files in experimental overlay.')

@@ -1,0 +1,349 @@
+--- a/forge-core/src/main/java/forge/card/CardDb.java
++++ b/forge-core/src/main/java/forge/card/CardDb.java
+@@ -1165,6 +1165,9 @@
+                 cards.retainAll(matchingNames);
+         }
+ 
++        final PaperCard linearChoice = selectNativePrinting(cards, artPref);
++        if (linearChoice != null) return preferTraditionalFrame(linearChoice, cr);
++
+         /* 2. Retrieve cards based of [Frame]Set Preference
+            ================================================ */
+         // Collect the list of all editions found for target card
+@@ -1213,6 +1216,51 @@
+         // it happens to have a local image made the preference look ignored.
+         PaperCard candidate = candidatesCard.get(acceptedEditions.get(0).getCode());
+         return preferTraditionalFrame(candidate, cr);
++    }
++
++    /** Select without temporary edition lists/maps; unknown metadata keeps the native path. */
++    private PaperCard selectNativePrinting(final List<PaperCard> cards, final CardArtPreference preference) {
++        if (editions.getClass() != CardEdition.Collection.class) return null;
++        for (PaperCard card : cards) {
++            if (card.getClass() != PaperCard.class) return null;
++        }
++        CardEdition bestAny = null;
++        CardEdition bestAccepted = null;
++        PaperCard anyCard = null;
++        PaperCard acceptedCard = null;
++        for (PaperCard card : cards) {
++            final String code = card.getEdition();
++            final CardEdition edition = code.equals(CardEdition.UNKNOWN_CODE)
++                    ? CardEdition.UNKNOWN : editions.get(code);
++            if (edition == null) continue;
++            if (edition.getClass() != CardEdition.class || !code.equals(edition.getCode())) return null;
++            if (bestAny == null || precedesEdition(edition, bestAny, preference)) {
++                bestAny = edition;
++                anyCard = card;
++            } else if (code.equals(bestAny.getCode())) {
++                anyCard = card; // Native candidate map keeps the last printing in the winning edition.
++            }
++            if (!preference.accept(edition)) continue;
++            if (bestAccepted == null || precedesEdition(edition, bestAccepted, preference)) {
++                bestAccepted = edition;
++                acceptedCard = card;
++            } else if (code.equals(bestAccepted.getCode())) {
++                acceptedCard = card;
++            }
++        }
++        return bestAccepted == null ? anyCard : acceptedCard;
++    }
++
++    /** Match stable rank sorting after native date/name sorting and optional reversal. */
++    private static boolean precedesEdition(final CardEdition candidate, final CardEdition current,
++            final CardArtPreference preference) {
++        if (preference.blackBorderOnly) {
++            final int rank = Integer.compare(preference.getEditionRank(candidate), preference.getEditionRank(current));
++            if (rank != 0) return rank < 0;
++        }
++        final int order = candidate.compareTo(current);
++        // Reversing the stable native order makes the last equal item win for latest-first.
++        return preference.latestFirst ? order >= 0 : order < 0;
+     }
+ 
+     /* Picks by Card Art Preference give the traditional frame, unless a specific print was requested. */
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -1152,17 +1152,21 @@
+         game.forEachCardInGame(c -> {
+             // need to get Card from preList if able
+             final Card co = preList.get(c);
+-            for (StaticAbility stAb : co.getStaticAbilities()) {
+-                if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
+-                    staticAbilities.add(stAb);
++            if (co.getClass() != Card.class || co.getCurrentState().mayHaveStaticAbilities()) {
++                for (StaticAbility stAb : co.getStaticAbilities()) {
++                    if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
++                        staticAbilities.add(stAb);
++                    }
+                 }
+             }
+             if (!co.getStaticCommandList().isEmpty()) {
+                 staticList.add(co);
+             }
+-            for (StaticAbility stAb : co.getHiddenStaticAbilities()) {
+-                if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
+-                    staticAbilities.add(stAb);
++            if (co.mayHaveHiddenStaticAbilities()) {
++                for (StaticAbility stAb : co.getHiddenStaticAbilities()) {
++                    if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
++                        staticAbilities.add(stAb);
++                    }
+                 }
+             }
+             return true;
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -7310,6 +7310,12 @@
+         getUnhiddenKeywords(state).applyStaticAbility(list);
+     }
+ 
++    /** Hidden counter/status sources are independent of the current state's statics. */
++    public final boolean mayHaveHiddenStaticAbilities() {
++        if (getClass() != Card.class) return true;
++        return (this.isInPlay() && this.isSuspected()) || !counterTypeKeywordStatic.isEmpty();
++    }
++
+     public final FCollectionView<StaticAbility> getHiddenStaticAbilities() {
+         FCollection<StaticAbility> result = new FCollection<>();
+         if (this.isInPlay() && this.isSuspected()) {
+--- a/forge-game/src/main/java/forge/game/card/CardLists.java
++++ b/forge-game/src/main/java/forge/game/card/CardLists.java
+@@ -32,9 +32,13 @@
+ 
+ import java.util.ArrayList;
+ import java.util.Collections;
++import java.util.Collection;
+ import java.util.Comparator;
+ import java.util.List;
+ import java.util.Map;
++import java.util.Objects;
++import java.util.Spliterator;
++import java.util.function.Consumer;
+ import java.util.function.Predicate;
+ import java.util.stream.Collector;
+ import java.util.stream.Collectors;
+@@ -328,15 +332,31 @@
+      *         criteria; may be empty, but never null.
+      */
+     public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+-        return new CardCollection(IterableUtil.filter(cardList, filt));
++        // Unknown sources keep native stream/spliterator metadata callbacks.
++        if (cardList == null || (cardList.getClass() != CardCollection.class
++                && cardList.getClass() != ArrayList.class && cardList != CardCollection.EMPTY)) {
++            return new CardCollection(IterableUtil.filter(cardList, filt));
++        }
++        Objects.requireNonNull(filt);
++        final CardCollection result = new CardCollection();
++        if (((Collection<?>) cardList).isEmpty()) return result;
++        final Spliterator<Card> source = Objects.requireNonNull(cardList.spliterator());
++        final Consumer<Card> collect = card -> {
++            if (filt.test(card)) result.add(card);
++        };
++        // Advance per element, retaining the source's order and mutation checks.
++        while (source.tryAdvance(collect)) {
++            // The consumer applies the predicate and retains unique matching cards.
++        }
++        return result;
+     }
+ 
+     public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> f1, Predicate<Card> f2) {
+-        return new CardCollection(IterableUtil.filter(cardList, f1.and(f2)));
++        return filter(cardList, f1.and(f2));
+     }
+ 
+     public static CardCollection filter(Iterable<Card> cardList, Iterable<Predicate<Card>> filt) {
+-        return new CardCollection(IterableUtil.filter(cardList, IterableUtil.and(filt)));
++        return filter(cardList, IterableUtil.and(filt));
+     }
+ 
+     /**
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -695,6 +695,24 @@
+         return abilities.add(a);
+     }
+ 
++    /** Shared native sources that can participate in an intrinsic-only cache. */
++    private boolean hasNoMergedTraits() {
++        return card.getChangedCardTraits().isEmpty()
++                && card.getChangedCardTraitsByText().isEmpty()
++                && !(getStateName() == CardStateName.Original
++                && (card.hasState(CardStateName.LeftSplit) || card.hasState(CardStateName.RightSplit)));
++    }
++
++    private boolean hasNoAdditionalStaticTraits() {
++        return getClass() == CardState.class && card.getClass() == Card.class
++                && hasNoMergedTraits() && cachedKeywords.hasNoStaticTraitsForCache();
++    }
++
++    private boolean hasNoAdditionalReplacementTraits() {
++        return getClass() == CardState.class && card.getClass() == Card.class
++                && hasNoMergedTraits() && cachedKeywords.hasNoReplacementTraitsForCache();
++    }
++
+     /** Live base-class trait sources; unknown subclasses retain normal callbacks. */
+     private boolean hasNoAdditionalTraits() {
+         return getClass() == CardState.class && card.getClass() == Card.class
+@@ -706,6 +724,16 @@
+                 && (card.hasState(CardStateName.LeftSplit) || card.hasState(CardStateName.RightSplit)));
+     }
+ 
++    /** A live negative check; unknown trigger callback sources retain gathering. */
++    public final boolean mayHaveTriggers() {
++        return !triggers.isEmpty() || !hasNoAdditionalTraits();
++    }
++
++    /** Keyword class metadata may prove absence; live lists are rechecked each time. */
++    public final boolean mayHaveStaticAbilities() {
++        return !staticAbilities.isEmpty() || !hasNoAdditionalStaticTraits();
++    }
++
+     public final FCollectionView<Trigger> getTriggers() {
+         FCollection<Trigger> result = new FCollection<>(triggers);
+         if (getStateName().equals(CardStateName.Original)) {
+@@ -740,7 +768,7 @@
+      * Revalidate intrinsic-list changes and land-type removal on every read.
+      */
+     public final FCollectionView<StaticAbility> getStaticAbilities() {
+-        if (!hasNoAdditionalTraits()) return buildStaticAbilities();
++        if (!hasNoAdditionalStaticTraits()) return buildStaticAbilities();
+         // Land type changes can remove statics, but cannot introduce one.
+         if (staticAbilities.isEmpty()) {
+             return FCollection.<StaticAbility>getEmpty().shareCopy();
+@@ -806,9 +834,16 @@
+ 
+     /** Only a live negative precheck; true still requires normal replacement checks. */
+     public final boolean mayHaveReplacementEffects(ReplacementType event) {
+-        // Implicit type/counter replacements do not apply to these two events.
+-        if (event != ReplacementType.Tap && event != ReplacementType.ProduceMana) return true;
+-        return !replacementEffects.isEmpty() || !hasNoAdditionalTraits();
++        if (event == null) return true;
++        if (!replacementEffects.isEmpty() || !hasNoAdditionalReplacementTraits()) return true;
++        if (FSnapshotTable.versionOf(card.getChangedCardTraits()) == null
++                || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) {
++            return true; // Unknown table implementations retain native callbacks.
++        }
++        // Native implicit type/counter replacements cannot handle these events.
++        if (event == ReplacementType.Tap || event == ReplacementType.ProduceMana) return false;
++        // These live flags cover every implicit source in the native builder.
++        return replacementFlags(true) != 0;
+     }
+ 
+     public FCollectionView<ReplacementEffect> getReplacementEffects() {
+@@ -819,7 +854,7 @@
+      * merged trait sources. Revalidate the intrinsic list, type and counter flags.
+      */
+     public FCollectionView<ReplacementEffect> getReplacementEffects(boolean rulesHost) {
+-        if (!hasNoAdditionalTraits()) return buildReplacementEffects(rulesHost);
++        if (!hasNoAdditionalReplacementTraits()) return buildReplacementEffects(rulesHost);
+         if (FSnapshotTable.versionOf(card.getChangedCardTraits()) == null
+                 || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) {
+             return buildReplacementEffects(rulesHost); // unknown table implementation: never cache
+@@ -851,7 +886,11 @@
+         final CardTypeView typeWithChanges = getTypeWithChanges(); // LandTraitChanges
+         if (typeWithChanges.isPlaneswalker()) flags |= 2;
+         if (typeWithChanges.isBattle()) flags |= 4;
+-        if (typeWithChanges.isSaga()) flags |= 8;
++        if (typeWithChanges.isSaga()) {
++            flags |= 8;
++            // LandTraitChanges uses read ahead in both rules-host modes.
++            if (hasKeyword(Keyword.READ_AHEAD)) flags |= 1024;
++        }
+         if (rulesHost) {
+             if (type.hasSubtype("Adventure")) flags |= 16;
+             if (type.hasSubtype("Omen")) flags |= 32;
+--- a/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java
++++ b/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java
+@@ -223,6 +223,27 @@
+         }
+         return list;
+     }
++    /** Inspect live lists only when the standard keyword applicators are inherited. */
++    public final boolean hasNoStaticTraitsForCache() {
++        if (getClass() != KeywordCollection.class) return false;
++        if (map.isEmpty()) return true;
++        for (KeywordInterface keyword : map.values()) {
++            if (!(keyword instanceof KeywordInstance<?> instance)
++                    || !instance.hasNoStaticTraitsForCache()) return false;
++        }
++        return true;
++    }
++
++    public final boolean hasNoReplacementTraitsForCache() {
++        if (getClass() != KeywordCollection.class) return false;
++        if (map.isEmpty()) return true;
++        for (KeywordInterface keyword : map.values()) {
++            if (!(keyword instanceof KeywordInstance<?> instance)
++                    || !instance.hasNoReplacementTraitsForCache()) return false;
++        }
++        return true;
++    }
++
+     @Override
+     public KeywordCollection copy(Card host, boolean lki) {
+         KeywordCollection result = new KeywordCollection();
+--- a/forge-game/src/main/java/forge/game/keyword/KeywordInstance.java
++++ b/forge-game/src/main/java/forge/game/keyword/KeywordInstance.java
+@@ -22,6 +22,41 @@
+ import io.sentry.Sentry;
+ 
+ public abstract class KeywordInstance<T extends KeywordInstance<?>> implements KeywordInterface {
++    private static final int DEFAULT_STATIC_ACCESS = 1;
++    private static final int DEFAULT_REPLACEMENT_ACCESS = 2;
++    private static final ClassValue<Integer> INHERITED_TRAIT_ACCESS = new InheritedTraitAccess();
++    private final int inheritedTraitAccess = INHERITED_TRAIT_ACCESS.get(getClass());
++
++    /** Only immutable class metadata is cached; trait lists are read on every query. */
++    private static final class InheritedTraitAccess extends ClassValue<Integer> {
++        @Override protected Integer computeValue(Class<?> type) {
++            int access = 0;
++            if (usesDefault(type, "getStaticAbilities", "applyStaticAbility")) access |= DEFAULT_STATIC_ACCESS;
++            if (usesDefault(type, "getReplacements", "applyReplacementEffect")) access |= DEFAULT_REPLACEMENT_ACCESS;
++            return access;
++        }
++
++        private static boolean usesDefault(Class<?> type, String getter, String applicator) {
++            try {
++                return type.getMethod(getter).getDeclaringClass() == KeywordInstance.class
++                        && type.getMethod(applicator, List.class).getDeclaringClass() == KeywordInstance.class;
++            } catch (NoSuchMethodException | SecurityException | LinkageError unavailable) {
++                // Unknown metadata retains the normal native callback path.
++                return false;
++            }
++        }
++    }
++
++    final boolean hasNoStaticTraitsForCache() {
++        return (inheritedTraitAccess & DEFAULT_STATIC_ACCESS) != 0
++                && staticAbilities.isEmpty();
++    }
++
++    final boolean hasNoReplacementTraitsForCache() {
++        return (inheritedTraitAccess & DEFAULT_REPLACEMENT_ACCESS) != 0
++                && replacements.isEmpty();
++    }
++
+     private Card hostCard = null;
+     private boolean intrinsic = false;
+ 
+--- a/forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java
++++ b/forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java
+@@ -11,6 +11,7 @@
+         int i = 0;
+         final Game game = player.getGame();
+         for (final Card ca : game.getCardsIn(ZoneType.STATIC_ABILITIES_SOURCE_ZONES)) {
++            if (ca.getClass() == Card.class && !ca.getCurrentState().mayHaveStaticAbilities()) continue;
+             for (final StaticAbility stAb : ca.getStaticAbilities()) {
+                 if (!stAb.checkConditions(StaticAbilityMode.Devotion)) {
+                     continue;
+--- a/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
++++ b/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java
+@@ -258,6 +258,7 @@
+         }
+         activeTriggers.clear();
+         game.forEachCardInGame(c -> {
++            if (c.getClass() == Card.class && !c.getCurrentState().mayHaveTriggers()) return true;
+             for (final Trigger t : c.getTriggers()) {
+                 if (c.isInPlay() && lastStateBattlefield != null && !lastStateBattlefield.contains(c) && t.looksBackInTime()) {
+                     continue;

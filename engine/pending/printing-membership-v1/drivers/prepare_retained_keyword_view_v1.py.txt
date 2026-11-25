@@ -1,0 +1,30 @@
+from pathlib import Path
+import shutil,json
+w=Path('data/development/commander-multiplayer-attack-research/waterbend-filter-research');f=w/'keyword-membership-fixtures-v2';f.mkdir();s=(w/'keyword-membership-fixtures-v1/CommanderKeywordMembershipTest.java').read_text(encoding='utf-8');s=s.replace('import forge.game.keyword.KeywordInterface;','import forge.game.keyword.KeywordInterface;\nimport forge.game.keyword.SimpleKeyword;')
+anchor='''    private void observe(Card card, boolean expected) {''';s=s.replace(anchor,'''    private static final class RetainingKeyword extends SimpleKeyword {
+        Collection<KeywordInterface> retained;
+        RetainingKeyword() { initialize("Flying", Keyword.FLYING, ""); }
+        @Override public boolean redundant(Collection<KeywordInterface> values) { retained = values; return false; }
+    }
+'''+anchor)
+anchor='''        if (mode.equals("keyAddRetained") || mode.equals("sameSizeView")) {''';s=s.replace(anchor,'''        if (mode.equals("redundantRetainedView")) {
+            RetainingKeyword retaining = new RetainingKeyword(); assertTrue(keywords.insert(retaining));
+            assertNotNull(retaining.retained); observe(card, false);
+            KeywordInterface extra = Keyword.getInstance("Flying"); extra.getStaticAbilities().add(ban); extra.getReplacements().add(replacement);
+            assertTrue(retaining.retained.add(extra)); observe(card, true);
+            assertTrue(retaining.retained.remove(extra)); observe(card, false);
+            retaining.retained.add(extra); observe(card, true); return;
+        }
+'''+anchor)
+s=s[:-2]+''.join(f'    @Test public void redundantRetainedViewDepth{depth}() {{ check("redundantRetainedView", {depth}); }}\n' for depth in range(3))+'}\n';(f/'CommanderKeywordMembershipTest.java').write_text(s,encoding='utf-8',newline='\n')
+p=w/'keyword-membership-prototype-v2';p.mkdir();parent=w/'keyword-membership-prototype-v1'
+for sub in ['source','baseline']:shutil.copytree(parent/sub,p/sub)
+file=p/'source/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java';s=file.read_text(encoding='utf-8');a='''        if (list.isEmpty() || !inst.redundant(list)) {''';b='''        boolean redundant = false;
+        if (!list.isEmpty()) {
+            // A keyword callback may retain this mutable native view.
+            valuesExposed = true;
+            invalidateTraitMembers();
+            redundant = inst.redundant(list);
+        }
+        if (!redundant) {''';assert s.count(a)==1;s=s.replace(a,b);file.write_text(s,encoding='utf-8',newline='\n');(p/'proposal.json').write_text(json.dumps({'scope':'Membership references only, live trait lists always. Native values views and views passed to redundant callbacks permanently select live traversal; structural mutations/iterator removals invalidate snapshots.','parent':'keyword-membership-prototype-v1','new_controls':'3 retained redundant-callback view controls plus all prior613 contracts.','status':'Prepared only; callback-exposure review found additional escape path, not an installed-engine defect.'},indent=2)+'\n',encoding='utf-8',newline='\n')
+s=(w/'run_keyword_membership613_v1.py').read_text(encoding='utf-8').replace("'keyword-membership613-'+MODE+'-v1'","'keyword-membership616-'+MODE+'-v1'").replace('keyword-membership-fixtures-v1','keyword-membership-fixtures-v2').replace("'copyIndependent','traitListsLive')","'copyIndependent','traitListsLive','redundantRetainedView')").replace('sum(expected.values())==613','sum(expected.values())==616').replace('total=613,passed=613','total=616,passed=616').replace('keyword-membership613-baseline-v1','keyword-membership616-baseline-v1').replace('plus48 native membership','plus51 native membership');(w/'run_keyword_membership616_v1.py').write_text(s,encoding='utf-8',newline='\n');print('Prepared3 callback-view escape controls and corrected prototype; original compiled v1 preserved for comparison.')
