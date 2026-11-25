@@ -6,7 +6,9 @@ import zipfile
 from contextlib import ExitStack
 from pathlib import Path
 
-from tools.build_sticker_engine import _extract, _test_evidence
+from commander.paths import PROJECT_ROOT
+from tools.build_sticker_engine import _copy_regressions, _extract, _test_evidence
+from tools.engine_test_sources import REGRESSION_PACKAGES, REGRESSION_SOURCES
 
 # Test names describe behavior.
 # pylint: disable=missing-function-docstring
@@ -40,6 +42,33 @@ class StickerBuildBoundaryTests(unittest.TestCase):
             with self.subTest(name=name), self.assertRaises(ValueError):
                 _extract(archive_path, self.root / f"out-{number}", "forge")
         self.assertFalse((self.root / "escape.txt").exists())
+
+    def test_registered_regressions_keep_declared_packages_and_exact_bytes(self):
+        _copy_regressions(self.root)
+        test_root = self.root / "forge-gui-desktop/src/test/java"
+        self.assertEqual(REGRESSION_PACKAGES.keys(), REGRESSION_SOURCES.keys())
+        expected = set()
+        for name in REGRESSION_SOURCES:
+            with self.subTest(source=name):
+                original = PROJECT_ROOT / "engine/tests" / name
+                declarations = [
+                    line.removeprefix("package ").removesuffix(";")
+                    for line in original.read_text(encoding="utf-8").splitlines()
+                    if line.startswith("package ")
+                ]
+                self.assertEqual(len(declarations), 1)
+                destination = Path(declarations[0].replace(".", "/")) / name
+                expected.add(destination.as_posix())
+                self.assertEqual(
+                    (test_root / destination).read_bytes(), original.read_bytes()
+                )
+        self.assertEqual(
+            {
+                path.relative_to(test_root).as_posix()
+                for path in test_root.rglob("*.java")
+            },
+            expected,
+        )
 
     def test_native_test_header_requires_all_tests_and_no_skips(self):
         report = (

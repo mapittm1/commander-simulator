@@ -1,0 +1,63 @@
+from pathlib import Path
+from collections import Counter,defaultdict
+import json,sys,importlib,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from tests.support.draw_ending_partitions import PARTITIONS
+RUN=WORK/'expend-resolution-profile-v1';profile=RUN/'runtime.jfr';before=file_hash(profile)
+assert profile.stat().st_size<=33554432 and (RUN/'process.json').exists()
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+import subprocess
+if sys.argv[1:]==[]:
+ result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'decode.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ (RUN/'decode-process.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+ assert result['status']=='finished' and result['returncode']==0,result
+ print(json.dumps(result),flush=True);sys.exit()
+assert sys.argv[1:]==['--worker']
+build=ROOT/json.loads((WORK/'expend-candidate-v1/candidate-selection.json').read_bytes())['build'];settings=read_settings(build/'engine-config.json');settings.verify()
+test_cases={cl.get('name')+'.'+m.get('name') for cl in ET.parse(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml').findall('.//class') if cl.get('name') in PARTITIONS['resolution'] for m in cl.findall('test-method') if m.get('is-config')!='true'};assert len(test_cases)==1271
+java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(profile)))
+counts=Counter();duration=Counter();maximum=Counter();contexts=defaultdict(Counter);leaf=Counter();forge=Counter();inclusive=Counter();main_samples=0;events=0;allocation_classes=Counter();allocation_forge=Counter();allocation_stacks=Counter();allocation_weight=0;allocation_samples=0;cpu_stacks=Counter();forge_inclusive=Counter();cpu_cases=Counter();allocation_cases=Counter()
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent();events+=1;assert events<=100000;kind=str(event.getEventType().getName());counts[kind]+=1
+  if kind=='jdk.ObjectAllocationSample':
+   thread=event.getThread()
+   if thread is None or str(thread.getJavaName())!='main':continue
+   weight=int(event.getLong('weight'));allocation_weight+=weight;allocation_samples+=1
+   allocation_classes[str(event.getClass('objectClass').getName())]+=weight
+  elif kind=='jdk.ExecutionSample':
+   thread=event.getThread('sampledThread')
+   if thread is None or str(thread.getJavaName())!='main':continue
+   main_samples+=1
+  elif kind in ('jdk.ThreadPark','jdk.ThreadSleep','jdk.JavaMonitorEnter','jdk.GarbageCollection','jdk.GCPhasePause'):
+   if kind in ('jdk.GarbageCollection','jdk.GCPhasePause'):label=kind
+   else:
+    thread=event.getThread();label=kind+'/'+('unknown' if thread is None else str(thread.getJavaName()))
+   elapsed=int(event.getDuration().toNanos());duration[label]+=elapsed;maximum[label]=max(maximum[label],elapsed)
+   if not label.endswith('/main'):continue
+  else:continue
+  stack=event.getStackTrace();names=[]
+  if stack is not None:
+   for frame in stack.getFrames():
+    method=frame.getMethod()
+    if method is not None:names.append(str(method.getType().getName())+'.'+str(method.getName()))
+  first=next((name for name in names if name.startswith('forge.')),None)
+  case=next((name for name in names if name in test_cases),None)
+  if kind=='jdk.ObjectAllocationSample':
+   if case:allocation_cases[case]+=weight
+   if first:allocation_forge[first]+=weight
+   allocation_stacks[' <- '.join(names[:8])]+=weight
+  elif kind=='jdk.ExecutionSample':
+   if names:leaf[names[0]]+=1
+   if first:forge[first]+=1
+   inclusive.update(set(names));forge_inclusive.update({name for name in names if name.startswith('forge.')});cpu_stacks[' <- '.join(names[:10])]+=1
+   if case:cpu_cases[case]+=1
+  else:contexts[label][first or (names[0] if names else 'no-stack')]+=elapsed
+finally:reader.close();java.shutdownJVM()
+assert file_hash(profile)==before
+result={'profile_sha256':before,'profile_bytes':profile.stat().st_size,'events':events,'event_counts':dict(counts),'main_execution_samples':main_samples,'main_cpu_leaf':leaf.most_common(30),'main_first_forge':forge.most_common(30),'main_inclusive':inclusive.most_common(60),'duration_ms':{key:round(value/1000000,3) for key,value in duration.items()},'max_duration_ms':{key:round(value/1000000,3) for key,value in maximum.items()},'main_wait_context_ms':{key:[(name,round(value/1000000,3)) for name,value in rows.most_common(20)] for key,rows in contexts.items()},'allocation_samples_main':allocation_samples,'allocation_estimated_weight_main_bytes':allocation_weight,'allocation_main_classes_estimated_bytes':allocation_classes.most_common(30),'allocation_main_first_forge_estimated_bytes':allocation_forge.most_common(30),'allocation_main_stacks_estimated_bytes':allocation_stacks.most_common(20),'main_forge_inclusive':forge_inclusive.most_common(40),'main_cpu_stacks':cpu_stacks.most_common(25),'main_cpu_case_samples':cpu_cases.most_common(30),'main_allocation_case_estimated_bytes':allocation_cases.most_common(20),'scope':'Bounded CPU/allocation sampling/wait/GC diagnostic only. Allocation weights estimate sampled allocation volume, not exact bytes or retained memory. Event durations may overlap and are not a completed timing gate or rules proof.'}
+out=RUN/'runtime-profile-summary.json';assert not out.exists();text=json.dumps(result,indent=2)+'\n';assert len(text.encode())<131072;out.write_text(text,encoding='utf-8',newline='\n')
+print(json.dumps({'main_samples':main_samples,'events':dict(counts),'duration_ms':result['duration_ms'],'main_wait_context_ms':result['main_wait_context_ms'],'first_forge':forge.most_common(8),'allocation_samples':allocation_samples,'allocation_estimated_main_bytes':allocation_weight,'allocation_classes':allocation_classes.most_common(8),'allocation_first_forge':allocation_forge.most_common(8)}),flush=True)

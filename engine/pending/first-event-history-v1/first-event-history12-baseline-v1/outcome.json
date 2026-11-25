@@ -1,0 +1,93 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 12,
+    "passed": 6,
+    "failed": 6,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.firstInvestigationStillTriggers",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.firstLifeGainStillTriggers",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.firstSurveilStillTriggers",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.investigateAfterOneCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.investigateAfterTwoCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.investigateInOriginal",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.lifeAfterOneCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.lifeAfterTwoCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.lifeInOriginal",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.surveilAfterOneCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.surveilAfterTwoCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.surveilInOriginal",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.investigateAfterOneCopy",
+      "message": "\n              Erdwal Illuminator adds an investigation only for the first event expected [3] but found [4]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.investigateAfterTwoCopies",
+      "message": "\n              Erdwal Illuminator adds an investigation only for the first event expected [3] but found [4]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.lifeAfterOneCopy",
+      "message": "\n              First-life-gain counter occurs once, even after net-zero prior events expected [1] but found [2]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.lifeAfterTwoCopies",
+      "message": "\n              First-life-gain counter occurs once, even after net-zero prior events expected [1] but found [2]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.surveilAfterOneCopy",
+      "message": "\n              Whispering Snitch drains only on the first surveil expected [39] but found [38]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderFirstEventHistoryTest.surveilAfterTwoCopies",
+      "message": "\n              Whispering Snitch drains only on the first surveil expected [39] but found [38]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 184,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Native earlier life gain/loss and paid surveil/investigate events from supplied boards, followed by paid spells at depths0/1/2 with first-event positive controls. Not full preceding legal histories or complete rules proof."
+}

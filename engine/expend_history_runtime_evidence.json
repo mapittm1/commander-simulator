@@ -1,0 +1,1925 @@
+{
+  "scope": "Audited source/native and first three packaged groups only. Full normal resolution failed; no complete rules or activation claim.",
+  "ci": {
+    "id": 45677252811,
+    "head_sha": "04548c23d7df3a75a322ac1e75a0497cbdad2448",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native_audit": {
+    "build_id": "357ce065d1ed4370b3af972b49868c91",
+    "candidate": {
+      "forge_version": "2.0.16-583714b-reviewed-expend-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation",
+        "dungeon_snapshot_state",
+        "expend_snapshot_history"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "e9f630a9d2b95ad373fdcc366325063068c0d45ab9cb1e0817453c4f895ae50e",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "830c705039a4fd180ceaba9fe9091d476bb2753fbbf0dda90834cc48ed65a504",
+      "native_tests": {
+        "total": 4736,
+        "passed": 4736,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "0ebfed36d0003ad0d73439e85a7503a769c3120d672b0cef643f5cf9a654dfcc",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "source_counts": {
+      "total": 3536,
+      "passed": 3536,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_native_cases_retained": 4730,
+    "added_cases": 6,
+    "exact_native_method_and_parameter_counter_matches": true,
+    "input_audit": {
+      "production": {
+        "files": 2168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": [
+          "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+          "forge-ai/src/main/java/forge/ai/AiCache.java",
+          "forge-ai/src/main/java/forge/ai/AiController.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+          "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "forge-ai/src/main/java/forge/ai/ability/SetStateAi.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+          "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+          "forge-core/src/main/java/forge/card/CardType.java",
+          "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+          "forge-game/src/main/java/forge/game/Game.java",
+          "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+          "forge-game/src/main/java/forge/game/card/Card.java",
+          "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+          "forge-game/src/main/java/forge/game/card/CardState.java",
+          "forge-game/src/main/java/forge/game/combat/Combat.java",
+          "forge-game/src/main/java/forge/game/cost/Cost.java",
+          "forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
+          "forge-game/src/main/java/forge/game/cost/CostPayment.java",
+          "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java",
+          "forge-game/src/main/java/forge/game/player/Player.java",
+          "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+          "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+          "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+        ]
+      },
+      "test": {
+        "files": 168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      },
+      "card": {
+        "files": 332,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      }
+    },
+    "production_classes_changed_from_1449": [
+      "forge/ai/simulation/GameCopier$1.class",
+      "forge/ai/simulation/GameCopier$2.class",
+      "forge/ai/simulation/GameCopier$3.class",
+      "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+      "forge/ai/simulation/GameCopier.class"
+    ],
+    "actual_processors": 2,
+    "actual_max_java_heap_bytes": 2147483648,
+    "selected_runtime_native_cases": 3295,
+    "installed": false,
+    "original_resolution_cases": 1271,
+    "original_resolution_worker_seconds": 90,
+    "scope": "Source/native regression and class/input audit only; independent packaged and final activation gates remain required."
+  },
+  "source": {
+    "counts": {
+      "total": 3536,
+      "passed": 3536,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 3530,
+    "new_cases": 6,
+    "exact_method_and_parameter_counter_matches": true,
+    "production_sources": 2168,
+    "test_inputs": 168,
+    "card_inputs": 332,
+    "changed_production_sources": [
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java"
+    ],
+    "inputs_unchanged_during_run": true,
+    "report_sha256": "3c7eb1e337a50dc4087630ba0e91fb2f8b87dd63d0e5bb8ebcef8d2b18d455d3",
+    "scope": "Source regressions only; fresh native4736, complete normal3579 including original1271/90, broader/live and activation remain required."
+  },
+  "packaged_partial": {
+    "build_id": "357ce065d1ed4370b3af972b49868c91",
+    "groups": {
+      "information": {
+        "run_id": "99d4a51f6fb748c7aac3ad68f5cefd83",
+        "counts": {
+          "total": 301,
+          "passed": 301,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 181,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 14338,
+          "returncode": 0,
+          "elapsed_seconds": 23.813,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "204883efd8031ef0e1fabda623ba1efde6b898d76996f14596c53ad93a5b081d"
+          }
+        }
+      },
+      "combat_and_snapshots": {
+        "run_id": "dcc7fba6a6fe4fe7b130fa363b4100b1",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 181,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10174,
+          "returncode": 0,
+          "elapsed_seconds": 39.203,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "204883efd8031ef0e1fabda623ba1efde6b898d76996f14596c53ad93a5b081d"
+          }
+        }
+      },
+      "text_casting_and_costs": {
+        "run_id": "58be65ea035c49a88381fcb5a2a9f131",
+        "counts": {
+          "total": 338,
+          "passed": 338,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 181,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 4805,
+          "returncode": 0,
+          "elapsed_seconds": 60.516,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "204883efd8031ef0e1fabda623ba1efde6b898d76996f14596c53ad93a5b081d"
+          }
+        }
+      }
+    },
+    "total_cases": 912,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 242.109,
+    "configuration_restored": true,
+    "scope": "Audit only the three completed groups in the failed full3579 attempt. Original1271 resolution timed out; no full packaged pass.",
+    "full3579_packaged_passed": false,
+    "resolution_process": {
+      "status": "timeout",
+      "bytes": 19020,
+      "returncode": 1,
+      "elapsed_seconds": 90.0,
+      "support_source_hashes": {
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "204883efd8031ef0e1fabda623ba1efde6b898d76996f14596c53ad93a5b081d"
+      }
+    },
+    "resolution_run_id": "072f4bb218de4ecab2ae62d58d775851"
+  },
+  "profile": {
+    "profile_sha256": "0d071d5bbad12f55df8e59827e1d04db1ec413dfdcc8d53cc6b725b4b438fd83",
+    "profile_bytes": 31370896,
+    "events": 67922,
+    "event_counts": {
+      "jdk.ObjectAllocationSample": 66835,
+      "jdk.ExecutionSample": 995,
+      "jdk.GCPhasePause": 46,
+      "jdk.GarbageCollection": 46
+    },
+    "main_execution_samples": 995,
+    "main_cpu_leaf": [
+      [
+        "forge.game.card.CardState.getReplacementEffects",
+        90
+      ],
+      [
+        "java.util.HashMap.getNode",
+        75
+      ],
+      [
+        "forge.game.card.Card.updateStaticAbilities",
+        56
+      ],
+      [
+        "forge.game.card.CardState.buildStaticAbilities",
+        41
+      ],
+      [
+        "forge.game.card.Card.updateTriggers",
+        32
+      ],
+      [
+        "java.util.Objects.requireNonNull",
+        31
+      ],
+      [
+        "forge.util.collect.FCollection.addAllUnique",
+        31
+      ],
+      [
+        "java.lang.StringLatin1.compareToCI",
+        30
+      ],
+      [
+        "forge.game.card.CardProperty.cardHasProperty",
+        23
+      ],
+      [
+        "forge.util.Visitor.visitAll",
+        21
+      ],
+      [
+        "forge.game.card.CardState.getTriggers",
+        21
+      ],
+      [
+        "forge.game.zone.PlayerZoneBattlefield.getCards",
+        18
+      ],
+      [
+        "java.util.TreeMap.getEntryUsingComparator",
+        18
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        17
+      ],
+      [
+        "forge.game.player.Player.getCardsIn",
+        16
+      ],
+      [
+        "java.util.EnumMap.get",
+        15
+      ],
+      [
+        "java.util.Arrays.copyOf",
+        12
+      ],
+      [
+        "forge.game.Game.forEachCardInGame",
+        11
+      ],
+      [
+        "forge.game.card.CardState.replacementEffectsStamp",
+        10
+      ],
+      [
+        "com.google.common.collect.AbstractMapBasedMultimap.valueIterator",
+        10
+      ],
+      [
+        "forge.game.card.Card.getStaticAbilities",
+        10
+      ],
+      [
+        "forge.util.collect.FCollection.addAllInternal",
+        9
+      ],
+      [
+        "forge.trackable.TrackableProperty.updateObjLookup",
+        9
+      ],
+      [
+        "java.util.ComparableTimSort.countRunAndMakeAscending",
+        8
+      ],
+      [
+        "java.util.HashMap.resize",
+        8
+      ],
+      [
+        "java.util.HashMap$HashIterator.<init>",
+        8
+      ],
+      [
+        "com.google.common.collect.Iterators$ConcatenatedIterator.hasNext",
+        7
+      ],
+      [
+        "forge.trackable.Tracker.addDelayedPropChange",
+        7
+      ],
+      [
+        "forge.game.GameAction.lambda$checkStaticAbilities$0",
+        7
+      ],
+      [
+        "java.util.Objects.checkIndex",
+        6
+      ]
+    ],
+    "main_first_forge": [
+      [
+        "forge.game.card.CardState.getReplacementEffects",
+        90
+      ],
+      [
+        "forge.game.card.Card.updateStaticAbilities",
+        57
+      ],
+      [
+        "forge.util.storage.StorageBase.get",
+        45
+      ],
+      [
+        "forge.game.card.CardState.buildStaticAbilities",
+        41
+      ],
+      [
+        "forge.card.CardType.isSaga",
+        35
+      ],
+      [
+        "forge.game.card.Card.updateTriggers",
+        32
+      ],
+      [
+        "forge.game.card.CardState.getTypeWithChanges",
+        31
+      ],
+      [
+        "forge.util.collect.FCollection.addAllUnique",
+        31
+      ],
+      [
+        "forge.game.card.CardProperty.cardHasProperty",
+        27
+      ],
+      [
+        "forge.card.CardDb.tryToGetCardFromEditions",
+        26
+      ],
+      [
+        "forge.card.CardType.hasSubtype",
+        24
+      ],
+      [
+        "forge.util.Visitor.visitAll",
+        21
+      ],
+      [
+        "forge.game.card.CardState.getTriggers",
+        21
+      ],
+      [
+        "forge.game.zone.PlayerZoneBattlefield.getCards",
+        18
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        17
+      ],
+      [
+        "forge.game.player.Player.getCardsIn",
+        16
+      ],
+      [
+        "forge.game.player.Player.getZone",
+        14
+      ],
+      [
+        "forge.util.collect.FCollection.addAll",
+        13
+      ],
+      [
+        "forge.game.Game.forEachCardInGame",
+        11
+      ],
+      [
+        "forge.game.card.CardState.replacementEffectsStamp",
+        10
+      ],
+      [
+        "forge.game.keyword.KeywordCollection.applyStaticAbility",
+        10
+      ],
+      [
+        "forge.game.card.Card.getStaticAbilities",
+        10
+      ],
+      [
+        "forge.util.collect.FCollection.addAllInternal",
+        9
+      ],
+      [
+        "forge.game.card.CardCopyService.getLKICopy",
+        9
+      ],
+      [
+        "forge.card.CardType.isACreatureType",
+        9
+      ],
+      [
+        "forge.trackable.TrackableProperty.updateObjLookup",
+        9
+      ],
+      [
+        "forge.trackable.Tracker.addDelayedPropChange",
+        8
+      ],
+      [
+        "forge.game.CardTraitBase.copyHelper",
+        8
+      ],
+      [
+        "forge.game.spellability.SpellAbility.copySnapshotFieldsTo",
+        8
+      ],
+      [
+        "forge.trackable.TrackableObject.set",
+        7
+      ]
+    ],
+    "main_inclusive": [
+      [
+        "jdk.internal.reflect.NativeMethodAccessorImpl.invoke0",
+        988
+      ],
+      [
+        "jdk.internal.reflect.NativeMethodAccessorImpl.invoke",
+        985
+      ],
+      [
+        "org.testng.internal.invokers.TestInvoker.invokeMethod",
+        985
+      ],
+      [
+        "org.testng.internal.invokers.MethodInvocationHelper.invokeMethod",
+        984
+      ],
+      [
+        "jdk.internal.reflect.DelegatingMethodAccessorImpl.invoke",
+        984
+      ],
+      [
+        "java.lang.reflect.Method.invoke",
+        984
+      ],
+      [
+        "org.testng.internal.invokers.TestInvoker.invokeTestMethod",
+        983
+      ],
+      [
+        "org.testng.internal.invokers.MethodRunner.runInSequence",
+        982
+      ],
+      [
+        "org.testng.internal.invokers.TestInvoker$MethodInvocationAgent.invoke",
+        978
+      ],
+      [
+        "org.testng.internal.invokers.TestInvoker.invokeTestMethods",
+        975
+      ],
+      [
+        "org.testng.internal.invokers.TestMethodWorker.invokeTestMethods",
+        973
+      ],
+      [
+        "org.testng.internal.invokers.TestMethodWorker.run",
+        969
+      ],
+      [
+        "org.testng.TestRunner$$Lambda$287+0x00000264811b91f8.665512315.accept",
+        963
+      ],
+      [
+        "java.util.ArrayList.forEach",
+        958
+      ],
+      [
+        "org.testng.TestRunner.privateRun",
+        952
+      ],
+      [
+        "org.testng.TestRunner.run",
+        946
+      ],
+      [
+        "org.testng.SuiteRunner.runTest",
+        942
+      ],
+      [
+        "org.testng.SuiteRunner.runSequentially",
+        934
+      ],
+      [
+        "org.testng.SuiteRunner.privateRun",
+        926
+      ],
+      [
+        "org.testng.SuiteRunner.run",
+        915
+      ],
+      [
+        "org.testng.SuiteRunnerWorker.runSuite",
+        906
+      ],
+      [
+        "org.testng.SuiteRunnerWorker.run",
+        891
+      ],
+      [
+        "org.testng.TestNG.runSuitesSequentially",
+        881
+      ],
+      [
+        "org.testng.TestNG.runSuitesLocally",
+        851
+      ],
+      [
+        "org.testng.TestNG.runSuites",
+        823
+      ],
+      [
+        "org.testng.TestNG.run",
+        808
+      ],
+      [
+        "forge.game.phase.PhaseHandler.devAdvanceThroughTurnEnd",
+        634
+      ],
+      [
+        "forge.game.phase.PhaseHandler.onPhaseBegin",
+        565
+      ],
+      [
+        "forge.game.phase.PhaseHandler.declareAttackersTurnBasedAction",
+        545
+      ],
+      [
+        "forge.ai.PlayerControllerAi.declareAttackers",
+        545
+      ],
+      [
+        "forge.ai.AiController.declareAttackers",
+        545
+      ],
+      [
+        "forge.util.MyRandom.withRandom",
+        527
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.consider",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search$$Lambda$919+0x0000026481387d10.23328108.get",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.score",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.run",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner.refine",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$$Lambda$918+0x00000264813878e8.1269946440.get",
+        511
+      ],
+      [
+        "forge.ai.ExertTestSupport.nextOwnerMain",
+        443
+      ],
+      [
+        "forge.game.Game.forEachCardInGame",
+        368
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.advanceOpponentTurns",
+        359
+      ],
+      [
+        "forge.util.Visitor.visitAll",
+        341
+      ],
+      [
+        "forge.ai.ExertTestSupport.checkUntaps",
+        322
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler.getReplacementList",
+        260
+      ],
+      [
+        "forge.game.GameAction.checkStateEffects",
+        259
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        224
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0",
+        207
+      ],
+      [
+        "forge.game.card.Card.getReplacementEffects",
+        200
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeated",
+        198
+      ],
+      [
+        "forge.game.card.CardState.getReplacementEffects",
+        197
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoPlayers",
+        190
+      ],
+      [
+        "forge.game.phase.PhaseHandler.devAdvanceToPhase",
+        187
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoPlayersExpire",
+        186
+      ],
+      [
+        "forge.game.GameAction.checkStaticAbilities",
+        182
+      ],
+      [
+        "forge.ai.simulation.GameSimulator.lambda$resolveStack$3",
+        179
+      ],
+      [
+        "forge.ai.simulation.GameSimulator$$Lambda$766+0x00000264813450b0.213750932.run",
+        179
+      ],
+      [
+        "forge.ai.simulation.GameSimulator.resolveStack",
+        179
+      ]
+    ],
+    "duration_ms": {
+      "jdk.GCPhasePause": 422.419,
+      "jdk.GarbageCollection": 422.419
+    },
+    "max_duration_ms": {
+      "jdk.GCPhasePause": 15.621,
+      "jdk.GarbageCollection": 15.621
+    },
+    "main_wait_context_ms": {},
+    "allocation_samples_main": 66688,
+    "allocation_estimated_weight_main_bytes": 34920822944,
+    "allocation_main_classes_estimated_bytes": [
+      [
+        "forge.util.collect.FCollection",
+        8317472856
+      ],
+      [
+        "[Ljava.lang.Object;",
+        6154786576
+      ],
+      [
+        "java.util.ArrayList",
+        3120443504
+      ],
+      [
+        "forge.game.card.CardCollection",
+        884426912
+      ],
+      [
+        "java.util.ImmutableCollections$ListItr",
+        839454320
+      ],
+      [
+        "java.util.HashMap",
+        721000464
+      ],
+      [
+        "forge.util.collect.FCollection$Itr",
+        612152240
+      ],
+      [
+        "java.util.stream.ReferencePipeline$2",
+        570802968
+      ],
+      [
+        "java.util.stream.ReferencePipeline$Head",
+        533575952
+      ],
+      [
+        "com.google.common.collect.AbstractMapBasedMultimap$1",
+        460293280
+      ],
+      [
+        "java.util.HashMap$Node",
+        453111424
+      ],
+      [
+        "com.google.common.collect.CompactHashMap$2",
+        451914624
+      ],
+      [
+        "[B",
+        407932960
+      ],
+      [
+        "java.util.LinkedHashMap",
+        379628976
+      ],
+      [
+        "java.util.stream.StreamSpliterators$WrappingSpliterator",
+        357678760
+      ],
+      [
+        "java.util.Spliterators$IteratorSpliterator",
+        324152024
+      ],
+      [
+        "java.util.stream.SpinedBuffer",
+        309487424
+      ],
+      [
+        "forge.util.collect.FSnapshotTable$SortedSnap",
+        296896640
+      ],
+      [
+        "java.util.ArrayList$Itr",
+        296389480
+      ],
+      [
+        "forge.util.collect.FSnapshotTable",
+        293721016
+      ],
+      [
+        "java.util.Spliterators$1Adapter",
+        284344920
+      ],
+      [
+        "forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464",
+        263403416
+      ],
+      [
+        "java.util.TreeMap",
+        262833464
+      ],
+      [
+        "java.util.stream.StreamSpliterators$WrappingSpliterator$$Lambda$558+0x0000026481266db0.1672064808",
+        258665128
+      ],
+      [
+        "[Lforge.card.ColorSet;",
+        249268392
+      ],
+      [
+        "forge.game.card.Card",
+        249247432
+      ],
+      [
+        "java.util.stream.AbstractPipeline$$Lambda$557+0x0000026481266470.472201306",
+        245063016
+      ],
+      [
+        "[Ljava.util.HashMap$Node;",
+        241918056
+      ],
+      [
+        "com.google.common.collect.CompactHashMap",
+        208946032
+      ],
+      [
+        "[I",
+        205255856
+      ]
+    ],
+    "allocation_main_first_forge_estimated_bytes": [
+      [
+        "forge.util.collect.FCollection.shareCopy",
+        5781311432
+      ],
+      [
+        "forge.util.collect.FCollection.<init>",
+        2931449112
+      ],
+      [
+        "forge.util.IterableUtil.lambda$filter$4",
+        2183133968
+      ],
+      [
+        "forge.util.collect.FCollection.addAll",
+        1597173448
+      ],
+      [
+        "forge.trackable.TrackableObject.<init>",
+        1401839920
+      ],
+      [
+        "forge.game.card.CardState.getTriggers",
+        1223836096
+      ],
+      [
+        "forge.game.ability.AbilityKey.newMap",
+        1087693456
+      ],
+      [
+        "forge.util.collect.FCollection.addAllUnique",
+        1055220320
+      ],
+      [
+        "forge.game.card.Card.getHiddenStaticAbilities",
+        984508128
+      ],
+      [
+        "forge.game.card.Card.<init>",
+        847736288
+      ],
+      [
+        "forge.game.card.Card.updateTriggers",
+        695455896
+      ],
+      [
+        "forge.util.collect.FCollection.iterator",
+        612152240
+      ],
+      [
+        "forge.util.collect.FSnapshotTable.createHash",
+        559772792
+      ],
+      [
+        "forge.card.CardDb.tryToGetCardFromEditions",
+        551823344
+      ],
+      [
+        "forge.util.collect.FSnapshotTable.createTree",
+        512595384
+      ],
+      [
+        "forge.game.card.CardCopyService.getLKICopy",
+        429377728
+      ],
+      [
+        "forge.game.keyword.KeywordCollection.iterator",
+        427301648
+      ],
+      [
+        "forge.game.card.CardLists.filter",
+        383850744
+      ],
+      [
+        "forge.game.keyword.KeywordCollection.<init>",
+        372821888
+      ],
+      [
+        "forge.util.collect.FCollection.threadSafeIterable",
+        326775688
+      ],
+      [
+        "forge.util.Localizer.getMessage",
+        281704080
+      ],
+      [
+        "forge.game.CardTraitBase.copyHelper",
+        276676208
+      ],
+      [
+        "forge.game.card.CardCopyService.<init>",
+        269164536
+      ],
+      [
+        "forge.util.IterableUtil.filter",
+        263927112
+      ],
+      [
+        "forge.game.player.Player.getCardsIn",
+        261832080
+      ],
+      [
+        "forge.card.ColorSet.values",
+        249268392
+      ],
+      [
+        "forge.game.keyword.KeywordCollection.applyStaticAbility",
+        239317944
+      ],
+      [
+        "forge.game.spellability.SpellAbility.<init>",
+        228296744
+      ],
+      [
+        "forge.game.GameAction.checkStateEffects",
+        225184624
+      ],
+      [
+        "forge.game.spellability.SpellAbility.copySnapshotFieldsTo",
+        222419096
+      ]
+    ],
+    "allocation_main_stacks_estimated_bytes": [
+      [
+        "forge.util.collect.FCollection.shareCopy <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame",
+        1749051208
+      ],
+      [
+        "forge.util.collect.FCollection.shareCopy <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects",
+        1201316480
+      ],
+      [
+        "forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.Game.forEachCardInGame <- forge.game.trigger.TriggerHandler.resetActiveTriggers",
+        1127484848
+      ],
+      [
+        "forge.game.card.Card.getHiddenStaticAbilities <- forge.game.GameAction.lambda$checkStaticAbilities$0 <- forge.game.GameAction$$Lambda$570+0x00000264812e0608.37858242.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects",
+        845215664
+      ],
+      [
+        "forge.util.collect.FCollection.shareCopy <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.GameAction.lambda$checkStaticAbilities$0 <- forge.game.GameAction$$Lambda$570+0x00000264812e0608.37858242.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.GameAction.checkStaticAbilities",
+        832660608
+      ],
+      [
+        "forge.util.collect.FCollection.<init> <- forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.Game.forEachCardInGame",
+        758276624
+      ],
+      [
+        "java.util.stream.SpinedBuffer.<init> <- java.util.stream.StreamSpliterators$WrappingSpliterator.initPartialTraversalState <- java.util.stream.StreamSpliterators$AbstractWrappingSpliterator.doAdvance <- java.util.stream.StreamSpliterators$WrappingSpliterator.tryAdvance <- java.util.Spliterators$1Adapter.hasNext <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init>",
+        659319752
+      ],
+      [
+        "java.util.ImmutableCollections$AbstractImmutableList.iterator <- forge.game.card.Card.updateTriggers <- forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame",
+        641517624
+      ],
+      [
+        "forge.util.collect.FCollection.<init> <- forge.game.card.Card.getHiddenStaticAbilities <- forge.game.GameAction.lambda$checkStaticAbilities$0 <- forge.game.GameAction$$Lambda$570+0x00000264812e0608.37858242.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities",
+        585462568
+      ],
+      [
+        "java.util.Arrays.copyOf <- java.util.ArrayList.toArray <- java.util.ArrayList.<init> <- forge.util.collect.FCollection.<init> <- forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit",
+        509015952
+      ],
+      [
+        "java.lang.invoke.DirectMethodHandle.allocateInstance <- java.lang.invoke.DirectMethodHandle$Holder.newInvokeSpecial <- java.lang.invoke.Invokers$Holder.linkToTargetMethod <- java.util.stream.StreamSpliterators$WrappingSpliterator.initPartialTraversalState <- java.util.stream.StreamSpliterators$AbstractWrappingSpliterator.doAdvance <- java.util.stream.StreamSpliterators$WrappingSpliterator.tryAdvance <- java.util.Spliterators$1Adapter.hasNext <- forge.util.collect.FCollection.addAll",
+        435136264
+      ],
+      [
+        "java.util.stream.ReferencePipeline.filter <- forge.util.IterableUtil.lambda$filter$4 <- forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464.iterator <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init> <- forge.game.card.CardLists.filter <- forge.game.GameEntity.getAttachedCards",
+        417897704
+      ],
+      [
+        "java.util.Arrays.copyOf <- java.util.ArrayList.grow <- java.util.ArrayList.ensureCapacity <- forge.util.collect.FCollection.addAllUnique <- forge.game.Game.addCardsIn <- forge.game.Game.getCardsIn <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer",
+        400626432
+      ],
+      [
+        "java.util.EnumMap.<init> <- forge.trackable.TrackableObject.<init> <- forge.game.spellability.SpellAbilityView.<init> <- forge.game.spellability.SpellAbility.copy <- forge.game.spellability.SpellAbility.copy <- forge.game.spellability.SpellAbility.copy <- forge.game.card.CardState.copyFrom <- forge.game.card.CardState.copyFrom",
+        355026984
+      ],
+      [
+        "java.util.stream.ReferencePipeline.wrap <- java.util.stream.AbstractPipeline.spliterator <- java.util.stream.ReferencePipeline.iterator <- forge.util.IterableUtil.lambda$filter$4 <- forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464.iterator <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init>",
+        353489176
+      ],
+      [
+        "java.util.stream.StreamSupport.stream <- forge.util.IterableUtil.lambda$filter$4 <- forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464.iterator <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init> <- forge.game.card.CardLists.filter <- forge.game.GameEntity.getAttachedCards",
+        334106272
+      ],
+      [
+        "java.util.stream.StreamSpliterators$WrappingSpliterator.initPartialTraversalState <- java.util.stream.StreamSpliterators$AbstractWrappingSpliterator.doAdvance <- java.util.stream.StreamSpliterators$WrappingSpliterator.tryAdvance <- java.util.Spliterators$1Adapter.hasNext <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init> <- forge.game.card.CardLists.filter",
+        305821576
+      ],
+      [
+        "java.util.Spliterators.spliterator <- java.util.List.spliterator <- forge.util.IterableUtil.lambda$filter$4 <- forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464.iterator <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init> <- forge.game.card.CardLists.filter",
+        281736792
+      ],
+      [
+        "java.util.Spliterators.iterator <- java.util.stream.ReferencePipeline.iterator <- forge.util.IterableUtil.lambda$filter$4 <- forge.util.IterableUtil$$Lambda$556+0x00000264812d9200.1524462464.iterator <- forge.util.collect.FCollection.addAll <- forge.util.collect.FCollection.<init> <- forge.game.card.CardCollection.<init> <- forge.game.card.CardLists.filter",
+        280155304
+      ],
+      [
+        "java.util.EnumMap.<init> <- forge.trackable.TrackableObject.<init> <- forge.game.card.CardView$CardStateView.<init> <- forge.game.card.DummyCardView$DummyCardStateView.<init> <- forge.game.card.DummyCardView.createAlternateState <- forge.game.card.CardView.<init> <- forge.game.card.DummyCardView.<init> <- forge.game.card.Card.<init>",
+        279117384
+      ]
+    ],
+    "main_forge_inclusive": [
+      [
+        "forge.game.phase.PhaseHandler.devAdvanceThroughTurnEnd",
+        634
+      ],
+      [
+        "forge.game.phase.PhaseHandler.onPhaseBegin",
+        565
+      ],
+      [
+        "forge.game.phase.PhaseHandler.declareAttackersTurnBasedAction",
+        545
+      ],
+      [
+        "forge.ai.PlayerControllerAi.declareAttackers",
+        545
+      ],
+      [
+        "forge.ai.AiController.declareAttackers",
+        545
+      ],
+      [
+        "forge.util.MyRandom.withRandom",
+        527
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.consider",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search$$Lambda$919+0x0000026481387d10.23328108.get",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.score",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.run",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner.refine",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner.lambda$refine$2",
+        511
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$$Lambda$918+0x00000264813878e8.1269946440.get",
+        511
+      ],
+      [
+        "forge.ai.ExertTestSupport.nextOwnerMain",
+        443
+      ],
+      [
+        "forge.game.Game.forEachCardInGame",
+        368
+      ],
+      [
+        "forge.ai.simulation.MultiplayerAttackPlanner$Search.advanceOpponentTurns",
+        359
+      ],
+      [
+        "forge.util.Visitor.visitAll",
+        341
+      ],
+      [
+        "forge.ai.ExertTestSupport.checkUntaps",
+        322
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler.getReplacementList",
+        260
+      ],
+      [
+        "forge.game.GameAction.checkStateEffects",
+        259
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        224
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0",
+        207
+      ],
+      [
+        "forge.game.card.Card.getReplacementEffects",
+        200
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeated",
+        198
+      ],
+      [
+        "forge.game.card.CardState.getReplacementEffects",
+        197
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoPlayers",
+        190
+      ],
+      [
+        "forge.game.phase.PhaseHandler.devAdvanceToPhase",
+        187
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoPlayersExpire",
+        186
+      ],
+      [
+        "forge.game.GameAction.checkStaticAbilities",
+        182
+      ],
+      [
+        "forge.ai.simulation.GameSimulator.lambda$resolveStack$3",
+        179
+      ],
+      [
+        "forge.ai.simulation.GameSimulator$$Lambda$766+0x00000264813450b0.213750932.run",
+        179
+      ],
+      [
+        "forge.ai.simulation.GameSimulator.resolveStack",
+        179
+      ],
+      [
+        "forge.game.player.Player.runWithController",
+        179
+      ],
+      [
+        "forge.ai.ComputerUtilMana.payManaCost",
+        159
+      ],
+      [
+        "forge.game.replacement.ReplacementHandler.run",
+        143
+      ],
+      [
+        "forge.ai.ComputerUtilMana.payManaCostGreedy",
+        138
+      ],
+      [
+        "forge.game.phase.PhaseHandler.checkStateBasedEffects",
+        127
+      ],
+      [
+        "forge.game.card.Card.getStaticAbilities",
+        125
+      ]
+    ],
+    "main_cpu_stacks": [
+      [
+        "forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.run <- forge.game.replacement.ReplacementHandler.run",
+        41
+      ],
+      [
+        "forge.game.card.Card.updateTriggers <- forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.Game.forEachCardInGame <- forge.game.trigger.TriggerHandler.resetActiveTriggers <- forge.game.trigger.TriggerHandler.resetActiveTriggers",
+        30
+      ],
+      [
+        "java.util.HashMap.getNode <- java.util.HashMap.containsKey <- java.util.HashSet.contains <- forge.card.CardType.isSaga <- forge.game.card.CardState.replacementFlags <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        28
+      ],
+      [
+        "forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.cantHappenCheck <- forge.game.card.Card.canTap",
+        27
+      ],
+      [
+        "java.lang.StringLatin1.compareToCI <- java.lang.String$CaseInsensitiveComparator.compare <- java.lang.String$CaseInsensitiveComparator.compare <- java.util.TreeMap.getEntryUsingComparator <- java.util.TreeMap.getEntry <- java.util.TreeMap.get <- forge.util.storage.StorageBase.get <- forge.card.CardEdition$Collection.get <- forge.card.CardDb.tryToGetCardFromEditions <- forge.card.CardDb.tryToGetCardFromEditions",
+        26
+      ],
+      [
+        "java.util.Objects.requireNonNull <- java.util.Objects.requireNonNullElse <- forge.game.card.CardState.getTypeWithChanges <- forge.game.card.CardState.replacementFlags <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll",
+        26
+      ],
+      [
+        "forge.game.card.CardProperty.cardHasProperty <- forge.game.card.Card.hasProperty <- forge.game.card.Card.isValid <- forge.game.GameObject.isValid <- forge.game.card.CardPredicates.lambda$restriction$20 <- forge.game.card.CardPredicates$$Lambda$750+0x0000026481336b68.79120973.test <- java.util.stream.ReferencePipeline$2$1.accept <- java.util.Spliterators$IteratorSpliterator.tryAdvance <- java.util.stream.StreamSpliterators$WrappingSpliterator.lambda$initPartialTraversalState$0 <- java.util.stream.StreamSpliterators$WrappingSpliterator$$Lambda$559+0x0000026481267058.1393284987.getAsBoolean",
+        23
+      ],
+      [
+        "forge.game.card.Card.updateStaticAbilities <- forge.game.card.CardState.buildStaticAbilities <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.GameAction.lambda$checkStaticAbilities$0 <- forge.game.GameAction$$Lambda$570+0x00000264812e0608.37858242.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities",
+        21
+      ],
+      [
+        "java.util.HashMap.getNode <- java.util.HashMap.containsKey <- java.util.HashSet.contains <- forge.card.CardType.hasSubtype <- forge.game.card.CardState.replacementFlags <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit",
+        18
+      ],
+      [
+        "java.util.TreeMap.getEntryUsingComparator <- java.util.TreeMap.getEntry <- java.util.TreeMap.get <- forge.util.storage.StorageBase.get <- forge.card.CardEdition$Collection.get <- forge.card.CardDb.tryToGetCardFromEditions <- forge.card.CardDb.tryToGetCardFromEditions <- forge.card.CardDb.getCardFromEditions <- forge.card.ICardDatabase.getCardFromEditions <- forge.card.CardDb.tryGetCard",
+        17
+      ],
+      [
+        "forge.game.card.CardState.buildStaticAbilities <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects <- forge.ai.simulation.GameSimulator.lambda$resolveStack$3 <- forge.ai.simulation.GameSimulator$$Lambda$766+0x00000264813450b0.213750932.run",
+        17
+      ],
+      [
+        "forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.Game.forEachCardInGame <- forge.game.trigger.TriggerHandler.resetActiveTriggers <- forge.game.trigger.TriggerHandler.resetActiveTriggers <- forge.game.GameAction.checkStateEffects",
+        11
+      ],
+      [
+        "forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.ai.ComputerUtilMana.groupSourcesByManaColor <- forge.ai.ComputerUtilMana.getSourcesForShards",
+        10
+      ],
+      [
+        "forge.util.collect.FCollection.addAllUnique <- forge.game.Game.addCardsIn <- forge.game.Game.getCardsIn <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects <- forge.ai.simulation.GameSimulator.lambda$resolveStack$3 <- forge.ai.simulation.GameSimulator$$Lambda$766+0x00000264813450b0.213750932.run",
+        10
+      ],
+      [
+        "forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.cantHappenCheck <- forge.game.card.Card.canUntap",
+        9
+      ],
+      [
+        "forge.game.zone.PlayerZoneBattlefield.getCards <- forge.game.player.Player.getCardsIn <- forge.game.player.Player.getCardsIn <- forge.game.Game.addCardsIn <- forge.game.Game.getCardsIn <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects",
+        9
+      ],
+      [
+        "forge.game.card.CardState.getTriggers <- forge.game.card.Card.getTriggers <- forge.game.trigger.TriggerHandler.lambda$resetActiveTriggers$0 <- forge.game.trigger.TriggerHandler$$Lambda$600+0x00000264812e7248.1514556391.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.Game.forEachCardInGame <- forge.game.trigger.TriggerHandler.resetActiveTriggers <- forge.game.trigger.TriggerHandler.resetActiveTriggers <- forge.game.zone.MagicStack.unfreezeStack",
+        9
+      ],
+      [
+        "java.util.ComparableTimSort.countRunAndMakeAscending <- java.util.ComparableTimSort.sort <- java.util.Arrays.sort <- java.util.Arrays.sort <- java.util.ArrayList.sort <- java.util.Collections.sort <- forge.card.CardDb.tryToGetCardFromEditions <- forge.card.CardDb.tryToGetCardFromEditions <- forge.card.CardDb.getCardFromEditions <- forge.card.ICardDatabase.getCardFromEditions",
+        8
+      ],
+      [
+        "forge.game.card.CardState.replacementEffectsStamp <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.CardState.getReplacementEffects <- forge.game.card.Card.getReplacementEffects <- forge.game.replacement.ReplacementHandler.lambda$getReplacementList$0 <- forge.game.replacement.ReplacementHandler$$Lambda$619+0x000002648130fd60.157567214.visit <- forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.run",
+        7
+      ],
+      [
+        "forge.util.Visitor.visitAll <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.cantHappenCheck <- forge.game.card.Card.canTap <- forge.game.card.Card.canTap <- forge.game.cost.CostTap.canPay <- forge.game.cost.Cost.canPay <- forge.game.cost.CostPayment.canPayAdditionalCosts <- forge.game.cost.CostPayment.canPayAdditionalCosts",
+        6
+      ],
+      [
+        "forge.game.card.CardState.buildStaticAbilities <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects <- forge.game.phase.PhaseHandler.checkStateBasedEffects <- forge.game.phase.PhaseHandler.devAdvanceToPhase",
+        5
+      ],
+      [
+        "forge.game.player.Player.getCardsIn <- forge.game.player.Player.getCardsIn <- forge.game.Game.addCardsIn <- forge.game.Game.getCardsIn <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects <- forge.ai.simulation.GameSimulator.lambda$resolveStack$3",
+        5
+      ],
+      [
+        "forge.game.player.Player.getCardsIn <- forge.game.player.Player.getCardsIn <- forge.game.Game.forEachCardInGame <- forge.game.replacement.ReplacementHandler.getReplacementList <- forge.game.replacement.ReplacementHandler.cantHappenCheck <- forge.game.card.Card.canTap <- forge.game.card.Card.canTap <- forge.game.cost.CostTap.canPay <- forge.game.cost.Cost.canPay <- forge.game.cost.CostPayment.canPayAdditionalCosts",
+        5
+      ],
+      [
+        "forge.game.card.CardState.buildStaticAbilities <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.staticability.StaticAbilityDevotion.getDevotionMod <- forge.game.player.Player.afterStaticAbilityLayer <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStaticAbilities <- forge.game.GameAction.checkStateEffects <- forge.game.phase.PhaseHandler.checkStateBasedEffects <- forge.game.phase.PhaseHandler.devAdvanceThroughTurnEnd",
+        5
+      ],
+      [
+        "forge.game.card.Card.updateStaticAbilities <- forge.game.card.CardState.buildStaticAbilities <- forge.game.card.CardState.getStaticAbilities <- forge.game.card.Card.getStaticAbilities <- forge.game.staticability.StaticAbilityNoCleanupDamage.damageNotRemoved <- forge.game.phase.PhaseHandler.onPhaseBegin <- forge.game.phase.PhaseHandler.devAdvanceThroughTurnEnd <- forge.ai.simulation.MultiplayerAttackPlanner$Search.advanceOpponentTurns <- forge.ai.simulation.MultiplayerAttackPlanner$Search.scoreWithRandom <- forge.ai.simulation.MultiplayerAttackPlanner$Search.lambda$score$0",
+        5
+      ]
+    ],
+    "main_cpu_case_samples": [
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth1",
+        89
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersDepth2",
+        79
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersDepth1",
+        73
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth2",
+        66
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth0",
+        43
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersOriginal",
+        38
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.twoCopiesOriginalAdvancesFirst",
+        27
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.oneCopyOriginalAdvancesFirst",
+        21
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.oneCopyAdvancesBeforeOriginal",
+        20
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.twoCopiesAdvanceBeforeOriginal",
+        20
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth1OriginalFirst",
+        18
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth0",
+        16
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth2CopyFirst",
+        15
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth2",
+        13
+      ],
+      [
+        "forge.ai.CommanderClassTransitionsTest.leveltwoRetainsStateWhileTypeChangedDepth1",
+        12
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth1CopyFirst",
+        12
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth2OriginalFirst",
+        12
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth1",
+        12
+      ],
+      [
+        "forge.ai.CommanderClassTransitionsTest.leveltwoRetainsStateWhileTypeChangedDepth2",
+        10
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertOriginal",
+        10
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.originalSkipsOnlyFirstOwnerUntap",
+        9
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.reentryDepth2",
+        9
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.donatedDepth0",
+        8
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.reentryDepth1",
+        8
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.reentryDepth0",
+        7
+      ],
+      [
+        "forge.ai.CommanderHarnessedTransitionsTest.soulRetainsStateWhileTypeChangedDepth2",
+        6
+      ],
+      [
+        "forge.ai.CommanderClassTransitionsTest.levelthreeRetainsStateWhileTypeChangedDepth1",
+        6
+      ],
+      [
+        "forge.ai.CommanderClassTransitionsTest.levelthreeRetainsStateWhileTypeChangedDepth2",
+        6
+      ],
+      [
+        "forge.ai.CommanderWorldStateTest.oneCopyAdvancesBeforeOriginal",
+        6
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.donatedDepth1",
+        6
+      ]
+    ],
+    "main_allocation_case_estimated_bytes": [
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth2",
+        3162943440
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth1",
+        3149299296
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersDepth2",
+        2469051936
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersDepth1",
+        2448629624
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.repeatedDepth0",
+        1590375696
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.twoExertingPlayersOriginal",
+        1241069264
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.twoCopiesOriginalAdvancesFirst",
+        898617448
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.twoCopiesAdvanceBeforeOriginal",
+        898602376
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.oneCopyAdvancesBeforeOriginal",
+        888676240
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.oneCopyOriginalAdvancesFirst",
+        888122888
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth2CopyFirst",
+        600648112
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth2OriginalFirst",
+        600633904
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth1OriginalFirst",
+        585973192
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertDepth1CopyFirst",
+        585456392
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth2",
+        525750824
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth1",
+        514237704
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.untapEffectDepth0",
+        502194744
+      ],
+      [
+        "forge.ai.CommanderExertStateTest.originalSkipsOnlyFirstOwnerUntap",
+        448255192
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.attackExertOriginal",
+        312099824
+      ],
+      [
+        "forge.ai.CommanderExertTransitionsTest.reentryDepth2",
+        306860624
+      ]
+    ],
+    "scope": "Bounded CPU/allocation sampling/wait/GC diagnostic only. Allocation weights estimate sampled allocation volume, not exact bytes or retained memory. Event durations may overlap and are not a completed timing gate or rules proof."
+  },
+  "profile_scope": "Instrumented75s CPU/allocation sample, not a normal timing gate. Allocation weights estimate volume, not retained memory; GC event durations overlap.",
+  "profile_phases": [
+    {
+      "phase": "worker_started",
+      "seconds": 0.0
+    },
+    {
+      "phase": "inputs_verified",
+      "seconds": 0.719
+    },
+    {
+      "phase": "jvm_started",
+      "seconds": 0.875
+    },
+    {
+      "phase": "classes_verified",
+      "seconds": 1.532
+    },
+    {
+      "phase": "runner_started",
+      "seconds": 1.625
+    }
+  ],
+  "profile_progress": [
+    {
+      "seconds": 21.641,
+      "passed": 175,
+      "failed": 0,
+      "skipped": 0,
+      "configuration_failures": 0,
+      "passed_per_class": {
+        "forge.ai.CommanderLibraryChoiceBoundaryTest": 12,
+        "forge.ai.CommanderRecruitPolicyPlanningTest": 16,
+        "forge.ai.CommanderRecruitSafetyTest": 10,
+        "forge.ai.CommanderDrawHistorySnapshotTest": 8,
+        "forge.ai.CommanderLastDrawnBoundaryTest": 21,
+        "forge.ai.CommanderDrawStepBoundaryTest": 24,
+        "forge.ai.CommanderAiCacheLifetimeTest": 16,
+        "forge.ai.CommanderMultiplayerAttackOpportunityTest": 50,
+        "forge.ai.CommanderMultiplayerAttackSafetyTest": 18
+      }
+    },
+    {
+      "seconds": 41.657,
+      "passed": 403,
+      "failed": 0,
+      "skipped": 0,
+      "configuration_failures": 0,
+      "passed_per_class": {
+        "forge.ai.CommanderLibraryChoiceBoundaryTest": 12,
+        "forge.ai.CommanderRecruitPolicyPlanningTest": 16,
+        "forge.ai.CommanderRecruitSafetyTest": 10,
+        "forge.ai.CommanderDrawHistorySnapshotTest": 8,
+        "forge.ai.CommanderLastDrawnBoundaryTest": 21,
+        "forge.ai.CommanderDrawStepBoundaryTest": 24,
+        "forge.ai.CommanderAiCacheLifetimeTest": 16,
+        "forge.ai.CommanderMultiplayerAttackOpportunityTest": 50,
+        "forge.ai.CommanderMultiplayerAttackSafetyTest": 40,
+        "forge.ai.CommanderMultiplayerAttackBoundaryTest": 16,
+        "forge.ai.DrawEndingCoverageTest": 23,
+        "forge.ai.NonmanaPaymentRecoveryProbeTest": 8,
+        "forge.ai.StarTrekSagaProbeTest": 4,
+        "forge.ai.StarTrekDilemmaProbeTest": 13,
+        "forge.ai.StarTrekBeamResolutionTest": 4,
+        "forge.ai.CardCharacteristicDiscrepancyTest": 5,
+        "forge.ai.StarTrekBattlefrontTest": 1,
+        "forge.ai.StarTrekFederationTest": 2,
+        "forge.ai.CommanderDiceReplacementTest": 5,
+        "forge.ai.CommanderOptionalDiePaymentTest": 3,
+        "forge.ai.CommanderExploreTest": 4,
+        "forge.ai.CommanderDiscoverTest": 5,
+        "forge.ai.CommanderDiscoverLkiTest": 6,
+        "forge.ai.CommanderDiscoverScalarTest": 4,
+        "forge.ai.CommanderDiscoverVehicleTest": 8,
+        "forge.ai.CommanderDiscoverTaxTest": 8,
+        "forge.ai.CommanderDiscoverSacrificeTest": 10,
+        "forge.ai.CommanderSwitchBlockAiTest": 22,
+        "forge.ai.CommanderEmpowerAiTest": 24,
+        "forge.ai.CommanderBaubleCoverageTest": 16,
+        "forge.ai.CommanderVintageOpeningReplayTest": 3,
+        "forge.ai.CommanderCompositeModeCoverageTest": 11,
+        "forge.ai.CommanderVillainousChoiceTest": 1
+      }
+    },
+    {
+      "seconds": 61.657,
+      "passed": 748,
+      "failed": 0,
+      "skipped": 0,
+      "configuration_failures": 0,
+      "passed_per_class": {
+        "forge.ai.CommanderLibraryChoiceBoundaryTest": 12,
+        "forge.ai.CommanderRecruitPolicyPlanningTest": 16,
+        "forge.ai.CommanderRecruitSafetyTest": 10,
+        "forge.ai.CommanderDrawHistorySnapshotTest": 8,
+        "forge.ai.CommanderLastDrawnBoundaryTest": 21,
+        "forge.ai.CommanderDrawStepBoundaryTest": 24,
+        "forge.ai.CommanderAiCacheLifetimeTest": 16,
+        "forge.ai.CommanderMultiplayerAttackOpportunityTest": 50,
+        "forge.ai.CommanderMultiplayerAttackSafetyTest": 40,
+        "forge.ai.CommanderMultiplayerAttackBoundaryTest": 16,
+        "forge.ai.DrawEndingCoverageTest": 23,
+        "forge.ai.NonmanaPaymentRecoveryProbeTest": 8,
+        "forge.ai.StarTrekSagaProbeTest": 4,
+        "forge.ai.StarTrekDilemmaProbeTest": 13,
+        "forge.ai.StarTrekBeamResolutionTest": 4,
+        "forge.ai.CardCharacteristicDiscrepancyTest": 5,
+        "forge.ai.StarTrekBattlefrontTest": 1,
+        "forge.ai.StarTrekFederationTest": 2,
+        "forge.ai.CommanderDiceReplacementTest": 5,
+        "forge.ai.CommanderOptionalDiePaymentTest": 3,
+        "forge.ai.CommanderExploreTest": 4,
+        "forge.ai.CommanderDiscoverTest": 5,
+        "forge.ai.CommanderDiscoverLkiTest": 6,
+        "forge.ai.CommanderDiscoverScalarTest": 4,
+        "forge.ai.CommanderDiscoverVehicleTest": 8,
+        "forge.ai.CommanderDiscoverTaxTest": 8,
+        "forge.ai.CommanderDiscoverSacrificeTest": 10,
+        "forge.ai.CommanderSwitchBlockAiTest": 22,
+        "forge.ai.CommanderEmpowerAiTest": 24,
+        "forge.ai.CommanderBaubleCoverageTest": 16,
+        "forge.ai.CommanderVintageOpeningReplayTest": 3,
+        "forge.ai.CommanderCompositeModeCoverageTest": 11,
+        "forge.ai.CommanderVillainousChoiceTest": 2,
+        "forge.ai.CommanderLearnTest": 3,
+        "forge.ai.CommanderReverseTurnOrderTest": 3,
+        "forge.ai.CommanderExtraTurnDirectionTest": 2,
+        "forge.ai.CommanderEndTurnTest": 3,
+        "forge.ai.CommanderIncubateTest": 2,
+        "forge.ai.CommanderTransformHistoryTest": 1,
+        "forge.ai.CommanderSnapshotTransformStackTest": 2,
+        "forge.ai.CommanderOracleCorrectionsTest": 2,
+        "forge.ai.CommanderTemptCopyTest": 2,
+        "forge.ai.CommanderUlalekTest": 2,
+        "forge.ai.CommanderUlalekAbilityOnlyTest": 3,
+        "forge.ai.CommanderReaperLimitTest": 2,
+        "forge.ai.CommanderRinoaReturnTest": 9,
+        "forge.ai.CommanderPreventedReturnTest": 16,
+        "forge.ai.CommanderTargetedReturnTest": 14,
+        "forge.ai.CommanderOptionalLifeGainTest": 18,
+        "forge.ai.CommanderOptionalDrawTest": 12,
+        "forge.ai.CommanderOptionalCopyTest": 12,
+        "forge.ai.CommanderOptionalCountersTest": 16,
+        "forge.ai.CommanderOptionalXTest": 16,
+        "forge.ai.CommanderPriorityBoardingTest": 18,
+        "forge.ai.CommanderOptionalPlayTest": 16,
+        "forge.ai.CommanderSecretVoteTest": 1,
+        "forge.ai.CommanderEmptyVoteTest": 2,
+        "forge.ai.CommanderPublicVoteTest": 1,
+        "forge.ai.CommanderCirdanTest": 2,
+        "forge.ai.CommanderTimeTravelTest": 2,
+        "forge.ai.ProliferateFightAndInvestigateTest": 4,
+        "forge.ai.StarTrekHoloEngineerTest": 1,
+        "forge.ai.StarTrekNamedAbilityTest": 1,
+        "forge.ai.StarTrekStationTest": 2,
+        "forge.ai.StarTrekKobayashiTest": 2,
+        "forge.ai.StarTrekAssimilateProbeTest": 4,
+        "forge.gamesimulationtests.priority.CopyOrderOnStackTest": 2,
+        "forge.gamesimulationtests.priority.EndTurnCleanupPriorityTest": 8,
+        "forge.ai.CommanderPreparedStateTest": 8,
+        "forge.ai.CommanderPreparedCastTest": 8,
+        "forge.ai.CommanderPreparedHistoryTest": 2,
+        "forge.ai.CommanderHarnessedStateTest": 6,
+        "forge.ai.CommanderClassStateTest": 6,
+        "forge.ai.CommanderHarnessedTransitionsTest": 26,
+        "forge.ai.CommanderClassTransitionsTest": 26,
+        "forge.ai.CommanderWorldStateTest": 8,
+        "forge.ai.CommanderWorldTransitionsTest": 23,
+        "forge.ai.CommanderExertStateTest": 8,
+        "forge.ai.CommanderExertTransitionsTest": 17
+      }
+    },
+    {
+      "seconds": 81.672,
+      "passed": 981,
+      "failed": 0,
+      "skipped": 0,
+      "configuration_failures": 0,
+      "passed_per_class": {
+        "forge.ai.CommanderLibraryChoiceBoundaryTest": 12,
+        "forge.ai.CommanderRecruitPolicyPlanningTest": 16,
+        "forge.ai.CommanderRecruitSafetyTest": 10,
+        "forge.ai.CommanderDrawHistorySnapshotTest": 8,
+        "forge.ai.CommanderLastDrawnBoundaryTest": 21,
+        "forge.ai.CommanderDrawStepBoundaryTest": 24,
+        "forge.ai.CommanderAiCacheLifetimeTest": 16,
+        "forge.ai.CommanderMultiplayerAttackOpportunityTest": 50,
+        "forge.ai.CommanderMultiplayerAttackSafetyTest": 40,
+        "forge.ai.CommanderMultiplayerAttackBoundaryTest": 16,
+        "forge.ai.DrawEndingCoverageTest": 23,
+        "forge.ai.NonmanaPaymentRecoveryProbeTest": 8,
+        "forge.ai.StarTrekSagaProbeTest": 4,
+        "forge.ai.StarTrekDilemmaProbeTest": 13,
+        "forge.ai.StarTrekBeamResolutionTest": 4,
+        "forge.ai.CardCharacteristicDiscrepancyTest": 5,
+        "forge.ai.StarTrekBattlefrontTest": 1,
+        "forge.ai.StarTrekFederationTest": 2,
+        "forge.ai.CommanderDiceReplacementTest": 5,
+        "forge.ai.CommanderOptionalDiePaymentTest": 3,
+        "forge.ai.CommanderExploreTest": 4,
+        "forge.ai.CommanderDiscoverTest": 5,
+        "forge.ai.CommanderDiscoverLkiTest": 6,
+        "forge.ai.CommanderDiscoverScalarTest": 4,
+        "forge.ai.CommanderDiscoverVehicleTest": 8,
+        "forge.ai.CommanderDiscoverTaxTest": 8,
+        "forge.ai.CommanderDiscoverSacrificeTest": 10,
+        "forge.ai.CommanderSwitchBlockAiTest": 22,
+        "forge.ai.CommanderEmpowerAiTest": 24,
+        "forge.ai.CommanderBaubleCoverageTest": 16,
+        "forge.ai.CommanderVintageOpeningReplayTest": 3,
+        "forge.ai.CommanderCompositeModeCoverageTest": 11,
+        "forge.ai.CommanderVillainousChoiceTest": 2,
+        "forge.ai.CommanderLearnTest": 3,
+        "forge.ai.CommanderReverseTurnOrderTest": 3,
+        "forge.ai.CommanderExtraTurnDirectionTest": 2,
+        "forge.ai.CommanderEndTurnTest": 3,
+        "forge.ai.CommanderIncubateTest": 2,
+        "forge.ai.CommanderTransformHistoryTest": 1,
+        "forge.ai.CommanderSnapshotTransformStackTest": 2,
+        "forge.ai.CommanderOracleCorrectionsTest": 2,
+        "forge.ai.CommanderTemptCopyTest": 2,
+        "forge.ai.CommanderUlalekTest": 2,
+        "forge.ai.CommanderUlalekAbilityOnlyTest": 3,
+        "forge.ai.CommanderReaperLimitTest": 2,
+        "forge.ai.CommanderRinoaReturnTest": 9,
+        "forge.ai.CommanderPreventedReturnTest": 16,
+        "forge.ai.CommanderTargetedReturnTest": 14,
+        "forge.ai.CommanderOptionalLifeGainTest": 18,
+        "forge.ai.CommanderOptionalDrawTest": 12,
+        "forge.ai.CommanderOptionalCopyTest": 12,
+        "forge.ai.CommanderOptionalCountersTest": 16,
+        "forge.ai.CommanderOptionalXTest": 16,
+        "forge.ai.CommanderPriorityBoardingTest": 18,
+        "forge.ai.CommanderOptionalPlayTest": 16,
+        "forge.ai.CommanderSecretVoteTest": 1,
+        "forge.ai.CommanderEmptyVoteTest": 2,
+        "forge.ai.CommanderPublicVoteTest": 1,
+        "forge.ai.CommanderCirdanTest": 2,
+        "forge.ai.CommanderTimeTravelTest": 2,
+        "forge.ai.ProliferateFightAndInvestigateTest": 4,
+        "forge.ai.StarTrekHoloEngineerTest": 1,
+        "forge.ai.StarTrekNamedAbilityTest": 1,
+        "forge.ai.StarTrekStationTest": 2,
+        "forge.ai.StarTrekKobayashiTest": 2,
+        "forge.ai.StarTrekAssimilateProbeTest": 4,
+        "forge.gamesimulationtests.priority.CopyOrderOnStackTest": 2,
+        "forge.gamesimulationtests.priority.EndTurnCleanupPriorityTest": 8,
+        "forge.ai.CommanderPreparedStateTest": 8,
+        "forge.ai.CommanderPreparedCastTest": 8,
+        "forge.ai.CommanderPreparedHistoryTest": 2,
+        "forge.ai.CommanderHarnessedStateTest": 6,
+        "forge.ai.CommanderClassStateTest": 6,
+        "forge.ai.CommanderHarnessedTransitionsTest": 26,
+        "forge.ai.CommanderClassTransitionsTest": 26,
+        "forge.ai.CommanderWorldStateTest": 8,
+        "forge.ai.CommanderWorldTransitionsTest": 23,
+        "forge.ai.CommanderExertStateTest": 8,
+        "forge.ai.CommanderExertTransitionsTest": 26,
+        "forge.ai.CommanderSimultaneousAuraTest": 48,
+        "forge.ai.CommanderCounterHistoryTest": 59,
+        "forge.ai.CommanderAirbendPermissionTest": 21,
+        "forge.ai.CommanderElementalBendHistoryTest": 25,
+        "forge.ai.CommanderEarthbendReturnTest": 71
+      }
+    }
+  ],
+  "broader_validation_pending": true,
+  "remaining_packaged_groups_pending": true,
+  "installed": false,
+  "selected_runtime_native_cases": 3295,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "full3579_packaged_passed": false,
+  "artifacts": {
+    "engine/pending/expend-history-runtime-v1/source3536-v1/card-inputs.json": "644c689f167479019e439a1da1ff1443365283a2c50eea5370f91d8cde14e1a3",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/driver.py.txt": "81496406db8144e18d9bba94755faa89ac966693a0b1d91c28e3d8c3f8aa6284",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/evidence.json": "f7f7b7256287c4bb58983abb5012e352022465b32d471a73b559300e013f44e1",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/maven-build.log": "93934a2818bed29b30a15b1ac2da15e4e8d7bd9647358e922449334ca867a8ac",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/outcome.json": "4b956a8802f56e4d121967ee208eaf318645503762435fe82b7ef496ab67c23f",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/production-inputs.json": "0309f70d1d46a674b31ca330e133717e50aba90b71f3f954b9a0223e812b3ea5",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/selection.json": "332cd1930ca19137e18ce94a8ef715451bd4a6a74bd442a05d93c0aa76556078",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/source-ci.json": "f1b393218aec8b8efa8a34ab249790459ff1a25ef00c1ee1d1b64972694b83ac",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/source-epoch.json": "e929924a7a7bc757448b3aa4a77f87d9637e1a72acf078337319693fd44ee8d1",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/source-frozen-inputs.json": "2b6345c551c5dbf9d6480334b18a49691b78952179fe57e71171dfefd5db18f9",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/test-inputs.json": "0660e2ce05c881a00950aa85b53fbd7fbada7011d2e9b562afcca2018f9bee64",
+    "engine/pending/expend-history-runtime-v1/source3536-v1/testng-results.xml": "3c7eb1e337a50dc4087630ba0e91fb2f8b87dd63d0e5bb8ebcef8d2b18d455d3",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/build-audit.json": "045c127d8d5e9debf0870d91c77864daf27f4229fe95edfc151d8a17573791fa",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/build-output.log": "b5f1c1efb944dd629cf725f1bd986747e0ee6207d4df9d90c704474faae96f80",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/candidate-selection.json": "99fd92d4f4ca607ad79eb9b643c1022378c55931ea6136cef68565d621413766",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/command.json": "a42dbba5f390b0763bd4ee4581f66920899eb22a967ae931c26c00ca6e48989f",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/driver.py.txt": "46adf4106c74ab08250360e368b553988dfae7ca510622d0e65adb9fb46f8258",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/process.json": "acd34f4b7bd50ff892b30902a9a617060164f2ead09ca70ed273d95c28269518",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/source-ci.json": "f1b393218aec8b8efa8a34ab249790459ff1a25ef00c1ee1d1b64972694b83ac",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/source-epoch.json": "e929924a7a7bc757448b3aa4a77f87d9637e1a72acf078337319693fd44ee8d1",
+    "engine/pending/expend-history-runtime-v1/expend-candidate-v1/source-frozen-inputs.json": "2b6345c551c5dbf9d6480334b18a49691b78952179fe57e71171dfefd5db18f9",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/candidate-config.json": "d561da57fbed8b0ea958288cad9dcd1abea5254371353e209b118c34bff80172",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/driver.py.txt": "6d1a9e07c85db00150b8cbf8b6f03f7c4d7f3b01a0bbec81e8935077f20a4b0f",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/outcome.json": "7a0ad7fd35e49c922d252a1832983d30407a8cd1b91d8340ebd2cd0d389d3e12",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/output.log": "bed681a0a1d121fdc46bfa4e172c7a23a26f38d5bf58da3d48e33e78978f922c",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/partial-audit.json": "4b2216e3fc312efc4014e736d8f3cfb0bc0b01ccbb35003186926e8d7a8d2508",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/process.json": "ec10d77f5edb4432818b6e37d545fdb7d82b22953c2880fb1e41a8399dba2d57",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/source-ci.json": "f1b393218aec8b8efa8a34ab249790459ff1a25ef00c1ee1d1b64972694b83ac",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/source-epoch.json": "e929924a7a7bc757448b3aa4a77f87d9637e1a72acf078337319693fd44ee8d1",
+    "engine/pending/expend-history-runtime-v1/expend-packaged-v1/source-frozen-inputs.json": "2b6345c551c5dbf9d6480334b18a49691b78952179fe57e71171dfefd5db18f9",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/decode-process.json": "3ce23b29fed64579191a2c194b5ab2e97f1afc526c41cffb461db0e73d9e6abb",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/decode.log": "9319a197ba2f2cabc5dd0a7dbce67d8d1855dcddb806e8c20eb8069f36bbfa4a",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/driver.py.txt": "ab350f0206c04fd13e42cf4364843b7829be07f86982b6ebc97eef695da055d7",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/native.log": "cc87138874261d5f64daa67ac41b5a6de993efd4cdc4426caa1c13221aaf351c",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/phases.json": "f9af69156be4657d73fb1ece839d398fb83e6a3eea64fece8db11d85fa2970b3",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/process.json": "ae86a4a0999af568ca2e06852f197ab0e429cac9fdaf9d02f06cba1167928cb6",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/profile-file.json": "ee11ea25657d99fb32ce81757d35910d2092525862fa760920b8c956eb36e9bf",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/profile-settings.json": "82828d30c2e4d9451d9475a85e5b3d5da9af7870361758d7652042a5374543ef",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/progress.json": "8dd40aa32f85c911a524545a62cc7ed883ee19e22b0e959eb33f9b530b1a4087",
+    "engine/pending/expend-history-runtime-v1/expend-resolution-profile-v1/runtime-profile-summary.json": "02bf7020d8314e4f96becb0fa1820543a59bc5fc6e91cbe893fd479135d91735",
+    "engine/pending/expend-history-runtime-v1/native-build/engine-lock.json": "6d3f21902b6037a64c35efa1448b910a742abf06d8f272257d086df6b8bc2f85",
+    "engine/pending/expend-history-runtime-v1/native-build/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/expend-history-runtime-v1/native-build/maven-build.log": "0ebfed36d0003ad0d73439e85a7503a769c3120d672b0cef643f5cf9a654dfcc",
+    "engine/pending/expend-history-runtime-v1/native-build/testng-results.xml": "8094994d6040a2c8872e410c5d56c69996b23e03496ab88b011b17252ba1ad4d",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/072f4bb218de4ecab2ae62d58d775851/draw-ending-worker.log": "80c417c05c434d99743e3296398874419d0dbf9d764954a436bbc40a1d9b8ee5",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/072f4bb218de4ecab2ae62d58d775851/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/072f4bb218de4ecab2ae62d58d775851/rules-inputs.json": "27284325c8bf27eb1ef5259c4fa312a80b9b473c775ba8b7cbccd9309f12c050",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/072f4bb218de4ecab2ae62d58d775851/rules-process.json": "4ebaaa12b48adf0493ff7f9c3617ca54ec90d731f3652bc2a2241db67226b7a2",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/draw-ending-summary.json": "09e16a9cd9422c0b04d4667a208acb1dbebdc7d6226213f98eb347a3e128d471",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/draw-ending-worker.log": "8ba2bc8efe7cf04b3cefd0c05edfe34a9a0e37e09ce5a0226fc19bce1b0a7659",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/draw-endings.json": "d3d6c20ad67ded379658f97a2979eb24d792590a60564bae7ba8ae582516e409",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/rules-inputs.json": "27284325c8bf27eb1ef5259c4fa312a80b9b473c775ba8b7cbccd9309f12c050",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/rules-process.json": "faf57870c366453d4cd63c7b32655b1163ea0392b7c7c1d348d4ceb54e1d9694",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/58be65ea035c49a88381fcb5a2a9f131/rules-reports/testng-results.xml": "596198c20cdd5b858a7e2c18bebf331f9dffec5516e42fc0b12515abc3280cf9",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/draw-ending-summary.json": "02769eabb4d45b538e5e306dbcdac4a02281d7b4c7b703e6abebcc43ce247de5",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/draw-ending-worker.log": "e5edd2d344f0f4d64c882230f365ed7943a03d2639c74a3af2ea25301b53ba0f",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/draw-endings.json": "9822ffac995be35df64f4dbae091160fa8109f9b91446ba595dc1f216c893fcb",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/rules-inputs.json": "27284325c8bf27eb1ef5259c4fa312a80b9b473c775ba8b7cbccd9309f12c050",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/rules-process.json": "27829874e9be9ce0d1e3d2d49b059a75ad3bc7f8333b8507d1b555904f396445",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/99d4a51f6fb748c7aac3ad68f5cefd83/rules-reports/testng-results.xml": "77d164f79aca8b525842c958a07b9f523615670be9990168674996f1e49f191f",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/draw-ending-methods.json": "d462e76b81f2b5403dc2f95f890a540489e30962e6f60158cd45c1a168ef0533",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/draw-ending-summary.json": "9ec8942637d4bb5493d97674cadcd31213604d886a0845274095fb7153d11921",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/draw-ending-worker.log": "0e12a06c6777ae0343a37ba1abdc331799c27fa984601c5c226768e2856a81d7",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/draw-endings.json": "3952687a803c07aa78c1c849d66be0f97277e8d500e41569f0e988fe1676ea17",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/rules-inputs.json": "27284325c8bf27eb1ef5259c4fa312a80b9b473c775ba8b7cbccd9309f12c050",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/rules-process.json": "062f675e5fe0cc11bf958cec81ae54d81a6eb9687d57683391679c005300bb30",
+    "engine/pending/expend-history-runtime-v1/packaged-runs/dcc7fba6a6fe4fe7b130fa363b4100b1/rules-reports/testng-results.xml": "35196f96c2ded962147ce12f4c2ce5202913ec8ea688de4d445dfbc165337d4f",
+    "engine/pending/expend-history-runtime-v1/drivers/run_source3536_v1.py.txt": "81496406db8144e18d9bba94755faa89ac966693a0b1d91c28e3d8c3f8aa6284",
+    "engine/pending/expend-history-runtime-v1/drivers/run_build4736_v1.py.txt": "46adf4106c74ab08250360e368b553988dfae7ca510622d0e65adb9fb46f8258",
+    "engine/pending/expend-history-runtime-v1/drivers/audit_build4736_v1.py.txt": "ed9d4f881eb281176481a6f8e5cc8dba14df46248ca8772d1b0fbce43ebe08ea",
+    "engine/pending/expend-history-runtime-v1/drivers/run_expend_packaged_v1.py.txt": "6d1a9e07c85db00150b8cbf8b6f03f7c4d7f3b01a0bbec81e8935077f20a4b0f",
+    "engine/pending/expend-history-runtime-v1/drivers/audit_expend_packaged_failure_v1.py.txt": "5c2f7da2eb47ab8c9dfd089883322c8b3a1443d087ba1c2fb5d04a0c5e790002",
+    "engine/pending/expend-history-runtime-v1/drivers/run_expend_resolution_profile_v1.py.txt": "ab350f0206c04fd13e42cf4364843b7829be07f86982b6ebc97eef695da055d7",
+    "engine/pending/expend-history-runtime-v1/drivers/decode_expend_resolution_profile_v1.py.txt": "39536de969931430f350993c2e9e7fa10886a3b99dbc5d3834d491db2151c139"
+  }
+}

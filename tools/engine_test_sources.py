@@ -274,10 +274,23 @@ REGRESSION_SOURCES = {
     "CommanderPreannouncementCostTest.java": "commander_preannouncement_cost_test_sha256",
     "CommanderDungeonSnapshotTest.java": "commander_dungeon_snapshot_test_sha256",
     "CommanderExpendHistoryTest.java": "commander_expend_history_test_sha256",
+    "CommanderFirstEventHistoryTest.java": "commander_first_event_history_test_sha256",
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",
     "CommanderSnapshotViewTest.java": "commander_snapshot_view_test_sha256",
     "CommanderSagaTypeTest.java": "commander_saga_type_test_sha256",
     "CommanderRuntimeLimitsTest.java": "commander_runtime_limits_test_sha256",
+}
+
+# Most fixtures use forge.ai; these fixed exceptions share the same hash registry.
+REGRESSION_PACKAGES = {
+    **dict.fromkeys(REGRESSION_SOURCES, "forge.ai"),
+    "ResolvingControlForecastTest.java": "forge.ai.simulation",
+    "CommanderModalBudgetTest.java": "forge.ai.simulation",
+    "PerfPatchUnitTest.java": "forge.gamesimulationtests.util",
+    "PerfPatchFollowUpTableTest.java": "forge.gamesimulationtests.util",
+    "CommanderSnapshotViewTest.java": "forge.gamesimulationtests.util",
+    "CommanderRuntimeLimitsTest.java": "forge.gamesimulationtests.util",
+    "CommanderSagaTypeTest.java": "forge.card",
 }

@@ -1,0 +1,26 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -167,6 +167,7 @@
+             // Restore cumulative spell-mana spending without firing expend triggers.
+             newPlayer.setExpentThisTurn(origPlayer.getExpentThisTurn());
+             newPlayer.copyDrawHistoryFrom(origPlayer);
++            newPlayer.copySnapshotFirstEventHistoryFrom(origPlayer);
+             newPlayer.copySnapshotElementalBendFrom(origPlayer);
+             newPlayer.setLifeStartedThisTurnWith(origPlayer.getLifeStartedThisTurnWith());
+             newPlayer.setDamageReceivedThisTurn(origPlayer.getDamageReceivedThisTurn());
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -1423,6 +1423,13 @@
+         }
+     }
+ 
++    /** Restore first-event counters without gaining life, surveilling or investigating again. */
++    public final void copySnapshotFirstEventHistoryFrom(final Player original) {
++        lifeGainedTimesThisTurn = original.lifeGainedTimesThisTurn;
++        surveilThisTurn = original.surveilThisTurn;
++        investigatedThisTurn = original.investigatedThisTurn;
++    }
++
+     /** Preserve draw limits and draw-event numbering without drawing cards or firing events. */
+     public final void copyDrawHistoryFrom(final Player original) {
+         numDrawnThisTurn = original.numDrawnThisTurn;

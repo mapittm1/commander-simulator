@@ -6,14 +6,39 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Copy native regression fixtures from the shared hash registry instead of a
+  second filename list. Preserve all 280 registered sources and nine priority
+  fixtures at their prior Java destinations. An offline check verifies declared
+  packages, exact file bytes and complete membership; no Pylint limit is raised.
+
+- Preserve life-gain, surveil and investigate event counts in ordinary AI world
+  copies through a shared Player helper. Six baseline failures repeat Cleric
+  counters, Whispering Snitch drains or Erdwal Illuminator investigations. The
+  correction passes twelve native-event/paid-follow-up controls and retains 1,404
+  casting / 273 combat / 194 untap / ten dungeon / six expend / nine upstream cases.
+  Supplied boards do not establish full histories or experimental restore support.
+- Register twelve first_events cases separately; retain all earlier groups/counts
+  and original 1,271-case / 90-second workload. Fresh 3,548 source / 4,748 native /
+  3,591 main packaged validation remains pending; selected runtime is unchanged.
+
 - Preserve cumulative expend history in shared AI world copies without firing
   triggers again. Four baseline failures include missed fourth-mana life gain and
   repeated fourth-mana gain in place of the eighth-mana exile effect. The correction
   passes six paid-spell/isolation controls and retains 1,404 casting / 273 combat /
   194 untap / ten dungeon / nine upstream checks. Supplied boards are not full histories.
 - Register the six-case expended_mana family separately, preserving all old groups,
-  counts and original 1,271/90 workload. Fresh 3,536 source / 4,736 native / 3,579 main
-  packaged validation is pending; selected runtime remains unchanged.
+  counts and original 1,271/90 workload. Fresh 3,536 source / 4,736 native cases now
+  pass with exact retained methods/parameters and reviewed 2,168 production / 168
+  test / 332 card inputs; class changes stay within GameCopier and nested classes.
+- Preserve the failed full 3,579-case packaged attempt: original resolution times
+  out at 90.000 seconds without a completed report. The preceding 301 information /
+  273 combat / 338 text-cost cases pass receipt audits. Remaining packaged groups,
+  broader/live checks and activation remain pending; selected runtime is unchanged.
+- Preserve one bounded CPU/allocation profile: setup takes about 1.6 seconds and
+  execution remains inside TestNG until timeout. Samples point toward trait-list
+  and collection work; recorded GC pauses total about 0.42 seconds. These are
+  diagnostics, not normal timing or complete rules proof. No workload/collector
+  change is promoted, and allocation weights are not retained-memory measurements.
 
 - Correct generic dungeon snapshots: retain noncopiable game-piece kind and room
   markers, mapped completed-dungeon records and venture counters without replaying

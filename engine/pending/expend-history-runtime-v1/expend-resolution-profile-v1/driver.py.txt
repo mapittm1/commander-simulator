@@ -1,0 +1,72 @@
+"""Profile the unchanged full resolution workload after a preserved normal failure."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,subprocess,sys,threading,time,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+WORK=Path(__file__).resolve().parent;RUN=WORK/'expend-resolution-profile-v1';CANDIDATE=WORK/'expend-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+AUDIT=load(WORK/'expend-packaged-v1/partial-audit.json');assert not AUDIT['full3579_packaged_passed']
+ORIGINAL=ROOT/'data/runs'/AUDIT['groups']['information']['run_id']
+SETTINGS=ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json'
+FROZEN=load(CANDIDATE/'source-frozen-inputs.json')
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify(root=False):
+ meta=load(ORIGINAL/'rules-inputs.json')
+ assert meta['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')}
+ assert all(file_hash(Path(n))==h for n,h in meta['inputs'].items())
+ if root:assert all(file_hash(ROOT/n)==h for n,h in FROZEN.items())
+ assert EXPECTED_COUNTS['resolution']==1271
+ return meta
+if sys.argv[1:]==['--worker']:
+ started=time.monotonic();phases=[]
+ def mark(name):
+  phases.append({'phase':name,'seconds':round(time.monotonic()-started,3)});save(RUN/'phases.json',phases)
+ mark('worker_started');settings=read_settings(SETTINGS);lock=settings.verify();assert lock['native_tests']['total']==4736
+ verify();mark('inputs_verified');require_bridge();java=importlib.import_module('jpype')
+ recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ archive=settings.home/lock['jar_name']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(archive,ORIGINAL/'rules-classes',dependency))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ mark('jvm_started');stop=threading.Event();recording=java.JClass('jdk.jfr.Recording')();spec=java.JClass('java.util.HashMap')()
+ for key,value in {'jdk.ExecutionSample#enabled':'true','jdk.ExecutionSample#period':'10 ms','jdk.ObjectAllocationSample#enabled':'true','jdk.GCPhasePause#enabled':'true','jdk.GarbageCollection#enabled':'true'}.items():spec.put(key,value)
+ recording.setSettings(spec);recording.setMaxSize(33554432);recording.setMaxAge(java.JClass('java.time.Duration').ofSeconds(90));recording.start()
+ save(RUN/'profile-settings.json',{'settings':dict((str(e.getKey()),str(e.getValue())) for e in spec.entrySet()),'max_bytes':33554432,'dump_after_seconds':75,'actual_processors':2,'actual_max_heap_bytes':2147483648})
+ def dump_profile():
+  stop.wait(75);recording.stop();recording.dump(java.JClass('java.nio.file.Paths').get(str(RUN/'runtime.jfr')))
+ profiler=threading.Thread(target=dump_profile,daemon=True);profiler.start()
+ assert len(draw_ending_worker.NATIVE_CLASSES)==181
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(archive),name
+ for name in (*PARTITIONS['resolution'],'forge.ai.AITest'):assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ mark('classes_verified');runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(n).class_ for n in PARTITIONS['resolution']]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+ def sample_counts():
+  snapshots=[]
+  for index in range(4):
+   if stop.wait(20):return
+   passed=list(listener.getPassedTests());failed=list(listener.getFailedTests());skipped=list(listener.getSkippedTests())
+   snapshots.append({'seconds':round(time.monotonic()-started,3),'passed':len(passed),'failed':len(failed),'skipped':len(skipped),'configuration_failures':len(listener.getConfigurationFailures()),'passed_per_class':dict(Counter(str(x.getTestClass().getName()) for x in passed))})
+   save(RUN/'progress.json',snapshots)
+ threading.Thread(target=sample_counts,daemon=True).start();mark('runner_started')
+ try:runner.run()
+ except BaseException:
+  mark('runner_raised');raise
+ else:mark('runner_returned')
+ finally:stop.set();profiler.join(5)
+ counts,methods=packaged_rules.test_results(listener);verify();mark('inputs_verified_after')
+ save(RUN/'outcome.json',{'counts':counts,'methods':methods,'diagnostic_only':True,'scope':'Instrumented full1271 resolution at unchanged90s; never substitutes for a normal passing gate.'})
+ mark('shutdown_started');java.shutdownJVM();mark('shutdown_returned')
+else:
+ assert sys.argv[1:]==[];verify(root=True);assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ ci=load(CANDIDATE/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(SETTINGS)
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ if (RUN/'runtime.jfr').exists():save(RUN/'profile-file.json',{'sha256':file_hash(RUN/'runtime.jfr'),'bytes':(RUN/'runtime.jfr').stat().st_size})
+ print(json.dumps({'process':result,'profile_written':(RUN/'runtime.jfr').exists(),'diagnostic_only':True,'phases':load(RUN/'phases.json') if (RUN/'phases.json').exists() else []}),flush=True)

@@ -1,5 +1,19 @@
 # Card support and evidence
 
+A shared correction now preserves how often life gain, surveil and investigate
+occurred during the turn in copied games. Six of twelve baseline controls fail:
+Cleric of Life's Bond counters, Whispering Snitch drains and Erdwal Illuminator
+investigations repeat after copying. The correction passes **12/12**, including
+original-game controls, repeated copies, native prior events, paid follow-up
+spells and valid first-time triggers. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / nine upstream** controls. These supplied
+boards do not establish complete legal histories or experimental restore support.
+
+The recipe adds twelve cases in a separate `first_events` group. Every earlier
+group/count and original **1,271-case / 90-second** workload remains unchanged.
+Fresh **3,548 source / 4,748 native / 3,591 main packaged** validation is pending;
+selected runtime remains unchanged. See [history correction evidence](../engine/first_event_history_evidence.json).
+
 A generic expend-history correction now retains cumulative spell-mana spending in
 AI world copies. Four of six controls fail on the preceding candidate: Muerra's
 fourth-mana effect can be missed or repeated instead of reaching the eighth-mana
@@ -10,8 +24,22 @@ boards and do not establish complete legal game histories or all-card correctnes
 
 The registered recipe adds a separate six-case `expended_mana` group, preserving
 every earlier group and the original **1,271-case / 90-second** workload. Fresh
-**3,536 source / 4,736 native / 3,579 main packaged** validation remains pending.
-The selected runtime stays unchanged. See [expend correction evidence](../engine/expend_history_evidence.json).
+**3,536 source / 4,736 native** validation passes, retaining every earlier method
+and parameter. All 2,168 production, 168 test and 332 card inputs match reviewed
+sources; production class changes are confined to GameCopier and nested classes.
+The full **3,579-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.000 seconds**, without a completed report.
+The preceding **301 information / 273 combat / 338 text-cost** cases pass with
+native membership and origin audits. Remaining packaged groups, broader/live
+checks, activation and complete card/rules coverage remain pending.
+
+A bounded diagnostic reaches TestNG after about **1.6 seconds** and remains there
+until timeout. Its samples point toward repeated trait-list and collection work;
+recorded GC pauses total about **0.42 seconds**. Allocation samples estimate volume,
+not retained memory. The profile is not a normal passing gate or a reliable speedup
+claim. No collector or test-workload change is promoted. The selected runtime stays
+unchanged. See [expend correction evidence](../engine/expend_history_evidence.json) and
+[runtime evidence](../engine/expend_history_runtime_evidence.json).
 
 A generic dungeon snapshot correction now preserves completed-dungeon history,
 venture counts, current-room markers and game-piece designations. The old copier
