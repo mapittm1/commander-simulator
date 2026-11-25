@@ -1,0 +1,168 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.card.CardCollection;
+import forge.game.card.CardLists;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Filtering preserves native traversal, mutation/error order and independent results. */
+public class CommanderCardFilterContractTest extends AITest {
+    private Player actor(Game game) { return game.getPlayers().getFirst(); }
+    private Game setup(int depth) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i = 0; i < 4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("filter-" + i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Filter contracts"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        for (Player player : game.getPlayers()) addCardToZone("Forest", player, ZoneType.Library);
+        addCardToZone("Forest", actor(game), ZoneType.Battlefield);
+        addCardToZone("Mountain", actor(game), ZoneType.Battlefield);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor(game), 5);
+        game.copyLastState();
+        for (int i = 0; i < depth; i++) {
+            GameCopier copier = new GameCopier(game).withStack(true);
+            game = copier.makeCopy(null, actor(game)); copier.release();
+        }
+        return game;
+    }
+    private void check(String mode, int depth) {
+        Game game = setup(depth); List<Card> cards = new ArrayList<>(actor(game).getCardsIn(ZoneType.Battlefield));
+        Card first = cards.get(0), second = cards.get(1);
+        if (mode.equals("orderedUnique")) {
+            List<Card> visits = new ArrayList<>();
+            CardCollection result = CardLists.filter(List.of(second, first, second), card -> { visits.add(card); return true; });
+            assertEquals(visits, List.of(second, first, second)); assertEquals(result, List.of(second, first));
+        } else if (mode.equals("emptyMutable")) {
+            AtomicInteger calls = new AtomicInteger(); CardCollection result = CardLists.filter(List.of(), card -> { calls.incrementAndGet(); return true; });
+            assertEquals(calls.get(), 0); result.add(first);
+            assertTrue(CardLists.filter(List.of(), (Predicate<Card>) card -> true).isEmpty());
+        } else if (mode.equals("independent")) {
+            CardCollection result = CardLists.filter(cards, card -> true);
+            cards.remove(first); assertEquals(result, List.of(first, second)); result.clear(); assertEquals(cards, List.of(second));
+        } else if (mode.equals("allRejected")) {
+            List<Card> visits = new ArrayList<>(); assertTrue(CardLists.filter(cards, card -> { visits.add(card); return false; }).isEmpty());
+            assertEquals(visits, cards);
+        } else if (mode.equals("customSpliterator")) {
+            Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Must use supplied spliterator"); }
+                @Override public Spliterator<Card> spliterator() { return List.of(second, first).spliterator(); }
+            };
+            assertEquals(CardLists.filter(custom, card -> true), List.of(second, first));
+        } else if (mode.equals("perElement")) {
+            Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Must use supplied spliterator"); }
+                @Override public Spliterator<Card> spliterator() {
+                    return new Spliterators.AbstractSpliterator<>(2, Spliterator.ORDERED) {
+                        int index;
+                        @Override public boolean tryAdvance(Consumer<? super Card> action) {
+                            if (index == 2) return false; action.accept(cards.get(index++)); return true;
+                        }
+                        @Override public void forEachRemaining(Consumer<? super Card> action) { throw new AssertionError("Must retain tryAdvance traversal"); }
+                    };
+                }
+            };
+            assertEquals(CardLists.filter(custom, card -> true), cards);
+        } else if (mode.equals("metadataCallback")) {
+            AtomicInteger metadataReads = new AtomicInteger();
+            Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Use supplied spliterator"); }
+                @Override public Spliterator<Card> spliterator() {
+                    return new Spliterators.AbstractSpliterator<>(2, Spliterator.ORDERED | Spliterator.SORTED) {
+                        int index;
+                        @Override public java.util.Comparator<? super Card> getComparator() { metadataReads.incrementAndGet(); return null; }
+                        @Override public boolean tryAdvance(Consumer<? super Card> action) {
+                            if (index == 2) return false; action.accept(cards.get(index++)); return true;
+                        }
+                    };
+                }
+            };
+            assertEquals(CardLists.filter(custom, card -> true), cards);
+            assertTrue(metadataReads.get() > 0, "Retain native callbacks for unknown spliterators");
+        } else if (mode.equals("predicateFailure")) {
+            RuntimeException expected = new IllegalStateException("Fixed predicate failure"); List<Card> visits = new ArrayList<>();
+            try { CardLists.filter(cards, card -> { visits.add(card); throw expected; }); fail("Must propagate failure"); }
+            catch (RuntimeException actual) { assertSame(actual, expected); }
+            assertEquals(visits, List.of(first));
+        } else if (mode.equals("mutationFailure")) {
+            List<Card> visits = new ArrayList<>();
+            expectThrows(ConcurrentModificationException.class, () -> CardLists.filter(cards, card -> { visits.add(card); cards.clear(); return true; }));
+            assertEquals(visits, List.of(first));
+        } else if (mode.equals("nullPredicate")) {
+            AtomicInteger sourceReads = new AtomicInteger(); Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Use spliterator"); }
+                @Override public Spliterator<Card> spliterator() { sourceReads.incrementAndGet(); return List.<Card>of().spliterator(); }
+            };
+            expectThrows(NullPointerException.class, () -> CardLists.filter(custom, (Predicate<Card>) null)); assertEquals(sourceReads.get(), 1);
+        } else if (mode.equals("nullSource")) {
+            expectThrows(NullPointerException.class, () -> CardLists.filter(null, (Predicate<Card>) card -> true));
+        } else if (mode.equals("andOrder")) {
+            List<String> visits = new ArrayList<>();
+            CardCollection result = CardLists.filter(cards, card -> { visits.add("a" + card.getId()); return card == first; }, card -> { visits.add("b" + card.getId()); return true; });
+            assertEquals(result, List.of(first)); assertEquals(visits, List.of("a" + first.getId(), "b" + first.getId(), "a" + second.getId()));
+        } else if (mode.equals("iterablePredicates")) {
+            List<String> visits = new ArrayList<>(); List<Predicate<Card>> predicates = List.of(card -> { visits.add("a" + card.getId()); return card == first; }, card -> { visits.add("b" + card.getId()); return true; });
+            assertEquals(CardLists.filter(cards, predicates), List.of(first));
+            assertEquals(visits, List.of("a" + first.getId(), "b" + first.getId(), "a" + second.getId()));
+        } else throw new IllegalArgumentException(mode);
+    }
+    @Test public void orderedUniqueDepth0() { check("orderedUnique", 0); }
+    @Test public void orderedUniqueDepth1() { check("orderedUnique", 1); }
+    @Test public void orderedUniqueDepth2() { check("orderedUnique", 2); }
+    @Test public void emptyMutableDepth0() { check("emptyMutable", 0); }
+    @Test public void emptyMutableDepth1() { check("emptyMutable", 1); }
+    @Test public void emptyMutableDepth2() { check("emptyMutable", 2); }
+    @Test public void independentDepth0() { check("independent", 0); }
+    @Test public void independentDepth1() { check("independent", 1); }
+    @Test public void independentDepth2() { check("independent", 2); }
+    @Test public void allRejectedDepth0() { check("allRejected", 0); }
+    @Test public void allRejectedDepth1() { check("allRejected", 1); }
+    @Test public void allRejectedDepth2() { check("allRejected", 2); }
+    @Test public void customSpliteratorDepth0() { check("customSpliterator", 0); }
+    @Test public void customSpliteratorDepth1() { check("customSpliterator", 1); }
+    @Test public void customSpliteratorDepth2() { check("customSpliterator", 2); }
+    @Test public void perElementDepth0() { check("perElement", 0); }
+    @Test public void perElementDepth1() { check("perElement", 1); }
+    @Test public void perElementDepth2() { check("perElement", 2); }
+    @Test public void predicateFailureDepth0() { check("predicateFailure", 0); }
+    @Test public void predicateFailureDepth1() { check("predicateFailure", 1); }
+    @Test public void predicateFailureDepth2() { check("predicateFailure", 2); }
+    @Test public void mutationFailureDepth0() { check("mutationFailure", 0); }
+    @Test public void mutationFailureDepth1() { check("mutationFailure", 1); }
+    @Test public void mutationFailureDepth2() { check("mutationFailure", 2); }
+    @Test public void nullPredicateDepth0() { check("nullPredicate", 0); }
+    @Test public void nullPredicateDepth1() { check("nullPredicate", 1); }
+    @Test public void nullPredicateDepth2() { check("nullPredicate", 2); }
+    @Test public void nullSourceDepth0() { check("nullSource", 0); }
+    @Test public void nullSourceDepth1() { check("nullSource", 1); }
+    @Test public void nullSourceDepth2() { check("nullSource", 2); }
+    @Test public void andOrderDepth0() { check("andOrder", 0); }
+    @Test public void andOrderDepth1() { check("andOrder", 1); }
+    @Test public void andOrderDepth2() { check("andOrder", 2); }
+    @Test public void iterablePredicatesDepth0() { check("iterablePredicates", 0); }
+    @Test public void iterablePredicatesDepth1() { check("iterablePredicates", 1); }
+    @Test public void iterablePredicatesDepth2() { check("iterablePredicates", 2); }
+    @Test public void metadataCallbackDepth0() { check("metadataCallback", 0); }
+    @Test public void metadataCallbackDepth1() { check("metadataCallback", 1); }
+    @Test public void metadataCallbackDepth2() { check("metadataCallback", 2); }
+}

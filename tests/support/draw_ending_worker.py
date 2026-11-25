@@ -117,6 +117,8 @@ SOURCES = {
     "CommanderKeywordMetadataFailureTest": "commander_keyword_metadata_failure_test_sha256",
     "CommanderStaticGatherTest": "commander_static_gather_test_sha256",
     "CommanderCardCounterZoneCopyTest": "commander_card_counter_zone_copy_test_sha256",
+    "CommanderTraitGatherTest": "commander_trait_gather_test_sha256",
+    "CommanderCardFilterContractTest": "commander_card_filter_contract_test_sha256",
     "CommanderUntapPresenceTest": "commander_untap_presence_test_sha256",
     "CommanderReplacementEligibilityTest": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
@@ -312,6 +314,8 @@ NATIVE_CLASSES = (
     "forge.ai.simulation.OnePlaySafetyChecker",
     "forge.game.Game",
     "forge.game.card.Card",
+    "forge.game.card.CardLists",
+    "forge.game.staticability.StaticAbilityDevotion",
     "forge.game.trigger.TriggerCounterRemoved",
     "forge.game.ability.effects.GameDrawEffect",
     "forge.game.ability.effects.DrawEffect",
@@ -460,7 +464,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3238-case packaged family."""
+    """Execute the fixed 3325-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

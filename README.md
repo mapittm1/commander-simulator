@@ -26,6 +26,21 @@ difference.
 
 ## Card coverage
 
+The normal workflow now registers 87 additional contracts: 48 live trigger/devotion
+and 39 filtering cases. Baseline and corrected prototype each pass the same 535
+focused cases, with prior cases retained. Tests caught three custom-spliterator
+callback failures in an unrestricted filter prototype; the corrected experiment
+keeps unknown sources on the native path. Preserve an earlier fixture setup/log-
+limit failure separately. These are contract tests, not full card-history proof.
+
+The expanded 3,282-source / 4,482-native / 3,325-packaged suite is pending; the cast
+subset is now 1,175 cases with 177 required production origins. Static gathering,
+trigger/devotion and filtering prototypes still exceed the original 1,271-case /
+90-second resolution limit (latest 90.016s) and remain unpromoted. A bounded
+allocation profile identifies candidate work; its weights are estimates, not
+retained memory or completed timing results. Production patches and the selected
+runtime are unchanged. See [contract/profile evidence](engine/trait_gather_filter_evidence.json).
+
 A reviewed candidate snapshot correction preserves counters on cards in the command
 zone, graveyard, exile, hand, library and stack, as well as the battlefield.
 The same 448 focused cases produce 430 passes / 18 failures before the correction
@@ -36,7 +51,7 @@ Most counter states are supplied directly; the Lightning Storm stack fixture pay
 and casts the spell but supplies its charge counters directly. These tests do not
 prove complete card histories or full Oracle coverage.
 
-The expanded suite passes all **3,195 source** and **4,395 native** cases,
+The preceding counter-snapshot suite passes all **3,195 source** and **4,395 native** cases,
 retaining every prior case and normalized parameter. All 2,168 production sources,
 156 test files and 316 tracked card files match reviewed inputs. Two-processor /
 2 GiB Java-heap assertions pass; cards and AI profiles are unchanged. The normal

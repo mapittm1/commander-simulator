@@ -1,0 +1,35 @@
+from pathlib import Path
+import hashlib,json,shutil,subprocess,sys,time
+r=Path.cwd();sys.path.insert(0,str(r))
+from commander.engine.forge_config import read_settings
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';source=r/'data/development/commander-blocking-history-research/source';proto=w/'static-gather-prototype-v2';epoch=w/'static-gather-epoch-v1'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain']);head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip();assert head=='5366c817a9778394abc6e320c33b25c9d28c1007'
+epoch.mkdir();names=[n for n in subprocess.check_output(['git','ls-files','-z']).decode().split('\0') if n];save(epoch/'source-frozen-inputs.json',{n:sha(r/n) for n in names});save(epoch/'source-ci.json',{'id':45587485021,'head_sha':head,'status':'completed','conclusion':'success'})
+proof=json.loads((w/'source3195-v1/production-inputs.json').read_bytes());assert all(sha(source/n)==h for n,h in proof.items());proto.mkdir()
+paths=['forge-game/src/main/java/forge/game/GameAction.java','forge-game/src/main/java/forge/game/card/Card.java','forge-game/src/main/java/forge/game/card/CardState.java']
+for rel in paths:
+ base=proto/'baseline'/rel;dest=proto/'source'/rel;base.parent.mkdir(parents=True,exist_ok=True);dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source/rel,base)
+ # Rebase the initial gathering proposal on the validated counter snapshot source.
+ text=(w/'static-gather-prototype-v1/source'/rel).read_text(encoding='utf-8')
+ if rel.endswith('/Card.java'):
+  current=(source/rel).read_text(encoding='utf-8');anchor='    public final FCollectionView<StaticAbility> getHiddenStaticAbilities() {';assert current.count(anchor)==1
+  helper='''    /** Hidden counter/status sources are independent of the current state's statics. */
+    public final boolean mayHaveHiddenStaticAbilities() {
+        if (getClass() != Card.class) return true;
+        return (this.isInPlay() && this.isSuspected()) || !counterTypeKeywordStatic.isEmpty();
+    }
+
+''';text=current.replace(anchor,helper+anchor)
+ dest.write_text(text,encoding='utf-8',newline='\n')
+assert 'copySnapshotCountersFrom' in (proto/'source'/paths[1]).read_text(encoding='utf-8')
+settings=read_settings(r/'data/engine-builds/190a373e5f46459597dd8c2eb8099952/engine-config.json');lock=settings.verify();archive=settings.home/lock['jar_name'];compiler=Path('C:/Program Files/Java/jdk-19/bin/javac.exe');classes=proto/'classes';classes.mkdir()
+command=[str(compiler),'-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',str(archive),'-d',str(classes),*[str(proto/'source'/n) for n in paths]]
+save(proto/'compile-selection.json',{'command':command,'timeout_seconds':90,'baseline_jar_sha256':sha(archive)})
+result=run_bounded(command,r,proto/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(proto)));save(proto/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+save(proto/'proposal.json',{'scope':'Conservative live initial static-gather presence checks; static commands unconditional, unknown classes fall back. No temporal absence cache.','parent':'Validated source3195/native4395 counter snapshot correction retained.','files':paths,'baseline_head':head,'status':'Compiled only; no gameplay or performance claim.'})
+save(proto/'inputs.json',{p.relative_to(proto).as_posix():sha(p) for p in proto.rglob('*') if p.is_file() and p.name!='inputs.json'})
+print(json.dumps({'compile':result,'class_files':len(list(classes.rglob('*.class'))),'counter_fix_retained':True}),flush=True)

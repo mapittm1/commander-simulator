@@ -259,6 +259,8 @@ REGRESSION_SOURCES = {
     "CommanderKeywordMetadataFailureTest.java": "commander_keyword_metadata_failure_test_sha256",
     "CommanderStaticGatherTest.java": "commander_static_gather_test_sha256",
     "CommanderCardCounterZoneCopyTest.java": "commander_card_counter_zone_copy_test_sha256",
+    "CommanderTraitGatherTest.java": "commander_trait_gather_test_sha256",
+    "CommanderCardFilterContractTest.java": "commander_card_filter_contract_test_sha256",
     "CommanderUntapPresenceTest.java": "commander_untap_presence_test_sha256",
     "CommanderReplacementEligibilityTest.java": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest.java": "commander_empty_attack_test_sha256",

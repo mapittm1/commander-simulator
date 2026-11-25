@@ -1,0 +1,25 @@
+from pathlib import Path
+import json,hashlib
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def write(p,s):p.write_text(s,encoding='utf-8',newline='\n')
+def replace(p,a,b):s=p.read_text(encoding='utf-8');assert a in s,(p,a);write(p,s.replace(a,b))
+for name in ['trait-filter535-baseline-v2','trait-filter535-prototype-v2']:
+ assert json.loads((w/name/'outcome.json').read_bytes())['counts']==dict(total=535,passed=535,failed=0,skipped=0)
+assert json.loads((w/'resolution1271-trait-filter-v49/process.json').read_bytes())['status']=='timeout'
+fixtures=[('trait-gather-fixtures-v1','CommanderTraitGatherTest','commander_trait_gather_test_sha256'),('card-filter-fixtures-v3','CommanderCardFilterContractTest','commander_card_filter_contract_test_sha256')]
+p=r/'engine/sticker_recipe.json';recipe=json.loads(p.read_bytes());assert recipe['native_test_count']==4395;recipe['native_test_count']=4482
+for folder,name,key in fixtures:target=r/'engine/tests'/f'{name}.java';assert not target.exists();target.write_bytes((w/folder/f'{name}.java').read_bytes());recipe[key]=sha(target)
+write(p,json.dumps(recipe,indent=2)+'\n');builder=r/'tools/build_sticker_engine.py'
+replace(builder,'        "CommanderCardCounterZoneCopyTest.java",','        "CommanderCardCounterZoneCopyTest.java",\n'+''.join(f'        "{name}.java",\n' for _,name,_ in fixtures).rstrip())
+replace(builder,'CommanderCardCounterZoneCopyTest,CommanderUntapPresenceTest','CommanderCardCounterZoneCopyTest,'+','.join(name for _,name,_ in fixtures)+',CommanderUntapPresenceTest')
+for path,anchor,lines in [('tools/engine_test_sources.py','    "CommanderCardCounterZoneCopyTest.java": "commander_card_counter_zone_copy_test_sha256",',''.join(f'    "{name}.java": "{key}",\n' for _,name,key in fixtures)),('tests/support/draw_ending_worker.py','    "CommanderCardCounterZoneCopyTest": "commander_card_counter_zone_copy_test_sha256",',''.join(f'    "{name}": "{key}",\n' for _,name,key in fixtures)),('tests/support/draw_ending_partitions.py','        "forge.ai.CommanderCardCounterZoneCopyTest",',''.join(f'        "forge.ai.{name}",\n' for _,name,_ in fixtures))]:replace(r/path,anchor,anchor+'\n'+lines.rstrip())
+replace(r/'tests/support/draw_ending_partitions.py','"cast_events": 1088','"cast_events": 1175')
+replace(r/'tests/support/draw_ending_worker.py','fixed 3238-case','fixed 3325-case')
+replace(r/'tests/support/draw_ending_worker.py','    "forge.game.card.Card",','    "forge.game.card.Card",\n    "forge.game.card.CardLists",\n    "forge.game.staticability.StaticAbilityDevotion",')
+for path in ['tests/integration/test_draw_endings_integration.py','tests/unit/test_draw_ending_partitions.py']:replace(r/path,'3238','3325')
+replace(r/'tests/integration/test_draw_endings_integration.py','len(expected_classes), 175','len(expected_classes), 177')
+replace(r/'tests/unit/test_draw_ending_partitions.py','1088','1175')
+with (r/'.gitattributes').open('a',encoding='utf-8',newline='\n') as f:
+ for _,name,_ in fixtures:f.write(f'engine/tests/{name}.java -text whitespace=cr-at-eol\n')
+print('Registered87 new native controls; source3282/native4482/packaged3325/cast1175; production patches and selected runtime unchanged;177 origins.')

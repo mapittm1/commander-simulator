@@ -1,0 +1,135 @@
+from pathlib import Path
+import shutil,json
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';old=w/'trait-gather-prototype-v1';p=w/'trait-filter-prototype-v1';p.mkdir();source=r/'data/development/commander-blocking-history-research/source'
+for sub in ['source','baseline']:shutil.copytree(old/sub,p/sub)
+n='forge-game/src/main/java/forge/game/card/CardLists.java';base=source/n;(p/'baseline'/n).parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(base,p/'baseline'/n);text=base.read_text(encoding='utf-8');text=text.replace('import java.util.Map;','import java.util.Map;\nimport java.util.Objects;\nimport java.util.Spliterator;\nimport java.util.function.Consumer;')
+a='''    public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+        return new CardCollection(IterableUtil.filter(cardList, filt));
+    }''';b='''    public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+        final Spliterator<Card> source = Objects.requireNonNull(cardList.spliterator());
+        Objects.requireNonNull(filt);
+        final CardCollection result = new CardCollection();
+        final Consumer<Card> collect = card -> {
+            if (filt.test(card)) result.add(card);
+        };
+        // Advance per element, retaining the source's order and mutation checks.
+        while (source.tryAdvance(collect)) {
+            // The consumer applies the predicate and retains unique matching cards.
+        }
+        return result;
+    }''';assert text.count(a)==1;text=text.replace(a,b).replace('return new CardCollection(IterableUtil.filter(cardList, f1.and(f2)));','return filter(cardList, f1.and(f2));').replace('return new CardCollection(IterableUtil.filter(cardList, IterableUtil.and(filt)));','return filter(cardList, IterableUtil.and(filt));');(p/'source'/n).write_text(text,encoding='utf-8',newline='\n')
+(p/'proposal.json').write_text(json.dumps({'scope':'Profile-guided card filtering using source spliterator.tryAdvance, preserving predicate order, unique output and mutable independent result; delegate predicate overloads. Includes prior live gathering prototype, not metadata or collector changes.','status':'Prepared only. Prior trait-gather v48 timeout90.015 preserved.','files':6},indent=2)+'\n',encoding='utf-8',newline='\n')
+f=w/'card-filter-fixtures-v1';f.mkdir();java='''package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.card.CardCollection;
+import forge.game.card.CardLists;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.ConcurrentModificationException;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Spliterator;
+import java.util.Spliterators;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Filtering preserves native traversal, mutation/error order and independent results. */
+public class CommanderCardFilterContractTest extends AITest {
+    private Player actor(Game game) { return game.getPlayers().getFirst(); }
+    private Game setup(int depth) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i = 0; i < 4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("filter-" + i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Filter contracts"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        for (Player player : game.getPlayers()) addCardToZone("Forest", player, ZoneType.Library);
+        addCardToZone("Forest", actor(game), ZoneType.Battlefield);
+        addCardToZone("Mountain", actor(game), ZoneType.Battlefield);
+        game.copyLastState();
+        for (int i = 0; i < depth; i++) {
+            GameCopier copier = new GameCopier(game).withStack(true);
+            game = copier.makeCopy(null, actor(game)); copier.release();
+        }
+        return game;
+    }
+    private void check(String mode, int depth) {
+        Game game = setup(depth); List<Card> cards = new ArrayList<>(actor(game).getCardsIn(ZoneType.Battlefield));
+        Card first = cards.get(0), second = cards.get(1);
+        if (mode.equals("orderedUnique")) {
+            List<Card> visits = new ArrayList<>();
+            CardCollection result = CardLists.filter(List.of(second, first, second), card -> { visits.add(card); return true; });
+            assertEquals(visits, List.of(second, first, second)); assertEquals(result, List.of(second, first));
+        } else if (mode.equals("emptyMutable")) {
+            AtomicInteger calls = new AtomicInteger(); CardCollection result = CardLists.filter(List.of(), card -> { calls.incrementAndGet(); return true; });
+            assertEquals(calls.get(), 0); result.add(first);
+            assertTrue(CardLists.filter(List.of(), (Predicate<Card>) card -> true).isEmpty());
+        } else if (mode.equals("independent")) {
+            CardCollection result = CardLists.filter(cards, card -> true);
+            cards.remove(first); assertEquals(result, List.of(first, second)); result.clear(); assertEquals(cards, List.of(second));
+        } else if (mode.equals("allRejected")) {
+            List<Card> visits = new ArrayList<>(); assertTrue(CardLists.filter(cards, card -> { visits.add(card); return false; }).isEmpty());
+            assertEquals(visits, cards);
+        } else if (mode.equals("customSpliterator")) {
+            Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Must use supplied spliterator"); }
+                @Override public Spliterator<Card> spliterator() { return List.of(second, first).spliterator(); }
+            };
+            assertEquals(CardLists.filter(custom, card -> true), List.of(second, first));
+        } else if (mode.equals("perElement")) {
+            Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Must use supplied spliterator"); }
+                @Override public Spliterator<Card> spliterator() {
+                    return new Spliterators.AbstractSpliterator<>(2, Spliterator.ORDERED) {
+                        int index;
+                        @Override public boolean tryAdvance(Consumer<? super Card> action) {
+                            if (index == 2) return false; action.accept(cards.get(index++)); return true;
+                        }
+                        @Override public void forEachRemaining(Consumer<? super Card> action) { throw new AssertionError("Must retain tryAdvance traversal"); }
+                    };
+                }
+            };
+            assertEquals(CardLists.filter(custom, card -> true), cards);
+        } else if (mode.equals("predicateFailure")) {
+            RuntimeException expected = new IllegalStateException("Fixed predicate failure"); List<Card> visits = new ArrayList<>();
+            try { CardLists.filter(cards, card -> { visits.add(card); throw expected; }); fail("Must propagate failure"); }
+            catch (RuntimeException actual) { assertSame(actual, expected); }
+            assertEquals(visits, List.of(first));
+        } else if (mode.equals("mutationFailure")) {
+            List<Card> visits = new ArrayList<>();
+            expectThrows(ConcurrentModificationException.class, () -> CardLists.filter(cards, card -> { visits.add(card); cards.clear(); return true; }));
+            assertEquals(visits, List.of(first));
+        } else if (mode.equals("nullPredicate")) {
+            AtomicInteger sourceReads = new AtomicInteger(); Iterable<Card> custom = new Iterable<>() {
+                @Override public Iterator<Card> iterator() { throw new AssertionError("Use spliterator"); }
+                @Override public Spliterator<Card> spliterator() { sourceReads.incrementAndGet(); return List.<Card>of().spliterator(); }
+            };
+            expectThrows(NullPointerException.class, () -> CardLists.filter(custom, (Predicate<Card>) null)); assertEquals(sourceReads.get(), 1);
+        } else if (mode.equals("nullSource")) {
+            expectThrows(NullPointerException.class, () -> CardLists.filter(null, (Predicate<Card>) card -> true));
+        } else if (mode.equals("andOrder")) {
+            List<String> visits = new ArrayList<>();
+            CardCollection result = CardLists.filter(cards, card -> { visits.add("a" + card.getId()); return card == first; }, card -> { visits.add("b" + card.getId()); return true; });
+            assertEquals(result, List.of(first)); assertEquals(visits, List.of("a" + first.getId(), "b" + first.getId(), "a" + second.getId()));
+        } else if (mode.equals("iterablePredicates")) {
+            List<String> visits = new ArrayList<>(); List<Predicate<Card>> predicates = List.of(card -> { visits.add("a" + card.getId()); return card == first; }, card -> { visits.add("b" + card.getId()); return true; });
+            assertEquals(CardLists.filter(cards, predicates), List.of(first));
+            assertEquals(visits, List.of("a" + first.getId(), "b" + first.getId(), "a" + second.getId()));
+        } else throw new IllegalArgumentException(mode);
+    }
+'''
+for mode in ['orderedUnique','emptyMutable','independent','allRejected','customSpliterator','perElement','predicateFailure','mutationFailure','nullPredicate','nullSource','andOrder','iterablePredicates']:
+ for d in range(3):java+=f'    @Test public void {mode}Depth{d}() {{ check("{mode}", {d}); }}\n'
+java+='}\n';(f/'CommanderCardFilterContractTest.java').write_text(java,encoding='utf-8',newline='\n');print('Prepared profile-guided filter change plus36 native filter contracts.')

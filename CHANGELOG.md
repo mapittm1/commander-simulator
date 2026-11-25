@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 87 native contracts for live trigger/devotion gathering and generic
+  filtering; paired baseline/corrected-prototype checks pass all 535 focused cases.
+  Preserve three custom-spliterator callback failures from the unrestricted filter
+  experiment, its corrected fallback, and the earlier missing-phase fixture/log-
+  limit failure. Preserve bounded CPU/allocation profiling and distinct unchanged-
+  workload resolution timeouts (90.016 / 90.031 diagnostic / 90.015 / 90.016s).
+  Production prototypes remain unpromoted; source3282/native4482/packaged3325 full
+  validation is pending, with 177 registered class origins. No speedup, complete
+  rules support or installed-engine regression claim. README and coverage limits
+  distinguish native registry/devotion/filter contracts from full card histories.
+
 - Validate the counter-zone correction with all 3,195 source and 4,395 native
   cases passing, preserving prior cases and parameters. Match all 2,168 production
   sources, 156 test files and 316 card files; verify actual two-processor / 2 GiB

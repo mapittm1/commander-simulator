@@ -1,0 +1,59 @@
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -1152,17 +1152,21 @@
+         game.forEachCardInGame(c -> {
+             // need to get Card from preList if able
+             final Card co = preList.get(c);
+-            for (StaticAbility stAb : co.getStaticAbilities()) {
+-                if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
+-                    staticAbilities.add(stAb);
++            if (co.getClass() != Card.class || co.getCurrentState().mayHaveStaticAbilities()) {
++                for (StaticAbility stAb : co.getStaticAbilities()) {
++                    if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
++                        staticAbilities.add(stAb);
++                    }
+                 }
+             }
+             if (!co.getStaticCommandList().isEmpty()) {
+                 staticList.add(co);
+             }
+-            for (StaticAbility stAb : co.getHiddenStaticAbilities()) {
+-                if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
+-                    staticAbilities.add(stAb);
++            if (co.mayHaveHiddenStaticAbilities()) {
++                for (StaticAbility stAb : co.getHiddenStaticAbilities()) {
++                    if (stAb.checkMode(StaticAbilityMode.Continuous) && stAb.zonesCheck()) {
++                        staticAbilities.add(stAb);
++                    }
+                 }
+             }
+             return true;
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -7310,6 +7310,12 @@
+         getUnhiddenKeywords(state).applyStaticAbility(list);
+     }
+ 
++    /** Hidden counter/status sources are independent of the current state's statics. */
++    public final boolean mayHaveHiddenStaticAbilities() {
++        if (getClass() != Card.class) return true;
++        return (this.isInPlay() && this.isSuspected()) || !counterTypeKeywordStatic.isEmpty();
++    }
++
+     public final FCollectionView<StaticAbility> getHiddenStaticAbilities() {
+         FCollection<StaticAbility> result = new FCollection<>();
+         if (this.isInPlay() && this.isSuspected()) {
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -735,6 +735,11 @@
+         return triggers.add(t);
+     }
+ 
++    /** Conservative live-source check for callers that only need to gather abilities. */
++    public final boolean mayHaveStaticAbilities() {
++        return !staticAbilities.isEmpty() || !hasNoAdditionalTraits();
++    }
++
+     /**
+      * Cache intrinsic abilities while the live guard excludes merged trait sources.
+      * Revalidate intrinsic-list changes and land-type removal on every read.

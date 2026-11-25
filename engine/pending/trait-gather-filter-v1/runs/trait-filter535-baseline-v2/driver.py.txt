@@ -1,0 +1,46 @@
+"""Check the complete448 focused contracts against a conservative static gathering overlay."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,sys,subprocess,os,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+MODE=sys.argv[1];assert MODE in ('baseline','prototype')
+RUN=WORK/('trait-filter535-'+MODE+'-v2');ORIGINAL=ROOT/'data/runs/20fe6e3b58d04b44a3bfa3aeb55654ed';PROTOTYPE=WORK/'trait-filter-prototype-v2';EPOCH=WORK/'static-gather-epoch-v1';SETTINGS=ROOT/'data/engine-builds/190a373e5f46459597dd8c2eb8099952/engine-config.json'
+CLASSES=('forge.ai.CommanderKeywordTraitPresenceTest','forge.ai.CommanderUntapPresenceTest','forge.ai.CommanderReplacementEligibilityTest','forge.ai.CommanderKeywordMetadataFailureTest','forge.ai.CommanderStaticGatherTest','forge.ai.CommanderCardCounterZoneCopyTest','forge.ai.CommanderLiveTraitMutationTest','forge.gamesimulationtests.util.CommanderSnapshotViewTest','forge.gamesimulationtests.util.PerfPatchUnitTest','forge.gamesimulationtests.util.PerfPatchFollowUpTableTest','forge.card.CommanderSagaTypeTest','forge.ai.CommanderReplacementPresenceTest','forge.gamesimulationtests.util.CommanderRuntimeLimitsTest','forge.ai.CommanderReplacementCacheInputsTest')
+TEST=WORK/'trait-gather-fixtures-v1/CommanderTraitGatherTest.java'
+FILTER_TEST=WORK/'card-filter-fixtures-v3/CommanderCardFilterContractTest.java'
+ALL_CLASSES=CLASSES+('forge.ai.CommanderTraitGatherTest','forge.ai.CommanderCardFilterContractTest')
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ metadata=load(ORIGINAL/'rules-inputs.json');assert metadata['classes']=={p.relative_to(ORIGINAL/'rules-classes').as_posix():file_hash(p) for p in (ORIGINAL/'rules-classes').rglob('*.class')};assert all(file_hash(Path(n))==h for n,h in metadata['inputs'].items())
+ inputs=load(PROTOTYPE/'inputs.json');assert all(file_hash(PROTOTYPE/n)==h for n,h in inputs.items())
+ if (RUN/'test-classes.json').exists():assert load(RUN/'test-classes.json')=={p.relative_to(RUN/'classes').as_posix():file_hash(p) for p in (RUN/'classes').rglob('*.class')}
+ if (RUN/'inputs.json').exists():assert all(file_hash(Path(n))==h for n,h in load(RUN/'inputs.json').items())
+ frozen=load(EPOCH/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items());return inputs
+if '--worker' in sys.argv:
+ inputs=verify();settings=read_settings(SETTINGS);engine=settings.verify();require_bridge();java=importlib.import_module('jpype');recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(() if MODE=='baseline' else (PROTOTYPE/'classes',))+(archive,RUN/'classes',ORIGINAL/'rules-classes',dependency))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()<=2147483648
+ overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in inputs if n.startswith('classes/')}
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+ for name in ('forge.game.staticability.StaticAbilityDevotion','forge.game.trigger.TriggerHandler'):assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in (*CLASSES,'forge.ai.AITest'):assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ assert packaged_rules.class_origin(java,'forge.ai.CommanderTraitGatherTest').samefile(RUN/'classes')
+ assert packaged_rules.class_origin(java,'forge.ai.CommanderCardFilterContractTest').samefile(RUN/'classes')
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in ALL_CLASSES]));runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run();counts,methods=packaged_rules.test_results(listener)
+ expected=Counter(cl.get('name')+'.'+m.get('name') for cl in ET.parse(ORIGINAL/'rules-reports/testng-results.xml').findall('.//class') if cl.get('name') in CLASSES for m in cl.findall('test-method') if m.get('is-config')!='true');assert sum(expected.values())==448
+ expected.update('forge.ai.CommanderTraitGatherTest.'+family+mode.title()+'Depth'+str(depth) for family in ('trigger','devotion') for mode in ('intrinsic','keyword','collection','getter','applicator','traits','text','callback') for depth in range(3));assert sum(expected.values())==496
+ expected.update('forge.ai.CommanderCardFilterContractTest.'+mode+'Depth'+str(depth) for mode in ('orderedUnique','emptyMutable','independent','allRejected','customSpliterator','perElement','predicateFailure','mutationFailure','nullPredicate','nullSource','andOrder','iterablePredicates','metadataCallback') for depth in range(3));assert sum(expected.values())==535
+ outcome={'counts':counts,'methods':methods,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'expected_method_counter_matches':Counter(row['method'] for row in methods)==expected,'actual_processors':int(runtime.availableProcessors()),'max_java_heap_bytes':int(runtime.maxMemory()),'failures':[str(item.getThrowable()) for item in listener.getFailedTests()],'scope':'All496 prior focused controls plus39 native filtering contracts retained. Raw overlay only; no independent packaged gate or performance success claim.'};save(RUN/'outcome.json',outcome);verify();assert counts==dict(total=535,passed=535,failed=0,skipped=0) and outcome['expected_method_counter_matches'];assert outcome['testng_status']==0 and outcome['configuration_failures']==0 and outcome['configuration_skips']==0;java.shutdownJVM()
+else:
+ assert sys.argv[1:]==[MODE];verify();prior=load(WORK/'trait-gather496-baseline-v1/outcome.json');assert prior['counts']==dict(total=496,passed=496,failed=0,skipped=0);assert Counter(row['method'] for row in prior['methods'] if row['method'].startswith('forge.ai.CommanderTraitGatherTest.'))==Counter('forge.ai.CommanderTraitGatherTest.'+family+mode.title()+'Depth'+str(depth) for family in ('trigger','devotion') for mode in ('intrinsic','keyword','collection','getter','applicator','traits','text','callback') for depth in range(3));assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT);ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success';RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(SETTINGS);engine=settings.verify();recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];archive=settings.home/engine['jar_name'];compiler=Path('C:/Program Files/Java/jdk-19/bin/javac.exe');(RUN/'classes').mkdir()
+ save(RUN/'inputs.json',{str(p.resolve()):file_hash(p) for p in [TEST,FILTER_TEST,compiler,archive,dependency,Path(__file__)]})
+ result=run_bounded([str(compiler),'-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',os.pathsep.join(map(str,(archive,ORIGINAL/'rules-classes',dependency))),'-d',str(RUN/'classes'),str(TEST),str(FILTER_TEST)],ROOT,RUN/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)));save(RUN/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+ save(RUN/'test-classes.json',{p.relative_to(RUN/'classes').as_posix():file_hash(p) for p in (RUN/'classes').rglob('*.class')})
+ with _engine_profile(settings,RUN):result=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {};print(json.dumps({'process':result,'counts':outcome.get('counts'),'method_counter_matches':outcome.get('expected_method_counter_matches'),'failures':outcome.get('failures')}),flush=True);assert result['status']=='finished' and result['returncode']==0,result
