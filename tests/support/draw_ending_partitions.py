@@ -30,6 +30,7 @@ PARTITIONS = {
         "forge.ai.CommanderLibraryLookAtPositionTest",
     ),
     "combat_and_snapshots": (
+        "forge.ai.CommanderEmptyAttackTest",
         "forge.ai.CommanderCombatRemovalPlanningTest",
         "forge.ai.CommanderCombatRemovalBoundaryTest",
         "forge.ai.CommanderCombatReblockingTest",
@@ -185,6 +186,10 @@ PARTITIONS = {
         "forge.ai.CommanderManaChainTest",
     ),
     "cast_events": (
+        "forge.ai.CommanderReplacementPresenceTest",
+        "forge.ai.CommanderReplacementCacheInputsTest",
+        "forge.gamesimulationtests.util.PerfPatchUnitTest",
+        "forge.gamesimulationtests.util.PerfPatchFollowUpTableTest",
         "forge.ai.CommanderWaterbendXTest",
         "forge.ai.CommanderTypedWardTest",
         "forge.ai.CommanderWardTransitionTest",
@@ -196,10 +201,10 @@ PARTITIONS = {
 
 EXPECTED_COUNTS = {
     "information": 301,
-    "combat_and_snapshots": 228,
+    "combat_and_snapshots": 240,
     "text_casting_and_costs": 338,
     "resolution": 1271,
-    "cast_events": 640,
+    "cast_events": 778,
 }
 
 

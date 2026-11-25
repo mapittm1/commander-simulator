@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the cache/planning patch and 150 additional fixed native cases,
+  targeting 4,085 native and 2,928 packaged checks. Keep every existing partition
+  member in order and retain the original 1,271-case resolution deadline. Copy
+  collection fixtures into their original Java package. Verify 174 production
+  origins, resolving private binary classes directly and rejecting wrong
+  identities or missing code sources. Add three boundary tests. Fresh build and
+  runtime gates remain required; the selected runtime is unchanged.
+
 - Reproduce a replacement-cache gap for Vengeance type changes: six of 36 native
   cache-equivalence controls fail before the fix; all 36 pass after adding the
   missing cache-key flag. Preserve baseline, corrected and failed diagnostic

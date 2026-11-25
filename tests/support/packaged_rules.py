@@ -90,9 +90,15 @@ def compile_rules(
 
 def class_origin(java: ModuleType, name: str) -> Path:
     """Locate the exact native archive or isolated test directory for a loaded class."""
-    location = (
-        java.JClass(name).class_.getProtectionDomain().getCodeSource().getLocation()
-    )
+    # Resolve the requested binary directly: bridge wrappers for private nested
+    # classes can expose another class through their class_ attribute.
+    loaded = java.JClass("java.lang.Class").forName(name)
+    if str(loaded.getName()) != name:
+        raise ValueError("Native class identity differs from the requested binary")
+    source = loaded.getProtectionDomain().getCodeSource()
+    if source is None:
+        raise ValueError("Native class has no verifiable code source")
+    location = source.getLocation()
     return Path(str(java.JClass("java.io.File")(location.toURI()).getCanonicalPath()))
 
 

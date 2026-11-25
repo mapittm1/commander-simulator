@@ -27,6 +27,14 @@ difference.
 
 ## Card coverage
 
+The cache/planning follow-up is now registered for fresh builds with 150 additional
+native controls. The recipe targets 4,085 native and 2,928 packaged cases, with
+174 explicit production-class origins, including the private filter helper.
+Collection fixtures use their original Java package. All existing partition
+members and order remain; resolution is still 1,271 cases with a 90-second limit.
+These are validation targets, not passing runtime results. The selected runtime
+is unchanged. See [registration evidence](engine/cache_registration_evidence.json).
+
 Development-only follow-up fixes a reproduced replacement-cache input gap: adding
 or removing Vengeance returned a stale list at snapshot depths 0/1/2. The same
 36-case suite goes from 30 passing / 6 failing to 36 passing after including the
