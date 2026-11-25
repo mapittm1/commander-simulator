@@ -1,0 +1,95 @@
+from pathlib import Path
+from types import SimpleNamespace
+import json,re,shutil,subprocess,sys,uuid
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.forge_engine import _environment
+from tools import build_sticker_engine as builder
+
+root=Path.cwd();work=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/live-trait-candidate-v1';history=root/'data/development/commander-blocking-history-research'
+load=lambda p:json.loads(p.read_bytes())
+build=root/load(work/'candidate-selection.json')['build'];sealed=build/'source'
+# Reuse the independently prepared/tested candidate, not the sealed packaged source.
+# The source validation inputs remain bound to their preserved phase snapshots.
+source=history/'source';reports=source/'forge-gui-desktop/target/surefire-reports'
+ci=load(work/'source-ci.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+for name,digest in load(work/'broad-driver-inputs-v1.json').items():
+ assert file_hash(work/name)==digest==file_hash(work/'broad-driver-snapshots-v1'/name)
+
+assert subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()==ci['head_sha']
+assert load(work/'packaged-evidence-v1.json')['status']=='normal_packaged_grouped_gate_passed_full_live_pending'
+frozen=load(work/'source-frozen-inputs.json');assert len(frozen)==load(work/'source-epoch.json')['tracked_count'] and all(file_hash(root/name)==value for name,value in frozen.items())
+production={p.relative_to(sealed).as_posix():file_hash(p) for p in sealed.glob('*/src/main/java/**/*.java')};assert len(production)==2168
+candidate_production={name:file_hash(source/name) for name in production}
+reviewed=load(work.parent/'source3045-v2/production-inputs.json');assert candidate_production==reviewed
+line_endings=[]
+for name,value in production.items():
+ if candidate_production[name]!=value:
+  assert (source/name).read_text(encoding='utf-8')==(sealed/name).read_text(encoding='utf-8'),name
+  line_endings.append(name)
+(work/'broad-production-inputs.json').write_bytes((json.dumps(candidate_production,indent=2)+'\n').encode())
+focused=work/'selected-native-reports';assert not focused.exists();shutil.copytree(sealed/'forge-gui-desktop/target/surefire-reports',focused)
+policies=('engine/patches/star-trek-commandeer-validation.patch','engine/patches/bauble-ai-classification-validation.patch')
+policy_hashes={name:file_hash(root/name) for name in policies}
+changed=set()
+for name in policies:
+ for line in (root/name).read_text(encoding='utf-8').splitlines():
+  if line.startswith('+++ b/'):
+   relative=line[len('+++ b/'):];assert relative.startswith('forge-gui-desktop/src/test/java/') and relative.endswith('.java')
+   assert (source/relative).resolve().is_relative_to(source.resolve());changed.add(relative)
+assert changed
+originals={name:(source/name).read_bytes() for name in changed}
+backup=work/'broad-policy-originals';assert not backup.exists();backup.mkdir()
+for name,data in originals.items():
+ target=backup/name;target.parent.mkdir(parents=True,exist_ok=True);target.write_bytes(data)
+results={};directory='--directory='+source.relative_to(root).as_posix()
+try:
+ for name in policies:
+  subprocess.run(['git','apply','--check',directory,str(root/name)],cwd=root,check=True)
+  subprocess.run(['git','apply',directory,str(root/name)],cwd=root,check=True)
+ applied=work/'broad-policy-applied';assert not applied.exists();applied.mkdir()
+ for name in changed:
+  target=applied/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source/name,target)
+ print(json.dumps({'independent_production_sources_verified':2168,'candidate_source_reused':True,'policy_originals_preserved':len(originals)}),flush=True)
+ test_root=source/'forge-gui-desktop/src/test/java'
+ for suite,directories,patterns,total in (
+  ('gameplay',('forge/ai','forge/game','forge/gamesimulationtests/comprehensiverules','forge/gamesimulationtests/priority'),('*Test.java',),5568),
+  ('serialization',('forge/card','forge/deck'),('*Test.java','*TestCase.java'),320),
+ ):
+  run=root/'data/coverage-research'/('native-'+suite+'-'+uuid.uuid4().hex);run.mkdir()
+  packaged_test_root=sealed/'forge-gui-desktop/src/test/java'
+  # Select the full actual packaged source suite. The experimental tree also retains
+  # an unregistered default-policy research fixture whose stochastic failure is preserved.
+  paths={path.relative_to(packaged_test_root) for folder in directories for pattern in patterns for path in (packaged_test_root/folder).rglob(pattern)}
+  research_only=sorted(p.relative_to(test_root).as_posix() for folder in directories for pattern in patterns for p in (test_root/folder).rglob(pattern) if p.relative_to(test_root) not in paths)
+  assert not research_only,research_only
+  classes=sorted('.'.join(path.with_suffix('').parts) for path in paths)
+  (run/'research-only-selection.json').write_bytes((json.dumps({'excluded_not_in_actual_packaged_source':research_only,'reason':'Actual packaged-source classes define the broader suite; this fresh experimental source has no additional research fixtures.'},indent=2)+'\n').encode())
+  captured=[];original_checked=builder._checked
+  try:
+   builder._checked=lambda command,*args:captured.append(command)
+   builder._compile(SimpleNamespace(jdk=Path('C:/Program Files/Java/jdk-19')),source,build/'maven',run)
+  finally:builder._checked=original_checked
+  assert len(captured)==1
+  command=['-Dtest='+','.join(classes) if value.startswith('-Dtest=') else 'test' if value=='package' else value for value in captured[0]]
+  (run/'selection.json').write_bytes((json.dumps({'classes':classes,'command':command},indent=2)+'\n').encode())
+  process=run_bounded(command,source/'forge-gui-desktop',run/'native-rules.log',ProcessLimits(600,environment=_environment(run)))
+  (run/'process.json').write_bytes((json.dumps(process,indent=2)+'\n').encode())
+  shutil.copytree(reports,run/'surefire-reports')
+  header=(reports/'testng-results.xml').read_bytes()[:2048].decode('utf-8')
+  counts={key:int(re.search(r'\b'+key+r'="(\d+)"',header).group(1)) for key in ('total','passed','failed','skipped')}
+  results[suite]={**counts,'classes':classes,'selected_classes':len(classes),'process':process,'local_run_id':run.name,'testng_results_sha256':file_hash(reports/'testng-results.xml'),'log_sha256':file_hash(run/'native-rules.log')}
+  print(json.dumps({'suite':suite,'counts':counts,'process':process}),flush=True)
+  assert counts==dict(total=total,passed=total,failed=0,skipped=0),counts
+  assert process['status']=='finished' and process['returncode']==0,process
+finally:
+ for name,data in originals.items():(source/name).write_bytes(data)
+ assert all((source/name).read_bytes()==data for name,data in originals.items())
+ assert all(file_hash(source/name)==value for name,value in candidate_production.items())
+ for phase in ('source3045-v2',):
+  for manifest in ('production-inputs.json','test-inputs.json','card-inputs.json'):
+   assert all(file_hash(source/name)==value for name,value in load(work.parent/phase/manifest).items())
+ assert all(file_hash(root/name)==value for name,value in frozen.items())
+record={'scope':'Independent native gameplay and card/deck compilation (including serialization and subtype controls) using the source-tested candidate; temporary reviewed test-only policies are restored byte-for-byte. Not all-card certification.','source_commit':'583714b8bfbd9cb04f8bc39ad95861190caf7691','recipe_sha256':file_hash(root/'engine/sticker_recipe.json'),'test_only_policies':policy_hashes,'frozen_inputs_sha256':file_hash(work/'source-frozen-inputs.json'),'candidate_source_reused':True,'production_sources':2168,'byte_identical_production_sources':2168-len(line_endings),'reviewed_line_ending_paths':line_endings,'candidate_production_inputs_sha256':file_hash(work/'broad-production-inputs.json'),'test_policy_originals_restored':True,'test_policy_files':{name:{'original_sha256':file_hash(backup/name),'applied_sha256':file_hash(applied/name)} for name in changed},'suites':results}
+p=work/'native-test-evidence-v1.json';assert not p.exists();p.write_bytes((json.dumps(record,indent=2)+'\n').encode())
+print('Broader suites finished; candidate inputs and original test policy bytes restored.',flush=True)

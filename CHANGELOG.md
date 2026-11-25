@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the live-trait correction with 3,045 passing source and 4,245 passing
+  native cases, retaining all prior cases/parameters and verifying two actual JVM
+  processors and a 2 GiB maximum heap. Audit all 2,168 production sources and
+  preserve the failed independent packaged gate: original resolution (1,271
+  cases) times out at 90.031 seconds; six groups pass 1,284 subtests and the
+  938-case cast-event group is not reached. Restore the original configuration,
+  keep the candidate uninstalled, preserve a separate bounded sampling profile,
+  and consolidate README coverage status while retaining historical evidence.
+  Broader/full-game/catalog/health/activation and full rules coverage remain open.
+
 - Remove eight unused imports from the new live-trait fixture after the full
   source attempt stopped at Checkstyle before executing tests. Keep every test
   body and production change unchanged, update the pinned fixture hash and

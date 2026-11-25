@@ -17,6 +17,18 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
+## Current live-trait validation
+
+The generic ability-cache correction re-evaluates mutable trait/keyword entries,
+removal predicates and custom callbacks. All 3,045 source and 4,245 native cases
+pass with verified two-processor / 2 GiB JVM limits; every earlier case is retained.
+The mandatory independent 1,271-case resolution gate still exceeds its original
+90-second limit. Six other groups pass 1,284 subtests; the 938-case cast-event
+suite is not reached. The candidate remains uninstalled and the previous
+configuration is restored. Broader/full-game/catalog/health/activation checks and
+complete rules coverage remain pending. See
+[latest runtime evidence](../engine/live_trait_runtime_evidence.json).
+
 ## Delayed disclosure rights and display metadata
 
 The active delayed-reveal wrapper resolves exact current views in declared and

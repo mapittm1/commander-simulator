@@ -24,80 +24,43 @@ review file both contribute to the approval digest. Other engine archives do not
 need to be loaded, and a missing or malformed review cannot approve a wording
 difference.
 
-
 ## Card coverage
 
-The first full-source attempt stopped before tests because Checkstyle found eight
-unused imports in the new fixture. Those imports are removed; test bodies and the
-production correction are unchanged. The failed attempt is preserved in the
-live trait evidence, and full validation still remains pending.
+The live-trait correction passes all **3,045 source** and **4,245 native** cases,
+including 30 new regressions and every retained earlier case. The source/binary
+audit matches all 2,168 production sources. Source/native runs verify two actual
+JVM processors and a 2 GiB maximum Java heap. Mutable keyword/trait entries,
+removal predicates and custom callbacks are evaluated on every read so cached
+ability lists cannot hide their changes. These suites cover selected interaction
+contracts and do not establish complete card or rules support.
 
-A new cache correction re-evaluates mutable keyword/trait entries, removal
-predicates and custom callbacks on every read. Thirty new regressions fail on the
-previous candidate and pass with the correction; all 232 prior focused controls
-also pass (262 total). The recipe now registers 4,245 native cases, including
-3,088 packaged draw/ending cases; the original resolution group remains 1,271
-cases with its 90-second limit. Full source/native/packaged validation of this
-correction remains pending, and the selected runtime is unchanged. See
-[live trait evidence](engine/live_trait_mutation_evidence.json).
+The independent packaged gate still fails: the original 1,271-case resolution
+group times out at 90.031 seconds against its unchanged 90-second limit. Six
+completed groups pass 1,284 subtests with verified packaged class origins; the
+938-case cast-event group is not reached. The original configuration is restored,
+the candidate remains uninstalled, and broader/full-game/catalog/health/activation
+validation remains pending. See the
+[latest runtime evidence](engine/live_trait_runtime_evidence.json).
 
-The bounded follow-up passes all 3,015 source and 4,215 native cases with actual
-two JVM processors and a 2 GiB maximum Java heap. The full 2,168-source parity audit
-passes, retaining every earlier case. Its independent packaged
-gate fails: the unchanged 1,271-case resolution group times out at 90 seconds.
-Six other completed groups pass 1,284 subtests with verified class origins; the
-908-case cast-event group is not reached. The original configuration is restored
-and the candidate remains uninstalled. Broader/full-game/catalog/activation gates
-remain pending. See [runtime attempt evidence](engine/bounded_trait_runtime_evidence.json).
+The [focused regression evidence](engine/live_trait_mutation_evidence.json)
+preserves the 30 failing baseline cases, their corrected passes and all 232
+previous focused controls. The first full-source attempt stopped at Checkstyle;
+removing eight unused imports preserved every test body, and the corrected
+3,045-case source run passes.
 
-Resource-validation correction: the fresh 4,214-case build passes functional
-checks and the parameter-aware source/binary audit, but inspection shows that its
-Maven JVM used 32 processors. Earlier Maven source/native passes do not establish
-two-processor validation; the two-processor label in the archived source scope
-was inaccurate. Packaged workers already explicitly use two processors. The build
-launcher now does too, with a native check of actual processors and maximum Java
-heap. That isolated check fails at 32 and passes at 2 with the same 2 GiB heap.
-The next bounded targets are 3,015 source, 4,215 native and 3,058 packaged cases;
-these full gates are pending. The selected runtime is unchanged. See
+Earlier evidence remains available for the
+[snapshot views and trait admission](engine/trait_admission_evidence.json),
+[cache registration](engine/cache_registration_evidence.json),
+[cache runtime attempt](engine/cache_runtime_attempt_evidence.json),
+[replacement-cache inputs](engine/replacement_cache_evidence.json), and
+[bounded 4,215-case candidate](engine/bounded_trait_runtime_evidence.json).
+These records do not establish a passing mandatory resolution gate.
+
+Resource-history correction: an earlier 4,214-case Maven build used 32 processors.
+Older Maven “two CPU” labels do not establish two-processor validation. The launcher
+and native resource assertion are corrected; the current source/native reruns
+verify the actual limits. See the
 [resource correction evidence](engine/jvm_build_limits_evidence.json).
-
-A new source-validated correction makes nested row/column snapshot maps read-only.
-Previously, inner-map writes could change shared table contents without updating
-the table version. The 56-case suite goes from 8 passing / 48 failing to 56 passing.
-All 231 focused and 3,014 source cases pass, retaining earlier cases; serialized
-bytes match the baseline. Related generic optimizations preserve native Saga
-predicate behavior, live trait changes and subclass callbacks. The recipe now
-targets 4,214 native and 3,057 packaged cases with 175 production origins. These
-are fresh-runtime targets: the original 1,271-case resolution group still exceeds
-90 seconds in overlay diagnostics. The selected runtime is unchanged. See
-[source and regression evidence](engine/trait_admission_evidence.json).
-
-The fresh registered follow-up passes all 4,085 native cases and the full
-2,168-source parity audit, retaining every earlier case. Its independent packaged
-gate fails: the unchanged 1,271-case resolution group times out at 90 seconds.
-Six other completed groups pass 1,284 subtests with verified class origins; the
-778-case cast-event group is not reached. The original configuration is restored
-and the candidate remains uninstalled. Broader/full-game/catalog/activation gates
-remain pending. See [runtime attempt evidence](engine/cache_runtime_attempt_evidence.json).
-
-The cache/planning follow-up is now registered for fresh builds with 150 additional
-native controls. The recipe targets 4,085 native and 2,928 packaged cases, with
-174 explicit production-class origins, including the private filter helper.
-Collection fixtures use their original Java package. All existing partition
-members and order remain; resolution is still 1,271 cases with a 90-second limit.
-These are validation targets, not passing runtime results. The selected runtime
-is unchanged. See [registration evidence](engine/cache_registration_evidence.json).
-
-Development-only follow-up fixes a reproduced replacement-cache input gap: adding
-or removing Vengeance returned a stale list at snapshot depths 0/1/2. The same
-36-case suite goes from 30 passing / 6 failing to 36 passing after including the
-subtype in the cache key. All 2,885 source cases pass, retaining the previous
-2,849 and adding these 36 controls. Earlier new controls cover live trait changes,
-empty attack declarations and core collections. These changes remain pending
-registration and runtime validation; the original 1,271-case packaged resolution
-group still has no passing result at its unchanged 90-second limit. The selected
-runtime remains unchanged. See [development evidence](engine/replacement_cache_evidence.json).
-This cache invariant does not establish the complete Vengeance gameplay lifecycle.
 
 The selected runtime is `2.0.16-583714b-reviewed-mana-chain`.
 Shared mana planning now searches native game copies for admitted chained-filter
