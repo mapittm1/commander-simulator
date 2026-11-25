@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Simplify guarded intrinsic ability caches by removing 66 lines of redundant
+  source/version bookkeeping and repeated split-state checks. Preserve live
+  mutable-source guards, unknown-table fallback, list stamps, native type/counter
+  flags and independent returned collections. Baseline/prototype both pass all
+  298 focused controls and retain identical snapshot serialization bytes. The
+  original 1,271-case overlay still times out at 90 seconds; preserve that result
+  without claiming a runtime improvement. Full source/native/packaged and later
+  validation remain pending for the new recipe; selected runtime unchanged.
+
 - Validate the live-trait correction with 3,045 passing source and 4,245 passing
   native cases, retaining all prior cases/parameters and verifying two actual JVM
   processors and a 2 GiB maximum heap. Audit all 2,168 production sources and

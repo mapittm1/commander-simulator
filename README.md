@@ -26,7 +26,17 @@ difference.
 
 ## Card coverage
 
-The live-trait correction passes all **3,045 source** and **4,245 native** cases,
+A registered intrinsic-cache simplification removes 66 lines of redundant
+bookkeeping while preserving live mutable-source guards, intrinsic-list stamps,
+native type/counter flags and independent returned collections. Both baseline
+and prototype pass the same 298 focused cases; snapshot serialization bytes match.
+Its original 1,271-case overlay diagnostic still times out at 90 seconds, so no
+runtime-limit improvement is established. Full 3,045-source / 4,245-native and
+independent 3,088-case packaged validation remain pending for this revision.
+The selected runtime is unchanged. See
+[intrinsic-cache evidence](engine/intrinsic_cache_evidence.json).
+
+The preceding live-trait candidate passed all **3,045 source** and **4,245 native** cases,
 including 30 new regressions and every retained earlier case. The source/binary
 audit matches all 2,168 production sources. Source/native runs verify two actual
 JVM processors and a 2 GiB maximum Java heap. Mutable keyword/trait entries,

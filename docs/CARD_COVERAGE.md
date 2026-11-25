@@ -17,7 +17,16 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Current live-trait validation
+## Guarded intrinsic-cache follow-up
+
+The registered follow-up removes redundant bookkeeping after the live-source
+guard. Both baseline and prototype pass 298 focused controls; serialized snapshot
+bytes match. The original 1,271-case overlay diagnostic still exceeds 90 seconds.
+Full 3,045-source / 4,245-native and independent packaged validation of this recipe
+remain pending. The installed runtime is unchanged. See
+[intrinsic-cache evidence](../engine/intrinsic_cache_evidence.json).
+
+## Earlier live-trait validation
 
 The generic ability-cache correction re-evaluates mutable trait/keyword entries,
 removal predicates and custom callbacks. All 3,045 source and 4,245 native cases

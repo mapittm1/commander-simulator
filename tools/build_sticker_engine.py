@@ -241,6 +241,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-cache-and-planning.patch",
                 "engine/patches/commander-trait-admission.patch",
                 "engine/patches/commander-live-trait-sources.patch",
+                "engine/patches/commander-intrinsic-cache-simplification.patch",
                 "engine/patches/commander-trait-doctoring-ai.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",

@@ -1,0 +1,167 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -735,51 +735,28 @@
+     }
+ 
+     /**
+-     * The merged static abilities are cached and re-validated on every read: the cache is only reused
+-     * while all of its inputs are unchanged, so no caller has to invalidate anything. Inputs:
+-     * this state's own list (and the split halves' lists for the Original state), the card's trait
+-     * change tables (Layer 3 by text, Layer 6), whether a Layer 4 effect removes intrinsic abilities
+-     * (land type changes), and the keyword collection.
++     * Cache intrinsic abilities while the live guard excludes merged trait sources.
++     * Revalidate intrinsic-list changes and land-type removal on every read.
+      */
+     public final FCollectionView<StaticAbility> getStaticAbilities() {
+-        // Table versions do not track mutable entries, keyword lists or callbacks.
+         if (!hasNoAdditionalTraits()) return buildStaticAbilities();
+         // Land type changes can remove statics, but cannot introduce one.
+-        if (staticAbilities.isEmpty() && hasNoAdditionalTraits()) {
++        if (staticAbilities.isEmpty()) {
+             return FCollection.<StaticAbility>getEmpty().shareCopy();
+         }
+-        final Object traits = FSnapshotTable.versionOf(card.getChangedCardTraits());
+-        final Object traitsByText = FSnapshotTable.versionOf(card.getChangedCardTraitsByText());
+-        if (traits == null || traitsByText == null) {
++        if (FSnapshotTable.versionOf(card.getChangedCardTraits()) == null
++                || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) {
+             return buildStaticAbilities(); // unknown table implementation: never cache
+         }
+-
+-        CardState left = null;
+-        CardState right = null;
+-        if (getStateName().equals(CardStateName.Original)) {
+-            if (getCard().hasState(CardStateName.LeftSplit))
+-                left = getCard().getState(CardStateName.LeftSplit);
+-            if (getCard().hasState(CardStateName.RightSplit))
+-                right = getCard().getState(CardStateName.RightSplit);
+-        }
+-        final int leftVersion = left == null ? -1 : left.staticAbilitiesStamp();
+-        final int rightVersion = right == null ? -1 : right.staticAbilitiesStamp();
+         final int ownVersion = staticAbilitiesStamp();
+         final boolean removeIntrinsic = card.hasRemoveIntrinsic();
+-        final KeywordCollection keywords = cachedKeywords;
+-
+         final StaticAbilitiesCache cache = staticCache;
+-        if (cache != null && cache.traits == traits && cache.traitsByText == traitsByText
+-                && cache.keywords == keywords && cache.removeIntrinsic == removeIntrinsic
+-                && cache.ownVersion == ownVersion
+-                && cache.leftVersion == leftVersion && cache.rightVersion == rightVersion) {
++        if (cache != null && cache.ownVersion == ownVersion
++                && cache.removeIntrinsic == removeIntrinsic) {
+             return cache.value.shareCopy();
+         }
+-
+-        // the stamps above were taken before building, so a change during the build is caught on the next read
+         final FCollection<StaticAbility> result = buildStaticAbilities();
+-        staticCache = new StaticAbilitiesCache(result, traits, traitsByText, keywords, removeIntrinsic,
+-                ownVersion, leftVersion, rightVersion);
++        staticCache = new StaticAbilitiesCache(result, removeIntrinsic, ownVersion);
+         return result.shareCopy();
+     }
+ 
+@@ -806,24 +783,13 @@
+     /** Immutable holder so the cached list and the stamps it was built from are published together. */
+     private static final class StaticAbilitiesCache {
+         final FCollection<StaticAbility> value;
+-        final Object traits;
+-        final Object traitsByText;
+-        final KeywordCollection keywords;
+         final boolean removeIntrinsic;
+         final int ownVersion;
+-        final int leftVersion;
+-        final int rightVersion;
+-
+-        StaticAbilitiesCache(FCollection<StaticAbility> value, Object traits, Object traitsByText,
+-                             KeywordCollection keywords, boolean removeIntrinsic, int ownVersion, int leftVersion, int rightVersion) {
++
++        StaticAbilitiesCache(FCollection<StaticAbility> value, boolean removeIntrinsic, int ownVersion) {
+             this.value = value;
+-            this.traits = traits;
+-            this.traitsByText = traitsByText;
+-            this.keywords = keywords;
+             this.removeIntrinsic = removeIntrinsic;
+             this.ownVersion = ownVersion;
+-            this.leftVersion = leftVersion;
+-            this.rightVersion = rightVersion;
+         }
+     }
+     public final boolean addStaticAbility(StaticAbility stab) {
+@@ -848,44 +814,23 @@
+         return getReplacementEffects(true);
+     }
+     /**
+-     * Cached and re-validated on every read, like getStaticAbilities. Besides the stamps used there, the
+-     * hidden inputs (type flags, counters, ...) are evaluated on every read as a small bitmask and compared.
++     * Cache intrinsic and native rule replacements while the live guard excludes
++     * merged trait sources. Revalidate the intrinsic list, type and counter flags.
+      */
+     public FCollectionView<ReplacementEffect> getReplacementEffects(boolean rulesHost) {
+-        // Re-evaluate mutable trait sources and predicates on every read.
+         if (!hasNoAdditionalTraits()) return buildReplacementEffects(rulesHost);
+-        final Object traits = FSnapshotTable.versionOf(card.getChangedCardTraits());
+-        final Object traitsByText = FSnapshotTable.versionOf(card.getChangedCardTraitsByText());
+-        if (traits == null || traitsByText == null) {
++        if (FSnapshotTable.versionOf(card.getChangedCardTraits()) == null
++                || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) {
+             return buildReplacementEffects(rulesHost); // unknown table implementation: never cache
+         }
+-
+-        CardState left = null;
+-        CardState right = null;
+-        if (getStateName().equals(CardStateName.Original)) {
+-            if (getCard().hasState(CardStateName.LeftSplit))
+-                left = getCard().getState(CardStateName.LeftSplit);
+-            if (getCard().hasState(CardStateName.RightSplit))
+-                right = getCard().getState(CardStateName.RightSplit);
+-        }
+-        final int leftVersion = left == null ? -1 : left.replacementEffectsStamp();
+-        final int rightVersion = right == null ? -1 : right.replacementEffectsStamp();
+         final int ownVersion = replacementEffectsStamp();
+         final int flags = replacementFlags(rulesHost);
+-        final KeywordCollection keywords = cachedKeywords;
+-
+         final ReplacementEffectsCache cache = rulesHost ? replacementCacheRules : replacementCacheNoRules;
+-        if (cache != null && cache.traits == traits && cache.traitsByText == traitsByText
+-                && cache.keywords == keywords && cache.flags == flags
+-                && cache.ownVersion == ownVersion
+-                && cache.leftVersion == leftVersion && cache.rightVersion == rightVersion) {
++        if (cache != null && cache.ownVersion == ownVersion && cache.flags == flags) {
+             return cache.value.shareCopy();
+         }
+-
+-        // the stamps above were taken before building, so a change during the build is caught on the next read
+         final FCollection<ReplacementEffect> result = buildReplacementEffects(rulesHost);
+-        final ReplacementEffectsCache fresh = new ReplacementEffectsCache(result, traits, traitsByText, keywords,
+-                flags, ownVersion, leftVersion, rightVersion);
++        final ReplacementEffectsCache fresh = new ReplacementEffectsCache(result, flags, ownVersion);
+         if (rulesHost) {
+             replacementCacheRules = fresh;
+         } else {
+@@ -960,24 +905,13 @@
+     /** Immutable holder so the cached list and the stamps it was built from are published together. */
+     private static final class ReplacementEffectsCache {
+         final FCollection<ReplacementEffect> value;
+-        final Object traits;
+-        final Object traitsByText;
+-        final KeywordCollection keywords;
+         final int flags;
+         final int ownVersion;
+-        final int leftVersion;
+-        final int rightVersion;
+-
+-        ReplacementEffectsCache(FCollection<ReplacementEffect> value, Object traits, Object traitsByText,
+-                                KeywordCollection keywords, int flags, int ownVersion, int leftVersion, int rightVersion) {
++
++        ReplacementEffectsCache(FCollection<ReplacementEffect> value, int flags, int ownVersion) {
+             this.value = value;
+-            this.traits = traits;
+-            this.traitsByText = traitsByText;
+-            this.keywords = keywords;
+             this.flags = flags;
+             this.ownVersion = ownVersion;
+-            this.leftVersion = leftVersion;
+-            this.rightVersion = rightVersion;
+         }
+     }
+     public boolean addReplacementEffect(final ReplacementEffect replacementEffect) {
