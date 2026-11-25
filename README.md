@@ -26,6 +26,22 @@ difference.
 
 ## Card coverage
 
+A generic discard-history correction now maps each player's historical discard
+records into AI game copies. Twelve of eighteen baseline controls fail: copied
+Hollow One casts lose earned discounts, and discard records disappear. The
+correction passes **18/18** controls using actual paid cycling and casting,
+repeated copies, preserved historical card ownership, opponent isolation,
+independent branches, native player cleanup and negative graveyard moves. All
+retained casting, combat, untap, event-history, foretell, upstream and trait
+regression groups pass; these groups can overlap and are not unique card counts.
+
+The recipe adds eighteen `discard_history` cases, retaining every earlier group
+and original **1,271 / 90 seconds**. Fresh **3,596 source / 4,796 native / 3,639 main
+packaged** validation is pending. Supplied boards do not establish full preceding
+legal histories, complete turn scheduling or experimental restore support;
+selected runtime is unchanged. See
+[discard correction evidence](engine/discard_history_evidence.json).
+
 A generic foretell-history correction now preserves each player's turn count in
 AI world copies. Six of twelve baseline controls fail: a used first-foretell
 discount becomes available again, and action counts disappear. The correction
@@ -37,9 +53,20 @@ cases pass. Supplied boards do not establish full preceding legal histories,
 the complete turn scheduler or experimental restore support.
 
 The recipe adds twelve `foretell_history` cases, retaining every earlier group
-and original **1,271 / 90 seconds**. Fresh **3,578 source / 4,778 native / 3,621 main
-packaged** validation is pending; selected runtime is unchanged. See
-[foretell correction evidence](engine/foretell_history_evidence.json).
+and original **1,271 / 90 seconds**. Fresh **3,578 source / 4,778 native** cases pass
+with exact retained methods and parameters. Reviewed manifests contain **2,168
+production / 172 test / 344 card** inputs; all **283 registered + nine priority**
+fixture files match reviewed bytes. Player.class is the only changed production
+class relative to the preceding native candidate. All **2,350** non-resolution
+main cases and separate **405** free-casting/untap/Battle cases pass receipt audits.
+Broader **6,101 gameplay / 320 serialization** cases pass with exact membership,
+no skips and policies restored.
+
+The full **3,621-case** gate remains incomplete: original resolution times out at
+**90.032 seconds**, without a completed report. Final live checks, activation
+and complete card/rules coverage remain open; selected runtime is unchanged. See
+[foretell correction evidence](engine/foretell_history_evidence.json) and
+[runtime evidence](engine/foretell_history_runtime_evidence.json).
 
 A generic game-long spell-history correction now preserves earlier-turn casts in
 AI world copies. Five of twelve baseline controls fail: copied games incorrectly

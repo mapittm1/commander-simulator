@@ -1,0 +1,76 @@
+"""Profile CPU in three unchanged heavy tests; never substitute for the full resolution gate."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,read_settings,jvm_library
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+WORK=Path(__file__).resolve().parent;EPOCH=WORK/'foretell-source-epoch-v1';load=lambda p:json.loads(p.read_bytes())
+MODE=sys.argv[1];assert MODE in ('overlay',) and sys.argv[2:] in ([],['--worker'])
+P=WORK/'native-keyword-static-cache-v1';RUN=WORK/'native-keyword-post-cache-cpu-v1'
+CONFIG=ROOT/load(WORK/'foretell-candidate-v1/candidate-selection.json')['build']/'engine-config.json'
+UPSTREAM=CONFIG.parent/'source/forge-gui-desktop/target/test-classes';TARGET='forge.ai.CommanderExertTransitionsTest'
+METHODS=('repeatedDepth2','twoExertingPlayersDepth1','twoExertingPlayersDepth2')
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify(root=False):
+ assert all(file_hash(P/n)==h for n,h in load(P/'inputs.json').items())
+ manifest=load(WORK/'source3578-v1/production-inputs.json');paths=load(P/'proposal.json')['changed_sources']
+ assert len(paths)==15 and all(file_hash(P/'baseline'/n)==manifest[n] for n in paths)
+ assert not (P/'classes/forge/game/player/Player.class').exists()
+ assert 'copySnapshotGameSpellCountFrom' in (P/'source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java').read_text(encoding='utf-8')
+ assert load(RUN/'test-inputs.json')['files']=={n.relative_to(UPSTREAM).as_posix():file_hash(n) for n in UPSTREAM.rglob('*') if n.is_file()}
+ if root:
+  assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+  source=ROOT/'data/development/commander-blocking-history-research/source'
+  assert all(file_hash(source/n)==h for n,h in load(WORK/'source3578-v1/production-inputs.json').items())
+def cases(report):
+ result=Counter()
+ for cls in ET.parse(report).findall('.//class'):
+  for m in cls.findall('test-method'):
+   if m.get('is-config')!='true':result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+ return result
+if '--worker' in sys.argv:
+ verify();settings=read_settings(CONFIG);lock=settings.verify();assert lock['native_tests']['total']==4778
+ require_bridge();java=importlib.import_module('jpype');recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256'];archive=settings.home/lock['jar_name']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(P/'classes',archive,UPSTREAM,dependency))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ overrides={n[len('classes/'):] for n in load(P/'inputs.json') if n.startswith('classes/') and n.endswith('.class')}
+ origins=tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.game.ability.effects.DetachedCardEffect')))
+ for name in origins:assert packaged_rules.class_origin(java,name).samefile(P/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(P/'classes'),name
+ for name in (TARGET,'forge.ai.ExertTestSupport','forge.ai.AITest'):assert packaged_rules.class_origin(java,name).samefile(UPSTREAM),name
+ native=cases(CONFIG.parent/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml');expected=Counter((TARGET+'.'+n,()) for n in METHODS);assert sum(expected.values())==3 and expected <= native
+ suite=java.JClass('org.testng.xml.XmlSuite')();suite.setName('Instrumented static gather diagnostic')
+ test=java.JClass('org.testng.xml.XmlTest')(suite);test.setName('Three unchanged heavy methods')
+ cls=java.JClass('org.testng.xml.XmlClass')(TARGET);included=java.JClass('java.util.ArrayList')()
+ for name in METHODS:included.add(java.JClass('org.testng.xml.XmlInclude')(name))
+ cls.setIncludedMethods(included);classes=java.JClass('java.util.ArrayList')();classes.add(cls);test.setXmlClasses(classes)
+ suites=java.JClass('java.util.ArrayList')();suites.add(suite)
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.setXmlSuites(suites);runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+ recording=java.JClass('jdk.jfr.Recording')();spec=java.JClass('java.util.HashMap')()
+ for key,value in {'jdk.ExecutionSample#enabled':'true','jdk.ExecutionSample#period':'10 ms','jdk.GCPhasePause#enabled':'true','jdk.GarbageCollection#enabled':'true'}.items():spec.put(key,value)
+ recording.setSettings(spec);recording.setMaxSize(33554432);recording.setMaxAge(java.JClass('java.time.Duration').ofSeconds(60))
+ save(RUN/'profile-settings.json',{'settings':{str(e.getKey()):str(e.getValue()) for e in spec.entrySet()},'max_bytes':33554432,'max_age_seconds':60,'allocation_sampling':False,'diagnostic_only':True})
+ recording.start()
+ try:runner.run()
+ finally:
+  recording.stop();recording.dump(java.JClass('java.nio.file.Paths').get(str(RUN/'runtime.jfr')));recording.close()
+ counts,methods=packaged_rules.test_results(listener);actual=cases(RUN/'reports/testng-results.xml')
+ profile=RUN/'runtime.jfr';assert 0<profile.stat().st_size<=33554432
+ save(RUN/'profile-file.json',{'sha256':file_hash(profile),'bytes':profile.stat().st_size})
+ outcome={'mode':MODE,'counts':counts,'methods':methods,'native_method_and_parameter_counter_matches':actual==expected,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'profile_sha256':file_hash(profile),'allocation_sampling':False,'production_origins':len(origins),'all_overlay_origins_verified':True,'actual_processors':int(runtime.availableProcessors()),'actual_max_heap_bytes':int(runtime.maxMemory()),'report_sha256':file_hash(RUN/'reports/testng-results.xml'),'scope':'CPU-profiled three-case diagnostic with uninstrumented positive cache. Original assertions retained; startup samples will be separated by test-frame filtering. Not a full1271/90 pass, reliable speedup or comprehensive rules claim.'}
+ save(RUN/'outcome.json',outcome)
+ assert counts==dict(total=3,passed=3,failed=0,skipped=0) and actual==expected
+ assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+ verify();java.shutdownJVM()
+else:
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+ RUN.mkdir();save(RUN/'test-inputs.json',{'files':{n.relative_to(UPSTREAM).as_posix():file_hash(n) for n in UPSTREAM.rglob('*') if n.is_file()}});verify(root=True);(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());save(RUN/'selection.json',{'mode':MODE,'class':TARGET,'methods':METHODS,'expected_cases':3,'worker_limit_seconds':90,'diagnostic_only':True,'original_resolution_cases_unchanged':1271})
+ settings=read_settings(CONFIG)
+ with _engine_profile(settings,RUN):process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ o=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {};print(json.dumps({'mode':MODE,'process':process,'counts':o.get('counts'),'profile_sha256':o.get('profile_sha256')}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0,process

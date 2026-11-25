@@ -1,0 +1,80 @@
+"""Audit the fresh native candidate against retained cases and exact reviewed inputs."""
+from collections import Counter
+from pathlib import Path
+import json
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+import zipfile
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'foretell-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def cases(p):
+    tree=ET.parse(p).getroot();result=Counter()
+    for cls in tree.findall('.//class'):
+        for m in cls.findall('test-method'):
+            assert m.get('status')=='PASS',(cls.get('name'),m.attrib)
+            if m.get('is-config')!='true':
+                result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return {n:int(tree.get(n)) for n in ('total','passed','failed','skipped')},result
+frozen=load(RUN/'source-frozen-inputs.json')
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+process=load(RUN/'process.json');assert process['status']=='finished' and len(process['new_builds'])==1
+build=ROOT/'data/engine-builds'/process['new_builds'][0]
+settings=read_settings(build/'engine-config.json');lock=settings.verify()
+assert lock['native_tests']==dict(total=4778,passed=4778,failed=0,skipped=0)
+assert lock['recipe_sha256']==file_hash(ROOT/'engine/sticker_recipe.json')
+report=build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+counts,actual=cases(report)
+assert counts==lock['native_tests'] and sum(actual.values())==4778
+prior=ROOT/'data/engine-builds/9d5e9058e53b4d0abae3667e2596bb48'
+_,old=cases(prior/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+new=Counter((r['method'],()) for r in load(WORK/'foretell-history12-prototype-v1/outcome.json')['methods'])
+assert sum(old.values())==4766 and sum(new.values())==12 and actual==old+new
+sourceproof=load(WORK/'source3578-v1/evidence.json')
+assert sourceproof['counts']==dict(total=3578,passed=3578,failed=0,skipped=0)
+inputs={}
+for kind in ('production','test','card'):
+    manifest=load(WORK/('source3578-v1/'+kind+'-inputs.json'))
+    if kind=='production':
+        observed={p.relative_to(build/'source').as_posix() for p in (build/'source').glob('*/src/main/java/**/*.java')}
+        assert observed==manifest.keys() and len(observed)==2168
+    differences=[]
+    for n,h in manifest.items():
+        snap=WORK/'source3578-v1/input-snapshots'/n
+        assert file_hash(snap)==h and snap.read_text(encoding='utf-8')==(build/'source'/n).read_text(encoding='utf-8'),n
+        if file_hash(build/'source'/n)!=h:differences.append(n)
+    inputs[kind]={'files':len(manifest),'normalized_text_matches':True,'raw_line_ending_differences':differences}
+observed=re.findall(r'RUNTIME_LIMITS processors=(\d+);max_heap_bytes=(\d+)',(build/'maven-build.log').read_text(encoding='utf-8'))
+assert observed==[('2','2147483648')],observed
+with zipfile.ZipFile(settings.home/lock['jar_name']) as current,zipfile.ZipFile(prior/'runtime'/lock['jar_name']) as earlier:
+    before={n:earlier.read(n) for n in earlier.namelist() if n.startswith('forge/') and n.endswith('.class')}
+    after={n:current.read(n) for n in current.namelist() if n.startswith('forge/') and n.endswith('.class')}
+    assert before.keys()==after.keys()
+    changes=[n for n in before if before[n]!=after[n]]
+    assert changes and all(any(n==family+'.class' or n.startswith(family+'$') for family in ('forge/game/player/Player',)) for n in changes),changes
+from tools.engine_test_sources import REGRESSION_PACKAGES,REGRESSION_SOURCES
+for name in REGRESSION_SOURCES:
+    target=build/'source/forge-gui-desktop/src/test/java'/REGRESSION_PACKAGES[name].replace('.','/')/name
+    assert file_hash(target)==file_hash(ROOT/'engine/tests'/name),name
+priority=load(ROOT/'engine/sticker_recipe.json')['upstream_priority_tests']
+for name,digest in priority.items():
+    target=build/'source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority'/(name+'.java')
+    assert file_hash(target)==digest,name
+fixture_copy_audit={'registered_fixture_files':len(REGRESSION_SOURCES),'priority_fixture_files':len(priority),'exact_reviewed_fixture_bytes_match':True}
+selected=read_settings().verify()
+assert selected['native_tests']['total']==3295
+record={'build_id':build.name,'candidate':lock,'source_counts':sourceproof['counts'],
+    'prior_native_cases_retained':4766,'added_cases':12,'exact_native_method_and_parameter_counter_matches':True,
+    'input_audit':inputs,'fixture_copy_audit':fixture_copy_audit,'production_classes_changed_from_9d5e':changes,
+    'actual_processors':2,'actual_max_java_heap_bytes':2147483648,
+    'selected_runtime_native_cases':3295,'installed':False,
+    'original_resolution_cases':1271,'original_resolution_worker_seconds':90,
+    'scope':'Source/native regression and class/input audit only; independent packaged and final activation gates remain required.'}
+(RUN/'build-audit.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({k:v for k,v in record.items() if k not in {'candidate','input_audit'}}),flush=True)

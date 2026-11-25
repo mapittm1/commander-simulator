@@ -6,14 +6,30 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve per-player discarded-card history in AI copies through the existing
+  LKI mapper, without replaying discard events or sharing original history cards.
+  Twelve baseline failures lose discard records or Hollow One discounts; all
+  eighteen paid cycling/casting, provenance, isolation, cleanup and negative
+  movement controls pass with the correction, plus retained semantic regressions.
+- Register eighteen discard_history cases separately; retain every earlier group
+  and the original 1,271/90 workload. Fresh 3,596 source / 4,796 native / 3,639 main
+  packaged validation is pending. Supplied boards are not full legal histories,
+  turn-scheduler or experimental restore proof; selected runtime is unchanged.
+
 - Preserve per-player foretell counts without replaying special actions or
   triggers. Six baseline failures wrongly restore first-foretell discounts or
   lose action history; all twelve native-payment/exile/trigger/permission controls
   pass after correction, plus all 1,926 retained semantic-family cases.
 - Register twelve foretell_history cases separately; retain every earlier group
-  and original 1,271/90 workload. Fresh 3,578 source / 4,778 native / 3,621 main
-  packaged validation is pending. Supplied boards are not full legal histories,
-  turn-scheduler or experimental restore proof; selected runtime is unchanged.
+  and original 1,271/90 workload. Fresh 3,578 source / 4,778 native cases pass with
+  exact retained methods/parameters and all 292 copied-fixture bytes verified.
+  Broader 6,101 gameplay / 320 serialization cases pass with exact membership,
+  no skips and policies restored. Supplied boards are not full legal histories,
+  turn-scheduler or experimental restore proof.
+- Audit all 2,350 non-resolution main and 405 separate packaged cases on that
+  candidate. Full 3,621 remains incomplete: original resolution times out at
+  90.032 seconds without a report. Final live checks and activation remain
+  pending; selected runtime is unchanged.
 
 - Preserve an unpromoted live-membership keyword-static cache: fourteen new and
   fifteen prior boundary contracts pass in baseline/prototype runs, plus 495

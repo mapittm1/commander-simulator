@@ -1,0 +1,789 @@
+{
+  "scope": "Fresh source/native, partial packaged and broader regression evidence. No full resolution or complete card-rules claim.",
+  "ci": {
+    "id": 45711929509,
+    "head_sha": "055ca877abcd72481a75d55f8e6101a8d6f4ddd0",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "native_audit": {
+    "build_id": "4cc3b0bcb94e40caa13839cff24f5c74",
+    "candidate": {
+      "forge_version": "2.0.16-583714b-reviewed-foretell-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation",
+        "dungeon_snapshot_state",
+        "expend_snapshot_history",
+        "first_event_snapshot_history",
+        "scry_snapshot_history",
+        "game_spell_snapshot_history",
+        "foretell_snapshot_history"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "2d8c367fedc636f67e8bd434dfe105f8660aaa2b078a1ee2f3360bf32b7496c3",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "833ff124f6bc499fc1c240af503f4d94ba0a5205cf188dc535fde7c0331650de",
+      "native_tests": {
+        "total": 4778,
+        "passed": 4778,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "1cfd5352c9c11556bbbd5b1fb37e766eec2b41c092ee92a6f00ca1d451ab31c0",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "source_counts": {
+      "total": 3578,
+      "passed": 3578,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_native_cases_retained": 4766,
+    "added_cases": 12,
+    "exact_native_method_and_parameter_counter_matches": true,
+    "input_audit": {
+      "production": {
+        "files": 2168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": [
+          "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+          "forge-ai/src/main/java/forge/ai/AiCache.java",
+          "forge-ai/src/main/java/forge/ai/AiController.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+          "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "forge-ai/src/main/java/forge/ai/ability/SetStateAi.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+          "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+          "forge-core/src/main/java/forge/card/CardType.java",
+          "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+          "forge-game/src/main/java/forge/game/Game.java",
+          "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+          "forge-game/src/main/java/forge/game/card/Card.java",
+          "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+          "forge-game/src/main/java/forge/game/card/CardState.java",
+          "forge-game/src/main/java/forge/game/combat/Combat.java",
+          "forge-game/src/main/java/forge/game/cost/Cost.java",
+          "forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
+          "forge-game/src/main/java/forge/game/cost/CostPayment.java",
+          "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java",
+          "forge-game/src/main/java/forge/game/player/Player.java",
+          "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+          "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+          "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+        ]
+      },
+      "test": {
+        "files": 172,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      },
+      "card": {
+        "files": 344,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      }
+    },
+    "fixture_copy_audit": {
+      "registered_fixture_files": 283,
+      "priority_fixture_files": 9,
+      "exact_reviewed_fixture_bytes_match": true
+    },
+    "production_classes_changed_from_9d5e": [
+      "forge/game/player/Player.class"
+    ],
+    "actual_processors": 2,
+    "actual_max_java_heap_bytes": 2147483648,
+    "selected_runtime_native_cases": 3295,
+    "installed": false,
+    "original_resolution_cases": 1271,
+    "original_resolution_worker_seconds": 90,
+    "scope": "Source/native regression and class/input audit only; independent packaged and final activation gates remain required."
+  },
+  "source": {
+    "counts": {
+      "total": 3578,
+      "passed": 3578,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 3566,
+    "new_cases": 12,
+    "exact_method_and_parameter_counter_matches": true,
+    "production_sources": 2168,
+    "test_inputs": 172,
+    "card_inputs": 344,
+    "changed_production_sources": [
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "inputs_unchanged_during_run": true,
+    "report_sha256": "bd597e3a35f312757eef783842454153e2fe54643cb037e09e481c80a7730bbf",
+    "scope": "Source regressions only; fresh native4778, complete normal3621 including original1271/90, broader/live and activation remain required."
+  },
+  "packaged_partial": {
+    "build_id": "4cc3b0bcb94e40caa13839cff24f5c74",
+    "groups": {
+      "information": {
+        "run_id": "0142b051e98745b2b6c2eb2cd0c96f88",
+        "counts": {
+          "total": 301,
+          "passed": 301,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 14338,
+          "returncode": 0,
+          "elapsed_seconds": 24.578,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "combat_and_snapshots": {
+        "run_id": "32ad220dad62457b934daa180fbce9a3",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10174,
+          "returncode": 0,
+          "elapsed_seconds": 40.172,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "text_casting_and_costs": {
+        "run_id": "9b608d6afdeb4a0d8913584abe152b1f",
+        "counts": {
+          "total": 338,
+          "passed": 338,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 4805,
+          "returncode": 0,
+          "elapsed_seconds": 59.75,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      }
+    },
+    "total_cases": 912,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 245.719,
+    "configuration_restored": true,
+    "scope": "Audit only the three completed groups in the failed full3621 attempt. Original1271 resolution timed out; no full packaged pass.",
+    "full3621_packaged_passed": false,
+    "resolution_process": {
+      "status": "timeout",
+      "bytes": 19020,
+      "returncode": 1,
+      "elapsed_seconds": 90.032,
+      "support_source_hashes": {
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+        "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+      }
+    },
+    "resolution_run_id": "574aed84aed8473c894b14b44857e9a7"
+  },
+  "packaged_remaining_groups": {
+    "build_id": "4cc3b0bcb94e40caa13839cff24f5c74",
+    "groups": {
+      "cast_events": {
+        "run_id": "8dd57a3e7a5d4a23b0d99a1af3b2f51c",
+        "counts": {
+          "total": 1380,
+          "passed": 1380,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10944,
+          "returncode": 0,
+          "elapsed_seconds": 46.844,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "dungeons": {
+        "run_id": "768f5bce9fc64bcaa0fe5641349d35de",
+        "counts": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.266,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "expended_mana": {
+        "run_id": "977ba09cf13947e1a7d26178341b08e4",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 14.671,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "first_events": {
+        "run_id": "3120c1d387fb4a819191c58d8513eaf3",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.563,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "scry_history": {
+        "run_id": "580f5fc157dd4bf8ae1bf3972eac997d",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 14.0,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "spell_game_history": {
+        "run_id": "d841f3b7f77d429c9f788ecd8cd9478a",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.844,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      },
+      "foretell_history": {
+        "run_id": "2ec87a04ac7a4eeaaed1d8a0d3427980",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 13.734,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "c6249a34fa7c4724d3cf830ea6b0cf639aadc15aa8d7dba3def17860e1c9c231"
+          }
+        }
+      }
+    },
+    "total_cases": 1438,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 184.657,
+    "configuration_restored": true,
+    "scope": "Fixed1380 cast,10 dungeon,6 expend,12 first-event 6 scry and12 game-long spell-history plus12 foretell-history cases only; full3621 remains incomplete at original1271/90. Not full rules evidence."
+  },
+  "packaged_other": {
+    "build_id": "4cc3b0bcb94e40caa13839cff24f5c74",
+    "groups": {
+      "free_casting": {
+        "run_id": "0e10258da4d140339cf4284979748181",
+        "counts": {
+          "total": 65,
+          "passed": 65,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 25,
+        "process": {
+          "status": "finished",
+          "bytes": 15875,
+          "returncode": 0,
+          "elapsed_seconds": 34.969,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "untap": {
+        "run_id": "df7c931604cd44a1937d3953fe490e0c",
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 52,
+        "process": {
+          "status": "finished",
+          "bytes": 12668,
+          "returncode": 0,
+          "elapsed_seconds": 39.109,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "battle_combat": {
+        "run_id": "83cdcb2e076f4af6a60715faf36bf681",
+        "counts": {
+          "total": 146,
+          "passed": 146,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 30,
+        "process": {
+          "status": "finished",
+          "bytes": 20842,
+          "returncode": 0,
+          "elapsed_seconds": 17.468,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "833ff124f6bc499fc1c240af503f4d94ba0a5205cf188dc535fde7c0331650de",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "f70be39624572210605772f0694d4be61a1000b912eaa4c11d5e4a3c347d0ce2"
+          }
+        }
+      }
+    },
+    "total_cases": 405,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 99.766,
+    "configuration_restored": true,
+    "scope": "Separate405 packaged cases only. Full3621 still incomplete at original1271/90."
+  },
+  "broader": {
+    "suites": {
+      "gameplay": {
+        "process": {
+          "status": "finished",
+          "bytes": 241077,
+          "returncode": 0,
+          "elapsed_seconds": 382.672
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 6101,
+          "passed": 6101,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "458c1b1bd0d6814e95ea6f83f5354f62536b2b147ec148772db55e697bfab461"
+      },
+      "serialization": {
+        "process": {
+          "status": "finished",
+          "bytes": 29816,
+          "returncode": 0,
+          "elapsed_seconds": 98.0
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 320,
+          "passed": 320,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "714740c752da9930bf4ef1c236dec97d6e8e9df7179796f38a92edc662512b22"
+      }
+    },
+    "passed": true,
+    "scope": "Broader gameplay/serialization only; no original1271/90 or all-card proof."
+  },
+  "installed": false,
+  "selected_runtime_native_cases": 3295,
+  "full3621_packaged_passed": false,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "remaining": [
+    "Original1271 resolution workload within90 seconds",
+    "Fresh final catalog/health/full-game checks for this candidate",
+    "Activation after all required gates",
+    "Complete paid-history and printed-card/rules coverage"
+  ],
+  "artifacts": {
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/card-inputs.json": "95fbbc6708642d2fde9852615480c012f500d4e25feb44d91099f2848c83d93c",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/driver.py.txt": "bf57a59738727c8bba79e98eecb72b856f114969731622ed2c96cee36d49f4ed",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/evidence.json": "4e4d8fe58148d9ea577db54d12c324782974a39217e0fe1148e901fd96264ae4",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/maven-build.log": "6720cd6e2c370a0bf07097cc7e32f133ff2e057fe48957aad682bf37d3c44e26",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/outcome.json": "83c4842491259e864b53400d3fd64e46bea57b65a6f1fdc385e9b07f02bc3488",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/production-inputs.json": "e5903af75e59a15ea5d7d20403f3e82f2af046336c1bd20faec012beb0ebdabe",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/selection.json": "93932844f85f25759450ec43feb499cd9f8822f697ed8c7881ccf8f5791d12e6",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/test-inputs.json": "d29b39d39198582fe92e0f4820e2efbcc082b69175fc65d1bb9f8e68fef7d7cc",
+    "engine/pending/foretell-history-runtime-v1/source3578-v1/testng-results.xml": "bd597e3a35f312757eef783842454153e2fe54643cb037e09e481c80a7730bbf",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/build-audit.json": "1133b1c012985892a64194b6ba9912d2b8fdeace33b81437aa70c8040856d052",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/build-output.log": "ae43082c3b85c9da6d46300bf88f226f35cf6b8a2b163af36e8032ed9f9f1f14",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/candidate-selection.json": "7d83aba71ad794529a3d272b19a41c349330c923b4383d3db523d7b9c8e312cb",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/command.json": "a42dbba5f390b0763bd4ee4581f66920899eb22a967ae931c26c00ca6e48989f",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/driver.py.txt": "0b8cf0d280180c13333878ee70b0037c2db7756e2ef9e305207ac4696b2a3821",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/process.json": "5725ab2025967a3272e9ce5cc87327771d09e8fb07da70b87f4fc623bd32eb04",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/foretell-candidate-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/candidate-config.json": "b47347493722c21059312196d790ed5f3983810392da8815f147091cb8616839",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/driver.py.txt": "7a92d13e8f855a7821aa34c1c6e05aaf56c07cf3a0119d11f6e4e2c642f3b640",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/outcome.json": "db14fcd7ef35ab4190539239d4105acf2bfa953a6d7e0251d1f76e463de9e300",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/output.log": "23b935e88af6c5886627301f670f88c7966ac3f2d4a79c6fd92288d88207e95a",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/partial-audit.json": "2d642b7c37cf6c0cbe0f2030342dabb9cb71186483b4c385d4b6454c3e6e4d67",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/process.json": "e39ae6677bc5ae526921fba666980eada8782543c31a5a21faed79170a9bc7f9",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/foretell-packaged-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/audit.json": "4e0e0488738be4719eb86c36a1c803a3e6de833f5478e2462760d2f23c23a487",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/candidate-config.json": "b47347493722c21059312196d790ed5f3983810392da8815f147091cb8616839",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/driver.py.txt": "6b8bda3ea10c1ebf05d604a67ae447ffca55cbf39daaa76086ad7653f4abb182",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/outcome.json": "e080823a9daa125d8c12748ad6f7272f89493a2abbf5d806c285632b7690afa5",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/output.log": "5e3f0245ebefb9ffe9ee7f5902acb79017deed905c795966193bcbca3226965e",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/process.json": "a66885281cb2c3f484a8b5fa69e5d88d9b58b5ccdd2bf996a7806d0895a57ba0",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/foretell-remainder-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/audit.json": "d16e895c890e3e8cbdbb1db461bd2c5ab745a70911b3be9df6178ae3ca4d8b8a",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/candidate-config.json": "b47347493722c21059312196d790ed5f3983810392da8815f147091cb8616839",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/driver.py.txt": "d9cdb7fb0484d54670deeb6b49a11cc7782697b25e9336838cd5efa7afbc597f",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/outcome.json": "a681d1da21ca8817a3976ddc3f2835f16415bf22ac88e2ee13f772297a59fbb4",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/output.log": "fe814449d97602bf122041e932fa87ea68f5d4bbdd310692e2624ac8c3b65897",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/process.json": "944b822106cc25c24ea2cfc13b3e6c48314d5b83b2f72665d2554f3486605c0f",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/foretell-other-packaged-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/applied-test-inputs.json": "1d66dbd6a50250bc1c4cb9bc20d5a3716fa91d843d2cd1d4b73e37d9c361848f",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/driver.py.txt": "3730e49b836ac9a5e56fd23f91540aee1e89c930e8734c15d9245e54c2b0a725",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay/native-rules.log": "857f94e930a9a2611c74851469bd91209b1ce39854d5f95cd20f2b268d553f7e",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay/outcome.json": "f12f97d8ce7bc10a4d07c97251011d36b6c78b4cfa397a29e6d56adb1cc759ac",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay/process.json": "8b1b81b4b60940fc2a894ff84309237e00869c983e1fc2d13814da418cffe89a",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay/selection.json": "772c543d2f9cea26e2e24d0477566d332034c4b3dd8904610c20a0bf92109e2f",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay/testng-results.xml": "458c1b1bd0d6814e95ea6f83f5354f62536b2b147ec148772db55e697bfab461",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/gameplay-expected-cases.json": "99b1bc57ef5caf7500b22d10f6a22d4da66a0a402663fd016e79e3e410e758e4",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/original-test-inputs.json": "ef2b1d6e7b5cf482e20038452899d533d020d3acee00add1d179c9ae71369de8",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/outcome.json": "13bffc7a393b4fff5d6e10480672dd1dbf1bcfacb7deab8591d286ff6d24b9e7",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/policy-applied/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "48fee858653cd7154c062e91dbbf22f5a0a5d33dedb48b6093aeff25528a9e18",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/policy-hashes.json": "e6f387302665533ea8aec60ae753c79c29a8b78b979d99f0f6337cf03be2d785",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/policy-originals/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "5d23b85edf2f94daba1858d56c8d09ba7000b8a19a740829b548eff390c35bc7",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/selection.json": "d5890b5fb615944ce493155e908abe60daada32b01614ac2889856bf6dbbf1ec",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization/native-rules.log": "377df4cc9ef81d94f689c158d70dd1b5e05e26885c22f2cdc2cc2c3bcc263b46",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization/outcome.json": "9578772ee0567699ef77840336fdc1af7d57162df90e051ac35ee60c7d46f77f",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization/process.json": "847a74a38efed8b006caf1e9befb9822d7d4648d2366e1d44c0f5832064b5f47",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization/selection.json": "f5262e41e781258a08bcc50f807d00706a2d4c7b21f2f15816d8f48e8356d1d9",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization/testng-results.xml": "714740c752da9930bf4ef1c236dec97d6e8e9df7179796f38a92edc662512b22",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/serialization-expected-cases.json": "f8ae90cfb0f6f776bf9f8cf87e2b6eda3656db60d8607ed701557f102e0aabdf",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/source-ci.json": "158ff02e1d9086ed63344b1b19479f8cb8ec1e1d8433bf625999114820d2c43a",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/source-epoch.json": "fd298fd2e112ad4c31eaa651953bcde0ae8000e9d109ea5b4f27e32f854048f0",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/source-frozen-inputs.json": "96df931638826046ca84f4724eca15ce0766895779fc45a99cc92ddc858f3180",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/worker.log": "ff8e1ce45137280c3a03cc9862f56ac7b8a7bdab5932eeb098f2459abe6be081",
+    "engine/pending/foretell-history-runtime-v1/foretell-broad-v1/wrapper-process.json": "a309ca89c0ca4ed37d5774a85f49ad71082feb90f6d01be56f86b06f5e493ae8",
+    "engine/pending/foretell-history-runtime-v1/native-build/engine-lock.json": "52daf60d3e37377fec5ef3fb57ceee8cacee1eefa6f45280ea86c4d6df157335",
+    "engine/pending/foretell-history-runtime-v1/native-build/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/foretell-history-runtime-v1/native-build/maven-build.log": "1cfd5352c9c11556bbbd5b1fb37e766eec2b41c092ee92a6f00ca1d451ab31c0",
+    "engine/pending/foretell-history-runtime-v1/native-build/testng-results.xml": "7a239ea5e6923e687a2346387017308a9efe03827df335fbb33eb1a89a940ead",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/draw-ending-summary.json": "171ff57d7940fa59a77773d0e9a6b54bb6982b41cfcbd2af67ec3c40051b74bc",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/draw-ending-worker.log": "f89ddc1edbebd7317fec800cf8d3da857dc906e15000cbf39c21e50657f92b3b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/draw-endings.json": "d51e863424d6e574a80e81cba032704d4133d5926a8b0217dccc9f520a6cb8d2",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/rules-process.json": "d35064581bec1985767e1a392052c794aa7ff4aa0ab7662d0411421d875de57d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0142b051e98745b2b6c2eb2cd0c96f88/rules-reports/testng-results.xml": "97b84af79dc37c6db4256e3fdeb243d0afaa0c14ead808891ae9aff4114b0d65",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/free-casting-methods.json": "0e20494fc23fb9820c5edc09150839b035532beb6d3d6db57ff7613196d5eae2",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/free-casting-summary.json": "34bbfd599d271f1bff151a93f60ed3a4c2f086d2977263defe541e0f41704d0a",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/free-casting-worker.log": "e559a74aedc5609642aa820c7577e858237ed1ec3c3fecc461ed45f80a1df795",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/free-casting.json": "dabb8dc7342b8c43318d52e99f05cf71803e5adce852f9a78cc05b331975cba9",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/rules-inputs.json": "fbe89d52123e7259d77ecfd10afef70e24a3c44fc6d56183f09ab278d9a409ed",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/rules-process.json": "a399a35cb139719cc3250a286b8ab5cfb8f0facf39bf81149d4cd9e058ce3e03",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/0e10258da4d140339cf4284979748181/rules-reports/testng-results.xml": "f8a667b7fe74093ec5af778c02b5d8a5f0cb9527a3759e4a1f3a16c8fbebe3b0",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/draw-ending-methods.json": "e6458e7c7f364abe16485b9bfaba085be6782dd82f424b672863b0decb2699a7",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/draw-ending-summary.json": "0b9e2fdcb4bb0ef5e7f9656974d26618d75d5ef8191249fde9da0d383b7b4a09",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/draw-ending-worker.log": "1c7e2da68a98e7260143bfeaea3ef9be3a5982d7a3469c83a988e858c965919d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/draw-endings.json": "fc629e56d61c62e2331e79313f39bd7dfff678ad05abf3515b418d35feba207f",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/rules-process.json": "e2313d1eba5d058617beacaccf4e952b26fd58f1eaa544cf8b956f6fe98c269e",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/2ec87a04ac7a4eeaaed1d8a0d3427980/rules-reports/testng-results.xml": "0c08746da969f058eb895711b248f02759e6247e8b3fbf8a33f6a5480a67f4c6",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/draw-ending-methods.json": "16bdf0419f9c6c8bf4ef5b20f3deb27a8a3e64fc2965a5e7b0310f460dee6248",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/draw-ending-summary.json": "38bdf952d130e769ea4f7a039a38e31884d0a3aa02334ba7e1c6a4f3d6d39cdf",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/draw-ending-worker.log": "f4a866a0316293547fe7f7c319c9ba07ed90a0f0976c2fd331ed1e6b4b5cae9e",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/draw-endings.json": "a4c3df8719ea3b73bb1b2927478f88d432ed6b47d0f694f047cdb69f6980e00c",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/rules-process.json": "d9452f5d9a41f67dc533e9aafdf7bb5ccec35f9ab94c6f1f9207e0c32976ecbe",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/3120c1d387fb4a819191c58d8513eaf3/rules-reports/testng-results.xml": "bb61fb7f4ffa532dbf4aa39ff4650b12d1ccb3b739b88a2f378cec044e92761d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/draw-ending-methods.json": "d462e76b81f2b5403dc2f95f890a540489e30962e6f60158cd45c1a168ef0533",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/draw-ending-summary.json": "042eb4a84d2601eb8bb9cbac8444606901516d67f7409caad8edadb947959e9d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/draw-ending-worker.log": "282fc39de15fff9a6b5397a3df5725472ba8ca8fd089708517e7d80739de70b9",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/draw-endings.json": "f16f542da0532ef654ea00736f9ec8c811c65de02a037549db965f919e3a8286",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/rules-process.json": "11896b1f6cedb12756f32f6ca9fab526edb1fcf709b0da329699b2caf30e38d3",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/32ad220dad62457b934daa180fbce9a3/rules-reports/testng-results.xml": "839e0d1cae097326bf3d5653f0b678d9723a7ad573128e42711029cea0118913",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/574aed84aed8473c894b14b44857e9a7/draw-ending-worker.log": "babe6b46a6764b9b9879aa1b8fc5b704c85abf07e8e0c6f7c727873e9317ae9f",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/574aed84aed8473c894b14b44857e9a7/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/574aed84aed8473c894b14b44857e9a7/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/574aed84aed8473c894b14b44857e9a7/rules-process.json": "4445f74b0e1342a6d4d95df449d51eab41e0a22c76b96f0d3eb1348d953ad134",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/draw-ending-methods.json": "80990a9c51c2894b8a81738812260263f53d39b71ee2d95113b8ee051c271a23",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/draw-ending-summary.json": "8f5bc474109257b4c066c30577b634d320f6f62f325c72212a0a73833645ee28",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/draw-ending-worker.log": "d62234055c433f3e1e64e78296e98139e66291c0318ebc98f93c9acd8c0a0062",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/draw-endings.json": "9e68e4f21a903e0b99dd341097bc42ace54f72c57d8dc23f355117ec0fd1b9e8",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/rules-process.json": "7359e9e02cb62b295db942603728490f43e8e6807073ea10a1722ed4d0bcd68a",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/580f5fc157dd4bf8ae1bf3972eac997d/rules-reports/testng-results.xml": "8ac9008f58e733b7183ea1b902884484ab7b461890689946d7d156dbf2bfdf48",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/draw-ending-methods.json": "6e917587b701936f8c1aec570a46bd854db8f75518e6698dccad6f59dca3e71d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/draw-ending-summary.json": "57f6b9d38846be04a6defd103ca103b353ba77bb388649c4dad68484a4e27527",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/draw-ending-worker.log": "0cde64dece162444afd1fc3a378cafc7fba3948efab564df6d0cc93e3c427f14",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/draw-endings.json": "297e9b941e9e9032e797a6fb14c14c1a2936011fd2dfb74bb04aecac1358209c",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/rules-process.json": "271c6ce100a83bfae02dc3a677e1acdfdb84817907c0d98ccd1f2f4234c44dec",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/768f5bce9fc64bcaa0fe5641349d35de/rules-reports/testng-results.xml": "f1b2876037f7f08f3c9f5ffece623a29112963166e8136afd250571b340d63bc",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/battle-combat-methods.json": "6dbcfd74792765019e2cd0929f9b6ac374e59929e92815b843ab1f22d059a655",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/battle-combat-summary.json": "dd4e96d9505534d52006210341f41a81d8afe01c1431429b37d745715feb6750",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/battle-combat-worker.log": "40d0ea379cad80212a94f7050fb70faef149fae049b90be832591c2a85d1541c",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/battle-combat.json": "a91cfacb0c002609b4a9d30808641e9132a95ee75ffbc5ff116a3d0bb8bf8b11",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/rules-inputs.json": "66761287acc56c6276c221ff7854f42876820fab281ded1ae1b218e2a58ef8ee",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/rules-process.json": "5d49e124abc4fe37e8a4abaef05e62667c2e6afadf1ddf4e763ae8f455d99769",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/83cdcb2e076f4af6a60715faf36bf681/rules-reports/testng-results.xml": "3a9761e920a229fac9f206a6534da071678fc88b83c5b38c7ed7aa027cea649c",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-methods-0000.json": "227a3e3b0b9f423ee813dbe181d4db380c51b070472375ecda06e8f278fa45f6",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-methods-0001.json": "d9235b460012d947cf464046711bf0989931fb9d49f341196703bfbb51699085",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-methods-0002.json": "ba352d48ad967c17db110794e344181e7024e2290ca0af12a80f36bd44f8f591",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-methods.json": "43db681ed884b449584364d6e8e2b141e3f213828e93dff6f430e2b2da6dc7af",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-summary.json": "f578bf09f03ee9a862ca5f34e18459b9b4c12d26367721bb4613fad2d434d8b1",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-ending-worker.log": "09469b2371f4b1f31484c68609ca0ee18e95ec55bf5cf04b23ab38addeea6bf4",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/draw-endings.json": "df50caf76d9a7a971375dad7e8252df221160f36852ae9630ae2f72ff6870568",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/rules-process.json": "a77cc8af11a0e2cfb2054e959252aa28a3d838e9d5cb8658dff62bab4b0a4f1a",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/8dd57a3e7a5d4a23b0d99a1af3b2f51c/rules-reports/testng-results.xml": "989c71b7d7e39719465ad34f1859b4a12c9741d459d360e57b2612f0a899b0f8",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/draw-ending-methods.json": "61c240518fb769744ed2c014a06fe1591b442188ad30c6d2859f5d9b11fe52b1",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/draw-ending-summary.json": "5a79183d28867cdc732d99ca8d333318ce7598f98f8c925df8c0a658745ea9d6",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/draw-ending-worker.log": "0489e554cc9a4ea613ab9a3b51776555235f846dc989a0b4aba4475606dd9e60",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/draw-endings.json": "e5cdfd624a71d9ea281d2695e6a507f5ba07c76997bb5819c52f3d035fca383f",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/rules-process.json": "5bd7f1384b773413c58cd7536c7941ed0dac8a2fe66e956310675d9c326e3024",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/977ba09cf13947e1a7d26178341b08e4/rules-reports/testng-results.xml": "e9383751c32a22577e619dfc982c3d022ee9b69d8098b16cda9f0b7ed94a9e3b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/draw-ending-summary.json": "6a2cde7502a2a81ecccebc39d989826b855c8323f995b589ae9c543d3c1f7a0d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/draw-ending-worker.log": "c55a17389824610b843ef3868c8fdb728b0afce7176e876366a39330322eea53",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/draw-endings.json": "0a8c648ae2a4a729d08babed6ff7c3458b1f6777cade6177f45a0e17cff592d3",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/rules-process.json": "bc32a59295ef5988058d7e4c0ea408689c25e015202684f9adb9bce126d47e97",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/9b608d6afdeb4a0d8913584abe152b1f/rules-reports/testng-results.xml": "55eb26382a2646906a46d8bb5ce1e2729f992249d01e46fe3e6cc5e319d8df1b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/draw-ending-methods.json": "e79a656fca704ed44615231dd7c5353de9711cc8004d256b7730445c7e4da29f",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/draw-ending-summary.json": "81379a29b3d48ad9b71dd8e0d03ced568ab7ebafb7a364d4a6dd6063ec499803",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/draw-ending-worker.log": "3aa92c68cc342c97340bd659e1f7e1c1ede3c81c6ad1074ab64d034b7534e497",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/draw-endings.json": "b14068e168da47916cfba09e11b689eba8e96b344314231ea18161c9b55edc6b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/rules-inputs.json": "5de03d6b30b132adab26c88cc8cfba2f7ea45b4efe83737faa0aec1c630bfa6d",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/rules-process.json": "ca70f598c65c5fa3c5a058eaa2ec7fa4cfc9a916229676fbfce6542ade301d18",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/d841f3b7f77d429c9f788ecd8cd9478a/rules-reports/testng-results.xml": "0e7f4e4ee3c88b1c4b5b2e7652c1ef1a51d910381d9e4bbf8fcb5be05288376f",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/rules-inputs.json": "babc6c0c35dbf9eef6d3710dc7f970625cf77f9ce64340439f7000497521e442",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/rules-process.json": "f8d8feae668913971b4e900d719ae9acae14a814bc2c06f9ec6f07fec217f9ea",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/rules-reports/testng-results.xml": "df491e303b1680eb13a46f5d2ec9abce91081447b104ecb5e1366e540186765c",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/untap-methods.json": "aee3dfb86a9d0e6a4ab984725d712b12f69fd1fc4b0aa91ab9c05af6f6a63fda",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/untap-summary.json": "3eef8ed2c4ff235413444fa156c4ea1fcb2d54a2cd19eb245236d161fa075b5e",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/untap-worker.log": "e04370151160a3b930aae40bf238c1029f66aaa6b534c92c4696f1130cf78404",
+    "engine/pending/foretell-history-runtime-v1/packaged-runs/df7c931604cd44a1937d3953fe490e0c/untap.json": "30c80023fe4635e8cff60992dade89dfa6e2dcdb188d8741029a6f2996d99de7",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_source3578_v1.py.txt": "bf57a59738727c8bba79e98eecb72b856f114969731622ed2c96cee36d49f4ed",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_build4778_v1.py.txt": "0b8cf0d280180c13333878ee70b0037c2db7756e2ef9e305207ac4696b2a3821",
+    "engine/pending/foretell-history-runtime-v1/drivers/audit_build4778_v1.py.txt": "552e70f02dda6bcfb10fe1fc93e406d9a2e491e16f503fdca4dee4ce1a27a861",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_foretell_packaged_v1.py.txt": "7a92d13e8f855a7821aa34c1c6e05aaf56c07cf3a0119d11f6e4e2c642f3b640",
+    "engine/pending/foretell-history-runtime-v1/drivers/audit_foretell_packaged_failure_v1.py.txt": "329dde9845d8dbd2b8a1261c929c9b5d0a509873ea5e1f0fab4409e1ae4f1a0b",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_foretell_remainder_v1.py.txt": "6b8bda3ea10c1ebf05d604a67ae447ffca55cbf39daaa76086ad7653f4abb182",
+    "engine/pending/foretell-history-runtime-v1/drivers/audit_foretell_remainder_v1.py.txt": "4b46ac317517362e0550b503e41a14c4cad90a2499fdfdee2988abf1fa243c4a",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_foretell_other_packaged_v1.py.txt": "d9cdb7fb0484d54670deeb6b49a11cc7782697b25e9336838cd5efa7afbc597f",
+    "engine/pending/foretell-history-runtime-v1/drivers/audit_foretell_other_packaged_v1.py.txt": "24e09138fef4a31010afb8a2348ca4899083e5f8a26d73fdcb488ff7facd7c3e",
+    "engine/pending/foretell-history-runtime-v1/drivers/prepare_foretell_broad_v1.py.txt": "f464b4058ae248a1b544d27d14a6c86ae6c49c300a09ecd5ff42e189a602d10b",
+    "engine/pending/foretell-history-runtime-v1/drivers/run_foretell_broad_v1.py.txt": "3730e49b836ac9a5e56fd23f91540aee1e89c930e8734c15d9245e54c2b0a725"
+  }
+}

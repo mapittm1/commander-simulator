@@ -1,0 +1,96 @@
+"""Decode bounded post-cache CPU samples, separating test work from startup."""
+from collections import Counter
+from pathlib import Path
+import importlib
+import json
+import sys
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import file_hash, jvm_library, read_settings
+from commander.engine.native_runtime import _environment
+
+WORK = Path(__file__).resolve().parent
+RUN = WORK / 'native-keyword-post-cache-cpu-v1'
+PROFILE = RUN / 'runtime.jfr'
+load = lambda p: json.loads(p.read_bytes())
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+assert 0 < PROFILE.stat().st_size <= 33554432
+assert load(RUN / 'process.json')['returncode'] == 0
+assert load(RUN / 'outcome.json')['counts'] == dict(total=3, passed=3, failed=0, skipped=0)
+profile_hash = file_hash(PROFILE)
+assert profile_hash == load(RUN / 'profile-file.json')['sha256']
+if not sys.argv[1:]:
+    assert not (RUN / 'runtime-profile-summary.json').exists()
+    result = run_bounded([sys.executable, '-I', str(Path(__file__)), '--worker'], ROOT,
+                         RUN / 'decode.log', ProcessLimits(90, log_bytes=65536,
+                         environment=_environment(RUN)))
+    save(RUN / 'decode-process.json', result)
+    assert result['status'] == 'finished' and result['returncode'] == 0, result
+    print(json.dumps(result), flush=True)
+    sys.exit()
+assert sys.argv[1:] == ['--worker']
+build = ROOT / load(WORK / 'foretell-candidate-v1/candidate-selection.json')['build']
+settings = read_settings(build / 'engine-config.json')
+assert settings.verify()['native_tests']['total'] == 4778
+java = importlib.import_module('jpype')
+java.startJVM(jvm_library(settings.java), '-Xmx2048m', '-XX:ActiveProcessorCount=2', convertStrings=True)
+runtime = java.JClass('java.lang.Runtime').getRuntime()
+assert runtime.availableProcessors() == 2 and runtime.maxMemory() == 2147483648
+reader = java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(PROFILE)))
+events = Counter()
+leaf = Counter()
+inclusive = Counter()
+stacks = Counter()
+case_counts = Counter()
+gc_duration = Counter()
+main_samples = 0
+selected_samples = 0
+try:
+    while reader.hasMoreEvents():
+        event = reader.readEvent()
+        kind = str(event.getEventType().getName())
+        events[kind] += 1
+        assert events.total() <= 100000
+        if kind in ('jdk.GarbageCollection', 'jdk.GCPhasePause'):
+            gc_duration[kind] += int(event.getDuration().toNanos())
+            continue
+        if kind != 'jdk.ExecutionSample':
+            continue
+        thread = event.getThread('sampledThread')
+        if thread is None or str(thread.getJavaName()) != 'main':
+            continue
+        main_samples += 1
+        trace = event.getStackTrace()
+        names = []
+        if trace is not None:
+            for frame in trace.getFrames():
+                method = frame.getMethod()
+                if method is not None:
+                    names.append(str(method.getType().getName()) + '.' + str(method.getName()))
+        markers = [name for name in names if name.startswith(('forge.ai.CommanderExertTransitionsTest.', 'forge.ai.ExertTestSupport.'))]
+        if not markers:
+            continue
+        selected_samples += 1
+        leaf.update(names[:1])
+        inclusive.update(set(names))
+        stacks[' <- '.join(names[:14])] += 1
+        case_counts.update(set(markers))
+finally:
+    reader.close()
+    java.shutdownJVM()
+assert file_hash(PROFILE) == profile_hash
+assert selected_samples > 0
+summary = {'profile_sha256': profile_hash, 'events': dict(events), 'main_samples': main_samples,
+           'samples_with_test_or_support_frame': selected_samples,
+           'selected_leaf_samples': leaf.most_common(40), 'selected_inclusive_samples': inclusive.most_common(70),
+           'selected_stacks': stacks.most_common(30), 'test_frame_samples': case_counts.most_common(),
+           'gc_duration_ms': {name: round(value / 1000000, 3) for name, value in gc_duration.items()},
+           'scope': 'CPU sampling of three unchanged tests with the positive cache. Samples without test/support frames excluded from selected counters; stack truncation can omit real test work. Inclusive counts and GC durations overlap. No allocation, reliable speedup, full1271/90 or rules-completeness claim.'}
+assert not (RUN / 'runtime-profile-summary.json').exists()
+save(RUN / 'runtime-profile-summary.json', summary)
+print(json.dumps({'main_samples': main_samples, 'selected_samples': selected_samples, 'leaf': leaf.most_common(12)}), flush=True)

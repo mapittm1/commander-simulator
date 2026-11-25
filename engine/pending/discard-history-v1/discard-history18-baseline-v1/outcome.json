@@ -1,0 +1,141 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 18,
+    "passed": 6,
+    "failed": 12,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.discardReceiptAfterOneCopyRetainsLkiAndOwnership",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.discardReceiptAfterTwoCopiesRetainsLkiAndOwnership",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.graveyardMoveAfterOneCopyDoesNotBecomeDiscard",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.graveyardMoveAfterTwoCopiesDoesNotBecomeDiscard",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.nativeCleanupAfterOneCopyClearsOnlyBranchHistory",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.nativeCleanupAfterTwoCopiesClearsOnlyBranchHistory",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.newDiscardAfterOneCopyDoesNotAffectSiblingOrOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.newDiscardAfterTwoCopiesDoesNotAffectSiblingOrOriginal",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.noHistoryAfterTwoCopiesPaysFive",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.noHistoryOriginalPaysFive",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.oneCycleAfterOneCopyPaysThree",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.oneCycleAfterTwoCopiesPaysThree",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.oneCycleOriginalPaysThree",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.opponentDiscardAfterOneCopyDoesNotDiscountActor",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.opponentDiscardAfterTwoCopiesDoesNotDiscountActor",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.twoCyclesAfterOneCopyPaysOne",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.twoCyclesAfterTwoCopiesPaysOne",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.twoCyclesOriginalPaysOne",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.discardReceiptAfterOneCopyRetainsLkiAndOwnership",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.discardReceiptAfterTwoCopiesRetainsLkiAndOwnership",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.nativeCleanupAfterOneCopyClearsOnlyBranchHistory",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.nativeCleanupAfterTwoCopiesClearsOnlyBranchHistory",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.newDiscardAfterOneCopyDoesNotAffectSiblingOrOriginal",
+      "message": "\n              expected [2] but found [1]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.newDiscardAfterTwoCopiesDoesNotAffectSiblingOrOriginal",
+      "message": "\n              expected [2] but found [1]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.oneCycleAfterOneCopyPaysThree",
+      "message": "\n              Native Hollow One payment includes cards cycled earlier this turn expected [3] but found [5]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.oneCycleAfterTwoCopiesPaysThree",
+      "message": "\n              Native Hollow One payment includes cards cycled earlier this turn expected [3] but found [5]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.opponentDiscardAfterOneCopyDoesNotDiscountActor",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.opponentDiscardAfterTwoCopiesDoesNotDiscountActor",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.twoCyclesAfterOneCopyPaysOne",
+      "message": "\n              Native Hollow One payment includes cards cycled earlier this turn expected [1] but found [5]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDiscardHistoryTest.twoCyclesAfterTwoCopiesPaysOne",
+      "message": "\n              Native Hollow One payment includes cards cycled earlier this turn expected [1] but found [5]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 188,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Supplied-board paid native cycling and Hollow One casting through depth0/1/2 copies. Baseline reproduction may fail; not a production fix, full preceding history, full1271 gate or all-card proof."
+}

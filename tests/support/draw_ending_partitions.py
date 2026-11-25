@@ -222,6 +222,7 @@ PARTITIONS = {
     "scry_history": ("forge.ai.CommanderScryHistoryTest",),
     "spell_game_history": ("forge.ai.CommanderSpellGameHistoryTest",),
     "foretell_history": ("forge.ai.CommanderForetellHistoryTest",),
+    "discard_history": ("forge.ai.CommanderDiscardHistoryTest",),
 }
 
 EXPECTED_COUNTS = {
@@ -236,6 +237,7 @@ EXPECTED_COUNTS = {
     "scry_history": 6,
     "spell_game_history": 12,
     "foretell_history": 12,
+    "discard_history": 18,
 }
 
 

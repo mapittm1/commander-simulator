@@ -136,6 +136,7 @@ SOURCES = {
     "CommanderScryHistoryTest": "commander_scry_history_test_sha256",
     "CommanderSpellGameHistoryTest": "commander_spell_game_history_test_sha256",
     "CommanderForetellHistoryTest": "commander_foretell_history_test_sha256",
+    "CommanderDiscardHistoryTest": "commander_discard_history_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest": "commander_replacement_cache_inputs_test_sha256",
@@ -490,7 +491,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3621-case packaged family."""
+    """Execute the fixed 3639-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
