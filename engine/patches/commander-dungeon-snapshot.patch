@@ -1,0 +1,65 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -330,6 +330,7 @@
+         for (Map.Entry<Player, Player> entry : playerMap.entrySet()) {
+             entry.getValue().copySnapshotControllersFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotRingFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotDungeonsFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotDrawnFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+@@ -599,6 +600,9 @@
+     private void addCard(Game newGame, ZoneType zone, Card c, Player aiPlayer) {
+         final Player owner = playerMap.get(c.getOwner());
+         final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);
++        // World copies preserve noncopiable designations, including dungeon cards.
++        newCard.setGamePieceType(c.getGamePieceType());
++        newCard.copySnapshotDungeonFrom(c);
+         newCard.setChosenCommanderColor(c.getChosenCommanderColor());
+         // Simulation worlds retain existing noncopiable designations and Class level.
+         newCard.setHarnessed(c.isHarnessed());
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -4501,6 +4501,16 @@
+         return elementalBendThisTurn.size() >= 4;
+     }
+ 
++    /** Preserve dungeon history and turn usage without venturing or completing again. */
++    public void copySnapshotDungeonsFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        venturedThisTurn = original.venturedThisTurn;
++        completedDungeons.clear();
++        for (Card dungeon : original.completedDungeons) {
++            completedDungeons.add(context.map(dungeon));
++        }
++    }
++
+     /** Restore progression and designation without tempting again or rebuilding the emblem. */
+     public void copySnapshotRingFrom(Player original,
+             forge.game.spellability.SpellAbilitySnapshot context) {
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -2387,6 +2387,13 @@
+     public void setChosenMode(String mode) {
+         chosenMode = mode;
+         view.updateChosenMode(this);
++    }
++
++    /** Restore an existing venture marker without entering a room or firing triggers. */
++    public final void copySnapshotDungeonFrom(Card original) {
++        if (currentRoom != original.currentRoom) {
++            setCurrentRoom(original.currentRoom);
++        }
+     }
+ 
+     public String getCurrentRoom() {
+--- a/forge-game/src/main/java/forge/game/card/CardCopyService.java
++++ b/forge-game/src/main/java/forge/game/card/CardCopyService.java
+@@ -418,6 +418,7 @@
+         newCopy.setMonstrous(copyFrom.isMonstrous());
+         newCopy.setHarnessed(copyFrom.isHarnessed());
+         newCopy.copySnapshotWorldFrom(copyFrom);
++        newCopy.copySnapshotDungeonFrom(copyFrom);
+         if (newCopy.getClassLevel() != copyFrom.getClassLevel()) {
+             newCopy.setClassLevel(copyFrom.getClassLevel());
+         }

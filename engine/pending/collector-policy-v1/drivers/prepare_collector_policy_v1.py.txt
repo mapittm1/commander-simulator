@@ -1,0 +1,40 @@
+"""Freeze a new collector-policy diagnostic on the corrected current production baseline."""
+from pathlib import Path
+import json
+import subprocess
+import sys
+import zipfile
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+EPOCH=WORK/'collector-policy-epoch-v1';PROPOSAL=WORK/'collector-policy-proposal-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();assert head=='976bc1e2c106a13b4d4e5ae7d203bf9b0a72e679'
+assert not EPOCH.exists() and not PROPOSAL.exists();EPOCH.mkdir();PROPOSAL.mkdir()
+ci={'id':45662182030,'head_sha':head,'status':'completed','conclusion':'success'}
+save(EPOCH/'source-ci.json',ci)
+tracked=[n for n in subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0') if n]
+save(EPOCH/'source-frozen-inputs.json',{n:file_hash(ROOT/n) for n in tracked})
+save(EPOCH/'source-epoch.json',{'head':head,'tracked_files':len(tracked),'ci_id':ci['id']})
+settings=read_settings(ROOT/'data/engine-builds/477ed00e83c74775a4d57ddbcdd63ce4/engine-config.json');lock=settings.verify();assert lock['native_tests']['total']==4720
+old=read_settings(ROOT/'data/engine-builds/e4834adf80e444c29dabfc473f48a17c/engine-config.json');oldlock=old.verify();assert oldlock['native_tests']['total']==4347
+with zipfile.ZipFile(settings.home/lock['jar_name']) as current,zipfile.ZipFile(old.home/oldlock['jar_name']) as prior:
+    names={n for n in current.namelist() if n.startswith('forge/') and n.endswith('.class')}
+    before={n for n in prior.namelist() if n.startswith('forge/') and n.endswith('.class')}
+    differences=[n for n in sorted(names|before) if n not in names or n not in before or current.read(n)!=prior.read(n)]
+assert differences
+proposal={'scope':'Changed collector policy on the current corrected4720 production JAR; no source overlay. Experimental only, not a normal packaged pass or complete rules proof.',
+    'baseline_build':'477ed00e83c74775a4d57ddbcdd63ce4','baseline_native_cases':4720,'jar_sha256':lock['jar_sha256'],
+    'earlier_parallel_build':'e4834adf80e444c29dabfc473f48a17c','earlier_parallel_native_cases':4347,
+    'changed_production_classes_since_prior_parallel':differences,
+    'prior_parallel_failures':{name:load(WORK/name/'process.json') for name in ['resolution1271-parallel-baseline-v43','resolution1271-parallel-metadata-v44']},
+    'base_options':['-Xmx2048m','-XX:ActiveProcessorCount=2'],'experimental_option':'-XX:+UseParallelGC',
+    'original_resolution_cases':1271,'worker_limit_seconds':90,
+    'documentation':'https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html',
+    'rationale':'Previous JFR data shows allocation churn and several seconds of GC pauses, but earlier collector trials failed. Test the current corrected production combination once, retain negative history, and record actual collector and JMX counters.',
+    'future_requirement_if_successful':'Any promotion must cover actual simulations and native checks consistently, be bound to engine evidence/approvals, and preserve selected runtime behavior until validation/activation. No test-only tuning or larger budget.'}
+save(PROPOSAL/'proposal.json',proposal)
+save(PROPOSAL/'inputs.json',{'proposal.json':file_hash(PROPOSAL/'proposal.json')})
+print(json.dumps({'head':head,'tracked_files':len(tracked),'changed_classes_since_prior_parallel':len(differences),'baseline_native_cases':4720}))

@@ -1,0 +1,59 @@
+"""Prepare a generic dungeon-state snapshot correction from the proven failing baseline."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+SOURCE=ROOT/'data/development/commander-blocking-history-research/source'
+PROTOTYPE=WORK/'dungeon-snapshot-prototype-v1'
+load=lambda p:json.loads(p.read_bytes())
+assert load(WORK/'dungeon-snapshot5-baseline-v1/outcome.json')['counts']==dict(total=5,passed=1,failed=4,skipped=0)
+assert not PROTOTYPE.exists();PROTOTYPE.mkdir()
+paths=['forge-ai/src/main/java/forge/ai/simulation/GameCopier.java','forge-game/src/main/java/forge/game/player/Player.java',
+    'forge-game/src/main/java/forge/game/card/Card.java','forge-game/src/main/java/forge/game/card/CardCopyService.java']
+known=load(WORK/'source3520-v1/production-inputs.json')
+for name in paths:
+    assert file_hash(SOURCE/name)==known[name]
+    dest=PROTOTYPE/'baseline'/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(SOURCE/name,dest)
+    dest=PROTOTYPE/'source'/name;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(SOURCE/name,dest)
+def replace(name,before,after):
+    p=PROTOTYPE/'source'/name;s=p.read_text(encoding='utf-8');assert s.count(before)==1,(name,before)
+    p.write_text(s.replace(before,after),encoding='utf-8',newline='\n')
+replace(paths[0], '            entry.getValue().copySnapshotRingFrom(entry.getKey(), context);',
+    '            entry.getValue().copySnapshotRingFrom(entry.getKey(), context);\n            entry.getValue().copySnapshotDungeonsFrom(entry.getKey(), context);')
+replace(paths[0], '        final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);',
+    '        final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);\n        // World copies preserve noncopiable designations, including dungeon cards.\n        newCard.setGamePieceType(c.getGamePieceType());\n        newCard.copySnapshotDungeonFrom(c);')
+replace(paths[1], '    /** Restore progression and designation without tempting again or rebuilding the emblem. */',
+    '''    /** Preserve dungeon history and turn usage without venturing or completing again. */
+    public void copySnapshotDungeonsFrom(Player original,
+            forge.game.spellability.SpellAbilitySnapshot context) {
+        venturedThisTurn = original.venturedThisTurn;
+        completedDungeons.clear();
+        for (Card dungeon : original.completedDungeons) {
+            completedDungeons.add(context.map(dungeon));
+        }
+    }
+
+    /** Restore progression and designation without tempting again or rebuilding the emblem. */''')
+replace(paths[2], '    public String getCurrentRoom() {',
+    '''    /** Restore an existing venture marker without entering a room or firing triggers. */
+    public final void copySnapshotDungeonFrom(Card original) {
+        if (currentRoom != original.currentRoom) {
+            setCurrentRoom(original.currentRoom);
+        }
+    }
+
+    public String getCurrentRoom() {''')
+replace(paths[3], '        newCopy.copySnapshotWorldFrom(copyFrom);',
+    '        newCopy.copySnapshotWorldFrom(copyFrom);\n        newCopy.copySnapshotDungeonFrom(copyFrom);')
+proposal={'scope':'Generic snapshot state correction, not card-name handling. Supplied-state baseline5 cases has4 failures/1 control pass.',
+    'baseline_build':'477ed00e83c74775a4d57ddbcdd63ce4','changed_sources':paths,
+    'change':'Preserve game-piece designation and venture marker, map completed dungeon records through the historical identity context, and retain ventured-this-turn counts. Do not venture, complete, or replay triggers during copying.',
+    'history':'Completed dungeons are outside the game and require mapped historical cards, not live-card aliasing.',
+    'rules_source':'https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.txt',
+    'rules_review':['309.2-309.7','701.49','704.5t'],'rules_scope':'Targeted dungeon-state review only, not complete rules certification.',
+    'not_promoted':True}
+(PROTOTYPE/'proposal.json').write_text(json.dumps(proposal,indent=2)+'\n',encoding='utf-8',newline='\n')
+print('Prepared four-source generic dungeon snapshot proposal; no production checkout or selected runtime change')

@@ -1,0 +1,97 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 10,
+    "passed": 1,
+    "failed": 9,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedDungeonKeepsNadaarsStaticBonus",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedHistorySurvivesAWorldCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.currentRoomSurvivesAWorldCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.independentHistoriesPreserveMultiplicityAndOwnership",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.noHistoryDoesNotInventNadaarsStaticBonus",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidFirstEntryKeepsDungeonThroughRepeatedCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesAfterOneWorldCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesAfterTwoWorldCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesOriginalFromSuppliedRoom",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.ventureCountsSurviveAWorldCopy",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedDungeonKeepsNadaarsStaticBonus",
+      "message": "\n              Copying a completed dungeon must preserve the real static bonus expected [3] but found [2]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedHistorySurvivesAWorldCopy",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.currentRoomSurvivesAWorldCopy",
+      "message": "\n              Cannot invoke \"forge.game.card.Card.getType()\" because \"<local4>\" is null\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.independentHistoriesPreserveMultiplicityAndOwnership",
+      "message": "\n              expected [2] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidFirstEntryKeepsDungeonThroughRepeatedCopies",
+      "message": "\n              expected object to not be null\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesAfterOneWorldCopy",
+      "message": "\n              The existing dungeon remains in the copied command zone expected object to not be null\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesAfterTwoWorldCopies",
+      "message": "\n              The existing dungeon remains in the copied command zone expected object to not be null\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.paidVentureCompletesOriginalFromSuppliedRoom",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.ventureCountsSurviveAWorldCopy",
+      "message": "\n              expected [2] but found [0]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 180,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Supplied dungeon states plus paid Dungeon Map final-room activation/completion at copy depths0/1/2; no complete preceding room histories or full rules claim."
+}

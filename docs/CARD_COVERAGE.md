@@ -1,5 +1,25 @@
 # Card support and evidence
 
+A generic dungeon snapshot correction now preserves completed-dungeon history,
+venture counts, current-room markers and game-piece designations. The old copier
+could turn a dungeon into a token that disappeared; it also lost completion-based
+bonuses such as Nadaar's. The unchanged baseline passes **1/10** targeted controls;
+the correction passes **10/10**, including paid Dungeon Map entry/completion,
+room draws, repeated copies, multiple players and history isolation. It also
+retains **1,404 casting**, **273 combat**, **194 untap** and **nine upstream** checks.
+Some starting states supply an existing room; these are not complete preceding
+legal histories or full rules coverage.
+
+The build registers the ten new cases in a separate `dungeons` group. Every earlier
+group and count remains unchanged, including original **1,271 / 90 seconds**.
+Fresh **3,530 source / 4,730 native / 3,573 main packaged** validation is pending.
+The selected runtime remains unchanged. See [dungeon correction evidence](../engine/dungeon_snapshot_evidence.json).
+
+A current-baseline Parallel GC diagnostic passes its semantic controls but still
+times out at **90.016 seconds** on the original resolution workload, without a
+completed report. Preserve earlier failed collector trials too; no collector or
+allocation setting is promoted. See [collector diagnostics](../engine/collector_policy_evidence.json).
+
 The generic casting-cost correction now passes **3,520 source** and **4,720
 native** cases, retaining every earlier method/parameter and adding nine paid-cast
 boundaries. All 2,168 production sources, 166 test inputs and 318 card inputs

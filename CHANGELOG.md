@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic dungeon snapshots: retain noncopiable game-piece kind and room
+  markers, mapped completed-dungeon records and venture counters without replaying
+  effects. Preserve the 1/10 baseline and 10/10 corrected controls, including real
+  Dungeon Map costs, first entry, final-room draw/completion, Nadaar bonus, repeated
+  worlds, multiple players and isolated history. Retain 1,404 casting / 273 combat /
+  194 untap / nine upstream checks. Supplied mid-room states are not full histories.
+- Register ten new dungeon cases separately; retain every earlier group/count and
+  original 1,271-case / 90-second gate. Expand expected source/native/main packaged
+  totals to 3,530/4,730/3,573 and required production origins to180. Fresh expanded
+  validation and activation remain pending; selected runtime stays unchanged.
+- Preserve a current corrected-baseline Parallel GC diagnostic and prior failed
+  trials. Semantic controls pass, but original resolution still times out90.016s
+  without a completed report. No collector setting or allocation patch is promoted;
+  individual timings/JMX counters do not establish a reliable speedup or full rules.
+
 - Validate the unchanged corrected candidate against the current frozen catalog:
   32,636 identities construct and seven non-starting meld results remain unavailable;
   no actionable starting-card construction/availability gap. Health passes. Fixed

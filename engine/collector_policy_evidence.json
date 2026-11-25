@@ -1,0 +1,541 @@
+{
+  "scope": "Collector-policy diagnostics only; no production JVM setting or test workload change. Not a normal timing or complete rules pass.",
+  "head": "976bc1e2c106a13b4d4e5ae7d203bf9b0a72e679",
+  "ci": {
+    "id": 45662182030,
+    "head_sha": "976bc1e2c106a13b4d4e5ae7d203bf9b0a72e679",
+    "status": "completed",
+    "conclusion": "success"
+  },
+  "proposal": {
+    "scope": "Changed collector policy on the current corrected4720 production JAR; no source overlay. Experimental only, not a normal packaged pass or complete rules proof.",
+    "baseline_build": "477ed00e83c74775a4d57ddbcdd63ce4",
+    "baseline_native_cases": 4720,
+    "jar_sha256": "58e9c86df891e2280664ef3662e2a92a6912310b26d0c479fcba0c87baed6e62",
+    "earlier_parallel_build": "e4834adf80e444c29dabfc473f48a17c",
+    "earlier_parallel_native_cases": 4347,
+    "changed_production_classes_since_prior_parallel": [
+      "forge/ai/ComputerUtilCost.class",
+      "forge/ai/simulation/GameCopier$3.class",
+      "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+      "forge/ai/simulation/GameCopier.class",
+      "forge/game/card/Card$1.class",
+      "forge/game/card/Card$CardColor.class",
+      "forge/game/card/Card$CardManaCost.class",
+      "forge/game/card/Card$CountKeywordVisitor.class",
+      "forge/game/card/Card$FaceDownResetCommand.class",
+      "forge/game/card/Card$HasKeywordVisitor.class",
+      "forge/game/card/Card$ListKeywordVisitor.class",
+      "forge/game/card/Card$ParsedRestriction.class",
+      "forge/game/card/Card$ReconfigureExpiration.class",
+      "forge/game/card/Card$StatBreakdown.class",
+      "forge/game/card/Card.class",
+      "forge/game/replacement/ReplacementHandler$1.class",
+      "forge/game/replacement/ReplacementHandler$2.class",
+      "forge/game/replacement/ReplacementHandler.class"
+    ],
+    "prior_parallel_failures": {
+      "resolution1271-parallel-baseline-v43": {
+        "status": "timeout",
+        "bytes": 20649,
+        "returncode": 1,
+        "elapsed_seconds": 90.0
+      },
+      "resolution1271-parallel-metadata-v44": {
+        "status": "timeout",
+        "bytes": 20649,
+        "returncode": 1,
+        "elapsed_seconds": 90.016
+      }
+    },
+    "base_options": [
+      "-Xmx2048m",
+      "-XX:ActiveProcessorCount=2"
+    ],
+    "experimental_option": "-XX:+UseParallelGC",
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "documentation": "https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html",
+    "rationale": "Previous JFR data shows allocation churn and several seconds of GC pauses, but earlier collector trials failed. Test the current corrected production combination once, retain negative history, and record actual collector and JMX counters.",
+    "future_requirement_if_successful": "Any promotion must cover actual simulations and native checks consistently, be bound to engine evidence/approvals, and preserve selected runtime behavior until validation/activation. No test-only tuning or larger budget."
+  },
+  "runs": {
+    "collector-policy-cast-baseline-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 10944,
+        "returncode": 0,
+        "elapsed_seconds": 46.844
+      },
+      "outcome": {
+        "mode": "baseline",
+        "family": "cast",
+        "counts": {
+          "total": 1404,
+          "passed": 1404,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "testng_status": 0,
+        "actual_processors": 2,
+        "actual_max_java_heap_bytes": 2147483648,
+        "production_origins": 184,
+        "casting_cost_class_from_corrected_jar": true,
+        "collector_names": [
+          "G1 Young Generation",
+          "G1 Old Generation"
+        ],
+        "gc_before": {
+          "G1 Young Generation": {
+            "collections": 6,
+            "time_ms": 6
+          },
+          "G1 Old Generation": {
+            "collections": 4,
+            "time_ms": 13
+          }
+        },
+        "gc_after": {
+          "G1 Young Generation": {
+            "collections": 93,
+            "time_ms": 499
+          },
+          "G1 Old Generation": {
+            "collections": 11,
+            "time_ms": 346
+          }
+        },
+        "testng_run_seconds": 44.707,
+        "gc_counter_scope": "JMX cumulative collection counters/times are diagnostic, not exact CPU time, pauses or retained memory.",
+        "scope": "Collector-policy diagnostic on the normal corrected4720 JAR, without source overlays. Original1271/90 unchanged; not a normal packaged or full rules pass."
+      },
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 2147483648,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "G1 Young Generation",
+          "G1 Old Generation"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "collector-policy-cast-prototype-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 10944,
+        "returncode": 0,
+        "elapsed_seconds": 44.453
+      },
+      "outcome": {
+        "mode": "prototype",
+        "family": "cast",
+        "counts": {
+          "total": 1404,
+          "passed": 1404,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "testng_status": 0,
+        "actual_processors": 2,
+        "actual_max_java_heap_bytes": 1908932608,
+        "production_origins": 184,
+        "casting_cost_class_from_corrected_jar": true,
+        "collector_names": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "gc_before": {
+          "PS MarkSweep": {
+            "collections": 3,
+            "time_ms": 11
+          },
+          "PS Scavenge": {
+            "collections": 3,
+            "time_ms": 3
+          }
+        },
+        "gc_after": {
+          "PS MarkSweep": {
+            "collections": 13,
+            "time_ms": 1507
+          },
+          "PS Scavenge": {
+            "collections": 78,
+            "time_ms": 513
+          }
+        },
+        "testng_run_seconds": 42.363,
+        "gc_counter_scope": "JMX cumulative collection counters/times are diagnostic, not exact CPU time, pauses or retained memory.",
+        "scope": "Collector-policy diagnostic on the normal corrected4720 JAR, without source overlays. Original1271/90 unchanged; not a normal packaged or full rules pass."
+      },
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "collector-policy-combat-prototype-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 10174,
+        "returncode": 0,
+        "elapsed_seconds": 38.11
+      },
+      "outcome": {
+        "mode": "prototype",
+        "family": "combat",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "testng_status": 0,
+        "actual_processors": 2,
+        "actual_max_java_heap_bytes": 1908932608,
+        "production_origins": 184,
+        "casting_cost_class_from_corrected_jar": true,
+        "collector_names": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "gc_before": {
+          "PS MarkSweep": {
+            "collections": 5,
+            "time_ms": 19
+          },
+          "PS Scavenge": {
+            "collections": 5,
+            "time_ms": 3
+          }
+        },
+        "gc_after": {
+          "PS MarkSweep": {
+            "collections": 11,
+            "time_ms": 876
+          },
+          "PS Scavenge": {
+            "collections": 66,
+            "time_ms": 626
+          }
+        },
+        "testng_run_seconds": 35.952,
+        "gc_counter_scope": "JMX cumulative collection counters/times are diagnostic, not exact CPU time, pauses or retained memory.",
+        "scope": "Collector-policy diagnostic on the normal corrected4720 JAR, without source overlays. Original1271/90 unchanged; not a normal packaged or full rules pass."
+      },
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "collector-policy-untap-prototype-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 12668,
+        "returncode": 0,
+        "elapsed_seconds": 36.563
+      },
+      "outcome": {
+        "mode": "prototype",
+        "family": "untap",
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "testng_status": 0,
+        "actual_processors": 2,
+        "actual_max_java_heap_bytes": 1908932608,
+        "production_origins": 184,
+        "casting_cost_class_from_corrected_jar": true,
+        "collector_names": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "gc_before": {
+          "PS MarkSweep": {
+            "collections": 3,
+            "time_ms": 11
+          },
+          "PS Scavenge": {
+            "collections": 3,
+            "time_ms": 3
+          }
+        },
+        "gc_after": {
+          "PS MarkSweep": {
+            "collections": 13,
+            "time_ms": 1723
+          },
+          "PS Scavenge": {
+            "collections": 82,
+            "time_ms": 1513
+          }
+        },
+        "testng_run_seconds": 34.99,
+        "gc_counter_scope": "JMX cumulative collection counters/times are diagnostic, not exact CPU time, pauses or retained memory.",
+        "scope": "Collector-policy diagnostic on the normal corrected4720 JAR, without source overlays. Original1271/90 unchanged; not a normal packaged or full rules pass."
+      },
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "collector-policy-upstream-prototype-v1": {
+      "process": {
+        "status": "finished",
+        "bytes": 3072,
+        "returncode": 0,
+        "elapsed_seconds": 12.719
+      },
+      "outcome": {
+        "mode": "prototype",
+        "family": "upstream",
+        "counts": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "configuration_failures": 0,
+        "configuration_skips": 0,
+        "testng_status": 0,
+        "actual_processors": 2,
+        "actual_max_java_heap_bytes": 1908932608,
+        "production_origins": 184,
+        "casting_cost_class_from_corrected_jar": true,
+        "collector_names": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "gc_before": {
+          "PS MarkSweep": {
+            "collections": 3,
+            "time_ms": 11
+          },
+          "PS Scavenge": {
+            "collections": 3,
+            "time_ms": 2
+          }
+        },
+        "gc_after": {
+          "PS MarkSweep": {
+            "collections": 5,
+            "time_ms": 534
+          },
+          "PS Scavenge": {
+            "collections": 10,
+            "time_ms": 265
+          }
+        },
+        "testng_run_seconds": 10.554,
+        "gc_counter_scope": "JMX cumulative collection counters/times are diagnostic, not exact CPU time, pauses or retained memory.",
+        "scope": "Collector-policy diagnostic on the normal corrected4720 JAR, without source overlays. Original1271/90 unchanged; not a normal packaged or full rules pass."
+      },
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "collector-policy-resolution-prototype-v1": {
+      "process": {
+        "status": "timeout",
+        "bytes": 19020,
+        "returncode": 1,
+        "elapsed_seconds": 90.016
+      },
+      "outcome": null,
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ],
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false
+      }
+    },
+    "resolution1271-parallel-baseline-v43": {
+      "process": {
+        "status": "timeout",
+        "bytes": 20649,
+        "returncode": 1,
+        "elapsed_seconds": 90.0
+      },
+      "outcome": null,
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": false,
+        "jvm_arguments": [
+          "-Xmx2048m",
+          "-XX:ActiveProcessorCount=2",
+          "-XX:+UseParallelGC",
+          "-Djava.awt.headless=true",
+          "-Dfile.encoding=UTF-8"
+        ]
+      }
+    },
+    "resolution1271-parallel-metadata-v44": {
+      "process": {
+        "status": "timeout",
+        "bytes": 20649,
+        "returncode": 1,
+        "elapsed_seconds": 90.016
+      },
+      "outcome": null,
+      "runtime": {
+        "processors": 2,
+        "max_heap_bytes": 1908932608,
+        "collectors": [
+          "PS MarkSweep",
+          "PS Scavenge"
+        ],
+        "source_overlay_used": true
+      }
+    }
+  },
+  "original_resolution_cases": 1271,
+  "worker_limit_seconds": 90,
+  "promoted": false,
+  "interpretation": "Current no-overlay ParallelGC still times out90.016s, without a completed report. Earlier4347 trials also failed. Cast timings and JMX collection time are individual diagnostics, not reliable workload speedup or exact pause/CPU/retained-memory evidence.",
+  "documentation": "https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html",
+  "artifacts": {
+    "engine/pending/collector-policy-v1/collector-policy-epoch-v1/source-ci.json": "54e5c6d17517e75a1414a2f08e2317f92254055a5706c5bc0afead200fabef41",
+    "engine/pending/collector-policy-v1/collector-policy-epoch-v1/source-epoch.json": "24c81d1847a8f9076da55016ddefa69d95bd9afc1384603c30f4504f5426fd20",
+    "engine/pending/collector-policy-v1/collector-policy-epoch-v1/source-frozen-inputs.json": "480da094ed0f6df774ef95fc28dffbc567ff2482df0bf733bdafb8760b6b9ae0",
+    "engine/pending/collector-policy-v1/collector-policy-epoch-v1/upstream-test-classes.json": "168187d81620a7082da40012bdb2a7fe8fc59f68e44d966f61bd6a954629e9d5",
+    "engine/pending/collector-policy-v1/collector-policy-proposal-v1/inputs.json": "e1fecb47130706652c1cf547f598dbdbff910bc6dd1a45ddada65163bb3ca49f",
+    "engine/pending/collector-policy-v1/collector-policy-proposal-v1/proposal.json": "b264b35b74e036e2b8143a4944d694691820a1652f9d160fa68f033c22d30b37",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/native.log": "12820156622d2c5d6fca4cf9034c5ac7355d574e0f9c626852e62dfc94f0fe27",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/outcome.json": "58a097a2f3906b8a30e9a3d9e7b6bac0441e959206c9324bb1845d9faf38592a",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/process.json": "57838a1a7b5dbfc591205a36730602e552f9370b51f3374933f71070c6e3b017",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/reports/testng-results.xml": "8a4b53eac27300d4f111c5b60f7ab4f803e99ee321224c0066f461f1e1904275",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/runtime-limits.json": "06757230bbd97b681265eee7448698d67543ff0e2efa4776e498dd0a0a5b01e0",
+    "engine/pending/collector-policy-v1/collector-policy-cast-baseline-v1/selection.json": "2b9eed2a770542bae539f6688ecb08e4bc185743e6b1e179faba3c8f1b9df2be",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/native.log": "426eb9fb9632c6590e8c01c96ade67aca7b910c1cbbedd39db370bcf55a32b28",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/outcome.json": "f54405abbe3e34a0930d5ff9fcbb8c1da1de3bc9edf7ae4d62e08aa2fbf53096",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/process.json": "5d3c8d2b8c510fb159380c37bb7365c3b20656cf698b1ccbfdc9c5de5c745dd2",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/reports/testng-results.xml": "5b52169789ebe6254b6bd3059c5f4d6e1bc6ace85b65c534d5b517686ae7e1c7",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/runtime-limits.json": "be306cad5fc584fd45328e4c76abfdad76b17842074b83a65534d56f57dad025",
+    "engine/pending/collector-policy-v1/collector-policy-cast-prototype-v1/selection.json": "9d71ef45e017512b253e6158caca67652ddb0508e61b2cb6f0df76ddc3232dd8",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/native.log": "aac7ad9ab1e05fca52cd95a909eb0ae6bad0284e48650ba67601c2c95cc6c61c",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/outcome.json": "3c400e63c6d6e179004214e7371a195e2383e3b3b98baaf5a713d846558ac18c",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/process.json": "aea97b954bc690fe6bc4052ececcf28498a1627d13a1c6828bc2a03c8dbdd49d",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/reports/testng-results.xml": "cad83ea67a518bed86a8471d1cfde03ccf18cd63eab46135b487b7ec22d1d6d4",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/runtime-limits.json": "be306cad5fc584fd45328e4c76abfdad76b17842074b83a65534d56f57dad025",
+    "engine/pending/collector-policy-v1/collector-policy-combat-prototype-v1/selection.json": "e4fc818c6a3d1857956369b63f8789196984ac999cd1b476a56c6f1c58742f1f",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/native.log": "db1795dee76ce79a8b3e674660960e7216a99f1d20c17b926e5023760f7944a8",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/outcome.json": "0a00c432bbdc0c26a8d7b93f52f974f72eead25e36a88a6ea1d711cd541e3a4e",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/process.json": "c97f4e757f20295dc00206086dadf1e36041114e02eb9addac28a7e9ce51f8e7",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/reports/testng-results.xml": "e5723e53f70cd6646a4f61e813c3c8ece9fc08c6bf4a9a80306af2e7099a2560",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/runtime-limits.json": "be306cad5fc584fd45328e4c76abfdad76b17842074b83a65534d56f57dad025",
+    "engine/pending/collector-policy-v1/collector-policy-untap-prototype-v1/selection.json": "838516aed1c5a0c9ebc0beefcf93177bc1986acd798d3c428932829d84564f27",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/native.log": "1b6d0465432e984d4a8da9a4532a46da8b3431c68455fd9846d44a50cff0e124",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/outcome.json": "6afa5f894c522b368af28e73c245c71bd84d2a98dc4b68fbfcc3e9f43928c8b8",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/process.json": "3a651f68bd5b86a474dc2c901b41b0d026bfa58c94416a1126b2e1f82a4141de",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/reports/testng-results.xml": "7600c23d539297d51861f2e2d348b2ed564956268d220c8ffe92905a93015c46",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/runtime-limits.json": "be306cad5fc584fd45328e4c76abfdad76b17842074b83a65534d56f57dad025",
+    "engine/pending/collector-policy-v1/collector-policy-upstream-prototype-v1/selection.json": "7cefc3ed255ad0d193b5555c33089a4814eeeee42842b9adf34ad0463af1d53b",
+    "engine/pending/collector-policy-v1/collector-policy-resolution-prototype-v1/driver.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/collector-policy-resolution-prototype-v1/native.log": "eb55a284982883181ce762ca65b966ed20dbb86cac9fb5fa3657766f5a96b3bc",
+    "engine/pending/collector-policy-v1/collector-policy-resolution-prototype-v1/process.json": "ae86a4a0999af568ca2e06852f197ab0e429cac9fdaf9d02f06cba1167928cb6",
+    "engine/pending/collector-policy-v1/collector-policy-resolution-prototype-v1/runtime-limits.json": "be306cad5fc584fd45328e4c76abfdad76b17842074b83a65534d56f57dad025",
+    "engine/pending/collector-policy-v1/collector-policy-resolution-prototype-v1/selection.json": "ee506f0c4e8b373c41fe90c46063dba763e8621e62dfa6cbcf395690ffa24aad",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-baseline-v43/driver.py.txt": "e8e6b2be4e9e43aa9689219af8c6c1790f3a453f3d95ca6a7592633ee03aa5fc",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-baseline-v43/native.log": "8879d20e13222cbcd77f011e3be1621ecf42381271c1e3763f262ea3b3d09013",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-baseline-v43/process.json": "ad31088a69e1af6430f5f7447ddf3510eb1af573f9e6a4e5f138dd34db5150d8",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-baseline-v43/runtime-limits.json": "71094af05e31f3c9f2f2d691529d23be588c0793050f4af47cbc781aa96ca7e1",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-metadata-v44/driver.py.txt": "f9dd94472a6801ad267a893ec698248634408d32632bc3012befe4f76568218b",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-metadata-v44/native.log": "4683e17c1cf2f3caea8c6526a5dcabfa07aac69163d4139f0fcd3d5fd100f48e",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-metadata-v44/process.json": "9cb1d3b90412a96a6e962209fa6e61367ac2aac8ce1616881db96f80fa65b87f",
+    "engine/pending/collector-policy-v1/resolution1271-parallel-metadata-v44/runtime-limits.json": "49fd0be9973be1aac99148aad962d2a77548557e8792f5b3e1d430ede31d2312",
+    "engine/pending/collector-policy-v1/drivers/prepare_collector_policy_v1.py.txt": "1de3cf151ab5d5ca72b838e36af21c24c9191aade08534177825604e8e733708",
+    "engine/pending/collector-policy-v1/drivers/run_collector_policy_v1.py.txt": "d46b4e0126a634d1b07400bce739b740f2d7e44c2b15872034c2f948f13fb17a",
+    "engine/pending/collector-policy-v1/drivers/run_resolution1271_parallel_baseline_v43.py.txt": "e8e6b2be4e9e43aa9689219af8c6c1790f3a453f3d95ca6a7592633ee03aa5fc",
+    "engine/pending/collector-policy-v1/drivers/run_resolution1271_parallel_metadata_v44.py.txt": "f9dd94472a6801ad267a893ec698248634408d32632bc3012befe4f76568218b"
+  }
+}

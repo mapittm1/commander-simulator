@@ -1,0 +1,57 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 5,
+    "passed": 1,
+    "failed": 4,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedDungeonKeepsNadaarsStaticBonus",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedHistorySurvivesAWorldCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.currentRoomSurvivesAWorldCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.noHistoryDoesNotInventNadaarsStaticBonus",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.ventureCountsSurviveAWorldCopy",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedDungeonKeepsNadaarsStaticBonus",
+      "message": "\n              Copying a completed dungeon must preserve the real static bonus expected [3] but found [2]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.completedHistorySurvivesAWorldCopy",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.currentRoomSurvivesAWorldCopy",
+      "message": "\n              Cannot invoke \"forge.game.card.Card.getType()\" because \"<local4>\" is null\n            "
+    },
+    {
+      "method": "forge.ai.CommanderDungeonSnapshotTest.ventureCountsSurviveAWorldCopy",
+      "message": "\n              expected [2] but found [0]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 180,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Supplied four-player dungeon states and native completion bookkeeping only; no preceding paid venture history or complete rules claim."
+}

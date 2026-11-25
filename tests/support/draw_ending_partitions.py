@@ -216,6 +216,7 @@ PARTITIONS = {
         "forge.ai.CommanderPreGoalOutcomeTest",
         "forge.ai.CommanderCastWindowTest",
     ),
+    "dungeons": ("forge.ai.CommanderDungeonSnapshotTest",),
 }
 
 EXPECTED_COUNTS = {
@@ -224,6 +225,7 @@ EXPECTED_COUNTS = {
     "text_casting_and_costs": 338,
     "resolution": 1271,
     "cast_events": 1380,
+    "dungeons": 10,
 }
 
 

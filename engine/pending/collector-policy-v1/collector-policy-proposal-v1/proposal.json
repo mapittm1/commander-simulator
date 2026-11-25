@@ -1,0 +1,52 @@
+{
+  "scope": "Changed collector policy on the current corrected4720 production JAR; no source overlay. Experimental only, not a normal packaged pass or complete rules proof.",
+  "baseline_build": "477ed00e83c74775a4d57ddbcdd63ce4",
+  "baseline_native_cases": 4720,
+  "jar_sha256": "58e9c86df891e2280664ef3662e2a92a6912310b26d0c479fcba0c87baed6e62",
+  "earlier_parallel_build": "e4834adf80e444c29dabfc473f48a17c",
+  "earlier_parallel_native_cases": 4347,
+  "changed_production_classes_since_prior_parallel": [
+    "forge/ai/ComputerUtilCost.class",
+    "forge/ai/simulation/GameCopier$3.class",
+    "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+    "forge/ai/simulation/GameCopier.class",
+    "forge/game/card/Card$1.class",
+    "forge/game/card/Card$CardColor.class",
+    "forge/game/card/Card$CardManaCost.class",
+    "forge/game/card/Card$CountKeywordVisitor.class",
+    "forge/game/card/Card$FaceDownResetCommand.class",
+    "forge/game/card/Card$HasKeywordVisitor.class",
+    "forge/game/card/Card$ListKeywordVisitor.class",
+    "forge/game/card/Card$ParsedRestriction.class",
+    "forge/game/card/Card$ReconfigureExpiration.class",
+    "forge/game/card/Card$StatBreakdown.class",
+    "forge/game/card/Card.class",
+    "forge/game/replacement/ReplacementHandler$1.class",
+    "forge/game/replacement/ReplacementHandler$2.class",
+    "forge/game/replacement/ReplacementHandler.class"
+  ],
+  "prior_parallel_failures": {
+    "resolution1271-parallel-baseline-v43": {
+      "status": "timeout",
+      "bytes": 20649,
+      "returncode": 1,
+      "elapsed_seconds": 90.0
+    },
+    "resolution1271-parallel-metadata-v44": {
+      "status": "timeout",
+      "bytes": 20649,
+      "returncode": 1,
+      "elapsed_seconds": 90.016
+    }
+  },
+  "base_options": [
+    "-Xmx2048m",
+    "-XX:ActiveProcessorCount=2"
+  ],
+  "experimental_option": "-XX:+UseParallelGC",
+  "original_resolution_cases": 1271,
+  "worker_limit_seconds": 90,
+  "documentation": "https://docs.oracle.com/en/java/javase/17/gctuning/available-collectors.html",
+  "rationale": "Previous JFR data shows allocation churn and several seconds of GC pauses, but earlier collector trials failed. Test the current corrected production combination once, retain negative history, and record actual collector and JMX counters.",
+  "future_requirement_if_successful": "Any promotion must cover actual simulations and native checks consistently, be bound to engine evidence/approvals, and preserve selected runtime behavior until validation/activation. No test-only tuning or larger budget."
+}

@@ -1,0 +1,20 @@
+{
+  "scope": "Generic snapshot state correction, not card-name handling. Supplied-state baseline5 cases has4 failures/1 control pass.",
+  "baseline_build": "477ed00e83c74775a4d57ddbcdd63ce4",
+  "changed_sources": [
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+    "forge-game/src/main/java/forge/game/player/Player.java",
+    "forge-game/src/main/java/forge/game/card/Card.java",
+    "forge-game/src/main/java/forge/game/card/CardCopyService.java"
+  ],
+  "change": "Preserve game-piece designation and venture marker, map completed dungeon records through the historical identity context, and retain ventured-this-turn counts. Do not venture, complete, or replay triggers during copying.",
+  "history": "Completed dungeons are outside the game and require mapped historical cards, not live-card aliasing.",
+  "rules_source": "https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.txt",
+  "rules_review": [
+    "309.2-309.7",
+    "701.49",
+    "704.5t"
+  ],
+  "rules_scope": "Targeted dungeon-state review only, not complete rules certification.",
+  "not_promoted": true
+}
