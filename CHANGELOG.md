@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct static/replacement cache reuse for mutable keyword and trait entries,
+  changing removal predicates and custom callbacks. Preserve 30 failing baseline
+  regressions and their corrected passes across original and copied games, plus
+  all 232 existing focused controls (262 pass). Register all 30 additional cases
+  in native and packaged suites without changing the original 1,271-case
+  resolution group or its 90-second limit. Full source/native/packaged and later
+  validation remain pending; selected runtime unchanged.
+
 - Preserve the bounded 3,015-source / 4,215-native pass with actual two JVM
   processors and a 2 GiB maximum Java heap, and full 2,168-source
   parity audit, retaining all prior native cases. Record the failed independent

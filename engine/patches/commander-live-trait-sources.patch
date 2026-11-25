@@ -1,0 +1,20 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -742,6 +742,8 @@
+      * (land type changes), and the keyword collection.
+      */
+     public final FCollectionView<StaticAbility> getStaticAbilities() {
++        // Table versions do not track mutable entries, keyword lists or callbacks.
++        if (!hasNoAdditionalTraits()) return buildStaticAbilities();
+         // Land type changes can remove statics, but cannot introduce one.
+         if (staticAbilities.isEmpty() && hasNoAdditionalTraits()) {
+             return FCollection.<StaticAbility>getEmpty().shareCopy();
+@@ -850,6 +852,8 @@
+      * hidden inputs (type flags, counters, ...) are evaluated on every read as a small bitmask and compared.
+      */
+     public FCollectionView<ReplacementEffect> getReplacementEffects(boolean rulesHost) {
++        // Re-evaluate mutable trait sources and predicates on every read.
++        if (!hasNoAdditionalTraits()) return buildReplacementEffects(rulesHost);
+         final Object traits = FSnapshotTable.versionOf(card.getChangedCardTraits());
+         final Object traitsByText = FSnapshotTable.versionOf(card.getChangedCardTraitsByText());
+         if (traits == null || traitsByText == null) {

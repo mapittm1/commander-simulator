@@ -1,0 +1,57 @@
+"""Preserve focused live-source regression outcomes without claiming gate success."""
+from pathlib import Path
+import importlib,json,sys,os,subprocess
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+CLASSES=('forge.ai.CommanderLiveTraitMutationTest', 'forge.gamesimulationtests.util.CommanderSnapshotViewTest', 'forge.gamesimulationtests.util.PerfPatchUnitTest', 'forge.gamesimulationtests.util.PerfPatchFollowUpTableTest', 'forge.card.CommanderSagaTypeTest', 'forge.ai.CommanderReplacementPresenceTest', 'forge.gamesimulationtests.util.CommanderRuntimeLimitsTest')
+MODE=sys.argv[1];assert MODE in ('baseline','prototype')
+RUN=WORK/('live-trait262-'+MODE+'-v1')
+SETTINGS=ROOT/'data/engine-builds/dd226772345647d2830c0a03df1a60b8/engine-config.json'
+PROTOTYPE=WORK/'live-trait-prototype-v1'
+TEST=WORK/'live-trait-mutations-v1/CommanderLiveTraitMutationTest.java'
+ORIGINAL=ROOT/'data/runs/d0f3237695da4a2cb2a274dc04871567'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify_inputs():
+ frozen=json.loads((WORK/'resolution-performance-epoch-v3/source-frozen-inputs.json').read_bytes())
+ assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ if (RUN/'inputs.json').exists():
+  data=json.loads((RUN/'inputs.json').read_bytes());assert all(file_hash(Path(n))==h for n,h in data.items())
+ if MODE=='prototype':
+  data=json.loads((PROTOTYPE/'inputs.json').read_bytes());assert all(file_hash(PROTOTYPE/n)==h for n,h in data.items())
+settings=read_settings(SETTINGS);engine=settings.verify();archive=settings.home/engine['jar_name']
+recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+verify_inputs()
+if '--worker' in sys.argv:
+ require_bridge();java=importlib.import_module('jpype')
+ cp=(() if MODE=='baseline' else (PROTOTYPE/'classes',))+(archive,RUN/'classes',ORIGINAL/'rules-classes',dependency)
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,cp)),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()<=2147483648
+ overrides=set() if MODE=='baseline' else {f.relative_to(PROTOTYPE/'classes').as_posix() for f in (PROTOTYPE/'classes').rglob('*.class')}
+ for name in draw_ending_worker.NATIVE_CLASSES:assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+ assert packaged_rules.class_origin(java,'forge.ai.CommanderLiveTraitMutationTest').samefile(RUN/'classes')
+ assert packaged_rules.class_origin(java,'forge.ai.AITest').samefile(ORIGINAL/'rules-classes')
+ for name in CLASSES[1:]:assert packaged_rules.class_origin(java,name).samefile(ORIGINAL/'rules-classes'),name
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in CLASSES]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+ counts,methods=packaged_rules.test_results(listener)
+ verify_inputs();assert counts==dict(total=262,passed=232 if MODE=='baseline' else 262,failed=30 if MODE=='baseline' else 0,skipped=0) ;assert not listener.getConfigurationFailures()
+ save(RUN/'outcome.json',{'counts':counts,'methods':methods,'failures':[str(item.getThrowable()) for item in listener.getFailedTests()],'actual_processors':int(runtime.availableProcessors()),'max_java_heap_bytes':int(runtime.maxMemory()),'configuration_failures':len(listener.getConfigurationFailures()),'scope':'Focused live-source transitions; not all-rules proof.'})
+ java.shutdownJVM()
+else:
+ assert sys.argv[1:]==[MODE];assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ ci=json.loads((WORK/'resolution-performance-epoch-v3/source-ci.json').read_bytes());assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+ RUN.mkdir();(RUN/'classes').mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ compiler=Path('C:/Program Files/Java/jdk-19/bin/javac.exe')
+ inputs=[Path(__file__),TEST,compiler,archive,dependency,*list((ORIGINAL/'rules-classes').rglob('*.class'))]
+ save(RUN/'inputs.json',{str(p.resolve()):file_hash(p) for p in inputs})
+ result=run_bounded([str(compiler),'-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',os.pathsep.join(map(str,(archive,ORIGINAL/'rules-classes',dependency))),'-d',str(RUN/'classes'),str(TEST)],ROOT,RUN/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+ with _engine_profile(settings,RUN):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify_inputs();assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');assert result['status']=='finished' and result['returncode']==0,result
+ print(json.dumps(json.loads((RUN/'outcome.json').read_bytes())),flush=True)

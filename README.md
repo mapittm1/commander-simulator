@@ -27,6 +27,15 @@ difference.
 
 ## Card coverage
 
+A new cache correction re-evaluates mutable keyword/trait entries, removal
+predicates and custom callbacks on every read. Thirty new regressions fail on the
+previous candidate and pass with the correction; all 232 prior focused controls
+also pass (262 total). The recipe now registers 4,245 native cases, including
+3,088 packaged draw/ending cases; the original resolution group remains 1,271
+cases with its 90-second limit. Full source/native/packaged validation of this
+correction remains pending, and the selected runtime is unchanged. See
+[live trait evidence](engine/live_trait_mutation_evidence.json).
+
 The bounded follow-up passes all 3,015 source and 4,215 native cases with actual
 two JVM processors and a 2 GiB maximum Java heap. The full 2,168-source parity audit
 passes, retaining every earlier case. Its independent packaged
