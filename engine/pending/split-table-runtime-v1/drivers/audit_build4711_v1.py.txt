@@ -1,0 +1,72 @@
+from pathlib import Path
+from collections import Counter
+import hashlib,json,subprocess,xml.etree.ElementTree as ET,zipfile
+from commander.engine.forge_config import file_hash,read_settings
+ROOT=Path.cwd();WORK=Path(__file__).resolve().parent/'split-table-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(path,value):
+ assert not path.exists();path.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+def cases(path,require_pass=True):
+ rows=Counter()
+ for cls in ET.parse(path).findall('.//class'):
+  for item in cls.findall('test-method'):
+   if item.get('is-config')=='true':continue
+   if require_pass:assert item.get('status')=='PASS'
+   parameters=tuple((value.text or '').strip() for value in item.findall('./params/param/value'))
+   rows[(cls.get('name')+'.'+item.get('name'),parameters)]+=1
+ return rows
+frozen=load(WORK/'source-frozen-inputs.json');assert len(frozen)==load(WORK/'source-epoch.json')['tracked_files'] and all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert subprocess.check_output(['git','rev-parse','HEAD']).decode().strip()==load(WORK/'source-epoch.json')['head'] and not subprocess.check_output(['git','status','--porcelain'])
+selection=load(WORK/'process.json');assert selection['status']=='finished' and len(selection['new_builds'])==1
+build=ROOT/'data/engine-builds'/selection['new_builds'][0];settings=read_settings(build/'engine-config.json');candidate=settings.verify();selected_settings=read_settings();selected=selected_settings.verify()
+assert candidate['native_tests']==dict(total=4711,passed=4711,failed=0,skipped=0) and selected['native_tests']['total']==3295
+assert candidate['recipe_sha256']==file_hash(ROOT/'engine/sticker_recipe.json')
+report=build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml';new=cases(report);assert sum(new.values())==4711
+prior_counts={}
+for build_id,total,require_pass in [(load(ROOT/'engine/mana_chain_activation_evidence.json')['build_id'],3295,True),('673e909cc3a54bc9b1f0927a4c5cca9a',3877,False),('5bd1350eab1a4c86930f08da5c630f0c',3899,True),('7b3b3424f34143a583f92467a6a172fc',3935,True),('500dd367a1874bf48b7d26f9cb736fa7',4085,True),('bf5da48806a24b8f8ff8c8862f7070a7',4214,True),('dd226772345647d2830c0a03df1a60b8',4215,True),('0981a925b4634919ae8342a3bf3d4f95',4245,True),('3fc24ee23a9740899c2bb37c42e8c030',4245,True),('fda074ba95974588b11e7540a01147fd',4251,True),('e4834adf80e444c29dabfc473f48a17c',4347,True),('190a373e5f46459597dd8c2eb8099952',4395,True),('3dfb2b244c0647cca9de46a6f6a443d3',4482,True),('1bae22d83a0743fc909573302ed9e3c0',4563,True),('dbaffa45079b421592301c9489b93b97',4596,True),('74767dfdf8394908a4e2c054540ce9f4',4596,True),('870c6afd6a0a4830ac7f3c7719b86217',4668,True)]:
+ old=cases(ROOT/'data/engine-builds'/build_id/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',require_pass);assert sum(old.values())==total and not(old-new),(build_id,old-new);prior_counts[build_id]=total
+selected_build=ROOT/'data/engine-builds'/load(ROOT/'engine/mana_chain_activation_evidence.json')['build_id'];old_selected=cases(selected_build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+source_proof=load(WORK.parent/'source3511-v1/evidence.json');assert source_proof['counts']==dict(total=3511,passed=3511,failed=0,skipped=0)
+added_classes={'forge.ai.'+n for n in ('CommanderWaterbendXTest','CommanderTypedWardTest','CommanderWardTransitionTest','CommanderTargetTaxTest','CommanderPreGoalOutcomeTest','CommanderCastWindowTest','CommanderReplacementPresenceTest','CommanderLiveTraitMutationTest','CommanderKeywordTraitPresenceTest','CommanderUntapPresenceTest','CommanderReplacementEligibilityTest','CommanderEmptyAttackTest','CommanderReplacementCacheInputsTest')}
+added_classes|={'forge.ai.'+n for n in ('CommanderCardCounterZoneCopyTest','CommanderKeywordMetadataFailureTest','CommanderStaticGatherTest','CommanderTraitGatherTest','CommanderCardFilterContractTest','CommanderPrintingSelectionTest','CommanderKeywordMembershipTest','CommanderUnavailableAttackTest','CommanderReplacementActiveZoneTest','CommanderSplitTraitGuardTest','CommanderInitialTableSnapshotTest')}
+added_classes|={'forge.gamesimulationtests.util.'+n for n in ('PerfPatchUnitTest','PerfPatchFollowUpTableTest','CommanderSnapshotViewTest','CommanderRuntimeLimitsTest')};added_classes.add('forge.card.CommanderSagaTypeTest')
+expected=Counter((row['method'],tuple((v or '').strip() for v in row['parameters'])) for row in source_proof['methods'] if row['method'].rsplit('.',1)[0] in added_classes)
+assert sum(expected.values())==1416 and new-old_selected==expected
+limit_key=('forge.gamesimulationtests.util.CommanderRuntimeLimitsTest.nativeJvmUsesConfiguredProcessorsAndHeap',());assert new[limit_key]==1
+import re
+observed=re.findall(r'RUNTIME_LIMITS processors=(\d+);max_heap_bytes=(\d+)',(build/'maven-build.log').read_text(encoding='utf-8'));assert observed==[('2','2147483648')],observed
+reviewed=load(WORK.parent/'source3511-v1/production-inputs.json');actual={f.relative_to(build/'source').as_posix():file_hash(f) for f in (build/'source').glob('*/src/main/java/**/*.java')};assert actual.keys()==reviewed.keys() and len(actual)==2168
+line_endings=[]
+for name,digest in actual.items():
+ saved=WORK.parent/'source3511-v1/input-snapshots'/name;assert file_hash(saved)==reviewed[name];assert (build/'source'/name).read_text(encoding='utf-8')==saved.read_text(encoding='utf-8'),name
+ if digest!=reviewed[name]:line_endings.append(name)
+input_audit={}
+for kind,expected_count in [('test',165),('card',316)]:
+ manifest=load(WORK.parent/('source3511-v1/'+kind+'-inputs.json'));assert len(manifest)==expected_count
+ variations=[]
+ for name,digest in manifest.items():
+  snapshot=WORK.parent/'source3511-v1/input-snapshots'/name;actual_input=build/'source'/name
+  assert file_hash(snapshot)==digest and actual_input.read_text(encoding='utf-8')==snapshot.read_text(encoding='utf-8'),name
+  if file_hash(actual_input)!=digest:variations.append(name)
+ input_audit[kind]={'files':len(manifest),'normalized_matches':True,'line_ending_paths':variations}
+assert not [m.attrib for m in ET.parse(report).findall('.//test-method') if m.get('is-config')=='true' and m.get('status')!='PASS']
+with zipfile.ZipFile(selected_settings.home/selected['jar_name']) as first,zipfile.ZipFile(settings.home/candidate['jar_name']) as second:
+ a={n:hashlib.sha256(first.read(n)).hexdigest() for n in first.namelist() if n.endswith('.class')};b={n:hashlib.sha256(second.read(n)).hexdigest() for n in second.namelist() if n.endswith('.class')}
+ changed=sorted(n for n in a.keys()&b.keys() if a[n]!=b[n]);added=sorted(b.keys()-a.keys());removed=sorted(a.keys()-b.keys())
+ production=load(ROOT/'engine/target_tax_evidence.json')['production_files']+['forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java','forge-game/src/main/java/forge/game/card/CardState.java','forge-core/src/main/java/forge/card/CardType.java','forge-core/src/main/java/forge/util/collect/FSnapshotTable.java','forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java']
+ families=tuple(n.split('/src/main/java/',1)[1][:-5] for n in production);assert len(families)==13 and len(set(families))==13
+ belongs=lambda n:any(n==family+'.class' or n.startswith(family+'$') for family in families)
+ assert added==['forge/ai/ComputerUtilMana$FilterActivationResult.class'] and removed==['forge/ai/ComputerUtilCost$1.class'],(added,removed)
+ assert all(belongs(n) for n in changed+added+removed) and {family+'.class' for family in families}<=set(changed)
+previous_settings=read_settings(ROOT/'data/engine-builds/870c6afd6a0a4830ac7f3c7719b86217/engine-config.json');previous_lock=previous_settings.verify()
+with zipfile.ZipFile(previous_settings.home/previous_lock['jar_name']) as previous,zipfile.ZipFile(settings.home/candidate['jar_name']) as current:
+ previous_classes={n:hashlib.sha256(previous.read(n)).hexdigest() for n in previous.namelist() if n.endswith('.class')}
+ current_classes={n:hashlib.sha256(current.read(n)).hexdigest() for n in current.namelist() if n.endswith('.class')}
+ assert previous_classes.keys()==current_classes.keys()
+ incremental_changed=sorted(n for n in previous_classes if previous_classes[n]!=current_classes[n])
+ assert not incremental_changed,'Test-only registration must not alter production class bytes'
+for name in ('Default.ai','Cautious.ai'):assert file_hash(selected_settings.home/'res/ai'/name)==file_hash(settings.home/'res/ai'/name)
+assert candidate['cards_sha256']==selected['cards_sha256']
+record={'actual_jvm_limits_case_passed':True,'observed_jvm_processors':2,'observed_max_java_heap_bytes':2147483648,'status':'sealed_native_and_limits_passed_independent_runtime_gates_pending','build_id':build.name,'candidate':candidate,'selected':selected,'native_retained':3295,'native_added':1416,'retained_builds_with_parameter_values':prior_counts,'native_report_sha256':file_hash(report),'production_sources':2168,'test_card_inputs':input_audit,'normalized_source_matches_reviewed3511':True,'line_ending_paths':line_endings,'changed_classes':changed,'added_classes':added,'removed_classes':removed,'cards_and_profiles_unchanged':True,'incremental_changed_classes_since_870':incremental_changed,'production_class_bytes_match_870':True,'scope':'Fresh4711 native/source/binary audit, preserving every prior case multiplicity and normalized parameter value. All2168 production sources match reviewed3511 snapshot. Changes confined13families. Independent3554/65/194/146, original1271/90s, broader/full/catalog/health/activation remain required. Selected runtime unchanged; no all-card rules proof.'}
+save(WORK/'build-audit.json',record)
+print(json.dumps({'native':candidate['native_tests'],'build':build.name,'changed_classes':len(changed),'families':13,'all_prior_parameterized_cases_retained':True,'actual_jvm_limit_case_passed':True}),flush=True)

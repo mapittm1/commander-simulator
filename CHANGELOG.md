@@ -6,15 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
-- Register 43 native controls for live split/clone trait visibility and table
-  isolation, version tokens, serialization and concurrent use. Baseline and
-  experimental controls pass; expanded full source/native/package validation
-  remains pending (3,511/4,711/3,554). Preserve unpromoted guard/allocation
-  experiments, paired diagnostics and the corrected post-test launcher diagnostic.
-  Original 1,271-case / 90-second runs still time out: one finishes every assertion,
-  while an instrumented run remains inside TestNG. Do not claim a completed
-  timing pass or whole-game speedup from bounded allocation measurements.
-  Production patches and selected runtime remain unchanged.
+- Add 43 regular native controls for live split/clone trait visibility and table
+  isolation, version tokens, serialization and concurrent use. The complete
+  3,511-source / 4,711-native suites pass with all earlier methods and parameters
+  retained. Verify all 2,168 production, 165 test and 316 card inputs; production
+  class bytes match the preceding candidate. The expanded 1,371-case packaged
+  group passes with 179 production origins and prior compiled assertions retained.
+- Preserve unpromoted guard/allocation experiments, paired diagnostics and a
+  corrected post-test catalog diagnostic. Original 1,271-case / 90-second runs
+  still time out: one finishes every assertion, while an instrumented run remains
+  inside TestNG. Do not infer completed timing or whole-game speedup from bounded
+  allocation measurements. The full 3,554-case packaged gate remains incomplete;
+  no unchanged resolution retry was made on identical production code. Broader,
+  full-game, catalog, health and activation gates stay open. Production patches
+  and selected runtime remain unchanged; complete card/rules support is unproven.
 
 - Correct generic replacement eligibility: performance mode now respects explicit
   active zones instead of dropping tap, untap and mana replacements outside the

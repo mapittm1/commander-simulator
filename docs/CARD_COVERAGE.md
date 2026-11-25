@@ -1,5 +1,22 @@
 # Card support and evidence
 
+Current checkpoint: all **3,511 source** and **4,711 native** regression cases
+pass, including 36 live split/clone and seven table-contract additions. Every prior
+case and parameter is retained. The changed **1,371-case packaged cast group**
+passes with 179 production origins; prior compiled assertions and production class
+bytes remain unchanged. The original 1,271-case / 90-second resolution gate and
+full 3,554-case packaged suite remain incomplete. Broader/full-game/catalog/health/
+activation and full printed-card/paid-history coverage remain required. The
+selected runtime is unchanged. See [expanded runtime evidence](../engine/split_table_runtime_evidence.json).
+
+Guard/allocation prototypes remain unpromoted. One completed all 1,271 assertions
+but exceeded its process deadline; a bounded phase diagnostic remained inside
+TestNG at the limit. Factory allocation measurements are narrow diagnostics,
+not proof of a reliable workload speedup or complete rules support. See
+[experiment evidence](../engine/copy_allocation_experiments_evidence.json).
+
+Earlier checkpoint records follow.
+
 The normal workflow now registers 81 additional contracts: 30 printing-selection
 and 51 keyword-membership cases. Baseline and corrected prototype each pass all
 616 focused cases. A separate pinned data fixture makes all 648 exact printing /

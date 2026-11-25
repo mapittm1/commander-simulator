@@ -26,17 +26,23 @@ difference.
 
 ## Card coverage
 
-The normal build now registers **43 additional controls**: 36 live split/clone
-trait transitions and seven table isolation/version/serialization/concurrency
-contracts. They pass on the existing engine and experimental overlays; full
-expanded source/native/package validation is pending (expected totals
-3,511/4,711/3,554). The original 1,271-case / 90-second gate is unchanged.
-Unpromoted allocation experiments retain 757 interaction and 194 untap cases.
-One attempt completed all 1,271 assertions but timed out during finalization;
-a phase diagnostic remained inside TestNG at the deadline. Neither establishes
-a completed timing pass. Bounded factory allocation observations do not establish
-whole-game memory or performance. Production patches and the selected runtime
-are unchanged. See [experiment evidence](engine/copy_allocation_experiments_evidence.json).
+The normal build includes **43 additional controls**: 36 live split/clone trait
+transitions and seven table isolation/version/serialization/concurrency contracts.
+All **3,511 source** and **4,711 native** regression cases pass, retaining every
+prior method and parameter. All 2,168 production sources, 165 test inputs and 316
+card inputs match reviewed evidence; production class bytes match the preceding
+candidate. The expanded **1,371-case packaged cast group** passes with 179
+production origins and earlier compiled assertions retained.
+
+The original **1,271-case / 90-second** resolution gate remains unmet, so the full
+3,554-case packaged gate is incomplete. It was not retried unchanged on identical
+production code. Allocation experiments remain unpromoted: one attempt completed
+all assertions but timed out before process completion; a phase diagnostic stayed
+inside TestNG at its deadline. Bounded allocation observations do not establish
+whole-game memory or a reliable speedup. Broader gameplay/serialization, full-game,
+catalog, health and activation checks remain required. The selected runtime is
+unchanged. See [expanded validation evidence](engine/split_table_runtime_evidence.json)
+and [experiment evidence](engine/copy_allocation_experiments_evidence.json).
 
 The replacement-effect correction now respects explicit active zones in performance
 mode. It passes all **3,468 source** and **4,668 native** cases, retaining every
