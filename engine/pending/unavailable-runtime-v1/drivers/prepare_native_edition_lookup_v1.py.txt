@@ -1,0 +1,92 @@
+"""Prepare an owned edition lookup index; native choices and mutable metadata stay live."""
+from pathlib import Path
+import hashlib,json,shutil
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';parent=w/'no-legal-attack-prototype-v1';dest=w/'native-edition-lookup-prototype-v1';assert not dest.exists();sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();assert all(sha(parent/n)==h for n,h in json.loads((parent/'inputs.json').read_bytes()).items());dest.mkdir()
+for name in ('source','baseline'):shutil.copytree(parent/name,dest/name)
+rel=Path('forge-core/src/main/java/forge/card/CardEdition.java');native=r/'data/development/commander-blocking-history-research/source'/rel
+for name in ('source','baseline'):
+ p=dest/name/rel;p.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(native,p)
+p=dest/'source'/rel;s=p.read_text(encoding='utf-8')
+old='''        private boolean lock = false; //Lock once custom content has been added.
+        public Collection(IItemReader<CardEdition> reader) {
+            super("Card editions", reader);
+
+            for (CardEdition ee : this) {
+                initAliases(ee);
+            }
+        }'''
+new='''        private boolean lock = false; //Lock once custom content has been added.
+        private final boolean ownsNativeStorage;
+        private volatile Map<String, CardEdition> nativeLookup;
+
+        public Collection(IItemReader<CardEdition> reader) {
+            super("Card editions", reader);
+            // Reader.readAll creates its own map; arbitrary readers may retain theirs.
+            ownsNativeStorage = reader.getClass() == Reader.class;
+            for (CardEdition ee : this) {
+                initAliases(ee);
+            }
+            rebuildNativeLookup();
+        }
+
+        private static String nativeCodeKey(final String code) {
+            for (int index = 0; index < code.length(); index++) {
+                if (code.charAt(index) > 127) return null;
+            }
+            return code.toUpperCase(Locale.ROOT);
+        }
+
+        /** Index references only; date/type changes remain visible to every caller. */
+        private void rebuildNativeLookup() {
+            nativeLookup = null;
+            if (!ownsNativeStorage || getClass() != Collection.class
+                    || map.getClass() != TreeMap.class
+                    || ((TreeMap<String, CardEdition>) map).comparator() != String.CASE_INSENSITIVE_ORDER) return;
+            final Map<String, CardEdition> index = new HashMap<>();
+            for (final Map<String, CardEdition> source : List.of(aliasToEdition, map)) {
+                for (final Entry<String, CardEdition> entry : source.entrySet()) {
+                    final String key = nativeCodeKey(entry.getKey());
+                    if (key == null) return; // Unicode keys retain the native comparator.
+                    index.put(key, entry.getValue());
+                }
+            }
+            // Primary codes override aliases, exactly as the two native lookups do.
+            nativeLookup = Collections.unmodifiableMap(index);
+        }
+
+        @Override
+        public Iterator<CardEdition> iterator() {
+            final Iterator<CardEdition> iterator = super.iterator();
+            if (!ownsNativeStorage || getClass() != Collection.class) return iterator;
+            return new Iterator<>() {
+                @Override public boolean hasNext() { return iterator.hasNext(); }
+                @Override public CardEdition next() { return iterator.next(); }
+                @Override public void remove() {
+                    nativeLookup = null;
+                    iterator.remove();
+                }
+                @Override public void forEachRemaining(java.util.function.Consumer<? super CardEdition> action) {
+                    iterator.forEachRemaining(action);
+                }
+            };
+        }'''
+assert s.count(old)==1;s=s.replace(old,new)
+old='''            if (lock) throw new UnsupportedOperationException("This is a read-only storage");
+            else map.put(item.getCode(), item);'''
+new='''            if (lock) throw new UnsupportedOperationException("This is a read-only storage");
+            nativeLookup = null;
+            map.put(item.getCode(), item);''';assert s.count(old)==1;s=s.replace(old,new)
+old='''            this.lock = true; //Consider it initialized and prevent from writing any more data.
+        }''';new='''            this.lock = true; //Consider it initialized and prevent from writing any more data.
+            rebuildNativeLookup();
+        }''';assert s.count(old)==1;s=s.replace(old,new)
+old='''            CardEdition baseResult = super.get(code);
+            return baseResult == null ? aliasToEdition.get(code) : baseResult;''';new='''            final Map<String, CardEdition> index = nativeLookup;
+            if (index != null) {
+                final String key = nativeCodeKey(code);
+                if (key != null) return index.get(key);
+            }
+            CardEdition baseResult = super.get(code);
+            return baseResult == null ? aliasToEdition.get(code) : baseResult;''';assert s.count(old)==1;s=s.replace(old,new)
+p.write_text(s,encoding='utf-8',newline='\n')
+proposal={'parent':parent.name,'parent_inputs_sha256':sha(parent/'inputs.json'),'change':'Owned native Reader/TreeMap only; index references by ASCII-insensitive code, preserving primary-over-alias precedence. No card/printing selection result cache.','mutation_rules':'add and iterator.remove invalidate; append rebuilds only after native completion. Unknown readers, collections, comparators and Unicode-key catalogs use original lookup.','status':'Prepared only; not compiled, tested or promoted.','concurrency':'Original storage is not a concurrent collection; immutable index snapshots are published via volatile reference.'};(dest/'proposal.json').write_text(json.dumps(proposal,indent=2)+'\n',encoding='utf-8',newline='\n');print('Prepared11-source prototype; only CardEdition differs from ten-source parent. No native job started.')

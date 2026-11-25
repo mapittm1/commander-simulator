@@ -1,0 +1,26 @@
+"""Read full printing-lookup caller stacks from the preserved bounded profile."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,sys
+r=Path.cwd();sys.path.insert(0,str(r))
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';run=w/'resolution1271-membership-allocation-v54';profile=run/'allocations.jfr';before=file_hash(profile);assert profile.stat().st_size<=16777216
+settings=read_settings(r/'data/engine-builds/1bae22d83a0743fc909573302ed9e3c0/engine-config.json');settings.verify();java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(profile)));events=0;stacks=Counter();callers=Counter()
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent();events+=1;assert events<=100000
+  if str(event.getEventType().getName())!='jdk.ExecutionSample':continue
+  thread=event.getThread('sampledThread')
+  if thread is None or str(thread.getJavaName())!='main':continue
+  trace=event.getStackTrace()
+  if trace is None:continue
+  names=[str(f.getMethod().getType().getName())+'.'+str(f.getMethod().getName()) for f in trace.getFrames() if f.getMethod() is not None]
+  positions=[i for i,n in enumerate(names) if n.startswith('forge.card.CardDb.')]
+  if not positions:continue
+  end=max(positions);suffix=names[end+1:]
+  if suffix:callers[suffix[0]]+=1
+  stacks[' <- '.join(names[max(0,end-1):end+17])]+=1
+finally:reader.close();java.shutdownJVM()
+assert file_hash(profile)==before
+out=run/'printing-callers-v54.json';assert not out.exists();record={'profile_sha256':before,'events_read':events,'sampled_immediate_callers':callers.most_common(20),'full_caller_stacks':stacks.most_common(25),'scope':'Read-only analysis of existing CPU samples; not new timing evidence or a completed gate.'};text=json.dumps(record,indent=2)+'\n';assert len(text.encode())<131072;out.write_text(text,encoding='utf-8',newline='\n');print(json.dumps({'immediate_callers':callers.most_common(6),'top_stack':stacks.most_common(1)}))

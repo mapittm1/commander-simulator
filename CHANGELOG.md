@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the corrected sealed 4,596-case native build and normal packaged
+  1,256 cast / 273 combat groups with 179 production origins. Retain every prior
+  native case/parameter, verify 2,168 production sources, 162 test files and 316
+  card files, and confirm production class bytes match the prior candidate.
+  Preserve an owned edition lookup experiment: paired baseline/prototype checks
+  pass 685 contracts with 661 prior cases and 648 printing vectors retained; the
+  changed overlay passes 194 untap cases. Its original 1,271-case / 90-second
+  resolution check still times out, so it remains unpromoted. Preserve the helper
+  interface compile failure and correction without changing assertion bodies.
+  The full packaged and remaining runtime/rules gates stay open; update evidence.
+
 - Correct the native sealing count from 4,563 to 4,596 after all 4,596 tests
   passed but the stale expected count stopped packaging. Add a cross-registry
   unit guard, verified failing before the correction and passing afterward;

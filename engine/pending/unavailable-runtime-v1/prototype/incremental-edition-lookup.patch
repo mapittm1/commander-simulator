@@ -1,0 +1,93 @@
+--- a/forge-core/src/main/java/forge/card/CardEdition.java
++++ b/forge-core/src/main/java/forge/card/CardEdition.java
+@@ -924,12 +924,59 @@
+     public static class Collection extends StorageBase<CardEdition> {
+         private final Map<String, CardEdition> aliasToEdition = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+         private boolean lock = false; //Lock once custom content has been added.
++        private final boolean ownsNativeStorage;
++        private volatile Map<String, CardEdition> nativeLookup;
++
+         public Collection(IItemReader<CardEdition> reader) {
+             super("Card editions", reader);
+-
++            // Reader.readAll creates its own map; arbitrary readers may retain theirs.
++            ownsNativeStorage = reader.getClass() == Reader.class;
+             for (CardEdition ee : this) {
+                 initAliases(ee);
+             }
++            rebuildNativeLookup();
++        }
++
++        private static String nativeCodeKey(final String code) {
++            for (int index = 0; index < code.length(); index++) {
++                if (code.charAt(index) > 127) return null;
++            }
++            return code.toUpperCase(Locale.ROOT);
++        }
++
++        /** Index references only; date/type changes remain visible to every caller. */
++        private void rebuildNativeLookup() {
++            nativeLookup = null;
++            if (!ownsNativeStorage || getClass() != Collection.class
++                    || map.getClass() != TreeMap.class
++                    || ((TreeMap<String, CardEdition>) map).comparator() != String.CASE_INSENSITIVE_ORDER) return;
++            final Map<String, CardEdition> index = new HashMap<>();
++            for (final Map<String, CardEdition> source : List.of(aliasToEdition, map)) {
++                for (final Entry<String, CardEdition> entry : source.entrySet()) {
++                    final String key = nativeCodeKey(entry.getKey());
++                    if (key == null) return; // Unicode keys retain the native comparator.
++                    index.put(key, entry.getValue());
++                }
++            }
++            // Primary codes override aliases, exactly as the two native lookups do.
++            nativeLookup = Collections.unmodifiableMap(index);
++        }
++
++        @Override
++        public Iterator<CardEdition> iterator() {
++            final Iterator<CardEdition> iterator = super.iterator();
++            if (!ownsNativeStorage || getClass() != Collection.class) return iterator;
++            return new Iterator<>() {
++                @Override public boolean hasNext() { return iterator.hasNext(); }
++                @Override public CardEdition next() { return iterator.next(); }
++                @Override public void remove() {
++                    nativeLookup = null;
++                    iterator.remove();
++                }
++                @Override public void forEachRemaining(java.util.function.Consumer<? super CardEdition> action) {
++                    iterator.forEachRemaining(action);
++                }
++            };
+         }
+         private void initAliases(CardEdition E) { //Add the alias to the edition here, to ensure it's always done equally.
+             String alias = E.getAlias();
+@@ -940,7 +987,8 @@
+         @Override
+         public void add(CardEdition item) { //Even though we want it to be read only, make an exception for custom content.
+             if (lock) throw new UnsupportedOperationException("This is a read-only storage");
+-            else map.put(item.getCode(), item);
++            nativeLookup = null;
++            map.put(item.getCode(), item);
+         }
+         public void append(CardEdition.Collection C) { //Append custom editions
+             if (lock) throw new UnsupportedOperationException("This is a read-only storage");
+@@ -952,6 +1000,7 @@
+             this.add(customBucket);
+             initAliases(customBucket);
+             this.lock = true; //Consider it initialized and prevent from writing any more data.
++            rebuildNativeLookup();
+         }
+ 
+         //Gets a sets by code.  It will search first by three letter codes, then by aliases and two-letter codes.
+@@ -961,6 +1010,11 @@
+                 return null;
+             }
+ 
++            final Map<String, CardEdition> index = nativeLookup;
++            if (index != null) {
++                final String key = nativeCodeKey(code);
++                if (key != null) return index.get(key);
++            }
+             CardEdition baseResult = super.get(code);
+             return baseResult == null ? aliasToEdition.get(code) : baseResult;
+         }

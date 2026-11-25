@@ -1,0 +1,37 @@
+"""Build the complete fixed native suite after source3396 validation."""
+from pathlib import Path
+import sys,json,subprocess,hashlib,time,contextlib,traceback
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+WORK=Path(__file__).resolve().parent;EPOCH=WORK/'native-count-source-epoch-v1';RUN=WORK/'no-legal-attack-candidate-v2'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(WORK/'source3396-v1/evidence.json')['counts']==dict(total=3396,passed=3396,failed=0,skipped=0)
+old_recipe=load(ROOT/'data/engine-builds/dbaffa45079b421592301c9489b93b97/build-recipe.json');current_recipe=load(ROOT/'engine/sticker_recipe.json')
+assert [key for key in current_recipe if current_recipe[key]!=old_recipe[key]]==['native_test_count']
+assert old_recipe['native_test_count']==4563 and current_recipe['native_test_count']==4596
+old_frozen=load(WORK/'no-legal-attack-source-epoch-v1/source-frozen-inputs.json')
+changed={name for name,digest in old_frozen.items() if sha(ROOT/name)!=digest}
+assert changed=={'.gitattributes','README.md','CHANGELOG.md','engine/sticker_recipe.json','tests/unit/test_draw_ending_partitions.py'},changed
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip();ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==head and ci['conclusion']=='success'
+frozen=load(EPOCH/'source-frozen-inputs.json');assert all(sha(ROOT/n)==h for n,h in frozen.items())
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+for name in ['source-ci.json','source-frozen-inputs.json','source-epoch.json']:(RUN/name).write_bytes((EPOCH/name).read_bytes())
+args=['tools/build_sticker_engine.py','--source-archive',str(ROOT/'data/coverage-research/forge-583714b.zip'),'--maven-archive',str(ROOT/'data/coverage-research/apache-maven-3.10.0-bin.zip'),'--jdk','C:/Program Files/Java/jdk-19','--runtime',str(ROOT/'data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe')]
+save(RUN/'command.json',args)
+existing={p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir()};started=time.monotonic();status='failed';error=None
+try:
+ sys.argv=args
+ with (RUN/'build-output.log').open('x',encoding='utf-8') as output,contextlib.redirect_stdout(output),contextlib.redirect_stderr(output):builder.main()
+ status='finished'
+except BaseException:
+ error=traceback.format_exc();raise
+finally:
+ new=sorted(p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir() and p.name not in existing)
+ record={'status':status,'elapsed_seconds':round(time.monotonic()-started,3),'new_builds':new,'error':error,'maven_limit_seconds':600,'source_suite_cases':3396,'expected_native_cases':4596}
+ save(RUN/'process.json',record)
+ assert sha(Path(__file__))==sha(RUN/'driver.py.txt');assert all(sha(ROOT/n)==h for n,h in frozen.items())
+ if status=='finished':
+  assert len(new)==1;build=ROOT/'data/engine-builds'/new[0];lock=load(build/'engine-lock.json');assert lock['native_tests']==dict(total=4596,passed=4596,failed=0,skipped=0)
+  save(RUN/'candidate-selection.json',{'build':build.relative_to(ROOT).as_posix(),'config':str(build/'engine-config.json'),'native_counts':lock['native_tests'],'installed':False});print(json.dumps(record),flush=True)

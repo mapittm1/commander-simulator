@@ -1,0 +1,96 @@
+"""Bind pending packaged family receipts to sealed native methods and parameters."""
+from collections import Counter
+from pathlib import Path
+import json
+import re
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.forge_config import file_hash, read_settings
+from tests.support import draw_ending_worker, free_casting_worker, untap_worker, battle_combat_worker
+from tests.support.draw_ending_partitions import PARTITIONS, EXPECTED_COUNTS
+from tests.support.native_receipts import read_test_receipts
+
+WORK = Path(__file__).resolve().parent
+RUN = WORK / 'unavailable-packaged-v2'
+CANDIDATE = WORK / 'no-legal-attack-candidate-v2'
+load = lambda path: json.loads(path.read_bytes())
+
+
+def cases(report, classes=None):
+    result = Counter()
+    for cls in ET.parse(report).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:
+            continue
+        for method in cls.findall('test-method'):
+            if method.get('is-config') == 'true':
+                assert method.get('status') == 'PASS'
+                continue
+            assert method.get('status') == 'PASS'
+            parameters = tuple((value.text or '').strip() for value in method.findall('./params/param/value'))
+            result[(cls.get('name') + '.' + method.get('name'), parameters)] += 1
+    return result
+
+
+frozen = load(RUN / 'source-frozen-inputs.json')
+assert all(file_hash(ROOT / name) == digest for name, digest in frozen.items())
+process = load(RUN / 'process.json')
+assert process['status'] == 'finished' and process['returncode'] == 0
+assert process['configuration_unchanged'] and process['elapsed_seconds'] <= 420
+assert file_hash(RUN / 'output.log') == process['log_sha256']
+assert load(RUN / 'outcome.json')['successful']
+assert load(RUN / 'outcome.json')['tests_run'] == 1
+build = ROOT / load(CANDIDATE / 'candidate-selection.json')['build']
+settings = read_settings(build / 'engine-config.json')
+assert settings.verify()['native_tests'] == dict(total=4596, passed=4596, failed=0, skipped=0)
+log = (RUN / 'output.log').read_text(encoding='utf-8')
+ids = re.findall(r'"draw_ending_partition": "([^"]+)", "draw_ending_run": "([a-f0-9]{32})"', log)
+assert Counter(name for name, _ in ids) == Counter({'cast_events': 1, 'combat_and_snapshots': 1})
+specs = [(name, run_id, EXPECTED_COUNTS[name], 'draw-ending', 'draw-endings.json', PARTITIONS[name], draw_ending_worker) for name, run_id in ids]
+assert set(process['new_run_directories']) == {item[1] for item in specs}
+results = {}
+for name, run_id, count, prefix, manifest, classes, worker in specs:
+    path = ROOT / 'data/runs' / run_id
+    rows = read_test_receipts(settings, path, manifest, {prefix + '-summary.json': 1, prefix + '-methods.json': count})
+    summary, methods = rows[0], rows[1:]
+    expected = cases(build / 'source/forge-gui-desktop/target/surefire-reports/testng-results.xml', set(classes))
+    actual = cases(path / 'rules-reports/testng-results.xml')
+    assert expected == actual and sum(actual.values()) == count
+    method_counts = Counter()
+    for (method, parameters), multiplicity in expected.items():
+        method_counts[method] += multiplicity
+    assert Counter(row['method'] for row in methods) == method_counts
+    assert all(row['status'] == 'PASS' for row in methods)
+    assert summary['counts'] == dict(total=count, passed=count, failed=0, skipped=0)
+    assert all(summary[key] == 0 for key in ('testng_status', 'configuration_failures', 'configuration_skips', 'partial_successes'))
+    assert summary['production_classes_from_packaged_jar'] == list(worker.NATIVE_CLASSES)
+    assert len(set(worker.NATIVE_CLASSES)) == len(worker.NATIVE_CLASSES)
+    assert file_hash(path / 'rules-reports/testng-results.xml') == summary['report_sha256']
+    assert all(file_hash(Path(n)) == h for n, h in summary['inputs'].items())
+    execution = load(path / 'rules-process.json')
+    assert execution['worker_sha256'] == file_hash(Path(worker.__file__))
+    assert execution['process']['status'] == 'finished' and execution['process']['returncode'] == 0
+    assert execution['process']['elapsed_seconds'] <= 90
+    assert all(file_hash(Path(n)) == h for n, h in execution['process']['support_source_hashes'].items())
+    old = ROOT / 'data/runs/dd055d84f753460cbb78c4bce32c5a73'
+    old_classes = load(old / 'rules-inputs.json')['classes']
+    new_classes = load(path / 'rules-inputs.json')['classes']
+    assert all(file_hash(old / 'rules-classes' / n) == h for n, h in old_classes.items())
+    assert all(file_hash(path / 'rules-classes' / n) == h for n, h in new_classes.items())
+    assert all(new_classes.get(n) == h for n, h in old_classes.items())
+    results[name] = {'run_id': run_id, 'counts': summary['counts'], 'native_method_and_parameter_counter_matches': True,
+                     'production_origins': len(worker.NATIVE_CLASSES), 'prior_compiled_rule_support_classes_retained_identically': len(old_classes), 'process': execution['process']}
+assert (ROOT / 'config/engine_config.json').read_bytes() == (RUN / 'active-config-before.json').read_bytes()
+record = {'build_id': build.name, 'groups': results, 'case_counts': [1256, 273],
+          'total_cases': sum(item['counts']['total'] for item in results.values()),
+          'configuration_restored': True, 'whole_wrapper_seconds': process['elapsed_seconds'],
+          'worker_limit_seconds': 90, 'wrapper_limit_seconds': 420,
+          'scope': 'Changed179-origin fixed1256 cast and273 combat groups pass. Original resolution1271/90 remains failed; full3439 gate and all-card correctness remain incomplete.'}
+assert record['total_cases'] == 1529
+out = RUN / 'audit.json'
+assert not out.exists()
+out.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8', newline='\n')
+print(json.dumps({'counts': record['case_counts'], 'all_native_parameter_counters_match': True,
+                  'whole_wrapper_seconds': record['whole_wrapper_seconds']}), flush=True)
