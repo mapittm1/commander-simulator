@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the counter-zone correction with all 3,195 source and 4,395 native
+  cases passing, preserving prior cases and parameters. Match all 2,168 production
+  sources, 156 test files and 316 card files; verify actual two-processor / 2 GiB
+  JVM limits. The normal packaged cast subset passes 1,088 cases with matching
+  native parameter counters and 175 production origins in 42.891 worker seconds.
+  Preserve the fresh packaged 1,271-case / 90-second resolution timeout (90.016s),
+  exact inputs/logs and the CRLF/LF preparation correction. Full packaged/broader/
+  full-game/catalog/health/activation and complete rules support remain pending;
+  restore the original configuration and keep the candidate uninstalled.
+
 - Add a pending generic world-copy correction for counters in every card zone,
   using independent storage without placement events, new timestamps or rebuilding
   counter statics. Paired 448-case checks improve from 430 pass / 18 fail to all

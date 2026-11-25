@@ -1,6 +1,6 @@
 # Card support and evidence
 
-A pending generic snapshot correction preserves counters on cards in the command
+A reviewed candidate snapshot correction preserves counters on cards in the command
 zone, graveyard, exile, hand, library and stack, as well as the battlefield.
 The same 448 focused cases produce 430 passes / 18 failures before the correction
 and 448 passes afterward. Counter storage is independent between copies;
@@ -10,12 +10,20 @@ Most counter states are supplied directly; the Lightning Storm stack fixture pay
 and casts the spell but supplies its charge counters directly. These tests do not
 prove complete card histories or full Oracle coverage.
 
-The normal build now registers 48 additional cases: 27 counter-zone, 18 static
-gathering and 3 optional-keyword-metadata controls. Full 3,195-source / 4,395-native /
-3,238-packaged validation is pending; the cast subset is now 1,088 cases. The
-unchanged 1,271-case / 90-second resolution diagnostic still times out (90.016s)
-with this correction. Collector/metadata/static-gather optimizations remain
-unpromoted, and the selected runtime is unchanged. See [counter snapshot evidence](../engine/counter_zone_snapshot_evidence.json).
+The expanded suite passes all **3,195 source** and **4,395 native** cases,
+retaining every prior case and normalized parameter. All 2,168 production sources,
+156 test files and 316 tracked card files match reviewed inputs. Two-processor /
+2 GiB Java-heap assertions pass; cards and AI profiles are unchanged. The normal
+**1,088-case packaged cast subset** passes, with native method/parameter counters
+matching and 175 production origins verified (42.891 worker seconds).
+
+The full 3,238-case packaged gate remains unmet: the fresh packaged 1,271-case
+resolution check times out at 90.016 seconds under its original limit. No unchanged
+retry or budget increase was made. Broader/full-game/catalog/health/activation and
+complete rules support remain pending. The candidate remains uninstalled and the
+original configuration is restored. Collector/metadata/static-gather optimizations
+remain unpromoted. See [runtime evidence](../engine/counter_zone_runtime_evidence.json) and the
+[focused counter snapshot evidence](../engine/counter_zone_snapshot_evidence.json).
 
 
 The preceding baseline contracts pass all **3,147 source** and **4,347 native** cases,
@@ -30,7 +38,7 @@ gate remains unmet: the original 1,271-case resolution group has a preserved
 90-second timeout on identical production code and was not retried unchanged.
 The candidate remains uninstalled and the original configuration is restored.
 Broader/full-game/catalog/health/activation and complete card/rules verification
-remain required. See [current evidence](../engine/replacement_contracts_runtime_evidence.json)
+remain required. See [preceding baseline evidence](../engine/replacement_contracts_runtime_evidence.json)
 and the [registration evidence](../engine/replacement_eligibility_evidence.json).
 
 The earlier sticker-capable runtime used the official Forge source snapshot

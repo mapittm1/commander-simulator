@@ -1,0 +1,13 @@
+from pathlib import Path
+import hashlib,json,shutil
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';s=r/'data/development/commander-blocking-history-research/source';p=w/'all-zone-counter-copy-prototype-v1';sha=lambda x:hashlib.sha256(x.read_bytes()).hexdigest()
+old=json.loads((w/'source3147-v2/production-inputs.json').read_bytes());changed=[]
+for n,h in old.items():
+ if sha(s/n)!=h:
+  assert (s/n).read_bytes().replace(b'\r\n',b'\n')==(p/'source'/n).read_bytes();changed.append(n)
+assert len(changed)==2
+for name in ['CommanderCardCounterZoneCopyTest','CommanderKeywordMetadataFailureTest','CommanderStaticGatherTest']:
+ target=s/'forge-gui-desktop/src/test/java/forge/ai'/f'{name}.java';assert not target.exists();shutil.copyfile(r/'engine/tests'/f'{name}.java',target)
+record={'changed_production_sources':changed,'total_production_sources':len(old),'root_patch_sha256':sha(r/'engine/patches/commander-counter-zone-snapshot.patch'),'prototype_text_matches_after_CRLF_normalization':True,'initial_preparation_failure':'v1 expected exact LF prototype bytes; canonical source uses CRLF. No Java text differs. Preserve initial driver, do not normalize production files.'}
+(w/'counter-zone-source-preparation-v2.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8')
+print('Verified exactly two changed production files; copied all three registered fixture files.')

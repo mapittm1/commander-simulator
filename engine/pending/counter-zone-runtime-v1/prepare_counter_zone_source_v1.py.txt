@@ -1,0 +1,16 @@
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';s=r/'data/development/commander-blocking-history-research/source';p=w/'all-zone-counter-copy-prototype-v1';sha=lambda x:hashlib.sha256(x.read_bytes()).hexdigest()
+old=json.loads((w/'source3147-v2/production-inputs.json').read_bytes());assert all(sha(s/n)==h for n,h in old.items())
+patch=r/'engine/patches/commander-counter-zone-snapshot.patch'
+subprocess.run(['git','apply','--check','--directory='+s.relative_to(r).as_posix(),str(patch)],check=True)
+subprocess.run(['git','apply','--directory='+s.relative_to(r).as_posix(),str(patch)],check=True)
+changed=[]
+for n,h in old.items():
+ if sha(s/n)!=h:
+  assert sha(s/n)==sha(p/'source'/n);changed.append(n)
+assert len(changed)==2
+for name in ['CommanderCardCounterZoneCopyTest','CommanderKeywordMetadataFailureTest','CommanderStaticGatherTest']:
+ target=s/'forge-gui-desktop/src/test/java/forge/ai'/f'{name}.java';assert not target.exists();shutil.copyfile(r/'engine/tests'/f'{name}.java',target)
+(w/'counter-zone-source-preparation-v1.json').write_text(json.dumps({'changed_production_sources':changed,'total_production_sources':len(old),'root_patch_sha256':sha(patch),'all_prior_production_except_two_unchanged':True},indent=2)+'\n',encoding='utf-8')
+print('Applied patch to canonical source; exactly two production files changed, matching focused prototype bytes.')
