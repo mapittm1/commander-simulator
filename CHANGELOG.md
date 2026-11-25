@@ -6,14 +6,36 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve game-long spell counts after the existing turn-local snapshot copy.
+  Five baseline failures incorrectly grant a free first-spell alternative or lose
+  prior casts. All twelve paid-spell, turn-boundary, later-cast and isolation
+  controls pass after correction; all retained semantic regression groups pass.
+- Register twelve spell_game_history cases separately; preserve all earlier groups
+  and original 1,271/90 workload. Fresh 3,566 source / 4,766 native / 3,609 main
+  packaged validation is pending. Supplied boards do not establish full legal
+  histories, turn scheduling or experimental restore support; selected runtime is
+  unchanged.
+
+- Preserve an unpromoted live static-category experiment: fifteen baseline and
+  corrected mutation/callback contracts pass, including side-effect ordering; all
+  1,914 retained semantic cases pass. The single original 1,271/90 trial times out without a completed report.
+  Keep the proposal uninstalled pending full validation; no full rules or reliable
+  speedup claim. Preserve the earlier generic-type compile failure and its correction.
+
 - Preserve per-player scry counts through the shared event-history helper. Three
   baseline failures lose paid-scry qualification or another player's count. All six
   controls pass after correction, including paid return, finality and enters-surveil
   effects. Retain casting/combat/untap/dungeon/expend/event-history/upstream controls.
 - Register six scry_history cases separately; preserve all prior groups and original
-  1,271/90 workload. Fresh 3,554 source / 4,754 native / 3,597 main packaged validation
-  is pending; selected runtime remains unchanged. Supplied boards are not full legal
-  histories or experimental restore proof.
+  1,271/90 workload. Fresh 3,554 source / 4,754 native cases pass with exact retained
+  methods/parameters, reviewed manifests and all 290 copied-fixture bytes verified.
+  Broader 6,077 gameplay / 320 serialization cases pass with exact membership, no
+  skips and temporary policies restored. Supplied boards are not full legal histories
+  or experimental restore proof.
+- Audit all non-resolution packaged groups on that candidate, including six scry
+  cases and separate free-casting/untap/Battle families. Full 3,597 remains incomplete:
+  original resolution times out at 90.016 seconds without a completed report.
+  Final live checks and activation remain pending; selected runtime is unchanged.
 
 - Copy native regression fixtures from the shared hash registry instead of a
   second filename list. Preserve all 280 registered sources and nine priority

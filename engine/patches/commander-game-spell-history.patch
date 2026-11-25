@@ -1,0 +1,25 @@
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -2595,6 +2595,11 @@
+     public final int getSpellsCastThisGame() {
+         return spellsCastThisGame;
+     }
++    /** Restore the game-long cast count without replaying a spell-cast event. */
++    public final void copySnapshotGameSpellCountFrom(final Player original) {
++        spellsCastThisGame = original.spellsCastThisGame;
++    }
++
+     public final void resetSpellCastThisGame() {
+         spellsCastThisGame = 0;
+     }
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -183,6 +183,8 @@
+             for (int j = 0; j < origPlayer.getSpellsCastThisTurn(); j++) {
+                 newPlayer.addSpellCastThisTurn();
+             }
++            // The turn-local loop above cannot recover casts from earlier turns.
++            newPlayer.copySnapshotGameSpellCountFrom(origPlayer);
+             newPlayer.setMaxHandSize(origPlayer.getMaxHandSize());
+             newPlayer.setUnlimitedHandSize(origPlayer.isUnlimitedHandSize());
+             newPlayer.setCrankCounter(origPlayer.getCrankCounter());

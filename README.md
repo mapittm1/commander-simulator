@@ -26,6 +26,21 @@ difference.
 
 ## Card coverage
 
+A generic game-long spell-history correction now preserves earlier-turn casts in
+AI world copies. Five of twelve baseline controls fail: copied games incorrectly
+offer Once Upon a Time's free first-spell alternative or undercount later paid
+casts. The correction passes **12/12**, including paid Opt, an explicit native
+stack-turn boundary, actual alternative-cost eligibility, repeated copies,
+separate players and branch isolation. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / twelve first-event / six scry / nine upstream**
+controls. Supplied boards do not prove full preceding legal histories, the complete
+turn scheduler or the experimental restore path.
+
+The recipe adds twelve `spell_game_history` cases, preserving every previous group
+and original **1,271 / 90 seconds**. Fresh **3,566 source / 4,766 native / 3,609 main
+packaged** validation is pending; the selected runtime is unchanged. See
+[game-long spell-history evidence](engine/game_spell_history_evidence.json).
+
 A generic scry-history correction now preserves each player's turn count in AI
 world copies. Three of six baseline controls fail: paid Opt no longer qualifies
 Proctor of Potential's graveyard ability after copying, and another player's
@@ -37,9 +52,21 @@ controls. These supplied boards do not establish full legal histories or the
 experimental restore path.
 
 The recipe adds six cases in `scry_history`, preserving every previous group and
-original **1,271 / 90 seconds**. Fresh **3,554 source / 4,754 native / 3,597 main
-packaged** validation is pending; selected runtime is unchanged. See
-[scry correction evidence](engine/scry_history_evidence.json).
+original **1,271 / 90 seconds**. Fresh **3,554 source / 4,754 native** cases pass
+with exact retained methods and parameters. Reviewed manifests contain **2,168
+production / 170 test / 340 card** inputs; all **281 registered + nine priority**
+fixtures match their reviewed bytes. The production class change is confined to
+`Player.class`. Completed packaged groups pass **301 information / 273 combat /
+338 text-cost / 1,380 casting / ten dungeon / six expend / twelve first-event /
+six scry** cases, plus separate **65 free-casting / 194 untap / 146 Battle** cases.
+Broader **6,077 gameplay / 320 serialization** cases pass with exact membership,
+no skips and temporary policies restored.
+
+The full **3,597-case** packaged gate remains incomplete: original **1,271 / 90
+seconds** resolution times out at **90.016 seconds**, without a completed report.
+The selected runtime remains unchanged. Final live checks, activation and complete
+card/rules coverage remain open. See [scry correction evidence](engine/scry_history_evidence.json)
+and [runtime evidence](engine/scry_history_runtime_evidence.json).
 
 A shared correction now preserves how often life gain, surveil and investigate
 occurred during the turn in copied games. Six of twelve baseline controls fail:
@@ -73,6 +100,14 @@ semantic controls but still times out at original **1,271 / 90 seconds** without
 completed report. These figures are not retained-memory or reliable speedup claims.
 A bounded late-window profile again points to static/replacement trait gathering.
 See [experiment evidence](engine/collection_experiments_v2_evidence.json).
+
+A live static-category proposal passes **15 boundary controls**, including native
+mutable lists, opaque callbacks, removal predicates and callback mutation ordering.
+It retains **1,914** casting/combat/untap/history/upstream cases. Its single original
+**1,271 / 90-second** trial times out at **90.016 seconds** without a completed report. The proposal stays
+unpromoted pending full validation. These results are not a reliable speedup,
+full normal packaged gate or complete card-rules proof. See
+[trait-category evidence](engine/trait_category_evidence.json).
 
 A generic expend-history correction now retains cumulative spell-mana spending in
 AI world copies. Four of six controls fail on the preceding candidate: Muerra's

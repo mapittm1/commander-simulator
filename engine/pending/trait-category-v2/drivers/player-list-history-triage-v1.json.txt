@@ -1,0 +1,78 @@
+{
+  "scope": "Static triage of rule-relevant player histories to reproduce after current validation. Catalog legality is the local snapshot status, not a new live rules/legality verification. Script references do not prove a gameplay defect or correct support.",
+  "cards": [
+    {
+      "suspected_player_field": "discardedThisTurn",
+      "name": "Hollow One",
+      "catalog_id": "b9e4d34a-ba91-4ad6-b886-daeeda6c9498",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/h/hollow_one.txt",
+      "script_sha256": "a2e9e93e02289fed75595b78e28ffa278f01eec738f18fbcba5a48166b9b7d56",
+      "relevant_script_lines": [
+        "SVar:Y:PlayerCountPropertyYou$CardsDiscardedThisTurn/Twice"
+      ],
+      "reproduced": false
+    },
+    {
+      "suspected_player_field": "discardedThisTurn",
+      "name": "Asmoranomardicadaistinaculdacar",
+      "catalog_id": "1f74e26f-5cf3-4b0e-bcc6-f858599474fc",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/a/asmoranomardicadaistinaculdacar.txt",
+      "script_sha256": "3624eb7a8277ca093479100738ef608a54414e493789b6393a9408ac4d79d9a6",
+      "relevant_script_lines": [
+        "SVar:X:PlayerCountPropertyYou$CardsDiscardedThisTurn"
+      ],
+      "reproduced": false
+    },
+    {
+      "suspected_player_field": "discardedThisTurn",
+      "name": "Dream Salvage",
+      "catalog_id": "a05d478c-a703-4fc4-9496-2894a6acdaef",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/d/dream_salvage.txt",
+      "script_sha256": "bf114be12adb6faeff5ecd04c893cd43b90faedb0bb9397daf0144440578b56e",
+      "relevant_script_lines": [
+        "SVar:X:TargetedPlayer$CardsDiscardedThisTurn"
+      ],
+      "reproduced": false
+    },
+    {
+      "suspected_player_field": "sacrificedThisTurn",
+      "name": "Dargo, the Shipwrecker",
+      "catalog_id": "a2414a2d-0fd8-4084-8762-ace48f70c853",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/d/dargo_the_shipwrecker.txt",
+      "script_sha256": "0faf52dff6cd28c52ce4beb8b5c4f11e5e6a2be3d2920abb54103e32307f8331",
+      "relevant_script_lines": [
+        "SVar:Z:PlayerCountPropertyYou$SacrificedThisTurn Artifact,Creature/Times.2"
+      ],
+      "reproduced": false
+    },
+    {
+      "suspected_player_field": "sacrificedThisTurn",
+      "name": "Briarbridge Patrol",
+      "catalog_id": "784f0ca3-efe1-4e22-aedd-57cba7996fa5",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/b/briarbridge_patrol.txt",
+      "script_sha256": "00284b6ccc2e84d93e99628809b94b53c38e3e3f8dba1f28e8a294fef87a75ab",
+      "relevant_script_lines": [
+        "SVar:ClueResearch:PlayerCountPropertyYou$SacrificedThisTurn Clue"
+      ],
+      "reproduced": false
+    },
+    {
+      "suspected_player_field": "numForetoldThisTurn",
+      "name": "Ranar the Ever-Watchful",
+      "catalog_id": "c73a9939-0742-4919-94d6-c3b537697f17",
+      "catalog_commander_legality": "legal",
+      "native_script": "forge-gui/res/cardsfolder/r/ranar_the_ever_watchful.txt",
+      "script_sha256": "76cbc48e43dc365f21e9da006773f698c3b3a898f0de3d5a9a9945b6fe564c9b",
+      "relevant_script_lines": [
+        "S:Mode$ ReduceCost | ValidCard$ Card | Type$ Foretell | Amount$ 2 | FirstForetell$ True | Activator$ You | Description$ The first card you foretell each turn costs {0} to foretell."
+      ],
+      "reproduced": false
+    }
+  ],
+  "next": "Reproduce paid discard/sacrifice or native foretell actions and copied-board consequences before any production correction."
+}

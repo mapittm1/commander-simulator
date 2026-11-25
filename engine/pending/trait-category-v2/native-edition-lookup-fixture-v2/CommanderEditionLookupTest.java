@@ -1,0 +1,197 @@
+package forge.ai;
+
+import forge.card.CardDb;
+import forge.card.CardEdition;
+import forge.card.CardRarity;
+import forge.card.CardRules;
+import forge.item.PaperCard;
+import forge.util.IItemReader;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Native reader ownership, aliases and exposed mutation paths must preserve lookup results. */
+public class CommanderEditionLookupTest extends AITest {
+    private static final String NAME = "Lookup Object";
+
+    private static final class Fileset implements AutoCloseable {
+        private final Path directory;
+        private final List<Path> files = new ArrayList<>();
+        Fileset() throws Exception {
+            directory = Files.createTempDirectory("commander-editions-");
+        }
+        void add(String file, String code, String code2, String alias, String date) throws Exception {
+            Path path = directory.resolve(file + ".txt");
+            String metadata = "[metadata]\nname=" + file + "\ncode=" + code + "\ncode2=" + code2
+                    + "\ndate=" + date + "\ntype=Core\nalias=" + alias + "\n[cards]\n1 C " + NAME + "\n";
+            Files.writeString(path, metadata, StandardCharsets.UTF_8);
+            files.add(path);
+        }
+        CardEdition.Collection read() {
+            return new CardEdition.Collection(new CardEdition.Reader(directory.toFile()));
+        }
+        @Override public void close() throws Exception {
+            for (Path file : files) Files.deleteIfExists(file);
+            Files.deleteIfExists(directory);
+        }
+    }
+
+    private static final class RetainedReader implements IItemReader<CardEdition> {
+        private final Map<String, CardEdition> values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+        @Override public String getFullPath() { return "controlled retained map"; }
+        @Override public String getItemKey(CardEdition item) { return item.getCode(); }
+        @Override public Map<String, CardEdition> readAll() { return values; }
+        @Override public Iterable<java.io.File> getSubFolders() { return List.of(); }
+        @Override public IItemReader<CardEdition> getReaderForFolder(java.io.File folder) {
+            throw new UnsupportedOperationException("Controlled reader has no subfolders");
+        }
+    }
+
+    private static final class RetainedNativeReader extends CardEdition.Reader {
+        private final Map<String, CardEdition> values;
+        RetainedNativeReader(Path directory, Map<String, CardEdition> values) {
+            super(directory.toFile());
+            this.values = values;
+        }
+        @Override public Map<String, CardEdition> readAll() { return values; }
+    }
+
+    private static final class CallbackCollection extends CardEdition.Collection {
+        private int reads;
+        CallbackCollection(IItemReader<CardEdition> reader) { super(reader); }
+        @Override public CardEdition get(String code) { reads++; return super.get(code); }
+    }
+
+    private PaperCard paper(CardRules rules, String code, String number) {
+        return new PaperCard(rules, code, CardRarity.Common, 1, false, number, "", "");
+    }
+
+    private void check(String mode) throws Exception {
+        try (Fileset input = new Fileset(); Fileset extra = new Fileset()) {
+            String firstCode = mode.equals("unicodePrimary") ? "\u017fAA" : "AAA";
+            String firstAlias = mode.equals("unicodeAlias") ? "\u017fOLD" : mode.equals("primaryWinsAlias") ? "BBB" : mode.equals("queryUnicode") ? "sold" : "old";
+            String firstCode2 = mode.equals("code2CollidesPrimary") ? "BBB" : "AA";
+            input.add("first", firstCode, firstCode2, firstAlias, "2000-01-01");
+            input.add("second", "BBB", "BB", mode.equals("sharedAlias") ? firstAlias : "new", "2020-01-01");
+            extra.add("replacement", "AAA", "AX", "replacement", "2040-01-01");
+            CardEdition.Collection editions = input.read();
+            CardEdition.Collection additions = extra.read();
+            CardEdition first = editions.get(firstCode);
+            CardEdition second = editions.get("BBB");
+            CardEdition replacement = additions.get("AAA");
+            assertNotNull(first); assertNotNull(second); assertNotNull(replacement);
+            if (mode.equals("primaryCase")) {
+                assertSame(editions.get("aaa"), first); assertSame(editions.get("aAa"), first);
+            } else if (mode.equals("aliasCase")) {
+                assertSame(editions.get("OlD"), first); assertSame(editions.get("aA"), first);
+            } else if (mode.equals("primaryWinsAlias") || mode.equals("code2CollidesPrimary")) {
+                assertSame(editions.get("bbb"), second);
+            } else if (mode.equals("nullAndMissing")) {
+                assertNull(editions.get(null)); assertNull(editions.get("not-present"));
+            } else if (mode.equals("addPrimary")) {
+                editions.add(additions.get("AAA"));
+                assertSame(editions.get("aaa"), replacement);
+                assertSame(editions.get("old"), first, "Adding a primary code does not rewrite native aliases");
+            } else if (mode.equals("appendAlias")) {
+                editions.append(additions);
+                assertSame(editions.get("AAA"), replacement); assertSame(editions.get("replacement"), replacement);
+                assertSame(editions.get("AA"), first, "Old aliases remain native aliases");
+                assertNotNull(editions.get("USER"));
+            } else if (mode.equals("appendLocks")) {
+                editions.append(additions);
+                assertThrows(UnsupportedOperationException.class, () -> editions.add(first));
+                assertThrows(UnsupportedOperationException.class, () -> editions.append(additions));
+                assertSame(editions.get("AAA"), replacement);
+            } else if (mode.equals("iteratorRemove") || mode.equals("iteratorAfterAppend")) {
+                if (mode.equals("iteratorAfterAppend")) editions.append(additions);
+                Iterator<CardEdition> iterator = editions.iterator();
+                while (iterator.hasNext()) if (iterator.next().getCode().equals("BBB")) iterator.remove();
+                assertNull(editions.get("BBB"));
+                assertSame(editions.get("new"), second, "Native aliases survive primary iterator removal");
+            } else if (mode.equals("forEachRemove")) {
+                Iterator<CardEdition> iterator = editions.iterator();
+                iterator.forEachRemaining(value -> { if (value.getCode().equals("BBB")) iterator.remove(); });
+                assertNull(editions.get("BBB")); assertSame(editions.get("BB"), second);
+            } else if (mode.equals("failedRemove")) {
+                Iterator<CardEdition> iterator = editions.iterator();
+                assertThrows(IllegalStateException.class, iterator::remove);
+                assertSame(editions.get("AAA"), first); assertEquals(editions.size(), 2);
+            } else if (mode.equals("unicodePrimary")) {
+                assertSame(editions.get("saa"), first); assertSame(editions.get("SAA"), first);
+            } else if (mode.equals("unicodeAlias")) {
+                assertSame(editions.get("sold"), first); assertSame(editions.get("SOLD"), first);
+            } else if (mode.equals("queryUnicode")) {
+                assertSame(editions.get("\u017fold"), first, "Unicode query retains case-insensitive native lookup");
+            } else if (mode.equals("dateLive") || mode.equals("printingDateLive")) {
+                if (mode.equals("printingDateLive")) {
+                    CardRules rules = CardRules.fromScript(List.of("Name:" + NAME, "ManaCost:1", "Types:Artifact", "Oracle:Live printing metadata."));
+                    Map<String, CardRules> names = new TreeMap<>(String.CASE_INSENSITIVE_ORDER); names.put(NAME, rules);
+                    CardDb db = new CardDb(names, editions, Set.of());
+                    PaperCard a = paper(rules, "AAA", "1"), b = paper(rules, "BBB", "2");
+                    db.addCard(a); db.addCard(b);
+                    assertSame(db.getCardFromEditions(NAME, CardDb.CardArtPreference.ORIGINAL_ART_ALL_EDITIONS, 1, null), a);
+                    first.getDate().setTime(second.getDate().getTime() + 86400000L);
+                    assertSame(db.getCardFromEditions(NAME, CardDb.CardArtPreference.ORIGINAL_ART_ALL_EDITIONS, 1, null), b);
+                } else {
+                    first.getDate().setTime(second.getDate().getTime() + 86400000L);
+                    assertSame(editions.get("AAA"), first); assertTrue(editions.get("AAA").getDate().after(second.getDate()));
+                }
+            } else if (mode.equals("retainedReplace") || mode.equals("retainedRemove") || mode.equals("readerSubclass")) {
+                RetainedReader reader = new RetainedReader(); reader.values.put("AAA", first);
+                CardEdition.Collection borrowed = mode.equals("readerSubclass")
+                        ? new CardEdition.Collection(new RetainedNativeReader(input.directory, reader.values))
+                        : new CardEdition.Collection(reader);
+                assertSame(borrowed.get("AAA"), first);
+                if (mode.equals("retainedRemove")) { reader.values.remove("AAA"); assertNull(borrowed.get("AAA")); }
+                else { reader.values.put("AAA", replacement); assertSame(borrowed.get("aaa"), replacement); }
+            } else if (mode.equals("collectionSubclass")) {
+                CallbackCollection callbacks = new CallbackCollection(new CardEdition.Reader(input.directory.toFile()));
+                assertEquals(callbacks.reads, 0); assertNotNull(callbacks.get("AAA")); assertNotNull(callbacks.get("aaa"));
+                assertEquals(callbacks.reads, 2);
+            } else if (mode.equals("sharedAlias")) {
+                assertSame(editions.get("OLD"), second, "Native sorted constructor order controls alias collisions");
+            } else if (mode.equals("duplicatePrimaryFiles")) {
+                input.add("duplicate", "AAA", "AC", "third", "2030-01-01");
+                CardEdition.Collection duplicates = input.read(); assertEquals(duplicates.size(), 3);
+                for (String key : duplicates.getItemNames()) {
+                    assertNotNull(duplicates.get(key)); assertSame(duplicates.get(key), duplicates.get(key.toUpperCase(java.util.Locale.ROOT)));
+                }
+            } else if (mode.equals("noOpIterator")) {
+                List<CardEdition> values = new ArrayList<>(); editions.iterator().forEachRemaining(values::add);
+                assertEquals(values.size(), 2); assertSame(editions.get("AAA"), first); assertSame(editions.get("BBB"), second);
+            } else throw new IllegalArgumentException(mode);
+        }
+    }
+    @Test public void primaryCase() throws Exception { check("primaryCase"); }
+    @Test public void aliasCase() throws Exception { check("aliasCase"); }
+    @Test public void primaryWinsAlias() throws Exception { check("primaryWinsAlias"); }
+    @Test public void code2CollidesPrimary() throws Exception { check("code2CollidesPrimary"); }
+    @Test public void nullAndMissing() throws Exception { check("nullAndMissing"); }
+    @Test public void addPrimary() throws Exception { check("addPrimary"); }
+    @Test public void appendAlias() throws Exception { check("appendAlias"); }
+    @Test public void appendLocks() throws Exception { check("appendLocks"); }
+    @Test public void iteratorRemove() throws Exception { check("iteratorRemove"); }
+    @Test public void iteratorAfterAppend() throws Exception { check("iteratorAfterAppend"); }
+    @Test public void forEachRemove() throws Exception { check("forEachRemove"); }
+    @Test public void failedRemove() throws Exception { check("failedRemove"); }
+    @Test public void unicodePrimary() throws Exception { check("unicodePrimary"); }
+    @Test public void unicodeAlias() throws Exception { check("unicodeAlias"); }
+    @Test public void queryUnicode() throws Exception { check("queryUnicode"); }
+    @Test public void dateLive() throws Exception { check("dateLive"); }
+    @Test public void printingDateLive() throws Exception { check("printingDateLive"); }
+    @Test public void retainedReplace() throws Exception { check("retainedReplace"); }
+    @Test public void retainedRemove() throws Exception { check("retainedRemove"); }
+    @Test public void readerSubclass() throws Exception { check("readerSubclass"); }
+    @Test public void collectionSubclass() throws Exception { check("collectionSubclass"); }
+    @Test public void sharedAlias() throws Exception { check("sharedAlias"); }
+    @Test public void duplicatePrimaryFiles() throws Exception { check("duplicatePrimaryFiles"); }
+    @Test public void noOpIterator() throws Exception { check("noOpIterator"); }
+}

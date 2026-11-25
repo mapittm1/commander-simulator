@@ -1,0 +1,37 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -703,9 +703,33 @@
+                 && card.hasAnySplitTraitState());
+     }
+ 
++    /** Recheck mutable native lists; opaque callbacks retain the ordinary gathering path. */
++    private static boolean isKnownEmptyTraitList(final Collection<?> values) {
++        if (values == null || values == List.of() || values == java.util.Collections.emptyList()
++                || values == ImmutableList.of()) return true;
++        final Class<?> type = values.getClass();
++        return (type == java.util.ArrayList.class || type == java.util.LinkedList.class
++                || type == FCollection.class) && values.isEmpty();
++    }
++
++    /** An empty relevant category cannot change the static list; other trait categories are irrelevant. */
++    private static boolean hasNoStaticChanges(
++            final com.google.common.collect.Table<Long, Long, ICardTraitChanges> table) {
++        if (table.isEmpty()) return true;
++        if (!(table instanceof FSnapshotTable)) return false;
++        for (final ICardTraitChanges value : table.values()) {
++            if (!(value instanceof CardTraitChanges change) || change.remove() != null
++                    || !isKnownEmptyTraitList(change.staticAbilities())) return false;
++        }
++        return true;
++    }
++
+     private boolean hasNoAdditionalStaticTraits() {
+         return getClass() == CardState.class && card.getClass() == Card.class
+-                && hasNoMergedTraits() && cachedKeywords.hasNoStaticTraitsForCache();
++                && !(getStateName() == CardStateName.Original && card.hasAnySplitTraitState())
++                && hasNoStaticChanges(card.getChangedCardTraits())
++                && hasNoStaticChanges(card.getChangedCardTraitsByText())
++                && cachedKeywords.hasNoStaticTraitsForCache();
+     }
+ 
+     private boolean hasNoAdditionalReplacementTraits() {

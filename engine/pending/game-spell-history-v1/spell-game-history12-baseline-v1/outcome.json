@@ -1,0 +1,89 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 12,
+    "passed": 7,
+    "failed": 5,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.aPaidBranchSpellDoesNotSpendOriginalFirstSpellChoice",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPaidSpellAfterOneCopyExtendsGameHistory",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPaidSpellAfterTwoCopiesExtendsGameHistory",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPlayersEarlierSpellDoesNotSpendFirstSpellChoice",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierSpellThisTurnAfterTwoCopiesBlocksFreeChoice",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierSpellThisTurnInOriginalBlocksFreeChoice",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierTurnAfterOneCopyBlocksFreeChoice",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierTurnAfterTwoCopiesBlocksFreeChoice",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierTurnInOriginalBlocksFreeChoice",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.firstSpellAfterTurnBoundaryAndCopiesIsFree",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.firstSpellAfterTwoCopiesIsFree",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.firstSpellInOriginalIsFree",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPaidSpellAfterOneCopyExtendsGameHistory",
+      "message": "\n              expected [2] but found [1]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPaidSpellAfterTwoCopiesExtendsGameHistory",
+      "message": "\n              expected [2] but found [1]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.anotherPlayersEarlierSpellDoesNotSpendFirstSpellChoice",
+      "message": "\n              expected [1] but found [0]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierTurnAfterOneCopyBlocksFreeChoice",
+      "message": "\n              The native first-spell alternative uses this player's game history expected [false] but found [true]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSpellGameHistoryTest.earlierTurnAfterTwoCopiesBlocksFreeChoice",
+      "message": "\n              The native first-spell alternative uses this player's game history expected [false] but found [true]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 186,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Paid Opt, explicit native stack-turn boundary, actual Once Upon a Time alternative-cost choices, later paid branch casts and separate-player isolation in supplied boards. Not full preceding legal histories, turn scheduler or experimental restore proof."
+}
