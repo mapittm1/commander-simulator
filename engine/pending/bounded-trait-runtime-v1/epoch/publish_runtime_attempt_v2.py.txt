@@ -1,0 +1,73 @@
+from pathlib import Path
+from collections import Counter
+import json,re,shutil,hashlib,subprocess,xml.etree.ElementTree as ET
+from commander.engine.forge_config import read_settings,file_hash
+from tests.support.native_receipts import read_test_receipts
+from tests.support import draw_ending_worker,free_casting_worker,untap_worker,battle_combat_worker
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+ROOT=Path.cwd();WORK=Path(__file__).resolve().parent
+load=lambda p:json.loads(p.read_bytes())
+assert not subprocess.check_output(['git','status','--porcelain'])
+frozen=load(WORK/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert (ROOT/'config/engine_config.json').read_bytes()==(WORK/'active-config-before-smoke-v1.json').read_bytes()
+assert read_settings().verify()['native_tests']['total']==3295
+build=ROOT/load(WORK/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json');engine=settings.verify()
+assert engine['native_tests']==dict(total=4215,passed=4215,failed=0,skipped=0)
+audit=load(WORK/'build-audit.json');process=load(WORK/'smoke-process-v1.json')
+assert process['status']=='finished' and process['returncode']==1
+log=(WORK/'smoke-output-v1.log').read_text(encoding='utf-8');assert '1 failed, 3 passed, 1284 subtests passed' in log
+report=build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+methods=Counter(cl.get('name')+'.'+m.get('name') for cl in ET.parse(report).findall('.//class') for m in cl.findall('test-method') if m.get('is-config')!='true')
+assert sum(methods.values())==4215
+selections=[]
+for name,run_id in re.findall(r'"draw_ending_partition": "([^"]+)", "draw_ending_run": "([a-f0-9]{32})"',log):
+ selections.append((name,run_id,EXPECTED_COUNTS[name],'draw-ending','draw-endings.json',PARTITIONS[name],draw_ending_worker.NATIVE_CLASSES))
+assert {v[0] for v in selections}=={'information','combat_and_snapshots','text_casting_and_costs'}
+for name,tag,count,prefix,manifest,worker in [('free','free_casting_run',65,'free-casting','free-casting.json',free_casting_worker),('untap','untap_run',194,'untap','untap.json',untap_worker),('battle','battle_combat_run',146,'battle-combat','battle-combat.json',battle_combat_worker)]:
+ ids=re.findall('"'+tag+'": "([a-f0-9]{32})"',log);assert len(ids)==1
+ selections.append((name,ids[0],count,prefix,manifest,worker.TEST_CLASSES,worker.NATIVE_CLASSES))
+failed_id='d0f3237695da4a2cb2a274dc04871567';failed=ROOT/'data/runs'/failed_id
+failure=load(failed/'rules-process.json');assert failure['process']['status']=='timeout' and failure['process']['elapsed_seconds']==90.016
+pending=ROOT/'engine/pending/bounded-trait-runtime-v1';pending.mkdir();artifacts={}
+def copy(src,relative):
+ dest=pending/relative;dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(src,dest);artifacts[dest.relative_to(ROOT).as_posix()]=file_hash(dest)
+results={}
+for name,run_id,count,prefix,manifest,classes,origins in selections:
+ run=ROOT/'data/runs'/run_id;rows=read_test_receipts(settings,run,manifest,{prefix+'-summary.json':1,prefix+'-methods.json':count});summary,outcomes=rows[0],rows[1:]
+ actual=Counter(row['method'] for row in outcomes);expected=Counter({m:n for m,n in methods.items() if m.rsplit('.',1)[0] in classes});assert actual==expected and sum(actual.values())==count
+ assert all(row['status']=='PASS' for row in outcomes)
+ assert summary['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+ assert summary['production_classes_from_packaged_jar']==list(origins)
+ assert all(summary[k]==0 for k in ('testng_status','configuration_failures','configuration_skips','partial_successes'))
+ execution=load(run/'rules-process.json')['process'];assert execution['status']=='finished' and execution['returncode']==0 and execution['elapsed_seconds']<=90
+ assert all(file_hash(Path(n))==h for n,h in summary['inputs'].items())
+ results[name]={'run_id':run_id,'counts':summary['counts'],'production_origins':len(origins),'process':execution}
+for run_id in [v[1] for v in selections]+[failed_id]:
+ run=ROOT/'data/runs'/run_id
+ for f in run.iterdir():
+  if f.is_file() and f.suffix in ('.json','.log'):copy(f,Path(run_id)/(f.name+'.txt' if f.suffix=='.log' else f.name))
+ f=run/'rules-reports/testng-results.xml'
+ if f.exists():copy(f,Path(run_id)/'rules-reports-testng-results.xml')
+for f in WORK.iterdir():
+ if f.is_file() and f.suffix in ('.json','.log','.py'):
+  copy(f,Path('epoch')/(f.name+'.txt' if f.suffix in ('.py','.log') else f.name))
+for folder in ('build-driver-snapshots','packaged-driver-snapshots-v1'):
+ for f in (WORK/folder).iterdir():copy(f,Path(folder)/(f.name+'.txt'))
+for name in ('build-recipe.json','engine-lock.json','engine-config.json','maven-build.log'):
+ f=build/name
+ if f.exists():copy(f,Path('build')/(name+'.txt' if f.suffix=='.log' else name))
+copy(report,Path('build/native-testng-results.xml'))
+record={'scope':'Fresh4215 native build and parity audit passed; independent packaged gate FAILED. Candidate remains uninstalled; full card/rules correctness remains incomplete.','build_id':build.name,'build_head':load(WORK/'source-epoch.json')['head_sha'],'ci':load(WORK/'source-ci.json'),'native_counts':engine['native_tests'],'retained_native_counts':[3295,3877,3899,3935,4085,4214],'normalized_source_parity':2168,'production_families':13,'changed_classes':audit['changed_classes'],'added_classes':audit['added_classes'],'removed_classes':audit['removed_classes'],'cards_and_profiles_unchanged':True,'packaged':{'tests_passed':3,'tests_failed':1,'completed_subtests':1284,'completed_groups':results,'resolution':{'expected_cases':1271,'limit_seconds':90,'process':failure['process'],'run_id':failed_id},'cast_events':{'expected_cases':908,'status':'not_reached_after_resolution_failure'},'wrapper_process':process},'configuration_restored':True,'frozen_inputs_unchanged':True,'remaining':'Resolve unchanged resolution1271/90s gate, then independent full packaged/broader/full-game/catalog/health/activation gates. No unchanged retry, budget increase, dropped cases or activation.','artifacts':artifacts}
+source_proof=load(WORK.parent/'source3015-v1/evidence.json');assert source_proof['counts']==dict(total=3015,passed=3015,failed=0,skipped=0) and source_proof['actual_jvm_limit_case_passed']
+assert audit['actual_jvm_limits_case_passed'] and audit['observed_jvm_processors']==2 and audit['observed_max_java_heap_bytes']==2147483648
+for name in ('evidence.json','production-inputs.json','test-inputs.json','card-inputs.json','selection.json','testng-results.xml','maven-build.log','processor-observation.json'):
+ src=WORK.parent/'source3015-v1'/name
+ if src.exists():copy(src,Path('source3015-v1')/(name+'.txt' if src.suffix=='.log' else name))
+record['source_counts']=source_proof['counts'];record['actual_jvm_processors']=2;record['observed_max_java_heap_bytes']=2147483648;record['actual_jvm_limit_case_passed']=True
+record['resource_scope']='This source/build rerun verifies actual2JVMprocessors and2GiBmaxJavaheap. Previous4214/32processorbuild remains functional-only; raw historical2CPUclaims remain explicitlycorrected.'
+record['scope']='Bounded3015source and4215native/source/binary audits passed; normalpackaged gateFAILED original1271/90s resolution; noactivation/allcardrulesproof.'
+(ROOT/'engine/bounded_trait_runtime_evidence.json').write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+f=ROOT/'.gitattributes';f.write_bytes(f.read_bytes()+b'\nengine/pending/bounded-trait-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,cr-at-eol\nengine/bounded_trait_runtime_evidence.json -text whitespace=cr-at-eol\n')
+f=ROOT/'README.md';s=f.read_text(encoding='utf-8');needle='## Card coverage\n';s=s.replace(needle,needle+'\nThe bounded follow-up passes all 3,015 source and 4,215 native cases with actual\ntwo JVM processors and a 2 GiB maximum Java heap. The full 2,168-source parity audit\npasses, retaining every earlier case. Its independent packaged\ngate fails: the unchanged 1,271-case resolution group times out at 90 seconds.\nSix other completed groups pass 1,284 subtests with verified class origins; the\n908-case cast-event group is not reached. The original configuration is restored\nand the candidate remains uninstalled. Broader/full-game/catalog/activation gates\nremain pending. See [runtime attempt evidence](engine/bounded_trait_runtime_evidence.json).\n');f.write_text(s,encoding='utf-8',newline='\n')
+f=ROOT/'CHANGELOG.md';s=f.read_text(encoding='utf-8');needle='## Unreleased\n';s=s.replace(needle,needle+'\n- Preserve the bounded 3,015-source / 4,215-native pass with actual two JVM\n  processors and a 2 GiB maximum Java heap, and full 2,168-source\n  parity audit, retaining all prior native cases. Record the failed independent\n  packaged gate: resolution (1,271 expected cases) times out at its unchanged\n  90-second limit; six completed groups pass 1,284 subtests. The 908-case\n  cast-event group is not reached. Restore the original configuration and keep\n  the candidate uninstalled. Broader/full-game/catalog/activation remain pending;\n  preserve raw results and update README and hashed evidence.\n');f.write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({'artifacts':len(artifacts),'native':engine['native_tests'],'completed_packaged_subtests':1284,'resolution':'timeout90s','configuration_restored':True}))

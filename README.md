@@ -27,6 +27,15 @@ difference.
 
 ## Card coverage
 
+The bounded follow-up passes all 3,015 source and 4,215 native cases with actual
+two JVM processors and a 2 GiB maximum Java heap. The full 2,168-source parity audit
+passes, retaining every earlier case. Its independent packaged
+gate fails: the unchanged 1,271-case resolution group times out at 90 seconds.
+Six other completed groups pass 1,284 subtests with verified class origins; the
+908-case cast-event group is not reached. The original configuration is restored
+and the candidate remains uninstalled. Broader/full-game/catalog/activation gates
+remain pending. See [runtime attempt evidence](engine/bounded_trait_runtime_evidence.json).
+
 Resource-validation correction: the fresh 4,214-case build passes functional
 checks and the parameter-aware source/binary audit, but inspection shows that its
 Maven JVM used 32 processors. Earlier Maven source/native passes do not establish

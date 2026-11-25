@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the bounded 3,015-source / 4,215-native pass with actual two JVM
+  processors and a 2 GiB maximum Java heap, and full 2,168-source
+  parity audit, retaining all prior native cases. Record the failed independent
+  packaged gate: resolution (1,271 expected cases) times out at its unchanged
+  90-second limit; six completed groups pass 1,284 subtests. The 908-case
+  cast-event group is not reached. Restore the original configuration and keep
+  the candidate uninstalled. Broader/full-game/catalog/activation remain pending;
+  preserve raw results and update README and hashed evidence.
+
 - Correct the Maven launcher to explicitly use two JVM processors. Inspection of
   the fresh 4,214-case functional build showed 32 active processors, so prior
   Maven source/native passes do not prove the advertised two-processor scope.
