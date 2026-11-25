@@ -131,6 +131,7 @@ SOURCES = {
     "CommanderInitialTableSnapshotTest": "commander_initial_table_snapshot_test_sha256",
     "CommanderPreannouncementCostTest": "commander_preannouncement_cost_test_sha256",
     "CommanderDungeonSnapshotTest": "commander_dungeon_snapshot_test_sha256",
+    "CommanderExpendHistoryTest": "commander_expend_history_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest": "commander_replacement_cache_inputs_test_sha256",
@@ -438,6 +439,7 @@ NATIVE_CLASSES = (
     "forge.game.trigger.TriggerChangesZoneAll",
     "forge.game.ability.AbilityKey",
     "forge.game.ability.effects.VentureEffect",
+    "forge.game.trigger.TriggerManaExpend",
 )
 
 
@@ -477,7 +479,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3573-case packaged family."""
+    """Execute the fixed 3579-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

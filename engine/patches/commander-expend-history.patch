@@ -1,0 +1,11 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -164,6 +164,8 @@
+             newPlayer.setCommitedCrimeThisTurn(origPlayer.getCommittedCrimeThisTurn());
+             newPlayer.setDilemmasFacedThisTurn(origPlayer.getDilemmasFacedThisTurn());
+             newPlayer.copyDiceHistoryFrom(origPlayer);
++            // Restore cumulative spell-mana spending without firing expend triggers.
++            newPlayer.setExpentThisTurn(origPlayer.getExpentThisTurn());
+             newPlayer.copyDrawHistoryFrom(origPlayer);
+             newPlayer.copySnapshotElementalBendFrom(origPlayer);
+             newPlayer.setLifeStartedThisTurnWith(origPlayer.getLifeStartedThisTurnWith());

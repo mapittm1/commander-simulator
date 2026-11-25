@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve cumulative expend history in shared AI world copies without firing
+  triggers again. Four baseline failures include missed fourth-mana life gain and
+  repeated fourth-mana gain in place of the eighth-mana exile effect. The correction
+  passes six paid-spell/isolation controls and retains 1,404 casting / 273 combat /
+  194 untap / ten dungeon / nine upstream checks. Supplied boards are not full histories.
+- Register the six-case expended_mana family separately, preserving all old groups,
+  counts and original 1,271/90 workload. Fresh 3,536 source / 4,736 native / 3,579 main
+  packaged validation is pending; selected runtime remains unchanged.
+
 - Correct generic dungeon snapshots: retain noncopiable game-piece kind and room
   markers, mapped completed-dungeon records and venture counters without replaying
   effects. Preserve the 1/10 baseline and 10/10 corrected controls, including real
@@ -14,8 +23,19 @@ Historical entries below summarize verified Git milestones, not release versions
   194 untap / nine upstream checks. Supplied mid-room states are not full histories.
 - Register ten new dungeon cases separately; retain every earlier group/count and
   original 1,271-case / 90-second gate. Expand expected source/native/main packaged
-  totals to 3,530/4,730/3,573 and required production origins to180. Fresh expanded
-  validation and activation remain pending; selected runtime stays unchanged.
+  totals to 3,530/4,730/3,573 and required production origins to 180. Fresh expanded
+  source/native validation now passes; full packaged validation and activation remain
+  incomplete, as recorded below. The selected runtime stays unchanged.
+- Validate fresh 3,530 source / 4,730 native cases with exact retained methods and
+  parameters, all 2,168 production / 167 test / 324 card inputs, and changed class
+  bytes confined to the four dungeon correction families. Broader 6,053 gameplay /
+  320 serialization cases pass, with reviewed test-only policies restored.
+- Audit packaged 301 information / 273 combat / 338 text-cost / 1,380 casting /
+  ten dungeon cases and separate 65 free-casting / 194 untap / 146 Battle cases.
+  The full 3,573-case gate remains incomplete: original 1,271-case resolution times
+  out at 90.016 seconds at its unchanged 90-second limit without a completed report. Preserve
+  this failure; no unchanged retry or activation. Fresh final live checks and full
+  paid-history/card-rules coverage remain required.
 - Preserve a current corrected-baseline Parallel GC diagnostic and prior failed
   trials. Semantic controls pass, but original resolution still times out90.016s
   without a completed report. No collector setting or allocation patch is promoted;

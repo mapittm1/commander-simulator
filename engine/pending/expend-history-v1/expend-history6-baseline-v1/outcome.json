@@ -1,0 +1,61 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 6,
+    "passed": 2,
+    "failed": 4,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.eighthPaidManaUsesNextThresholdWithoutRepeatingFourth",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.firstPaidManaDoesNotInventFourthManaTrigger",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.fourthPaidManaAfterOneCopy",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.fourthPaidManaAfterTwoCopies",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.fourthPaidManaInOriginal",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.historiesRemainIndependentForEachPlayer",
+      "status": "FAIL"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.eighthPaidManaUsesNextThresholdWithoutRepeatingFourth",
+      "message": "\n              Expend4 does not repeat after a copied history expected [43] but found [46]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.fourthPaidManaAfterOneCopy",
+      "message": "\n              The fourth paid mana fires Muerra once expected [43] but found [40]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.fourthPaidManaAfterTwoCopies",
+      "message": "\n              The fourth paid mana fires Muerra once expected [43] but found [40]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderExpendHistoryTest.historiesRemainIndependentForEachPlayer",
+      "message": "\n              expected [3] but found [0]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 180,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Paid expend4 and expend8 thresholds from supplied boards with per-player isolation and repeated copies. Not full histories or full rules proof."
+}

@@ -1,0 +1,15 @@
+{
+  "scope": "Static triage only; no execution or correctness claim. Reproduce after current frozen native epoch.",
+  "source_head": "9d95b7ff399088bb3c436a8fbcbfd3bf2b12f4bc",
+  "source_manifest": "source3530-v1/production-inputs.json",
+  "observation": "Player.expentThisTurn is used by ManaExpend and copied by GameSnapshot, but no getter/setter occurs in GameCopier or current engine/tests. A copied mid-turn count may restart the threshold.",
+  "next_probe": "Paid spell reaching expend4 from prior3; zero-history negative and repeated-copy/source-isolation controls. Check multiple players and actual triggered result.",
+  "files": {
+    "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java": "71f5bc2a793f3fde139d0840d0f41f11e713f3ec839cf92964ff9af9f5dd224f",
+    "forge-game/src/main/java/forge/game/GameSnapshot.java": "ec12ee7cdf0b487f8e6668b545c44a0217cabc9bef609af8acdd612b726f554e",
+    "forge-game/src/main/java/forge/game/player/Player.java": "19fe4d7738d93333974e03cee074934b811c2dd7f646bb3bac4c505f905449ee",
+    "forge-gui/res/cardsfolder/w/wandertale_mentor.txt": "3fa159172857ae853db9370b8110ec6a3a49f514fc7056719ce625690efadb61",
+    "forge-gui/res/cardsfolder/t/teapot_slinger.txt": "dffde208b94c3062712bc82127749cfedc6d2670d77a46599dba6779cfa29024",
+    "forge-gui/res/cardsfolder/m/muerra_trash_tactician.txt": "afbeb806406665e304cd89c1ee2f2515fc37585045faa5b99aebd91117685b46"
+  }
+}

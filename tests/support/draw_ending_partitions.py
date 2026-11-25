@@ -217,6 +217,7 @@ PARTITIONS = {
         "forge.ai.CommanderCastWindowTest",
     ),
     "dungeons": ("forge.ai.CommanderDungeonSnapshotTest",),
+    "expended_mana": ("forge.ai.CommanderExpendHistoryTest",),
 }
 
 EXPECTED_COUNTS = {
@@ -226,6 +227,7 @@ EXPECTED_COUNTS = {
     "resolution": 1271,
     "cast_events": 1380,
     "dungeons": 10,
+    "expended_mana": 6,
 }
 
 

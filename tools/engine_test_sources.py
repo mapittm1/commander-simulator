@@ -273,6 +273,7 @@ REGRESSION_SOURCES = {
     "CommanderInitialTableSnapshotTest.java": "commander_initial_table_snapshot_test_sha256",
     "CommanderPreannouncementCostTest.java": "commander_preannouncement_cost_test_sha256",
     "CommanderDungeonSnapshotTest.java": "commander_dungeon_snapshot_test_sha256",
+    "CommanderExpendHistoryTest.java": "commander_expend_history_test_sha256",
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",

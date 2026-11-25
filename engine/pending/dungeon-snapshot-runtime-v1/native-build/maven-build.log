@@ -1,0 +1,1474 @@
+[INFO] Scanning for projects...
+[WARNING] Using credentials of server 'cardforge-repo' for repository file:///C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\target/tmp, although no repository or mirror with this id is declared in settings or on the command line and the server declares no <repositoryOrigins>. Declare its origin in <repositoryOrigins> of that server in settings to bind these credentials explicitly, or set maven.repository.credentialScope=strict to refuse such credential use.
+[INFO] Loaded 24627 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for forge:forge-gui-android:jar:2.0.16
+[WARNING] 'dependencies.dependency.scope' for de.cketti.fileprovider:public-fileprovider:jar declares usage of deprecated 'system' scope  @ line 113, column 20
+[WARNING] 'dependencies.dependency.scope' for com.getkeepsafe.relinker:relinker:jar declares usage of deprecated 'system' scope  @ line 120, column 20
+[WARNING] 'dependencies.dependency.scope' for com.badlogicgames.gdx:gdx-backend-android:jar declares usage of deprecated 'system' scope  @ line 152, column 20
+[WARNING] 'dependencies.dependency.scope' for io.sentry:sentry-native-ndk:jar declares usage of deprecated 'system' scope  @ line 159, column 20
+[WARNING] 'dependencies.dependency.scope' for com.badlogicgames.gdx-controllers:gdx-controllers-android:jar declares usage of deprecated 'system' scope  @ line 239, column 20
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] Forge Parent                                                       [pom]
+[INFO] Forge Core                                                         [jar]
+[INFO] Forge Game                                                         [jar]
+[INFO] Forge AI                                                           [jar]
+[INFO] Forge Gui                                                          [jar]
+[INFO] Forge                                                              [jar]
+[INFO] 
+[INFO] ----------------------------< forge:forge >-----------------------------
+[INFO] Building Forge Parent 2.0.16                                       [1/6]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge ---
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to jvnet-nexus-releases (https://maven.java.net/content/repositories/releases/): PKIX path validation failed: java.security.cert.CertPathValidatorException: validity check failed
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --------------------------< forge:forge-core >--------------------------
+[INFO] Building Forge Core 2.0.16                                         [2/6]
+[INFO]   from forge-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-core ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-core ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-core ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-core\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-core ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 156 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-core\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-core/src/main/java/forge/card/CardRules.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-core/src/main/java/forge/card/CardRules.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-core/src/main/java/forge/StaticData.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-core/src/main/java/forge/StaticData.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-core ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-core\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-core ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-core ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ forge-core ---
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-core\target\forge-core-2.0.16.jar
+[INFO] 
+[INFO] --------------------------< forge:forge-game >--------------------------
+[INFO] Building Forge Game 2.0.16                                         [3/6]
+[INFO]   from forge-game\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-game ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-game ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-game ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-game\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-game ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 829 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-game\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-game/src/main/java/forge/game/GameLog.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-game/src/main/java/forge/game/GameLog.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-game ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-game\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-game ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-game\target\test-classes
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-game ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ forge-game ---
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-game\target\forge-game-2.0.16.jar
+[INFO] 
+[INFO] ---------------------------< forge:forge-ai >---------------------------
+[INFO] Building Forge AI 2.0.16                                           [4/6]
+[INFO]   from forge-ai\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-ai ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-ai ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-ai ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-ai\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-ai ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 263 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-ai\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-ai/src/main/java/forge/ai/AiController.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-ai/src/main/java/forge/ai/AiController.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-ai/src/main/java/forge/ai/AiCardMemory.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-ai/src/main/java/forge/ai/AiCardMemory.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-ai ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-ai\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-ai ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-ai ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ forge-ai ---
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-ai\target\forge-ai-2.0.16.jar
+[INFO] 
+[INFO] --------------------------< forge:forge-gui >---------------------------
+[INFO] Building Forge Gui 2.0.16                                          [5/6]
+[INFO]   from forge-gui\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-gui ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-gui ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-gui ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-gui ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 471 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputQueue.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputQueue.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-gui ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-gui ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui\target\test-classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/test/java/forge/gamemodes/replay/ReplayRecordingShould.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui/src/test/java/forge/gamemodes/replay/ReplayRecordingShould.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-gui ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ forge-gui ---
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui\target\forge-gui-2.0.16.jar
+[INFO] 
+[INFO] ----------------------< forge:forge-gui-desktop >-----------------------
+[INFO] Building Forge 2.0.16                                              [6/6]
+[INFO]   from forge-gui-desktop\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-gui-desktop ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-gui-desktop ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- build-helper:3.6.0:released-version (released-version) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- build-helper:3.6.0:parse-version (parse-version) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- build-helper:3.6.0:timestamp-property (timestamp-property) @ forge-gui-desktop ---
+[WARNING] Using platform locale (en_US actually) to format date/time, i.e. build is platform dependent!
+[INFO] 
+[INFO] --- build-helper:3.6.0:regex-property (regex-property) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- groovy:2.1.1:execute (get-changelog-from-tag) @ forge-gui-desktop ---
+WARNING: Could not determine changelog tag: Cannot run program "git": CreateProcess error=2, The system cannot find the file specified
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-gui-desktop ---
+[INFO] Copying 2 resources from filters to target\classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-gui-desktop ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 410 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/main/java/forge/screens/match/controllers/CLog.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/main/java/forge/screens/match/controllers/CLog.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/main/java/forge/screens/match/CMatchUI.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/main/java/forge/screens/match/CMatchUI.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-gui-desktop ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-gui-desktop ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 515 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\target\test-classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/test/java/forge/gamemodes/net/WireDeserializationTest.java: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\src\test\java\forge\gamemodes\net\WireDeserializationTest.java uses or overrides a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/test/java/forge/gamemodes/net/WireDeserializationTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/PerfPatchUnitTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/engine-builds/1449f74dd9e1483d9017aed2bbf83192/source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/PerfPatchUnitTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-gui-desktop ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] Using auto detected provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] Running TestSuite
+Language 'en-US' loaded successfully.
+(ThreadUtil first call): Running with priority 5
+Read cards: 34466 files in 3 ms (25 parts) using thread pool
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+The card A-Alrund's Epiphany was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Baba Lysaga, Night Witch was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Divide by Zero was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Esika's Chariot was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Faceless Haven was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Fires of Invention was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Goldspan Dragon was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Hullbreaker Horror was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Kumano Faces Kakkazan was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Luminarch Aspirant was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Monster Manual was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Omnath, Locus of Creation was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-The Meathook Massacre was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Unholy Heat was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Blinding Radiance was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Goblin Bruiser was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Ogre Painbringer was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Titanic Pelagosaur was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Treetop Recluse was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Read cards: 864 files in 0 ms (8 parts) using thread pool
+hidden has neither ManaCost nor Color
+Mirage Mirror (24) Remembered: new-incarnation/class java.lang.String
+Simulation: SA not found! {T}: You may tap or untap another target permanent. / class forge.game.ability.AbilityApiBased
+Simulation: SA not found! {T}: You may tap or untap another target permanent. / class forge.game.ability.AbilityApiBased
+Simulation: SA not found! {U}, {T}, Discard a card: You may tap or untap target artifact, creature, or land. / class forge.game.ability.AbilityApiBased
+Simulation: SA not found! {T}: You may tap or untap another target permanent. / class forge.game.ability.AbilityApiBased
+ComputerUtilMana: payManaCost() cost was not paid for {2}, {T}: You may tap or untap target creature. (Puppet Strings). Didn't find what to pay for null
+[activated-untap-0] AI failed to play Puppet Strings (35) [activated-untap-0's Battlefield]
+ComputerUtilMana: payManaCost() cost was not paid for {2}, {T}: You may tap or untap target creature. (Puppet Strings). Didn't find what to pay for null
+[activated-untap-0] AI failed to play Puppet Strings (35) [activated-untap-0's Battlefield]
+AUTONOMOUS_REARRANGE mode=USE_FULL_SIMULATION; copied=true; choices=[{X}: Look at the top X cards of your library, then put them back in any order.]
+AUTONOMOUS_X mode=USE_FULL_SIMULATION; copied=true; x=4; available=4
+AUTONOMOUS_REARRANGE mode=USE_HYBRID_SIMULATION; copied=true; choices=[{X}: Look at the top X cards of your library, then put them back in any order.]
+AUTONOMOUS_X mode=USE_HYBRID_SIMULATION; copied=true; x=4; available=4
+AUTONOMOUS_REARRANGE mode=USE_FULL_SIMULATION; copied=false; choices=[{X}: Look at the top X cards of your library, then put them back in any order.]
+AUTONOMOUS_X mode=USE_FULL_SIMULATION; copied=false; x=4; available=4
+AUTONOMOUS_DECLINE mode=USE_FULL_SIMULATION; reason=known; choices=null
+AUTONOMOUS_DECLINE mode=USE_FULL_SIMULATION; reason=empty; choices=null
+AUTONOMOUS_DECLINE mode=USE_FULL_SIMULATION; reason=budget; choices=null
+AUTONOMOUS_DECLINE mode=USE_FULL_SIMULATION; reason=timing; choices=null
+AUTONOMOUS_REARRANGE mode=USE_HYBRID_SIMULATION; copied=false; choices=[{X}: Look at the top X cards of your library, then put them back in any order.]
+AUTONOMOUS_X mode=USE_HYBRID_SIMULATION; copied=false; x=4; available=4
+AUTONOMOUS_DECLINE mode=USE_HYBRID_SIMULATION; reason=known; choices=null
+AUTONOMOUS_DECLINE mode=USE_HYBRID_SIMULATION; reason=empty; choices=null
+ComputerUtilMana: payManaCost() cost was not paid for {4}{U}: Look at the top four cards of your library, then put them back in any order. (Aven Fateshaper). Didn't find what to pay for null
+[information-choice-0] AI failed to play Aven Fateshaper (40) [information-choice-0's Battlefield]
+AUTONOMOUS_DECLINE mode=USE_HYBRID_SIMULATION; reason=budget; choices=null
+AUTONOMOUS_DECLINE mode=USE_HYBRID_SIMULATION; reason=timing; choices=null
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=true; blocked=false; name=Invasion of Gobakhan; id=35; zone=battle-protector-0's Battlefield; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+REMOVED_DEFENDER before: walker=false; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=true; blocked=false; name=Invasion of Gobakhan; id=35; zone=battle-protector-0's Battlefield; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+REMOVED_DEFENDER before: walker=false; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+TYPE_CHANGE before resolution: walker=false; over=false; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=false; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=false; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=false; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=true; countered=false; defender=<Nothing>
+REMOVED_DEFENDER before: walker=false; over=true; copy=true; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=true; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+TYPE_CHANGE before resolution: walker=false; over=false; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=false; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=false; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=false; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=true; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=true; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=true; countered=true; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=true; countered=true; defender=Invasion of Gobakhan (35)
+REMOVED_DEFENDER before: walker=true; over=true; copy=true; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+TYPE_CHANGE before resolution: walker=true; over=true; copy=true; countered=true; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=true; countered=true; defender=Jace, the Mind Sculptor (36)
+REMOVED_DEFENDER before: walker=false; over=false; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=true; live=true; blocked=false; name=Invasion of Gobakhan; id=35; zone=battle-protector-0's Battlefield; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=true; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+REMOVED_DEFENDER before: walker=true; over=false; copy=true; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=false; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=true; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+TYPE_CHANGE before resolution: walker=false; over=false; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=false; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=false; defender=<Nothing>
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=true; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+TYPE_CHANGE before resolution: walker=false; over=false; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=false; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=false; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=true; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=true; defender=Invasion of Gobakhan (35)
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=true; pendingCopy=false; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=true; defender=Jace, the Mind Sculptor (36)
+REMOVED_DEFENDER before: walker=false; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=true; blocked=false; name=Invasion of Gobakhan; id=35; zone=battle-protector-0's Battlefield; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=3
+REMOVED_DEFENDER before: walker=true; over=false; copy=false; live=true; blocked=false; name=Jace, the Mind Sculptor; id=36; zone=battle-protector-1's Battlefield; battle=false; pw=true; loyalty=3; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=true; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=7
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=false; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=true; pw=false; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+REMOVED_DEFENDER before: walker=true; over=false; copy=false; live=false; blocked=false; name=<Nothing>; id=-1; zone=null; battle=false; pw=true; loyalty=0; toughness=0; damage=6
+REMOVED_DEFENDER assigned: defender=0
+TYPE_CHANGE before resolution: walker=false; over=false; copy=false; countered=false; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=false; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=false; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=true; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=true; defender=Invasion of Gobakhan (35)
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=true; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=true; defender=Jace, the Mind Sculptor (36)
+TYPE_CHANGE before resolution: walker=true; over=false; copy=false; countered=false; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=true; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=false; pendingCopy=true; nested=true
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=false; copy=false; countered=false; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=false; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=false; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=false; over=true; copy=false; countered=true; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=false; over=true; copy=false; countered=true; defender=Invasion of Gobakhan (35)
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=true; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=true; defender=Jace, the Mind Sculptor (36)
+TYPE_CHANGE before resolution: walker=true; over=false; copy=false; countered=false; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=true; over=false; copy=false; countered=false; defender=<Nothing>
+TYPE_CHANGE before resolution: walker=true; over=true; copy=false; countered=false; pendingCopy=true; nested=false
+TYPE_CHANGE before damage: walker=true; over=true; copy=false; countered=false; defender=<Nothing>
+Default player choice logic.
+BLOCK_HISTORY fresh world=2 damageOnly=true blockedFlag=false
+BLOCK_HISTORY fresh world=2 damageOnly=false blockedFlag=false
+BLOCK_HISTORY one world=2 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=2 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY present world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY present world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY blink world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY blink world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY fresh world=1 damageOnly=true blockedFlag=false
+BLOCK_HISTORY fresh world=1 damageOnly=false blockedFlag=false
+BLOCK_HISTORY blink world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY blink world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY fresh world=0 damageOnly=true blockedFlag=false
+BLOCK_HISTORY fresh world=0 damageOnly=false blockedFlag=false
+BLOCK_HISTORY blink world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY blink world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one copied=true damageOnly=true blockedFlag=false
+BLOCK_HISTORY one copied=true damageOnly=false blockedFlag=false
+BLOCK_HISTORY died copied=true damageOnly=true blockedFlag=true
+BLOCK_HISTORY died copied=true damageOnly=false blockedFlag=true
+BLOCK_HISTORY present copied=true damageOnly=true blockedFlag=true
+BLOCK_HISTORY present copied=true damageOnly=false blockedFlag=true
+BLOCK_HISTORY one copied=false damageOnly=true blockedFlag=false
+BLOCK_HISTORY one copied=false damageOnly=false blockedFlag=false
+BLOCK_HISTORY died copied=false damageOnly=true blockedFlag=true
+BLOCK_HISTORY died copied=false damageOnly=false blockedFlag=true
+BLOCK_HISTORY present copied=false damageOnly=true blockedFlag=true
+BLOCK_HISTORY present copied=false damageOnly=false blockedFlag=true
+BLOCK_HISTORY cancelled world=2 damageOnly=true blockedFlag=false
+BLOCK_HISTORY cancelled world=2 damageOnly=false blockedFlag=false
+BLOCK_HISTORY cancelled world=1 damageOnly=true blockedFlag=false
+BLOCK_HISTORY cancelled world=1 damageOnly=false blockedFlag=false
+BLOCK_HISTORY cancelled world=0 damageOnly=true blockedFlag=false
+BLOCK_HISTORY cancelled world=0 damageOnly=false blockedFlag=false
+ComputerUtilMana: payManaCost() cost was not paid for Morph {U} (Turn this face up any time for its morph cost.) (). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Morph {U} (Turn this face up any time for its morph cost.) (). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Morph {U} (Turn this face up any time for its morph cost.) (). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Basalt Monolith). Didn't find what to pay for null
+Correcting zone for Invisible Stalker (36)
+Correcting zone for Invisible Stalker (36)
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn. (without paying its mana cost)  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (43) [Stack]
+Correcting zone for Wizard Class (157)
+Correcting zone for Wizard Class (157)
+REBLOCK_DAMAGE False Orders copied=true blockerDeparts=true blockedFlag=true
+REBLOCK_DAMAGE False Orders copied=true blockerDeparts=false blockedFlag=true
+REBLOCK_DAMAGE Balduvian Warlord copied=true blockerDeparts=true blockedFlag=true
+REBLOCK_DAMAGE Balduvian Warlord copied=true blockerDeparts=false blockedFlag=true
+REBLOCK_DAMAGE False Orders copied=false blockerDeparts=true blockedFlag=true
+REBLOCK_DAMAGE False Orders copied=false blockerDeparts=false blockedFlag=true
+REBLOCK_DAMAGE Balduvian Warlord copied=false blockerDeparts=true blockedFlag=true
+REBLOCK_DAMAGE Balduvian Warlord copied=false blockerDeparts=false blockedFlag=true
+ComputerUtilMana: payManaCost() cost was not paid for {4}, {T}: Remove target attacking or blocking creature from combat. (Labyrinth of Skophos). Didn't find what to pay for {1}
+[combat-removal-1] AI failed to play Labyrinth of Skophos (52) [combat-removal-1's Battlefield]
+ComputerUtilMana: payManaCost() cost was not paid for {4}, {T}: Remove target attacking or blocking creature from combat. (Labyrinth of Skophos). Didn't find what to pay for {1}
+[combat-removal-1] AI failed to play Labyrinth of Skophos (52) [combat-removal-1's Battlefield]
+ComputerUtilMana: payManaCost() cost was not paid for {4}, {T}: Remove target attacking or blocking creature from combat. (Labyrinth of Skophos). Didn't find what to pay for {1}
+[combat-removal-1] AI failed to play Labyrinth of Skophos (52) [combat-removal-1's Battlefield]
+ComputerUtilMana: payManaCost() cost was not paid for {4}, {T}: Remove target attacking or blocking creature from combat. (Labyrinth of Skophos). Didn't find what to pay for {1}
+[combat-removal-1] AI failed to play Labyrinth of Skophos (52) [combat-removal-1's Battlefield]
+CONTROLLED_INFORMATION observer=proxy; copied=false; known=3
+CONTROLLED_INFORMATION observer=after; copied=false; known=3
+CONTROLLED_INFORMATION observer=proxy; copied=true; known=3
+CONTROLLED_INFORMATION observer=after; copied=true; known=3
+CONTROLLED_INFORMATION observer=master; copied=true; known=3
+CONTROLLED_INFORMATION observer=master; copied=false; known=3
+ComputerUtilMana: payManaCost() cost was not paid for Draw a card.  (Last Thoughts). Didn't find what to pay for {1}
+[expression-0] AI failed to play Last Thoughts (36) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Draw a card.  (Last Thoughts). Didn't find what to pay for {R}
+[modifier-0] AI failed to play Last Thoughts (35) [Stack]
+Correcting zone for Grizzly Bears (129)
+Correcting zone for Grizzly Bears (129)
+Correcting zone for Grizzly Bears (129)
+BLOCK_HISTORY one world=2 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=2 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY present world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY present world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one world=1 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=1 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY present world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY present world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one world=0 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=0 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY present world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY present world=0 damageOnly=false blockedFlag=true
+DELAYED_PRIVATE choice=true; copied=true; observer=after; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=true; copied=true; observer=master; countered=true; controlled=true; remembered=0
+DELAYED_PRIVATE choice=true; copied=true; observer=master; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=true; copied=true; observer=proxy; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=false; copied=true; observer=after; countered=false; controlled=true; remembered=5
+DELAYED_PRIVATE choice=false; copied=true; observer=master; countered=true; controlled=true; remembered=0
+DELAYED_PRIVATE choice=false; copied=true; observer=master; countered=false; controlled=true; remembered=5
+DELAYED_PRIVATE choice=false; copied=true; observer=proxy; countered=false; controlled=true; remembered=5
+DELAYED_PRIVATE choice=true; copied=false; observer=proxy; countered=false; controlled=false; remembered=3
+DELAYED_PRIVATE choice=false; copied=false; observer=proxy; countered=false; controlled=false; remembered=5
+DELAYED_PRIVATE choice=true; copied=false; observer=after; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=true; copied=false; observer=master; countered=true; controlled=true; remembered=0
+DELAYED_PRIVATE choice=true; copied=false; observer=master; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=true; copied=false; observer=proxy; countered=false; controlled=true; remembered=3
+DELAYED_PRIVATE choice=false; copied=false; observer=after; countered=false; controlled=true; remembered=5
+DELAYED_PRIVATE choice=false; copied=false; observer=master; countered=true; controlled=true; remembered=0
+DELAYED_PRIVATE choice=false; copied=false; observer=master; countered=false; controlled=true; remembered=5
+DELAYED_PRIVATE choice=false; copied=false; observer=proxy; countered=false; controlled=true; remembered=5
+13:09:21 [ERROR] Game: findByView: id=38 (zone=Hand, controller=information-choice-1) not found in any zone ? returning null
+DIRECT_PRIVATE hand=true; copied=true; observer=after; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=true; copied=true; observer=master; countered=true; controlled=true; remembered=false
+DIRECT_PRIVATE hand=true; copied=true; observer=master; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=true; copied=true; observer=proxy; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=true; observer=after; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=true; observer=master; countered=true; controlled=true; remembered=false
+DIRECT_PRIVATE hand=false; copied=true; observer=master; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=true; observer=proxy; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=true; copied=false; observer=proxy; countered=false; controlled=false; remembered=true
+DIRECT_PRIVATE hand=false; copied=false; observer=proxy; countered=false; controlled=false; remembered=true
+DIRECT_PRIVATE hand=true; copied=false; observer=after; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=true; copied=false; observer=master; countered=true; controlled=true; remembered=false
+DIRECT_PRIVATE hand=true; copied=false; observer=master; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=true; copied=false; observer=proxy; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=false; observer=after; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=false; observer=master; countered=true; controlled=true; remembered=false
+DIRECT_PRIVATE hand=false; copied=false; observer=master; countered=false; controlled=true; remembered=true
+DIRECT_PRIVATE hand=false; copied=false; observer=proxy; countered=false; controlled=true; remembered=true
+Moving spell to Hand
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Gideon, Ally of Zendikar (33)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (129)
+Correcting zone for Forest (129)
+Correcting zone for Forest (129)
+Correcting zone for Forest (129)
+Correcting zone for Forest (129)
+Correcting zone for Forest (129)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Forest (99)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Arena of Glory (145)
+Correcting zone for Grizzly Bears (11)
+ComputerUtilMana: payManaCost() cost was not paid for Draw a card.  (Last Thoughts). Didn't find what to pay for {1}
+[cost-boundary-0] AI failed to play Last Thoughts (37) [Stack]
+Simulation: SA not found! As an additional cost to cast this spell, sacrifice a creature.
+Draw two cards. / class forge.game.ability.SpellApiBased
+[cost-boundary-0] AI failed to play Last Thoughts (33) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Draw a card.  (Last Thoughts). Didn't find what to pay for {1}
+[granted-cost-0] AI failed to play Last Thoughts (34) [Stack]
+Correcting zone for The Mind Stone (153)
+Correcting zone for The Soul Stone (154)
+Restoring game state with timestamp of :13
+INFORMATION_CHOICE name=Lens of Clarity; mode=USE_FULL_SIMULATION; choices=[Lens of Clarity]
+INFORMATION_CHOICE name=Spy Network; mode=USE_FULL_SIMULATION; choices=[Look at target player's hand, the top card of that player's library, and any face-down creatures they control.    ]
+INFORMATION_ADMISSION name=Lens of Clarity; mode=USE_FULL_SIMULATION; handler=forge.ai.ability.PermanentNoncreatureAi; policy=WillPlay; controller=WillPlay
+INFORMATION_ADMISSION name=Spy Network; mode=USE_FULL_SIMULATION; handler=forge.ai.ability.PumpAi; policy=WillPlay; controller=WillPlay
+INFORMATION_CHOICE name=Lens of Clarity; mode=null; choices=[Lens of Clarity]
+INFORMATION_CHOICE name=Spy Network; mode=null; choices=[Look at target player's hand, the top card of that player's library, and any face-down creatures they control.    ]
+INFORMATION_ADMISSION name=Lens of Clarity; mode=null; handler=forge.ai.ability.PermanentNoncreatureAi; policy=WillPlay; controller=WillPlay
+INFORMATION_ADMISSION name=Spy Network; mode=null; handler=forge.ai.ability.PumpAi; policy=WillPlay; controller=WillPlay
+INFORMATION_CHOICE name=Lens of Clarity; mode=USE_HYBRID_SIMULATION; choices=[Lens of Clarity]
+INFORMATION_CHOICE name=Spy Network; mode=USE_HYBRID_SIMULATION; choices=[Look at target player's hand, the top card of that player's library, and any face-down creatures they control.    ]
+INFORMATION_ADMISSION name=Lens of Clarity; mode=USE_HYBRID_SIMULATION; handler=forge.ai.ability.PermanentNoncreatureAi; policy=WillPlay; controller=WillPlay
+INFORMATION_ADMISSION name=Spy Network; mode=USE_HYBRID_SIMULATION; handler=forge.ai.ability.PumpAi; policy=WillPlay; controller=WillPlay
+TABLE_INIT_ALLOCATION tables=10000;bytes=640016
+INSPECTION_ADMISSION source=Aven Soulgazer; mode=USE_FULL_SIMULATION; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+INSPECTION_ADMISSION source=Aven Soulgazer; mode=null; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+INSPECTION_ADMISSION source=Aven Soulgazer; mode=USE_HYBRID_SIMULATION; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+INSPECTION_ADMISSION source=Smoke Teller; mode=USE_FULL_SIMULATION; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+INSPECTION_ADMISSION source=Smoke Teller; mode=null; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+INSPECTION_ADMISSION source=Smoke Teller; mode=USE_HYBRID_SIMULATION; handler=forge.ai.ability.LookAtAi; policy=WaitForCombat; controller=CantPlayAi
+Correcting zone for Face-down card (H2)
+LIBRARY_CHOICE surveil=false; copied=true; shape=mixed; observed=3; retained=3
+LIBRARY_CHOICE surveil=true; copied=true; shape=mixed; observed=3; retained=2
+LIBRARY_CHOICE surveil=false; copied=true; shape=bottom; observed=3; retained=3
+LIBRARY_CHOICE surveil=false; copied=true; shape=top; observed=3; retained=3
+LIBRARY_CHOICE surveil=true; copied=true; shape=top; observed=3; retained=3
+LIBRARY_CHOICE surveil=false; copied=false; shape=mixed; observed=3; retained=3
+LIBRARY_CHOICE surveil=true; copied=false; shape=mixed; observed=3; retained=2
+LIBRARY_CHOICE surveil=false; copied=false; shape=bottom; observed=3; retained=3
+LIBRARY_CHOICE surveil=false; copied=false; shape=top; observed=3; retained=3
+LIBRARY_CHOICE surveil=true; copied=false; shape=top; observed=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Spy Network; copied=true; initial=4; required=4; retained=4
+LIBRARY_TRANSITION shape=bottom; spell=Consider; copied=true; initial=3; required=3; retained=3
+LIBRARY_TRANSITION shape=bottom; spell=Opt; copied=true; initial=3; required=4; retained=4
+LIBRARY_TRANSITION shape=prefix; spell=Consider; copied=true; initial=4; required=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Opt; copied=true; initial=4; required=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Reach Through Mists; copied=true; initial=4; required=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Spy Network; copied=false; initial=4; required=4; retained=4
+LIBRARY_TRANSITION shape=bottom; spell=Consider; copied=false; initial=3; required=3; retained=3
+LIBRARY_TRANSITION shape=bottom; spell=Opt; copied=false; initial=3; required=4; retained=4
+LIBRARY_TRANSITION shape=prefix; spell=Consider; copied=false; initial=4; required=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Opt; copied=false; initial=4; required=3; retained=3
+LIBRARY_TRANSITION shape=prefix; spell=Reach Through Mists; copied=false; initial=4; required=3; retained=3
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose artifact, creature, or land. Tap all untapped permanents of the chosen type target player controls, or untap all tapped permanents of that type that player controls.  (Turnabout). Didn't find what to pay for null
+[mass-tap-0] AI failed to play Turnabout (43) [Stack]
+PLANNER_BOUNDARY copied=true kind=cap attackers=0
+PLANNER_BOUNDARY copied=false kind=cap attackers=0
+PLANNER_BOUNDARY copied=true kind=controlled attackers=0
+PLANNER_BOUNDARY copied=false kind=controlled attackers=0
+PLANNER_BOUNDARY copied=true kind=expired attackers=1
+PLANNER_BOUNDARY copied=false kind=expired attackers=1
+PLANNER_BOUNDARY copied=true kind=goad attackers=1
+PLANNER_BOUNDARY copied=false kind=goad attackers=1
+PLANNER_BOUNDARY copied=true kind=optionalTax attackers=0
+PLANNER_BOUNDARY copied=false kind=optionalTax attackers=0
+PLANNER_BOUNDARY copied=true kind=paidTax attackers=0
+PLANNER_BOUNDARY copied=false kind=paidTax attackers=0
+PLANNER_BOUNDARY copied=true kind=rng attackers=1
+PLANNER_BOUNDARY copied=false kind=rng attackers=1
+PLANNER_BOUNDARY copied=true kind=vigilance attackers=1
+PLANNER_BOUNDARY copied=false kind=vigilance attackers=1
+ATTACK_OUTCOME kind=bears copied=true attack=true damage=2
+ATTACK_OUTCOME kind=bears copied=true attack=false damage=0
+ATTACK_OUTCOME kind=bears copied=false attack=true damage=2
+ATTACK_OUTCOME kind=bears copied=false attack=false damage=0
+ATTACK_OPPORTUNITY mode=0 copied=true kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=false kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=true kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=flying attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=0 copied=false kind=flying attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=0 copied=true kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=false kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=true kind=open attackers=1 defender=opportunity-3
+ATTACK_OPPORTUNITY mode=0 copied=false kind=open attackers=1 defender=opportunity-3
+ATTACK_OPPORTUNITY mode=0 copied=true kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=tapped attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=tapped attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=false kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=true kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=flying attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=2 copied=false kind=flying attackers=1 defender=opportunity-3
+ATTACK_OPPORTUNITY mode=2 copied=true kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=false kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=true kind=open attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=false kind=open attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=2 copied=true kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=tapped attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=tapped attackers=0 defender=none
+ATTACK_OUTCOME kind=goreclaw copied=true attack=true damage=5
+ATTACK_OUTCOME kind=goreclaw copied=true attack=false damage=0
+ATTACK_OUTCOME kind=goreclaw copied=false attack=true damage=5
+ATTACK_OUTCOME kind=goreclaw copied=false attack=false damage=0
+ATTACK_OPPORTUNITY mode=1 copied=true kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=false kind=bears attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=true kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=defender attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=flying attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=1 copied=false kind=flying attackers=1 defender=opportunity-3
+ATTACK_OPPORTUNITY mode=1 copied=true kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=false kind=goreclaw attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=true kind=open attackers=1 defender=opportunity-2
+ATTACK_OPPORTUNITY mode=1 copied=false kind=open attackers=1 defender=opportunity-3
+ATTACK_OPPORTUNITY mode=1 copied=true kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=sick attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=tapped attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=tapped attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=false kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=true kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=false kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=0 copied=true kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=true kind=tax attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=0 copied=false kind=tax attackers=0 defender=none
+COUNTERATTACK_OUTCOME copied=true attack=true lost=true life=-5
+COUNTERATTACK_OUTCOME copied=true attack=false lost=false life=1
+ATTACK_OPPORTUNITY mode=2 copied=true kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=false kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=true kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=false kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=2 copied=true kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=true kind=tax attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=2 copied=false kind=tax attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=allblocked attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=false kind=forced attackers=1 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=true kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=false kind=group attackers=2 defender=opportunity-1
+ATTACK_OPPORTUNITY mode=1 copied=true kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=guard attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=peace attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=true kind=tax attackers=0 defender=none
+ATTACK_OPPORTUNITY mode=1 copied=false kind=tax attackers=0 defender=none
+COUNTERATTACK_OUTCOME copied=false attack=true lost=true life=-5
+COUNTERATTACK_OUTCOME copied=false attack=false lost=false life=1
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Calix, Guided by Fate (45) - [Couldn't add to stack, failed to target] - [[]]
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Circuits Act for forge.ai.ability.RollDiceAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Circuits Act for forge.ai.ability.RollDiceAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Circuits Act for forge.ai.ability.RollDiceAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Circuits Act for forge.ai.ability.RollDiceAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Circuits Act for forge.ai.ability.RollDiceAi. Consider declaring an overloaded method
+ComputerUtilMana: payManaCost() cost was not paid for  (Pressure Point). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Pressure Point). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Pressure Point). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for {4}{U}: Look at the top four cards of your library, then put them back in any order. (Aven Fateshaper). Didn't find what to pay for {U}
+[information-choice-0] AI failed to play Aven Fateshaper (40) [information-choice-0's Battlefield]
+RECRUIT_ADMISSION recruit=true; copied=true; decision=WillPlay
+RECRUIT_CHOICE recruit=true; mode=USE_FULL_SIMULATION; copied=true; choices=[Counter target spell. If that spell's mana value was 2 or less, recruit. (Draw a card, then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier creature token.) ]
+RECRUIT_CHOICE recruit=false; mode=USE_FULL_SIMULATION; copied=true; choices=[Counter target spell.]
+RECRUIT_CHOICE recruit=true; mode=USE_HYBRID_SIMULATION; copied=true; choices=[Counter target spell. If that spell's mana value was 2 or less, recruit. (Draw a card, then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier creature token.) ]
+RECRUIT_CHOICE recruit=false; mode=USE_HYBRID_SIMULATION; copied=true; choices=[Counter target spell.]
+RECRUIT_ADMISSION recruit=false; copied=true; decision=WillPlay
+RECRUIT_ADMISSION recruit=true; copied=false; decision=WillPlay
+RECRUIT_CHOICE recruit=true; mode=USE_FULL_SIMULATION; copied=false; choices=[Counter target spell. If that spell's mana value was 2 or less, recruit. (Draw a card, then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier creature token.) ]
+RECRUIT_CHOICE recruit=false; mode=USE_FULL_SIMULATION; copied=false; choices=[Counter target spell.]
+RECRUIT_CHOICE recruit=true; mode=USE_HYBRID_SIMULATION; copied=false; choices=[Counter target spell. If that spell's mana value was 2 or less, recruit. (Draw a card, then discard a card. If you discarded a nonland card, create a 1/1 white Human Soldier creature token.) ]
+RECRUIT_CHOICE recruit=false; mode=USE_HYBRID_SIMULATION; copied=false; choices=[Counter target spell.]
+RECRUIT_ADMISSION recruit=false; copied=false; decision=WillPlay
+RESOLVING_TRANSITION former=Hand; actual=Stack
+RESOLVING_TRANSITION former=Library; actual=Stack
+RESOLVING_TRANSITION former=Hand; actual=Stack
+RESOLVING_PAID paid=9; original=9; copied=9
+RESOLVING_TRANSITION former=Hand; actual=Stack
+RESOLVING_HAND original=0; copied=0
+Restoring game state with timestamp of :2
+Restoring game state with timestamp of :8
+Restoring game state with timestamp of :12
+Restoring game state with timestamp of :7
+Restoring game state with timestamp of :5
+BLOCK_HISTORY jarkeld world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY jarkeld world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY path world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY path world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY jarkeld world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY jarkeld world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY path world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY path world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY jarkeld world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY jarkeld world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY path world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY path world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY died world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY tokenDied world=2 damageOnly=true blockedFlag=true
+BLOCK_HISTORY tokenDied world=2 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one world=2 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=2 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY tokenDied world=1 damageOnly=true blockedFlag=true
+BLOCK_HISTORY tokenDied world=1 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one world=1 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=1 damageOnly=false blockedFlag=false
+BLOCK_HISTORY died world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY died world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY tokenDied world=0 damageOnly=true blockedFlag=true
+BLOCK_HISTORY tokenDied world=0 damageOnly=false blockedFlag=true
+BLOCK_HISTORY one world=0 damageOnly=true blockedFlag=false
+BLOCK_HISTORY one world=0 damageOnly=false blockedFlag=false
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Change the text of target permanent by replacing all instances of one color word with another or one basic land type with another until end of turn.  (Trait Doctoring). Didn't find what to pay for null
+[trait-pilot-0] AI failed to play Trait Doctoring (40) [Stack]
+Restoring game state with timestamp of :7
+ComputerUtilMana: payManaCost() cost was not paid for You may tap or untap target artifact, creature, or land. (Twiddle). Didn't find what to pay for null
+[untap-followup-0] AI failed to play Twiddle (37) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for You may tap or untap target artifact, creature, or land. (Twiddle). Didn't find what to pay for null
+[untap-followup-0] AI failed to play Twiddle (37) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for You may tap or untap target artifact, creature, or land. (Twiddle). Didn't find what to pay for null
+[untap-followup-0] AI failed to play Twiddle (37) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Clarion Conqueror - Creature 3 / 3 (Clarion Conqueror). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Voice of Victory - Creature 1 / 3 (Voice of Victory). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Giver of Runes - Creature 1 / 2 (Giver of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Mother of Runes - Creature 1 / 1 (Mother of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Clarion Conqueror - Creature 3 / 3 (Clarion Conqueror). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Voice of Victory - Creature 1 / 3 (Voice of Victory). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Giver of Runes - Creature 1 / 2 (Giver of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Mother of Runes - Creature 1 / 1 (Mother of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Clarion Conqueror - Creature 3 / 3 (Clarion Conqueror). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Voice of Victory - Creature 1 / 3 (Voice of Victory). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Giver of Runes - Creature 1 / 2 (Giver of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Mother of Runes - Creature 1 / 1 (Mother of Runes). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for  (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Waterbend {X}: Creatures you control have base power and toughness X/X until end of turn. X can't be 0. Activate only during your turn. (Katara, Water Tribe's Hope). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Waterbend {X}: Creatures you control have base power and toughness X/X until end of turn. X can't be 0. Activate only during your turn. (Katara, Water Tribe's Hope). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Waterbend {X}: Creatures you control have base power and toughness X/X until end of turn. X can't be 0. Activate only during your turn. (Katara, Water Tribe's Hope). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creatures you control. Return those cards to the battlefield under their owner's control at the beginning of the next end step.   (Waterbender's Restoration). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creatures you control. Return those cards to the battlefield under their owner's control at the beginning of the next end step.   (Waterbender's Restoration). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creatures you control. Return those cards to the battlefield under their owner's control at the beginning of the next end step.   (Waterbender's Restoration). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creature cards from graveyards. For each creature card exiled this way, create a token that's a copy of it. At the beginning of your next end step, sacrifice those tokens.   (Foggy Swamp Visions). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creature cards from graveyards. For each creature card exiled this way, create a token that's a copy of it. At the beginning of your next end step, sacrifice those tokens.   (Foggy Swamp Visions). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Exile X target creature cards from graveyards. For each creature card exiled this way, create a token that's a copy of it. At the beginning of your next end step, sacrifice those tokens.   (Foggy Swamp Visions). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for   (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for   (Crashing Wave). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for   (Crashing Wave). Didn't find what to pay for {1}
+Correcting zone for The Abyss (149)
+Correcting zone for The Abyss (149)
+Correcting zone for The Abyss (149)
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Invert Polarity for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Invert Polarity for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Invert Polarity for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Invert Polarity for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Ornithopter (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Sudden Substitution for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Grizzly Bears (25)
+Correcting zone for Grizzly Bears (25)
+Correcting zone for Grizzly Bears (25)
+Correcting zone for Grizzly Bears (25)
+Correcting zone for Grizzly Bears (23)
+Correcting zone for Grizzly Bears (23)
+Correcting zone for Grizzly Bears (23)
+Correcting zone for Grizzly Bears (23)
+Correcting zone for Grizzly Bears (23)
+Correcting zone for Grizzly Bears (23)
+CONTROL_COMBAT controlled=true full=true kind=blocked attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=blocked attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=cap attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=cap attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=chain attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=chain attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=combatOnly attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=combatOnly attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=controlled attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=controlled attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=forced attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=forced attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=group attacksBeneficiary=false attackers=2
+CONTROL_COMBAT controlled=true full=false kind=group attacksBeneficiary=false attackers=2
+CONTROL_COMBAT controlled=true full=true kind=onlyMaster attacksBeneficiary=true attackers=1
+CONTROL_COMBAT controlled=true full=false kind=onlyMaster attacksBeneficiary=true attackers=1
+CONTROL_COMBAT controlled=true full=true kind=optionalTax attacksBeneficiary=false attackers=0
+CONTROL_COMBAT controlled=true full=false kind=optionalTax attacksBeneficiary=false attackers=0
+CONTROL_COMBAT controlled=false full=true kind=ordinary attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=false full=false kind=ordinary attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=paidTax attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=paidTax attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=false full=true kind=self attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=false full=false kind=self attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=true kind=timeout attacksBeneficiary=false attackers=1
+CONTROL_COMBAT controlled=true full=false kind=timeout attacksBeneficiary=false attackers=1
+CONTROL_DECISION protect=true full=true choice=Shock [decision0] lethalToBeneficiary=false
+CONTROL_DECISION protect=true full=false choice=Shock [decision0] lethalToBeneficiary=false
+CONTROL_DECISION protect=true full=true choice=Shock [decision1] lethalToBeneficiary=false
+CONTROL_DECISION protect=false full=true choice=Shock [decision0] lethalToBeneficiary=true
+CONTROL_DECISION protect=true full=false choice=Shock [decision1] lethalToBeneficiary=false
+CONTROL_DECISION protect=false full=false choice=Shock [decision0] lethalToBeneficiary=true
+CONTROL_RESPONSE controlled=true full=true choice=Counterspell target=[Shock deals 2 damage to any target.]
+CONTROL_RESPONSE controlled=true full=false choice=Counterspell target=[Shock deals 2 damage to any target.]
+CONTROL_RESPONSE controlled=false full=true choice=Counterspell target=[Shock deals 2 damage to any target.]
+CONTROL_RESPONSE controlled=false full=false choice=Counterspell target=[Shock deals 2 damage to any target.]
+CONTROL_DECISION protect=false full=true choice=Shock [decision0] lethalToBeneficiary=true
+CONTROL_DECISION protect=false full=false choice=Shock [decision0] lethalToBeneficiary=true
+CONTROL_RESPONSE controlled=true full=true choice=pass target=none
+CONTROL_RESPONSE controlled=true full=false choice=pass target=none
+ComputerUtilMana: payManaCost() cost was not paid for Emrakul, the Promised End - Creature 13 / 13 (Emrakul, the Promised End). Didn't find what to pay for null
+Correcting zone for Calciderm (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Grizzly Bears (130)
+Correcting zone for Serra Angel (131)
+Correcting zone for Shivan Dragon (132)
+Correcting zone for Ornithopter (130)
+Correcting zone for Serra Angel (131)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Ornithopter (129)
+Correcting zone for Serra Angel (130)
+Correcting zone for Soul Warden (17)
+Correcting zone for Soul Warden (17)
+Correcting zone for Azure Mage (209)
+Correcting zone for Azure Mage (209)
+Correcting zone for Azure Mage (209)
+Correcting zone for Azure Mage (209)
+Correcting zone for Azure Mage (209)
+Correcting zone for Azure Mage (209)
+Correcting zone for Divine Intervention (193)
+Correcting zone for Divine Intervention (193)
+Correcting zone for Serra Angel (7)
+Correcting zone for Ornithopter (5)
+Correcting zone for Ashcoat Bear (38)
+ComputerUtilMana: payManaCost() cost was not paid for {3}{G}{W}, {T}, Tap two untapped creatures you control, Sacrifice Grove of the Guardian: Create an 8/8 green and white Elemental creature token with vigilance. (Grove of the Guardian). Didn't find what to pay for {W}
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Perplexing Chimera (97)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Perplexing Chimera for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+ComputerUtilMana: payManaCost() cost was not paid for Remove all counters from all permanents and exile all tokens.  (Aether Snap). Didn't find what to pay for null
+[paidOutcome0] AI failed to play Aether Snap (34) [Stack]
+PRIMARY_CONTROL card=The Dominion Bracelet mode=USE_FULL_SIMULATION chosen=The Dominion Bracelet
+CONTROL_PREFIX paidEquip=1 next=Attach
+CONTROL_PREFIX paidEquip=1 next=Attach
+CONTROL_PREFIX paidEquip=1 next=ControlPlayer
+PRIMARY_CONTROL card=The Dominion Bracelet mode=null chosen=Ornithopter
+PRIMARY_CONTROL card=The Dominion Bracelet mode=USE_HYBRID_SIMULATION chosen=Ornithopter
+UNHELPFUL_CONTROL card=The Dominion Bracelet decision=AiAbilityDecision[rating=0, decision=DoesntImpactGame]
+UNHELPFUL_CONTROL card=Mindslaver decision=AiAbilityDecision[rating=0, decision=DoesntImpactGame]
+UNHELPFUL_CONTROL card=Secret of Bloodbending decision=AiAbilityDecision[rating=0, decision=DoesntImpactGame]
+UNHELPFUL_CONTROL card=Sorin Markov decision=AiAbilityDecision[rating=0, decision=DoesntImpactGame]
+UNHELPFUL_CONTROL card=Worst Fears decision=AiAbilityDecision[rating=0, decision=DoesntImpactGame]
+PRIMARY_CONTROL card=Mindslaver mode=USE_FULL_SIMULATION chosen=Mindslaver
+PRIMARY_CONTROL card=Mindslaver mode=null chosen=Mindslaver
+PRIMARY_CONTROL card=Mindslaver mode=USE_HYBRID_SIMULATION chosen=Mindslaver
+PRIMARY_CONTROL card=Secret of Bloodbending mode=USE_FULL_SIMULATION chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Secret of Bloodbending mode=null chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Secret of Bloodbending mode=USE_HYBRID_SIMULATION chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Secret of Bloodbending mode=USE_FULL_SIMULATION chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Secret of Bloodbending mode=null chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Secret of Bloodbending mode=USE_HYBRID_SIMULATION chosen=Secret of Bloodbending
+PRIMARY_CONTROL card=Sorin Markov mode=USE_FULL_SIMULATION chosen=Sorin Markov
+PRIMARY_CONTROL card=Sorin Markov mode=null chosen=Sorin Markov
+PRIMARY_CONTROL card=Sorin Markov mode=USE_HYBRID_SIMULATION chosen=Sorin Markov
+PRIMARY_CONTROL card=Worst Fears mode=USE_FULL_SIMULATION chosen=Worst Fears
+PRIMARY_CONTROL card=Worst Fears mode=null chosen=Worst Fears
+PRIMARY_CONTROL card=Worst Fears mode=USE_HYBRID_SIMULATION chosen=Worst Fears
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Grizzly Bears (125)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Grizzly Bears (125)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Royal Assassin (126) Remembered: new-incarnation/class java.lang.String
+Royal Assassin (126) Remembered: new-incarnation/class java.lang.String
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Wall of Stone (125)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Wall of Stone (125)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Wall of Stone (125)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Birthday Escape for forge.ai.ability.AlwaysPlayAi. Consider declaring an overloaded method
+Correcting zone for Merfolk Looter (34)
+Correcting zone for Merfolk Looter (34)
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Aethersnatch mode=USE_FULL_SIMULATION chosen=Aethersnatch
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Aethersnatch mode=null chosen=Aethersnatch
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Aethersnatch mode=USE_HYBRID_SIMULATION chosen=Aethersnatch
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Chef's Kiss mode=USE_FULL_SIMULATION chosen=Chef's Kiss
+SPELL_CONTROL source=Chef's Kiss mode=null chosen=Chef's Kiss
+SPELL_CONTROL source=Chef's Kiss mode=USE_HYBRID_SIMULATION chosen=Chef's Kiss
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+ComputerUtilMana: payManaCost() cost was not paid for Gain control of target noncreature spell. You may choose new targets for it. (If that spell is an artifact, enchantment, or planeswalker, the permanent you control enters.)  (Commandeer). Didn't find what to pay for null
+[spellControl0] AI failed to play Commandeer (100) [Stack]
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+ComputerUtilMana: payManaCost() cost was not paid for Gain control of target noncreature spell. You may choose new targets for it. (If that spell is an artifact, enchantment, or planeswalker, the permanent you control enters.)  (Commandeer). Didn't find what to pay for null
+[spellControl0] AI failed to play Commandeer (100) [Stack]
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Commandeer mode=USE_FULL_SIMULATION chosen=Commandeer
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Commandeer mode=null chosen=Commandeer
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+SPELL_CONTROL source=Commandeer mode=USE_HYBRID_SIMULATION chosen=Commandeer
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Commandeer for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Warning: default (ie. inherited from base class) implementation of confirmAction is used by Aethersnatch for forge.ai.ability.ChangeTargetsAi. Consider declaring an overloaded method
+Correcting zone for Dryad Arbor (2)
+Moving spell to Hand
+ComputerUtilMana: payManaCost() cost was not paid for Choose one ?
+? Boros Charm deals 4 damage to target player or planeswalker.
+? Permanents you control gain indestructible until end of turn.
+? Target creature gains double strike until end of turn.
+
+ Permanents you control gain indestructible until end of turn. (Boros Charm). Didn't find what to pay for null
+[seat0] AI failed to play Boros Charm (6) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose one ?
+? Boros Charm deals 4 damage to target player or planeswalker.
+? Permanents you control gain indestructible until end of turn.
+? Target creature gains double strike until end of turn.
+
+ Permanents you control gain indestructible until end of turn. (Boros Charm). Didn't find what to pay for {W}
+[seat0] AI failed to play Boros Charm (4) [Stack]
+ComputerUtilMana: payManaCost() cost was not paid for Choose one ?
+? Boros Charm deals 4 damage to target player or planeswalker.
+? Permanents you control gain indestructible until end of turn.
+? Target creature gains double strike until end of turn.
+
+ Permanents you control gain indestructible until end of turn. (Boros Charm). Didn't find what to pay for null
+[seat0] AI failed to play Boros Charm (10) [Stack]
+Correcting zone for Kobayashi Maru Scenario (1)
+Warning: default (ie. inherited from base class) implementation of chooseSingleCard is used by Graf Rats for forge.ai.ability.MeldAi. Consider declaring an overloaded method
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Basking Rootwalla (24)
+Correcting zone for Grizzly Bears (22)
+Correcting zone for Grizzly Bears (22)
+Correcting zone for Grizzly Bears (20)
+Correcting zone for Grizzly Bears (20)
+Correcting zone for Grizzly Bears (20)
+Correcting zone for Grizzly Bears (20)
+Correcting zone for Grizzly Bears (20)
+Correcting zone for Grizzly Bears (20)
+ComputerUtilMana: payManaCost() cost was not paid for Gravecrawler - Creature 2 / 1 (Gravecrawler). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Tempest Djinn - Creature 0 / 4 (Tempest Djinn). Didn't find what to pay for {U}
+ComputerUtilMana: payManaCost() cost was not paid for Haakon, Stromgald Scourge - Creature 3 / 3 (Haakon, Stromgald Scourge). Didn't find what to pay for {1}
+ComputerUtilMana: payManaCost() cost was not paid for Scry 1. Draw a card. (Opt). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Scry 1. Draw a card. (Opt). Didn't find what to pay for null
+ComputerUtilMana: payManaCost() cost was not paid for Thassa's Oracle - Creature 1 / 3 (Thassa's Oracle). Didn't find what to pay for {U}
+ComputerUtilMana: payManaCost() cost was not paid for Scry 1. Draw a card. (Opt). Didn't find what to pay for null
+Correcting zone for Archmage Ascension (21)
+Correcting zone for Platinum Angel (26)
+Correcting zone for Platinum Angel (26)
+Correcting zone for Steam Vents (23)
+RUNTIME_LIMITS processors=2;max_heap_bytes=2147483648
+SNAPSHOT_WIRE sorted=false;rows=false;sha256=4df0742371f88b5dbfb04bf09e10472351dafd7bb716df2756f2dea85464b41a
+SNAPSHOT_WIRE sorted=false;rows=true;sha256=4df0742371f88b5dbfb04bf09e10472351dafd7bb716df2756f2dea85464b41a
+SNAPSHOT_WIRE sorted=true;rows=false;sha256=9f7ce18a028422db1a60a66ddf6b58f22b565beeb32a3b0ca430632e7900cfbb
+SNAPSHOT_WIRE sorted=true;rows=true;sha256=9f7ce18a028422db1a60a66ddf6b58f22b565beeb32a3b0ca430632e7900cfbb
+[INFO] Tests run: 4730, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 304.0 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 4730, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jar:3.3.0:jar (default-jar) @ forge-gui-desktop ---
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\target\forge-gui-desktop-2.0.16.jar
+[INFO] 
+[INFO] --- launch4j:2.5.1:launch4j (l4j-gui) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- replacer:1.5.3:replace (default) @ forge-gui-desktop ---
+[INFO] Replacement run on 3 files.
+[INFO] 
+[INFO] --- assembly:3.3.0:single (make-assembly) @ forge-gui-desktop ---
+[INFO] Reading assembly descriptor: src/main/assembly/jar-with-dependencies.xml
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to rso-public-grid (https://repository.sonatype.org/content/groups/sonatype-public-grid/): No such host is known (repository.sonatype.org)
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to jvnet-nexus-snapshots (https://maven.java.net/content/repositories/snapshots): PKIX path validation failed: java.security.cert.CertPathValidatorException: validity check failed
+[WARNING] /.meta/prefixes.txt failed to transfer from https://maven.java.net/content/repositories/snapshots during a previous attempt. This failure was cached in the local repository and resolution will not be reattempted until the update interval of jvnet-nexus-snapshots has elapsed or updates are forced. Original error: Could not transfer metadata /.meta/prefixes.txt from/to jvnet-nexus-snapshots (https://maven.java.net/content/repositories/snapshots): PKIX path validation failed: java.security.cert.CertPathValidatorException: validity check failed
+[INFO] Building jar: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\target\forge-gui-desktop-2.0.16-jar-with-dependencies.jar
+[INFO] 
+[INFO] --- git-changelog-maven-plugin:2.2.0:git-changelog (GenerateGitChangelog) @ forge-gui-desktop ---
+[INFO] Extended variables:
+[INFO] #
+[INFO] # Wrote: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\engine-builds\1449f74dd9e1483d9017aed2bbf83192\source\forge-gui-desktop\target\CHANGES.txt
+[INFO] #
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Forge Parent 2.0.16:
+[INFO] 
+[INFO] Forge Parent ....................................... SUCCESS [  0.709 s]
+[INFO] Forge Core ......................................... SUCCESS [  6.802 s]
+[INFO] Forge Game ......................................... SUCCESS [ 16.159 s]
+[INFO] Forge AI ........................................... SUCCESS [  9.212 s]
+[INFO] Forge Gui .......................................... SUCCESS [ 11.163 s]
+[INFO] Forge .............................................. SUCCESS [05:37 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  06:22 min
+[INFO] Finished at: 2026-11-25T13:13:04-05:00
+[INFO] ------------------------------------------------------------------------

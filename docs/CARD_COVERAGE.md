@@ -1,5 +1,18 @@
 # Card support and evidence
 
+A generic expend-history correction now retains cumulative spell-mana spending in
+AI world copies. Four of six controls fail on the preceding candidate: Muerra's
+fourth-mana effect can be missed or repeated instead of reaching the eighth-mana
+effect. The correction passes **6/6**, including paid spells, repeated copies,
+negative controls and player isolation; **1,404 casting / 273 combat / 194 untap /
+ten dungeon / nine upstream** controls remain passing. These start from supplied
+boards and do not establish complete legal game histories or all-card correctness.
+
+The registered recipe adds a separate six-case `expended_mana` group, preserving
+every earlier group and the original **1,271-case / 90-second** workload. Fresh
+**3,536 source / 4,736 native / 3,579 main packaged** validation remains pending.
+The selected runtime stays unchanged. See [expend correction evidence](../engine/expend_history_evidence.json).
+
 A generic dungeon snapshot correction now preserves completed-dungeon history,
 venture counts, current-room markers and game-piece designations. The old copier
 could turn a dungeon into a token that disappeared; it also lost completion-based
@@ -12,8 +25,21 @@ legal histories or full rules coverage.
 
 The build registers the ten new cases in a separate `dungeons` group. Every earlier
 group and count remains unchanged, including original **1,271 / 90 seconds**.
-Fresh **3,530 source / 4,730 native / 3,573 main packaged** validation is pending.
-The selected runtime remains unchanged. See [dungeon correction evidence](../engine/dungeon_snapshot_evidence.json).
+Fresh validation passes **3,530 source / 4,730 native** cases, retaining all earlier
+methods and parameters. All 2,168 production, 167 test and 324 card inputs match the
+reviewed source; production class changes stay within the four corrected families.
+Normal packaged checks pass **301 information / 273 combat / 338 text-cost / 1,380
+casting / ten dungeon** cases, plus separate **65 free-casting / 194 untap / 146
+Battle** cases. Native counters, parameters and production origins are audited.
+Broader suites pass **6,053 gameplay / 320 serialization** cases without skips.
+
+The full **3,573-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.016s**, without a completed report. Its
+workload and deadline are unchanged; it was not retried unchanged for luck.
+The candidate remains uninstalled and the selected runtime unchanged. Fresh final
+live checks, activation and complete paid-history/card-rules coverage remain open.
+See [dungeon correction evidence](../engine/dungeon_snapshot_evidence.json) and
+[fresh runtime evidence](../engine/dungeon_snapshot_runtime_evidence.json).
 
 A current-baseline Parallel GC diagnostic passes its semantic controls but still
 times out at **90.016 seconds** on the original resolution workload, without a
