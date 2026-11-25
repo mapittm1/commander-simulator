@@ -1,0 +1,13 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilCost.java
+@@ -623,7 +623,10 @@
+             }
+ 
+             // Let native event handling account for legacy taxes, counters and granted target triggers.
++            // Cost feasibility is queried before targets are selected too. A native stack
++            // forecast requires a complete announcement; earlier checks remain cost-only.
+             accountForNativeTriggers = !sa.isTrigger()
++                    && payer.getGame().getStack().hasLegalTargeting(sa)
+                     && (extraManaNeeded > 0 || ComputerUtilMana.requiresStackForecast(sa));
+ 
+             // Bail early on Casualty in case there are no cards that would make sense to pay with

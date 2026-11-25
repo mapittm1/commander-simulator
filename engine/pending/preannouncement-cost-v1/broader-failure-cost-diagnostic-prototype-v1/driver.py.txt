@@ -1,0 +1,59 @@
+"""Compare nine exact upstream failure/control cases; not a replacement broader gate."""
+from pathlib import Path
+from collections import Counter
+import importlib
+import json
+import sys
+import xml.etree.ElementTree as ET
+import zipfile
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules
+WORK=Path(__file__).resolve().parent;MODE=sys.argv[1];assert MODE in ('selected','candidate','prototype')
+RUN=WORK/('broader-failure-cost-diagnostic-'+MODE+'-v1');FIXTURE=WORK/'broader-failure-focus-v1'
+PROTOTYPE=WORK/'keyword-cost-diagnostic-prototype-v1'
+BUILD='5b5e213ff45d4f2fb5d95b586e8976ba' if MODE=='selected' else 'e7a999854f3d4ef9a5bd7301adb6ad50'
+SETTINGS=ROOT/'data/engine-builds'/BUILD/'engine-config.json'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ assert all(file_hash(FIXTURE/n)==h for n,h in load(FIXTURE/'inputs.json').items())
+ if MODE=='prototype':assert all(file_hash(PROTOTYPE/n)==h for n,h in load(PROTOTYPE/'inputs.json').items())
+ assert all(file_hash(ROOT/n)==h for n,h in load(WORK/'split-table-broad-v2/source-frozen-inputs.json').items())
+verify();selection=load(FIXTURE/'selection.json')
+if '--worker' in sys.argv:
+ settings=read_settings(SETTINGS);lock=settings.verify();require_bridge();java=importlib.import_module('jpype')
+ recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ archive=settings.home/lock['jar_name'];classpath=(() if MODE!='prototype' else (PROTOTYPE/'classes',))+(archive,FIXTURE/'classes',dependency)
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,classpath)),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ overrides=set() if MODE!='prototype' else {n[len('classes/'):] for n in load(PROTOTYPE/'inputs.json') if n.startswith('classes/')}
+ for name in ('forge.game.card.Card','forge.ai.PlayerControllerAi','forge.ai.ComputerUtilCost','forge.ai.ComputerUtilMana','forge.game.spellability.SpellAbility','forge.game.GameActionUtil','forge.ai.simulation.GameCopier','forge.ai.simulation.GameSimulator','forge.ai.simulation.SpellAbilityPicker'):
+  assert packaged_rules.class_origin(java,name).samefile(PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in (*selection['classes'],'forge.ai.AITest','forge.ai.simulation.SimulationTest'):
+  assert packaged_rules.class_origin(java,name).samefile(FIXTURE/'classes'),name
+ suite=java.JClass('org.testng.xml.XmlSuite')();suite.setName('Exact upstream failures and controls')
+ test=java.JClass('org.testng.xml.XmlTest')(suite);test.setName('Nine diagnostic cases')
+ xml_classes=java.JClass('java.util.ArrayList')()
+ expected=Counter()
+ for cls,names in selection['classes'].items():
+  xml_class=java.JClass('org.testng.xml.XmlClass')(cls);included=java.JClass('java.util.ArrayList')()
+  for name in names:included.add(java.JClass('org.testng.xml.XmlInclude')(name));expected[(cls+'.'+name,())]+=1
+  xml_class.setIncludedMethods(included);xml_classes.add(xml_class)
+ test.setXmlClasses(xml_classes)
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ suites=java.JClass('java.util.ArrayList')();suites.add(suite);runner.setXmlSuites(suites);runner.setOutputDirectory(str(RUN/'reports'));runner.run()
+ counts,methods=packaged_rules.test_results(listener)
+ actual=Counter((cl.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for cl in ET.parse(RUN/'reports/testng-results.xml').findall('.//class') for m in cl.findall('test-method') if m.get('is-config')!='true')
+ outcome={'mode':MODE,'counts':counts,'methods':methods,'exact_case_counter_matches':actual==expected,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'scope':selection['scope']}
+ save(RUN/'outcome.json',outcome);assert actual==expected and counts['total']==9 and counts['skipped']==0 and outcome['configuration_failures']==outcome['configuration_skips']==0
+ verify();java.shutdownJVM()
+else:
+ assert sys.argv[2:]==[];RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());settings=read_settings(SETTINGS)
+ with _engine_profile(settings,RUN):
+  process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify();assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ print(json.dumps({'mode':MODE,'process':process,'counts':load(RUN/'outcome.json')['counts'] if (RUN/'outcome.json').exists() else None}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0

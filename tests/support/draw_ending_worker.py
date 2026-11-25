@@ -129,6 +129,7 @@ SOURCES = {
     "CommanderReplacementActiveZoneTest": "commander_replacement_active_zone_test_sha256",
     "CommanderSplitTraitGuardTest": "commander_split_trait_guard_test_sha256",
     "CommanderInitialTableSnapshotTest": "commander_initial_table_snapshot_test_sha256",
+    "CommanderPreannouncementCostTest": "commander_preannouncement_cost_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest": "commander_replacement_cache_inputs_test_sha256",
@@ -474,7 +475,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3554-case packaged family."""
+    """Execute the fixed 3563-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

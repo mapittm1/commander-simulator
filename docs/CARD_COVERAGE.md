@@ -1,5 +1,26 @@
 # Card support and evidence
 
+A generic casting correction now keeps pre-target affordability checks on the
+cost-only path until required targets exist. This restores replicate choices and
+Abbot of Keral Keep follow-up plans without dropping additional-cost or known
+extra-mana checks. Completed targeting retains native cast/target-trigger forecasts.
+The unchanged upstream comparison passes **9/9** on the selected runtime,
+**4/9** on the preceding candidate, and **9/9** with the correction. Nine paid
+boundary cases for ward, Nether Void and sacrifice costs pass across copy depths
+0/1/2; all nine fail on the preceding candidate. These start from supplied board
+states, so they do not establish complete preceding legal histories.
+
+The corrected broader suites pass **6,034 gameplay** and **320 serialization**
+cases with exact method/parameter membership and no skips; the preceding candidate
+failed five gameplay cases. The existing **1,371-case cast group** also passes.
+The regular workflow now registers the nine new boundary cases: fresh **3,520
+source / 4,720 native / 3,563 packaged** validation remains pending. The original
+**1,271-case / 90-second** resolution workload and budget are unchanged. Full-game,
+catalog, health, activation and complete card/rules coverage remain open; the
+selected runtime is unchanged. See [casting correction evidence](../engine/preannouncement_cost_evidence.json).
+
+Earlier checkpoint records follow.
+
 Current checkpoint: all **3,511 source** and **4,711 native** regression cases
 pass, including 36 live split/clone and seven table-contract additions. Every prior
 case and parameter is retained. The changed **1,371-case packaged cast group**

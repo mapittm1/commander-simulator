@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic pre-target affordability: defer native cast/target-trigger
+  forecasting until required targets exist, retaining additional costs and known
+  extra-mana budgets. Restore replicate choices and Abbot follow-up plans. Preserve
+  selected 9/9, candidate 4/9 and corrected 9/9 upstream comparisons, diagnostic
+  failures, and a corrected card/mana fixture setup error.
+- Add nine regular paid-cast controls for ward, Nether Void and sacrifice costs
+  across copy depths 0/1/2. Baseline fails all nine; corrected passes all nine and
+  the retained 1,371-case cast group. Broader suites pass 6,034 gameplay and 320
+  serialization cases with exact membership/no skips, correcting five candidate
+  regressions. Verify restoration of temporary production/test-policy changes.
+  Fresh 3,520-source / 4,720-native / 3,563-packaged validation remains pending;
+  preserve original 1,271-case / 90-second gate. Full-game, catalog, health,
+  activation and complete card/rules coverage remain open; selected runtime unchanged.
+
 - Add 43 regular native controls for live split/clone trait visibility and table
   isolation, version tokens, serialization and concurrent use. The complete
   3,511-source / 4,711-native suites pass with all earlier methods and parameters
