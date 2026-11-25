@@ -199,7 +199,7 @@ EXPECTED_COUNTS = {
     "combat_and_snapshots": 228,
     "text_casting_and_costs": 338,
     "resolution": 1271,
-    "cast_events": 604,
+    "cast_events": 640,
 }
 
 

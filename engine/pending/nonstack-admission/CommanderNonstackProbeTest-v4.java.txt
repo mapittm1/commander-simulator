@@ -1,0 +1,148 @@
+package forge.ai;
+import forge.deck.Deck;
+import forge.card.CardStateName;
+import forge.ai.simulation.GameSimulator;
+import forge.ai.simulation.GameCopier;
+import forge.game.spellability.AbilityStatic;
+import forge.game.card.CounterEnumType;
+import forge.game.trigger.TriggerWaiting;
+import forge.game.*;
+import forge.game.card.Card;
+import forge.game.cost.CostPayment;
+import forge.game.phase.PhaseType;
+import forge.game.player.*;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.*;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+public class CommanderNonstackProbeTest extends AITest {
+    private void check(boolean tapped, int depth, boolean nativePayment) {
+        List<RegisteredPlayer> seats=new ArrayList<>();
+        for(int i=0;i<4;i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("mana-"+i,null)));
+        GameRules rules=new GameRules(GameType.Commander);
+        Game game=new Game(seats,rules,new Match(rules,seats,"Nonstack admission probe"));
+        game.setNoGUIUser();game.setAge(GameStage.Play);
+        Player payer=game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("mana-0")).findFirst().orElseThrow();
+        for(Player player:game.getPlayers()) {player.setLife(100,null);for(int i=0;i<20;i++) addCardToZone("Forest",player,ZoneType.Library);}
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1,payer,5);
+        addCardToZone("Glava, Five-Advents Mage",payer,ZoneType.Battlefield);
+        Card land=addCardToZone("Forest",payer,ZoneType.Battlefield);land.setTapped(tapped);
+        game.getAction().checkStaticAbilities(false);game.getTriggerHandler().resetActiveTriggers();game.copyLastState();
+        for (int i=0; i<depth; i++) {GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,payer);copier.release();payer=game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("mana-0")).findFirst().orElseThrow();}
+        land=payer.getCardsIn(ZoneType.Battlefield).stream().filter(c -> c.getName().equals("Forest")).findFirst().orElseThrow();
+        SpellAbility mana=land.getManaAbilities().get(0);mana.setActivatingPlayer(payer);assertTrue(mana.isManaAbility());
+        if(!nativePayment) {assertEquals(ComputerUtilCost.canPayCost(mana,payer,false),!tapped);assertEquals(land.isTapped(),tapped);assertEquals(payer.getManaPool().totalMana(),0);}
+        else {boolean paid=new CostPayment(mana.getPayCosts(),mana).payComputerCosts(new AiCostDecision(payer,mana,false,true));assertEquals(paid,!tapped);if(paid) game.getStack().addAndUnfreeze(mana);assertTrue(game.getStack().isEmpty());assertEquals(payer.getManaPool().totalMana(),tapped?0:1);}
+    }
+
+    private void ritual(boolean countered, int depth, boolean nativePayment) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i=0; i<4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("ritual-"+i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Mana spell stack control"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        Player payer = game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("ritual-0")).findFirst().orElseThrow();
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int i=0; i<20; i++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, payer, 5);
+        addCardToZone("Swamp", payer, ZoneType.Battlefield);
+        Card chalice = addCardToZone("Chalice of the Void", game.getPlayers().get(1), ZoneType.Battlefield);
+        chalice.setCounters(CounterEnumType.CHARGE, countered ? 1 : 2);
+        Card card = addCardToZone("Dark Ritual", payer, ZoneType.Hand);
+        SpellAbility spell = card.getFirstSpellAbility(); spell.setActivatingPlayer(payer);
+        assertTrue(spell.isSpell()); assertFalse(spell.isManaAbility());
+        game.getAction().checkStaticAbilities(false); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();
+        for (int i=0; i<depth; i++) {GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,payer);copier.release();payer=game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("ritual-0")).findFirst().orElseThrow();}
+        card=payer.getCardsIn(ZoneType.Hand).stream().filter(c -> c.getName().equals("Dark Ritual")).findFirst().orElseThrow();
+        spell=card.getFirstSpellAbility();spell.setActivatingPlayer(payer);
+        if (!nativePayment) {
+            assertEquals(ComputerUtilCost.canPayCost(spell, payer, false), !countered);
+            assertTrue(card.isInZone(ZoneType.Hand)); assertTrue(game.getStack().isEmpty());
+            assertEquals(payer.getManaPool().totalMana(), 0);
+        } else {
+            Card onStack = game.getAction().moveToStack(card, spell);
+            TriggerWaiting placement = game.getTriggerHandler().holdCastPlacement(onStack);
+            spell.setHostCard(onStack);
+            assertTrue(new CostPayment(spell.getPayCosts(), spell).payComputerCosts(new AiCostDecision(payer, spell, false, true)));
+            game.getTriggerHandler().commitCastPlacement(placement);
+            game.getStack().addAndUnfreeze(spell);
+            assertFalse(game.getStack().isEmpty());
+            GameSimulator.resolveStack(game, payer);
+            assertEquals(payer.getManaPool().totalMana(), countered ? 0 : 3);
+            assertTrue(spell.getHostCard().isInZone(ZoneType.Graveyard));
+        }
+    }
+
+    private void morph(boolean funded, int depth, boolean nativePayment) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i=0; i<4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("morph-"+i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Non-stack special action"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        Player payer = game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("morph-0")).findFirst().orElseThrow();
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int i=0; i<20; i++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, payer, 5);
+        addCardToZone("Glava, Five-Advents Mage", payer, ZoneType.Battlefield);
+        if (funded) addCardToZone("Island", payer, ZoneType.Battlefield);
+        Card creature = addCardToZone("Monastery Flock", payer, ZoneType.Battlefield);
+        creature.turnFaceDown(true);
+        game.getAction().checkStaticAbilities(false); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();
+        for (int i=0; i<depth; i++) {GameCopier copier=new GameCopier(game).withStack(true);game=copier.makeCopy(null,payer);copier.release();payer=game.getRegisteredPlayers().stream().filter(p -> p.getName().equals("morph-0")).findFirst().orElseThrow();}
+        creature=payer.getCardsIn(ZoneType.Battlefield).stream().filter(Card::isFaceDown).findFirst().orElseThrow();
+        SpellAbility action = creature.getState(CardStateName.Original).getSpellAbilities().stream().filter(SpellAbility::isTurnFaceUp).findFirst().orElseThrow();
+        action.setActivatingPlayer(payer);
+        assertTrue(action instanceof AbilityStatic); assertFalse(action.isManaAbility());
+        if (!nativePayment) {
+            assertEquals(ComputerUtilCost.canPayCost(action, payer, false), funded);
+            assertTrue(creature.isFaceDown()); assertTrue(game.getStack().isEmpty());
+            assertEquals(payer.getManaPool().totalMana(), 0);
+        } else {
+            boolean paid = new CostPayment(action.getPayCosts(), action).payComputerCosts(new AiCostDecision(payer, action, false, true));
+            assertEquals(paid, funded);
+            if (paid) game.getStack().addAndUnfreeze(action);
+            assertEquals(creature.isFaceDown(), !funded); assertTrue(game.getStack().isEmpty());
+        }
+    }
+    @Test public void untappedManaDepth0Preview() { check(false, 0, false); }
+    @Test public void untappedManaDepth0Native() { check(false, 0, true); }
+    @Test public void untappedManaDepth1Preview() { check(false, 1, false); }
+    @Test public void untappedManaDepth1Native() { check(false, 1, true); }
+    @Test public void untappedManaDepth2Preview() { check(false, 2, false); }
+    @Test public void untappedManaDepth2Native() { check(false, 2, true); }
+    @Test public void tappedManaDepth0Preview() { check(true, 0, false); }
+    @Test public void tappedManaDepth0Native() { check(true, 0, true); }
+    @Test public void tappedManaDepth1Preview() { check(true, 1, false); }
+    @Test public void tappedManaDepth1Native() { check(true, 1, true); }
+    @Test public void tappedManaDepth2Preview() { check(true, 2, false); }
+    @Test public void tappedManaDepth2Native() { check(true, 2, true); }
+    @Test public void counteredManaSpellDepth0Preview() { ritual(true, 0, false); }
+    @Test public void counteredManaSpellDepth0Native() { ritual(true, 0, true); }
+    @Test public void counteredManaSpellDepth1Preview() { ritual(true, 1, false); }
+    @Test public void counteredManaSpellDepth1Native() { ritual(true, 1, true); }
+    @Test public void counteredManaSpellDepth2Preview() { ritual(true, 2, false); }
+    @Test public void counteredManaSpellDepth2Native() { ritual(true, 2, true); }
+    @Test public void allowedManaSpellDepth0Preview() { ritual(false, 0, false); }
+    @Test public void allowedManaSpellDepth0Native() { ritual(false, 0, true); }
+    @Test public void allowedManaSpellDepth1Preview() { ritual(false, 1, false); }
+    @Test public void allowedManaSpellDepth1Native() { ritual(false, 1, true); }
+    @Test public void allowedManaSpellDepth2Preview() { ritual(false, 2, false); }
+    @Test public void allowedManaSpellDepth2Native() { ritual(false, 2, true); }
+    @Test public void fundedMorphDepth0Preview() { morph(true, 0, false); }
+    @Test public void fundedMorphDepth0Native() { morph(true, 0, true); }
+    @Test public void fundedMorphDepth1Preview() { morph(true, 1, false); }
+    @Test public void fundedMorphDepth1Native() { morph(true, 1, true); }
+    @Test public void fundedMorphDepth2Preview() { morph(true, 2, false); }
+    @Test public void fundedMorphDepth2Native() { morph(true, 2, true); }
+    @Test public void unfundedMorphDepth0Preview() { morph(false, 0, false); }
+    @Test public void unfundedMorphDepth0Native() { morph(false, 0, true); }
+    @Test public void unfundedMorphDepth1Preview() { morph(false, 1, false); }
+    @Test public void unfundedMorphDepth1Native() { morph(false, 1, true); }
+    @Test public void unfundedMorphDepth2Preview() { morph(false, 2, false); }
+    @Test public void unfundedMorphDepth2Native() { morph(false, 2, true); }
+}

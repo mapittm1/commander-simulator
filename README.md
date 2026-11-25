@@ -66,6 +66,28 @@ diagnostics require further work. Complete card/rules/AI support remains unprove
 Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
 remain included.
 
+The fresh cast-event build passes all 3,899 native cases and its source/binary
+parity audit. An additional independent packaged probe then exposed a real
+regression: a basic mana ability was rejected under an active cast trigger
+(three of four controls passed). That candidate remains uninstalled.
+
+The generic admission correction distinguishes actions that resolve without a
+stack entry from spells and abilities that use the stack. It excludes native
+mana abilities, land actions and special actions represented by AbilityStatic.
+Mana-producing spells still receive normal cast-trigger forecasting. Thirty-six
+new controls cover untapped/tapped Forest, Dark Ritual under matching/mismatched
+Chalice of the Void, and funded/unfunded Monastery Flock face-up actions, using
+native execution and previews across original and twice-copied game states.
+All 850 focused and 2,735 source cases pass, retaining every earlier case. Card
+scripts and AI profiles are unchanged. The updated recipe targets 3,935 native
+and 2,778 independent packaged cases; a fresh build and runtime gates remain
+pending. The selected runtime is unchanged. These tests do not prove complete
+card or rules correctness.
+
+See the [generic admission patch](engine/patches/commander-nonstack-admission.patch),
+[58 activation-window/admission controls](engine/tests/CommanderCastWindowTest.java)
+and [preserved failures and validation evidence](engine/nonstack_admission_evidence.json).
+
 The registered cast-event correction passes 814 focused and 2,699 source cases.
 The first fresh build passed 3,872/3,877 native cases; that failed build remains
 preserved. Its four optional-X failures and cleanup-priority failure were
@@ -86,8 +108,8 @@ priority cases from the full build now pass, along with every prior focused and
 source case. The correction changes ComputerUtilMana and GameCopier; cards and
 AI profiles are unchanged. The registered recipe now targets 3,899 native cases,
 retaining every prior case, and 2,742 independent packaged cases under unchanged
-resource limits. These expected totals still require a fresh build and runtime
-gates; the selected runtime is unchanged.
+resource limits. Those historical registration targets were met by the fresh build; the later
+admission correction above has its own pending build and runtime gates.
 
 See the [incremental correction](engine/patches/commander-cast-windows.patch),
 [22 new controls](engine/tests/CommanderCastWindowTest.java) and

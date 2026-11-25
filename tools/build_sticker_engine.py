@@ -228,6 +228,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-mana-chain.patch",
                 "engine/patches/commander-cast-events.patch",
                 "engine/patches/commander-cast-windows.patch",
+                "engine/patches/commander-nonstack-admission.patch",
                 "engine/patches/commander-trait-doctoring-ai.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",

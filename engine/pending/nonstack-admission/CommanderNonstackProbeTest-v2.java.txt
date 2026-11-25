@@ -1,0 +1,78 @@
+package forge.ai;
+import forge.deck.Deck;
+import forge.ai.simulation.GameSimulator;
+import forge.game.card.CounterEnumType;
+import forge.game.trigger.TriggerWaiting;
+import forge.game.*;
+import forge.game.card.Card;
+import forge.game.cost.CostPayment;
+import forge.game.phase.PhaseType;
+import forge.game.player.*;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.*;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+public class CommanderNonstackProbeTest extends AITest {
+    private void check(boolean tapped, boolean nativePayment) {
+        List<RegisteredPlayer> seats=new ArrayList<>();
+        for(int i=0;i<4;i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("mana-"+i,null)));
+        GameRules rules=new GameRules(GameType.Commander);
+        Game game=new Game(seats,rules,new Match(rules,seats,"Nonstack admission probe"));
+        game.setNoGUIUser();game.setAge(GameStage.Play);
+        Player payer=game.getPlayers().get(0);
+        for(Player player:game.getPlayers()) {player.setLife(100,null);for(int i=0;i<20;i++) addCardToZone("Forest",player,ZoneType.Library);}
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1,payer,5);
+        addCardToZone("Glava, Five-Advents Mage",payer,ZoneType.Battlefield);
+        Card land=addCardToZone("Forest",payer,ZoneType.Battlefield);land.setTapped(tapped);
+        game.getAction().checkStaticAbilities(false);game.getTriggerHandler().resetActiveTriggers();game.copyLastState();
+        SpellAbility mana=land.getManaAbilities().get(0);mana.setActivatingPlayer(payer);assertTrue(mana.isManaAbility());
+        if(!nativePayment) {assertEquals(ComputerUtilCost.canPayCost(mana,payer,false),!tapped);assertEquals(land.isTapped(),tapped);assertEquals(payer.getManaPool().totalMana(),0);}
+        else {boolean paid=new CostPayment(mana.getPayCosts(),mana).payComputerCosts(new AiCostDecision(payer,mana,false,true));assertEquals(paid,!tapped);if(paid) game.getStack().addAndUnfreeze(mana);assertTrue(game.getStack().isEmpty());assertEquals(payer.getManaPool().totalMana(),tapped?0:1);}
+    }
+    @Test public void untappedPreview(){check(false,false);}
+    @Test public void tappedPreview(){check(true,false);}
+    @Test public void untappedNative(){check(false,true);}
+    @Test public void tappedNative(){check(true,true);}
+
+    private void ritual(boolean countered, boolean nativePayment) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i=0; i<4; i++) seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("ritual-"+i, null)));
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Mana spell stack control"));
+        game.setNoGUIUser(); game.setAge(GameStage.Play);
+        Player payer = game.getPlayers().get(0);
+        for (Player player : game.getPlayers()) {
+            player.setLife(100, null);
+            for (int i=0; i<20; i++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, payer, 5);
+        addCardToZone("Swamp", payer, ZoneType.Battlefield);
+        Card chalice = addCardToZone("Chalice of the Void", game.getPlayers().get(1), ZoneType.Battlefield);
+        chalice.setCounters(CounterEnumType.CHARGE, countered ? 1 : 2);
+        Card card = addCardToZone("Dark Ritual", payer, ZoneType.Hand);
+        SpellAbility spell = card.getFirstSpellAbility(); spell.setActivatingPlayer(payer);
+        assertTrue(spell.isSpell()); assertFalse(spell.isManaAbility());
+        game.getAction().checkStaticAbilities(false); game.getTriggerHandler().resetActiveTriggers(); game.copyLastState();
+        if (!nativePayment) {
+            assertEquals(ComputerUtilCost.canPayCost(spell, payer, false), !countered);
+            assertTrue(card.isInZone(ZoneType.Hand)); assertTrue(game.getStack().isEmpty());
+            assertEquals(payer.getManaPool().totalMana(), 0);
+        } else {
+            Card onStack = game.getAction().moveToStack(card, spell);
+            TriggerWaiting placement = game.getTriggerHandler().holdCastPlacement(onStack);
+            spell.setHostCard(onStack);
+            assertTrue(new CostPayment(spell.getPayCosts(), spell).payComputerCosts(new AiCostDecision(payer, spell, false, true)));
+            game.getTriggerHandler().commitCastPlacement(placement);
+            game.getStack().addAndUnfreeze(spell);
+            assertFalse(game.getStack().isEmpty());
+            GameSimulator.resolveStack(game, payer);
+            assertEquals(payer.getManaPool().totalMana(), countered ? 0 : 3);
+            assertTrue(spell.getHostCard().isInZone(ZoneType.Graveyard));
+        }
+    }
+    @Test public void counteredManaSpellPreview() { ritual(true, false); }
+    @Test public void allowedManaSpellPreview() { ritual(false, false); }
+    @Test public void counteredManaSpellNative() { ritual(true, true); }
+    @Test public void allowedManaSpellNative() { ritual(false, true); }
+}

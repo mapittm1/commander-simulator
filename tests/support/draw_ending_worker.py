@@ -427,7 +427,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 2742-case packaged family."""
+    """Execute the fixed 2778-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

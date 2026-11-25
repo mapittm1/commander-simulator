@@ -1,0 +1,20 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -39,6 +39,7 @@
+ import forge.game.replacement.ReplacementType;
+ import forge.game.spellability.AbilityManaPart;
+ import forge.game.spellability.AbilitySub;
++import forge.game.spellability.AbilityStatic;
+ import forge.game.spellability.SpellAbility;
+ import forge.game.spellability.SpellAbilityStackInstance;
+ import forge.game.staticability.StaticAbilityAdditionalActivations;
+@@ -177,6 +178,9 @@
+ 
+     /** Whether native cast/copy/target events may need the full pre-goal forecast. */
+     public static boolean requiresStackForecast(SpellAbility ability) {
++        // These native actions resolve without a stack entry to observe.
++        // Mana-producing spells remain stack actions: isManaAbility() excludes spells.
++        if (ability.isManaAbility() || ability.isLandAbility() || ability instanceof AbilityStatic) return false;
+         TriggerHandler triggers = ability.getHostCard().getGame().getTriggerHandler();
+         if (!ability.isCopied() && triggers.hasActiveTrigger(TriggerType.SpellAbilityCast)) return true;
+         if (ability.isCopied() && triggers.hasActiveTrigger(TriggerType.SpellAbilityCopy)) return true;

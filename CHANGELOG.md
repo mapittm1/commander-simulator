@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the 3,899-case fresh build and audit, plus the independent packaged
+  probe that found a mana-ability admission regression (3/4 pass). Keep that
+  runtime uninstalled. Add a generic non-stack action guard while preserving
+  cast-trigger checks for mana-producing spells. Add 36 native/preview controls
+  across copy depths 0/1/2; all 850 focused and 2,735 source cases pass with every
+  earlier case retained. Pin the incremental patch and expanded fixture; target
+  3,935 native and 2,778 packaged cases. Preserve the failed fixture compilation
+  and corrected run. Fresh build/runtime gates remain pending; selected runtime,
+  card scripts and AI profiles are unchanged. Update README and hashed evidence.
+
 - Preserve the first registered event build's 3,872/3,877 result and its five
   regressions. Track native stack-entry IDs through activation copying and
   preserve continuation timing with guarded cost-only snapshots. Default copies
