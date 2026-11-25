@@ -1,0 +1,30 @@
+from pathlib import Path
+import sys,json,os,importlib
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+from tests.support import packaged_rules
+BOUNDED='--bounded' in sys.argv
+RUN=WORK/('runtime-limits-bounded-v1' if BOUNDED else 'runtime-limits-default-v1')
+SETTINGS=ROOT/'data/engine-builds/500dd367a1874bf48b7d26f9cb736fa7/engine-config.json'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ m=json.loads((RUN/'rules-inputs.json').read_bytes());assert all(file_hash(Path(n))==h for n,h in m['inputs'].items());assert m['classes']=={p.relative_to(RUN/'rules-classes').as_posix():file_hash(p) for p in (RUN/'rules-classes').rglob('*.class')}
+if '--worker' in sys.argv:
+ verify();settings=read_settings(SETTINGS);engine=settings.verify();recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+ java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m',*(['-XX:ActiveProcessorCount=2'] if BOUNDED else []),classpath=[str(settings.home/engine['jar_name']),str(RUN/'rules-classes'),str(dependency)],convertStrings=True)
+ assert packaged_rules.class_origin(java,'forge.gamesimulationtests.util.CommanderRuntimeLimitsTest').samefile(RUN/'rules-classes')
+ actual_processors=int(java.JClass('java.lang.Runtime').getRuntime().availableProcessors());heap=int(java.JClass('java.lang.Runtime').getRuntime().maxMemory())
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass('forge.gamesimulationtests.util.CommanderRuntimeLimitsTest').class_]));runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+ counts,methods=packaged_rules.test_results(listener);verify();save(RUN/'outcome.json',{'actual_processors':actual_processors,'max_java_heap_bytes':heap,'counts':counts,'methods':methods,'bounded':BOUNDED,'configuration_failures':len(listener.getConfigurationFailures()),'failures':[str(v.getThrowable()) for v in listener.getFailedTests()]})
+ assert actual_processors==(2 if BOUNDED else 32)
+ assert counts==dict(total=1,passed=1 if BOUNDED else 0,failed=0 if BOUNDED else 1,skipped=0)
+ assert not listener.getConfigurationFailures();java.shutdownJVM()
+else:
+ assert sys.argv[1:] in ([],['--bounded']);RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ recipe=json.loads((ROOT/'engine/sticker_recipe.json').read_bytes());dependency=ROOT/recipe['packaged_testng']['path'];os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe';settings=read_settings(SETTINGS)
+ packaged_rules.compile_rules(settings,RUN,[WORK/'runtime-limits-fixtures-v1/CommanderRuntimeLimitsTest.java'],dependency)
+ result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker',*(['--bounded'] if BOUNDED else [])],ROOT,RUN/'native.log',ProcessLimits(30,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',result);verify();assert result['status']=='finished' and result['returncode']==0,result
+ assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');print(json.dumps(json.loads((RUN/'outcome.json').read_bytes())),flush=True)

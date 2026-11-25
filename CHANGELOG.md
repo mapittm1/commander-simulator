@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct the Maven launcher to explicitly use two JVM processors. Inspection of
+  the fresh 4,214-case functional build showed 32 active processors, so prior
+  Maven source/native passes do not prove the advertised two-processor scope.
+  Preserve the functional pass and parameter-aware parity audit, mark that
+  build ineligible for bounded validation, and retain raw historical evidence.
+  Add a native resource assertion: it fails at the default 32 and passes at 2
+  with the same 2 GiB maximum Java heap. Register 4,215 native / 3,058 packaged
+  targets. Bounded source/build revalidation and the unresolved resolution gate
+  remain required; the selected runtime is unchanged.
+
 - Fix writable inner maps escaping read-only snapshot row/column views; 48
   mutation cases fail before correction and all 56 controls pass afterward.
   Cache immutable table cell counts and preserve serialization bytes. Add

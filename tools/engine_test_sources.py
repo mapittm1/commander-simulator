@@ -260,4 +260,5 @@ REGRESSION_SOURCES = {
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",
     "CommanderSnapshotViewTest.java": "commander_snapshot_view_test_sha256",
     "CommanderSagaTypeTest.java": "commander_saga_type_test_sha256",
+    "CommanderRuntimeLimitsTest.java": "commander_runtime_limits_test_sha256",
 }

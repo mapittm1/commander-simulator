@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+Resource-validation correction: the fresh 4,214-case build passes functional
+checks and the parameter-aware source/binary audit, but inspection shows that its
+Maven JVM used 32 processors. Earlier Maven source/native passes do not establish
+two-processor validation; the two-processor label in the archived source scope
+was inaccurate. Packaged workers already explicitly use two processors. The build
+launcher now does too, with a native check of actual processors and maximum Java
+heap. That isolated check fails at 32 and passes at 2 with the same 2 GiB heap.
+The next bounded targets are 3,015 source, 4,215 native and 3,058 packaged cases;
+these full gates are pending. The selected runtime is unchanged. See
+[resource correction evidence](engine/jvm_build_limits_evidence.json).
+
 A new source-validated correction makes nested row/column snapshot maps read-only.
 Previously, inner-map writes could change shared table contents without updating
 the table version. The 56-case suite goes from 8 passing / 48 failing to 56 passing.

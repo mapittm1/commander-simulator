@@ -109,6 +109,7 @@ SOURCES = {
     "CommanderPreGoalOutcomeTest": "commander_pre_goal_outcome_test_sha256",
     "CommanderCastWindowTest": "commander_cast_window_test_sha256",
     "CommanderSnapshotViewTest": "commander_snapshot_view_test_sha256",
+    "CommanderRuntimeLimitsTest": "commander_runtime_limits_test_sha256",
     "CommanderSagaTypeTest": "commander_saga_type_test_sha256",
     "CommanderReplacementPresenceTest": "commander_replacement_presence_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
@@ -452,7 +453,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3057-case packaged family."""
+    """Execute the fixed 3058-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

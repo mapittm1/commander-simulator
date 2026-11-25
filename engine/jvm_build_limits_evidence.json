@@ -1,0 +1,129 @@
+{
+  "scope": "Correct an actual Maven JVM processor-setting mismatch. Native4214 functional/source/binary checks passed at observed32processors; that build is not approved as two-processor validation. Corrected bounded-source/build gates remain pending.",
+  "native_functional_build": {
+    "build_id": "bf5da48806a24b8f8ff8c8862f7070a7",
+    "counts": {
+      "total": 4214,
+      "passed": 4214,
+      "failed": 0,
+      "skipped": 0
+    },
+    "elapsed_seconds": 398.937,
+    "source_parity": 2168,
+    "families": 13,
+    "changed_classes": 44,
+    "added_classes": [
+      "forge/ai/ComputerUtilMana$FilterActivationResult.class"
+    ],
+    "removed_classes": [
+      "forge/ai/ComputerUtilCost$1.class"
+    ],
+    "all_prior_parameterized_cases_retained": true,
+    "observed_jvm_active_processors": 32,
+    "jvm_resource_gate_approved": false
+  },
+  "correction": "Maven launcher previously specified heap2048MiB and timeout600s, but omitted ActiveProcessorCount. Packaged workers already specified2. The launcher now explicitly sets ActiveProcessorCount=2, and a native test asserts actual processor count and maxJavaHeap. No heap/time increase.",
+  "historical_scope_correction": "Earlier source/native Maven runs without the explicit processor flag do not prove two-processor execution. In particular, the 2CPU claim in raw source3014-v1 evidence is unsupported. Raw results remain preserved; pass counts remain functional evidence. Independent packaged workers and focused JPype tests used explicit2processors and are not reclassified.",
+  "default_probe": {
+    "actual_processors": 32,
+    "max_java_heap_bytes": 2147483648,
+    "counts": {
+      "total": 1,
+      "passed": 0,
+      "failed": 1,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.gamesimulationtests.util.CommanderRuntimeLimitsTest.nativeJvmUsesConfiguredProcessorsAndHeap",
+        "status": "FAIL"
+      }
+    ],
+    "bounded": false,
+    "configuration_failures": 0,
+    "failures": [
+      "java.lang.AssertionError: Native tests must use the configured JVM processor count expected [2] but found [32]"
+    ]
+  },
+  "bounded_probe": {
+    "actual_processors": 2,
+    "max_java_heap_bytes": 2147483648,
+    "counts": {
+      "total": 1,
+      "passed": 1,
+      "failed": 0,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.gamesimulationtests.util.CommanderRuntimeLimitsTest.nativeJvmUsesConfiguredProcessorsAndHeap",
+        "status": "PASS"
+      }
+    ],
+    "bounded": true,
+    "configuration_failures": 0,
+    "failures": []
+  },
+  "registered_targets": {
+    "native": 4215,
+    "packaged": 3058,
+    "cast_events": 908,
+    "resolution_unchanged": 1271,
+    "production_origins": 175
+  },
+  "remaining": [
+    "Revalidate3015source cases with actual2processors/2048MiBJavaheap/600s",
+    "Fresh4215native build and parameter-aware parity audit with actual2processors",
+    "Normal packaged3058, including original1271/90s gate, then broader/full/catalog/health/activation"
+  ],
+  "runtime": "Selected3295runtime unchanged. Native4214build remains uninstalled and functional-only. Original packaged resolution gate remains failed; full card/rules coverage incomplete.",
+  "artifacts": {
+    "engine/pending/jvm-build-limits/native4214-functional/build-selection.json": "ea1055d8595576cb5d8ccbec9f5346b2281bb5b088b9b42f1c54c9fe87cf1fe5",
+    "engine/pending/jvm-build-limits/native4214-functional/candidate-selection.json": "852a0e7ca1614408c9f53340c5f4d77ccfbb0c1fa0bc28a1d4df9e969febe47b",
+    "engine/pending/jvm-build-limits/native4214-functional/build-audit.json": "0a1068d81212d7d5517b85937eda514560c48a28ca03e283cc512b45aac52cc3",
+    "engine/pending/jvm-build-limits/native4214-functional/build-output.log.txt": "08d930a1036547554b57379b60ae45672c49daa72df809de8ec101481ab3683d",
+    "engine/pending/jvm-build-limits/native4214-functional/source-ci.json": "dd292c498c14f8bd1765a132ad6fcc982abb4905393d29d3c10ac4940651c28c",
+    "engine/pending/jvm-build-limits/native4214-functional/source-epoch.json": "0230408bef7ff7e54acd880739304840d8891cbc0b7eca667e0d80fe02692c3b",
+    "engine/pending/jvm-build-limits/native4214-functional/source-frozen-inputs.json": "d5f14665563f3486c9cf46388a9ff79ac2914b22d55065cfbc5837fbfaed77ce",
+    "engine/pending/jvm-build-limits/native4214-functional/build-driver-inputs.json": "e868a4780ad8a8b41175e49aefb8d262f8e6af71e3c087da438a9517c4e56d29",
+    "engine/pending/jvm-build-limits/native4214-functional/run_build_v1.py.txt": "3ce313712b53675c978f3f2704520b1d1750194797978e249626374ef44b2ba1",
+    "engine/pending/jvm-build-limits/native4214-functional/audit_build_v1.py.txt": "484988f1530997d7cbb1abe7556af3ddda244e3fbe924c47d445bfb033c882a2",
+    "engine/pending/jvm-build-limits/native4214-functional/build-recipe.json": "0dd2d84792d66aeca9db7642d430b41f9d26fad9d30fab3df190ce7beabd05e3",
+    "engine/pending/jvm-build-limits/native4214-functional/engine-lock.json": "8c8f5ffcec617c7b2b7a2af73f7e87ff68624f521816dd2bce560eef0bd4e1eb",
+    "engine/pending/jvm-build-limits/native4214-functional/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/jvm-build-limits/native4214-functional/maven-build.log.txt": "d648554a954b048e687b5dcf38974f5f106af1cd452dfc35b1ae0a865d644d6c",
+    "engine/pending/jvm-build-limits/native4214-functional/testng-results.xml": "c351e877d023832f66eb174520276a0f9026c7fcee7d14393188f52fcb623645",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/driver.py.txt": "fc48877f05a1dd06bf9eee0d3b7634f74c71da133db7080fffd870921d7f8413",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/native.log.txt": "79674aa056efab6e8e27c596ae322acde25513926d169b34e3270422c1c42042",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/outcome.json": "d5a8b1eb4b7bb61ccb77785cadddd1cef7ad561f7d82678d4adc2bee21d1e73a",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/process.json": "109ecce969a828c1e9f2ff730172880be689eb5f01cef2607189c3e23a219827",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/rules-inputs.json": "f28406feafb140338fb80abd7116f0c7472ea859b21cf714d8e7a77089fe6aad",
+    "engine/pending/jvm-build-limits/runtime-limits-default-v1/testng-results.xml": "a228547869797159cd89d1087a1ccbeb7f624e33b5653a5715dfef8fabd998cf",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/driver.py.txt": "fc48877f05a1dd06bf9eee0d3b7634f74c71da133db7080fffd870921d7f8413",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/native.log.txt": "cb21048bfa86d97b6e20265a17b1818aee49eb9f74b616be33a2785d24ce7994",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/outcome.json": "77d576a33c5687c91fefaa0b5d933044272ebffe7ef032ac6c56bbf3dbe89215",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/process.json": "f14f32d4bea0ac0d3dd3faf4a13cd50da5e362a29311c4a7e4240603ff743cfd",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/rules-compiler.log.txt": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/rules-inputs.json": "f28406feafb140338fb80abd7116f0c7472ea859b21cf714d8e7a77089fe6aad",
+    "engine/pending/jvm-build-limits/runtime-limits-bounded-v1/testng-results.xml": "de8f0127172a5f05952d4df81f9a648a7dc006c89f0c9af55d5a6f10ce3f7ec0",
+    "engine/pending/jvm-build-limits/run_runtime_limits_v1.py.txt": "fc48877f05a1dd06bf9eee0d3b7634f74c71da133db7080fffd870921d7f8413",
+    "engine/pending/jvm-build-limits/CommanderRuntimeLimitsTest.java": "8b70815007289d6785f86de76576af0bacbb3045ba6d28eaa1a1a8b3dbb1c706",
+    "engine/pending/jvm-build-limits/processor-observation.json": "a3914cf8cdd4f720ce47605d370af6336ae64612182d91020e25bd2ce4c8356c",
+    "tools/build_sticker_engine.py": "dd897f7e42bc171891b7de6f083e3c783b1128c13d7e20a8430f1a7b99511bae",
+    "tools/engine_test_sources.py": "2124cf77234e06481e7468d7318ced45ec7178dfc411031bd5cb7a9f079ece31",
+    "engine/sticker_recipe.json": "ba0fbae26d798b556c2a14eea42b4d192a6e184023d3da8e463f844c05661426",
+    "engine/tests/CommanderRuntimeLimitsTest.java": "8b70815007289d6785f86de76576af0bacbb3045ba6d28eaa1a1a8b3dbb1c706",
+    "tests/support/draw_ending_worker.py": "64ba5da2aa4e9bff18b0f7cfaaddffe37a3368483bfdf5df010df1d71fd41612",
+    "tests/support/draw_ending_partitions.py": "967c78137139b85d128bfd89dfeefff837e9146c4e56528b8cf628b0f14a524f",
+    "tests/unit/test_draw_ending_partitions.py": "4f428560d156841fd3aa800d7d5fefe9090f6c927c851dae99f0512d3c55395a",
+    "tests/integration/test_draw_endings_integration.py": "dbdce21fab8b90e6d3b5829951efb4e8b36a3e3d826f086257e3409d49cd15bd",
+    "engine/pending/jvm-build-limits/python-quality.log.txt": "eabce60206280cfa600f33fa48661c0a848d5eb276c0ba0b78baff1a8c67d482"
+  },
+  "python_quality": {
+    "passed": 450,
+    "skipped_opt_in_integration": 45,
+    "subtests_passed": 523,
+    "format_lint_security": "passed"
+  }
+}
