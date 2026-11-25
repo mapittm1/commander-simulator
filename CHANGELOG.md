@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve an unpromoted native snapshot-construction experiment: eligible
+  runtime types start with original-state properties before the existing mapped
+  trait graph installation. All 685 retained contracts and 194 untap cases pass,
+  including printing/random-state comparisons, but the unchanged 1,271-case /
+  90-second resolution workload still times out. Add bounded CPU/allocation
+  diagnostics with explicit limits; partial counts do not prove completion or a
+  speedup. Production patches, selected runtime and remaining full-rules gates
+  remain unchanged.
+
 - Validate the corrected sealed 4,596-case native build and normal packaged
   1,256 cast / 273 combat groups with 179 production origins. Retain every prior
   native case/parameter, verify 2,168 production sources, 162 test files and 316

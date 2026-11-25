@@ -1,0 +1,20 @@
+{
+  "status": "Investigation only; no source changes or correctness/performance claim.",
+  "current_baseline": "Sealed74767dfdf8394908a4e2c054540ce9f4:3396 source/4596 native and packaged1256/273 passed; original1271/90 still unmet.",
+  "evidence": "GameCopier.createCardCopy reparses paper cards before a later snapshot trait graph installation. Source TODO identifies this as a major copier cost; verify with execution evidence.",
+  "existing_helpers": [
+    "CardState.copySnapshotPropertiesFrom",
+    "CardState.copySnapshotTraitsFrom",
+    "SpellAbilitySnapshot reference mapping"
+  ],
+  "hypothesis": "For supported exact native card/state classes in the full snapshot path, create a skeleton with all original state properties, then install the mapped actual graph after cardMap is complete. Avoid rebuilding traits that are discarded.",
+  "required_review": [
+    "Read complete addCard/update-state/trait mapping order before changing creation.",
+    "Preserve tokens, detached effects, hidden information, unknown subclasses and ordinary non-snapshot copy effects; retain original path when uncertain.",
+    "Initialize every source state and essential base properties before class/zone/world operations. Avoid copying layered live properties as intrinsic characteristics.",
+    "Preserve counters in all zones, timestamps, commander designations, multiface/copy effects, modes/targets/costs and actual remapped trait identities.",
+    "Retain scoped RNG, deadlines, all existing named cases and full1271/90 workload. No reduced forecasts or budget changes.",
+    "Validate meaningful baseline/prototype differences and all relevant source/native/packaged cases; do not infer all-card support from construction/script presence."
+  ],
+  "prior_experiment": "Owned edition lookup:685 baseline/prototype +194 changed cases passed;768 live index entries observed, but rawv57 timed out90.016s. Remains unpromoted."
+}

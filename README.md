@@ -26,6 +26,15 @@ difference.
 
 ## Card coverage
 
+An unpromoted snapshot-construction experiment reuses source state properties
+before the existing mapped trait graph installation, instead of rebuilding
+printed traits for eligible exact native types. It passes the retained **685**
+contracts (including 648 printing comparisons) and **194 untap** cases. The original
+**1,271-case / 90-second** resolution workload still times out (90.016s). A bounded
+CPU/allocation profile is diagnostic only; partial counts and allocation weights
+do not establish completion, speedup or retained memory. Production patches and
+the selected runtime are unchanged. See [snapshot experiment evidence](engine/snapshot_skeleton_evidence.json).
+
 The normal workflow now registers 33 additional attack controls covering tapped,
 summoning-sick, defender and goaded creatures, haste, mandatory attacks, legal
 groups and defender-specific protection at copy depths 0/1/2. Baseline and

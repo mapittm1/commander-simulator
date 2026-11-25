@@ -1,0 +1,54 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -27,6 +27,7 @@
+ import forge.game.zone.PlayerZoneBattlefield;
+ import forge.game.zone.ZoneType;
+ import forge.item.PaperCard;
++import forge.item.IPaperCard;
+ 
+ import java.util.ArrayList;
+ import java.util.HashMap;
+@@ -561,7 +562,12 @@
+                 newCard = new Card(c.getId(), hidden_info_card, newGame);
+                 newCard.setOwner(newOwner);
+             } else {
+-                newCard = CardFactory.getCard(c.getPaperCard(), newOwner, c.getId(), newGame);
++                final IPaperCard paper = c.getPaperCard();
++                if (canCreateSnapshotSkeleton(c, paper)) {
++                    newCard = createSnapshotSkeleton(newGame, newOwner, c, paper);
++                } else {
++                    newCard = CardFactory.getCard(paper, newOwner, c.getId(), newGame);
++                }
+             }
+             newCard.setCommander(c.isCommander());
+             return newCard;
+@@ -596,6 +602,29 @@
+         return newCard;
+     }
+ 
++    /** Unknown runtime types keep their normal construction callbacks. */
++    private boolean canCreateSnapshotSkeleton(final Card source, final IPaperCard paper) {
++        if (source.getClass() != Card.class || paper == null || paper.getClass() != PaperCard.class
++                || paper.getRules().getClass() != CardRules.class) return false;
++        for (final CardStateName name : source.getStates()) {
++            if (source.getOriginalState(name).getClass() != CardState.class) return false;
++        }
++        return true;
++    }
++
++    /** Traits are installed by copyAbilityState after every live object has a mapping. */
++    private Card createSnapshotSkeleton(final Game game, final Player owner,
++            final Card source, final IPaperCard paper) {
++        final Card target = new Card(source.getId(), paper, game);
++        target.setOwner(owner);
++        target.setGamePieceType(source.getGamePieceType());
++        for (final CardStateName name : source.getStates()) {
++            if (!target.getStates().contains(name)) target.addAlternateState(name, false);
++            target.getOriginalState(name).copySnapshotPropertiesFrom(source.getOriginalState(name));
++        }
++        return target;
++    }
++
+     private void addCard(Game newGame, ZoneType zone, Card c, Player aiPlayer) {
+         final Player owner = playerMap.get(c.getOwner());
+         final Card newCard = createCardCopy(newGame, owner, c, aiPlayer);
