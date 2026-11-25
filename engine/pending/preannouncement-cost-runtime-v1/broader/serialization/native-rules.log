@@ -1,0 +1,329 @@
+[INFO] Scanning for projects...
+[WARNING] Using credentials of server 'cardforge-repo' for repository file:///C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\target/tmp, although no repository or mirror with this id is declared in settings or on the command line and the server declares no <repositoryOrigins>. Declare its origin in <repositoryOrigins> of that server in settings to bind these credentials explicitly, or set maven.repository.credentialScope=strict to refuse such credential use.
+[INFO] Loaded 24627 auto-discovered prefixes for remote repository central (prefixes-central.txt)
+[INFO] Loaded 64 auto-discovered prefixes for remote repository apache.snapshots (prefixes-apache.snapshots.txt)
+[WARNING] 
+[WARNING] Some problems were encountered while building the effective model for forge:forge-gui-android:jar:2.0.16
+[WARNING] 'dependencies.dependency.scope' for de.cketti.fileprovider:public-fileprovider:jar declares usage of deprecated 'system' scope  @ line 113, column 20
+[WARNING] 'dependencies.dependency.scope' for com.getkeepsafe.relinker:relinker:jar declares usage of deprecated 'system' scope  @ line 120, column 20
+[WARNING] 'dependencies.dependency.scope' for com.badlogicgames.gdx:gdx-backend-android:jar declares usage of deprecated 'system' scope  @ line 152, column 20
+[WARNING] 'dependencies.dependency.scope' for io.sentry:sentry-native-ndk:jar declares usage of deprecated 'system' scope  @ line 159, column 20
+[WARNING] 'dependencies.dependency.scope' for com.badlogicgames.gdx-controllers:gdx-controllers-android:jar declares usage of deprecated 'system' scope  @ line 239, column 20
+[WARNING] 
+[WARNING] It is highly recommended to fix these problems because they threaten the stability of your build.
+[WARNING] 
+[WARNING] For this reason, future Maven versions might no longer support building such malformed projects.
+[WARNING] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] Forge Parent                                                       [pom]
+[INFO] Forge Core                                                         [jar]
+[INFO] Forge Game                                                         [jar]
+[INFO] Forge AI                                                           [jar]
+[INFO] Forge Gui                                                          [jar]
+[INFO] Forge                                                              [jar]
+[INFO] 
+[INFO] ----------------------------< forge:forge >-----------------------------
+[INFO] Building Forge Parent 2.0.16                                       [1/6]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge ---
+[INFO] Rule 0: org.apache.maven.enforcer.rules.version.RequireMavenVersion passed
+[INFO] Rule 1: org.apache.maven.enforcer.rules.version.RequireJavaVersion passed
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge ---
+[WARNING] Could not transfer metadata /.meta/prefixes.txt from/to jvnet-nexus-releases (https://maven.java.net/content/repositories/releases/): PKIX path validation failed: java.security.cert.CertPathValidatorException: validity check failed
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --------------------------< forge:forge-core >--------------------------
+[INFO] Building Forge Core 2.0.16                                         [2/6]
+[INFO]   from forge-core\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-core ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-core ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-core ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-core\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-core ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 156 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-core\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-core/src/main/java/forge/card/CardRules.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-core/src/main/java/forge/card/CardRules.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-core/src/main/java/forge/util/BagRandomizer.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-core/src/main/java/forge/util/BagRandomizer.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-core ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-core\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-core ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-core ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --------------------------< forge:forge-game >--------------------------
+[INFO] Building Forge Game 2.0.16                                         [3/6]
+[INFO]   from forge-game\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-game ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-game ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-game ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-game\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-game ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 829 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-game\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-game/src/main/java/forge/game/GameLog.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-game/src/main/java/forge/game/GameLog.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-game ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-game\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-game ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 5 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-game\target\test-classes
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-game ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] 
+[INFO] ---------------------------< forge:forge-ai >---------------------------
+[INFO] Building Forge AI 2.0.16                                           [4/6]
+[INFO]   from forge-ai\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-ai ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-ai ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-ai ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-ai\src\main\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-ai ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 263 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-ai\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-ai ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-ai\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-ai ---
+[INFO] No sources to compile
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-ai ---
+[INFO] No tests to run.
+[INFO] 
+[INFO] --------------------------< forge:forge-gui >---------------------------
+[INFO] Building Forge Gui 2.0.16                                          [5/6]
+[INFO]   from forge-gui\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-gui ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-gui ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-gui ---
+[INFO] Copying 3 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-gui ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 471 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/main/java/forge/gamemodes/net/client/ReplayPlayer.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/main/java/forge/gamemodes/net/client/ReplayPlayer.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/main/java/forge/gamemodes/match/input/InputSelectEntitiesFromList.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-gui ---
+[INFO] Copying 1 resource from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-gui ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 7 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui\target\test-classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/test/java/forge/gamemodes/replay/ReplayRecordingShould.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui/src/test/java/forge/gamemodes/replay/ReplayRecordingShould.java: Recompile with -Xlint:deprecation for details.
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-gui ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] 
+[INFO] ----------------------< forge:forge-gui-desktop >-----------------------
+[INFO] Building Forge 2.0.16                                              [6/6]
+[INFO]   from forge-gui-desktop\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- enforcer:3.3.0:enforce (enforce-versions) @ forge-gui-desktop ---
+[INFO] Rule 2: org.apache.maven.enforcer.rules.RequirePluginVersions passed
+[INFO] 
+[INFO] --- checkstyle:3.1.2:check (checkstyle-validation) @ forge-gui-desktop ---
+[INFO] Starting audit...
+Audit done.
+[INFO] You have 0 Checkstyle violations.
+[INFO] 
+[INFO] --- build-helper:3.6.0:released-version (released-version) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- build-helper:3.6.0:parse-version (parse-version) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- build-helper:3.6.0:timestamp-property (timestamp-property) @ forge-gui-desktop ---
+[WARNING] Using platform locale (en_US actually) to format date/time, i.e. build is platform dependent!
+[INFO] 
+[INFO] --- build-helper:3.6.0:regex-property (regex-property) @ forge-gui-desktop ---
+[INFO] 
+[INFO] --- groovy:2.1.1:execute (get-changelog-from-tag) @ forge-gui-desktop ---
+WARNING: Could not determine changelog tag: Cannot run program "git": CreateProcess error=2, The system cannot find the file specified
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ forge-gui-desktop ---
+[INFO] Copying 2 resources from filters to target\classes
+[INFO] 
+[INFO] --- compiler:3.8.1:compile (default-compile) @ forge-gui-desktop ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 410 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui-desktop\target\classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/main/java/forge/screens/match/controllers/CLog.java: Some input files use or override a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/main/java/forge/screens/match/controllers/CLog.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/main/java/forge/screens/match/CMatchUI.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/main/java/forge/screens/match/CMatchUI.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ forge-gui-desktop ---
+[INFO] skip non existing resourceDirectory C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui-desktop\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.8.1:testCompile (default-testCompile) @ forge-gui-desktop ---
+[INFO] Changes detected - recompiling the module!
+[INFO] Compiling 514 source files to C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui-desktop\target\test-classes
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/test/java/forge/gamemodes/net/WireDeserializationTest.java: C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-blocking-history-research\source\forge-gui-desktop\src\test\java\forge\gamemodes\net\WireDeserializationTest.java uses or overrides a deprecated API.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/test/java/forge/gamemodes/net/WireDeserializationTest.java: Recompile with -Xlint:deprecation for details.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/PerfPatchFollowUpTableTest.java: Some input files use unchecked or unsafe operations.
+[INFO] /C:/Users/mapit/OneDrive/Desktop/CommanderSimulator/data/development/commander-blocking-history-research/source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/util/PerfPatchFollowUpTableTest.java: Recompile with -Xlint:unchecked for details.
+[INFO] 
+[INFO] --- surefire:3.1.2:test (default-test) @ forge-gui-desktop ---
+[WARNING] useSystemClassLoader setting has no effect when not forking
+[WARNING] The parameter forkCount should likely not be 0. Forking a JVM for tests improves test accuracy. Ensure to have a <forkCount> >= 1.
+[INFO] Using auto detected provider org.apache.maven.surefire.testng.TestNGProvider
+[INFO] Running TestSuite
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+(ThreadUtil first call): Running with priority 5
+Read cards: 34466 files in 3 ms (25 parts) using thread pool
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+The card A-Alrund's Epiphany was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Baba Lysaga, Night Witch was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Divide by Zero was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Esika's Chariot was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Faceless Haven was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Fires of Invention was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Goldspan Dragon was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Hullbreaker Horror was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Kumano Faces Kakkazan was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Luminarch Aspirant was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Monster Manual was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Omnath, Locus of Creation was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-The Meathook Massacre was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Unholy Heat was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Blinding Radiance was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Goblin Bruiser was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Ogre Painbringer was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Titanic Pelagosaur was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Treetop Recluse was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Read cards: 864 files in 0 ms (8 parts) using thread pool
+Lazy card database: indexed 35730 card names from 34466 files in 7772 ms
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Read cards: 864 files in 0 ms (8 parts) using thread pool
+Read cards: 34466 files in 2 ms (25 parts) using thread pool
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+The card A-Alrund's Epiphany was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Baba Lysaga, Night Witch was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Divide by Zero was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Esika's Chariot was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Faceless Haven was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Fires of Invention was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Goldspan Dragon was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Hullbreaker Horror was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Kumano Faces Kakkazan was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Luminarch Aspirant was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Monster Manual was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Omnath, Locus of Creation was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-The Meathook Massacre was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Unholy Heat was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Blinding Radiance was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Goblin Bruiser was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Ogre Painbringer was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Titanic Pelagosaur was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Treetop Recluse was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Read cards: 864 files in 0 ms (8 parts) using thread pool
+Language 'en-US' loaded successfully.
+Read cards: 34466 files in 2 ms (25 parts) using thread pool
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+The card A-Alrund's Epiphany was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Baba Lysaga, Night Witch was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Divide by Zero was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Esika's Chariot was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Faceless Haven was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Fires of Invention was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Goldspan Dragon was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Hullbreaker Horror was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Kumano Faces Kakkazan was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Luminarch Aspirant was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Monster Manual was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Omnath, Locus of Creation was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-The Meathook Massacre was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card A-Unholy Heat was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Blinding Radiance was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Goblin Bruiser was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Ogre Painbringer was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Titanic Pelagosaur was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+The card Treetop Recluse was not assigned to any set. Adding it to UNKNOWN set... to fix see res/editions/ folder. 
+Upcoming set Marvel: Darkhold Destiny (MDD) dated in the future. All `upcoming` cards will be added to this set with unknown rarity.
+Read cards: 864 files in 0 ms (8 parts) using thread pool
+[INFO] Tests run: 320, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 66.62 s -- in TestSuite
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 320, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for Forge Parent 2.0.16:
+[INFO] 
+[INFO] Forge Parent ....................................... SUCCESS [  0.681 s]
+[INFO] Forge Core ......................................... SUCCESS [  2.917 s]
+[INFO] Forge Game ......................................... SUCCESS [  7.164 s]
+[INFO] Forge AI ........................................... SUCCESS [  3.055 s]
+[INFO] Forge Gui .......................................... SUCCESS [  5.670 s]
+[INFO] Forge .............................................. SUCCESS [01:19 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  01:39 min
+[INFO] Finished at: 2026-11-25T11:30:52-05:00
+[INFO] ------------------------------------------------------------------------

@@ -1,25 +1,28 @@
 # Card support and evidence
 
-A generic casting correction now keeps pre-target affordability checks on the
-cost-only path until required targets exist. This restores replicate choices and
-Abbot of Keral Keep follow-up plans without dropping additional-cost or known
-extra-mana checks. Completed targeting retains native cast/target-trigger forecasts.
-The unchanged upstream comparison passes **9/9** on the selected runtime,
-**4/9** on the preceding candidate, and **9/9** with the correction. Nine paid
-boundary cases for ward, Nether Void and sacrifice costs pass across copy depths
-0/1/2; all nine fail on the preceding candidate. These start from supplied board
-states, so they do not establish complete preceding legal histories.
+The generic casting-cost correction now passes **3,520 source** and **4,720
+native** cases, retaining every earlier method/parameter and adding nine paid-cast
+boundaries. All 2,168 production sources, 166 test inputs and 318 card inputs
+match reviewed evidence; only `ComputerUtilCost` production class bytes change
+from the preceding candidate.
+Pre-target probes retain additional-cost/known extra-mana checks; completed targets
+retain native cast/target-trigger forecasting. This restores replicate choices and
+Abbot follow-up plans. The boundary cases use supplied board states and copied
+games, so they do not establish complete preceding legal histories.
 
-The corrected broader suites pass **6,034 gameplay** and **320 serialization**
-cases with exact method/parameter membership and no skips; the preceding candidate
-failed five gameplay cases. The existing **1,371-case cast group** also passes.
-The regular workflow now registers the nine new boundary cases: fresh **3,520
-source / 4,720 native / 3,563 packaged** validation remains pending. The original
-**1,271-case / 90-second** resolution workload and budget are unchanged. Full-game,
-catalog, health, activation and complete card/rules coverage remain open; the
-selected runtime is unchanged. See [casting correction evidence](../engine/preannouncement_cost_evidence.json).
+The fresh broader suites pass **6,043 gameplay / 320 serialization** cases with
+exact membership and no skips. Normal packaged groups pass **1,380 cast**, **301
+information**, **273 combat**, **338 text/cost**, **65 free-casting**, **194 untap**
+and **146 Battle** cases, with native method/parameter counters and origins audited.
+The full **3,563-case** packaged gate remains incomplete: the original **1,271-case /
+90-second** resolution worker times out at **90.015s**, without a completed report.
+It was not retried unchanged for luck, and its workload/budget remain unchanged.
+The selected runtime is unchanged; full-game seeds 42/0/4096, catalog, health,
+activation and complete card/rules coverage remain required. See
+[focused correction evidence](../engine/preannouncement_cost_evidence.json) and
+[fresh runtime evidence](../engine/preannouncement_cost_runtime_evidence.json).
 
-Earlier checkpoint records follow.
+Earlier validation checkpoints follow.
 
 Current checkpoint: all **3,511 source** and **4,711 native** regression cases
 pass, including 36 live split/clone and seven table-contract additions. Every prior

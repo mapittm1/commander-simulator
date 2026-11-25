@@ -6,19 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
-- Correct generic pre-target affordability: defer native cast/target-trigger
-  forecasting until required targets exist, retaining additional costs and known
-  extra-mana budgets. Restore replicate choices and Abbot follow-up plans. Preserve
-  selected 9/9, candidate 4/9 and corrected 9/9 upstream comparisons, diagnostic
-  failures, and a corrected card/mana fixture setup error.
-- Add nine regular paid-cast controls for ward, Nether Void and sacrifice costs
-  across copy depths 0/1/2. Baseline fails all nine; corrected passes all nine and
-  the retained 1,371-case cast group. Broader suites pass 6,034 gameplay and 320
-  serialization cases with exact membership/no skips, correcting five candidate
-  regressions. Verify restoration of temporary production/test-policy changes.
-  Fresh 3,520-source / 4,720-native / 3,563-packaged validation remains pending;
-  preserve original 1,271-case / 90-second gate. Full-game, catalog, health,
-  activation and complete card/rules coverage remain open; selected runtime unchanged.
+- Correct generic pre-target cost forecasting, restoring replicate choices and
+  Abbot follow-up plans while retaining additional costs, known extra-mana budgets
+  and completed-target native trigger handling. Preserve selected 9/9, earlier
+  candidate 4/9 and corrected 9/9 upstream comparisons, diagnostic failures and a
+  corrected card/mana fixture setup error. Add nine paid ward/tax/sacrifice cases
+  across copied board states; all nine fail on baseline and pass with the fix.
+- Fresh source/native suites pass 3,520/4,720 cases with every earlier method and
+  parameter retained. Verify 2,168 production, 166 test and 318 card inputs; only
+  the casting-cost production class changes. Broader suites pass 6,043 gameplay /
+  320 serialization cases with exact membership/no skips and restored test policies.
+  Preserve a pre-Java newline-only source preflight failure and its verified repair.
+- Validate packaged groups: 1,380 cast, 301 information, 273 combat, 338 text/cost,
+  65 free-casting, 194 untap and 146 Battle cases with exact native case/parameter
+  and origin audits. The full 3,563-case attempt still fails at the original
+  1,271-case / 90-second resolution gate (90.015s); no completed report or unchanged
+  retry for luck. Preserve the workload/budget and failure receipts. Selected
+  runtime stays unchanged; full-game, catalog, health, activation and complete
+  card/rules coverage remain open. Supplied board states do not prove complete
+  preceding legal histories.
 
 - Add 43 regular native controls for live split/clone trait visibility and table
   isolation, version tokens, serialization and concurrent use. The complete

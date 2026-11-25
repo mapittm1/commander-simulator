@@ -1,0 +1,120 @@
+"""Freeze the reviewed commit and validate every retained source case plus nine boundaries."""
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from tools import build_sticker_engine as builder
+WORK = Path(__file__).resolve().parent
+SOURCE = ROOT / 'data/development/commander-blocking-history-research/source'
+PRIOR = WORK / 'source3511-v1'
+EPOCH = WORK / 'preannouncement-source-epoch-v1'
+RUN = WORK / 'source3520-v1'
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+load = lambda p: json.loads(p.read_bytes())
+def save(p, value):
+    p.write_text(json.dumps(value, indent=2)+'\n',encoding='utf-8',newline='\n')
+def cases(report):
+    tree = ET.parse(report).getroot()
+    methods = []
+    for cls in tree.findall('.//class'):
+        for item in cls.findall('test-method'):
+            assert item.get('status') == 'PASS', (cls.get('name'), item.attrib)
+            if item.get('is-config') != 'true':
+                methods.append({'method':cls.get('name')+'.'+item.get('name'),
+                    'parameters':[(v.text or '').strip() for v in item.findall('./params/param/value')],
+                    'status':item.get('status')})
+    return {n:int(tree.get(n)) for n in ('total','passed','failed','skipped')}, methods
+
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+head = subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+ci = load(EPOCH/'source-ci.json')
+assert ci['head_sha']==head and ci['conclusion']=='success' and ci['status']=='completed'
+assert not (EPOCH/'source-frozen-inputs.json').exists() and not RUN.exists()
+tracked = subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0')
+frozen = {n:sha(ROOT/n) for n in tracked if n}
+save(EPOCH/'source-frozen-inputs.json', frozen)
+save(EPOCH/'source-epoch.json', {'head':head,'tracked_files':len(frozen),'ci_id':ci['id']})
+oldproduction = load(PRIOR/'production-inputs.json')
+assert len(oldproduction)==2168 and all(sha(SOURCE/n)==h for n,h in oldproduction.items())
+patch = ROOT/'engine/patches/commander-preannouncement-cost.patch'
+directory = '--directory='+SOURCE.relative_to(ROOT).as_posix()
+subprocess.run(['git','apply','--check',directory,str(patch)],cwd=ROOT,check=True)
+subprocess.run(['git','apply',directory,str(patch)],cwd=ROOT,check=True)
+fixture = 'forge-gui-desktop/src/test/java/forge/ai/CommanderPreannouncementCostTest.java'
+assert not (SOURCE/fixture).exists()
+shutil.copyfile(ROOT/'engine/tests/CommanderPreannouncementCostTest.java',SOURCE/fixture)
+production = {p.relative_to(SOURCE).as_posix():sha(p) for p in SOURCE.glob('*/src/main/java/**/*.java')}
+assert production.keys()==oldproduction.keys()
+changed = [n for n in production if production[n]!=oldproduction[n]]
+assert changed==['forge-ai/src/main/java/forge/ai/ComputerUtilCost.java']
+assert production[changed[0]]==load(WORK/'preannouncement-broad-v1/proposed-production.json')['proposed_sha256']
+fixtures = load(PRIOR/'test-inputs.json')
+assert len(fixtures)==165 and all(sha(SOURCE/n)==h for n,h in fixtures.items())
+fixtures[fixture]=sha(SOURCE/fixture)
+cards = load(PRIOR/'card-inputs.json')
+assert all(sha(SOURCE/n)==h for n,h in cards.items())
+newcards = load(WORK/'preannouncement-boundary-fixture-v2/card-inputs.json')['scripts']
+for n,h in newcards.items():
+    key='forge-gui/res/cardsfolder/'+n
+    assert sha(SOURCE/key)==h
+    cards[key]=h
+bear='forge-gui/res/cardsfolder/g/grizzly_bears.txt'
+cards[bear]=sha(SOURCE/bear)
+selection = load(PRIOR/'selection.json')
+classes = selection['classes']+['CommanderPreannouncementCostTest']
+assert len(classes)==len(set(classes))
+RUN.mkdir()
+for kind,values in [('production',production),('test',fixtures),('card',cards)]:
+    save(RUN/(kind+'-inputs.json'), values)
+    for n,h in values.items():
+        dest=RUN/'input-snapshots'/n
+        dest.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copyfile(SOURCE/n,dest)
+        assert sha(dest)==h
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+for n in ['source-ci.json','source-epoch.json','source-frozen-inputs.json']:
+    shutil.copyfile(EPOCH/n,RUN/n)
+selectedarg = next(arg for arg in selection['command'] if arg.startswith('-Dtest='))+',CommanderPreannouncementCostTest'
+original = builder._checked
+started = time.time_ns()
+def selected(command,cwd,output,name,timeout):
+    assert timeout==600 and '-Xmx2048m' in command and '-XX:ActiveProcessorCount=2' in command
+    command=[selectedarg if arg.startswith('-Dtest=') else 'test' if arg=='package' else arg for arg in command]
+    save(RUN/'selection.json',{'classes':classes,'command':command,'timeout':timeout})
+    return original(command,cwd,output,name,timeout)
+try:
+    builder._checked=selected
+    builder._compile(SimpleNamespace(jdk=Path('C:/Program Files/Java/jdk-19')),SOURCE,
+        ROOT/'data/engine-builds/e7a999854f3d4ef9a5bd7301adb6ad50/maven',RUN)
+finally:
+    builder._checked=original
+    assert all(sha(ROOT/n)==h for n,h in frozen.items())
+    assert all(sha(SOURCE/n)==h for values in (production,fixtures,cards) for n,h in values.items())
+    assert sha(Path(__file__))==sha(RUN/'driver.py.txt')
+    report=SOURCE/'forge-gui-desktop/target/surefire-reports/testng-results.xml'
+    if report.exists() and report.stat().st_mtime_ns>=started:
+        shutil.copyfile(report,RUN/'testng-results.xml')
+        counts,methods=cases(report)
+        actual=Counter((r['method'],tuple(r['parameters'])) for r in methods)
+        prior=load(PRIOR/'evidence.json')
+        expected=Counter((r['method'],tuple((v or '').strip() for v in r['parameters'])) for r in prior['methods'])
+        new=Counter((r['method'],()) for r in load(WORK/'preannouncement-boundary9-prototype-v2/outcome.json')['methods'])
+        assert sum(expected.values())==3511 and sum(new.values())==9 and actual==expected+new
+        assert counts==dict(total=3520,passed=3520,failed=0,skipped=0)
+        evidence={'counts':counts,'methods':methods,'retained_source_cases':3511,'new_cases':9,
+            'exact_method_and_parameter_counter_matches':True,'production_sources':len(production),
+            'test_inputs':len(fixtures),'card_inputs':len(cards),'changed_production_sources':changed,
+            'inputs_unchanged_during_run':True,'report_sha256':sha(RUN/'testng-results.xml'),
+            'scope':'Complete source regression selection; native4720/package3563/original1271/90 and final activation remain required.'}
+        save(RUN/'evidence.json',evidence)
+        print(json.dumps({k:v for k,v in evidence.items() if k!='methods'}),flush=True)
+assert (RUN/'evidence.json').exists()
