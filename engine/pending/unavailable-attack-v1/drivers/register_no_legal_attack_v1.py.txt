@@ -1,0 +1,29 @@
+"""Register the proven33 attack controls without promoting experimental production code."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';e=w/'no-legal-attack-epoch-v1';sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest();frozen=json.loads((e/'source-frozen-inputs.json').read_bytes());assert all(sha(r/n)==h for n,h in frozen.items());assert not subprocess.check_output(['git','status','--porcelain'])
+for mode in ('baseline','prototype'):
+ assert json.loads((w/f'no-legal-attack661-{mode}-v1/outcome.json').read_bytes())['counts']==dict(total=661,passed=661,failed=0,skipped=0)
+assert json.loads((w/'no-legal-attack194-prototype-v1/outcome.json').read_bytes())['counts']==dict(total=194,passed=194,failed=0,skipped=0)
+assert json.loads((w/'resolution1271-no-legal-attack-v56/process.json').read_bytes())['status']=='timeout'
+backup=w/'no-legal-attack-registration-v1';backup.mkdir()
+paths=['engine/sticker_recipe.json','tools/engine_test_sources.py','tools/build_sticker_engine.py','tests/support/draw_ending_worker.py','tests/support/draw_ending_partitions.py','tests/integration/test_draw_endings_integration.py','tests/unit/test_draw_ending_partitions.py']
+for name in paths:
+ target=backup/name;target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(r/name,target)
+fixture=w/'no-legal-attack-fixture-v1/CommanderUnavailableAttackTest.java';target=r/'engine/tests/CommanderUnavailableAttackTest.java';assert not target.exists();shutil.copyfile(fixture,target)
+recipe=r/'engine/sticker_recipe.json';data=json.loads(recipe.read_bytes());data['commander_unavailable_attack_test_sha256']=sha(target);recipe.write_text(json.dumps(data,indent=2)+'\n',encoding='utf-8',newline='\n')
+def edit(name,old,new,count=1):
+ p=r/name;text=p.read_text(encoding='utf-8');assert text.count(old)==count,(name,old,text.count(old));text=text.replace(old,new);p.write_text(text,encoding='utf-8',newline='\n')
+edit('tools/engine_test_sources.py','    "CommanderEmptyAttackTest.java": "commander_empty_attack_test_sha256",','    "CommanderEmptyAttackTest.java": "commander_empty_attack_test_sha256",\n    "CommanderUnavailableAttackTest.java": "commander_unavailable_attack_test_sha256",')
+edit('tools/build_sticker_engine.py','        "CommanderEmptyAttackTest.java",','        "CommanderEmptyAttackTest.java",\n        "CommanderUnavailableAttackTest.java",')
+edit('tools/build_sticker_engine.py',',CommanderEmptyAttackTest,',',CommanderEmptyAttackTest,CommanderUnavailableAttackTest,')
+edit('tests/support/draw_ending_worker.py','    "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",','    "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",\n    "CommanderUnavailableAttackTest": "commander_unavailable_attack_test_sha256",')
+edit('tests/support/draw_ending_worker.py','    "forge.game.combat.CombatUtil",','    "forge.game.combat.CombatUtil",\n    "forge.game.combat.AttackRestriction",')
+edit('tests/support/draw_ending_worker.py','fixed 3406-case','fixed 3439-case')
+edit('tests/support/draw_ending_partitions.py','        "forge.ai.CommanderEmptyAttackTest",','        "forge.ai.CommanderEmptyAttackTest",\n        "forge.ai.CommanderUnavailableAttackTest",')
+edit('tests/support/draw_ending_partitions.py','"combat_and_snapshots": 240','"combat_and_snapshots": 273')
+edit('tests/integration/test_draw_endings_integration.py',', 3406)',', 3439)',2)
+edit('tests/integration/test_draw_endings_integration.py','len(expected_classes), 178','len(expected_classes), 179')
+edit('tests/unit/test_draw_ending_partitions.py','sum(EXPECTED_COUNTS.values()), 3406','sum(EXPECTED_COUNTS.values()), 3439')
+canonical=r/'data/development/commander-blocking-history-research/source/forge-gui-desktop/src/test/java/forge/ai/CommanderUnavailableAttackTest.java';assert not canonical.exists();shutil.copyfile(target,canonical)
+print('Registered33 controls: source3396/native4596/packaged3439, combat273,179 origins. Production patches unchanged.')

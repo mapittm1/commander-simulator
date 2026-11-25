@@ -125,6 +125,7 @@ SOURCES = {
     "CommanderUntapPresenceTest": "commander_untap_presence_test_sha256",
     "CommanderReplacementEligibilityTest": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest": "commander_empty_attack_test_sha256",
+    "CommanderUnavailableAttackTest": "commander_unavailable_attack_test_sha256",
     "PerfPatchUnitTest": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest": "commander_replacement_cache_inputs_test_sha256",
@@ -284,6 +285,7 @@ NATIVE_CLASSES = (
     "forge.game.cost.CostExert",
     "forge.game.phase.Untap",
     "forge.game.combat.CombatUtil",
+    "forge.game.combat.AttackRestriction",
     "forge.ai.ability.ChooseGenericAi",
     "forge.ai.ability.CharmAi",
     "forge.ai.simulation.ModalTextChoices",
@@ -469,7 +471,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3406-case packaged family."""
+    """Execute the fixed 3439-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()

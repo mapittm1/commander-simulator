@@ -31,6 +31,7 @@ PARTITIONS = {
     ),
     "combat_and_snapshots": (
         "forge.ai.CommanderEmptyAttackTest",
+        "forge.ai.CommanderUnavailableAttackTest",
         "forge.ai.CommanderCombatRemovalPlanningTest",
         "forge.ai.CommanderCombatRemovalBoundaryTest",
         "forge.ai.CommanderCombatReblockingTest",
@@ -215,7 +216,7 @@ PARTITIONS = {
 
 EXPECTED_COUNTS = {
     "information": 301,
-    "combat_and_snapshots": 240,
+    "combat_and_snapshots": 273,
     "text_casting_and_costs": 338,
     "resolution": 1271,
     "cast_events": 1256,

@@ -1,0 +1,130 @@
+"""Run 661 attack/trait contracts against baseline or no-legal-attack prototype."""
+from collections import Counter
+from pathlib import Path
+import re
+import importlib
+import json
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import read_settings, file_hash, jvm_library
+from commander.engine.native_runtime import _engine_profile, _environment, require_bridge
+from tests.support import packaged_rules, draw_ending_worker
+
+WORK = Path(__file__).resolve().parent
+MODE = sys.argv[1]
+assert MODE in ('baseline', 'prototype')
+assert sys.argv[2:] in ([], ['--worker'])
+RUN = WORK / ('no-legal-attack661-' + MODE + '-v1')
+ORIGINAL = ROOT / 'data/runs/dd055d84f753460cbb78c4bce32c5a73'
+PROTOTYPE = WORK / 'no-legal-attack-prototype-v1'
+EPOCH = WORK / 'no-legal-attack-epoch-v1'
+SETTINGS = ROOT / 'data/engine-builds/1bae22d83a0743fc909573302ed9e3c0/engine-config.json'
+load = lambda path: json.loads(path.read_bytes())
+FIXTURE = WORK / 'no-legal-attack-fixture-v1'
+CLASSES = ('forge.ai.CommanderKeywordTraitPresenceTest', 'forge.ai.CommanderUntapPresenceTest', 'forge.ai.CommanderReplacementEligibilityTest', 'forge.ai.CommanderKeywordMetadataFailureTest', 'forge.ai.CommanderStaticGatherTest', 'forge.ai.CommanderCardCounterZoneCopyTest', 'forge.ai.CommanderLiveTraitMutationTest', 'forge.gamesimulationtests.util.CommanderSnapshotViewTest', 'forge.gamesimulationtests.util.PerfPatchUnitTest', 'forge.gamesimulationtests.util.PerfPatchFollowUpTableTest', 'forge.card.CommanderSagaTypeTest', 'forge.ai.CommanderReplacementPresenceTest', 'forge.gamesimulationtests.util.CommanderRuntimeLimitsTest', 'forge.ai.CommanderReplacementCacheInputsTest', 'forge.ai.CommanderTraitGatherTest', 'forge.ai.CommanderCardFilterContractTest', 'forge.ai.CommanderPrintingSelectionTest', 'forge.ai.CommanderKeywordMembershipTest', 'forge.ai.CommanderEmptyAttackTest', 'forge.ai.CommanderUnavailableAttackTest')
+assert len(CLASSES) == len(set(CLASSES))
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+
+def cases(path, classes=None):
+    rows = Counter()
+    for cls in ET.parse(path).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:
+            continue
+        for method in cls.findall('test-method'):
+            if method.get('is-config') == 'true':
+                continue
+            params = tuple((v.text or '').strip() for v in method.findall('./params/param/value'))
+            rows[(cls.get('name') + '.' + method.get('name'), params)] += 1
+    return rows
+
+
+def verify():
+    metadata = load(ORIGINAL / 'rules-inputs.json')
+    assert metadata['classes'] == {p.relative_to(ORIGINAL / 'rules-classes').as_posix(): file_hash(p)
+                                   for p in (ORIGINAL / 'rules-classes').rglob('*.class')}
+    assert all(file_hash(Path(n)) == h for n, h in metadata['inputs'].items())
+    assert all(file_hash(FIXTURE / n) == h for n, h in load(FIXTURE / 'inputs.json').items())
+    inputs = load(PROTOTYPE / 'inputs.json')
+    assert all(file_hash(PROTOTYPE / n) == h for n, h in inputs.items())
+    assert all(file_hash(ROOT / n) == h for n, h in load(EPOCH / 'source-frozen-inputs.json').items())
+    return inputs
+
+
+if '--worker' in sys.argv:
+    inputs = verify()
+    settings = read_settings(SETTINGS)
+    engine = settings.verify()
+    require_bridge()
+    java = importlib.import_module('jpype')
+    recipe = load(ROOT / 'engine/sticker_recipe.json')
+    dependency = ROOT / recipe['packaged_testng']['path']
+    archive = settings.home / engine['jar_name']
+    assert file_hash(dependency) == recipe['packaged_testng']['sha256']
+    classpath = (() if MODE == 'baseline' else (PROTOTYPE / 'classes',)) + (archive, FIXTURE / 'classes', ORIGINAL / 'rules-classes', dependency)
+    java.startJVM(jvm_library(settings.java), '-Xmx2048m', '-XX:ActiveProcessorCount=2',
+                  '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',
+                  classpath=list(map(str, classpath)), convertStrings=True)
+    runtime = java.JClass('java.lang.Runtime').getRuntime()
+    assert runtime.availableProcessors() == 2 and runtime.maxMemory() <= 2147483648
+    overrides = set() if MODE == 'baseline' else {n[len('classes/'):] for n in inputs if n.startswith('classes/')}
+    for name in draw_ending_worker.NATIVE_CLASSES:
+        expected = PROTOTYPE / 'classes' if name.replace('.', '/') + '.class' in overrides else archive
+        assert packaged_rules.class_origin(java, name).samefile(expected), name
+    for name in overrides:
+        assert packaged_rules.class_origin(java, name[:-6].replace('/', '.')).samefile(PROTOTYPE / 'classes')
+    for name in (*CLASSES, 'forge.ai.AITest', 'forge.ai.CommanderPrintingSelectionExpected'):
+        expected_origin = FIXTURE / 'classes' if name == 'forge.ai.CommanderUnavailableAttackTest' else ORIGINAL / 'rules-classes'
+        assert packaged_rules.class_origin(java, name).samefile(expected_origin)
+    runner = java.JClass('org.testng.TestNG')()
+    listener = java.JClass('org.testng.TestListenerAdapter')()
+    runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(n).class_ for n in CLASSES]))
+    runner.setOutputDirectory(str(RUN / 'reports'))
+    runner.setUseDefaultListeners(True)
+    runner.run()
+    counts, methods = packaged_rules.test_results(listener)
+    expected = cases(SETTINGS.parent / 'source/forge-gui-desktop/target/surefire-reports/testng-results.xml', set(CLASSES))
+    names = re.findall(r'@Test public void (\w+)\(', (FIXTURE / 'CommanderUnavailableAttackTest.java').read_text(encoding='utf-8'))
+    assert len(names) == len(set(names)) == 33
+    expected.update({('forge.ai.CommanderUnavailableAttackTest.' + name, ()): 1 for name in names})
+    actual = cases(RUN / 'reports/testng-results.xml')
+    counter_matches = actual == expected and sum(actual.values()) == 661
+    outcome = {'mode': MODE, 'counts': counts, 'methods': methods, 'native_method_and_parameter_counter_matches': counter_matches,
+               'configuration_failures': len(listener.getConfigurationFailures()), 'configuration_skips': len(listener.getConfigurationSkips()),
+               'testng_status': int(runner.getStatus()), 'actual_processors': int(runtime.availableProcessors()),
+               'max_java_heap_bytes': int(runtime.maxMemory()), 'production_origins': len(draw_ending_worker.NATIVE_CLASSES),
+               'scope': 'Existing 616 contracts, 12 empty-army cases and 33 new native declarations; pinned printing vectors unchanged. Direct-state controls, not complete legal histories or a packaged resolution pass.'}
+    save(RUN / 'outcome.json', outcome)
+    assert counts == dict(total=661, passed=661, failed=0, skipped=0)
+    assert counter_matches
+    assert outcome['configuration_failures'] == outcome['configuration_skips'] == outcome['testng_status'] == 0
+    verify()
+    java.shutdownJVM()
+else:
+    verify()
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)
+    ci = load(EPOCH / 'source-ci.json')
+    assert ci['head_sha'] == subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    assert ci['conclusion'] == 'success' and ci['status'] == 'completed'
+    RUN.mkdir()
+    (RUN / 'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    save(RUN / 'selection.json', {'classes': CLASSES, 'expected_cases': 661, 'mode': MODE})
+    settings = read_settings(SETTINGS)
+    with _engine_profile(settings, RUN):
+        process = run_bounded([sys.executable, '-I', str(Path(__file__)), MODE, '--worker'], settings.home,
+                              RUN / 'native.log', ProcessLimits(90, log_bytes=65536, environment=_environment(RUN)))
+    save(RUN / 'process.json', process)
+    verify()
+    assert file_hash(Path(__file__)) == file_hash(RUN / 'driver.py.txt')
+    outcome = load(RUN / 'outcome.json') if (RUN / 'outcome.json').exists() else {}
+    print(json.dumps({'process': process, 'counts': outcome.get('counts'), 'mode': MODE}), flush=True)
+    assert process['status'] == 'finished' and process['returncode'] == 0

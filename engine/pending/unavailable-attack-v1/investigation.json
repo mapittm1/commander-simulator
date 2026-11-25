@@ -1,0 +1,15 @@
+{
+  "status": "Investigation only; no prototype or correctness/performance claim.",
+  "evidence": "resolution1271-membership-allocation-v54/runtime-profile-summary.json",
+  "observation": "594 inclusive CPU samples involve AiController.declareAttackers, 564 MultiplayerAttackPlanner Search score; repeated exert transitions dominate named cases.",
+  "current_guard": "MultiplayerAttackPlanner.refine skips actor with no creatures and no declared attackers; tapped/summoning-sick or otherwise unable creatures may still enter a whole-round search.",
+  "hypothesis": "If an initially empty declaration has no creature able to attack any defender, every current candidate is identical; forecasting later rounds cannot change the current declaration.",
+  "required_review": [
+    "Read CombatUtil.canAttack and AttackConstraints semantics; inspect callback/side-effect risks before changing code.",
+    "Retain every existing empty-attack, mandatory-attack, goad, multiplayer-safety and exert assertion.",
+    "Add meaningful positive/negative controls with legal attacking alternatives, tapped/summoning-sick creatures, defender-specific restrictions and required attacks.",
+    "Verify scoped random state, game state and timeout behavior; do not suppress legal candidates or alter shared budgets.",
+    "Paired baseline/prototype correctness and original1271/90s workload remain mandatory; no unchanged retry."
+  ],
+  "prior_prototype": "replacement-event-prefilter-prototype-v1:616 and194 pass in pairs; raw resolution v55 timed out90.016s. Keep unpromoted."
+}

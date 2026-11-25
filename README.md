@@ -26,7 +26,22 @@ difference.
 
 ## Card coverage
 
-The normal workflow now registers 81 additional contracts: 30 printing-selection
+The normal workflow now registers 33 additional attack controls covering tapped,
+summoning-sick, defender and goaded creatures, haste, mandatory attacks, legal
+groups and defender-specific protection at copy depths 0/1/2. Baseline and
+prototype each pass the same **661 focused cases**, retaining 628 prior contracts
+and all 648 printing comparisons. The changed prototype also passes 194 untap
+cases. These direct-state fixtures do not establish complete paid card histories.
+
+A native restriction-based empty-declaration shortcut preserves these cases but
+still exceeds the original 1,271-case / 90-second resolution limit (90.016s), so it
+remains unpromoted. Production patches and the selected runtime are unchanged.
+The expanded **3,396-source / 4,596-native / 3,439-packaged** workflow remains
+pending, with 273 combat/snapshot cases and 179 required production origins;
+1,256 cast cases and the original 1,271 resolution cases are retained.
+See [unavailable-attacker evidence](engine/unavailable_attack_evidence.json).
+
+The preceding printing/membership expansion registered 81 contracts: 30 printing-selection
 and 51 keyword-membership cases. Baseline and corrected prototype each pass all
 616 focused cases. A separate pinned data fixture makes all 648 exact printing /
 random-state comparisons part of the native test, covering six names, six
@@ -35,7 +50,7 @@ retained-callback-view failures in an earlier unpromoted membership experiment;
 its corrected fallback preserves native live views. These are contract tests,
 not full Oracle or legal card-history coverage.
 
-The expanded suite passes **3,363 source** and **4,563 native** cases, retaining
+The preceding validated suite passes **3,363 source** and **4,563 native** cases, retaining
 all prior cases and parameters. All 2,168 production sources, 161 test files and
 316 tracked card files match reviewed inputs. Actual two-processor / 2 GiB
 Java-heap checks pass; production class bytes match the previous candidate.
@@ -59,7 +74,8 @@ the pinned printing comparisons, but still times out on the original 1,271-case 
 rules correctness is established. Allocation sampling estimates volume, not exact
 or retained memory. See [remaining runtime evidence](engine/remaining_runtime_evidence.json).
 
-The full **3,406-case packaged gate remains incomplete**. Linear printing and
+The preceding **3,406-case packaged gate remains incomplete**; the expanded
+3,439-case suite is pending. Linear printing and
 keyword membership experiments still exceed the original 1,271-case / 90-second
 resolution limit (90.016 / 90.015s) and remain unpromoted. Broader/full-game/catalog/
 health/activation checks and complete card rules support remain pending.

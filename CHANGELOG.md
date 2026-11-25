@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 33 native attack controls for unavailable creatures, haste, goad,
+  mandatory and group attacks, and protected defenders across copy depths 0/1/2.
+  Paired baseline/prototype runs pass 661 cases, retaining 628 prior contracts and
+  all 648 printing comparisons; the changed overlay also passes 194 untap cases.
+  Its empty-declaration shortcut still times out on the unchanged 1,271-case /
+  90-second resolution workload and remains unpromoted. Pin the fixture and add
+  it to source/native/packaged registries, retaining all prior assertions. Expanded
+  3,396 / 4,596 / 3,439 full validation remains pending, with 273 combat cases and
+  179 required production origins. Preserve evidence and the selected runtime.
+
 - Validate six pending packaged families: 301 information, 240 combat/snapshot,
   338 casting-cost, 65 free-casting, 194 untap and 146 Battle cases pass. Native
   methods/parameters, packaged origins and configuration restoration are verified.

@@ -267,6 +267,7 @@ REGRESSION_SOURCES = {
     "CommanderUntapPresenceTest.java": "commander_untap_presence_test_sha256",
     "CommanderReplacementEligibilityTest.java": "commander_replacement_eligibility_test_sha256",
     "CommanderEmptyAttackTest.java": "commander_empty_attack_test_sha256",
+    "CommanderUnavailableAttackTest.java": "commander_unavailable_attack_test_sha256",
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",

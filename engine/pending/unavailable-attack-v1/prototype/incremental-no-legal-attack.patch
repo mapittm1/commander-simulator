@@ -1,0 +1,48 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java
+@@ -6,6 +6,7 @@
+ import forge.game.GameEntity;
+ import forge.game.card.Card;
+ import forge.game.combat.AttackConstraints;
++import forge.game.combat.AttackRestriction;
+ import forge.game.combat.Combat;
+ import forge.game.combat.CombatUtil;
+ import forge.game.phase.PhaseType;
+@@ -100,6 +101,7 @@
+         }
+ 
+         private void run() {
++            if (onlyEmptyDeclaration()) return;
+             final Map<Card, GameEntity> heuristic = new LinkedHashMap<>(combat.getAttackersAndDefenders());
+             consider(heuristic);
+             consider(required);
+@@ -135,6 +137,29 @@
+             }
+         }
+ 
++        /** Reuse native restrictions; never infer legality from card names or scores. */
++        private boolean onlyEmptyDeclaration() {
++            AITimeoutTracker.check();
++            if (!combat.getAttackers().isEmpty() || !required.isEmpty()
++                    || constraints.getClass() != AttackConstraints.class
++                    || constraints.countViolations(Collections.emptyMap()) != minimumViolations) {
++                return false;
++            }
++            for (final GameEntity defender : combat.getDefenders()) {
++                if (defender.getClass() != Player.class && defender.getClass() != Card.class) return false;
++            }
++            for (final Card creature : actor.getCreaturesInPlay()) {
++                AITimeoutTracker.check();
++                if (creature.getClass() != Card.class) return false;
++                final AttackRestriction restriction = constraints.getRestrictions().get(creature);
++                if (restriction == null || restriction.getClass() != AttackRestriction.class) return false;
++                for (final GameEntity defender : combat.getDefenders()) {
++                    if (restriction.canAttack(defender)) return false;
++                }
++            }
++            return true;
++        }
++
+         private void consider(final Map<Card, GameEntity> declaration) {
+             AITimeoutTracker.check();
+             if (evaluated >= MAX_CANDIDATES) {
