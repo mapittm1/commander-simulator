@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Add 21 pending native untap controls for live callbacks, intrinsic/keyword/merged
+  replacements, and actual stun-counter consumption across copy depths 0/1/2.
+  Baseline and generic untap prototype both pass all 349 focused cases, retaining
+  all 328 prior controls. Preserve guard-order and untap resolution timeouts
+  (90.031 / 90.016 seconds under the unchanged 1,271-case / 90-second gate) and
+  the existing profile follow-up. Production recipe/runtime unchanged; no speedup
+  or full card/rules support claim.
+
 - Preserve a pending keyword no-op prototype and 24 additional callback/read-ahead
   controls: baseline and prototype both pass all 328 focused cases. The unchanged
   1,271-case resolution workload still times out at 90.016 seconds. Preserve the

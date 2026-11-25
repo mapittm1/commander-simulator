@@ -1,0 +1,35 @@
+from pathlib import Path
+from collections import Counter,defaultdict
+import json,sys,importlib
+root=Path(__file__).resolve().parents[4];sys.path.insert(0,str(root));work=Path(__file__).resolve().parent
+from commander.engine.forge_config import read_settings,file_hash,jvm_library
+run=work/'resolution1271-keyword-noop-jfr-v36';profile=run/'cpu.jfr';before=file_hash(profile)
+assert profile.stat().st_size<=16777216
+settings=read_settings(root/'data/engine-builds/fda074ba95974588b11e7540a01147fd/engine-config.json');settings.verify()
+java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()<=2147483648
+reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(profile)))
+contexts=Counter();leaves=defaultdict(Counter);samples=0;unattributed=0;events=0
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent();events+=1;assert events<=100000
+  if str(event.getEventType().getName())!='jdk.ExecutionSample':continue
+  thread=event.getThread('sampledThread')
+  if thread is None or str(thread.getJavaName())!='main':continue
+  samples+=1;stack=event.getStackTrace()
+  if stack is None:unattributed+=1;continue
+  frames=[]
+  for frame in stack.getFrames():
+   method=frame.getMethod()
+   if method is not None:frames.append((str(method.getType().getName()),str(method.getName())))
+  context=next((cls+'.'+method for cls,method in frames if cls.startswith('forge.') and cls.endswith('Test')),None)
+  if context is None:unattributed+=1;continue
+  contexts[context]+=1
+  first=next((cls+'.'+method for cls,method in frames if cls.startswith('forge.')),None)
+  if first:leaves[context][first]+=1
+finally:reader.close();java.shutdownJVM()
+assert file_hash(profile)==before
+out=run/'test-context-summary-v1.json';assert not out.exists()
+result={'profile_sha256':before,'main_samples':samples,'unattributed_samples':unattributed,'contexts':contexts.most_common(),'first_forge_per_context':{key:value.most_common(12) for key,value in leaves.items()},'scope':'Sampled stack contexts from existing recording only; truncated/absent stacks are unattributed. Not timing or rules proof.'}
+out.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'samples':samples,'unattributed':unattributed,'top_contexts':contexts.most_common(12)}))

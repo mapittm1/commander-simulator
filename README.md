@@ -26,6 +26,13 @@ difference.
 
 ## Card coverage
 
+A pending generic untap precheck passes **349 paired focused controls**, retaining
+all 328 earlier cases and adding 21 actual untap/stun/live-callback checks. It
+still times out on the unchanged 1,271-case resolution workload at 90.016 seconds.
+An earlier guard-order experiment also times out (90.031 seconds). Neither is
+promoted into the production recipe or selected runtime. See
+[untap diagnostic evidence](engine/untap_presence_diagnostic_evidence.json).
+
 A pending keyword no-op prototype passes all **328 paired focused controls**,
 including 24 additional callback/read-ahead cases. Its unchanged 1,271-case
 resolution workload still times out at 90.016 seconds. A separate bounded CPU

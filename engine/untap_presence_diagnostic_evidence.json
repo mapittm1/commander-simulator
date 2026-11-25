@@ -1,0 +1,116 @@
+{
+  "scope": "Pending generic Untap replacement precheck and guard-order experiment. Selected runtime and production recipe unchanged. No established speedup or all-card correctness claim.",
+  "baseline_head": "6162b16704180758ab8882dc07f1c438ffb56428",
+  "baseline_build": "fda074ba95974588b11e7540a01147fd",
+  "baseline_counts": {
+    "total": 349,
+    "passed": 349,
+    "failed": 0,
+    "skipped": 0
+  },
+  "prototype_counts": {
+    "total": 349,
+    "passed": 349,
+    "failed": 0,
+    "skipped": 0
+  },
+  "all_prior328_methods_retained": true,
+  "new_controls": {
+    "count": 21,
+    "copy_depths": [
+      0,
+      1,
+      2
+    ],
+    "scenarios": [
+      "opaque keyword-collection callback",
+      "overridden keyword getter",
+      "overridden keyword applicator",
+      "live native keyword replacement list",
+      "live changed-trait replacement list",
+      "intrinsic replacement addition",
+      "actual stun-counter removal instead of untapping, followed by ordinary untapping"
+    ],
+    "scope": "Synthetic controlled native game states; not claims about paid setup histories or every printed card."
+  },
+  "actual_jvm_processors": 2,
+  "max_java_heap_bytes": 2147483648,
+  "prototype_design": "Check merged-trait eligibility before scanning keywords. Extend empty replacement precheck to Untap only with no intrinsic/keyword/merged replacements, live zero stun counters and known native tables. Exact-class guards retain custom callbacks. Other event handling unchanged.",
+  "source_review": "Card.updateReplacementEffects supplies the implicit stun Untap replacement. CardState.LandTraitChanges and Adventure/Omen/Vengeance global rules add other event types. Card.canUntap/untap retain exert checks.",
+  "guard_order_experiment": {
+    "focused_passed": 328,
+    "resolution_expected_cases": 1271,
+    "limit_seconds": 90,
+    "process": {
+      "status": "timeout",
+      "bytes": 20649,
+      "returncode": 1,
+      "elapsed_seconds": 90.031
+    }
+  },
+  "untap_experiment": {
+    "focused_passed": 349,
+    "resolution_expected_cases": 1271,
+    "limit_seconds": 90,
+    "process": {
+      "status": "timeout",
+      "bytes": 20649,
+      "returncode": 1,
+      "elapsed_seconds": 90.016
+    },
+    "completed_counts": null
+  },
+  "profile_followup": "Reanalyzed existing bounded profile c6f3b2075ea06ddfa88c3407027853977d01def00a547e0ffec03dd08cc485cf without rerunning it. 1608 main samples, 20 unattributed; exert transition helpers are prominent sampled contexts. Nearest Test-class stack methods can be helpers, not test-entry methods. Sampling is not causal timing proof.",
+  "selected_runtime_changed": false,
+  "production_recipe_changed": false,
+  "remaining": "Resolve original1271/90-second gate; register/promote only after full source/native/fresh independent packaged and broader/full-game/catalog/health/activation validation. Complete card/rules correctness remains unproven.",
+  "shared_source_artifacts": {
+    "engine/pending/keyword-noop-diagnostic-v1/prototype/source/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java.txt": "a0aa88c9748d617f0276637b023b7ee3b9ff656906200ffe953b303bfd659dbc",
+    "engine/pending/keyword-noop-diagnostic-v1/prototype/source/forge-game/src/main/java/forge/game/keyword/KeywordInstance.java.txt": "e605624d5af16f61abc1f0106cc5b4f656f3fd6e1d815cb13f13af1c02590cad"
+  },
+  "artifacts": {
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/outcome.json": "59558eb89ad66cf3dc29b75b80f7661290d184b60fb85812d2990789cd3192de",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/process.json": "8824175759548939180432ba7be9837ffbdc6afe9900e8f4661b9942b8e97df2",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/compile-process.json": "ea0914809ba137065cc7fe6eb6b4eb73099838ec66c47970d2e91c67e60967af",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/inputs.json": "bd091b3329a6fab7a39f46c73acf3456d0af63345a934497a7e04cfa8142383e",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/test-classes.json": "dbcf7b93afde57eddfc9b2dac9db9edd31500c2f01d0706f7635cd4da2c8f8bc",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/driver.py.txt": "124b1d773b625b256330effdc4690798c9f4c1b13c7c9d9c80bd0b4718b937fa",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-baseline-v1/native.log.txt": "595482edad9ef750f22d7400dbd3e0da5fb2f0d94800b4f2fb32c8cd9a8af097",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/outcome.json": "59558eb89ad66cf3dc29b75b80f7661290d184b60fb85812d2990789cd3192de",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/process.json": "2797ba252d3e7315b03c3ef799ee9b0a232680c904f73be4f13eeef5f5d3aea2",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/compile-process.json": "990dcb4c3c9865af4aae1ef076b39ab05d74b9b67acdf11448215cc411c61e23",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/inputs.json": "bd091b3329a6fab7a39f46c73acf3456d0af63345a934497a7e04cfa8142383e",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/test-classes.json": "dbcf7b93afde57eddfc9b2dac9db9edd31500c2f01d0706f7635cd4da2c8f8bc",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/driver.py.txt": "124b1d773b625b256330effdc4690798c9f4c1b13c7c9d9c80bd0b4718b937fa",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence349-prototype-v1/native.log.txt": "fd36f5edc49f1867f0fb68b76dd7d2428ca770da4a8e0d3ffb5b6b7e6c4c36c5",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/outcome.json": "5d044e52cf68084a00065a2d88535ceabe49b94dbb20577ed3e1aa0ea03495de",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/process.json": "972b1ec499acf4e7a8db8f2312c5dc93d28446580dc4279994db695364a532ed",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/compile-process.json": "4d36b42ec782ce1b707325c86aa15f1988c33a8a9ac440f5c862bb1d662bff1d",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/inputs.json": "582c5dbd048f69f43e6e4f55f7c11c0e32235c08de182e27c1c5a19a46e9830e",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/test-classes.json": "9b2076a985739b3f57602b9563a0e0619ca1a4dab1fad4c2adb9a8b0095bc50d",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/driver.py.txt": "11f2d67af6075ab6e95e764f8b5fd25650fc772a7e89ae3bb938d72665017493",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop328-prototype-v2/native.log.txt": "c35c44f943c75d16b358b298ab23392e3dad0e17e158914595fe36fbc7d13dd7",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-keyword-guard-order-v37/process.json": "172d67178659a48c3a9b3dbfbc632d628b0af35071003c1ce72125e87246108a",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-keyword-guard-order-v37/driver.py.txt": "ec9277cb05daef94821ca9fec14a8dc98814569eeb0ae074399285bf608b3167",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-keyword-guard-order-v37/native.log.txt": "8c11c1195136ce5445fb803778b6c0392ef0d7f264f39716dbfd66ea9ef88e17",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-untap-presence-v38/process.json": "9cb1d3b90412a96a6e962209fa6e61367ac2aac8ce1616881db96f80fa65b87f",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-untap-presence-v38/driver.py.txt": "e44bfc7dfc764a3b54eb858a4599833a51b5288423b0c3bc04a7adaa5850343d",
+    "engine/pending/untap-presence-diagnostic-v1/resolution1271-untap-presence-v38/native.log.txt": "3bbc094a18cbcfd8eefa213c1320216488c5ed1b193d0140ace85447f26971c9",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop-prototype-v2/inputs.json": "a7644d94735c28494c43416a42bdbf64ca7643217a27ce2c691cf9d128a15773",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop-prototype-v2/proposal.json": "f699e2f8af1f9d25184b8f191bcda06ce2b8883102cc7045c20eda441632c218",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop-prototype-v2/compile-selection.json": "9a19ff114427445870ab362f34dbb297daf87d22091b1f06cb090250174c47db",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop-prototype-v2/compile-process.json": "f1839ddf5b0a3b59f211dbf55e2903ff82a04a0ab53932b2cb91b41504d2344c",
+    "engine/pending/untap-presence-diagnostic-v1/keyword-noop-prototype-v2/CardState.java.txt": "85599325e2d34224de58c0079797a9dbb9061988be3126ddbd5b9b7bbd737852",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence-prototype-v1/inputs.json": "8377424c547229dec47e7c2c5aba6272c49294d0f0f2644a8d77d3a28111100f",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence-prototype-v1/proposal.json": "13e455afe4258d0dcd88ef23752c105628e35cf3f52ac8a324ae769bdb9fb1c7",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence-prototype-v1/compile-selection.json": "2af9f4b83b1c3f8ca2f90fb688ff9d0e1149f05c6723d8c97cc95606405b94f4",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence-prototype-v1/compile-process.json": "50c590a738fdada040f9bfa169154929654447ea03a87b8c211d87eb6f11da17",
+    "engine/pending/untap-presence-diagnostic-v1/untap-presence-prototype-v1/CardState.java.txt": "141d325599d71860a9b275107cbbdb3b95660551c1b419e9f8cee5bace241791",
+    "engine/pending/untap-presence-diagnostic-v1/CommanderUntapPresenceTest.java.txt": "4686ee5bb5bb8d34b392455be069da7a4e57795f4c1a57cb53717dcc18b7efdc",
+    "engine/pending/untap-presence-diagnostic-v1/epoch/source-ci.json": "f4836d1e66762db7003f563846a0356eb885f3a0a497f5e8be945d9060242135",
+    "engine/pending/untap-presence-diagnostic-v1/epoch/source-epoch.json": "0cf7d308cd76b2b104be0d0e544358f97e241d5870c686db9abeead4bf7292b5",
+    "engine/pending/untap-presence-diagnostic-v1/epoch/source-frozen-inputs.json": "f1f21ba751ba16847e2051d80efc23e100300dda1aa14968ddc8ec80c09c1306",
+    "engine/pending/untap-presence-diagnostic-v1/test-context-summary-v1.json": "4de89ae072dafc7c3ddb313d954af8846223528090957c0cb54bf02592fa72b1",
+    "engine/pending/untap-presence-diagnostic-v1/decode-test-contexts.py.txt": "e6c46013d7b3c29aa1a94180d1fe57d0c81c71cd75c41eec0f5947a65c9ab183"
+  }
+}
