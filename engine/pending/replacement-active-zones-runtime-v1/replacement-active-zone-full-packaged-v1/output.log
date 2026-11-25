@@ -1,0 +1,27 @@
+test_packaged_draw_ending_rules (__main__.FullRules.test_packaged_draw_ending_rules) ... {"draw_ending_partition": "information", "draw_ending_run": "272e03803e764885a278a4e79ef50399"}
+{"draw_ending_partition": "combat_and_snapshots", "draw_ending_run": "02fddc7965d6479cb7771cb3f8060184"}
+{"draw_ending_partition": "text_casting_and_costs", "draw_ending_run": "8550a3f30ee24838a0751966d1d14cb2"}
+FAIL
+
+======================================================================
+FAIL: test_packaged_draw_ending_rules (__main__.FullRules.test_packaged_draw_ending_rules)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_replacement_active_zone_full_packaged_v1.py", line 23, in test_packaged_draw_ending_rules
+    super().test_packaged_draw_ending_rules()
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\tests\integration\test_draw_endings_integration.py", line 43, in test_packaged_draw_ending_rules
+    all_methods.extend(self.check_partition(settings, partition))
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\tests\integration\test_draw_endings_integration.py", line 61, in check_partition
+    self.assertEqual(process["returncode"], 0, process)
+AssertionError: 1 != 0 : {'status': 'timeout', 'bytes': 20649, 'returncode': 1, 'elapsed_seconds': 90.031, 'support_source_hashes': {'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py': 'aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py': '70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py': 'a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973', 'C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py': '777a31938890ef078ad05ce7fddc5174b15f8be4d41946c93b6e3cdffce153b7'}}
+
+----------------------------------------------------------------------
+Ran 1 test in 238.475s
+
+FAILED (failures=1)
+Traceback (most recent call last):
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_replacement_active_zone_full_packaged_v1.py", line 26, in <module>
+    assert result.wasSuccessful() and result.testsRun==1 and not result.skipped
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError

@@ -26,15 +26,20 @@ difference.
 
 ## Card coverage
 
-A reviewed replacement-effect correction now respects each effect's explicit
-active zones in performance mode. The original implementation fails 36 of 72
-controlled zone/copy tests; the correction passes all 72 plus 685 retained
-interaction contracts and 194 untap cases. These use synthetic replacement
-definitions on native cards; they do not prove every printed card or paid history.
-The build registers 4,668 native and 3,511 packaged cases; complete build and
-packaged validation remain pending, including the original 1,271-case / 90-second
-resolution gate. The selected runtime is unchanged. See
-[replacement-zone evidence](engine/replacement_active_zones_evidence.json).
+The replacement-effect correction now respects explicit active zones in performance
+mode. It passes all **3,468 source** and **4,668 native** cases, retaining every
+earlier case and parameter. The build audit confirms only the intended
+replacement-handler class family changes from the previous candidate, with all
+2,168 production, 163 test and 316 card inputs matching the reviewed source run.
+
+Normal packaged checks pass **1,328 cast/trait**, **301 information**, **273 combat**,
+**338 text/cost**, **65 free-casting**, **194 untap** and **146 Battle** cases.
+The complete 3,511-case attempt still fails at the unchanged **1,271-case /
+90-second** resolution gate (90.031s). The selected runtime remains unchanged;
+full-game, catalog, health and activation checks remain pending. Controlled
+synthetic replacement definitions do not establish full printed-card or paid-history
+coverage. See [focused correction evidence](engine/replacement_active_zones_evidence.json)
+and [source/native/runtime evidence](engine/replacement_active_zones_runtime_evidence.json).
 
 An unpromoted snapshot-construction experiment reuses source state properties
 before the existing mapped trait graph installation, instead of rebuilding
@@ -1206,14 +1211,14 @@ Native checks also cover Roaming Throne creating distinct Ulalek triggers:
 one resolving trigger may copy another trigger from the same permanent.
 
 
-Ulalek can pay two colorless mana to copy its controllerâ€™s spells and other
+Ulalek can pay two colorless mana to copy its controller’s spells and other
 abilities. Tests verify copy order and exclude the resolving trigger itself.
 If an opponent counters the Eldrazi spell, Ulalek can still copy an eligible
 ability on the stack.
 
 Spells and copies created during resolution preserve priority and stack order.
 Tempt with Mayhem copies the selected spell in turn order. Mana planning uses
-Gemstone Cavernsâ€™ luck counter and can spend Cavern of Soulsâ€™ colorless mana
+Gemstone Caverns’ luck counter and can spend Cavern of Souls’ colorless mana
 when it is required. Delighted Halfling can protect a legendary spell when its
 mana pays a generic cost.
 
@@ -1233,7 +1238,7 @@ pending extra turns. Tests also check Day's Undoing, Time Stop, and The War
 Doctor's exile trigger during cleanup.
 
 Vault 11 draws for each player when no creature receives a vote. Players who
-receive no votes from CÃ­rdan may decline to put a permanent onto the
+receive no votes from Círdan may decline to put a permanent onto the
 battlefield. Restoring a snapshot also restores Aeon Engine's turn direction.
 
 Learn offers discard-and-draw in Commander and honors Retriever Phoenix's
@@ -1381,7 +1386,7 @@ cost. That earlier reviewed build passed 641 focused native regressions,
 for its exact historical scope. Full-card rules and strategy
 coverage remain in progress.
 
-The recorded catalog refresh uses Scryfallâ€™s November 4 export (39,287 records).
+The recorded catalog refresh uses Scryfall’s November 4 export (39,287 records).
 The previous database is preserved under `data/local-archive/`; real provider
 timestamps and normal freshness checks remain in effect.
 
@@ -1539,7 +1544,7 @@ For direct-state card interaction checks, install the optional pinned tools and 
 .\.venv\Scripts\python.exe commander_simulator.py engine-interactions
 ```
 
-The current suite checks 41 RatonhnhakÃ©êž‰ton/Equipment scenarios against direct
+The current suite checks 41 Ratonhnhaké꞉ton/Equipment scenarios against direct
 Forge state: separate trigger/target timing, return and attachment, missing or
 opponent-owned Equipment, removed targets, removed tokens/sources, incompatible
 attachments, noncombat damage, damage prevention/doubling, and countering the
@@ -1555,7 +1560,7 @@ then preventing one deals 5 damage; preventing one then doubling deals 4.
 Combat and noncombat controls check trigger behavior for both orders. Eight
 casting cases now exercise Forge's paid-casting entry point with real lands,
 colored/generic costs, unaffordable/off-color rejection, and controlled timing
-and priority admission checks. Three additional cases drive Forgeâ€™s native
+and priority admission checks. Three additional cases drive Forge’s native
 four-player priority loop, including a paid counterspell response and an
 unaffordable response. Two counterspell-chain cases now verify a third player
 countering the counterspell, a fresh pass cycle before the original spell resolves,
@@ -1749,7 +1754,7 @@ python commander_simulator.py bracket-history 1 --version 1
 `bracket-check` is diagnostic: it rechecks Commander legality first, counts Game
 Changers in every zone using the current Scryfall catalog, and reports conflicts
 or `needs_review`. It intentionally does not approve gameplay intent. Game
-Changer caps are 0 for brackets 1â€“2, 3 for bracket 3, and unlimited for 4â€“5, per
+Changer caps are 0 for brackets 1–2, 3 for bracket 3, and unlimited for 4–5, per
 [Wizards' Commander guidance](https://magic.wizards.com/en/formats/commander).
 Policy, checklist, and source links live in `config/bracket_policy.json`.
 
@@ -1839,7 +1844,7 @@ card interaction or AI strategy. Automated opponent selection remains pending.
 Runs preserve `inputs.json`, generated decks, `forge.log`, and `result.json`
 under generated identifiers in `data/runs`. Wins/draws, engine errors,
 unrecognized output, log limits, and timeouts have distinct statuses. Failed
-simulations exit nonzero. Game clocks accept 1â€“300 seconds; an outer timeout
+simulations exit nonzero. Game clocks accept 1–300 seconds; an outer timeout
 allows 90 seconds for startup/shutdown. Logs are capped at 8 MiB per game; Java
 heap is capped at 2 GiB. A heap cap is not a total process memory limit.
 The minimal child environment excludes inherited tokens and Java option variables.
@@ -2007,7 +2012,7 @@ catalog and Forge 2.0.15, not every published card or every game interaction. Im
 retain older identities; the audited set is the local catalog, not a guaranteed
 exact inventory of the latest bulk export. Rerun after catalog/engine changes.
 
-Audits accept at most 100,000 catalog identities. Result pages contain 1â€“1,000
+Audits accept at most 100,000 catalog identities. Result pages contain 1–1,000
 rows; offsets are bounded. Catalog identifiers, names, layouts, and legality
 labels have bounded lengths. Audit creation briefly serializes catalog writes;
 it is a trusted local operator command. Hard disk quotas and retention remain
@@ -2086,9 +2091,9 @@ opt-in integration tests run the real engine using the command documented above.
 ## Reviewed identity exports
 
 The repository-owned `config/engine_alias_reviews.json` records explicit identity
-reviews separately from gameplay code. RatonhnhakÃ©êž‰ton has a catalog Unicode
+reviews separately from gameplay code. Ratonhnhaké꞉ton has a catalog Unicode
 colon, while Forge and the [official release notes](https://magic.wizards.com/en/news/feature/assassins-creed-release-notes)
-use RatonhnhakÃ©:ton. This mapping requires its exact Oracle ID, reviewed archive
+use Ratonhnhaké:ton. This mapping requires its exact Oracle ID, reviewed archive
 SHA-256, individual script SHA-256, and an existing exact engine target.
 Other similar names are never normalized or approved automatically.
 
@@ -2136,7 +2141,7 @@ python commander_simulator.py deck-salt DECK_ID --version 1 --salt-snapshot SNAP
 `salt-import` accepts an attributed local JSON sample. The example contains three
 observed 2026 ratings, not a complete dataset. Source URL, year, timezone-aware
 observation time, exact card name, source rank, and rating are required. Input is
-limited to 1 MiB and 100 entries. Ratings must be finite 0â€“4 values with at most
+limited to 1 MiB and 100 entries. Ratings must be finite 0–4 values with at most
 two decimal places; internal storage uses integer hundredths. Duplicate JSON
 keys, names, ranks, conflicting identity mappings, and inconsistent rank order
 are rejected. Numeric token lengths and JSON nesting are bounded or rejected.

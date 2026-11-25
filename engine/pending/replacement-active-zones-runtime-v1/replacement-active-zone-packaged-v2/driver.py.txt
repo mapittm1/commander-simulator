@@ -1,0 +1,55 @@
+"""Run the fixed packaged cast_events and combat groups against the newly built replacement active-zone candidate."""
+from pathlib import Path
+import json,sys,os,subprocess,time,hashlib,unittest
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT));WORK=Path(__file__).resolve().parent
+CANDIDATE=WORK/'replacement-active-zone-candidate-v1';RUN=WORK/'replacement-active-zone-packaged-v2'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+frozen=load(CANDIDATE/'source-frozen-inputs.json')
+assert all(sha(ROOT/n)==h for n,h in frozen.items() if '--worker' not in sys.argv or n!='config/engine_config.json')
+if '--worker' in sys.argv:assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'candidate-config.json').read_bytes()
+assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['total']==4668
+assert load(CANDIDATE/'build-audit.json')['only_replacement_handler_family_changed_since_74767']
+if '--worker' in sys.argv:
+ os.environ['COMMANDER_ENGINE_INTEGRATION']='1';os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe'
+ from commander.engine.forge_config import read_settings
+ from tests.integration.test_draw_endings_integration import DrawEndingIntegrationTests
+ from tests.support.draw_ending_partitions import EXPECTED_COUNTS
+ assert EXPECTED_COUNTS['cast_events']==1328 and EXPECTED_COUNTS['combat_and_snapshots']==273
+ settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json')
+ class CastOnly(DrawEndingIntegrationTests):
+  __unittest_skip__=False
+  def test_packaged_draw_ending_rules(self):
+   for partition in ('cast_events','combat_and_snapshots'):
+    methods=self.check_partition(settings,partition);self.assertEqual(len(methods),EXPECTED_COUNTS[partition])
+ result=unittest.TextTestRunner(stream=sys.stdout,verbosity=2).run(CastOnly('test_packaged_draw_ending_rules'))
+ save(RUN/'outcome.json',{'successful':result.wasSuccessful(),'tests_run':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),'scope':'Fixed1328 cast and273 combat groups using normal workers with179 origins. Not full3511 gate; original1271/90 remains unmet.'})
+ assert result.wasSuccessful() and result.testsRun==1 and not result.skipped
+else:
+ assert sys.argv[1:]==[] and not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(CANDIDATE/'source-ci.json')['head_sha']
+ RUN.mkdir()
+ for name in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):(RUN/name).write_bytes((CANDIDATE/name).read_bytes())
+ (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());active=(ROOT/'config/engine_config.json').read_bytes();existing={p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir()}
+ from commander.engine.forge_config import read_settings
+ settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json')
+ selector=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode()
+ (RUN/'active-config-before.json').write_bytes(active);(RUN/'candidate-config.json').write_bytes(selector)
+ started=time.monotonic();record=None
+ try:
+  (ROOT/'config/engine_config.json').write_bytes(selector)
+  with (RUN/'output.log').open('xb') as output:
+   result=subprocess.run([sys.executable,'-I',str(Path(__file__)),'--worker'],cwd=ROOT,stdout=output,stderr=subprocess.STDOUT,timeout=420,check=False)
+  record={'status':'finished','returncode':result.returncode,'elapsed_seconds':round(time.monotonic()-started,3)}
+ except subprocess.TimeoutExpired:
+  record={'status':'timeout','returncode':1,'elapsed_seconds':round(time.monotonic()-started,3)}
+ finally:
+  if (ROOT/'config/engine_config.json').read_bytes()!=selector:raise RuntimeError('Configuration changed during cast check; original preserved in backup')
+  (ROOT/'config/engine_config.json').write_bytes(active)
+  assert (ROOT/'config/engine_config.json').read_bytes()==active
+  assert all(sha(ROOT/n)==h for n,h in frozen.items())
+  assert sha(Path(__file__))==sha(RUN/'driver.py.txt')
+  if record is not None:
+   record.update({'new_run_directories':sorted(p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir() and p.name not in existing),'log_sha256':sha(RUN/'output.log'),'configuration_unchanged':True,'worker_limit_seconds':90,'wrapper_limit_seconds':420})
+   save(RUN/'process.json',record);print(json.dumps(record),flush=True)
+ assert record['status']=='finished' and record['returncode']==0,record
