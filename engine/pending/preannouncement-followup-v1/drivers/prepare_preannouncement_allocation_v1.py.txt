@@ -1,0 +1,48 @@
+"""Freeze a new combination of the reviewed casting baseline and unpromoted allocation guards."""
+from pathlib import Path
+import hashlib
+import json
+import shutil
+import subprocess
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import read_settings,file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+EPOCH=WORK/'preannouncement-allocation-epoch-v1'
+PROTOTYPE=WORK/'preannouncement-allocation-prototype-v1'
+PARENT=WORK/'ordinary-history-map-prototype-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+head=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+assert head=='307e474e7334591ef4b5a6b609e63d8b7443b4de'
+assert not EPOCH.exists() and not PROTOTYPE.exists()
+EPOCH.mkdir();PROTOTYPE.mkdir()
+ci={'id':45655802433,'head_sha':head,'status':'completed','conclusion':'success'}
+save(EPOCH/'source-ci.json',ci)
+tracked=[n for n in subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode('utf-8').split('\0') if n]
+frozen={n:file_hash(ROOT/n) for n in tracked}
+save(EPOCH/'source-frozen-inputs.json',frozen);save(EPOCH/'source-epoch.json',{'head':head,'tracked_files':len(frozen),'ci_id':ci['id']})
+settings=read_settings(ROOT/'data/engine-builds/477ed00e83c74775a4d57ddbcdd63ce4/engine-config.json');lock=settings.verify()
+assert lock['native_tests']==dict(total=4720,passed=4720,failed=0,skipped=0)
+assert all(file_hash(PARENT/n)==h for n,h in load(PARENT/'inputs.json').items())
+canonical=ROOT/'data/development/commander-blocking-history-research/source'
+sourceproof=load(WORK/'source3520-v1/production-inputs.json')
+assert len(sourceproof)==2168 and all(file_hash(canonical/n)==h for n,h in sourceproof.items())
+sourcefiles=sorted((PARENT/'source').rglob('*.java'));assert len(sourcefiles)==14
+for p in sourcefiles:
+    n=p.relative_to(PARENT/'source')
+    assert (canonical/n).read_text(encoding='utf-8')==(settings.home.parent/'source'/n).read_text(encoding='utf-8')
+    for dest,origin in [(PROTOTYPE/'source'/n,p),(PROTOTYPE/'baseline'/n,canonical/n)]:
+        dest.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(origin,dest)
+changed=[p.relative_to(PROTOTYPE/'source').as_posix() for p in (PROTOTYPE/'source').rglob('*.java') if p.read_text(encoding='utf-8')!=(PROTOTYPE/'baseline'/p.relative_to(PROTOTYPE/'source')).read_text(encoding='utf-8')]
+assert len(changed)==14
+assert 'forge-ai/src/main/java/forge/ai/ComputerUtilCost.java' not in changed
+save(PROTOTYPE/'proposal.json',{'baseline_build':'477ed00e83c74775a4d57ddbcdd63ce4','baseline_native_cases':4720,
+    'parent_experiment':'ordinary-history-map-prototype-v1','changed_sources':changed,
+    'new_combination':'Retain corrected pre-target forecasting from the fresh4720 JAR while testing the earlier14-source allocation/callback guards. The previous14-source experiment used the older casting baseline.',
+    'not_promoted':True,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,
+    'required_semantic_checks':['All current1380 cast cases plus24 retained edition controls.','Current273 combat and194 untap cases.','Nine unchanged upstream casting regression/control cases.'],
+    'scope':'Experimental combination, not a normal packaged, full-game or complete rules pass.'})
+save(PROTOTYPE/'source-inputs.json',{p.relative_to(PROTOTYPE).as_posix():file_hash(p) for p in PROTOTYPE.rglob('*.java')})
+print(json.dumps({'head':head,'tracked_files':len(frozen),'changed_sources':len(changed),'baseline_native_cases':4720}))

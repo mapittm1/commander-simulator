@@ -1,0 +1,73 @@
+"""Run the normal catalog diagnostic on the corrected candidate with an owned300s process tree."""
+from pathlib import Path
+from types import SimpleNamespace
+import json
+import os
+import shutil
+import signal
+import subprocess
+import sys
+import threading
+import time
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded,_drain
+from commander.engine.forge_config import file_hash,read_settings
+from commander.engine.forge_engine import _environment
+WORK=Path(__file__).resolve().parent
+EPOCH=WORK/'preannouncement-allocation-epoch-v1'
+RUN=WORK/'preannouncement-game-witnesses-v1'
+CONFIG=ROOT/'data/engine-builds/477ed00e83c74775a4d57ddbcdd63ce4/engine-config.json'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+if sys.argv[1:]==['--worker']:
+    from commander.catalog.database import connect
+    from commander.rules.legality import require_current_catalog
+    from commander.engine.engine_conformance import run_rules_conformance
+    verify();settings=read_settings(CONFIG);lock=settings.verify();assert lock['native_tests']['total']==4720
+    connection=connect();catalog=require_current_catalog(connection)
+    save(RUN/'catalog-before.json',catalog)
+    try:result=run_rules_conformance(connection,settings)
+    finally:connection.close()
+    save(RUN/'outcome.json',result)
+    assert result['seeds']==[42,0,4096] and [r['seed'] for r in result['witness_runs']]==[42,0,4096]
+    assert len(result['checks'])==3 and len(result['witness_runs'])==3 and result['engine']==lock
+    verify()
+    print(json.dumps({'status':result['status'],'seeds':result['seeds'],'checks':[{k:r[k] for k in ('id','status')} for r in result['checks']],
+        'run_ids':[r['run_id'] for r in result['witness_runs']],'scope':'Limited closed-deck native game witnesses only; no full card/rules or activation claim.'}),flush=True)
+    assert result['status']=='passed' and all(r['status']=='passed' for r in result['checks'])
+
+else:
+    assert sys.argv[1:]==[] and not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+    ci=load(EPOCH/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+    verify();RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    for n in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):shutil.copyfile(EPOCH/n,RUN/n)
+    save(RUN/'selection.json',{'config':str(CONFIG),'seeds':[42,0,4096],'game_clock_seconds':60,'individual_game_process_limit_seconds':150,'whole_wrapper_limit_seconds':420,
+        'native_jvm_settings':{'active_processors':2,'max_heap_bytes':2147483648},
+        'scope':'Normal fixed three-seed rules-conformance game suite. No retry, shortened fixture, seed substitution or allocation overlay; not full rules coverage.'})
+    state={'status':'finished','bytes':0};started=time.monotonic();kill_lock=threading.Lock()
+    env=_environment(RUN);env['PYTHONUTF8']='1'
+    with (RUN/'worker.log').open('xb') as output:
+        with subprocess.Popen([sys.executable,'-I',str(Path(__file__)),'--worker'],cwd=ROOT,stdin=subprocess.DEVNULL,
+                stdout=subprocess.PIPE,stderr=subprocess.STDOUT,shell=False,env=env,
+                creationflags=subprocess.CREATE_NO_WINDOW if os.name=='nt' else 0,start_new_session=os.name!='nt') as process:
+            def kill_tree():
+                with kill_lock:
+                    if process.poll() is not None:return
+                    if os.name=='nt':
+                        subprocess.run([str(Path(os.environ['SystemRoot'])/'System32/taskkill.exe'),'/PID',str(process.pid),'/T','/F'],
+                            stdin=subprocess.DEVNULL,stdout=subprocess.DEVNULL,stderr=subprocess.DEVNULL,shell=False,timeout=10,check=False,creationflags=subprocess.CREATE_NO_WINDOW)
+                    else:os.killpg(process.pid,signal.SIGKILL)
+            owner=SimpleNamespace(stdout=process.stdout,poll=process.poll,kill=kill_tree)
+            reader=threading.Thread(target=_drain,args=(owner,output,state,65536),daemon=True);reader.start()
+            try:process.wait(timeout=420)
+            except subprocess.TimeoutExpired:
+                state['status']='timeout';kill_tree();process.wait(timeout=10)
+            finally:
+                if process.poll() is None:kill_tree();process.wait(timeout=10)
+                reader.join(timeout=10)
+            assert not reader.is_alive();state['returncode']=process.returncode
+    record={**state,'elapsed_seconds':round(time.monotonic()-started,3),'whole_wrapper_limit_seconds':420,'owned_tree_cleanup':True}
+    save(RUN/'process.json',record);verify();assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+    print(json.dumps(record),flush=True)
+    assert record['status']=='finished' and record['returncode']==0,record

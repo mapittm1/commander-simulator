@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the unchanged corrected candidate against the current frozen catalog:
+  32,636 identities construct and seven non-starting meld results remain unavailable;
+  no actionable starting-card construction/availability gap. Health passes. Fixed
+  full-game seeds 42/0/4096 pass commander-tax, Goreclaw-trigger and commander-damage
+  loss witnesses, with raw logs and frozen inputs revalidated. These checks do not
+  establish every card's ability behavior or complete rules coverage.
+- Preserve the unpromoted 14-source allocation combination: paired 1,404 casting
+  controls and 273 combat / 194 untap / nine upstream checks pass, but original
+  1,271-case / 90-second resolution still times out without a complete report.
+  Keep the workload/budget and failed receipts. Static Intensify API triage matches
+  21 non-Commander-legal catalog cards, so no Commander blocker is inferred.
+  Correct an inherited health annotation without rewriting original evidence:
+  java -version makes no heap/processor measurement claim. Selected runtime,
+  production patches and all remaining activation/full-rules gates stay unchanged.
+
 - Correct generic pre-target cost forecasting, restoring replicate choices and
   Abbot follow-up plans while retaining additional costs, known extra-mana budgets
   and completed-target native trigger handling. Preserve selected 9/9, earlier

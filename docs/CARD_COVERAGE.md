@@ -17,10 +17,28 @@ and **146 Battle** cases, with native method/parameter counters and origins audi
 The full **3,563-case** packaged gate remains incomplete: the original **1,271-case /
 90-second** resolution worker times out at **90.015s**, without a completed report.
 It was not retried unchanged for luck, and its workload/budget remain unchanged.
-The selected runtime is unchanged; full-game seeds 42/0/4096, catalog, health,
-activation and complete card/rules coverage remain required. See
+The selected runtime is unchanged; the normal resolution gate, remaining live
+checks, activation and complete card/rules coverage remain required. See
 [focused correction evidence](../engine/preannouncement_cost_evidence.json) and
 [fresh runtime evidence](../engine/preannouncement_cost_runtime_evidence.json).
+
+Follow-up checks pass on that same normal candidate. The frozen November 20
+catalog yields **32,636 constructed identities** and seven unavailable non-starting
+meld results, with no actionable starting-card availability/construction gaps.
+This checks construction and identity, not every ability. Health is ready, and the
+fixed full-game witnesses at seeds **42 / 0 / 4096** pass their commander-tax,
+Goreclaw-trigger and commander-damage-loss checks with raw-log evidence.
+
+The earlier 14-source allocation experiment, combined with the corrected casting
+baseline, passes paired **1,404 casting controls**, plus 273 combat, 194 untap and
+nine upstream checks. Its original 1,271-case / 90-second resolution run still
+times out without a completed report, so it remains unpromoted. Static API triage
+finds that all 21 matching Intensify scripts map to non-Commander-legal catalog
+cards; this is not treated as a Commander gap. The preserved health-metadata
+correction records `java -version` without a heap/processor measurement claim.
+The selected runtime is unchanged; the normal resolution gate, remaining live
+checks, activation and complete rules coverage remain open. See
+[follow-up evidence](../engine/preannouncement_followup_evidence.json).
 
 Earlier validation checkpoints follow.
 
