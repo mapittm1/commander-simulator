@@ -20,7 +20,6 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 import java.util.TreeMap;
-import java.util.function.Predicate;
 import org.testng.annotations.Test;
 import static org.testng.Assert.*;
 

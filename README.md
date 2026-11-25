@@ -35,7 +35,10 @@ retained-callback-view failures in an earlier unpromoted membership experiment;
 its corrected fallback preserves native live views. These are contract tests,
 not full Oracle or legal card-history coverage.
 
-The expanded 3,363-source / 4,563-native / 3,406-packaged suite is pending, with
+The first full source attempt stopped at Checkstyle on an unused fixture import
+before running tests. The import is corrected; all case bodies and reference
+vectors are unchanged. The expanded 3,363-source / 4,563-native / 3,406-packaged
+suite is pending, with
 1,256 cast cases and 178 required production origins. Linear printing and keyword
 membership experiments still exceed the original 1,271-case / 90-second resolution
 limit (90.016 / 90.015s) and remain unpromoted. The bounded combined profile is a

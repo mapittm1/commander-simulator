@@ -1,0 +1,198 @@
+package forge.ai;
+
+import forge.StaticData;
+import forge.card.CardDb;
+import forge.card.CardDb.CardArtPreference;
+import forge.card.CardEdition;
+import forge.card.CardRarity;
+import forge.card.CardRules;
+import forge.item.PaperCard;
+import forge.util.IItemReader;
+import forge.util.MyRandom;
+import java.io.File;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.Set;
+import java.util.TreeMap;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Printing identity, preference/tie rules, native fallbacks and random state. */
+public class CommanderPrintingSelectionTest extends AITest {
+    private static final String NAME = "Printing Contract";
+    public static final List<String> catalogFingerprints = new ArrayList<>();
+    private CardEdition edition(String code, String date, String name, CardEdition.Type type) throws Exception {
+        Constructor<CardEdition> constructor = CardEdition.class.getDeclaredConstructor(String.class, String.class, String.class, CardEdition.Type.class, String.class, CardEdition.FoilType.class);
+        constructor.setAccessible(true);
+        return constructor.newInstance(date, code, code.substring(0, 2), type, name, CardEdition.FoilType.NOT_SUPPORTED);
+    }
+    private void white(CardEdition edition) throws Exception {
+        Field field = CardEdition.class.getDeclaredField("borderColor"); field.setAccessible(true); field.set(edition, CardEdition.BorderColor.WHITE);
+    }
+    private static final class Reader implements IItemReader<CardEdition> {
+        private final Map<String, CardEdition> values;
+        Reader(CardEdition... editions) {
+            values = new TreeMap<>(String.CASE_INSENSITIVE_ORDER);
+            for (CardEdition edition : editions) values.put(edition.getCode(), edition);
+        }
+        @Override public String getFullPath() { return "fixed-memory-editions"; }
+        @Override public Map<String, CardEdition> readAll() { return values; }
+        @Override public String getItemKey(CardEdition item) { return item.getCode(); }
+        @Override public Iterable<File> getSubFolders() { return List.of(); }
+        @Override public IItemReader<CardEdition> getReaderForFolder(File ignored) { throw new UnsupportedOperationException(); }
+    }
+    private static final class CallbackEditions extends CardEdition.Collection {
+        int reads;
+        CallbackEditions(Reader reader) { super(reader); }
+        @Override public CardEdition get(String code) { reads++; return super.get(code); }
+    }
+    private static final class CallbackPaper extends PaperCard {
+        int reads;
+        CallbackPaper(CardRules rules, String code) { super(rules, code, CardRarity.Common); }
+        @Override public String getEdition() { reads++; return super.getEdition(); }
+    }
+    private CardRules rules() {
+        return CardRules.fromScript(List.of("Name:" + NAME, "ManaCost:1", "Types:Artifact", "Oracle:Fixed metadata contract."));
+    }
+    private CardDb database(CardRules rules, CardEdition.Collection editions, PaperCard... cards) {
+        Map<String, CardRules> names = new TreeMap<>(String.CASE_INSENSITIVE_ORDER); names.put(NAME, rules);
+        CardDb db = new CardDb(names, editions, Set.of());
+        db.setCardArtPreference(false, false, false);
+        for (PaperCard card : cards) db.addCard(card);
+        return db;
+    }
+    private PaperCard paper(CardRules rules, String code, int art, String number) {
+        return new PaperCard(rules, code, CardRarity.Common, art, false, number, "", "");
+    }
+    private PaperCard query(CardDb db, CardArtPreference preference) { return db.getCardFromEditions(NAME, preference, 1, null); }
+    private void check(String mode) throws Exception {
+        CardEdition a = edition("AAA", "2000-01-01", "First Edition", CardEdition.Type.CORE);
+        CardEdition b = edition("BBB", "2020-01-01", "Second Edition", CardEdition.Type.EXPANSION);
+        CardRules rules = rules(); PaperCard first = paper(rules, "AAA", 1, "1"), second = paper(rules, "BBB", 1, "2");
+        CardEdition.Collection editions = new CardEdition.Collection(new Reader(a, b));
+        CardDb db = database(rules, editions, first, second);
+        CardArtPreference old = CardArtPreference.ORIGINAL_ART_ALL_EDITIONS, latest = CardArtPreference.LATEST_ART_ALL_EDITIONS;
+        if (mode.equals("original")) assertSame(query(db, old), first);
+        else if (mode.equals("latest")) assertSame(query(db, latest), second);
+        else if (mode.startsWith("tie")) {
+            b = edition("BBB", "2000-01-01", "First Edition", CardEdition.Type.EXPANSION);
+            PaperCard lastA = paper(rules, "AAA", 1, "3");
+            db = mode.contains("Repeated") ? database(rules, new CardEdition.Collection(new Reader(a, b)), first, second, lastA) : database(rules, new CardEdition.Collection(new Reader(a, b)), first, second);
+            boolean latestFirst = mode.endsWith("Latest");
+            assertSame(query(db, latestFirst ? latest : old), mode.contains("Repeated") ? lastA : latestFirst ? second : first);
+        } else if (mode.startsWith("duplicate")) {
+            PaperCard last = paper(rules, "AAA", 1, "9"); db = database(rules, editions, first, last);
+            assertSame(query(db, mode.endsWith("Latest") ? latest : old), last);
+        } else if (mode.equals("coreRankBlack")) {
+            CardEdition promo = edition("CCC", "1990-01-01", "Old Promo", CardEdition.Type.PROMO);
+            PaperCard card = paper(rules, "CCC", 1, "3"); db = database(rules, new CardEdition.Collection(new Reader(a, promo)), card, first);
+            assertSame(query(db, CardArtPreference.ORIGINAL_ART_BLACK_BORDER_ALL_EDITIONS), first);
+        } else if (mode.equals("blackAccepted")) {
+            white(a); assertSame(query(db, CardArtPreference.ORIGINAL_ART_BLACK_BORDER_ALL_EDITIONS), second);
+        } else if (mode.equals("blackFallback")) {
+            white(a); white(b); assertSame(query(db, CardArtPreference.ORIGINAL_ART_BLACK_BORDER_ALL_EDITIONS), first);
+        } else if (mode.equals("coreFilterFallback")) {
+            CardEdition x = edition("XXX", "1990-01-01", "Promo", CardEdition.Type.PROMO);
+            CardEdition y = edition("YYY", "2010-01-01", "Commander", CardEdition.Type.COMMANDER);
+            PaperCard left = paper(rules, "XXX", 1, "1"), right = paper(rules, "YYY", 1, "2");
+            db = database(rules, new CardEdition.Collection(new Reader(x, y)), left, right);
+            assertSame(query(db, CardArtPreference.ORIGINAL_ART_CORE_EXPANSIONS_REPRINT_ONLY), left);
+        } else if (mode.equals("missingEdition")) {
+            db = database(rules, editions, first, paper(rules, "ZZZ", 1, "2")); assertSame(query(db, latest), first);
+        } else if (mode.equals("allMissing")) {
+            db = database(rules, editions, paper(rules, "ZZZ", 1, "1"), paper(rules, "YYY", 1, "2")); assertNull(query(db, latest));
+        } else if (mode.equals("unknownPaper")) {
+            CallbackPaper callback = new CallbackPaper(rules, "AAA"); db = database(rules, editions, callback, second);
+            assertSame(query(db, old), callback); assertTrue(callback.reads > 0);
+        } else if (mode.equals("unknownCollection")) {
+            CallbackEditions callback = new CallbackEditions(new Reader(a, b)); db = database(rules, callback, first, second);
+            assertSame(query(db, old), first); assertTrue(callback.reads > 0);
+        } else if (mode.equals("aliasCode") || mode.equals("lowerCode")) {
+            db = database(rules, editions, paper(rules, mode.equals("aliasCode") ? "AA" : "aaa", 1, "3"), second);
+            assertNull(query(db, old), "Native canonical-map lookup result for noncanonical code");
+        } else if (mode.equals("foil")) {
+            PaperCard result = db.getCardFromEditions(NAME + "+", latest, 1, null);
+            assertTrue(result.isFoil()); assertEquals(result.getEdition(), "BBB");
+        } else if (mode.equals("artIndex")) {
+            PaperCard art = paper(rules, "AAA", 2, "4"); db.addCard(art);
+            assertSame(db.getCardFromEditions(NAME, latest, 2, null), art);
+        } else if (mode.equals("filterSelect")) {
+            assertSame(db.getCardFromEditions(NAME, latest, 1, card -> card.getEdition().equals("AAA")), first);
+        } else if (mode.equals("filterReject")) {
+            assertNull(db.getCardFromEditions(NAME, latest, 1, card -> false));
+        } else if (mode.equals("before")) {
+            assertSame(db.getCardFromEditionsReleasedBefore(NAME, latest, 1, b.getDate(), null), first);
+        } else if (mode.equals("after")) {
+            assertSame(db.getCardFromEditionsReleasedAfter(NAME, old, 1, a.getDate(), null), second);
+        } else if (mode.equals("boundary")) {
+            assertNull(db.getCardFromEditionsReleasedBefore(NAME, old, 1, a.getDate(), null));
+            assertNull(db.getCardFromEditionsReleasedAfter(NAME, latest, 1, b.getDate(), null));
+        } else if (mode.equals("addCard")) {
+            db = database(rules, editions, first); assertSame(query(db, latest), first); db.addCard(second); assertSame(query(db, latest), second);
+        } else if (mode.equals("addEdition")) {
+            editions = new CardEdition.Collection(new Reader(a)); db = database(rules, editions, first, second);
+            assertSame(query(db, latest), first); editions.add(b); assertSame(query(db, latest), second);
+        } else if (mode.equals("preferenceChange")) {
+            assertSame(query(db, null), first); db.setCardArtPreference(true, false, false); assertSame(query(db, null), second);
+        } else if (mode.equals("nullRequest")) {
+            assertNull(db.getCardFromEditions(null, old, 1, null));
+        } else throw new IllegalArgumentException(mode);
+    }
+    @Test public void original() throws Exception { check("original"); }
+    @Test public void latest() throws Exception { check("latest"); }
+    @Test public void tieOriginal() throws Exception { check("tieOriginal"); }
+    @Test public void tieLatest() throws Exception { check("tieLatest"); }
+    @Test public void tieRepeatedOriginal() throws Exception { check("tieRepeatedOriginal"); }
+    @Test public void tieRepeatedLatest() throws Exception { check("tieRepeatedLatest"); }
+    @Test public void duplicateOriginal() throws Exception { check("duplicateOriginal"); }
+    @Test public void duplicateLatest() throws Exception { check("duplicateLatest"); }
+    @Test public void coreRankBlack() throws Exception { check("coreRankBlack"); }
+    @Test public void blackAccepted() throws Exception { check("blackAccepted"); }
+    @Test public void blackFallback() throws Exception { check("blackFallback"); }
+    @Test public void coreFilterFallback() throws Exception { check("coreFilterFallback"); }
+    @Test public void missingEdition() throws Exception { check("missingEdition"); }
+    @Test public void allMissing() throws Exception { check("allMissing"); }
+    @Test public void unknownPaper() throws Exception { check("unknownPaper"); }
+    @Test public void unknownCollection() throws Exception { check("unknownCollection"); }
+    @Test public void aliasCode() throws Exception { check("aliasCode"); }
+    @Test public void lowerCode() throws Exception { check("lowerCode"); }
+    @Test public void foil() throws Exception { check("foil"); }
+    @Test public void artIndex() throws Exception { check("artIndex"); }
+    @Test public void filterSelect() throws Exception { check("filterSelect"); }
+    @Test public void filterReject() throws Exception { check("filterReject"); }
+    @Test public void before() throws Exception { check("before"); }
+    @Test public void after() throws Exception { check("after"); }
+    @Test public void boundary() throws Exception { check("boundary"); }
+    @Test public void addCard() throws Exception { check("addCard"); }
+    @Test public void addEdition() throws Exception { check("addEdition"); }
+    @Test public void preferenceChange() throws Exception { check("preferenceChange"); }
+    @Test public void nullRequest() throws Exception { check("nullRequest"); }
+    @Test public void realCatalogPreferencesAndRandomState() throws Exception {
+        catalogFingerprints.clear(); CardDb db = StaticData.instance().getCommonCards();
+        Date date = new SimpleDateFormat("yyyy-MM-dd").parse("2015-01-01");
+        int found = 0;
+        for (String name : List.of("Forest", "Mountain", "Lightning Bolt", "Sol Ring", "Counterspell", "Black Lotus")) {
+            for (CardArtPreference preference : CardArtPreference.values()) for (int art : new int[]{1, 2}) {
+                for (String mode : List.of("plain", "before", "after")) for (long seed : new long[]{42, 0, 4096}) {
+                    Random provider = new Random(seed); Random original = MyRandom.getRandom();
+                    String result = MyRandom.withRandom(provider, () -> {
+                        PaperCard card = mode.equals("before") ? db.getCardFromEditionsReleasedBefore(name, preference, art, date, null)
+                                : mode.equals("after") ? db.getCardFromEditionsReleasedAfter(name, preference, art, date, null)
+                                : db.getCardFromEditions(name, preference, art, null);
+                        return (card == null ? "<null>" : card.getName() + "|" + card.getEdition() + "|" + card.getCollectorNumber() + "|" + card.getArtIndex() + "|" + card.isFoil() + "|" + card.getFunctionalVariant()) + "|rng=" + provider.nextLong();
+                    });
+                    assertSame(MyRandom.getRandom(), original); if (!result.startsWith("<null>")) found++;
+                    catalogFingerprints.add(name + "|" + preference + "|art=" + art + "|" + mode + "|seed=" + seed + "|" + result);
+                }
+            }
+        }
+        assertEquals(catalogFingerprints.size(), 648); assertTrue(found > 100);
+        assertEquals(catalogFingerprints, CommanderPrintingSelectionExpected.FINGERPRINTS, "Pinned native printing identities and random state");
+    }
+}

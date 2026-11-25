@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct one unused import in the printing regression fixture after the full
+  source build stopped at Checkstyle before executing native cases. Preserve the
+  failed attempt, align canonical fixture bytes and update the recipe digest;
+  test bodies, all 30 named cases and all 648 reference vectors are unchanged.
+  Full expanded source/native/packaged validation remains pending.
+
 - Register 81 native printing/membership contracts and a pinned 648-vector data
   fixture. Paired baseline/corrected-prototype checks pass all 616 focused cases
   with identical printing identities and scoped random state. Preserve three
