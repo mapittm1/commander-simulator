@@ -1,0 +1,83 @@
+"""Bind all normal grouped packaged receipts to the complete sealed method set."""
+from pathlib import Path
+from collections import Counter
+import json
+import re
+import xml.etree.ElementTree as ET
+from commander.engine.forge_config import file_hash, read_settings
+from tests.support import draw_ending_worker, free_casting_worker, untap_worker, battle_combat_worker
+from tests.support.draw_ending_partitions import PARTITIONS, EXPECTED_COUNTS, validate_partitions
+from tests.support.native_receipts import read_test_receipts
+
+ROOT=Path.cwd()
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/intrinsic-cache-candidate-v1'
+load=lambda path:json.loads(path.read_bytes())
+def bound(path):
+    return {'path':path.relative_to(ROOT).as_posix(),'sha256':file_hash(path)}
+frozen=load(WORK/'source-frozen-inputs.json')
+assert len(frozen)==load(WORK/'source-epoch.json')['tracked_count'] and all(file_hash(ROOT/name)==sha for name,sha in frozen.items())
+process=load(WORK/'smoke-process-v1.json')
+assert process['status']=='finished' and process['returncode']==0 and process['elapsed_seconds']<=420
+log_path=WORK/'smoke-output-v1.log'
+assert file_hash(log_path)==process['log_sha256']
+log=log_path.read_text(encoding='utf-8')
+build=ROOT/load(WORK/'candidate-selection.json')['build']
+settings=read_settings(build/'engine-config.json')
+engine=settings.verify()
+assert engine['native_tests']==dict(total=4245,passed=4245,failed=0,skipped=0)
+assert engine['recipe_sha256']==file_hash(ROOT/'engine/sticker_recipe.json')
+assert read_settings().verify()['native_tests']['total']==3295
+methods=Counter()
+report=build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+for cls in ET.parse(report).findall('.//class'):
+    for method in cls.findall('test-method'):
+        if method.get('is-config')!='true':
+            assert method.get('status')=='PASS'
+            methods[cls.get('name')+'.'+method.get('name')]+=1
+assert sum(methods.values())==4245
+validate_partitions(draw_ending_worker.TEST_CLASSES)
+assert len(draw_ending_worker.NATIVE_CLASSES)==175 and len(set(draw_ending_worker.NATIVE_CLASSES))==175
+group_ids=re.findall(r'"draw_ending_partition": "([^"]+)", "draw_ending_run": "([a-f0-9]{32})"',log)
+assert Counter(name for name,_ in group_ids)==Counter({name:1 for name in PARTITIONS})
+selections=[]
+for name,run_id in group_ids:
+    selections.append((name,run_id,EXPECTED_COUNTS[name],'draw-ending','draw-endings.json',PARTITIONS[name],draw_ending_worker.NATIVE_CLASSES,draw_ending_worker))
+for name,tag,count,prefix,manifest,worker in (
+    ('free','free_casting_run',65,'free-casting','free-casting.json',free_casting_worker),
+    ('untap','untap_run',194,'untap','untap.json',untap_worker),
+    ('battle','battle_combat_run',146,'battle-combat','battle-combat.json',battle_combat_worker),
+):
+    ids=re.findall('"'+tag+'": "([a-f0-9]{32})"',log)
+    assert len(ids)==1
+    selections.append((name,ids[0],count,prefix,manifest,worker.TEST_CLASSES,worker.NATIVE_CLASSES,worker))
+results={};grouped_methods=Counter()
+for name,run_id,count,prefix,manifest,classes,origins,worker in selections:
+    run=ROOT/'data/runs'/run_id
+    rows=read_test_receipts(settings,run,manifest,{prefix+'-summary.json':1,prefix+'-methods.json':count})
+    summary,outcomes=rows[0],rows[1:]
+    actual=Counter(row['method'] for row in outcomes)
+    expected=Counter({method:n for method,n in methods.items() if method.rsplit('.',1)[0] in classes})
+    assert sum(expected.values())==count and actual==expected
+    assert all(row['status']=='PASS' for row in outcomes)
+    assert summary['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert summary['production_classes_from_packaged_jar']==list(origins) and len(set(origins))==len(origins)
+    assert all(summary[key]==0 for key in ('testng_status','configuration_failures','configuration_skips','partial_successes'))
+    assert file_hash(run/'rules-reports/testng-results.xml')==summary['report_sha256']
+    assert all(file_hash(Path(path))==sha for path,sha in summary['inputs'].items())
+    execution=load(run/'rules-process.json')
+    assert execution['worker_sha256']==file_hash(Path(worker.__file__))
+    assert execution['process']['status']=='finished' and execution['process']['returncode']==0 and execution['process']['elapsed_seconds']<=90
+    assert all(file_hash(Path(path))==sha for path,sha in execution['process']['support_source_hashes'].items())
+    artifacts=[bound(run/item) for item in (manifest,prefix+'-summary.json',prefix+'-methods.json','rules-inputs.json','rules-process.json','rules-reports/testng-results.xml')]
+    for chunk in load(run/(prefix+'-methods.json')).get('chunks',[]):
+        assert file_hash(run/chunk['name'])==chunk['sha256'];artifacts.append(bound(run/chunk['name']))
+    results[name]={'run':run_id,'counts':summary['counts'],'production_origins':len(origins),'process':execution['process'],'artifacts':artifacts}
+    if name in PARTITIONS:
+        grouped_methods.update(actual)
+expected=Counter({method:n for method,n in methods.items() if method.rsplit('.',1)[0] in draw_ending_worker.TEST_CLASSES})
+assert grouped_methods==expected and sum(grouped_methods.values())==3088 and len(grouped_methods)==3088
+assert (ROOT/'config/engine_config.json').read_bytes()==(WORK/'active-config-before-smoke-v1.json').read_bytes()
+record={'status':'normal_packaged_grouped_gate_passed_full_live_pending','build_id':build.name,'epoch':load(WORK/'source-epoch.json'),'ci':load(WORK/'source-ci.json'),'method_totals':[3088,65,194,146],'combined_native_required':4245,'exact_grouped_method_counter_matches_native':True,'whole_smoke_seconds':process['elapsed_seconds'],'worker_budget_seconds':90,'groups':results,'wrapper':bound(WORK/'smoke-process-v1.json'),'wrapper_log':bound(log_path),'frozen_inputs':bound(WORK/'source-frozen-inputs.json'),'native_report':bound(report),'prior_failures_preserved':bound(ROOT/'engine/exert_snapshot_evidence.json'),'limits':'All original cases and assertions retained under fixed groups. Earlier single-worker timeouts remain failed. Full fixed-seed games/catalog and activation remain pending; no all-card correctness claim.'}
+record['native_build_epoch']=load(WORK/'source-epoch.json')
+p=WORK/'packaged-evidence-v1.json';assert not p.exists();p.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'status':record['status'],'packaged':[3088,65,194,146],'whole_smoke_seconds':process['elapsed_seconds']}),flush=True)

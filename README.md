@@ -26,15 +26,28 @@ difference.
 
 ## Card coverage
 
-A registered intrinsic-cache simplification removes 66 lines of redundant
-bookkeeping while preserving live mutable-source guards, intrinsic-list stamps,
-native type/counter flags and independent returned collections. Both baseline
-and prototype pass the same 298 focused cases; snapshot serialization bytes match.
-Its original 1,271-case overlay diagnostic still times out at 90 seconds, so no
-runtime-limit improvement is established. Full 3,045-source / 4,245-native and
-independent 3,088-case packaged validation remain pending for this revision.
-The selected runtime is unchanged. See
-[intrinsic-cache evidence](engine/intrinsic_cache_evidence.json).
+A registered follow-up ensures that keyword-collection subclasses use their
+native ability/replacement callbacks even when their underlying map is empty.
+Six baseline failures are corrected, and all 298 prior focused controls remain
+passing (304 total). Full 3,051-source / 4,251-native and independent 3,094-case
+packaged validation remain pending for this revision. The selected runtime is
+unchanged. See [opaque keyword evidence](engine/opaque_keyword_traits_evidence.json).
+
+The completed intrinsic-cache revision passes all 3,045 source and 4,245 native
+cases, retaining every earlier case/parameter. All 2,168 production sources match,
+and native resource assertions verify two JVM processors and a 2 GiB maximum heap.
+Its independent packaged gate still fails: the original 1,271-case resolution
+group exceeds 90 seconds. Six other groups pass 1,284 subtests; the 938-case
+cast-event group is not reached. The configuration is restored and this candidate
+remains uninstalled. Broader/full-game/catalog/health/activation remain pending.
+See [completed revision evidence](engine/intrinsic_cache_runtime_evidence.json).
+
+The cache simplification removes 66 redundant lines while preserving live guards,
+intrinsic-list stamps, native type/counter flags and independent returned
+collections. All 298 paired controls pass; four table-snapshot serialization
+checks retain identical bytes. This does not establish whole-game serialization
+compatibility or complete card/rules support. See
+[focused cache evidence](engine/intrinsic_cache_evidence.json).
 
 The preceding live-trait candidate passed all **3,045 source** and **4,245 native** cases,
 including 30 new regressions and every retained earlier case. The source/binary

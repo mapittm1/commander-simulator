@@ -17,14 +17,24 @@ does not silently replace the selected engine. Rebuilding may change the JAR
 hash because upstream packaging embeds build metadata; every build needs its
 own lock and validation.
 
-## Guarded intrinsic-cache follow-up
+## Opaque keyword callbacks
 
-The registered follow-up removes redundant bookkeeping after the live-source
-guard. Both baseline and prototype pass 298 focused controls; serialized snapshot
-bytes match. The original 1,271-case overlay diagnostic still exceeds 90 seconds.
-Full 3,045-source / 4,245-native and independent packaged validation of this recipe
-remain pending. The installed runtime is unchanged. See
-[intrinsic-cache evidence](../engine/intrinsic_cache_evidence.json).
+The registered follow-up delegates to native keyword-collection subclasses,
+even when their underlying map is empty. Six baseline callback failures are
+corrected; all 298 prior controls remain passing (304 total). Full 3,051-source /
+4,251-native and independent 3,094-case packaged validation remain pending.
+These controlled native extension contracts do not certify printed card behavior.
+See [callback evidence](../engine/opaque_keyword_traits_evidence.json).
+
+## Completed intrinsic-cache validation
+
+The preceding revision passes all 3,045 source / 4,245 native cases and the
+2,168-source audit with actual two-processor / 2 GiB JVM assertions. The original
+1,271-case independent resolution group still times out at 90 seconds. Six groups
+pass 1,284 subtests, the 938-case cast-event group is not reached, and configuration
+is restored. The candidate remains uninstalled. Four serialized table snapshots
+retain identical bytes; whole-game serialization and full rules correctness are
+not established. See [runtime evidence](../engine/intrinsic_cache_runtime_evidence.json).
 
 ## Earlier live-trait validation
 

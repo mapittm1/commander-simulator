@@ -6,11 +6,26 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Honor opaque keyword-collection callbacks even when the underlying collection
+  is empty. Six native callback failures become passing, and all 298 prior focused
+  controls remain passing (304 total). Bind compiled test bytecode before and
+  after the combined runs. Register all six additional cases without changing
+  the original 1,271-case / 90-second resolution gate. Full 3,051-source /
+  4,251-native / 3,094-packaged validation remains pending; selected runtime unchanged.
+
+- Complete intrinsic-cache source/native validation: 3,045 source and 4,245 native
+  cases pass, all prior parameters and 2,168 production sources are retained, and
+  actual two-processor / 2 GiB JVM assertions pass. Preserve the independent
+  packaged resolution timeout (90.016 seconds), 1,284 passing subtests in six
+  other groups, and the 938-case cast group not reached. Restore configuration
+  and keep the candidate uninstalled. Clarify that the four serialization checks
+  cover table snapshots; broader/full-game/catalog/health/activation remain pending.
+
 - Simplify guarded intrinsic ability caches by removing 66 lines of redundant
   source/version bookkeeping and repeated split-state checks. Preserve live
   mutable-source guards, unknown-table fallback, list stamps, native type/counter
   flags and independent returned collections. Baseline/prototype both pass all
-  298 focused controls and retain identical snapshot serialization bytes. The
+  298 focused controls and retain identical table-snapshot serialization bytes. The
   original 1,271-case overlay still times out at 90 seconds; preserve that result
   without claiming a runtime improvement. Full source/native/packaged and later
   validation remain pending for the new recipe; selected runtime unchanged.

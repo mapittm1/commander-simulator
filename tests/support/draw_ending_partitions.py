@@ -191,6 +191,7 @@ PARTITIONS = {
         "forge.card.CommanderSagaTypeTest",
         "forge.ai.CommanderReplacementPresenceTest",
         "forge.ai.CommanderLiveTraitMutationTest",
+        "forge.ai.CommanderKeywordTraitPresenceTest",
         "forge.ai.CommanderReplacementCacheInputsTest",
         "forge.gamesimulationtests.util.PerfPatchUnitTest",
         "forge.gamesimulationtests.util.PerfPatchFollowUpTableTest",
@@ -208,7 +209,7 @@ EXPECTED_COUNTS = {
     "combat_and_snapshots": 240,
     "text_casting_and_costs": 338,
     "resolution": 1271,
-    "cast_events": 938,
+    "cast_events": 944,
 }
 
 

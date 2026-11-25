@@ -1,0 +1,10 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -698,6 +698,7 @@
+     /** Live base-class trait sources; unknown subclasses retain normal callbacks. */
+     private boolean hasNoAdditionalTraits() {
+         return getClass() == CardState.class && card.getClass() == Card.class
++                && cachedKeywords.getClass() == KeywordCollection.class
+                 && cachedKeywords.isEmpty()
+                 && card.getChangedCardTraits().isEmpty()
+                 && card.getChangedCardTraitsByText().isEmpty()
