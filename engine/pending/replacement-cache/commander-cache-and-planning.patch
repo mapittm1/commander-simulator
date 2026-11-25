@@ -1,0 +1,120 @@
+--- a/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
++++ b/forge-ai/src/main/java/forge/ai/ComputerUtilMana.java
+@@ -1067,22 +1067,32 @@
+         return paid;
+     }
+ 
++    private enum FilterActivationResult { UNAVAILABLE_BEFORE_CHOICE, PAYMENT_FAILED, ACTIVATED }
++
+     private static boolean activateFilterStep(FilterStep step, Game game, Player payer, boolean effect) {
++        return tryActivateFilterStep(step, game, payer, effect) == FilterActivationResult.ACTIVATED;
++    }
++
++    private static FilterActivationResult tryActivateFilterStep(FilterStep step, Game game, Player payer, boolean effect) {
+         SpellAbility ability = step.source().find(game);
+         if (ability == null || isManaSourceReserved(payer, ability.getHostCard())
+-                || !getAvailableManaSources(payer, false).contains(ability.getHostCard())) return false;
++                || !getAvailableManaSources(payer, false).contains(ability.getHostCard())) {
++            return FilterActivationResult.UNAVAILABLE_BEFORE_CHOICE;
++        }
+         ability.setActivatingPlayer(payer);
+         prepareManaPoolForPayment(payer, ability, effect);
+         ManaCostBeingPaid activation = calculateManaCost(ability.getPayCosts(), ability, payer, true, 0, effect);
+-        if (!filterPoolCovers(activation, ability, payer) || !ability.canPlay()) return false;
++        if (!filterPoolCovers(activation, ability, payer) || !ability.canPlay()) {
++            return FilterActivationResult.UNAVAILABLE_BEFORE_CHOICE;
++        }
+         ability.getManaPart().setExpressChoice(step.choice());
+         boolean newTap = rememberManaTap(payer, ability);
+         if (!new CostPayment(ability.getPayCosts(), ability).payComputerCosts(new AiCostDecision(payer, ability, effect, true))) {
+             releaseFailedManaTap(payer, ability, newTap);
+-            return false;
++            return FilterActivationResult.PAYMENT_FAILED;
+         }
+         game.getStack().addAndUnfreeze(ability);
+-        return true;
++        return FilterActivationResult.ACTIVATED;
+     }
+ 
+     private static FilterFrontier filterFrontier(FilterNode node, ManaCostBeingPaid cost, boolean effect) {
+@@ -1106,8 +1116,8 @@
+                 .thenComparing(Comparator.comparingInt(FilterFrontier::floating).reversed())
+                 .thenComparingInt(entry -> entry.node().steps().size()));
+         queue.add(filterFrontier(filterCopy(new FilterNode(payer.getGame(), payer, goal, List.of())), cost, effect));
+-        int copies = 1;
+-        while (!queue.isEmpty() && copies <= MAX_FILTER_SEARCH_COPIES) {
++        int copySlots = 1;
++        while (!queue.isEmpty() && copySlots <= MAX_FILTER_SEARCH_COPIES) {
+             FilterNode node = queue.remove().node();
+             prepareManaPoolForPayment(node.payer(), node.goal(), effect);
+             ManaCostBeingPaid remaining = new ManaCostBeingPaid(cost);
+@@ -1119,12 +1129,25 @@
+                 SpellAbility mapped = source.find(node.game());
+                 if (mapped == null) continue;
+                 mapped.setActivatingPlayer(node.payer());
+-                for (String choice : filterChoices(mapped)) {
+-                    if (copies >= MAX_FILTER_SEARCH_COPIES) break;
++                List<String> choices = filterChoices(mapped);
++                for (int choiceIndex = 0; choiceIndex < choices.size(); choiceIndex++) {
++                    String choice = choices.get(choiceIndex);
++                    if (copySlots >= MAX_FILTER_SEARCH_COPIES) break;
+                     FilterNode child = filterCopy(node);
+-                    copies++;
++                    copySlots++;
+                     FilterStep step = new FilterStep(source, choice);
+-                    if (!activateFilterStep(step, child.game(), child.payer(), effect)) continue;
++                    FilterActivationResult activation = tryActivateFilterStep(step, child.game(), child.payer(), effect);
++                    // Every color shares this node's checks before expressChoice is set.
++                    // A failure there cannot be repaired by another output color. Keep
++                    // trying colors when native payment fails after the choice instead.
++                    if (activation == FilterActivationResult.UNAVAILABLE_BEFORE_CHOICE) {
++                        // Preserve the original candidate budget while eliding copies
++                        // for color choices that have the same failed preconditions.
++                        int remainingChoices = choices.size() - choiceIndex - 1;
++                        copySlots += Math.min(remainingChoices, MAX_FILTER_SEARCH_COPIES - copySlots);
++                        break;
++                    }
++                    if (activation != FilterActivationResult.ACTIVATED) continue;
+                     List<FilterStep> steps = new ArrayList<>(node.steps());
+                     steps.add(step);
+                     queue.add(filterFrontier(new FilterNode(child.game(), child.payer(), child.goal(), List.copyOf(steps)), cost, effect));
+--- a/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java
+@@ -33,6 +33,9 @@
+     /** Called inside the ordinary attack decision's armed timeout, before original costs are paid. */
+     public static void refine(final Player actor, final Combat combat) {
+         if (PLANNING.get() || actor.isControlled() || actor.getOpponents().size() < 2
++                // With no creatures and no declared attackers, every candidate
++                // is the same empty declaration; a future-round score cannot change it.
++                || actor.getCreaturesInPlay().isEmpty() && combat.getAttackers().isEmpty()
+                 || combat.getAttackers().anyMatch(card -> card.getController() != actor)
+                 || !actor.getGame().getPhaseHandler().is(PhaseType.COMBAT_DECLARE_ATTACKERS)) {
+             return;
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -8558,8 +8558,13 @@
+             forge.game.spellability.SpellAbilitySnapshot context) {
+         drawnThisTurn = original.drawnThisTurn;
+         // First-target and valiant events depend on the participants that targeted this object.
+-        targetedFromThisTurn = new PlayerCollection();
+-        for (Player participant : original.targetedFromThisTurn) targetedFromThisTurn.add(context.map(participant));
++        if (!targetedFromThisTurn.isEmpty() || !original.targetedFromThisTurn.isEmpty()) {
++            // Fresh copies already own an empty collection. Map nonempty history
++            // before assignment so source and destination can safely be identical.
++            PlayerCollection mappedTargets = new PlayerCollection();
++            for (Player participant : original.targetedFromThisTurn) mappedTargets.add(context.map(participant));
++            targetedFromThisTurn = mappedTargets;
++        }
+         numberTurnActivations.copySnapshotFrom(original.numberTurnActivations, context);
+         numberGameActivations.copySnapshotFrom(original.numberGameActivations, context);
+         numberAbilityResolved.copySnapshotFrom(original.numberAbilityResolved, context);
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -883,6 +883,7 @@
+         if (rulesHost) {
+             if (type.hasSubtype("Adventure")) flags |= 16;
+             if (type.hasSubtype("Omen")) flags |= 32;
++            if (type.hasSubtype("Vengeance")) flags |= 512;
+             // Card.updateReplacementEffects
+             if (card.getCounters(CounterEnumType.SHIELD) > 0) flags |= 64;
+             if (card.getCounters(CounterEnumType.STUN) > 0) flags |= 128;

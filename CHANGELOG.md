@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reproduce a replacement-cache gap for Vengeance type changes: six of 36 native
+  cache-equivalence controls fail before the fix; all 36 pass after adding the
+  missing cache-key flag. Preserve baseline, corrected and failed diagnostic
+  attempts. All 2,885 source cases pass with previous cases retained. Preserve
+  114 preceding live-trait, empty-attack and core-collection controls and the
+  candidate-budget-preserving planning changes. Keep these changes pending
+  registration/runtime gates; the original packaged resolution timeout remains
+  unresolved and the selected runtime stays unchanged. Update README and evidence.
+
 - Preserve the fresh 3,935-case native build and source/binary parity audit,
   retaining all prior cases. Record the failed independent packaged gate:
   resolution (1,271 expected cases) reached its unchanged 90-second limit;

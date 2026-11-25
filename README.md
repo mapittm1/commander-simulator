@@ -27,6 +27,17 @@ difference.
 
 ## Card coverage
 
+Development-only follow-up fixes a reproduced replacement-cache input gap: adding
+or removing Vengeance returned a stale list at snapshot depths 0/1/2. The same
+36-case suite goes from 30 passing / 6 failing to 36 passing after including the
+subtype in the cache key. All 2,885 source cases pass, retaining the previous
+2,849 and adding these 36 controls. Earlier new controls cover live trait changes,
+empty attack declarations and core collections. These changes remain pending
+registration and runtime validation; the original 1,271-case packaged resolution
+group still has no passing result at its unchanged 90-second limit. The selected
+runtime remains unchanged. See [development evidence](engine/replacement_cache_evidence.json).
+This cache invariant does not establish the complete Vengeance gameplay lifecycle.
+
 The selected runtime is `2.0.16-583714b-reviewed-mana-chain`.
 Shared mana planning now searches native game copies for admitted chained-filter
 payments after the ordinary planner fails. It handles tested floating-color seeds
