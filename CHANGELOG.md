@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Correct generic replacement eligibility: performance mode now respects explicit
+  active zones instead of dropping tap, untap and mana replacements outside the
+  battlefield/command zone. Preserve a failing baseline (36/72) and corrected
+  72/72 checks, including inactive-zone controls and copy depths 0/1/2. Retained
+  685 interaction and 194 untap cases also pass. Register the patch and all 72
+  cases in the reproducible build; update expected native/package totals to
+  4,668/3,511. Full build, packaged resolution and remaining rules gates are
+  pending; selected runtime remains unchanged. These controlled definitions do
+  not establish full printed-card or paid-history coverage.
+
 - Preserve an unpromoted native snapshot-construction experiment: eligible
   runtime types start with original-state properties before the existing mapped
   trait graph installation. All 685 retained contracts and 194 untap cases pass,
@@ -2225,7 +2235,7 @@ Historical entries below summarize verified Git milestones, not release versions
   validated by the activation above.
 
 
-- Correct Rinoa, Angel Wing’s queued return to retain the graveyard objects
+- Correct Rinoa, Angel Wingâ€™s queued return to retain the graveyard objects
   from the death event, including simultaneous deaths and cards that leave and
   later return to the graveyard.
 - Copy resident ability definitions and usage records through the snapshot
@@ -2260,14 +2270,14 @@ Historical entries below summarize verified Git milestones, not release versions
 - Prune generated and archived folders before discovering Python source for the
   quality gate, keeping engine builds out of the traversal.
 
-- Let Ulalek’s AI consider eligible abilities after the Eldrazi spell is
+- Let Ulalekâ€™s AI consider eligible abilities after the Eldrazi spell is
   countered, and verify that it declines when only an uncopyable spell remains.
 
-- Let the AI pay for Ulalek’s copy trigger and exclude the resolving trigger
+- Let the AI pay for Ulalekâ€™s copy trigger and exclude the resolving trigger
   from the abilities it copies.
 
 - Correct priority when resolving spells, copying spells and ending the turn.
-- Preserve Tempt with Mayhem’s spell target and copy order.
+- Preserve Tempt with Mayhemâ€™s spell target and copy order.
 - Fix mana payment with Gemstone Caverns, Cavern of Souls, and Delighted Halfling.
 
 
@@ -2284,7 +2294,7 @@ Historical entries below summarize verified Git milestones, not release versions
   created during the process to resolve in cleanup.
 
 - Resolve Vault 11's no-vote draw when there are no eligible creatures.
-- Make Círdan's permanent placement optional for each player with no votes.
+- Make CÃ­rdan's permanent placement optional for each player with no votes.
 - Restore the saved turn direction when applying a snapshot to an existing game.
 
 - Apply Commander's outside-the-game rule to Learn while preserving its
@@ -3232,7 +3242,7 @@ Historical entries below summarize verified Git milestones, not release versions
 
 - `engine-interactions`: controlled partial-state tests using the actual pinned
   Forge damage, trigger, stack, zone-change, and state-based-action APIs. Eight
-  initial Ratonhnhaké꞉ton/Equipment cases cover return/attach, separate target
+  initial RatonhnhakÃ©êž‰ton/Equipment cases cover return/attach, separate target
   timing, unavailable/opponent-owned Equipment, exiled targets, removed tokens
   and sources, creature Equipment, and noncombat damage. All eight pass; no
   production engine-script correction was needed for these tested cases.
@@ -3279,8 +3289,8 @@ Historical entries below summarize verified Git milestones, not release versions
 
 - Repository-owned identity review registry with exact Oracle-ID guards, archive
   and script hashes, bounded input, duplicate/conflict rejection, and preserved
-  provenance in audits and game/batch evidence. Ratonhnhaké꞉ton now exports to
-  the reviewed Forge spelling, Ratonhnhaké:ton; no fuzzy substitution is used.
+  provenance in audits and game/batch evidence. RatonhnhakÃ©êž‰ton now exports to
+  the reviewed Forge spelling, RatonhnhakÃ©:ton; no fuzzy substitution is used.
 - Multicolor basic-land fixtures and a live regression for that reviewed export,
   casting, combat-damage trigger resolution, and later Assassin-token participation.
   Equipment recursion, hexproof, and full card conformance remain unverified.
@@ -3322,7 +3332,7 @@ Historical entries below summarize verified Git milestones, not release versions
 
 - EDHREC salt reference support through bounded local sample import, immutable
   source snapshots, exact catalog/face matching, and `deck-salt` advisory reports.
-  Ratings retain the 0–4 scale, voting year, observation date, source attribution,
+  Ratings retain the 0â€“4 scale, voting year, observation date, source attribution,
   resolution catalog, and explicit unknowns. New commands: `salt-import`,
   `salt-show`, and `deck-salt`; a three-card example manifest is included.
 - Validation for finite/precise scores, rank order, duplicate fields/names/ranks,
