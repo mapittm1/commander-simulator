@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Fix multiplayer AI valuation that could decline a legal opponent elimination
+  because average surviving-opponent life remained unchanged. Reward native
+  registered-opponent losses and penalize allied losses by 200 heuristic points;
+  preserve terminal scoring. Focused autonomous/payment controls improve from
+  5/11 to 11/11, and 112 unchanged control/perspective/snapshot cases pass.
+- Register 21 candidate/payment/autonomous regressions. The new recipe expects
+  3,753 source, 4,953 native and 3,796 main packaged cases; full build validation
+  is pending. Preserve raw baselines, corrected fixtures and the evaluator overlay
+  in engine/elimination_score_evidence.json. Keep selected runtime and original
+  1,271-case / 90-second gate unchanged. Full rules coverage remains open.
+
 - Preserve Java parameter text in native test receipts: Boolean and floating
   special values no longer use Python bridge formatting, and null arguments
   use the explicit native null marker. Keep literal text and nonpassing results

@@ -227,6 +227,10 @@ PARTITIONS = {
     "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),
     "remembered_history": ("forge.ai.CommanderRememberedHistoryTest",),
     "phase_replacements": ("forge.ai.CommanderPhaseReplacementTest",),
+    "ignore_effect_ai": (
+        "forge.ai.CommanderIgnoreEffectAiTest",
+        "forge.ai.CommanderIgnoreEffectChoiceTest",
+    ),
     "ignore_effect": (
         "forge.ai.CommanderIgnoreEffectCopyTest",
         "forge.ai.CommanderIgnoreEffectCostTest",
@@ -257,6 +261,7 @@ EXPECTED_COUNTS = {
     "ignore_effect": 22,
     "remembered_history": 9,
     "phase_replacements": 14,
+    "ignore_effect_ai": 21,
 }
 
 

@@ -1,5 +1,18 @@
 # Card support and evidence
 
+A registered one-source evaluator fix recognizes native participant eliminations.
+The baseline declines a legal lethal activation: its score falls 340 to 339 while
+remaining-opponent average life is unchanged. The candidate adds 200 points for
+a lost registered opponent and subtracts 200 for a lost ally, retaining terminal
+win/loss scoring. Eleven focused controls improve from 5 pass / 6 fail to 11 pass;
+112 unchanged semantic cases pass. Both positive and unaffordable/no-benefit
+controls are retained. This is an AI heuristic, not a rules or optimal-play claim.
+Twenty-one candidate/payment/autonomous cases are registered. Full 3,753-source,
+4,953-native and 3,796 main packaged validation is pending. The original 1,271/90
+gate, full legal games, activation and universal rules support remain open.
+See [focused evidence](../engine/elimination_score_evidence.json), including all
+fixture and line-ending preparation corrections. Selected runtime is unchanged.
+
 A native-format probe exposed receipt identities differing from TestNG XML for
 Boolean, null, NaN and infinite arguments even when all 15 invocations passed.
 The collector now preserves Java display text and an explicit null marker. Four

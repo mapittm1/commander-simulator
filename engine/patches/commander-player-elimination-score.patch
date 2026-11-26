@@ -1,0 +1,26 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java
+@@ -115,6 +115,8 @@
+     // GameSimulator returns Integer.MIN_VALUE to mean "this line could not be simulated", so the
+     // very bottom of the range is left alone and a real loss is scored just above it.
+     private static final int GAME_OVER_TURN_PENALTY = 1000;
++    // Nonterminal progress: roughly one substantial permanent, below any game win/loss.
++    private static final int ELIMINATED_PLAYER_VALUE = 200;
+     private static final int MAX_DISCOUNTED_TURNS = 1000000;
+ 
+     /** True for any score that means the AI has won, however far off that win is. */
+@@ -202,6 +204,14 @@
+         if (opponents > 0) {
+             score -= 2 * opponentLife / opponents;
+         }
++        // Active-player averages alone hide eliminations (and can reward losing a
++        // low-life ally). Registered participants retain their native outcomes.
++        for (Player participant : game.getRegisteredPlayers()) {
++            if (participant.hasLost()) {
++                score += participant.isOpponentOf(aiPlayer)
++                        ? ELIMINATED_PLAYER_VALUE : -ELIMINATED_PLAYER_VALUE;
++            }
++        }
+ 
+         // evaluate mana base quality
+         AiDeckStatistics statistics = AiDeckStatistics.fromPlayer(aiPlayer);

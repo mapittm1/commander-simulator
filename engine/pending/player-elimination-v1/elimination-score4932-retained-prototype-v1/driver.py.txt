@@ -1,0 +1,59 @@
+"""Run every supplied-board ignore-effect AI contract against the sealed candidate."""
+from collections import Counter
+from pathlib import Path
+import importlib,json,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+WORK=Path(__file__).resolve().parent
+BUILD=ROOT/'data/engine-builds/d98c8b366a8d4210a9199336cdcfd02f'
+EPOCH=WORK/'ignore-choice4932-epoch-v1';FIXTURE=WORK/'ignore-choice4932-fixture-v4';RUN=WORK/'elimination-score4932-retained-prototype-v1'
+PROTO=WORK/'elimination-score4932-prototype-v2'
+UPSTREAM=BUILD/'source/forge-gui-desktop/target/test-classes';TARGETS=('forge.ai.ControlOutcomeScoringTest','forge.ai.ControlledDecisionAiTest','forge.ai.PlayerControlPlanningTest','forge.ai.ControlledCombatAiCoverageTest','forge.ai.PreviewRandomIsolationTest','forge.ai.ParticipantGameCopyTest','forge.ai.StartingLifeGameCopyTest')
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify(root=False):
+ assert all(file_hash(FIXTURE/n)==h for n,h in load(FIXTURE/'inputs.json').items())
+ assert all(file_hash(PROTO/n)==h for n,h in load(PROTO/'inputs.json').items())
+ assert load(RUN/'test-inputs.json')=={p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}
+ if root:assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+settings=read_settings(BUILD/'engine-config.json');assert sys.argv[1:] in ([],['--worker'])
+if sys.argv[1:]==['--worker']:
+ verify();lock=settings.verify();assert lock['native_tests']==dict(total=4932,passed=4932,failed=0,skipped=0)
+ recipe=load(ROOT/'engine/sticker_recipe.json');dep=ROOT/recipe['packaged_testng']['path'];assert file_hash(dep)==recipe['packaged_testng']['sha256']
+ require_bridge();java=importlib.import_module('jpype');jar=settings.home/lock['jar_name']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(PROTO/'classes',jar,FIXTURE/'classes',UPSTREAM,dep))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ overrides={n[len('classes/'):] for n in load(PROTO/'inputs.json') if n.startswith('classes/') and n.endswith('.class')}
+ assert overrides and all(n=='forge/ai/simulation/GameStateEvaluator.class' or n.startswith('forge/ai/simulation/GameStateEvaluator$') for n in overrides)
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTO/'classes')
+ for name in tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.ai.simulation.SpellAbilityPicker','forge.ai.simulation.GameSimulator','forge.game.staticability.StaticAbilityContinuous'))):
+  assert packaged_rules.class_origin(java,name).samefile(PROTO/'classes' if name.replace('.','/')+'.class' in overrides else jar),name
+ for target in TARGETS:assert packaged_rules.class_origin(java,target).samefile(UPSTREAM)
+ for name in ('forge.ai.AITest','forge.ai.CommanderPayloadGraphTest'):assert packaged_rules.class_origin(java,name).samefile(UPSTREAM)
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+ runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(target).class_ for target in TARGETS]))
+ runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+ counts,methods=packaged_rules.test_results(listener)
+ reference=ET.parse(BUILD/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+ expected=Counter((c.get('name')+'.'+m.get('name'),tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in m.findall('./params/param/value'))) for c in reference.findall('.//class') if c.get('name') in TARGETS for m in c.findall('test-method') if m.get('is-config')!='true')
+ assert sum(expected.values())==112
+ tree=ET.parse(RUN/'reports/testng-results.xml');actual=Counter((c.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))) for c in tree.findall('.//class') for m in c.findall('test-method') if m.get('is-config')!='true')
+ receipt_counter=Counter((r['method'],tuple(r.get('parameters',[]))) for r in methods)
+ configs=[m for m in tree.findall('.//test-method') if m.get('is-config')=='true']
+ result={'counts':counts,'methods':methods,'exact_method_parameter_counter':actual==expected,'receipt_parameters_match_xml':receipt_counter==actual,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'actual_processors':runtime.availableProcessors(),'actual_heap_bytes':runtime.maxMemory(),'production_origins_verified':True,'report_sha256':file_hash(RUN/'reports/testng-results.xml'),'scope':'112 unchanged control, decision-perspective, life/participant snapshot and RNG-isolation cases. Exact reference case/argument membership retained. Diagnostic semantic selection only, not full4932 or original1271/90, full games or universal rules correctness.'}
+ save(RUN/'outcome.json',result);verify();java.shutdownJVM()
+ assert actual==expected and receipt_counter==actual and counts==dict(total=112,passed=112,failed=0,skipped=0)
+ assert all(m.get('status')=='PASS' for m in configs) and not result['configuration_failures'] and not result['configuration_skips']
+else:
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ ci=load(EPOCH/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+ RUN.mkdir();save(RUN/'test-inputs.json',{p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()});verify(root=True)
+ (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ with _engine_profile(settings,RUN):process=run_bounded([sys.executable,'-I',str(Path(__file__)), '--worker'],settings.home,RUN/'native.log',ProcessLimits(90,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+ print(json.dumps({'process':process,'counts':outcome.get('counts'),'methods':outcome.get('methods'),'exact_case_parameters':outcome.get('exact_method_parameter_counter')}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0

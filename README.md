@@ -31,7 +31,12 @@ triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete. A reviewed candidate fixes lost remembered-card
 history, with controls for native life gain, repeated copies and isolation.
 
-The candidate passes 3,732 source and 4,932 native cases, retaining every previous
+A newly registered candidate fixes multiplayer elimination valuation: focused
+autonomous/payment controls improve from 5/11 to 11/11, with 112 unchanged
+semantic cases passing. Its 3,753-source / 4,953-native recipe and 3,796-case main
+packaged suite await full validation. The selected runtime is unchanged.
+
+The last fully built candidate passes 3,732 source and 4,932 native cases, retaining every previous
 case and adding 14 phase-replacement controls. Those 14 also pass through the
 regular packaged worker. All production class bytes match the prior candidate;
 the original resolution test/helper classfiles remain byte-identical.

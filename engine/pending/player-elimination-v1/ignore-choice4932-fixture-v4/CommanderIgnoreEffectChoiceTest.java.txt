@@ -1,0 +1,267 @@
+package forge.ai;
+
+import forge.ai.simulation.GameSimulator;
+import forge.ai.simulation.GameStateEvaluator.Score;
+import forge.ai.simulation.SpellAbilityPicker;
+import forge.game.Game;
+import forge.game.ability.ApiType;
+import forge.game.card.Card;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Autonomous decisions on supplied four-player boards, not full legal histories. */
+public class CommanderIgnoreEffectChoiceTest extends AITest {
+    private static final class Scene {
+        Game game;
+        Player actor;
+        List<Player> opponents;
+        Card source;
+        Card payoff;
+        Card spare;
+        List<Card> mana = new ArrayList<>();
+        List<Card> grave = new ArrayList<>();
+    }
+    @DataProvider(name = "auras")
+    public Object[][] auras() { return new Object[][]{{"Lost in Thought"}, {"Volrath's Curse"}}; }
+    private Scene base(int opponentLife) {
+        Scene scene = new Scene();
+        scene.game = CommanderPayloadGraphTest.newBoard();
+        scene.actor = scene.game.getPlayers().getFirst();
+        scene.opponents = new ArrayList<>(scene.actor.getOpponents());
+        for (Player player : scene.game.getPlayers()) {
+            for (int index = 0; index < 8; index++) addCardToZone("Forest", player, ZoneType.Library);
+        }
+        for (Player player : scene.opponents) player.setLife(opponentLife, null);
+        scene.game.getPhaseHandler().devModeSet(PhaseType.MAIN2, scene.actor, 3);
+        scene.game.getPhaseHandler().setPriority(scene.actor);
+        return scene;
+    }
+    private void prepare(Scene scene) {
+        scene.game.getAction().checkStaticAbilities(false);
+        scene.game.getTriggerHandler().resetActiveTriggers();
+        scene.game.copyLastState();
+    }
+    private Scene merchant(boolean engine, boolean spare) {
+        Scene scene = base(2);
+        for (int index = 0; index < 5; index++) scene.mana.add(addCardToZone("Swamp", scene.actor, ZoneType.Battlefield));
+        if (spare) scene.spare = addCardToZone("Ornithopter", scene.actor, ZoneType.Battlefield);
+        scene.payoff = addCardToZone("Gray Merchant of Asphodel", scene.actor, ZoneType.Hand);
+        if (engine) scene.source = addCardToZone("Damping Engine", scene.opponents.get(0), ZoneType.Battlefield);
+        prepare(scene);
+        return scene;
+    }
+    private Scene fireslinger(String aura, int graveCards) {
+        Scene scene = base(1);
+        scene.payoff = addCardToZone("Goblin Fireslinger", scene.actor, ZoneType.Battlefield);
+        scene.payoff.setSickness(false);
+        scene.spare = addCardToZone("Ornithopter", scene.actor, ZoneType.Battlefield);
+        if (aura != null) {
+            scene.source = addCardToZone(aura, scene.opponents.get(0), ZoneType.Battlefield);
+            scene.source.attachToEntity(scene.payoff, null);
+        }
+        for (int index = 0; index < graveCards; index++) scene.grave.add(addCardToZone("Forest", scene.actor, ZoneType.Graveyard));
+        prepare(scene);
+        for (SpellAbility ability : scene.payoff.getSpellAbilities()) {
+            ability.setActivatingPlayer(scene.actor);
+            System.out.println("FIRE_ABILITY aura=" + aura + "; api=" + ability.getApi()
+                    + "; cost=" + ability.getPayCosts() + "; canPlay=" + ability.canPlay()
+                    + "; restrictions=" + ability.checkRestrictions(ability.getHostCard(), scene.actor)
+                    + "; sick=" + scene.payoff.isSick() + "; tapped=" + scene.payoff.isTapped());
+        }
+        return scene;
+    }
+    private SpellAbility choose(Scene scene) {
+        AiController ai = ((PlayerControllerAi) scene.actor.getController()).getAi();
+        ai.setUseSimulation(AIOption.USE_FULL_SIMULATION);
+        List<SpellAbility> actions = ai.chooseSpellAbilityToPlay();
+        System.out.println("IGNORE_CHOICE source=" + (scene.source == null ? "control" : scene.source.getName())
+                + "; actions=" + actions);
+        if (actions == null || actions.isEmpty()) {
+            System.out.println("IGNORE_CANDIDATES " + new SpellAbilityPicker(scene.actor).explainCandidates());
+        }
+        return actions == null || actions.isEmpty() ? null : actions.get(0);
+    }
+    private void unchangedPlanning(Scene scene) {
+        assertEquals(scene.actor.getLife(), 40);
+        assertEquals(scene.actor.getSacrificedThisTurn().size(), 0);
+        for (Card card : scene.mana) assertFalse(card.isTapped());
+        for (Card card : scene.grave) assertTrue(card.isInZone(ZoneType.Graveyard));
+        if (scene.spare != null) assertTrue(scene.spare.isInPlay());
+    }
+    private void play(Scene scene, SpellAbility action) {
+        assertNotNull(action, "The autonomous controller must choose the useful action");
+        assertTrue(ComputerUtil.playStack(action, scene.actor, scene.game));
+        settle(scene);
+    }
+    private void settle(Scene scene) {
+        for (int step = 0; step < 40; step++) {
+            scene.game.getAction().checkStateEffects(true);
+            if (scene.game.isGameOver()) return;
+            scene.game.getTriggerHandler().collectTriggerForWaiting();
+            scene.game.getTriggerHandler().runWaitingTriggers();
+            scene.game.getStack().addAllTriggeredAbilitiesToStack();
+            if (scene.game.getStack().isEmpty()) { scene.game.copyLastState(); return; }
+            scene.game.getStack().resolveStack();
+        }
+        throw new AssertionError("Native choice replay did not settle");
+    }
+    private void won(Scene scene) {
+        assertTrue(scene.game.isGameOver());
+        assertTrue(scene.game.getOutcome().isWinner(scene.actor.getLobbyPlayer()));
+    }
+    @Test public void unrestrictedMerchantIsChosenAndWins() {
+        Scene scene = merchant(false, true);
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNotNull(selected);
+        assertEquals(selected.getHostCard().getId(), scene.payoff.getId());
+        play(scene, selected);
+        won(scene);
+    }
+    @Test public void dampingEnginePaymentUnlocksChosenLethalMerchant() {
+        Scene scene = merchant(true, true);
+        SpellAbility cast = scene.payoff.getFirstSpellAbility(); cast.setActivatingPlayer(scene.actor);
+        assertFalse(cast.canPlay() && cast.checkRestrictions(cast.getHostCard(), scene.actor));
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNotNull(selected);
+        assertEquals(selected.getApi(), ApiType.InternalIgnoreEffect);
+        assertEquals(selected.getHostCard().getId(), scene.source.getId());
+        play(scene, selected);
+        assertTrue(scene.spare.isInZone(ZoneType.Graveyard));
+        assertTrue(scene.source.isInPlay());
+        assertTrue(scene.mana.stream().noneMatch(Card::isTapped));
+        SpellAbility next = choose(scene);
+        assertNotNull(next);
+        assertEquals(next.getHostCard().getId(), scene.payoff.getId());
+        play(scene, next);
+        won(scene);
+    }
+    @Test public void dampingEngineDeclinesSacrificeWithoutFollowupMana() {
+        Scene scene = merchant(true, false);
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNull(selected, "Sacrificing a required land cannot unlock the five-mana follow-up");
+        assertTrue(scene.payoff.isInZone(ZoneType.Hand));
+    }
+    @Test public void unrestrictedFireslingerChoosesLethalTarget() {
+        Scene scene = fireslinger(null, 3);
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNotNull(selected);
+        assertEquals(selected.getApi(), ApiType.DealDamage);
+        play(scene, selected);
+        assertTrue(scene.payoff.isTapped());
+        assertTrue(scene.opponents.stream().anyMatch(Player::hasLost));
+    }
+    @Test(dataProvider = "auras")
+    public void auraControllerPaysAndUsesLethalAbility(String aura) {
+        Scene scene = fireslinger(aura, 3);
+        SpellAbility shot = scene.payoff.getNonManaAbilities().stream().filter(ability -> ability.getApi() == ApiType.DealDamage).findFirst().orElseThrow(); shot.setActivatingPlayer(scene.actor);
+        assertFalse(shot.canPlay() && shot.checkRestrictions(shot.getHostCard(), scene.actor));
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNotNull(selected);
+        assertEquals(selected.getApi(), ApiType.InternalIgnoreEffect);
+        assertEquals(selected.getHostCard().getId(), scene.source.getId());
+        play(scene, selected);
+        assertTrue(scene.payoff.isInPlay());
+        if (aura.equals("Lost in Thought")) {
+            for (Card card : scene.grave) assertTrue(card.isInZone(ZoneType.Exile));
+        } else {
+            assertTrue(scene.spare.isInZone(ZoneType.Graveyard));
+        }
+        SpellAbility next = choose(scene);
+        assertNotNull(next);
+        assertEquals(next.getApi(), ApiType.DealDamage);
+        assertEquals(next.getHostCard().getId(), scene.payoff.getId());
+        play(scene, next);
+        assertTrue(scene.opponents.stream().anyMatch(Player::hasLost));
+    }
+    @Test public void insufficientExilePaymentDoesNotBecomeChosenAction() {
+        Scene scene = fireslinger("Lost in Thought", 2);
+        SpellAbility selected = choose(scene);
+        unchangedPlanning(scene);
+        assertNull(selected);
+        assertFalse(scene.payoff.isTapped());
+        assertTrue(scene.opponents.stream().noneMatch(Player::hasLost));
+    }
+    @Test public void nativeLethalActivationScoresOpponentElimination() {
+        Scene scene = fireslinger(null, 3);
+        Score before = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        SpellAbility shot = scene.payoff.getNonManaAbilities().stream().filter(ability -> ability.getApi() == ApiType.DealDamage).findFirst().orElseThrow();
+        shot.setActivatingPlayer(scene.actor);
+        shot.getTargets().add(scene.opponents.get(0));
+        assertTrue(shot.canPlay());
+        assertTrue(shot.checkRestrictions(shot.getHostCard(), scene.actor));
+        assertTrue(ComputerUtilCost.canPayCost(shot, scene.actor, false));
+        play(scene, shot);
+        assertTrue(scene.opponents.get(0).hasLost());
+        assertFalse(scene.game.isGameOver());
+        Score after = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        System.out.println("OPPONENT_ELIMINATION before=" + before.value + "; after=" + after.value
+                + "; beforeAvailable=" + before.availableValue + "; afterAvailable=" + after.availableValue
+                + "; registered=" + scene.game.getRegisteredPlayers().size()
+                + "; survivors=" + scene.game.getPlayers().size());
+        assertTrue(after.value > before.value,
+                "A legal opponent elimination must improve the multiplayer decision score");
+    }
+    private void nativeShot(Scene scene, Player target) {
+        SpellAbility shot = scene.payoff.getNonManaAbilities().stream()
+                .filter(ability -> ability.getApi() == ApiType.DealDamage).findFirst().orElseThrow();
+        shot.setActivatingPlayer(scene.actor);
+        shot.getTargets().add(target);
+        assertTrue(shot.canPlay() && shot.checkRestrictions(shot.getHostCard(), scene.actor));
+        assertTrue(ComputerUtilCost.canPayCost(shot, scene.actor, false));
+        assertTrue(ComputerUtil.handlePlayingSpellAbility(scene.actor, shot, announced -> {
+            announced.getTargets().clear();
+            announced.getTargets().add(target);
+        }));
+        settle(scene);
+    }
+    private int damageGain(boolean lethal) {
+        Scene scene = fireslinger(null, 3);
+        if (!lethal) for (Player player : scene.opponents) player.setLife(3, null);
+        Score before = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        nativeShot(scene, scene.opponents.get(0));
+        assertEquals(scene.opponents.get(0).hasLost(), lethal);
+        Score after = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        return after.value - before.value;
+    }
+    @Test public void eliminationOutranksEqualNonlethalDamage() {
+        assertTrue(damageGain(true) > damageGain(false));
+    }
+    @Test public void losingAnAllyDoesNotEarnOpponentEliminationValue() {
+        Scene scene = fireslinger(null, 3);
+        Player ally = scene.opponents.get(0);
+        scene.actor.setTeam(7);
+        ally.setTeam(7);
+        assertFalse(ally.isOpponentOf(scene.actor));
+        Score before = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        nativeShot(scene, ally);
+        assertTrue(ally.hasLost());
+        assertFalse(scene.actor.hasLost());
+        Score after = GameSimulator.scoreForDecision(scene.game, scene.actor);
+        System.out.println("ALLY_ELIMINATION before=" + before.value + "; after=" + after.value);
+        assertTrue(after.value < before.value);
+    }
+    @Test public void terminalVictoryStillOutranksPriorEliminations() {
+        Scene scene = fireslinger(null, 3);
+        scene.opponents.get(1).setLife(0, null);
+        scene.opponents.get(2).setLife(0, null);
+        settle(scene);
+        assertEquals(scene.actor.getOpponents().size(), 1);
+        assertFalse(scene.game.isGameOver());
+        nativeShot(scene, scene.opponents.get(0));
+        won(scene);
+        assertTrue(forge.ai.simulation.GameStateEvaluator.isWinning(
+                GameSimulator.scoreForDecision(scene.game, scene.actor).value));
+    }
+}
