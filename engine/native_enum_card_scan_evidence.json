@@ -1,0 +1,132 @@
+{
+  "baseline_build": "800559d7545b4631b03e1866f6ce7822",
+  "controls": {
+    "contracts-baseline": {
+      "counts": {
+        "total": 17,
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "d5991334a04af1d2668887f9e1cc765adfb38eb37d0f0acc3977c44b8793bf0b"
+    },
+    "contracts-prototype": {
+      "counts": {
+        "total": 17,
+        "passed": 17,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "44e88e239454c503e6073c389088af194a7787873016f6d28a935b7b3fff5773"
+    },
+    "allocation-baseline": {
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "b64beaedd97119505c4d5cdcacaad6bf3728a9ae2457cc0db71f0b2f549fd40d"
+    },
+    "allocation-prototype": {
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "18ffb64c50e873a2ea12830ad24fff93d6c32f051919a5dcd549a32481bcb725"
+    }
+  },
+  "allocation": {
+    "warmup_queries": 1000,
+    "measured_escaping_queries": 2000,
+    "by_card_count": {
+      "0": {
+        "baseline_bytes": 144064,
+        "prototype_bytes": 156856,
+        "prototype_minus_baseline_bytes": 12792
+      },
+      "8": {
+        "baseline_bytes": 768000,
+        "prototype_bytes": 560000,
+        "prototype_minus_baseline_bytes": -208000
+      },
+      "80": {
+        "baseline_bytes": 2272000,
+        "prototype_bytes": 1136000,
+        "prototype_minus_baseline_bytes": -1136000
+      },
+      "400": {
+        "baseline_bytes": 9059024,
+        "prototype_bytes": 9056000,
+        "prototype_minus_baseline_bytes": -3024
+      }
+    }
+  },
+  "source_changes": [
+    "forge-game/src/main/java/forge/game/Game.java"
+  ],
+  "candidate_unchanged": true,
+  "installed": false,
+  "original1271_gate_attempted": false,
+  "inference": "Fixed small/medium query workloads allocate less. Empty-world allocation increased in this sample; large-world allocation is close to baseline. Cross-JVM warm-up/JIT effects and other workloads remain unquantified. No universal allocation, elapsed speedup, retained-memory or full-rules claim.",
+  "scope": "Single-source bounded size-hint prototype only. Seventeen supplied-world controls pass in each mode; separate one-method escaping-allocation probes pass. Not combined with unpromoted keyword/view overlays, not broad native coverage of this prototype, not a production promotion.",
+  "artifacts": {
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/baseline/forge-game/src/main/java/forge/game/Game.java": "29bc081d1566254989ee3797e08e2f2e5658d64809a11630b7d615ff43449bdc",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/compile-process.json": "efdf04f7dcc3b59e619063eab7144f9d8558e6c844f7f6354ed1c87a237fcd68",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/compile-selection.json": "659bc04c67d98a7a0b9e33ab3b3b55272d1874f15bce053051b3dcae59d47866",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/inputs.json": "bf5ecf2ef65a0647d35dc6191cfb465f6bcda1ea145c703ef4d20f0df2501ce2",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/pre-cap-review/Game.java.txt": "a83a447b453be5bde1da2fcc6f42502e723c4b1aa0cbec80935e30f7f7086001",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/pre-stack-review/Game.java.txt": "f51ebb9d68b212a437e7d079728ec57df1a8407f7eec2b16b71fe9afaec07209",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/proposal.json": "59b29903676aeed0d4b13030ecdea60c83a8264f157a0802323cac91fa3f6c3b",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-prototype-v1/source/forge-game/src/main/java/forge/game/Game.java": "8bc0203543e7a7e0e80616b00b6fda7261b12054ddcf36069b74c938bf10ca89",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/CommanderEnumCardScanAllocationTest.java": "a765194a8fdc144315d41050bf5951ecc1a9b1e537eaa25b4db52d4bc0017982",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/CommanderEnumCardScanCapacityTest.java": "79405c4b83980ec346ee65173f26fc78e41ab2ff45b427fe5e2a1dd71857bddd",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/compile-process.json": "34c73b61016714d5120c36f7826c0e04bfb95cb887ffd7d15370ab1b0dd3a179",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/compile-selection.json": "a8de71dc78bd418b487f90e34b6d026f6276ac308ee4c5471f21b5448922caf0",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-capacity-fixture-v1/inputs.json": "968e3d9ad56f15160e970fe29291d29c45707610be0d8078826a754ac598e4de",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/driver.py.txt": "b3463d36392f7c650358924d115163948a046d8c2778dab0866534301467957d",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/native.log": "98e0d06511dd0da9d3c2995fd50474dcd70b8cb0e6b17f03d6c8e4bafaebbd5e",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/outcome.json": "d5991334a04af1d2668887f9e1cc765adfb38eb37d0f0acc3977c44b8793bf0b",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/process.json": "880258b16966454057891bc33dbe1f04b63fcb1e02d9e3ca5fc5543713ebe5da",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/reports/testng-results.xml": "a07ea478d5ce67f833347b1a163b3e8f2655d936ad648325b1f9b5c2c4ac5d70",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/selection.json": "88d2cb4828183d602bc6111a2417885a552fc2124f139c07517f9f188f0326cd",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-baseline-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/driver.py.txt": "b3463d36392f7c650358924d115163948a046d8c2778dab0866534301467957d",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/native.log": "ba741b9d8985a1aad7d94b88f13e12d1fb01e7d60a5fc2dd6aa757d32ae45d23",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/outcome.json": "44e88e239454c503e6073c389088af194a7787873016f6d28a935b7b3fff5773",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/process.json": "57b7be5bbb3d2a8ae7a25b7642ab43cd916ae028514efbbd95d715c791cff142",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/reports/testng-results.xml": "146588ff9af5b0dab0c764a4161a77ef585735b81ec92ed8fc89789823dca4e4",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/selection.json": "b7eccf1ebaa7bcba28683b9ebe157e32c876e372edd3f38be2fc7c4d61dc1fdb",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-contracts-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/driver.py.txt": "b3463d36392f7c650358924d115163948a046d8c2778dab0866534301467957d",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/native.log": "9ff6e74746b5a44b4ca103e304823f9a1c7ec48894875a2e455cc8148e83eaad",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/outcome.json": "b64beaedd97119505c4d5cdcacaad6bf3728a9ae2457cc0db71f0b2f549fd40d",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/process.json": "0d50c426265b502cbabc36964095e3ea5012711703c3ffc75f4c017a6c380883",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/reports/testng-results.xml": "0fa81418871762476c532934e8fa55c058a158634e9d10c43d19c0cf278903fb",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/selection.json": "8ff2389544ae0b6fdf7401203a1d6b010dd06c5874c393ee0b89158e49db9b9f",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-baseline-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/driver.py.txt": "b3463d36392f7c650358924d115163948a046d8c2778dab0866534301467957d",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/native.log": "2091d98fa58998ecdd7b1166b9691db05ebe1fb6ffc43a245b30ed7a6af3b43b",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/outcome.json": "18ffb64c50e873a2ea12830ad24fff93d6c32f051919a5dcd549a32481bcb725",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/process.json": "029bc633a174a9ef2c057766e3fdaeb1f41fbca038bdb6b1f5d74c855de70b9c",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/reports/testng-results.xml": "43948c9c293142ae67a4219c09e21c5c48dfb1b843a4d5de5045634b4f06d4c6",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/selection.json": "d0d74563ad6bcf0041f372309d2550cf0afd0029ec26051e44630a60b0cae902",
+    "engine/pending/native-enum-card-scan-v1/enum-card-scan-allocation-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/native-enum-card-scan-v1/drivers/compile_enum_card_scan_capacity_v1.py.txt": "26509cce21e842e8e856e99804b09051841617e2ea95471e343d58fe5f85f764",
+    "engine/pending/native-enum-card-scan-v1/drivers/compile_enum_card_scan_capacity_fixture_v1.py.txt": "9bd66b480fa98be86458090f01a890768c1457998eac04062e66b3bf828afc14",
+    "engine/pending/native-enum-card-scan-v1/drivers/run_enum_card_scan_controls_v1.py.txt": "b3463d36392f7c650358924d115163948a046d8c2778dab0866534301467957d"
+  },
+  "ci": {
+    "id": 45731251279,
+    "head_sha": "64cd56ed02b0ac747df2fec5f8aaf720cd9ba40b",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/mapittm1/commander-simulator/actions/runs/45731251279"
+  },
+  "original_resolution_cases": 1271,
+  "original_resolution_worker_seconds": 90
+}

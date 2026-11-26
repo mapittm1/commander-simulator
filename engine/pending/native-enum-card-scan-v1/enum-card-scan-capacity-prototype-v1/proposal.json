@@ -1,0 +1,10 @@
+{
+  "changed_sources": [
+    "forge-game/src/main/java/forge/game/Game.java"
+  ],
+  "baseline_production_manifest": "source3622-v1/production-inputs.json",
+  "capacity_hint_cap": 256,
+  "scope": "Uncompiled/unrun single-source allocation prototype. Capacity is a bounded allocation hint, not a card/result/search limit. No zone view is fetched during sizing; final Player.getZone and Zone.size read native owned state. Preserve original EnumSet contains checks and all copy callbacks. Read the native owned stack size once, without fetching its view; Flashback and unknown Iterable behavior use the existing path. Needs callback, ordering, phasing, snapshot and allocation controls before any performance claim or promotion.",
+  "precompile_review": "Static-source query EnumSets include Stack; corrected the uncompiled hint to count the owned stack once. Preserve the earlier unexecuted preparation in pre-stack-review.",
+  "large_world_fallback": "If the raw-size hint reaches256, use the original initial capacity0. Avoid an arbitrary intermediate capacity causing larger subsequent ArrayList growth. This does not truncate or limit results."
+}

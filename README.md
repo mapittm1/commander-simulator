@@ -34,11 +34,31 @@ last-known information, repeated copies, player/branch isolation, native cleanup
 and negative non-sacrifice moves. Retained semantic regression groups pass;
 groups can overlap and are not unique card counts.
 
-The recipe adds twenty-six `sacrifice_history` cases and retains every earlier case,
-including original **1,271 / 90 seconds**. Fresh **3,622 source / 4,822 native /
-3,665 main packaged** validation is pending. Full rules correctness and runtime
-activation remain unverified; selected runtime is unchanged. See
-[sacrifice correction evidence](engine/sacrifice_history_evidence.json).
+The recipe adds twenty-six `sacrifice_history` cases and retains every earlier
+case, including original **1,271 / 90 seconds**. Fresh **3,622 source / 4,822 native**
+cases pass with exact retained methods and parameters. All **285 registered + nine
+priority** native fixture files match reviewed bytes. Source manifests bind
+**2,168 production / 174 test / 350 card** inputs; only Player and GameCopier
+production classes changed from the preceding candidate.
+
+Independent receipt audits pass all **2,394 non-resolution main** and **405
+separate packaged** cases. Broader **6,145 gameplay / 320 serialization** cases
+pass with exact membership, no skips and restored source policies.
+
+The full **3,665-case** main gate remains unverified at the original resolution
+workload and limit. Final catalog/health/full-game checks, activation and complete
+card/rules correctness remain open; selected runtime is unchanged. See
+[sacrifice correction evidence](engine/sacrifice_history_evidence.json) and
+[runtime evidence](engine/sacrifice_history_runtime_evidence.json).
+
+An isolated, unpromoted EnumSet query allocation hint passes **17 native query
+contracts in each baseline/prototype mode**, including opaque callbacks, live
+set changes, phasing, stack handling and independent mutable snapshots. Fixed
+2,000-query probes allocate less for 8/80-card worlds, more in the empty-world
+sample, and close to baseline for 400 cards. These measurements establish no
+lower allocation for every workload, faster runs, lower retained memory, or
+complete rules correctness. The hint is not part of the selected runtime. See
+[allocation evidence](engine/native_enum_card_scan_evidence.json).
 
 A generic discard-history correction now maps each player's historical discard
 records into AI game copies. Twelve of eighteen baseline controls fail: copied

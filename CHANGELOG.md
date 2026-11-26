@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve an unpromoted one-source EnumSet allocation hint and seventeen
+  native query controls for both baseline and prototype. Fixed escaping-query
+  measurements improve 8/80-card allocation, increase the empty sample, and stay
+  close at 400 cards; general memory, speed, rules correctness and activation
+  remain unverified.
+
+- Verify fresh 3,622 source and 4,822 native cases with exact retained methods
+  and parameters, plus all 294 reviewed fixture bytes. Only Player/GameCopier
+  production classes change from the previous candidate.
+- Audit all 2,394 non-resolution main and 405 separate packaged cases. Broader
+  6,145 gameplay and 320 serialization cases pass without skips, with exact
+  membership and source policies restored. Full 3,665 main validation remains
+  open at original 1,271/90; final live checks, activation and complete card/rules
+  coverage remain unfinished. Preserve raw receipts and failed wrapper preflight.
+
 - Preserve per-player sacrificed-card history in AI game copies through the
   existing LKI mapper, without replaying events or sharing original history cards.
   Sixteen baseline failures lose records or Dargo's prior-sacrifice discounts;

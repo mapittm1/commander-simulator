@@ -1,0 +1,853 @@
+{
+  "scope": "Fresh source/native, all non-resolution packaged and broader regression evidence. Current full3665 remains unverified at the original1271/90 gate; no full resolution or complete card-rules claim.",
+  "ci": {
+    "id": 45731251279,
+    "head_sha": "64cd56ed02b0ac747df2fec5f8aaf720cd9ba40b",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/mapittm1/commander-simulator/actions/runs/45731251279"
+  },
+  "native_audit": {
+    "build_id": "800559d7545b4631b03e1866f6ce7822",
+    "candidate": {
+      "forge_version": "2.0.17-583714b-reviewed-sacrifice-history",
+      "capabilities": [
+        "sticker_kicker",
+        "explicit_commander_colors",
+        "native_companion_pregame",
+        "supplementary_ai_zones",
+        "sticker_snapshot_state",
+        "historical_lki_state",
+        "damage_history_state",
+        "participant_snapshot_state",
+        "starting_life_snapshot",
+        "stack_snapshot_state",
+        "cast_form_snapshot",
+        "usage_snapshot_state",
+        "scheduled_snapshot_state",
+        "delayed_trigger_snapshot",
+        "turn_schedule_snapshot",
+        "conditional_cleanup_snapshot",
+        "animation_snapshot_state",
+        "copy_frame_expiration",
+        "protection_expiration",
+        "keyword_exchange_expiration",
+        "blocking_prevention_snapshot",
+        "ring_text_snapshot",
+        "attachment_mana_cleanup",
+        "host_bound_return_snapshot",
+        "effect_cleanup_regeneration",
+        "detain_control_age_snapshot",
+        "player_control_snapshot",
+        "decision_beneficiary_planning",
+        "controlled_attack_planning",
+        "primary_control_future_planning",
+        "paid_spell_control_retargeting",
+        "composed_spell_control",
+        "cast_provenance_records",
+        "paid_mass_counter_planning",
+        "paid_exchange_pile_planning",
+        "divine_intervention_counter_trigger",
+        "expired_mana_reservation_isolation",
+        "hybrid_safety_paired_random_isolation",
+        "dungeon_snapshot_state",
+        "expend_snapshot_history",
+        "first_event_snapshot_history",
+        "scry_snapshot_history",
+        "game_spell_snapshot_history",
+        "foretell_snapshot_history",
+        "discard_snapshot_history",
+        "sacrifice_snapshot_history"
+      ],
+      "jar_name": "forge-gui-desktop-2.0.16-jar-with-dependencies.jar",
+      "jar_sha256": "17d9707ecb9af85d9b85343ade59d881d8d67412413d7d39075c6da85da22343",
+      "cards_sha256": "319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e",
+      "source_commit": "583714b8bfbd9cb04f8bc39ad95861190caf7691",
+      "source_archive_sha256": "015f2debd65a73332a2de7968cc7a9102eb0508ec6ff2ba264312faadd57c23b",
+      "recipe_sha256": "8c62305e6303377b167cc6c7b9f3e7350065af430271ca3cf40ea140c91a5e4a",
+      "native_tests": {
+        "total": 4822,
+        "passed": 4822,
+        "failed": 0,
+        "skipped": 0
+      },
+      "build_log_sha256": "490a0d29e7da9ae5e2102158af9bfa7e7ead9751ba93d40a793e4a9af0584294",
+      "edition_resources": {
+        "files": 686,
+        "sha256": "0aa2fbe6083588741dba24f3a37ee0f1fa26ad50682a630030c378ba8464ced7"
+      },
+      "runtime_executable_sha256": "1977f302375adbb920d41dac65c7e22eb9c2ed8e1e8d6258964154ff16f14406",
+      "runtime_jvm_sha256": "6b9a2354b41134986d61d1f8ff0f9614e3a6b7e235469b7e9260fe7a1d9bb84a",
+      "purpose": "Separately built candidate; run catalog, pregame and interaction checks before activation"
+    },
+    "source_counts": {
+      "total": 3622,
+      "passed": 3622,
+      "failed": 0,
+      "skipped": 0
+    },
+    "prior_native_cases_retained": 4796,
+    "added_cases": 26,
+    "exact_native_method_and_parameter_counter_matches": true,
+    "input_audit": {
+      "production": {
+        "files": 2168,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": [
+          "forge-ai/src/main/java/forge/ai/AiAttackController.java",
+          "forge-ai/src/main/java/forge/ai/AiCache.java",
+          "forge-ai/src/main/java/forge/ai/AiController.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilCost.java",
+          "forge-ai/src/main/java/forge/ai/ComputerUtilMana.java",
+          "forge-ai/src/main/java/forge/ai/PlayerControllerAi.java",
+          "forge-ai/src/main/java/forge/ai/ability/SetStateAi.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+          "forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java",
+          "forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java",
+          "forge-core/src/main/java/forge/card/CardType.java",
+          "forge-core/src/main/java/forge/util/collect/FSnapshotTable.java",
+          "forge-game/src/main/java/forge/game/Game.java",
+          "forge-game/src/main/java/forge/game/ability/SpellAbilityEffect.java",
+          "forge-game/src/main/java/forge/game/card/Card.java",
+          "forge-game/src/main/java/forge/game/card/CardCopyService.java",
+          "forge-game/src/main/java/forge/game/card/CardState.java",
+          "forge-game/src/main/java/forge/game/combat/Combat.java",
+          "forge-game/src/main/java/forge/game/cost/Cost.java",
+          "forge-game/src/main/java/forge/game/cost/CostAdjustment.java",
+          "forge-game/src/main/java/forge/game/cost/CostPayment.java",
+          "forge-game/src/main/java/forge/game/mana/ManaCostBeingPaid.java",
+          "forge-game/src/main/java/forge/game/player/Player.java",
+          "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java",
+          "forge-game/src/main/java/forge/game/trigger/TriggerHandler.java",
+          "forge-game/src/main/java/forge/game/ability/effects/AlterAttributeEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/GoadEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/RepeatEachEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SkipPhaseEffect.java",
+          "forge-game/src/main/java/forge/game/ability/effects/SwitchBlockEffect.java"
+        ]
+      },
+      "test": {
+        "files": 174,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      },
+      "card": {
+        "files": 350,
+        "normalized_text_matches": true,
+        "raw_line_ending_differences": []
+      }
+    },
+    "fixture_copy_audit": {
+      "registered_fixture_files": 285,
+      "priority_fixture_files": 9,
+      "exact_reviewed_fixture_bytes_match": true
+    },
+    "production_classes_changed_from_7744": [
+      "forge/game/player/Player.class",
+      "forge/ai/simulation/GameCopier$2.class",
+      "forge/ai/simulation/GameCopier$3.class",
+      "forge/ai/simulation/GameCopier$CopiedGameObjectMap.class",
+      "forge/ai/simulation/GameCopier.class"
+    ],
+    "actual_processors": 2,
+    "actual_max_java_heap_bytes": 2147483648,
+    "selected_runtime_native_cases": 3295,
+    "installed": false,
+    "original_resolution_cases": 1271,
+    "original_resolution_worker_seconds": 90,
+    "scope": "Source/native regression and class/input audit only; independent packaged and final activation gates remain required."
+  },
+  "source": {
+    "counts": {
+      "total": 3622,
+      "passed": 3622,
+      "failed": 0,
+      "skipped": 0
+    },
+    "retained_source_cases": 3596,
+    "new_cases": 26,
+    "exact_method_and_parameter_counter_matches": true,
+    "production_sources": 2168,
+    "test_inputs": 174,
+    "card_inputs": 350,
+    "changed_production_sources": [
+      "forge-ai/src/main/java/forge/ai/simulation/GameCopier.java",
+      "forge-game/src/main/java/forge/game/player/Player.java"
+    ],
+    "inputs_unchanged_during_run": true,
+    "report_sha256": "bf85eb583ad92613be32312c1eca84a6943b5aeef259f6238cbe835cebe1c436",
+    "scope": "Source regressions only; fresh native4822, complete normal3665 including original1271/90, broader/live and activation remain required."
+  },
+  "packaged_front": {
+    "build_id": "800559d7545b4631b03e1866f6ce7822",
+    "groups": {
+      "information": {
+        "run_id": "009cc90b8cc646c68159a1b799464f05",
+        "counts": {
+          "total": 301,
+          "passed": 301,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 14338,
+          "returncode": 0,
+          "elapsed_seconds": 24.891,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "combat_and_snapshots": {
+        "run_id": "8e783d157dae4774ac475906eacc5c87",
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10174,
+          "returncode": 0,
+          "elapsed_seconds": 45.593,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "text_casting_and_costs": {
+        "run_id": "bf376daa6cff4e17bb6f8ef52a684b01",
+        "counts": {
+          "total": 338,
+          "passed": 338,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 4805,
+          "returncode": 0,
+          "elapsed_seconds": 64.266,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      }
+    },
+    "total_cases": 912,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 162.094,
+    "configuration_restored": true,
+    "scope": "Three unchanged non-resolution partitions,912 cases with exact native method/parameter membership and production origins. Original1271/90 remains required; not full3665 or full rules proof."
+  },
+  "packaged_remaining_groups": {
+    "build_id": "800559d7545b4631b03e1866f6ce7822",
+    "groups": {
+      "cast_events": {
+        "run_id": "fb5a68a26d7445dd8be9ae86c1227c7c",
+        "counts": {
+          "total": 1380,
+          "passed": 1380,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 10944,
+          "returncode": 0,
+          "elapsed_seconds": 48.328,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "dungeons": {
+        "run_id": "471a5704cb8a445a973ad253655398d5",
+        "counts": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.25,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "expended_mana": {
+        "run_id": "e825d417c18c4450907d073b2ad69b23",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 14.281,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "first_events": {
+        "run_id": "0da6c4be883a487b9db821dc315ede6c",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.516,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "scry_history": {
+        "run_id": "78fe67f6eff842aab27a1281dd306ffc",
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3056,
+          "returncode": 0,
+          "elapsed_seconds": 14.328,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "spell_game_history": {
+        "run_id": "9bec9330871d490e9ac26822158534ba",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.656,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "foretell_history": {
+        "run_id": "2de5f0a9255a4446b947227c29a89428",
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.641,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "discard_history": {
+        "run_id": "edbe3cc3208348a9a7c669ce2851e6a9",
+        "counts": {
+          "total": 18,
+          "passed": 18,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 14.719,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      },
+      "sacrifice_history": {
+        "run_id": "662c7b20096548df88b6439a81cca550",
+        "counts": {
+          "total": 26,
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 188,
+        "prior_compiled_rule_support_classes_retained_identically": 423,
+        "process": {
+          "status": "finished",
+          "bytes": 3058,
+          "returncode": 0,
+          "elapsed_seconds": 15.047,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\draw_ending_partitions.py": "17305848c620bd442b181ce4dbeb65f40c99df12e0a0fb9897e8c29f4286324a"
+          }
+        }
+      }
+    },
+    "total_cases": 1482,
+    "original_resolution_cases": 1271,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 236.594,
+    "configuration_restored": true,
+    "scope": "Fixed1380 cast,10 dungeon,6 expend,12 first-event 6 scry and12 game-long spell-history plus12 foretell-history and18 discard-history plus26 sacrifice-history cases only; full3665 remains incomplete at original1271/90. Not full rules evidence."
+  },
+  "packaged_other": {
+    "build_id": "800559d7545b4631b03e1866f6ce7822",
+    "groups": {
+      "free_casting": {
+        "run_id": "e4fbc050c623425a99f9a214c835bfcb",
+        "counts": {
+          "total": 65,
+          "passed": 65,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 25,
+        "process": {
+          "status": "finished",
+          "bytes": 15875,
+          "returncode": 0,
+          "elapsed_seconds": 34.219,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "untap": {
+        "run_id": "b71f856dced349b9881570c6b68636f2",
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 52,
+        "process": {
+          "status": "finished",
+          "bytes": 12668,
+          "returncode": 0,
+          "elapsed_seconds": 41.969,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973"
+          }
+        }
+      },
+      "battle_combat": {
+        "run_id": "9f50495bc1a74e9e9aa29e384de72389",
+        "counts": {
+          "total": 146,
+          "passed": 146,
+          "failed": 0,
+          "skipped": 0
+        },
+        "native_method_and_parameter_counter_matches": true,
+        "production_origins": 30,
+        "process": {
+          "status": "finished",
+          "bytes": 20842,
+          "returncode": 0,
+          "elapsed_seconds": 18.093,
+          "support_source_hashes": {
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\packaged_rules.py": "aa636571eb22a8eaba80c9ca18546b762581b3cbc89da985efe2059f6a1f1d6c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_receipts.py": "70ecc5a4981792baface4b494bde7968439e20ba561b2a55bbfe328b596a7e2c",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\tests\\support\\native_worker.py": "a2bb9b32492cbe1a7d4d7d1e17dc5807190071c1ac7663585c01e733236fe973",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\sticker_recipe.json": "8c62305e6303377b167cc6c7b9f3e7350065af430271ca3cf40ea140c91a5e4a",
+            "C:\\Users\\mapit\\OneDrive\\Desktop\\CommanderSimulator\\engine\\battle_combat_tests.json": "f70be39624572210605772f0694d4be61a1000b912eaa4c11d5e4a3c347d0ce2"
+          }
+        }
+      }
+    },
+    "total_cases": 405,
+    "worker_limit_seconds": 90,
+    "wrapper_limit_seconds": 420,
+    "whole_wrapper_seconds": 103.078,
+    "configuration_restored": true,
+    "scope": "Separate405 packaged cases only. Full3665 still incomplete at original1271/90."
+  },
+  "broader": {
+    "suites": {
+      "gameplay": {
+        "process": {
+          "status": "finished",
+          "bytes": 244079,
+          "returncode": 0,
+          "elapsed_seconds": 406.484
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 6145,
+          "passed": 6145,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "b9fce2e3dfdaca069e9e483aa1e854ffea1fc8658a0b8f8a345af7d814f0118b"
+      },
+      "serialization": {
+        "process": {
+          "status": "finished",
+          "bytes": 29816,
+          "returncode": 0,
+          "elapsed_seconds": 114.312
+        },
+        "fresh_report": true,
+        "passed": true,
+        "counts": {
+          "total": 320,
+          "passed": 320,
+          "failed": 0,
+          "skipped": 0
+        },
+        "configuration_failures_or_skips": [],
+        "exact_case_and_parameter_counter_matches": true,
+        "report_sha256": "a0dc13b84401160ef3a9669351797a2e40ff5e7b712b05dd0777af3429369b37"
+      }
+    },
+    "passed": true,
+    "scope": "Broader gameplay/serialization only; no original1271/90 or all-card proof."
+  },
+  "installed": false,
+  "selected_runtime_native_cases": 3295,
+  "full3665_packaged_passed": false,
+  "resolution_candidate_attempted": false,
+  "original_resolution_cases": 1271,
+  "resolution_worker_seconds": 90,
+  "remaining": [
+    "Original1271 resolution workload within90 seconds; current candidate not re-tried for luck",
+    "Fresh final catalog/health/full-game checks for this candidate",
+    "Activation after all required gates",
+    "Complete paid-history and printed-card/rules coverage"
+  ],
+  "artifacts": {
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/card-inputs.json": "21e1f5507346ab203480148bd447be3ac21ad7b0a08fa098b4e7013b4190a9c7",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/driver.py.txt": "c1514c8239c99410ba0acada1a7aa9396b5a99c7f9ea592c834598b1a69ace57",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/evidence.json": "e1fc1f7e37a55295a094ac06964752cd441c4b935306f02f3f20488f03cccb9b",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/maven-build.log": "ff48da89d74ced181e06280c7b276fe6a7f3add8b89d42cca832411aacaffc04",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/outcome.json": "1e5e921d54a646f9a8a54dd0509af6d6add0c2d2770faf673c5160c831681a9a",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/production-inputs.json": "0b5b1a8fb0cc3615a52cc59c8a7791ba580389488672005ae303ac3951682224",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/selection.json": "41417fc3aa7f7f02341c137b806e14c2393c2a35dc20b5d3b0af1b5e68a2ef2e",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/test-inputs.json": "0428c7b4c7d6137318ea1f08bd4da646738eb632381e84b1762eca0098fc9731",
+    "engine/pending/sacrifice-history-runtime-v1/source3622-v1/testng-results.xml": "bf85eb583ad92613be32312c1eca84a6943b5aeef259f6238cbe835cebe1c436",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/build-audit.json": "eff55bdd29764688aa58bd6e6bc8b71283a424a068dc0d348ab784916919ce0f",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/build-output.log": "fea832011c16bd66ff8db3b0d68fb28737cd47beba8731daa6b3565af53ad196",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/candidate-selection.json": "ede814003d09a4bef1d78ccfd03a99a8679a30953df9b613876b1b84237d73f9",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/command.json": "a42dbba5f390b0763bd4ee4581f66920899eb22a967ae931c26c00ca6e48989f",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/driver.py.txt": "dd659dea08b3712b105e7778d11213e4b15494618585174ba78926d88fc145cc",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/process.json": "ee30846e2247fa1419c5cc5323403a069894eae97d68186f7e9d73e8d64e95d0",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-candidate-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/audit.json": "05afd0f1de8ac60a25963f8fa430f67c04ba67bd87238dc39c234a746f270f7c",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/candidate-config.json": "812b2bcd2dc5c60f3289349f985f33832ab408d2cdeec4da1dd0f8720d16e67a",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/driver.py.txt": "3396df990f5be79bc1b5a2d48b99fb1c2feca9a6f07e681c992cf7f02182757b",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/outcome.json": "514147c586008d3473cfc5a9ab77dac2ff0b66f6edd9ddb315a727fb334cae00",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/output.log": "21c2a786e80a28999aa50d4ce1231b028fd48711562a5715534817aa9f34c623",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/process.json": "4d90a70cccc5ed952c036c4c2e8f8fa248184ba9de0d3c9d7fda8d7eed9a6255",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-front-packaged-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/audit.json": "bba04194b1a5de44e0af2fd0bd174670a6f5bf72cb24487fabe54f250f3941b8",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/candidate-config.json": "812b2bcd2dc5c60f3289349f985f33832ab408d2cdeec4da1dd0f8720d16e67a",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/driver.py.txt": "111d3a836ec4b271f4f85211d1c9ec351e93d98d7d62033d583d5533e739a68d",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/outcome.json": "0c77b6a39ae494a93b81fcf3911c4d474b346af878845308c38c1e5352542a9e",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/output.log": "9bcce879c8797e293745ca8500997ff96630d07b5281143cda763150edf1f456",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/process.json": "40e24b53294fad3837000f3b0781d8ae37856e70e5313b09d3b4e3f95cab46d4",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-remainder-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/candidate-config.json": "812b2bcd2dc5c60f3289349f985f33832ab408d2cdeec4da1dd0f8720d16e67a",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/driver.py.txt": "0b0206279c188597a7addc8144fd4d27771fee2417873fca4e1d3a83900283d2",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/output.log": "178ab134f38e787836dbc94dbad85f9821c49dfe943d1fd01025b621e9418585",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/process.json": "765383294de4594490e4b6cbb6f0d064d3dde6dde16b1a7b44389079f095950f",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/active-config-before.json": "4d9edf2eac895c313dd699dd21bd8670eda1dd09b04208e1ca2b6d4d667826ea",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/audit.json": "5dfdfbbf0558cee24f248409412bd581bfd75140357e921531c94d3a2ca4e470",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/candidate-config.json": "812b2bcd2dc5c60f3289349f985f33832ab408d2cdeec4da1dd0f8720d16e67a",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/driver.py.txt": "2e19b90169f83f15b0712f6c5a5a802a21dab314929764f9b08a22fce8202b57",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/outcome.json": "c6e0f6b779d1820e6e61eb42613edcf904c3ce8c7a3ab34a1c39f260e46f9768",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/output.log": "4c549baa6ecc2e4c760a2308168ba1f187d3a7199991b58b0c08f088267682be",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/process.json": "b1475a40dcc56c16b2dbb584ae03ea9a8ea73b64186afc8e20f730eb9f4b5dc9",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-other-packaged-v2/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/applied-test-inputs.json": "0427177d4cae27d4938339e840b711a6504c26554fb9c481cab9660f501b0151",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/driver.py.txt": "ec30146981394b2a8fd6f167ab47ef358916437dca5bae667cd9289c05751f82",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay/native-rules.log": "bd9f968edee4e6d7cee97ddfce9c92f991e580d1674b0b733909285618ae6fc4",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay/outcome.json": "2b35520b9f4b70583828c630edcd29337163b2d80b8b2f0e4f5e6477f008fbee",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay/process.json": "e981e2a7a40569e54fe7a571694b8094244f1859cf498c9f99d7d49239c030d7",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay/selection.json": "45597a86b7d64a608dfa8c335a581e86d1265fbbf599214d08d27bd412aa9d4f",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay/testng-results.xml": "b9fce2e3dfdaca069e9e483aa1e854ffea1fc8658a0b8f8a345af7d814f0118b",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/gameplay-expected-cases.json": "ca82b3f6ab30efc87b4dc8915f089d59f3efb4925cb6cc5e6d51b71c66a1ef4b",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/original-test-inputs.json": "11f573d8cb5c954c9434641070d672848e31afa5f6391160beea617ff719d551",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/outcome.json": "c9501659dc646a0f0b123b5d60587e55b4cfac9f7eb58b3764e267ee30f6f60c",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/policy-applied/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "48fee858653cd7154c062e91dbbf22f5a0a5d33dedb48b6093aeff25528a9e18",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/policy-hashes.json": "e6f387302665533ea8aec60ae753c79c29a8b78b979d99f0f6337cf03be2d785",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/policy-originals/forge-gui-desktop/src/test/java/forge/ai/FlatMonteCarloVintageMetaTest.java": "5d23b85edf2f94daba1858d56c8d09ba7000b8a19a740829b548eff390c35bc7",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/selection.json": "bfe59d85c5c54c7265ff4ed87674d662082509c022dd4f14e4f8beb742eaf665",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization/native-rules.log": "4c4bcad60253aed63becb42cef2fddffda913f5bc94b95782f3524c6b2628a18",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization/outcome.json": "dd54f516168558a4d978a0840f54632ede2c121e9ffc95195606eb0d141eb601",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization/process.json": "689e0743b06ef69d7eed6c4f07613d75b8f2c1eb7497bf453266d48ef00e4ad3",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization/selection.json": "056b5f160185dad736bb5ab9733728d098ecc915efeb689d417991ffc7853ae4",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization/testng-results.xml": "a0dc13b84401160ef3a9669351797a2e40ff5e7b712b05dd0777af3429369b37",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/serialization-expected-cases.json": "f8ae90cfb0f6f776bf9f8cf87e2b6eda3656db60d8607ed701557f102e0aabdf",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/source-ci.json": "4a09652b2720d3812829d3215ccdaf93d391cc4fd0bd9b43c8d89e60eed45f35",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/source-epoch.json": "28d3c6820a710a34adf81513ed6d1b9aa5dfefaf66933b53a4315b36264e3396",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/source-frozen-inputs.json": "eb86db4bc662baf61b686fa437134ea088877a91617fb3c5528a649477772088",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/worker.log": "5a115a5c3470fd159aab2b73005b80c6400f2ffb878c6f6a5702819d38d37f0d",
+    "engine/pending/sacrifice-history-runtime-v1/sacrifice-broad-v1/wrapper-process.json": "28c6ac0d19a295b1593644baa996f4808fe4d51248415f2e9cdacf56681182cb",
+    "engine/pending/sacrifice-history-runtime-v1/native-build/engine-lock.json": "e6a5d599ef210284e2fb966e833c7343693df36340356ba05965bceb5196ebb9",
+    "engine/pending/sacrifice-history-runtime-v1/native-build/engine-config.json": "7489e0771a9da26c9ab097c75fac17c40ca1e10ea76a409bfd983c338866fbbf",
+    "engine/pending/sacrifice-history-runtime-v1/native-build/maven-build.log": "490a0d29e7da9ae5e2102158af9bfa7e7ead9751ba93d40a793e4a9af0584294",
+    "engine/pending/sacrifice-history-runtime-v1/native-build/testng-results.xml": "2835c0f6b999d310a53766e431362898c605a36b13a502d971a5c77be9ea7a97",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/draw-ending-methods.json": "987e6d2071ef2a632486c4adf68db8084801edd756be017d951c1d956f758ba3",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/draw-ending-summary.json": "b6eee4a2eeeefcf9c5852b4be980c592fd0341075c4c754e9234d520faa53e7f",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/draw-ending-worker.log": "3d0196f6f5dcc4c1052539dd4cea14036022bcdd68c91725466b3e5f59baf8fd",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/draw-endings.json": "f4ebf83519b46c14d64ca249ecf0ca0b675a6f3f069348eeb84a9fd5557d6ab0",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/rules-process.json": "957af55d509f4a69942d752f52ab1f6dd7ac4c4a3bd0ba8f71baae2b4ba84326",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/009cc90b8cc646c68159a1b799464f05/rules-reports/testng-results.xml": "0c3d22c457da6138c78558e96d7526f7c88e486fb66f261b8aa70b218f58ee9c",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/draw-ending-methods.json": "16bdf0419f9c6c8bf4ef5b20f3deb27a8a3e64fc2965a5e7b0310f460dee6248",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/draw-ending-summary.json": "bf6cd32c552d5e930796b98a608569ba60e05def1d12f9e61f5a6b68cd94c787",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/draw-ending-worker.log": "d4e637f404d2e575b89f4a5d2b436c94bfb09b1f9272873b9ab3e11cb11e3418",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/draw-endings.json": "c15088b27ff8282643742c1ea51a14fcfa09cddaa684b0919cf9385377ca289c",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/rules-process.json": "a342e28992d86d15663ac7afce38ef094c276502797456d3b81442e9978c7ac6",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/0da6c4be883a487b9db821dc315ede6c/rules-reports/testng-results.xml": "5a179c2edb8582051c6b5aee4fdbc617f44894269fdac93eaac6eb41022ffd51",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/draw-ending-methods.json": "e6458e7c7f364abe16485b9bfaba085be6782dd82f424b672863b0decb2699a7",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/draw-ending-summary.json": "fcefd90c8dbfa8a49ce0acbc3e219d3a08d42c49005e803d0f0660c0a182a8d4",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/draw-ending-worker.log": "c9c1038bb4574942e655d69c60135db7c158d8738264d19e1112abcc7fba24aa",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/draw-endings.json": "d272e3f904f38ea12e027dd04d0a415f0c115baa2ce14eb9853dd04016fd3fa0",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/rules-process.json": "0da790c67e8bf1bdf8b8f732d9e79e704f1d7e082fad7d058f7aa3fa34037c1d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/2de5f0a9255a4446b947227c29a89428/rules-reports/testng-results.xml": "bc22fc206d6b2fd3a60a7220ceb6838eb46b4c8d93f71575f6cc8398ec271c8e",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/draw-ending-methods.json": "6e917587b701936f8c1aec570a46bd854db8f75518e6698dccad6f59dca3e71d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/draw-ending-summary.json": "71ccbd2a2d6b241254d100576c5329a01e044ca2154caf470c0d9ebe276abf70",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/draw-ending-worker.log": "691b9fdac882ff68fe094e8c65c58f348a34f94ace1abbc40a4cdd9b6f25f154",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/draw-endings.json": "5f8d5416201a02c7b9f4357d806383e2a31e2c71dd21a311c6eb0c29a1b0d749",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/rules-process.json": "38dac49aa4068fe408712eeecc7f3e6a5072fd5a842f3c14290163226dee2ac3",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/471a5704cb8a445a973ad253655398d5/rules-reports/testng-results.xml": "a31d454456c5cf76d58f5429f2a8cf59eccf9a41d73683fa620610d94f4cf8af",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/draw-ending-methods.json": "fcde8c41e26b8f69e40239bb876ef230aed31a8fe06f7fa3f9f1d7490c25281c",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/draw-ending-summary.json": "5fd12aeb6cd18100571e5dd231c98fbed09fddfe4d898a61a1eaea04a36345e3",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/draw-ending-worker.log": "41c38ace03afca33c7492b8bf38c7f49bc35f41925c888e355aacdcb69fef8c0",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/draw-endings.json": "eae284d951fb59cd6a9d8c56e216057df8a7a0651bd9f1b25ad746c7fa27fcf7",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/rules-process.json": "8c05af9341ff71500e46181e3f1a6d0193b1388654458a420f4ddb9764cbc761",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/662c7b20096548df88b6439a81cca550/rules-reports/testng-results.xml": "2d1e8f3be2977df7999d4e0ef8a7de705cec46dbe9995c86bcec849b21c4f637",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/draw-ending-methods.json": "80990a9c51c2894b8a81738812260263f53d39b71ee2d95113b8ee051c271a23",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/draw-ending-summary.json": "4554ee620fa21863f0df013132e1b05247fbd7accf8f9eef7471967c93359b84",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/draw-ending-worker.log": "2d40a0739f47a4d9f28e1c1462a46aba0454b96c761c5d9ff25d1f3927c86293",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/draw-endings.json": "701172577a1508193291f3b6c71fbaa1ac117d045429cc7e9ed4af25e46b137d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/rules-process.json": "f47c9c72c58da46797f89a75ef891f148708bd593a9b8fe79092cfc85a74cff4",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/78fe67f6eff842aab27a1281dd306ffc/rules-reports/testng-results.xml": "701027575cf8afec565ca1b1af8d8b5e73303da5a966605dbb6f69930bc99911",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/draw-ending-methods.json": "d462e76b81f2b5403dc2f95f890a540489e30962e6f60158cd45c1a168ef0533",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/draw-ending-summary.json": "8710d5c1cad61f61c175f2b633381dfc4a0ac9c5d7e746ec4ffbf556f3f84585",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/draw-ending-worker.log": "69ad1625a7807cd69c7446aca31e35bf3a7232ec4a6584b2b93c546e1b411004",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/draw-endings.json": "5f89daff42d88dec993f09608eaf041af6d6d4ef4b4c28606fe0b4e1eb26f9d3",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/rules-process.json": "534bcd611f766fe05d059c4c358ea5a93adf4ee48c771238d0a0c747b8484517",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/8e783d157dae4774ac475906eacc5c87/rules-reports/testng-results.xml": "e685cae90b4acc5a1936251474ba1a7badeb055910c8b134374351f7b39b9064",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/draw-ending-methods.json": "e79a656fca704ed44615231dd7c5353de9711cc8004d256b7730445c7e4da29f",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/draw-ending-summary.json": "3b52d492df9fa490a419d4040e17bebf9d270f06c7938cb891c9f75886e45e27",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/draw-ending-worker.log": "14f1b7d190febfe83096d393749dbb94b1dc313a30c5b032ac6b1c3cd16de905",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/draw-endings.json": "aac7800246b39f514fb0a5fd14052bd63c7fd69e01fb47905d1862970a464cbf",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/rules-process.json": "6f634ac11826675b54437c92e258cf05afec5330e454cfc3e32dfb9e6545b321",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9bec9330871d490e9ac26822158534ba/rules-reports/testng-results.xml": "3636715f8527010a7d39aab851dbcfc5e4ec99000a81c310a61f33d49dbfd45e",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/battle-combat-methods.json": "6dbcfd74792765019e2cd0929f9b6ac374e59929e92815b843ab1f22d059a655",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/battle-combat-summary.json": "826f4752d63b6baf3b2840d56fc7ef0bbdd93335605d94945bbbba3fed472641",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/battle-combat-worker.log": "2bf6d14b6ccbe8d637c4e62d6338c1a9f4a8593a93a7138b020a2262e12f29e2",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/battle-combat.json": "6d95740a555d7bb8c27e2b6fdeab8d276c95512f54e18844ce8f04ad13184ba7",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/rules-inputs.json": "66761287acc56c6276c221ff7854f42876820fab281ded1ae1b218e2a58ef8ee",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/rules-process.json": "8011c79b500aeee7314ab604449a4b435bd8740b6ecc7f7cc9484c08d987c980",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/9f50495bc1a74e9e9aa29e384de72389/rules-reports/testng-results.xml": "c7ab33801f8d7452cacfbe5b2c412a1fdc9e89e55da0b8886b5393eed2bc7174",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/rules-inputs.json": "babc6c0c35dbf9eef6d3710dc7f970625cf77f9ce64340439f7000497521e442",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/rules-process.json": "859a768a3aa40e97e3f08ca37f934b0557177b5af981e5a34e923ca058257561",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/rules-reports/testng-results.xml": "98f6edd9a0d1f550c0d32c310946435ca9be52edbad4d32eef19444b5083a53d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/untap-methods.json": "aee3dfb86a9d0e6a4ab984725d712b12f69fd1fc4b0aa91ab9c05af6f6a63fda",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/untap-summary.json": "bb9fb082e04aaa2082c9b3d3a47430815a87374ac5baf10d3b3ebd0700243725",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/untap-worker.log": "252e38e8dc16d073ec6b8bf00b7f7802f0f59e998cb98280e434a3f92ffa4348",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/b71f856dced349b9881570c6b68636f2/untap.json": "9fa986c59c3bdc9accb5d433b21441bad3919c6a76917e4ec375a392eaf4d790",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/draw-ending-methods.json": "ccc74d9325678aa63852d60ebb4e9fac531e87f5acb4af7ee1b803b4a8162b47",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/draw-ending-summary.json": "fed5809fbd234b2daa9ad15ad541b4000861f1fba04315e3c26571c9b07fca22",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/draw-ending-worker.log": "ae644988f20445d20a496f569d8a2e3365fc9e90af19b310bcf4bedd99dc1b31",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/draw-endings.json": "60c1df5fb8b66c42f5de62d0d47938d60d4c3b17a5d1ca405dbf722f749455b9",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/rules-process.json": "0c293dcbe4d01fbf4be544f60f1170c31e46469cbf23b545167b30a464d93bc3",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/bf376daa6cff4e17bb6f8ef52a684b01/rules-reports/testng-results.xml": "9493cfa2adc87845ec4cd5539d0c60d423d607cd5f4b779a5c6bef151486a0e2",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/free-casting-methods.json": "0e20494fc23fb9820c5edc09150839b035532beb6d3d6db57ff7613196d5eae2",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/free-casting-summary.json": "8eee32fc51ed1d662d04ab09389b0993a3967934f6be53c5e03b371040880dd8",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/free-casting-worker.log": "b7216c17af2c2570e20dd36c954e53b5de582c36d9a061f58c2bbe8bb329a7d8",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/free-casting.json": "c8dad42e179c6c8c04f1b57750bee9b5ee0ab92c9a95074eb143f28403f1160d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/rules-compiler.log": "4f831cf229f98b0599906f3f4cdac4909cd4bceccaf67a88f63f0e3e6ed3abba",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/rules-inputs.json": "fbe89d52123e7259d77ecfd10afef70e24a3c44fc6d56183f09ab278d9a409ed",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/rules-process.json": "191813810958891f9cc24553316e13779359390928bebe2cb3175074d37318cd",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e4fbc050c623425a99f9a214c835bfcb/rules-reports/testng-results.xml": "d1f74e27a40e4ebe11b5e87141b6f82df01e54db18178fac7e44285b97c50a47",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/draw-ending-methods.json": "61c240518fb769744ed2c014a06fe1591b442188ad30c6d2859f5d9b11fe52b1",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/draw-ending-summary.json": "cb8ebae305e7f6d5b35fe5388758a7567ac3362422e6ab96623d94b2abc6a6cc",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/draw-ending-worker.log": "7fa07d19e55c6992dcbdd89450d58cef14ba08046978874f7822c446dd90a9c4",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/draw-endings.json": "7d481897884f4510b44291d42adcff537572379e4e79fc42802a9cde00c379ca",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/rules-process.json": "251fc93749289b3a8ece9d1e53dd52d3e8b939a5f7a2f8ef533a3ef355bdb7ca",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/e825d417c18c4450907d073b2ad69b23/rules-reports/testng-results.xml": "ad873e17406859b2fde22b89c96ef14aa7e13874aa7a4678bae80999dc260696",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/draw-ending-methods.json": "1ce21ef0b228879c8727881e661b08dca3277f9f874cdd294022c30df8e3c8ed",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/draw-ending-summary.json": "d802f0265ba9ad37f3ecb5c34fa1ef735bdde22aa706459939620783b3eb1ee6",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/draw-ending-worker.log": "3609d4f8e60461129b549bb0019f6d1047ec8e98cde6543a1fcc7e6f712ade67",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/draw-endings.json": "cde1beb7c6e96f4a8fd4ce1b08c91f9a08ec8b186c24d3b0cef19a22f03e3d7d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/rules-process.json": "4f16cdb115fe89e1f67a814242f2d46d67b60cc26b4f545ea3cecb56f0f90238",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/edbe3cc3208348a9a7c669ce2851e6a9/rules-reports/testng-results.xml": "25ef01713531717f2ea328349278be09fb8ee66ea9de2fdaa39cf779a8d325a8",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-methods-0000.json": "227a3e3b0b9f423ee813dbe181d4db380c51b070472375ecda06e8f278fa45f6",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-methods-0001.json": "d9235b460012d947cf464046711bf0989931fb9d49f341196703bfbb51699085",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-methods-0002.json": "ba352d48ad967c17db110794e344181e7024e2290ca0af12a80f36bd44f8f591",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-methods.json": "43db681ed884b449584364d6e8e2b141e3f213828e93dff6f430e2b2da6dc7af",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-summary.json": "15751db73873f15c08db396f07310be323f63973250c1ec88f863bcefc75dd23",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-ending-worker.log": "ca0ec7b8ac2750e00bfba22ee32887945dc23039f95c3580ef94fa3b47f380ee",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/draw-endings.json": "de76c70d8594756e5fe031cabb3e6e5a565d8d51c655dd57305ec29b92542fe7",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/rules-compiler.log": "462b348c2b91bb265035a91fdf79fa1eb4ed55edcc316b5c47629649ced9a65b",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/rules-inputs.json": "cad34d1fdeb6b875e2ac10be982e366f14678a9ac05c14dc75405c89c7511f3d",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/rules-process.json": "64d7aa958fff4541a9390dde772d836d59562be056d299d76b2ec32528d054eb",
+    "engine/pending/sacrifice-history-runtime-v1/packaged-runs/fb5a68a26d7445dd8be9ae86c1227c7c/rules-reports/testng-results.xml": "62148c83d19140043a699b4217062161dc3dd4fd5c87cd44948d3f3a3eb35944",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_source3622_v1.py.txt": "c1514c8239c99410ba0acada1a7aa9396b5a99c7f9ea592c834598b1a69ace57",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_build4822_v1.py.txt": "dd659dea08b3712b105e7778d11213e4b15494618585174ba78926d88fc145cc",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/audit_build4822_v1.py.txt": "44298cd913dba08c3c11ad83861882820843ce4be8513c39d53a61d8e3e75062",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_sacrifice_front_packaged_v1.py.txt": "3396df990f5be79bc1b5a2d48b99fb1c2feca9a6f07e681c992cf7f02182757b",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/audit_sacrifice_front_packaged_v1.py.txt": "11efc1e68002f907cd152ab8a71134855d3e668c8a8c6a6d680401247bd4ec99",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_sacrifice_remainder_v1.py.txt": "111d3a836ec4b271f4f85211d1c9ec351e93d98d7d62033d583d5533e739a68d",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/audit_sacrifice_remainder_v1.py.txt": "664f8b7af9b6c71c50b935828af77abc866a113391bf11911bcac6fa5ff524a0",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_sacrifice_other_packaged_v1.py.txt": "0b0206279c188597a7addc8144fd4d27771fee2417873fca4e1d3a83900283d2",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_sacrifice_other_packaged_v2.py.txt": "2e19b90169f83f15b0712f6c5a5a802a21dab314929764f9b08a22fce8202b57",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/audit_sacrifice_other_packaged_v2.py.txt": "1e0408648bd9c5f03e4da1ca720b26700a900a7cd574bd2626a34847dc6b3644",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/prepare_sacrifice_broad_v1.py.txt": "cfc21f837ec38c17594f72359c869e434931c8301d2ac5ce2a36b3e7441e18e3",
+    "engine/pending/sacrifice-history-runtime-v1/drivers/run_sacrifice_broad_v1.py.txt": "ec30146981394b2a8fd6f167ab47ef358916437dca5bae667cd9289c05751f82"
+  }
+}
