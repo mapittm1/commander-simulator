@@ -1,0 +1,222 @@
+{
+  "status": "registered_not_activated",
+  "source_head": "edec752fad9eaa973251ff0adc15197682950377",
+  "source_ci": {
+    "id": 45775713914,
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "edec752fad9eaa973251ff0adc15197682950377"
+  },
+  "baseline_build": "35e8b8bcca1b41a1acc2aaa672d12b45",
+  "patch_sha256": "3f45a920180f6a2f731ab5d781fb80a7c0f8549671fa1dee5cb3ea3dabd8b18f",
+  "fixture_sha256": "9d874b4a32a6f9a9780f1fed92837eb130e2b69e787ad51d1466c4c57619f38c",
+  "baseline": {
+    "mode": "baseline",
+    "counts": {
+      "total": 9,
+      "passed": 2,
+      "failed": 7,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.detachedMemorySuppliesNativeLifeGain",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.detachedRememberedCardIsRetainedAndIsolated",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.historicalMemorySuppliesNativeLifeGain",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.liveRememberedCardUsesCopiedIdentity",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedHistorySurvivesRepeatedCopies",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedLkiDoesNotBecomeLiveCard",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedPlayersAndScalarsSurvive",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.sharedHistoricalReferenceStaysSharedWithinCopy",
+        "status": "FAIL"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.siblingHistoricalMemoriesDoNotAlias",
+        "status": "FAIL"
+      }
+    ],
+    "exact_method_parameter_counter": true,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "testng_status": 1,
+    "actual_processors": 2,
+    "actual_heap_bytes": 2147483648,
+    "production_origins_verified": true,
+    "report_sha256": "a24d818e44455a25ac81952e15f02c4ce74e8485bcde2729fddf34a0d71f3421",
+    "scope": "Supplied-state memory and native GainLife resolution controls only; not full legal histories, original1271/90, speedup or universal rules proof."
+  },
+  "corrected": {
+    "mode": "prototype",
+    "counts": {
+      "total": 9,
+      "passed": 9,
+      "failed": 0,
+      "skipped": 0
+    },
+    "methods": [
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.detachedMemorySuppliesNativeLifeGain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.detachedRememberedCardIsRetainedAndIsolated",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.historicalMemorySuppliesNativeLifeGain",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.liveRememberedCardUsesCopiedIdentity",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedHistorySurvivesRepeatedCopies",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedLkiDoesNotBecomeLiveCard",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.rememberedPlayersAndScalarsSurvive",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.sharedHistoricalReferenceStaysSharedWithinCopy",
+        "status": "PASS"
+      },
+      {
+        "method": "forge.ai.CommanderRememberedHistoryTest.siblingHistoricalMemoriesDoNotAlias",
+        "status": "PASS"
+      }
+    ],
+    "exact_method_parameter_counter": true,
+    "configuration_failures": 0,
+    "configuration_skips": 0,
+    "testng_status": 0,
+    "actual_processors": 2,
+    "actual_heap_bytes": 2147483648,
+    "production_origins_verified": true,
+    "report_sha256": "5953b6eab7f513818e15684805d211e1c3920cdc99345d205f000e5cd612e4a6",
+    "scope": "Supplied-state memory and native GainLife resolution controls only; not full legal histories, original1271/90, speedup or universal rules proof."
+  },
+  "retained_regression_counts": {
+    "total": 87,
+    "passed": 87,
+    "failed": 0,
+    "skipped": 0
+  },
+  "expanded_source_cases_expected": 3718,
+  "expanded_native_cases_expected": 4918,
+  "expanded_main_packaged_cases_expected": 3761,
+  "original_resolution_cases": 1271,
+  "original_resolution_worker_seconds": 90,
+  "source_build_packaged_and_activation_gates": "pending",
+  "earlier_experiments": [
+    "First prototype5/6: one new fixture incorrectly expected historical power from a native expression that intentionally consults a still-live card. Revised fixtures compare actual native source and copied resolutions; historical memory remains separately checked at power2. All raw failed artifacts retained.",
+    "Registration v1 stopped before mutations because the source guard compared LF-only research text with CRLF golden input. v2 verifies explicit CRLF normalization against both golden and native build source, while preserving exact tested prototype bytes.",
+    "First wrapper collided with the existing prototype directory before starting the prototype JVM. Corrected output naming; completed baseline was not repeated until its fixture changed."
+  ],
+  "scope": "Generic remembered GameObject mapping through the existing shared historical graph. Supplied states and native GainLife controls do not prove complete legal histories, all-card rules correctness, AI competence, speedup or original1271/90. No selected runtime change.",
+  "files": {
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/driver.py.txt": "5f4be2bbc7818975d564ba0771946b848e55c913fce4521256b7905f67045c0b",
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/native.log": "803a0eadbd6a2b3d2b8395f5100c4319a7ce1afaeddfd71131f695515803e77a",
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/outcome.json": "afa174ed35984184cd763f9608f0a35f7cb7f44e31abf1e157b4a901a1c56b24",
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/process.json": "7e7c7b0243933e673eb56290bbe56d3488980a4722819bcd84b22b727b057ee7",
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-baseline-v1/reports/testng-results.xml": "1b92f513300ed5a19ea7e8eb56699cbb3909ea1b49e07ab7f9425b8c0851efbe",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/driver.py.txt": "7c78ba2c58039c3f987760105604ccabc57b2d933e8cba6d2d37e3af18656f1c",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/native.log": "b3e741874ba389edc0be36b98898f3128c8bf99ec88d4219cfea82d7a14db5d7",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/outcome.json": "8104353a612d9dcea4fd4811bc827402d4377ed4eab9eead274b643c6806ff07",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/process.json": "31488f2a4602ed0cf16b18a4f78e86757f4172d7ba7e55427f3be6fea3e06fbb",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v3/reports/testng-results.xml": "12d379cb4e4c0c8e248b43239a16dd08c0ae0bc971316f8bc75d74de98a79dcb",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/driver.py.txt": "0782b2d9c320a7f32d824571f674c4f1727400a8ee6462e8695ea3939d2508fd",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/native.log": "f75d4035d40532908c74f54a86a5186842c4a52cf712f4ca22a67396adea092e",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/outcome.json": "6bb0966ce8bbce9f2317d26dffffa16681a0e7538a80b960b381ef81469ea6c5",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/process.json": "7e7c7b0243933e673eb56290bbe56d3488980a4722819bcd84b22b727b057ee7",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-baseline-v4/reports/testng-results.xml": "a24d818e44455a25ac81952e15f02c4ce74e8485bcde2729fddf34a0d71f3421",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/driver.py.txt": "7feb05c80c0c66dafc22809beecbade305315ea410922236081a26ee1b3f015a",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/native.log": "6e470c96e247434bf385f5e13ef3e24850b27dcba6ec6ca2a7e4d6df94d44612",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/outcome.json": "74bd236d2ce22e527b70a22b123655cf6dffa42b84b8b6066c04293c102d8cc4",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/process.json": "75e346b26dd2c7c54e23a7100f9d39412b98e17e8e7ca2aef2f9d5eb794fae5f",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v2/reports/testng-results.xml": "0abc2bcc8d12f7ad248bbe3c569f76eeadb2a9b9a7c8d86fcba274b8ee7a269d",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/driver.py.txt": "7c78ba2c58039c3f987760105604ccabc57b2d933e8cba6d2d37e3af18656f1c",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/native.log": "4786a8e359a8ca1dd5302004e3dd95bfa3727d833bb981acef1b3573f617dacd",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/outcome.json": "e8e781c0d3119c56b26ea391e968a1be0c9e583effed0bb7af37a8ca9d15431c",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/process.json": "b3f658a13d9e4e085afac9960b323243ad2cd99ed24ec2ae5bca99cda2b6bea8",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v3/reports/testng-results.xml": "d768e1702b40585b8360d5b7cb101854ee5f993b21813726e842a3bbab67d0a2",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/driver.py.txt": "0782b2d9c320a7f32d824571f674c4f1727400a8ee6462e8695ea3939d2508fd",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/native.log": "7681ed7bcfc084e8fe0bedf2e94d4accb787a7bb5a5a5668718ced8a42856436",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/outcome.json": "504d51e6f6e2d278d868ddf3993c353f55915b23e598b3a56ac33bce8ec35b0f",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/process.json": "7cfa4dd2fa38b073e80887a1a288a4e12a41c143f5ee6d1efca68d463d8f11e1",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-cases-prototype-v4/reports/testng-results.xml": "5953b6eab7f513818e15684805d211e1c3920cdc99345d205f000e5cd612e4a6",
+    "engine/pending/remembered-history-v1/remembered-history4909-epoch-v1/source-ci.json": "0c9f8d434a8d1a8fad43bd1f0115a7e3e065fa0a293843cd9b3200a24149c4a2",
+    "engine/pending/remembered-history-v1/remembered-history4909-epoch-v1/source-frozen-inputs.json": "2049e7cf680e5f9ddf831a00b3bea9845a16e7e226e18bd703d5fd46a76fa53d",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v1/CommanderRememberedHistoryTest.java.txt": "6d1d490f1d7a3ed2b0f42c1c15962667af01ab0b222e69ace5d558141f421aee",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v1/compile-process.json": "ae87693e8e633444471263a9c28b5f83454b0117f84e85e97420e8efc25ed5c2",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v1/compile-selection.json": "6e5a222fdfeed956185c33d5834bcef1ec1a8ddcf8857d169dada1290e5b2417",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v1/inputs.json": "9ba85cdc02e78b5807c6c1a24e1c3a6a5bc6cd2cfbcbdbb14a935ab686cb88ef",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v2/CommanderRememberedHistoryTest.java.txt": "97e947356277b06e4c1c91e7cfbdd3e464438eca8d62651f3e6a7d66f0f770a4",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v2/compile-process.json": "990dcb4c3c9865af4aae1ef076b39ab05d74b9b67acdf11448215cc411c61e23",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v2/compile-selection.json": "08ca9665b60d41de0fa740494ffda9a87c3cb57a08bdad12d393f42bb2fb1cba",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v2/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v2/inputs.json": "8cce6b1c33bae38b34588ebc1d060facb96975c33f0b923c4a73aa5df1aa1635",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v3/CommanderRememberedHistoryTest.java.txt": "9d874b4a32a6f9a9780f1fed92837eb130e2b69e787ad51d1466c4c57619f38c",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v3/compile-process.json": "af7534d82ce7a45755e99963fecf5c74f61e3f0af913da2db6a007a872923c79",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v3/compile-selection.json": "fce73f832fdb8ea00d75c99352f35267d827747201e1a833971a18b754a739c0",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v3/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/remembered-history-v1/remembered-history4909-fixture-v3/inputs.json": "f297badf1a50cc0a587e3d62a91a475226618e8291ce3f974de4137dc635e60e",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/compile-process.json": "52ae0b495b4b384b07cce779828431623f2f8cbab8ce76c90fcdf22b75d7d148",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/compile-selection.json": "c74eb9266d6d6876a6effde18a7d2c37423def918f3d3a7dfa63cb6fa59a306b",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/compile.log": "e484cd6c373ee1eb83cf0d6cbabe1eded19bc5e397f025678c3087bf6099891a",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/inputs.json": "c9e951138a87bcc11b59676ebccb7dcfb3df29f9533f3b8cd6b2fd993722dd36",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/proposal.json": "85bb33d08e1688e755a077eb2faf968787accf6a29b87702307b48d2c86a023b",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java.txt": "119c3bc0f21f5a034530ae56b25bd61872764926d3ce7e452427933a4c7096dd",
+    "engine/pending/remembered-history-v1/remembered-history4909-prototype-v1/baseline/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java.txt": "b5ecd0b5252e5bb32012b375e9136ce1f1537a8bd2d1429469587071b30376ca",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/driver.py.txt": "20d5dc1504ae0844c056e1ed6db3279c1a3802163f19c43bcf3c27b64c7db9de",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/native.log": "5a65eb42781c23d754bed819f46653cc1dddc70cae4414aeadb2f4e2737c0e92",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/outcome.json": "3a9bf5ca77913248a41eddfee9ec1a9acbd75148eded33b1a775c5dd3ea116d0",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/process.json": "31790d7ff468a744aefa6162efb45365b97ff73fe1f04bda02e5123b37b18925",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/test-inputs.json": "1f2affa244c0555339baa8629206331d42bd2f0eb11add3cc1c15d02e5345023",
+    "engine/pending/remembered-history-v1/remembered-history4909-retained-prototype-v1/reports/testng-results.xml": "50e93efd301589f7efc3c5b9ff6620904a5d22dfcb431584749b3f5b79ed3e27",
+    "engine/pending/remembered-history-v1/drivers/compile_remembered_history4909_v1.py.txt": "6e8952e646e24b37e86cb87cd54b194e4ee1180f20e7136aa365dae6a60a43fb",
+    "engine/pending/remembered-history-v1/drivers/compile_remembered_history4909_v2.py.txt": "204f84fa5bada376eff2243d9dc806f0939b300c511c66e22a472a52a831b09a",
+    "engine/pending/remembered-history-v1/drivers/compile_remembered_history4909_v3.py.txt": "d0941bc30784671fed1c0cc490f22e88b0659c27c5cdd579c7f3628beaf19910",
+    "engine/pending/remembered-history-v1/drivers/register_remembered_history4909_v1.py.txt": "c8571fb6601a4c4676c21d1500c0d4e6540fec76d9449fc5684bd1bbe6c599ae",
+    "engine/pending/remembered-history-v1/drivers/register_remembered_history4909_v2.py.txt": "209aab1af355f8fbe9d474d23535ebdb053c0353fe15a2fccabb13b09bbe162e",
+    "engine/pending/remembered-history-v1/drivers/run_remembered_history4909_retained_v1.py.txt": "20d5dc1504ae0844c056e1ed6db3279c1a3802163f19c43bcf3c27b64c7db9de",
+    "engine/pending/remembered-history-v1/drivers/run_remembered_history4909_v1.py.txt": "5f4be2bbc7818975d564ba0771946b848e55c913fce4521256b7905f67045c0b",
+    "engine/pending/remembered-history-v1/drivers/run_remembered_history4909_v2.py.txt": "7feb05c80c0c66dafc22809beecbade305315ea410922236081a26ee1b3f015a",
+    "engine/pending/remembered-history-v1/drivers/run_remembered_history4909_v3.py.txt": "7c78ba2c58039c3f987760105604ccabc57b2d933e8cba6d2d37e3af18656f1c",
+    "engine/pending/remembered-history-v1/drivers/run_remembered_history4909_v4.py.txt": "0782b2d9c320a7f32d824571f674c4f1727400a8ee6462e8695ea3939d2508fd",
+    "engine/pending/remembered-history-v1/publisher.py.txt": "209aab1af355f8fbe9d474d23535ebdb053c0353fe15a2fccabb13b09bbe162e"
+  }
+}

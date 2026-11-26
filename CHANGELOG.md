@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve remembered detached cards and last-known-information objects through
+  the shared snapshot identity graph. Seven of nine baseline controls fail; all
+  nine corrected controls and 87 retained regressions pass, including actual
+  source-versus-copy native life gain, repeated copies and sibling isolation.
+  Retain the initial incorrect test expectation and wrapper collision artifacts.
+- Register nine remembered-history cases with reviewed patch/fixture hashes.
+  Expanded 3,718 source / 4,918 native / 3,761 main packaged validation remains
+  pending. Original 1,271/90, full-game checks and activation remain open; selected
+  runtime is unchanged. See engine/remembered_history_evidence.json.
+
 - Validate the repaired parameter-aware collector through a real 22-case native
   invocation, all 2,481 non-resolution main packaged cases and 405 separate
   casting/untap/Battle cases. Audit exact native method/argument membership and

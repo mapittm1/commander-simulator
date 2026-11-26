@@ -1,0 +1,23 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -240,17 +240,10 @@
+             if (origCard.hasRemembered()) {
+                 for (Object o : origCard.getRemembered()) {
+                     if (o instanceof GameObject) {
+-                        // Sometimes, a spell can "remember" a token card that's not in any zone
+-                        // (and thus wouldn't have been copied) - for example Swords to Plowshares
+-                        // remembering its target for LKI. Skip these to not crash in find().
+-                        if (o instanceof Card && ((Card)o).getZone() == null) {
+-                           continue;
+-                        }
+-                        // Paid ability identities were mapped before remembered objects.
+-
+-                        c.addRemembered(find((GameObject) o));
++                        // Use the shared history graph: remembered LKI and ceased tokens
++                        // need their historical characteristics, not a live card by id.
++                        c.addRemembered(context.map((GameObject) o));
+                     } else {
+-                        System.err.println(c + " Remembered: " + o + "/" + o.getClass());
+                         c.addRemembered(o);
+                     }
+                 }

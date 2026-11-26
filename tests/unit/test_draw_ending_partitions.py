@@ -20,7 +20,7 @@ class DrawEndingPartitionTests(unittest.TestCase):
     def test_current_registry_is_exhaustive_and_disjoint(self):
         """Validate the actual complete registry and total expected case count."""
         validate_partitions(TEST_CLASSES)
-        self.assertEqual(sum(EXPECTED_COUNTS.values()), 3752)
+        self.assertEqual(sum(EXPECTED_COUNTS.values()), 3761)
         self.assertEqual(EXPECTED_COUNTS["resolution"], 1271)
         self.assertEqual(EXPECTED_COUNTS["cast_events"], 1380)
         self.assertEqual(EXPECTED_COUNTS["dungeons"], 10)
@@ -34,6 +34,7 @@ class DrawEndingPartitionTests(unittest.TestCase):
         self.assertEqual(EXPECTED_COUNTS["payload_graph"], 57)
         self.assertEqual(EXPECTED_COUNTS["copier_lifecycle"], 8)
         self.assertEqual(EXPECTED_COUNTS["ignore_effect"], 22)
+        self.assertEqual(EXPECTED_COUNTS["remembered_history"], 9)
         for name, classes in PARTITIONS.items():
             self.assertEqual(select_partition(name, TEST_CLASSES), classes)
 

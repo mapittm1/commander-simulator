@@ -1,0 +1,86 @@
+"""Register the paired-tested remembered-history correction; never activate it."""
+from pathlib import Path
+import difflib
+import hashlib
+import json
+import shutil
+import subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def replace(name,old,new):
+ p=ROOT/name;s=p.read_text(encoding='utf-8');assert s.count(old)==1,(name,old);p.write_text(s.replace(old,new,1),encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'])
+epoch=WORK/'remembered-history4909-epoch-v1';assert all(sha(ROOT/n)==h for n,h in load(epoch/'source-frozen-inputs.json').items())
+baseline=load(WORK/'remembered-history4909-cases-baseline-v4/outcome.json');fixed=load(WORK/'remembered-history4909-cases-prototype-v4/outcome.json');retained=load(WORK/'remembered-history4909-retained-prototype-v1/outcome.json')
+assert baseline['counts']==dict(total=9,passed=2,failed=7,skipped=0)
+assert fixed['counts']==dict(total=9,passed=9,failed=0,skipped=0)
+assert retained['counts']==dict(total=87,passed=87,failed=0,skipped=0)
+assert {v['method'] for v in baseline['methods']}=={v['method'] for v in fixed['methods']}
+for value in (baseline,fixed,retained):assert value['exact_method_parameter_counter'] and not value['configuration_failures'] and not value['configuration_skips']
+p=WORK/'remembered-history4909-prototype-v1';name='forge-ai/src/main/java/forge/ai/simulation/GameCopier.java'
+assert sha(p/'baseline'/name)==sha(WORK/'source3709-v2/source'/name)
+a=(p/'baseline'/name).read_text(encoding='utf-8');b=(p/'source'/name).read_text(encoding='utf-8')
+patch='engine/patches/commander-remembered-history.patch';test='engine/tests/CommanderRememberedHistoryTest.java'
+assert not (ROOT/patch).exists() and not (ROOT/test).exists()
+(ROOT/patch).write_text(''.join(difflib.unified_diff(a.splitlines(True),b.splitlines(True),fromfile='a/'+name,tofile='b/'+name)),encoding='utf-8',newline='\n')
+shutil.copyfile(WORK/'remembered-history4909-fixture-v3/CommanderRememberedHistoryTest.java',ROOT/test)
+dest=ROOT/'engine/pending/remembered-history-v1';dest.mkdir();files={}
+def preserve(source,relative):
+ target=dest/relative;assert not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target);assert sha(source)==sha(target);files[target.relative_to(ROOT).as_posix()]=sha(target)
+for folder in sorted(WORK.glob('remembered-history4909-*')):
+ if not folder.is_dir():continue
+ for source in sorted(folder.iterdir()):
+  if source.is_file() and source.suffix in ('.json','.log','.txt','.java'):
+   preserve(source,folder.name+'/'+source.name+('.txt' if source.suffix=='.java' else ''))
+ for source in folder.glob('reports/testng-results.xml'):preserve(source,folder.name+'/reports/testng-results.xml')
+ for sub in ('source','baseline'):
+  for source in (folder/sub).rglob('*.java'):preserve(source,folder.name+'/'+source.relative_to(folder).as_posix()+'.txt')
+for pattern in ('*remembered_history4909*.py',):
+ for source in sorted(WORK.glob(pattern)):preserve(source,'drivers/'+source.name+'.txt')
+preserve(Path(__file__),'publisher.py.txt')
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4909
+recipe['patches'].append({'path':patch,'sha256':sha(ROOT/patch)})
+recipe['native_test_count']=4918;recipe['runtime_version']='2.0.20-583714b-reviewed-remembered-history'
+recipe['capabilities'].append('remembered_history_snapshot_state');recipe['commander_remembered_history_test_sha256']=sha(ROOT/test);save(ROOT/'engine/sticker_recipe.json',recipe)
+replace('tools/build_sticker_engine.py','                "engine/patches/commander-ignore-effect-copy.patch",\n','                "engine/patches/commander-ignore-effect-copy.patch",\n                "engine/patches/commander-remembered-history.patch",\n')
+replace('tools/build_sticker_engine.py','CommanderIgnoreEffectCopyTest,CommanderIgnoreEffectCostTest,','CommanderIgnoreEffectCopyTest,CommanderIgnoreEffectCostTest,CommanderRememberedHistoryTest,')
+replace('tools/engine_test_sources.py','    "CommanderIgnoreEffectCostTest.java": "commander_ignore_effect_cost_test_sha256",\n','    "CommanderIgnoreEffectCostTest.java": "commander_ignore_effect_cost_test_sha256",\n    "CommanderRememberedHistoryTest.java": "commander_remembered_history_test_sha256",\n')
+replace('tests/support/draw_ending_worker.py','    "CommanderIgnoreEffectCostTest": "commander_ignore_effect_cost_test_sha256",\n','    "CommanderIgnoreEffectCostTest": "commander_ignore_effect_cost_test_sha256",\n    "CommanderRememberedHistoryTest": "commander_remembered_history_test_sha256",\n')
+replace('tests/support/draw_ending_worker.py','fixed 3752-case packaged family','fixed 3761-case packaged family')
+replace('tests/support/draw_ending_partitions.py','    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),\n','    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),\n    "remembered_history": ("forge.ai.CommanderRememberedHistoryTest",),\n')
+replace('tests/support/draw_ending_partitions.py','    "ignore_effect": 22,\n','    "ignore_effect": 22,\n    "remembered_history": 9,\n')
+replace('tests/unit/test_draw_ending_partitions.py','sum(EXPECTED_COUNTS.values()), 3752','sum(EXPECTED_COUNTS.values()), 3761')
+replace('tests/unit/test_draw_ending_partitions.py','        self.assertEqual(EXPECTED_COUNTS["ignore_effect"], 22)\n','        self.assertEqual(EXPECTED_COUNTS["ignore_effect"], 22)\n        self.assertEqual(EXPECTED_COUNTS["remembered_history"], 9)\n')
+record={'status':'registered_not_activated','source_head':load(epoch/'source-ci.json')['head_sha'],'source_ci':load(epoch/'source-ci.json'),'baseline_build':'35e8b8bcca1b41a1acc2aaa672d12b45','patch_sha256':sha(ROOT/patch),'fixture_sha256':sha(ROOT/test),'baseline':baseline,'corrected':fixed,'retained_regression_counts':retained['counts'],'expanded_source_cases_expected':3718,'expanded_native_cases_expected':4918,'expanded_main_packaged_cases_expected':3761,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,'source_build_packaged_and_activation_gates':'pending','earlier_experiments':['First prototype5/6: one new fixture incorrectly expected historical power from a native expression that intentionally consults a still-live card. Revised fixtures compare actual native source and copied resolutions; historical memory remains separately checked at power2. All raw failed artifacts retained.','First wrapper collided with the existing prototype directory before starting the prototype JVM. Corrected output naming; completed baseline was not repeated until its fixture changed.'],'scope':'Generic remembered GameObject mapping through the existing shared historical graph. Supplied states and native GainLife controls do not prove complete legal histories, all-card rules correctness, AI competence, speedup or original1271/90. No selected runtime change.','files':files}
+save(ROOT/'engine/remembered_history_evidence.json',record)
+text='''A generic remembered-history correction preserves cards outside live zones and
+last-known-information objects through the shared snapshot graph. Seven of nine
+baseline controls fail; all nine corrected controls pass, including native
+life-gain parity, repeated copies, sibling isolation and shared historical
+identity. All 87 retained payload/lifecycle/ignore-effect cases pass.
+
+The recipe registers nine `remembered_history` cases with fixed patch/fixture
+checksums. Expanded **3,718 source / 4,918 native / 3,761 main packaged** validation
+is pending. The original **1,271 cases / 90 seconds** workload and selected runtime
+are unchanged. Supplied states do not prove complete legal histories or universal
+card correctness; no speedup is claimed. See [remembered-history evidence](LINK).
+
+'''
+for name,anchor,link in [('README.md','## Card coverage\n\n','engine/remembered_history_evidence.json'),('docs/CARD_COVERAGE.md','# Card support and evidence\n\n','../engine/remembered_history_evidence.json')]:replace(name,anchor,anchor+text.replace('LINK',link))
+entry='''- Preserve remembered detached cards and last-known-information objects through
+  the shared snapshot identity graph. Seven of nine baseline controls fail; all
+  nine corrected controls and 87 retained regressions pass, including actual
+  source-versus-copy native life gain, repeated copies and sibling isolation.
+  Retain the initial incorrect test expectation and wrapper collision artifacts.
+- Register nine remembered-history cases with reviewed patch/fixture hashes.
+  Expanded 3,718 source / 4,918 native / 3,761 main packaged validation remains
+  pending. Original 1,271/90, full-game checks and activation remain open; selected
+  runtime is unchanged. See engine/remembered_history_evidence.json.
+
+'''
+replace('CHANGELOG.md','## Unreleased\n\n','## Unreleased\n\n'+entry)
+p=ROOT/'.gitattributes';s=p.read_text(encoding='utf-8');s+='engine/patches/commander-remembered-history.patch -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\nengine/tests/CommanderRememberedHistoryTest.java -text whitespace=cr-at-eol\nengine/remembered_history_evidence.json -text whitespace=cr-at-eol\nengine/pending/remembered-history-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(s,encoding='utf-8',newline='\n')
+assert all(sha(ROOT/n)==h for n,h in files.items())
+print(json.dumps({'registered_cases':9,'preserved_artifacts':len(files),'activation':False}),flush=True)

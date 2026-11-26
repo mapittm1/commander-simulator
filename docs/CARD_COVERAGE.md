@@ -1,5 +1,17 @@
 # Card support and evidence
 
+A generic remembered-history correction preserves cards outside live zones and
+last-known-information objects through the shared snapshot graph. Seven of nine
+baseline controls fail; all nine corrected controls pass, including native
+life-gain parity, repeated copies, sibling isolation and shared historical
+identity. All 87 retained payload/lifecycle/ignore-effect cases pass.
+
+The recipe registers nine `remembered_history` cases with fixed patch/fixture
+checksums. Expanded **3,718 source / 4,918 native / 3,761 main packaged** validation
+is pending. The original **1,271 cases / 90 seconds** workload and selected runtime
+are unchanged. Supplied states do not prove complete legal histories or universal
+card correctness; no speedup is claimed. See [remembered-history evidence](../engine/remembered_history_evidence.json).
+
 A shared ignore-effect correction fixes copied paid special actions for Leonin
 Arbiter, Damping Engine, Volrath's Curse and Lost in Thought. Copied actions now
 update their own static effect, eligible players and affected cards; native
