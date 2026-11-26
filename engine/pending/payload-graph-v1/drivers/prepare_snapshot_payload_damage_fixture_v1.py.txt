@@ -1,0 +1,130 @@
+from pathlib import Path
+import shutil
+root=Path.cwd();work=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+dest=work/'snapshot-payload-damage-fixture-v1';dest.mkdir()
+shutil.copyfile(work/'snapshot-ability-supplier-fixture-v1/CommanderSnapshotAbilitySupplierTest.java',dest/'CommanderSnapshotAbilitySupplierTest.java')
+s=r'''package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.game.Game;
+import forge.game.GameObject;
+import forge.game.IEntityMap;
+import forge.game.ability.AbilityFactory;
+import forge.game.ability.AbilityKey;
+import forge.game.ability.effects.ReplaceDamageEffect;
+import forge.game.card.Card;
+import forge.game.player.Player;
+import forge.game.replacement.ReplacementEffect;
+import forge.game.replacement.ReplacementHandler;
+import forge.game.replacement.ReplacementResult;
+import forge.game.spellability.SpellAbility;
+import forge.game.spellability.SpellAbilitySnapshot;
+import forge.game.trigger.TriggerType;
+import forge.game.trigger.TriggerWaiting;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Supplied damage/prevention events with the native resolver, not full paid card histories. */
+public class CommanderSnapshotPayloadDamageTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release();
+        copies.clear();
+    }
+    private static final class Scene {
+        Game game;
+        Card host;
+        SpellAbility ability;
+        Map<AbilityKey, Object> params;
+    }
+    private Scene scene(int amount, boolean shared) {
+        Scene s = new Scene(); s.game = CommanderSnapshotAbilitySupplierTest.newBoard();
+        Player player = s.game.getPlayers().getFirst();
+        s.host = addCardToZone("Grizzly Bears", player, ZoneType.Battlefield);
+        // A fixed native prevention definition isolates event-state copying from
+        // activation, payment and replacement ordering, which remain separate gates.
+        s.ability = AbilityFactory.getAbility("DB$ ReplaceDamage | Amount$ 1", s.host);
+        s.ability.setActivatingPlayer(player);
+        ReplacementEffect effect = ReplacementHandler.parseReplacement(
+                "Event$ DamageDone | ActiveZones$ Battlefield | ValidTarget$ Card.Self", s.host, true);
+        s.ability.setReplacementEffect(effect);
+        s.params = AbilityKey.newMap(); s.params.put(AbilityKey.DamageAmount, amount);
+        s.params.put(AbilityKey.Affected, s.host);
+        s.ability.setReplacingObject(AbilityKey.OriginalParams, s.params);
+        s.ability.setReplacingObject(AbilityKey.DamageAmount, amount);
+        s.ability.setTriggeringObject(AbilityKey.OriginalParams, shared ? s.params : AbilityKey.newMap(s.params));
+        return s;
+    }
+    private GameCopier branch(Scene s) {
+        s.game.getAction().checkStaticAbilities(false); s.game.getTriggerHandler().resetActiveTriggers(); s.game.copyLastState();
+        GameCopier copier = new GameCopier(s.game).withStack(true); copier.makeCopy(null, s.game.getPlayers().getFirst());
+        copies.add(copier); return copier;
+    }
+    private SpellAbilitySnapshot context(GameCopier copier) {
+        return new SpellAbilitySnapshot(new IEntityMap() {
+            @Override public Game getGame() { return copier.getCopiedGame(); }
+            @Override public GameObject map(GameObject value) { return copier.find(value); }
+        });
+    }
+    @SuppressWarnings("unchecked")
+    private Map<AbilityKey, Object> original(SpellAbility value, boolean trigger) {
+        return (Map<AbilityKey, Object>) (trigger ? value.getTriggeringObject(AbilityKey.OriginalParams)
+                : value.getReplacingObject(AbilityKey.OriginalParams));
+    }
+    private void resolve(SpellAbility ability) {
+        assertTrue(ability.isReplacementAbility()); new ReplaceDamageEffect().resolve(ability);
+    }
+    @Test public void nativePartialPreventionUpdatesEverySharedEventReference() {
+        Scene s = scene(3, true); GameCopier copier = branch(s); SpellAbility value = context(copier).copy(s.ability);
+        resolve(value);
+        assertEquals(original(value, true).get(AbilityKey.DamageAmount), 2);
+        assertEquals(original(value, true).get(AbilityKey.ReplacementResult), ReplacementResult.Updated);
+        assertSame(original(value, true), original(value, false));
+        assertSame(original(value, true).get(AbilityKey.Affected), copier.find(s.host));
+        assertEquals(s.params.get(AbilityKey.DamageAmount), 3); assertFalse(s.params.containsKey(AbilityKey.ReplacementResult));
+    }
+    @Test public void nativeFullPreventionSharesTheReplacedResult() {
+        Scene s = scene(1, true); SpellAbility value = context(branch(s)).copy(s.ability); resolve(value);
+        assertEquals(original(value, true).get(AbilityKey.ReplacementResult), ReplacementResult.Replaced);
+        assertSame(original(value, true), original(value, false)); assertFalse(s.params.containsKey(AbilityKey.ReplacementResult));
+    }
+    @Test public void equalButDistinctEventsStayIndependentDuringNativePrevention() {
+        Scene s = scene(3, false); assertEquals(original(s.ability, true), s.params);
+        assertNotSame(original(s.ability, true), s.params);
+        SpellAbility value = context(branch(s)).copy(s.ability); resolve(value);
+        assertEquals(original(value, false).get(AbilityKey.DamageAmount), 2);
+        assertEquals(original(value, true).get(AbilityKey.DamageAmount), 3);
+        assertFalse(original(value, true).containsKey(AbilityKey.ReplacementResult));
+        assertNotSame(original(value, true), original(value, false));
+    }
+    @Test public void nativePreventionCannotChangeOriginalOrSiblingEventState() {
+        Scene s = scene(3, true); SpellAbility first = context(branch(s)).copy(s.ability);
+        SpellAbility second = context(branch(s)).copy(s.ability); resolve(first);
+        assertEquals(original(first, true).get(AbilityKey.DamageAmount), 2);
+        assertEquals(original(second, true).get(AbilityKey.DamageAmount), 3);
+        assertEquals(s.params.get(AbilityKey.DamageAmount), 3);
+        assertNotSame(original(first, true), original(second, true));
+        assertFalse(original(second, true).containsKey(AbilityKey.ReplacementResult));
+    }
+    @Test public void nativeWaitingEventSeesItsSharedPreventionUpdate() {
+        Scene s = scene(3, true); TriggerWaiting waiting = new TriggerWaiting(TriggerType.DamageDone, s.params);
+        SpellAbilitySnapshot context = context(branch(s)); TriggerWaiting copied = waiting.copyForSnapshot(context);
+        SpellAbility value = context.copy(s.ability); resolve(value);
+        assertEquals(copied.getParams().get(AbilityKey.DamageAmount), 2);
+        assertEquals(copied.getParams().get(AbilityKey.ReplacementResult), ReplacementResult.Updated);
+        assertSame(copied.getParams(), original(value, false));
+        assertEquals(waiting.getParams().get(AbilityKey.DamageAmount), 3);
+    }
+}
+'''
+(dest/'CommanderSnapshotPayloadDamageTest.java').write_text(s,encoding='utf-8',newline='\n')
+s=(work/'compile_snapshot_ability_supplier_fixture_v1.py').read_text(encoding='utf-8').replace('snapshot-ability-supplier-fixture-v1','snapshot-payload-damage-fixture-v1')
+(work/'compile_snapshot_payload_damage_fixture_v1.py').write_text(s,encoding='utf-8',newline='\n')
+s=(work/'run_snapshot_payload_graph_controls_v1.py').read_text(encoding='utf-8').replace('snapshot-payload-graph-fixture-v1','snapshot-payload-damage-fixture-v1').replace('"snapshot-payload-graph-" + FAMILY','"snapshot-payload-damage-" + FAMILY').replace('"contracts": "CommanderSnapshotPayloadGraphTest"','"contracts": "CommanderSnapshotPayloadDamageTest"').replace('"contracts": 26','"contracts": 5')
+(work/'run_snapshot_payload_damage_controls_v1.py').write_text(s,encoding='utf-8',newline='\n')
+print('Prepared5 native prevention/event tests; no JVM started while semantic batch runs.')

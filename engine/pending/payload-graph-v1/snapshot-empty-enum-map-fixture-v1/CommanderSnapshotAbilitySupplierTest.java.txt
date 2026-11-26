@@ -1,0 +1,306 @@
+package forge.ai;
+
+import com.google.common.base.Supplier;
+import forge.ai.simulation.GameCopier;
+import forge.deck.Deck;
+import forge.game.Game;
+import forge.game.GameObject;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.IEntityMap;
+import forge.game.Match;
+import forge.game.card.Card;
+import forge.game.card.CardCollection;
+import forge.game.phase.PhaseType;
+import forge.game.player.Player;
+import forge.game.player.RegisteredPlayer;
+import forge.game.spellability.SpellAbility;
+import forge.game.spellability.SpellAbilitySnapshot;
+import forge.game.zone.ZoneType;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Native snapshot/container contracts on supplied boards, not full legal-game histories. */
+public class CommanderSnapshotAbilitySupplierTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release();
+        copies.clear();
+    }
+
+    static Game newBoard() {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int index = 0; index < 4; index++) {
+            seats.add(RegisteredPlayer.forCommander(new Deck())
+                    .setPlayer(new LobbyPlayerAi("ability-supplier-" + index, null)));
+        }
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, "Snapshot supplier contracts"));
+        game.setNoGUIUser();
+        game.setAge(GameStage.Play);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, game.getPlayers().getFirst(), 3);
+        return game;
+    }
+
+    private static final class Scene {
+        Game game;
+        SpellAbility ability;
+        Card elf;
+        Card ring;
+    }
+
+    private Scene scene() {
+        Scene scene = new Scene();
+        scene.game = newBoard();
+        Player player = scene.game.getPlayers().getFirst();
+        scene.ability = addCardToZone("Grizzly Bears", player, ZoneType.Hand).getFirstSpellAbility();
+        scene.ability.setActivatingPlayer(player);
+        scene.elf = addCardToZone("Llanowar Elves", player, ZoneType.Battlefield);
+        scene.ring = addCardToZone("Sol Ring", player, ZoneType.Battlefield);
+        return scene;
+    }
+
+    private GameCopier branch(Game game) {
+        game.getAction().checkStaticAbilities(false);
+        game.getTriggerHandler().resetActiveTriggers();
+        game.copyLastState();
+        GameCopier copier = new GameCopier(game).withStack(true);
+        copier.makeCopy(null, game.getPlayers().getFirst());
+        copies.add(copier);
+        return copier;
+    }
+
+    private SpellAbilitySnapshot context(GameCopier copier) {
+        return new SpellAbilitySnapshot(new IEntityMap() {
+            @Override public Game getGame() { return copier.getCopiedGame(); }
+            @Override public GameObject map(GameObject original) { return copier.find(original); }
+        });
+    }
+
+    private void supplier(SpellAbility ability, String name, Supplier<?> value) throws Exception {
+        Field field = SpellAbility.class.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(ability, value);
+    }
+
+    @SuppressWarnings("unchecked")
+    private CardCollection rollback(SpellAbility ability) throws Exception {
+        Field field = SpellAbility.class.getDeclaredField("rollbackEffects");
+        field.setAccessible(true);
+        return ((Supplier<CardCollection>) field.get(ability)).get();
+    }
+
+    private CardCollection cards(Card... values) {
+        CardCollection result = new CardCollection();
+        for (Card card : values) result.add(card);
+        return result;
+    }
+
+    private void seeded(Scene scene) {
+        scene.ability.getPipsToReduce().add("G");
+        scene.ability.addTappedForConvoke(scene.elf);
+        scene.ability.addRollbackEffect(scene.ring);
+    }
+
+    @Test public void sourceSuppliersEvaluateOnceInOriginalOrder() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        List<String> calls = new ArrayList<>();
+        supplier(scene.ability, "pipsToReduce", () -> { calls.add("pips"); return new ArrayList<String>(); });
+        supplier(scene.ability, "tappedForConvoke", () -> { calls.add("convoke"); return cards(scene.elf); });
+        supplier(scene.ability, "rollbackEffects", () -> { calls.add("rollback"); return cards(scene.ring); });
+        SpellAbility copied = context(copier).copy(scene.ability);
+        assertEquals(calls, Arrays.asList("pips", "convoke", "rollback"));
+        copied.getPipsToReduce(); copied.getPipsToReduce();
+        copied.getTappedForConvoke(); copied.getTappedForConvoke();
+        rollback(copied); rollback(copied);
+        assertEquals(calls, Arrays.asList("pips", "convoke", "rollback"));
+    }
+
+    @Test public void copyingKeepsEagerCrossSupplierSideEffects() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        List<String> pips = new ArrayList<>(Arrays.asList("G"));
+        CardCollection convoke = cards(scene.elf);
+        supplier(scene.ability, "pipsToReduce", () -> pips);
+        supplier(scene.ability, "tappedForConvoke", () -> { pips.add("U"); return convoke; });
+        supplier(scene.ability, "rollbackEffects", () -> { convoke.add(scene.ring); return cards(scene.ring); });
+        SpellAbility copied = context(copier).copy(scene.ability);
+        assertEquals(copied.getPipsToReduce(), Arrays.asList("G"));
+        assertEquals(pips, Arrays.asList("G", "U"));
+        assertEquals(copied.getTappedForConvoke().size(), 1);
+        assertSame(copied.getTappedForConvoke().getFirst(), copier.find(scene.elf));
+        assertEquals(convoke.size(), 2);
+    }
+
+    private void failedSupplier(String failing, List<String> expected) throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        List<String> calls = new ArrayList<>();
+        IllegalStateException marker = new IllegalStateException("supplied failure: " + failing);
+        supplier(scene.ability, "pipsToReduce", () -> {
+            calls.add("pips"); if (failing.equals("pips")) throw marker; return new ArrayList<String>();
+        });
+        supplier(scene.ability, "tappedForConvoke", () -> {
+            calls.add("convoke"); if (failing.equals("convoke")) throw marker; return cards();
+        });
+        supplier(scene.ability, "rollbackEffects", () -> {
+            calls.add("rollback"); if (failing.equals("rollback")) throw marker; return cards();
+        });
+        try {
+            context(copier).copy(scene.ability);
+            fail("Source supplier failure must propagate");
+        } catch (IllegalStateException actual) { assertSame(actual, marker); }
+        assertEquals(calls, expected);
+    }
+
+    @Test public void pipSupplierFailureStopsAtTheSamePoint() throws Exception { failedSupplier("pips", Arrays.asList("pips")); }
+    @Test public void convokeSupplierFailureStopsAtTheSamePoint() throws Exception { failedSupplier("convoke", Arrays.asList("pips", "convoke")); }
+    @Test public void rollbackSupplierFailureStopsAtTheSamePoint() throws Exception { failedSupplier("rollback", Arrays.asList("pips", "convoke", "rollback")); }
+
+    @Test public void copiedPipListRemainsMutableAndIndependent() {
+        Scene scene = scene(); seeded(scene);
+        GameCopier copier = branch(scene.game);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        copied.getPipsToReduce().add("R");
+        assertEquals(copied.getPipsToReduce(), Arrays.asList("G", "R"));
+        assertEquals(scene.ability.getPipsToReduce(), Arrays.asList("G"));
+        copied.clearPipsToReduce();
+        assertTrue(copied.getPipsToReduce().isEmpty());
+        assertEquals(scene.ability.getPipsToReduce(), Arrays.asList("G"));
+    }
+
+    @Test public void convokeCardsMapIntoTheCopiedGame() {
+        Scene scene = scene(); seeded(scene);
+        GameCopier copier = branch(scene.game);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        Card mapped = copied.getTappedForConvoke().getFirst();
+        assertSame(mapped, copier.find(scene.elf));
+        assertNotSame(mapped, scene.elf);
+        assertSame(mapped.getGame(), copier.getCopiedGame());
+        assertSame(mapped.getOwner(), copier.find(scene.elf.getOwner()));
+        copied.addTappedForConvoke(copier.find(scene.ring));
+        assertEquals(copied.getTappedForConvoke().size(), 2);
+        assertEquals(scene.ability.getTappedForConvoke().size(), 1);
+    }
+
+    @Test public void rollbackCardsMapIntoTheCopiedGame() throws Exception {
+        Scene scene = scene(); seeded(scene);
+        GameCopier copier = branch(scene.game);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        Card mapped = rollback(copied).getFirst();
+        assertSame(mapped, copier.find(scene.ring));
+        assertSame(mapped.getGame(), copier.getCopiedGame());
+        assertSame(mapped.getController(), copier.find(scene.ring.getController()));
+        rollback(copied).clear();
+        assertEquals(rollback(scene.ability).size(), 1);
+    }
+
+    @Test public void siblingsKeepSeparateMutableContainersAndGames() throws Exception {
+        Scene scene = scene(); seeded(scene);
+        GameCopier left = branch(scene.game);
+        GameCopier right = branch(scene.game);
+        SpellAbility a = context(left).copy(scene.ability);
+        SpellAbility b = context(right).copy(scene.ability);
+        a.getPipsToReduce().clear(); a.clearTappedForConvoke(); rollback(a).clear();
+        assertEquals(b.getPipsToReduce(), Arrays.asList("G"));
+        assertSame(b.getTappedForConvoke().getFirst(), right.find(scene.elf));
+        assertSame(rollback(b).getFirst(), right.find(scene.ring));
+        assertEquals(scene.ability.getPipsToReduce(), Arrays.asList("G"));
+        assertEquals(scene.ability.getTappedForConvoke().size(), 1);
+        assertEquals(rollback(scene.ability).size(), 1);
+    }
+
+    @Test public void repeatedCopiesRetainMappedMutableValues() throws Exception {
+        Scene scene = scene(); seeded(scene);
+        GameCopier first = branch(scene.game);
+        SpellAbility a = context(first).copy(scene.ability);
+        GameCopier second = branch(first.getCopiedGame());
+        SpellAbility b = context(second).copy(a);
+        assertEquals(b.getPipsToReduce(), Arrays.asList("G"));
+        assertSame(b.getTappedForConvoke().getFirst(), second.find(first.find(scene.elf)));
+        assertSame(rollback(b).getFirst(), second.find(first.find(scene.ring)));
+        b.getPipsToReduce().add("U"); b.clearTappedForConvoke(); rollback(b).clear();
+        assertEquals(a.getPipsToReduce(), Arrays.asList("G"));
+        assertEquals(a.getTappedForConvoke().size(), 1);
+        assertEquals(rollback(a).size(), 1);
+    }
+
+    @Test public void nativeRollbackRemovesOnlyBranchCards() throws Exception {
+        Scene scene = scene(); seeded(scene);
+        GameCopier left = branch(scene.game);
+        GameCopier right = branch(scene.game);
+        SpellAbility a = context(left).copy(scene.ability);
+        SpellAbility b = context(right).copy(scene.ability);
+        a.rollback();
+        assertFalse(left.find(scene.ring).isInZone(ZoneType.Battlefield));
+        assertTrue(right.find(scene.ring).isInZone(ZoneType.Battlefield));
+        assertTrue(scene.ring.isInZone(ZoneType.Battlefield));
+        assertTrue(rollback(a).isEmpty());
+        assertEquals(rollback(b).size(), 1);
+        assertEquals(rollback(scene.ability).size(), 1);
+    }
+
+    @Test public void sameSnapshotContextPreservesAbilityIdentity() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        int[] reads = {0};
+        supplier(scene.ability, "pipsToReduce", () -> { reads[0]++; return new ArrayList<String>(); });
+        SpellAbilitySnapshot context = context(copier);
+        SpellAbility first = context.copy(scene.ability);
+        assertSame(context.copy(scene.ability), first);
+        assertEquals(reads[0], 1);
+    }
+
+    @Test public void supportedNullCardCollectionsRemainNull() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        supplier(scene.ability, "tappedForConvoke", () -> null);
+        supplier(scene.ability, "rollbackEffects", () -> null);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        assertNull(copied.getTappedForConvoke());
+        assertNull(rollback(copied));
+    }
+
+    @Test public void nullPipCollectionStillFailsDuringCopy() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        supplier(scene.ability, "pipsToReduce", () -> null);
+        try { context(copier).copy(scene.ability); fail("Null pip collection must retain its original failure"); }
+        catch (NullPointerException expected) { /* Native list-copy boundary retains its failure. */ }
+    }
+
+    @Test public void emptyCollectionsStayMutableAndIndependent() throws Exception {
+        Scene scene = scene();
+        GameCopier copier = branch(scene.game);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        copied.getPipsToReduce().add("W");
+        copied.addTappedForConvoke(copier.find(scene.elf));
+        copied.addRollbackEffect(copier.find(scene.ring));
+        assertTrue(scene.ability.getPipsToReduce().isEmpty());
+        assertTrue(scene.ability.getTappedForConvoke().isEmpty());
+        assertTrue(rollback(scene.ability).isEmpty());
+    }
+
+    @Test public void sharedCardIdentityDoesNotMergeSeparateContainers() throws Exception {
+        Scene scene = scene();
+        scene.ability.addTappedForConvoke(scene.elf);
+        scene.ability.addRollbackEffect(scene.elf);
+        GameCopier copier = branch(scene.game);
+        SpellAbility copied = context(copier).copy(scene.ability);
+        assertNotSame(copied.getTappedForConvoke(), rollback(copied));
+        assertSame(copied.getTappedForConvoke().getFirst(), rollback(copied).getFirst());
+        assertSame(copied.getTappedForConvoke().getFirst(), copier.find(scene.elf));
+        rollback(copied).clear();
+        assertEquals(copied.getTappedForConvoke().size(), 1);
+        assertEquals(scene.ability.getTappedForConvoke().size(), 1);
+        assertEquals(rollback(scene.ability).size(), 1);
+    }
+}

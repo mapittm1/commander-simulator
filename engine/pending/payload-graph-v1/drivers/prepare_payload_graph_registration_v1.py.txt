@@ -1,0 +1,53 @@
+"""Prepare reviewable correction/fixture registration drafts without changing the recipe."""
+from pathlib import Path
+import difflib
+import json
+import re
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'payload-graph-registration-v1';RUN.mkdir()
+REL='forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java'
+proto=WORK/'snapshot-payload-graph-prototype-v2'
+a=(proto/'baseline'/REL).read_text(encoding='utf-8').splitlines(keepends=True)
+b=(proto/'source'/REL).read_text(encoding='utf-8').splitlines(keepends=True)
+patch=''.join(difflib.unified_diff(a,b,fromfile='a/'+REL,tofile='b/'+REL))
+(RUN/'commander-payload-graph.patch').write_text(patch,encoding='utf-8',newline='\n')
+helper=(WORK/'snapshot-ability-supplier-fixture-v1/CommanderSnapshotAbilitySupplierTest.java').read_text(encoding='utf-8')
+start=helper.index('    static Game newBoard() {');end=helper.index('    private static final class Scene',start)
+board=helper[start:end]
+imports='''import forge.deck.Deck;
+import forge.game.GameRules;
+import forge.game.GameStage;
+import forge.game.GameType;
+import forge.game.Match;
+import forge.game.phase.PhaseType;
+import forge.game.player.RegisteredPlayer;
+'''
+rows=[]
+for old_name,new_name,folder,count in [
+ ('CommanderSnapshotPayloadGraphTest','CommanderPayloadGraphTest','snapshot-payload-graph-fixture-v1',26),
+ ('CommanderSnapshotEmptyEnumMapTest','CommanderPayloadMapTest','snapshot-empty-enum-map-fixture-v1',25),
+ ('CommanderSnapshotPayloadDamageTest','CommanderPayloadDamageTest','snapshot-payload-damage-fixture-v1',5)]:
+    source=WORK/folder/(old_name+'.java');text=source.read_text(encoding='utf-8')
+    methods=re.findall(r'@Test\s+public void (\w+)\(',text)
+    assert len(methods)==len(set(methods))==count
+    text=text.replace(old_name,new_name)
+    if new_name=='CommanderPayloadGraphTest':
+        text=text.replace('import forge.ai.simulation.GameCopier;','import forge.ai.simulation.GameCopier;\n'+imports)
+        anchor='public class CommanderPayloadGraphTest extends AITest {\n'
+        assert text.count(anchor)==1;text=text.replace(anchor,anchor+board,1)
+        text=text.replace('CommanderSnapshotAbilitySupplierTest.newBoard()','newBoard()')
+    else:
+        text=text.replace('CommanderSnapshotAbilitySupplierTest.newBoard()','CommanderPayloadGraphTest.newBoard()')
+    target=RUN/(new_name+'.java');target.write_text(text,encoding='utf-8',newline='\n')
+    assert re.findall(r'@Test\s+public void (\w+)\(',text)==methods
+    rows.append({'original_fixture':source.relative_to(WORK).as_posix(),'original_fixture_sha256':file_hash(source),'registration_draft':target.name,'registration_draft_sha256':file_hash(target),'case_count':count,'method_names_unchanged':methods,'only_registration_edits':'Class/reference names and self-contained copied board helper/imports; all original assertions retained.'})
+plan={'status':'draft_not_registered_or_compiled','patch_sha256':file_hash(RUN/'commander-payload-graph.patch'),'fixture_correspondence':rows,
+ 'additional_cases':56,'expected_native_cases_after_registration':4878,'expected_source_cases_after_registration':3678,'expected_main_packaged_cases_after_registration':3721,
+ 'original_resolution_cases':1271,'original_resolution_worker_seconds':90,
+ 'required_before_registration':['All retained semantic regressions','5 native prevention/event controls','Fresh320 loading cases','One unchanged full1271/90 trial'],
+ 'remaining_after_registration':['Exact-head CI','Fresh source/native builds including all56 additional cases','All packaged case receipts and broader regressions','Final catalog/health/full-game verification','Runtime activation and complete rules/card correctness']}
+(RUN/'registration-plan.json').write_text(json.dumps(plan,indent=2)+'\n',encoding='utf-8',newline='\n')
+print('Prepared one-source patch and3 self-contained native registration drafts retaining56 methods.')

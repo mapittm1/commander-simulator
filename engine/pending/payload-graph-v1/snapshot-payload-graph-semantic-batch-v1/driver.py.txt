@@ -1,0 +1,35 @@
+"""Retain supplier controls and all semantic families for the payload correction."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+from commander.engine.forge_config import file_hash
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'snapshot-payload-graph-semantic-batch-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(WORK/'snapshot-payload-graph-map-contracts-prototype-v1/outcome.json')['counts']==dict(total=25,passed=25,failed=0,skipped=0)
+assert load(WORK/'snapshot-payload-graph-contracts-prototype-v1/outcome.json')['counts']==dict(total=26,passed=26,failed=0,skipped=0)
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+git=shutil.which('git');assert git
+env=_environment(RUN);env['PATH']=str(Path(git).parent)
+specs=[('suppliers',16),('sacrifice_history',26),('discard_history',18),('traits',495),('cast',1404),('combat',273),('untap',194),('dungeons',10),('expended_mana',6),('first_events',12),('scry_history',6),('spell_game_history',12),('foretell_history',12),('upstream',9)]
+save(RUN/'selection.json',{'groups':specs,'per_worker_seconds':90,'per_wrapper_seconds':420,'original_resolution_cases':1271,'original_resolution_limit_seconds':90,'scope':'Complete retained semantic families, possibly overlapping; not a replacement for original1271/90 or full rules coverage.'})
+results={}
+for family,count in specs:
+    driver='run_snapshot_payload_graph_controls_v1.py' if family=='suppliers' else 'run_snapshot_payload_graph_regression_v1.py'
+    process=run_bounded([sys.executable,'-I',str(WORK/driver),'prototype',family],ROOT,RUN/(family+'.log'),ProcessLimits(420,log_bytes=65536,environment=env))
+    results[family]={'process':process};save(RUN/'progress.json',results)
+    assert process['status']=='finished' and process['returncode']==0,(family,process)
+    folder='snapshot-payload-graph-suppliers-prototype-v1' if family=='suppliers' else 'snapshot-payload-graph-regression-'+family+'-prototype-v1'
+    outcome=load(WORK/folder/'outcome.json')
+    assert outcome['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert outcome.get('native_method_and_parameter_counter_matches',outcome.get('exact_case_counter_matches'))
+    assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+    results[family]['counts']=outcome['counts'];save(RUN/'progress.json',results)
+    print(json.dumps({'family':family,'counts':outcome['counts']}),flush=True)
+assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+save(RUN/'outcome.json',{'all_passed':True,'groups':results,'scope':'Retained full semantic families and supplier controls; possible overlap, not original1271/90, full paid histories or comprehensive card/rules proof.'})

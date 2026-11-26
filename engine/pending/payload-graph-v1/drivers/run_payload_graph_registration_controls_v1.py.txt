@@ -1,0 +1,151 @@
+"""Run isolated EnumSet query contracts or fixed escaping-allocation controls."""
+from collections import Counter
+from pathlib import Path
+import importlib
+import json
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import file_hash, jvm_library, read_settings
+from commander.engine.native_runtime import _engine_profile, _environment, require_bridge
+from tests.support import draw_ending_worker, packaged_rules
+
+WORK = Path(__file__).resolve().parent
+PROTOTYPE = WORK / "snapshot-payload-graph-prototype-v2"
+FIXTURE = WORK / "payload-graph-registration-v1"
+EPOCH = WORK / "post-snapshot-supplier-epoch-v1"
+load = lambda path: json.loads(path.read_bytes())
+MODE, FAMILY = sys.argv[1:3]
+assert MODE in ("baseline", "prototype")
+assert FAMILY == "contracts"
+assert sys.argv[3:] in ([], ["--worker"])
+WORKER = sys.argv[3:] == ["--worker"]
+RUN = WORK / ("payload-graph-registration-" + FAMILY + "-" + MODE + "-v1")
+CONFIG = ROOT / load(WORK / "sacrifice-candidate-v1/candidate-selection.json")["build"] / "engine-config.json"
+UPSTREAM = CONFIG.parent / "source/forge-gui-desktop/target/test-classes"
+TARGETS = ("forge.ai.CommanderPayloadGraphTest", "forge.ai.CommanderPayloadMapTest", "forge.ai.CommanderPayloadDamageTest")
+COUNT = 56
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def verify(root=False):
+    for directory in (PROTOTYPE, FIXTURE):
+        assert all(file_hash(directory / name) == digest for name, digest in load(directory / "inputs.json").items())
+    assert load(PROTOTYPE / "proposal.json")["changed_sources"] == ["forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java"]
+    baseline = PROTOTYPE / "baseline/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java"
+    assert file_hash(baseline) == load(WORK / "source3622-v1/production-inputs.json")["forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java"]
+    assert load(RUN / "test-inputs.json")["files"] == {
+        path.relative_to(UPSTREAM).as_posix(): file_hash(path)
+        for path in UPSTREAM.rglob("*") if path.is_file()
+    }
+    if root:
+        assert all(file_hash(ROOT / name) == digest for name, digest in load(EPOCH / "source-frozen-inputs.json").items())
+
+
+def cases(report):
+    result = Counter()
+    for cls in ET.parse(report).findall(".//class"):
+        for method in cls.findall("test-method"):
+            if method.get("is-config") != "true":
+                parameters = tuple((value.text or "").strip() for value in method.findall("./params/param/value"))
+                result[(cls.get("name") + "." + method.get("name"), parameters)] += 1
+    return result
+
+
+if WORKER:
+    verify()
+    settings = read_settings(CONFIG)
+    lock = settings.verify()
+    assert lock["native_tests"]["total"] == 4822
+    require_bridge()
+    java = importlib.import_module("jpype")
+    recipe = load(ROOT / "engine/sticker_recipe.json")
+    dependency = ROOT / recipe["packaged_testng"]["path"]
+    assert file_hash(dependency) == recipe["packaged_testng"]["sha256"]
+    archive = settings.home / lock["jar_name"]
+    paths = (() if MODE == "baseline" else (PROTOTYPE / "classes",)) + (archive, FIXTURE / "classes", UPSTREAM, dependency)
+    java.startJVM(jvm_library(settings.java), "-Xmx2048m", "-XX:ActiveProcessorCount=2",
+                  "-Djava.awt.headless=true", "-Dfile.encoding=UTF-8", classpath=list(map(str, paths)), convertStrings=True)
+    runtime = java.JClass("java.lang.Runtime").getRuntime()
+    assert runtime.availableProcessors() == 2 and runtime.maxMemory() == 2147483648
+    overrides = set() if MODE == "baseline" else {
+        name[len("classes/"):] for name in load(PROTOTYPE / "inputs.json")
+        if name.startswith("classes/") and name.endswith(".class")
+    }
+    assert all(name == "forge/game/spellability/SpellAbilitySnapshot.class" or name.startswith("forge/game/spellability/SpellAbilitySnapshot$") for name in overrides)
+    for name in tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES, "forge.game.Game", "forge.game.spellability.SpellAbilitySnapshot"))):
+        expected_origin = PROTOTYPE / "classes" if name.replace(".", "/") + ".class" in overrides else archive
+        assert packaged_rules.class_origin(java, name).samefile(expected_origin), name
+    for name in overrides:
+        assert packaged_rules.class_origin(java, name[:-6].replace("/", ".")).samefile(PROTOTYPE / "classes"), name
+    for name in TARGETS:
+        assert packaged_rules.class_origin(java, name).samefile(FIXTURE / "classes"), name
+    assert packaged_rules.class_origin(java, "forge.ai.AITest").samefile(UPSTREAM)
+    expected = Counter()
+    for name in TARGETS:
+        names = re.findall(r"@Test\s+public void (\w+)\(", (FIXTURE / (name.rsplit(".", 1)[1] + ".java")).read_text(encoding="utf-8"))
+        assert len(names) == len(set(names))
+        expected.update((name + "." + method, ()) for method in names)
+    assert sum(expected.values()) == COUNT
+    runner = java.JClass("org.testng.TestNG")()
+    listener = java.JClass("org.testng.TestListenerAdapter")()
+    runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass("java.lang.Class"))([java.JClass(name).class_ for name in TARGETS]))
+    runner.setOutputDirectory(str(RUN / "reports"))
+    runner.setUseDefaultListeners(True)
+    runner.run()
+    counts, methods = packaged_rules.test_results(listener)
+    actual = cases(RUN / "reports/testng-results.xml")
+    allocation = {}
+    if FAMILY == "allocation":
+        allocation = {str(entry.getKey()): int(entry.getValue()) for entry in java.JClass(TARGETS[0]).allocationBytes().entrySet()}
+    outcome = {
+        "mode": MODE, "family": FAMILY, "counts": counts, "methods": methods,
+        "exact_case_counter_matches": actual == expected,
+        "configuration_failures": len(listener.getConfigurationFailures()),
+        "configuration_skips": len(listener.getConfigurationSkips()),
+        "testng_status": int(runner.getStatus()), "allocated_bytes_by_scenario": allocation,
+        "actual_processors": int(runtime.availableProcessors()), "actual_max_heap_bytes": int(runtime.maxMemory()),
+        "all_overlay_origins_verified": True, "warmup_snapshots": 1000, "measured_snapshots": 2000,
+        "scope": "Self-contained registration fixtures retaining all56 map, graph and native-prevention methods/assertions against the isolated payload graph correction. Supplied-world contracts or fixed escaping-snapshot allocation counts; no elapsed-speedup, retained-memory, original1271/90 or full-rules proof."
+    }
+    save(RUN / "outcome.json", outcome)
+    assert counts == dict(total=COUNT, passed=COUNT, failed=0, skipped=0) and actual == expected
+    assert outcome["configuration_failures"] == outcome["configuration_skips"] == outcome["testng_status"] == 0
+    if FAMILY == "allocation":
+        assert set(allocation) == {"empty_maps", "trigger_payload", "both_payloads"} and all(value >= 0 for value in allocation.values())
+    verify()
+    java.shutdownJVM()
+else:
+    assert not subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT)
+    ci = load(EPOCH / "source-ci.json")
+    assert ci["head_sha"] == subprocess.check_output(["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    assert ci["status"] == "completed" and ci["conclusion"] == "success"
+    RUN.mkdir()
+    save(RUN / "test-inputs.json", {"files": {
+        path.relative_to(UPSTREAM).as_posix(): file_hash(path)
+        for path in UPSTREAM.rglob("*") if path.is_file()
+    }})
+    verify(root=True)
+    (RUN / "driver.py.txt").write_bytes(Path(__file__).read_bytes())
+    save(RUN / "selection.json", {"mode": MODE, "family": FAMILY, "classes": TARGETS,
+                                    "expected_cases": COUNT, "worker_limit_seconds": 90})
+    settings = read_settings(CONFIG)
+    with _engine_profile(settings, RUN):
+        process = run_bounded([sys.executable, "-I", str(Path(__file__)), MODE, FAMILY, "--worker"],
+                              settings.home, RUN / "native.log", ProcessLimits(90, log_bytes=65536, environment=_environment(RUN)))
+    save(RUN / "process.json", process)
+    verify(root=True)
+    assert file_hash(Path(__file__)) == file_hash(RUN / "driver.py.txt")
+    outcome = load(RUN / "outcome.json") if (RUN / "outcome.json").exists() else {}
+    print(json.dumps({"mode": MODE, "family": FAMILY, "process": process, "counts": outcome.get("counts"),
+                      "allocated_bytes_by_scenario": outcome.get("allocated_bytes_by_scenario")}), flush=True)
+    assert process["status"] == "finished" and process["returncode"] == 0, process

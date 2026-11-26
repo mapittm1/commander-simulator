@@ -26,6 +26,23 @@ difference.
 
 ## Card coverage
 
+A generic payload-copy correction preserves shared mutable event state and
+supported container cycles in AI worlds. The baseline fails 22 of 26 graph checks
+and 4 of 5 native prevention-event checks; the correction passes all of them.
+Native damage prevention now updates every copied reference to the same event,
+while equal-but-distinct events and original/sibling worlds stay independent.
+All 25 map contracts, 16 supplier controls and 13 retained interaction groups pass.
+Three self-contained registration fixtures pass all 57 cases together; a fresh
+source build passes all 320 card/deck loading cases with exact methods/parameters.
+
+Original **1,271 / 90 seconds** still times out at **90.016s** without a
+completed report. The recipe now registers 57 additional `payload_graph` cases,
+retaining all prior groups. Fresh **3,679 source / 4,879 native / 3,722 main packaged**
+validation is pending. The selected runtime is unchanged. Supplied event states
+do not prove preceding legal histories, activation/payment/replacement ordering
+or complete rules coverage. Payload-container failure cleanup is not a complete
+native snapshot transaction. See [payload graph evidence](engine/payload_graph_evidence.json).
+
 An unpromoted snapshot optimization replaces redundant memoizers for three
 already-copied ability values with instance suppliers. It preserves source
 supplier evaluation, separate mutable containers and native card mapping.

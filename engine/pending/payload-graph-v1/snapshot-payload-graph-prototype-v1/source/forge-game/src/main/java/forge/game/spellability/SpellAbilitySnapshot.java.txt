@@ -1,0 +1,635 @@
+package forge.game.spellability;
+
+import forge.game.Game;
+import forge.game.GameEntity;
+import forge.game.GameEntityCounterTable;
+import forge.game.GameObject;
+import forge.game.IEntityMap;
+import forge.game.card.Card;
+import forge.game.card.CardCollection;
+import forge.game.card.CardCollectionView;
+import forge.game.card.CardCopyService;
+import forge.game.card.CardDamageTable;
+import forge.game.card.CardPlayOption;
+import forge.game.card.CardState;
+import forge.game.card.CardZoneTable;
+import forge.game.card.CounterType;
+import forge.game.mana.Mana;
+import forge.game.player.Player;
+import forge.game.player.PlayerCollection;
+import forge.game.trigger.Trigger;
+import forge.game.staticability.StaticAbility;
+import forge.game.replacement.ReplacementEffect;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.HashMultiset;
+import com.google.common.collect.Multiset;
+import com.google.common.collect.Table;
+import org.apache.commons.lang3.tuple.Pair;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Set;
+
+/** One identity map for paid abilities, modal graphs and their snapshot references. */
+public final class SpellAbilitySnapshot implements IEntityMap {
+    private final IEntityMap entities;
+    private final Map<forge.game.combat.AttackingBand, forge.game.combat.AttackingBand> bands;
+    private final Map<SpellAbility, SpellAbility> abilities = new IdentityHashMap<>();
+    private final Map<Object, Object> objects = new IdentityHashMap<>();
+    private List<Object> payloadCopies;
+
+    public SpellAbilitySnapshot(IEntityMap entities) {
+        this(entities, new IdentityHashMap<>());
+    }
+
+    public SpellAbilitySnapshot(IEntityMap entities,
+            Map<forge.game.combat.AttackingBand, forge.game.combat.AttackingBand> bands) {
+        this.entities = entities;
+        this.bands = bands;
+    }
+    @Override
+    public Game getGame() {
+        return entities.getGame();
+    }
+
+    @Override
+    public GameObject map(GameObject value) {
+        if (value instanceof SpellAbility ability) {
+            return copy(ability);
+        }
+        if (value instanceof Trigger trigger) {
+            return trigger(trigger);
+        }
+        if (value instanceof StaticAbility ability) {
+            return staticAbility(ability);
+        }
+        if (value instanceof ReplacementEffect effect) {
+            return replacement(effect);
+        }
+        if (value instanceof Card card) {
+            if (card.getGame() == getGame()) {
+                return card;
+            }
+            Card live = entities.map(card);
+            if (!card.isLKI() && live != null && live.equalsWithGameTimestamp(card)) {
+                return live;
+            }
+            Card saved = (Card) objects.get(card);
+            if (saved != null) {
+                return saved;
+            }
+            Card history = CardCopyService.getLKICopyForGame(card, this);
+            objects.put(card, history);
+            copyCastState(card, history);
+            return history;
+        }
+        return entities.map(value);
+    }
+
+    public SpellAbility copy(SpellAbility original) {
+        if (original == null) {
+            return null;
+        }
+        SpellAbility existing = abilities.get(original);
+        if (existing != null) {
+            return existing;
+        }
+        SpellAbility result = original.snapshotClone();
+        abilities.put(original, result);
+        original.copySnapshotFieldsTo(result, this);
+        return result;
+    }
+
+    public Map<SpellAbility, SpellAbility> getAbilityCopies() {
+        return Collections.unmodifiableMap(abilities);
+    }
+
+    public void copyCastState(Card source, Card target) {
+        target.setCastSA(copy(source.getCastSA()));
+        forge.game.zone.Zone from = source.getCastFrom();
+        target.setCastFrom(from == null ? null : from.getZoneType() == forge.game.zone.ZoneType.Stack
+                ? getGame().getStackZone() : map(from.getPlayer()).getZone(from.getZoneType()));
+    }
+
+    public List<SpellAbility> abilityList(Iterable<? extends SpellAbility> source) {
+        List<SpellAbility> result = new ArrayList<>();
+        for (SpellAbility value : source) {
+            result.add(copy(value));
+        }
+        return result;
+    }
+
+    public CardCollection cards(Iterable<Card> source) {
+        if (source == null) {
+            return null;
+        }
+        CardCollection result = new CardCollection();
+        for (Card card : source) {
+            result.add(map(card));
+        }
+        return result;
+    }
+
+    public Trigger trigger(Trigger source) {
+        if (source == null) {
+            return null;
+        }
+        Trigger existing = (Trigger) objects.get(source);
+        if (existing != null) {
+            return existing;
+        }
+        Trigger result = source.copy(map(source.getHostCard()), true, true);
+        objects.put(source, result);
+        result.copySnapshotTextFrom(source, this);
+        result.copySnapshotReferencesFrom(source, this);
+        return result;
+    }
+
+    public StaticAbility staticAbility(StaticAbility source) {
+        if (source == null) {
+            return null;
+        }
+        StaticAbility existing = (StaticAbility) objects.get(source);
+        if (existing != null) {
+            return existing;
+        }
+        StaticAbility result = source.copy(map(source.getHostCard()), true);
+        objects.put(source, result);
+        result.copySnapshotTextFrom(source, this);
+        result.copySnapshotReferencesFrom(source, this);
+        return result;
+    }
+
+    public ReplacementEffect replacement(ReplacementEffect source) {
+        if (source == null) {
+            return null;
+        }
+        ReplacementEffect existing = (ReplacementEffect) objects.get(source);
+        if (existing != null) {
+            return existing;
+        }
+        ReplacementEffect result = source.copy(map(source.getHostCard()), true);
+        objects.put(source, result);
+        result.copySnapshotTextFrom(source, this);
+        result.restoreSnapshotOverride(copy(source.getOverridingAbility()));
+        if (source.getOtherChoices() != null) {
+            List<ReplacementEffect> choices = new ArrayList<>();
+            for (ReplacementEffect choice : source.getOtherChoices()) {
+                choices.add(replacement(choice));
+            }
+            result.setOtherChoices(choices);
+        }
+        return result;
+    }
+
+    public AbilityManaPart manaPart(AbilityManaPart source) {
+        if (source == null) {
+            return null;
+        }
+        AbilityManaPart existing = (AbilityManaPart) objects.get(source);
+        if (existing != null) {
+            return existing;
+        }
+        AbilityManaPart result = new AbilityManaPart(map(source.getSourceCard()), source);
+        objects.put(source, result);
+        result.copySnapshotReferencesFrom(source, this);
+        return result;
+    }
+
+    public Mana mana(Mana source) {
+        Mana existing = (Mana) objects.get(source);
+        if (existing != null) {
+            return existing;
+        }
+        Card card = map(source.getSourceCard());
+        AbilityManaPart oldPart = source.getManaAbility();
+        AbilityManaPart part = oldPart == null ? null : (AbilityManaPart) objects.get(oldPart);
+        boolean fresh = oldPart != null && part == null;
+        if (fresh) {
+            part = new AbilityManaPart(map(oldPart.getSourceCard()), oldPart);
+            objects.put(oldPart, part);
+        }
+        Mana result = new Mana(source.getColor(), card, part, map(source.getPlayer()));
+        objects.put(source, result);
+        if (fresh) {
+            part.copySnapshotReferencesFrom(oldPart, this);
+        }
+        return result;
+    }
+
+    @Override
+    public forge.game.combat.AttackingBand mapCombatBand(forge.game.combat.AttackingBand source) {
+        forge.game.combat.AttackingBand saved = bands.get(source);
+        if (saved != null) {
+            return saved;
+        }
+        forge.game.combat.AttackingBand result = new forge.game.combat.AttackingBand(new ArrayList<>());
+        bands.put(source, result);
+        for (Card attacker : source.getAttackers()) {
+            result.addAttacker(map(attacker));
+        }
+        if (source.isBlocked() != null) {
+            result.setBlocked(source.isBlocked());
+        }
+        return result;
+    }
+
+    public CardPlayOption playOption(CardPlayOption source) {
+        if (source == null) {
+            return null;
+        }
+        PlayerCollection players = new PlayerCollection();
+        for (Player player : source.getPlayers()) {
+            players.add(map(player));
+        }
+        return new CardPlayOption(players, staticAbility(source.getAbility()),
+                source.getPayManaCost() == CardPlayOption.PayManaCost.NO,
+                source.getAltManaCost() == null ? null : source.getAltManaCost().copyForSnapshot(this),
+                source.isWithFlash(), source.grantsZonePermissions());
+    }
+
+    /** Copy event payload containers; unknown mutable/native values fail explicitly. */
+    public Object data(Object source) {
+        if (source == null || source instanceof String || source instanceof Byte || source instanceof Short || source instanceof Integer
+                || source instanceof Long || source instanceof Float || source instanceof Double
+                || source instanceof java.math.BigInteger || source instanceof java.math.BigDecimal
+                || source instanceof Boolean || source instanceof Enum<?>
+                || source instanceof CounterType || source instanceof forge.card.ColorSet
+                || source instanceof forge.card.mana.ManaCost) return source;
+        int checkpoint = payloadCopies == null ? 0 : payloadCopies.size();
+        try {
+            return copyPayloadValue(source);
+        } catch (RuntimeException | Error failure) {
+            // A failed container must not be reused as a successful partial copy.
+            while (payloadCopies != null && payloadCopies.size() > checkpoint) {
+                objects.remove(payloadCopies.remove(payloadCopies.size() - 1));
+            }
+            throw failure;
+        }
+    }
+
+    private Object copyPayloadValue(Object source) {
+        if (source instanceof Game) {
+            return getGame();
+        }
+        if (source instanceof forge.game.combat.AttackingBand band) {
+            return mapCombatBand(band);
+        }
+        if (source instanceof AbilityManaPart part) {
+            return manaPart(part);
+        }
+        if (source instanceof forge.game.cost.Cost cost) {
+            return cost.copyForSnapshot(this);
+        }
+        if (source instanceof forge.game.phase.ExtraTurn turn) {
+            return extraTurn(turn);
+        }
+        if (source instanceof forge.game.phase.ExtraPhase phase) {
+            return extraPhase(phase);
+        }
+        if (source instanceof forge.game.zone.CostPaymentStack.Entry entry) {
+            return costEntry(entry);
+        }
+        if (source instanceof forge.game.zone.CostPaymentStack stack) {
+            return costStack(stack);
+        }
+        if (source instanceof forge.game.cost.CostPayment payment) {
+            return payment(payment);
+        }
+        if (source instanceof forge.game.cost.CostPart part) {
+            return costPart(part);
+        }
+        if (source instanceof GameObject object) {
+            return map(object);
+        }
+        if (source instanceof CardState state) {
+            return cardState(state);
+        }
+        if (source instanceof Mana mana) {
+            return mana(mana);
+        }
+        if (source instanceof Trigger trigger) {
+            return trigger(trigger);
+        }
+        if (source instanceof StaticAbility ability) {
+            return staticAbility(ability);
+        }
+        if (source instanceof ReplacementEffect effect) {
+            return replacement(effect);
+        }
+        Object saved = objects.get(source);
+        if (saved != null && isPayloadContainer(source)) {
+            return saved;
+        }
+        if (source instanceof CardCollectionView cards) {
+            CardCollection result = rememberPayload(source, new CardCollection());
+            for (Card card : cards) {
+                result.add(map(card));
+            }
+            return result;
+        }
+        if (source instanceof PlayerCollection players) {
+            PlayerCollection result = rememberPayload(source, new PlayerCollection());
+            for (Player player : players) {
+                result.add(map(player));
+            }
+            return result;
+        }
+        if (source instanceof Optional<?> optional) {
+            return optional.map(this::data);
+        }
+        if (source instanceof Object[] values) {
+            Object[] result = rememberPayload(source, values.clone());
+            for (int i = 0; i < result.length; i++) {
+                result[i] = data(result[i]);
+            }
+            return result;
+        }
+        if (source instanceof int[] values) {
+            return rememberPayload(source, values.clone());
+        }
+        if (source instanceof byte[] values) {
+            return rememberPayload(source, values.clone());
+        }
+        if (source instanceof long[] values) {
+            return rememberPayload(source, values.clone());
+        }
+        if (source instanceof forge.util.collect.FCollection<?> values) {
+            forge.util.collect.FCollection<Object> result = rememberPayload(source, new forge.util.collect.FCollection<>());
+            for (Object value : values) {
+                result.add(data(value));
+            }
+            return result;
+        }
+        if (source instanceof Multiset<?> values) {
+            Multiset<Object> result = rememberPayload(source, HashMultiset.create());
+            for (Multiset.Entry<?> entry : values.entrySet()) {
+                result.add(data(entry.getElement()), entry.getCount());
+            }
+            return result;
+        }
+        if (source instanceof Pair<?, ?> pair) {
+            return Pair.of(data(pair.getLeft()), data(pair.getRight()));
+        }
+        if (source instanceof Map<?, ?> values) {
+            Map<Object, Object> result = rememberPayload(source, new LinkedHashMap<>());
+            for (Map.Entry<?, ?> entry : values.entrySet()) {
+                result.put(data(entry.getKey()), data(entry.getValue()));
+            }
+            return result;
+        }
+        if (source instanceof List<?> values) {
+            List<Object> result = rememberPayload(source, new ArrayList<>());
+            for (Object value : values) {
+                result.add(data(value));
+            }
+            return result;
+        }
+        if (source instanceof Set<?> values) {
+            Set<Object> result = rememberPayload(source, new LinkedHashSet<>());
+            for (Object value : values) {
+                result.add(data(value));
+            }
+            return result;
+        }
+        if (source instanceof CardDamageTable table) {
+            CardDamageTable result = rememberPayload(source, new CardDamageTable());
+            for (Table.Cell<Card, GameEntity, Integer> cell : table.cellSet())
+                result.put(map(cell.getRowKey()), map(cell.getColumnKey()), cell.getValue());
+            return result;
+        }
+        if (source instanceof GameEntityCounterTable table) {
+            GameEntityCounterTable result = rememberPayload(source, new GameEntityCounterTable());
+            for (Table.Cell<Optional<Player>, GameEntity, Multiset<CounterType>> cell : table.cellSet())
+                result.put(cell.getRowKey().map(this::map), map(cell.getColumnKey()), HashMultiset.create(cell.getValue()));
+            return result;
+        }
+        if (source instanceof CardZoneTable table) {
+            CardZoneTable result = rememberPayload(source, new CardZoneTable(cards(table.getLastStateBattlefield()), cards(table.getLastStateGraveyard())));
+            for (Table.Cell<forge.game.zone.ZoneType, forge.game.zone.ZoneType, CardCollection> cell : table.cellSet())
+                result.put(cell.getRowKey(), cell.getColumnKey(), cards(cell.getValue()));
+            result.copySnapshotRecordsFrom(table, this);
+            return result;
+        }
+        if (source instanceof Table<?, ?, ?> values) {
+            Table<Object, Object, Object> result = rememberPayload(source, HashBasedTable.create());
+            for (Table.Cell<?, ?, ?> cell : values.cellSet())
+                result.put(data(cell.getRowKey()), data(cell.getColumnKey()), data(cell.getValue()));
+            return result;
+        }
+        throw new IllegalStateException("Unmapped snapshot payload: " + source.getClass().getName());
+    }
+
+    /** Preserve mutable event-payload identity; native field-owned copies stay separate. */
+    private <T> T rememberPayload(Object source, T target) {
+        if (payloadCopies == null) {
+            payloadCopies = new ArrayList<>();
+        }
+        payloadCopies.add(source);
+        objects.put(source, target);
+        return target;
+    }
+
+    private static boolean isPayloadContainer(Object source) {
+        return source instanceof CardCollectionView || source instanceof PlayerCollection
+                || source instanceof Object[] || source instanceof int[]
+                || source instanceof byte[] || source instanceof long[]
+                || source instanceof forge.util.collect.FCollection<?>
+                || source instanceof Multiset<?> || source instanceof Map<?, ?>
+                || source instanceof List<?> || source instanceof Set<?>
+                || source instanceof Table<?, ?, ?>;
+    }
+
+    /** Bind distinct printed and clone frames before copying any of their traits. */
+    public void bindCardState(CardState source, CardState target) {
+        objects.put(source, target);
+    }
+
+    public CardState cardState(CardState source) {
+        if (source == null) {
+            return null;
+        }
+        CardState saved = (CardState) objects.get(source);
+        return saved != null ? saved : map(source.getCard()).getState(source.getStateName());
+    }
+
+    /** Share one independently mapped copy for each source cost, including cycles. */
+    public forge.game.cost.Cost cost(forge.game.cost.Cost source) {
+        if (source == null) {
+            return null;
+        }
+        forge.game.cost.Cost saved = (forge.game.cost.Cost) objects.get(source);
+        if (saved != null) {
+            return saved;
+        }
+        forge.game.cost.Cost result = source.copy();
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+    public forge.game.keyword.KeywordInterface keyword(
+            forge.game.keyword.KeywordInterface source, Card host) {
+        if (source == null) {
+            return null;
+        }
+        forge.game.keyword.KeywordInterface saved =
+                (forge.game.keyword.KeywordInterface) objects.get(source);
+        if (saved != null) {
+            return saved;
+        }
+        forge.game.keyword.KeywordInterface result = source.copy(host, true);
+        objects.put(source, result);
+        result.copySnapshotFieldsFrom(source, this);
+        return result;
+    }
+
+    public <R, C, V> void copyTable(Table<R, C, V> source, Table<R, C, V> target,
+            java.util.function.Function<R, R> rowMapper,
+            java.util.function.Function<C, C> columnMapper,
+            java.util.function.Function<V, V> valueMapper) {
+        target.clear();
+        for (Table.Cell<R, C, V> cell : source.cellSet()) {
+            target.put(rowMapper.apply(cell.getRowKey()),
+                    columnMapper.apply(cell.getColumnKey()), valueMapper.apply(cell.getValue()));
+        }
+    }
+
+    private final java.util.Set<String> unmappedCommands = new java.util.LinkedHashSet<>();
+
+    /** Unsupported callback kinds are reported rather than shared across worlds. */
+    public List<String> getUnmappedCommands() {
+        return List.copyOf(unmappedCommands);
+    }
+
+    public forge.GameCommand command(forge.GameCommand source, String location) {
+        if (source == forge.GameCommand.BLANK) {
+            return source;
+        }
+        forge.GameCommand saved = (forge.GameCommand) objects.get(source);
+        if (saved != null) {
+            return saved;
+        }
+        if (source instanceof forge.game.SnapshotCommand command) {
+            forge.GameCommand result = command.copyForSnapshot(this);
+            objects.put(source, result);
+            return result;
+        }
+        unmappedCommands.add(location + ": " + source.getClass().getName());
+        return null;
+    }
+
+    /** Retain queue order and aliases; never execute source closures while copying. */
+    public void copyCommands(Iterable<forge.GameCommand> source,
+            java.util.Collection<forge.GameCommand> target, String location) {
+        target.clear();
+        for (forge.GameCommand original : source) {
+            forge.GameCommand mapped = command(original, location);
+            if (mapped != null) {
+                target.add(mapped);
+            }
+        }
+    }
+
+    public forge.game.cost.CostPart costPart(forge.game.cost.CostPart source) {
+        if (source == null) return null;
+        forge.game.cost.CostPart saved = (forge.game.cost.CostPart) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.cost.CostPart result = source.copy();
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+    public forge.game.cost.CostPayment payment(forge.game.cost.CostPayment source) {
+        if (source == null) return null;
+        forge.game.cost.CostPayment saved = (forge.game.cost.CostPayment) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.cost.CostPayment result = new forge.game.cost.CostPayment(null, null);
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+    public forge.game.zone.CostPaymentStack.Entry costEntry(
+            forge.game.zone.CostPaymentStack.Entry source) {
+        forge.game.zone.CostPaymentStack.Entry saved =
+                (forge.game.zone.CostPaymentStack.Entry) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.cost.CostPart part = costPart(source.cost());
+        forge.game.cost.CostPayment payment = payment(source.payment());
+        // A nested ability can have reached this immutable wrapper while its components were restored.
+        saved = (forge.game.zone.CostPaymentStack.Entry) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.zone.CostPaymentStack.Entry result =
+                new forge.game.zone.CostPaymentStack.Entry(part, payment);
+        objects.put(source, result);
+        return result;
+    }
+
+    public void bindCostStack(forge.game.zone.CostPaymentStack source,
+            forge.game.zone.CostPaymentStack target) {
+        objects.put(source, target);
+    }
+
+    public forge.game.zone.CostPaymentStack costStack(forge.game.zone.CostPaymentStack source) {
+        forge.game.zone.CostPaymentStack saved = (forge.game.zone.CostPaymentStack) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.zone.CostPaymentStack result = new forge.game.zone.CostPaymentStack();
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+    public forge.game.phase.ExtraTurn extraTurn(forge.game.phase.ExtraTurn source) {
+        if (source == null) return null;
+        forge.game.phase.ExtraTurn saved = (forge.game.phase.ExtraTurn) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.phase.ExtraTurn result = new forge.game.phase.ExtraTurn(map(source.getPlayer()));
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+    public forge.game.phase.ExtraPhase extraPhase(forge.game.phase.ExtraPhase source) {
+        if (source == null) return null;
+        forge.game.phase.ExtraPhase saved = (forge.game.phase.ExtraPhase) objects.get(source);
+        if (saved != null) return saved;
+        forge.game.phase.ExtraPhase result = new forge.game.phase.ExtraPhase(source.getPhase());
+        objects.put(source, result);
+        result.copySnapshotStateFrom(source, this);
+        return result;
+    }
+
+
+    /** Map changed-trait collections through the same canonical graph as printed abilities. */
+    public forge.game.card.CardTraitChanges traitChanges(forge.game.card.CardTraitChanges source) {
+        forge.game.card.CardTraitChanges saved = (forge.game.card.CardTraitChanges) objects.get(source);
+        if (saved != null) return saved;
+        java.util.function.Predicate<forge.game.CardTraitBase> remove = source.remove();
+        if (remove instanceof forge.game.card.SnapshotTraitPredicate predicate) {
+            remove = predicate.copyForSnapshot(this);
+        }
+        saved = (forge.game.card.CardTraitChanges) objects.get(source);
+        if (saved != null) return saved;
+        List<SpellAbility> added = new ArrayList<>();
+        List<Trigger> triggers = new ArrayList<>();
+        List<ReplacementEffect> replacements = new ArrayList<>();
+        List<StaticAbility> statics = new ArrayList<>();
+        forge.game.card.CardTraitChanges result =
+                new forge.game.card.CardTraitChanges(added, triggers, replacements, statics, remove);
+        objects.put(source, result);
+        for (SpellAbility ability : source.getAbilities()) added.add(copy(ability));
+        for (Trigger trigger : source.getTriggers()) triggers.add(trigger(trigger));
+        for (ReplacementEffect replacement : source.getReplacements()) replacements.add(replacement(replacement));
+        for (StaticAbility ability : source.getStaticAbilities()) statics.add(staticAbility(ability));
+        return result;
+    }
+
+}

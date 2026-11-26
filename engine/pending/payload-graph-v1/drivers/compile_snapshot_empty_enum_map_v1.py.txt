@@ -1,0 +1,11 @@
+from pathlib import Path
+import sys,json
+r=Path.cwd();sys.path.insert(0,str(r))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+p=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/snapshot-empty-enum-map-prototype-v1';selection=json.loads((p.parent/'sacrifice-candidate-v1/candidate-selection.json').read_bytes());settings=read_settings(r/selection['build']/'engine-config.json');lock=settings.verify();assert lock['native_tests']['total']==4822;archive=settings.home/lock['jar_name'];classes=p/'classes';classes.mkdir();paths=list((p/'source').rglob('*.java'))
+def save(dest,value):dest.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',str(archive),'-d',str(classes),*map(str,paths)];save(p/'compile-selection.json',{'command':command,'timeout_seconds':90,'jar_sha256':file_hash(archive)})
+result=run_bounded(command,r,p/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(p)));save(p/'compile-process.json',result);assert result['status']=='finished' and result['returncode']==0,result
+save(p/'inputs.json',{n.relative_to(p).as_posix():file_hash(n) for n in p.rglob('*') if n.is_file() and n.name!='inputs.json'});print(result)

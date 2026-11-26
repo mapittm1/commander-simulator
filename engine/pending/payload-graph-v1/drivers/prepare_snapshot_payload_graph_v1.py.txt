@@ -1,0 +1,110 @@
+"""Prepare a generic mutable event-payload graph correction."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+DEST=WORK/'snapshot-payload-graph-prototype-v1'
+REL='forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java'
+BASE=ROOT/'data/development/commander-blocking-history-research/source'/REL
+assert file_hash(BASE)==json.loads((WORK/'source3622-v1/production-inputs.json').read_bytes())[REL]
+DEST.mkdir()
+for folder in ('baseline','source'):(DEST/folder/REL).parent.mkdir(parents=True,exist_ok=True)
+shutil.copyfile(BASE,DEST/'baseline'/REL)
+s=BASE.read_text(encoding='utf-8')
+old='    private final Map<Object, Object> objects = new IdentityHashMap<>();'
+assert s.count(old)==1
+s=s.replace(old,old+'\n    private List<Object> payloadCopies;',1)
+anchor='''        if (source instanceof Game) {
+            return getGame();
+        }'''
+assert s.count(anchor)==1
+wrapper='''        int checkpoint = payloadCopies == null ? 0 : payloadCopies.size();
+        try {
+            return copyPayloadValue(source);
+        } catch (RuntimeException | Error failure) {
+            // A failed container must not be reused as a successful partial copy.
+            while (payloadCopies != null && payloadCopies.size() > checkpoint) {
+                objects.remove(payloadCopies.remove(payloadCopies.size() - 1));
+            }
+            throw failure;
+        }
+    }
+
+    private Object copyPayloadValue(Object source) {
+'''+anchor
+s=s.replace(anchor,wrapper,1)
+anchor='''        if (source instanceof CardCollectionView cards) {
+            return cards(cards);
+        }'''
+replacement='''        Object saved = objects.get(source);
+        if (saved != null && isPayloadContainer(source)) {
+            return saved;
+        }
+        if (source instanceof CardCollectionView cards) {
+            CardCollection result = rememberPayload(source, new CardCollection());
+            for (Card card : cards) {
+                result.add(map(card));
+            }
+            return result;
+        }'''
+assert s.count(anchor)==1;s=s.replace(anchor,replacement,1)
+constructors=[
+('PlayerCollection result = new PlayerCollection();','PlayerCollection result = rememberPayload(source, new PlayerCollection());'),
+('Object[] result = values.clone();','Object[] result = rememberPayload(source, values.clone());'),
+('forge.util.collect.FCollection<Object> result = new forge.util.collect.FCollection<>();','forge.util.collect.FCollection<Object> result = rememberPayload(source, new forge.util.collect.FCollection<>());'),
+('Multiset<Object> result = HashMultiset.create();','Multiset<Object> result = rememberPayload(source, HashMultiset.create());'),
+('Map<Object, Object> result = new LinkedHashMap<>();','Map<Object, Object> result = rememberPayload(source, new LinkedHashMap<>());'),
+('List<Object> result = new ArrayList<>();','List<Object> result = rememberPayload(source, new ArrayList<>());'),
+('Set<Object> result = new LinkedHashSet<>();','Set<Object> result = rememberPayload(source, new LinkedHashSet<>());'),
+('CardDamageTable result = new CardDamageTable();','CardDamageTable result = rememberPayload(source, new CardDamageTable());'),
+('GameEntityCounterTable result = new GameEntityCounterTable();','GameEntityCounterTable result = rememberPayload(source, new GameEntityCounterTable());'),
+('CardZoneTable result = new CardZoneTable(cards(table.getLastStateBattlefield()), cards(table.getLastStateGraveyard()));','CardZoneTable result = rememberPayload(source, new CardZoneTable(cards(table.getLastStateBattlefield()), cards(table.getLastStateGraveyard())));'),
+('Table<Object, Object, Object> result = HashBasedTable.create();','Table<Object, Object, Object> result = rememberPayload(source, HashBasedTable.create());')]
+# Restrict replacements to the data dispatcher, preserving explicit field-owned
+# container policies in all other native copy helpers.
+start=s.index('    private Object copyPayloadValue(Object source) {')
+end=s.index('    /** Bind distinct printed',start)
+section=s[start:end]
+for old,new in constructors:
+    assert section.count(old)==1,old
+    section=section.replace(old,new,1)
+for primitive in ('int','byte','long'):
+    old='''        if (source instanceof %s[] values) {
+            return values.clone();
+        }'''%primitive
+    new='''        if (source instanceof %s[] values) {
+            return rememberPayload(source, values.clone());
+        }'''%primitive
+    assert section.count(old)==1;section=section.replace(old,new,1)
+s=s[:start]+section+s[end:]
+helpers='''    /** Preserve mutable event-payload identity; native field-owned copies stay separate. */
+    private <T> T rememberPayload(Object source, T target) {
+        if (payloadCopies == null) {
+            payloadCopies = new ArrayList<>();
+        }
+        payloadCopies.add(source);
+        objects.put(source, target);
+        return target;
+    }
+
+    private static boolean isPayloadContainer(Object source) {
+        return source instanceof CardCollectionView || source instanceof PlayerCollection
+                || source instanceof Object[] || source instanceof int[]
+                || source instanceof byte[] || source instanceof long[]
+                || source instanceof forge.util.collect.FCollection<?>
+                || source instanceof Multiset<?> || source instanceof Map<?, ?>
+                || source instanceof List<?> || source instanceof Set<?>
+                || source instanceof Table<?, ?, ?>;
+    }
+
+'''
+anchor='    /** Bind distinct printed and clone frames before copying any of their traits. */'
+assert s.count(anchor)==1;s=s.replace(anchor,helpers+anchor,1)
+(DEST/'source'/REL).write_text(s,encoding='utf-8',newline='\n')
+(DEST/'proposal.json').write_text(json.dumps({'changed_sources':[REL],'baseline_native_build':'800559d7545b4631b03e1866f6ce7822','baseline_production_manifest':'source3622-v1/production-inputs.json','scope':'Uncompiled/unrun correction: remember supported mutable data payload containers before mapping nested values, preserve shared references and cycles, remove newly remembered containers on failure. Explicit field-owned cards()/abilityList()/cost copies remain unchanged. No complete native transaction, rules or performance claim.'},indent=2)+'\n',encoding='utf-8',newline='\n')
+s=(WORK/'compile_snapshot_ability_supplier_v1.py').read_text(encoding='utf-8').replace('snapshot-ability-supplier-prototype-v1','snapshot-payload-graph-prototype-v1')
+(WORK/'compile_snapshot_payload_graph_v1.py').write_text(s,encoding='utf-8',newline='\n')
+print('Prepared payload graph correction; all25 original map contracts retained.')

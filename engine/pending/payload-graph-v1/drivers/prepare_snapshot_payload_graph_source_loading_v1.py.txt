@@ -1,0 +1,66 @@
+"""Prepare a fresh source tree, preserving all selected card/deck loading cases."""
+from pathlib import Path
+import json
+import shutil
+import subprocess
+import sys
+ROOT = Path.cwd()
+sys.path.insert(0, str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK = ROOT / 'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN = WORK / 'snapshot-payload-graph-source-loading-v1'
+load = lambda p: json.loads(p.read_bytes())
+def save(p, value):
+    p.write_text(json.dumps(value, indent=2)+'\n', encoding='utf-8', newline='\n')
+assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)
+epoch = WORK / 'post-snapshot-supplier-epoch-v1'
+ci = load(epoch/'source-ci.json')
+assert ci['conclusion']=='success'
+assert subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()==ci['head_sha']
+frozen = load(epoch/'source-frozen-inputs.json')
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+BUILD = ROOT / load(WORK/'sacrifice-candidate-v1/candidate-selection.json')['build']
+BASE = BUILD/'source'
+PROTO = WORK/'snapshot-payload-graph-prototype-v2'
+changed = load(PROTO/'proposal.json')['changed_sources']
+assert len(changed)==1
+production = load(WORK/'source3622-v1/production-inputs.json')
+assert len(production)==2168
+# Native build sources may use different line endings. Compare semantic bytes,
+# preserve raw baseline hashes separately, and copy the exact prototype bytes.
+canonical = ROOT/'data/development/commander-blocking-history-research/source'
+normalize = lambda p: p.read_bytes().replace(b'\r\n',b'\n')
+assert all(normalize(BASE/n)==normalize(canonical/n) for n in production)
+assert all(file_hash(canonical/n)==h for n,h in production.items())
+assert all(normalize(PROTO/'baseline'/n)==normalize(BASE/n) for n in changed)
+RUN.mkdir()
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+modules = {p.parent.resolve() for p in BASE.glob('*/pom.xml')}
+modules.add(BASE.resolve())
+def ignore(directory, names):
+    return ['target'] if Path(directory).resolve() in modules and 'target' in names else []
+source = RUN/'source'
+shutil.copytree(BASE, source, ignore=ignore)
+assert all(file_hash(source/n)==file_hash(BASE/n) for n in production)
+assert not list(source.glob('*/target'))
+for name in changed:
+    shutil.copyfile(PROTO/'source'/name, source/name)
+actual = [n for n in production if normalize(source/n)!=normalize(BASE/n)]
+assert sorted(actual)==sorted(changed)
+selection = load(WORK/'sacrifice-broad-v1/selection.json')['suites']['serialization']
+expected = WORK/'sacrifice-broad-v1/serialization-expected-cases.json'
+assert file_hash(expected)==selection['expected_manifest_sha256']
+shutil.copyfile(expected, RUN/'expected-cases.json')
+selected = ['forge-gui-desktop/src/test/java/'+c.replace('.','/')+'.java' for c in selection['classes']]
+assert all(file_hash(source/n)==file_hash(BASE/n) for n in selected)
+save(RUN/'selection.json', {'build':str(BUILD), 'source':str(source), 'suite':selection,
+    'changed_sources':changed, 'fresh_target_directories':True,
+    'scope':'Existing320 card/deck loading/parsing tests; not ability serialization or all-card rules proof.'})
+save(RUN/'production-inputs.json',{n:file_hash(source/n) for n in production})
+save(RUN/'selected-test-inputs.json',{n:file_hash(source/n) for n in selected})
+save(RUN/'root-inputs.json',frozen)
+save(RUN/'source-ci.json',ci)
+save(RUN/'preparation.json',{'passed':True, 'production_sources':len(production), 'changed_sources':1,
+    'selected_test_classes':len(selected),'expected_cases':selection['expected_cases'],
+    'excluded_only_module_build_targets':True})
+print('Fresh source prepared:2168 production files,1 change,320 cases retained.',flush=True)

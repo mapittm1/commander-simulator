@@ -1,0 +1,164 @@
+"""Register the validated payload correction after all frozen native jobs finish."""
+from pathlib import Path
+import json
+import re
+import shutil
+import subprocess
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+EPOCH=WORK/'post-snapshot-supplier-epoch-v1'
+DRAFT=WORK/'payload-graph-registration-v2'
+DEST=ROOT/'engine/pending/payload-graph-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def replace(path,old,new):
+    raw=path.read_bytes();newline=b'\r\n' if b'\r\n' in raw else b'\n'
+    before=old.encode().replace(b'\n',newline);after=new.encode().replace(b'\n',newline)
+    assert raw.count(before)==1,(path,old)
+    path.write_bytes(raw.replace(before,after,1))
+# No tracked mutations before the last native run and its frozen-input audit.
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ci=load(EPOCH/'source-ci.json');assert ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+semantic=load(WORK/'snapshot-payload-graph-semantic-batch-v1/outcome.json');assert semantic['all_passed']
+loading=load(WORK/'snapshot-payload-graph-source-loading-v1/outcome.json');assert loading['passed']
+assert loading['counts']==dict(total=320,passed=320,failed=0,skipped=0)
+resolution=load(WORK/'snapshot-payload-graph-resolution1271-v1/process.json')
+assert resolution['status']=='timeout' or (resolution['status']=='finished' and resolution['returncode']==0)
+if resolution['status']=='finished':
+    proof=load(WORK/'snapshot-payload-graph-resolution1271-v1/outcome.json')
+    assert proof['counts']==dict(total=1271,passed=1271,failed=0,skipped=0)
+for folder,count in [('snapshot-payload-graph-map-contracts-prototype-v1',25),('snapshot-payload-graph-contracts-prototype-v1',26),('snapshot-payload-damage-contracts-prototype-v1',5),('payload-graph-registration-contracts-prototype-v1',56),('payload-graph-registration-v2-contracts-prototype-v1',57)]:
+    result=load(WORK/folder/'outcome.json')
+    assert result['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert result['exact_case_counter_matches']
+    assert result['configuration_failures']==result['configuration_skips']==result['testng_status']==0
+assert load(WORK/'snapshot-payload-graph-contracts-baseline-v1/outcome.json')['counts']==dict(total=26,passed=4,failed=22,skipped=0)
+assert load(WORK/'snapshot-payload-damage-contracts-baseline-v1/outcome.json')['counts']==dict(total=5,passed=1,failed=4,skipped=0)
+prior_table=load(WORK/'payload-graph-pre-table-registration-contracts-prototype-v1/outcome.json')
+assert prior_table['counts']==dict(total=57,passed=56,failed=1,skipped=0)
+assert prior_table['exact_case_counter_matches']
+assert prior_table['configuration_failures']==prior_table['configuration_skips']==0
+
+assert all(file_hash(DRAFT/n)==h for n,h in load(DRAFT/'inputs.json').items())
+DEST.mkdir()
+artifacts={}
+def copy(source,relative):
+    target=DEST/relative;assert target.resolve().is_relative_to(DEST.resolve()) and not target.exists()
+    target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target)
+    assert file_hash(source)==file_hash(target)
+    artifacts[target.relative_to(ROOT).as_posix()]=file_hash(target)
+def capture(folder,java=False):
+    base=WORK/folder;assert base.is_dir(),base
+    for p in sorted(base.rglob('*')):
+        if not p.is_file():continue
+        rel=p.relative_to(base)
+        if len(rel.parts)==1 and p.suffix in ('.json','.log','.txt','.patch'):
+            copy(p,Path(folder)/rel)
+        elif rel.as_posix()=='reports/testng-results.xml':copy(p,Path(folder)/rel)
+        elif java and p.suffix=='.java' and (len(rel.parts)==1 or rel.parts[0] in ('source','baseline')):
+            copy(p,Path(folder)/(rel.as_posix()+'.txt'))
+for folder in ('snapshot-empty-enum-map-prototype-v1','snapshot-empty-enum-map-fixture-v1','snapshot-payload-graph-prototype-v1','snapshot-payload-graph-prototype-v2','snapshot-payload-graph-fixture-v1','snapshot-payload-damage-fixture-v1','payload-graph-registration-v1','payload-graph-registration-v2'):
+    capture(folder,java=True)
+for folder in ('snapshot-empty-enum-map-contracts-baseline-v1','snapshot-empty-enum-map-contracts-prototype-v1','snapshot-payload-graph-map-contracts-prototype-v1','snapshot-payload-graph-contracts-baseline-v1','snapshot-payload-graph-contracts-prototype-v1','snapshot-payload-damage-contracts-baseline-v1','snapshot-payload-damage-contracts-prototype-v1','snapshot-payload-graph-suppliers-prototype-v1','payload-graph-registration-contracts-prototype-v1','payload-graph-registration-v2-contracts-prototype-v1','payload-graph-pre-table-registration-contracts-prototype-v1','snapshot-payload-graph-semantic-batch-v1','snapshot-payload-graph-source-loading-v1','snapshot-payload-graph-resolution1271-v1'):
+    capture(folder)
+copy(WORK/'snapshot-payload-graph-source-loading-v1/testng-results.xml',Path('snapshot-payload-graph-source-loading-v1/testng-results.xml'))
+for family in semantic['groups']:
+    if family!='suppliers':capture('snapshot-payload-graph-regression-'+family+'-prototype-v1')
+copy(WORK/'snapshot-payload-graph-comparison-v1.json',Path('snapshot-payload-graph-comparison-v1.json'))
+copy(WORK/'payload-graph-registration-v2-bindings.json',Path('payload-graph-registration-v2-bindings.json'))
+copy(WORK/'snapshot-payload-graph-resolution-scope-clarification-v1.json',Path('snapshot-payload-graph-resolution-scope-clarification-v1.json'))
+for pattern in ('*snapshot_empty_enum_map*.py','*snapshot_payload_graph*.py','*snapshot_payload_damage*.py','*payload_graph_registration*.py'):
+    for p in WORK.glob(pattern):
+        target=Path('drivers')/(p.name+'.txt')
+        if (DEST/target).exists():continue
+        copy(p,target)
+copy(Path(__file__),Path('drivers')/(Path(__file__).name+'.txt'))
+# Preserve the old recipe as the exact recipe used by the isolated native proof.
+copy(ROOT/'engine/sticker_recipe.json',Path('baseline-recipe.json'))
+recipe_path=ROOT/'engine/sticker_recipe.json';raw=recipe_path.read_bytes();recipe=json.loads(raw)
+assert recipe['native_test_count']==4822
+patch='engine/patches/commander-payload-graph.patch'
+assert not (ROOT/patch).exists();shutil.copyfile(DRAFT/'commander-payload-graph.patch',ROOT/patch)
+recipe['patches'].append({'path':patch,'sha256':file_hash(ROOT/patch)})
+recipe['native_test_count']=4879
+recipe['runtime_version']='2.0.17-583714b-reviewed-payload-graph'
+recipe['capabilities'].append('event_payload_graph_snapshot')
+fixtures=[('CommanderPayloadGraphTest','commander_payload_graph_test_sha256'),('CommanderPayloadMapTest','commander_payload_map_test_sha256'),('CommanderPayloadDamageTest','commander_payload_damage_test_sha256')]
+for name,key in fixtures:
+    target=ROOT/'engine/tests'/(name+'.java');assert not target.exists()
+    shutil.copyfile(DRAFT/(name+'.java'),target);recipe[key]=file_hash(target)
+newline='\r\n' if b'\r\n' in raw else '\n'
+recipe_path.write_bytes((json.dumps(recipe,indent=2)+'\n').replace('\n',newline).encode('utf-8'))
+replace(ROOT/'tools/engine_test_sources.py','    "CommanderSacrificeHistoryTest.java": "commander_sacrifice_history_test_sha256",\n','    "CommanderSacrificeHistoryTest.java": "commander_sacrifice_history_test_sha256",\n'+''.join('    "'+name+'.java": "'+key+'",\n' for name,key in fixtures))
+replace(ROOT/'tests/support/draw_ending_worker.py','    "CommanderSacrificeHistoryTest": "commander_sacrifice_history_test_sha256",\n','    "CommanderSacrificeHistoryTest": "commander_sacrifice_history_test_sha256",\n'+''.join('    "'+name+'": "'+key+'",\n' for name,key in fixtures))
+replace(ROOT/'tools/build_sticker_engine.py','CommanderSacrificeHistoryTest,CommanderReplacementCacheInputsTest','CommanderSacrificeHistoryTest,'+','.join(name for name,_ in fixtures)+',CommanderReplacementCacheInputsTest')
+replace(ROOT/'tests/support/draw_ending_partitions.py','    "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),\n','    "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),\n    "payload_graph": (\n'+''.join('        "forge.ai.'+name+'",\n' for name,_ in fixtures)+'    ),\n')
+replace(ROOT/'tests/support/draw_ending_partitions.py','    "sacrifice_history": 26,\n','    "sacrifice_history": 26,\n    "payload_graph": 57,\n')
+replace(ROOT/'tests/unit/test_draw_ending_partitions.py','self.assertEqual(sum(EXPECTED_COUNTS.values()), 3665)','self.assertEqual(sum(EXPECTED_COUNTS.values()), 3722)')
+replace(ROOT/'tests/unit/test_draw_ending_partitions.py','        self.assertEqual(EXPECTED_COUNTS["sacrifice_history"], 26)\n','        self.assertEqual(EXPECTED_COUNTS["sacrifice_history"], 26)\n        self.assertEqual(EXPECTED_COUNTS["payload_graph"], 57)\n')
+replace(ROOT/'tests/support/draw_ending_worker.py','fixed 3665-case packaged family','fixed 3722-case packaged family')
+p=ROOT/'tests/integration/test_draw_endings_integration.py'
+for old,new in [('self.assertEqual(len(all_methods), 3665)','self.assertEqual(len(all_methods), 3722)'),('self.assertEqual(len(set(all_methods)), 3665)','self.assertEqual(len(set(all_methods)), 3722)')]:replace(p,old,new)
+attrs=ROOT/'.gitattributes';raw=attrs.read_bytes();newline=b'\r\n' if b'\r\n' in raw else b'\n'
+raw+=('engine/payload_graph_evidence.json -text whitespace=cr-at-eol\nengine/pending/payload-graph-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n').encode().replace(b'\n',newline)
+attrs.write_bytes(raw)
+main={'status':'registered_correction_not_activated','source_ci':ci,'baseline_native_build':'800559d7545b4631b03e1866f6ce7822',
+ 'change':'Preserve supported mutable event-payload aliases/cycles with identity mapping; remove newly remembered containers after copy failures. Explicit native field-owned container policies remain separate.',
+ 'graph_controls':{'baseline':{'total':26,'passed':4,'failed':22,'skipped':0},'prototype':{'total':26,'passed':26,'failed':0,'skipped':0}},
+ 'native_prevention_controls':{'baseline':{'total':5,'passed':1,'failed':4,'skipped':0},'prototype':{'total':5,'passed':5,'failed':0,'skipped':0}},
+ 'map_controls_unchanged':25,'pre_table_registration_control_counts':prior_table['counts'],'self_contained_registration_controls':57,'prior_registration_controls':56,'retained_supplier_controls':16,
+ 'retained_semantics':semantic,'fresh_source_loading':{k:v for k,v in loading.items() if k!='cases'},
+ 'original_resolution_process':resolution,'resolution_scope_clarification':load(WORK/'snapshot-payload-graph-resolution-scope-clarification-v1.json'),'original_resolution_cases':1271,'original_resolution_worker_seconds':90,
+ 'registered_recipe_sha256':file_hash(recipe_path),'registered_patch_sha256':file_hash(ROOT/patch),
+ 'registered_fixture_sha256':{name+'.java':recipe[key] for name,key in fixtures},
+ 'fresh_validation_pending':{'source_cases':3679,'native_cases':4879,'main_packaged_cases':3722},
+ 'selected_runtime_unchanged':True,'artifacts':artifacts,
+ 'limits':['Shared payload nodes are copied once per snapshot context; aliased opaque containers are traversed once per node, rather than once per reference.',
+ 'Failure cleanup concerns newly memoized payload containers, not a complete rollback of native ability/entity caches.',
+ 'Supplied prevention events exercise the native resolver; full preceding legal histories, activation/payment/replacement ordering and complete card/rules coverage are unproven.',
+ 'The320 loading cases do not establish ability serialization. Retained families may overlap and are not unique-card counts.',
+ 'Fresh full builds, packaged/broader regressions, final catalog/health/full games and activation remain pending.']}
+save(ROOT/'engine/payload_graph_evidence.json',main)
+if resolution['status']=='timeout':
+    gate=f"Original **1,271 / 90 seconds** still times out at **{resolution['elapsed_seconds']}s** without a completed report."
+else:
+    gate=f"Original **1,271 / 90 seconds** passes in **{resolution['elapsed_seconds']}s**; the expanded main suite still needs fresh validation."
+paragraph='''A generic payload-copy correction preserves shared mutable event state and
+supported container cycles in AI worlds. The baseline fails22 of26 graph checks
+and4 of5 native prevention-event checks; the correction passes all of them.
+Native damage prevention now updates every copied reference to the same event,
+while equal-but-distinct events and original/sibling worlds stay independent.
+All25 map contracts,16 supplier controls and13 retained interaction groups pass.
+Three self-contained registration fixtures pass all57 cases together; a fresh
+source build passes all320 card/deck loading cases with exact methods/parameters.
+
+GATE The recipe now registers57 additional `payload_graph` cases,
+retaining all prior groups. Fresh **3,679 source / 4,879 native / 3,722 main packaged**
+validation is pending. The selected runtime is unchanged. Supplied event states
+do not prove preceding legal histories, activation/payment/replacement ordering
+or complete rules coverage. Payload-container failure cleanup is not a complete
+native snapshot transaction. See [payload graph evidence](LINK).
+
+'''.replace('fails22','fails 22').replace('of26','of 26').replace('and4','and 4').replace('of5','of 5').replace('All25','All 25').replace('contracts,16','contracts, 16').replace('and13','and 13').replace('all57','all 57').replace('all320','all 320').replace('registers57','registers 57').replace('GATE',gate)
+for filename,anchor,link in [('README.md','## Card coverage\n\n','engine/payload_graph_evidence.json'),('docs/CARD_COVERAGE.md','# Card support and evidence\n\n','../engine/payload_graph_evidence.json')]:
+    replace(ROOT/filename,anchor,anchor+paragraph.replace('LINK',link))
+entry='''- Preserve shared mutable event-payload references and supported container cycles
+  in AI snapshots; retain independent field-owned containers and original/sibling
+  worlds. Remove newly memoized payload containers after copy failures without
+  claiming full native snapshot transactions.
+- Correct22/26 baseline graph failures and4/5 native prevention-event failures;
+  all57 self-contained registered cases, retained16 supplier controls,13 semantic
+  groups and a fresh source build's320 card/deck loading cases pass. Preserve raw
+  failures and unchanged assertions; supplied events are not full paid histories.
+- Register57 `payload_graph` cases and their fixed checksums, keeping every prior
+  group and original1,271/90. Fresh3,679 source /4,879 native /3,722 main packaged
+  validation, final live checks, activation and complete card/rules coverage remain
+  pending. GATE
+
+'''.replace('Correct22','Correct 22').replace('and4','and 4').replace('all57','all 57').replace('retained16','retained 16').replace('controls,13','controls, 13').replace("build's320","build's 320").replace('Register57','Register 57').replace('original1,271/90','original 1,271/90').replace('Fresh3,679','Fresh 3,679').replace('/4,879','/ 4,879').replace('/3,722','/ 3,722').replace('GATE',gate.replace('**',''))
+replace(ROOT/'CHANGELOG.md','## Unreleased\n\n','## Unreleased\n\n'+entry)
+print(json.dumps({'registered_additional_cases':57,'preserved_artifacts':len(artifacts),'resolution':resolution,'selected_runtime_unchanged':True}),flush=True)

@@ -1,0 +1,111 @@
+{
+  "status": "draft_not_registered_or_compiled",
+  "patch_sha256": "1d780e4623a098f5a04b0b2a1606ae10ffe8fa1bd49c29c50b6bb471fbc51dfb",
+  "fixture_correspondence": [
+    {
+      "original_fixture": "snapshot-payload-graph-fixture-v1/CommanderSnapshotPayloadGraphTest.java",
+      "original_fixture_sha256": "b1382bcd577d5f90fe0ac5d5e51e9f4dfdcc968ddd93ef760d26cb3b046608c1",
+      "registration_draft": "CommanderPayloadGraphTest.java",
+      "registration_draft_sha256": "f7dd416e6372f8d1e97064395a0615e51631e45cb9cfb6852cfc15fe8aa81f87",
+      "case_count": 26,
+      "method_names_unchanged": [
+        "listAliasesWithinMapStaySharedAndIndependentOfSource",
+        "listSelfCycleKeepsMappedCards",
+        "mutualListMapCycleKeepsOneCopyPerSource",
+        "objectArraySelfCycleKeepsMappedCards",
+        "objectArrayAliasesAcrossPayloadReferencesStayShared",
+        "intArrayAliasPreservesIndependentMutableState",
+        "byteArrayAliasPreservesIndependentMutableState",
+        "longArrayAliasPreservesIndependentMutableState",
+        "mapSelfCycleKeepsMappedCards",
+        "sharedSetUsesOneIndependentMappedContainer",
+        "sharedCardCollectionUsesOneMappedPayloadContainer",
+        "sharedPlayerCollectionUsesMappedPlayers",
+        "explicitFieldOwnedCardCopiesRemainSeparate",
+        "sharedFCollectionPreservesMappedPayloadIdentity",
+        "multisetAliasesKeepCountsAndMappedCards",
+        "genericTableSelfCycleKeepsMappedValues",
+        "nativeDamageTableAliasesKeepMappedCells",
+        "emptyNativeCounterTableAliasesRemainMutable",
+        "nativeZoneTableAliasesKeepMappedLastStatesAndCells",
+        "unknownPayloadFailureNeverReturnsCachedPartialContainer",
+        "opaqueListTraversalOccursOncePerSourceGraphNode",
+        "iteratorCallbackCanResolveInProgressContainer",
+        "opaqueIteratorFailureKeepsIdentityAndCanRetry",
+        "failedNestedCycleDoesNotLeaveStaleContainerCopies",
+        "identicalSourcesStayIndependentAcrossCopiedGames",
+        "distinctEqualContainersRemainDistinct"
+      ],
+      "only_registration_edits": "Class/reference names and self-contained copied board helper/imports; all original assertions retained."
+    },
+    {
+      "original_fixture": "snapshot-empty-enum-map-fixture-v1/CommanderSnapshotEmptyEnumMapTest.java",
+      "original_fixture_sha256": "a528e03105d7a6f24f590d28bbb84421d6fe3bc22d3a6e86bfe17f66eb42e1a3",
+      "registration_draft": "CommanderPayloadMapTest.java",
+      "registration_draft_sha256": "59dfb1c44b5b9a35ae475f798f8991c800f298dc8ebd1e78b96260e510b68f7a",
+      "case_count": 25,
+      "method_names_unchanged": [
+        "nativeViewsAreMutableEnumMaps",
+        "emptySnapshotViewsAreIndependentAcrossBranches",
+        "scalarLookupsPreserveAbsentAndNullKeySemantics",
+        "nullTriggerPayloadRemainsPresent",
+        "nullReplacementPayloadRemainsPresent",
+        "cardsAndPlayersAreReboundToCopiedGame",
+        "sharedPayloadListIdentityRetainedAcrossBothMaps",
+        "selfReferentialAbilityPayloadMapsToCopy",
+        "retainedTriggerMapViewObservesMutations",
+        "retainedReplacementMapViewObservesMutations",
+        "triggerResetDetachesEarlierView",
+        "sameGameCopyResetsReplacementAndCopiesTriggerMap",
+        "lkiCopySharesReplacementButNotTriggerMap",
+        "lkiCopyAfterEmptySnapshotPreservesSharedReplacementView",
+        "sameGameCopyAfterEmptySnapshotKeepsMapsIndependent",
+        "repeatedSnapshotRetainsMutationsAndRebindsEntities",
+        "sameContextReusesAbilityCopy",
+        "opaqueEmptyMapsKeepEntryIteration",
+        "opaquePopulatedMapsKeepEntryIteration",
+        "opaqueIsEmptyIsNotCalled",
+        "opaqueFailurePreservesIdentityAndEarlierCopiedMap",
+        "triggerIterationMayPopulateReplacementBeforeItsCopy",
+        "replacementIterationMayMutateAlreadyCopiedTriggerMap",
+        "clearedPopulatedMapsCanBeCopiedAndWrittenAgain",
+        "nativeGameCopyRebindsMapsOnCardAbility"
+      ],
+      "only_registration_edits": "Class/reference names and self-contained copied board helper/imports; all original assertions retained."
+    },
+    {
+      "original_fixture": "snapshot-payload-damage-fixture-v1/CommanderSnapshotPayloadDamageTest.java",
+      "original_fixture_sha256": "b17ffff6af094a39bbf5066f8d0c3acaf731e1ec8da3e9531cf66debef214326",
+      "registration_draft": "CommanderPayloadDamageTest.java",
+      "registration_draft_sha256": "57123b2ab54d0760bf87397ee45bcb396132b05483ff7c957e5fd820c55bca73",
+      "case_count": 5,
+      "method_names_unchanged": [
+        "nativePartialPreventionUpdatesEverySharedEventReference",
+        "nativeFullPreventionSharesTheReplacedResult",
+        "equalButDistinctEventsStayIndependentDuringNativePrevention",
+        "nativePreventionCannotChangeOriginalOrSiblingEventState",
+        "nativeWaitingEventSeesItsSharedPreventionUpdate"
+      ],
+      "only_registration_edits": "Class/reference names and self-contained copied board helper/imports; all original assertions retained."
+    }
+  ],
+  "additional_cases": 56,
+  "expected_native_cases_after_registration": 4878,
+  "expected_source_cases_after_registration": 3678,
+  "expected_main_packaged_cases_after_registration": 3721,
+  "original_resolution_cases": 1271,
+  "original_resolution_worker_seconds": 90,
+  "required_before_registration": [
+    "All retained semantic regressions",
+    "5 native prevention/event controls",
+    "Fresh320 loading cases",
+    "One unchanged full1271/90 trial"
+  ],
+  "remaining_after_registration": [
+    "Exact-head CI",
+    "Fresh source/native builds including all56 additional cases",
+    "All packaged case receipts and broader regressions",
+    "Final catalog/health/full-game verification",
+    "Runtime activation and complete rules/card correctness"
+  ]
+}

@@ -1,0 +1,171 @@
+--- a/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
++++ b/forge-game/src/main/java/forge/game/spellability/SpellAbilitySnapshot.java
+@@ -42,6 +42,7 @@
+     private final Map<forge.game.combat.AttackingBand, forge.game.combat.AttackingBand> bands;
+     private final Map<SpellAbility, SpellAbility> abilities = new IdentityHashMap<>();
+     private final Map<Object, Object> objects = new IdentityHashMap<>();
++    private List<Object> payloadCopies;
+ 
+     public SpellAbilitySnapshot(IEntityMap entities) {
+         this(entities, new IdentityHashMap<>());
+@@ -261,6 +262,19 @@
+                 || source instanceof Boolean || source instanceof Enum<?>
+                 || source instanceof CounterType || source instanceof forge.card.ColorSet
+                 || source instanceof forge.card.mana.ManaCost) return source;
++        int checkpoint = payloadCopies == null ? 0 : payloadCopies.size();
++        try {
++            return copyPayloadValue(source);
++        } catch (RuntimeException | Error failure) {
++            // A failed container must not be reused as a successful partial copy.
++            while (payloadCopies != null && payloadCopies.size() > checkpoint) {
++                objects.remove(payloadCopies.remove(payloadCopies.size() - 1));
++            }
++            throw failure;
++        }
++    }
++
++    private Object copyPayloadValue(Object source) {
+         if (source instanceof Game) {
+             return getGame();
+         }
+@@ -309,11 +323,19 @@
+         if (source instanceof ReplacementEffect effect) {
+             return replacement(effect);
+         }
++        Object saved = objects.get(source);
++        if (saved != null && isPayloadContainer(source)) {
++            return saved;
++        }
+         if (source instanceof CardCollectionView cards) {
+-            return cards(cards);
++            CardCollection result = rememberPayload(source, new CardCollection());
++            for (Card card : cards) {
++                result.add(map(card));
++            }
++            return result;
+         }
+         if (source instanceof PlayerCollection players) {
+-            PlayerCollection result = new PlayerCollection();
++            PlayerCollection result = rememberPayload(source, new PlayerCollection());
+             for (Player player : players) {
+                 result.add(map(player));
+             }
+@@ -323,30 +345,30 @@
+             return optional.map(this::data);
+         }
+         if (source instanceof Object[] values) {
+-            Object[] result = values.clone();
++            Object[] result = rememberPayload(source, values.clone());
+             for (int i = 0; i < result.length; i++) {
+                 result[i] = data(result[i]);
+             }
+             return result;
+         }
+         if (source instanceof int[] values) {
+-            return values.clone();
++            return rememberPayload(source, values.clone());
+         }
+         if (source instanceof byte[] values) {
+-            return values.clone();
++            return rememberPayload(source, values.clone());
+         }
+         if (source instanceof long[] values) {
+-            return values.clone();
++            return rememberPayload(source, values.clone());
+         }
+         if (source instanceof forge.util.collect.FCollection<?> values) {
+-            forge.util.collect.FCollection<Object> result = new forge.util.collect.FCollection<>();
++            forge.util.collect.FCollection<Object> result = rememberPayload(source, new forge.util.collect.FCollection<>());
+             for (Object value : values) {
+                 result.add(data(value));
+             }
+             return result;
+         }
+         if (source instanceof Multiset<?> values) {
+-            Multiset<Object> result = HashMultiset.create();
++            Multiset<Object> result = rememberPayload(source, HashMultiset.create());
+             for (Multiset.Entry<?> entry : values.entrySet()) {
+                 result.add(data(entry.getElement()), entry.getCount());
+             }
+@@ -356,52 +378,74 @@
+             return Pair.of(data(pair.getLeft()), data(pair.getRight()));
+         }
+         if (source instanceof Map<?, ?> values) {
+-            Map<Object, Object> result = new LinkedHashMap<>();
++            Map<Object, Object> result = rememberPayload(source, new LinkedHashMap<>());
+             for (Map.Entry<?, ?> entry : values.entrySet()) {
+                 result.put(data(entry.getKey()), data(entry.getValue()));
+             }
+             return result;
+         }
+         if (source instanceof List<?> values) {
+-            List<Object> result = new ArrayList<>();
++            List<Object> result = rememberPayload(source, new ArrayList<>());
+             for (Object value : values) {
+                 result.add(data(value));
+             }
+             return result;
+         }
+         if (source instanceof Set<?> values) {
+-            Set<Object> result = new LinkedHashSet<>();
++            Set<Object> result = rememberPayload(source, new LinkedHashSet<>());
+             for (Object value : values) {
+                 result.add(data(value));
+             }
+             return result;
+         }
+         if (source instanceof CardDamageTable table) {
+-            CardDamageTable result = new CardDamageTable();
++            CardDamageTable result = rememberPayload(source, new CardDamageTable());
+             for (Table.Cell<Card, GameEntity, Integer> cell : table.cellSet())
+                 result.put(map(cell.getRowKey()), map(cell.getColumnKey()), cell.getValue());
+             return result;
+         }
+         if (source instanceof GameEntityCounterTable table) {
+-            GameEntityCounterTable result = new GameEntityCounterTable();
++            GameEntityCounterTable result = rememberPayload(source, new GameEntityCounterTable());
+             for (Table.Cell<Optional<Player>, GameEntity, Multiset<CounterType>> cell : table.cellSet())
+                 result.put(cell.getRowKey().map(this::map), map(cell.getColumnKey()), HashMultiset.create(cell.getValue()));
+             return result;
+         }
+         if (source instanceof CardZoneTable table) {
+-            CardZoneTable result = new CardZoneTable(cards(table.getLastStateBattlefield()), cards(table.getLastStateGraveyard()));
++            CardZoneTable result = rememberPayload(source, new CardZoneTable());
++            result.setLastStateBattlefield(cards(table.getLastStateBattlefield()));
++            result.setLastStateGraveyard(cards(table.getLastStateGraveyard()));
+             for (Table.Cell<forge.game.zone.ZoneType, forge.game.zone.ZoneType, CardCollection> cell : table.cellSet())
+                 result.put(cell.getRowKey(), cell.getColumnKey(), cards(cell.getValue()));
+             result.copySnapshotRecordsFrom(table, this);
+             return result;
+         }
+         if (source instanceof Table<?, ?, ?> values) {
+-            Table<Object, Object, Object> result = HashBasedTable.create();
++            Table<Object, Object, Object> result = rememberPayload(source, HashBasedTable.create());
+             for (Table.Cell<?, ?, ?> cell : values.cellSet())
+                 result.put(data(cell.getRowKey()), data(cell.getColumnKey()), data(cell.getValue()));
+             return result;
+         }
+         throw new IllegalStateException("Unmapped snapshot payload: " + source.getClass().getName());
++    }
++
++    /** Preserve mutable event-payload identity; native field-owned copies stay separate. */
++    private <T> T rememberPayload(Object source, T target) {
++        if (payloadCopies == null) {
++            payloadCopies = new ArrayList<>();
++        }
++        payloadCopies.add(source);
++        objects.put(source, target);
++        return target;
++    }
++
++    private static boolean isPayloadContainer(Object source) {
++        return source instanceof CardCollectionView || source instanceof PlayerCollection
++                || source instanceof Object[] || source instanceof int[]
++                || source instanceof byte[] || source instanceof long[]
++                || source instanceof forge.util.collect.FCollection<?>
++                || source instanceof Multiset<?> || source instanceof Map<?, ?>
++                || source instanceof List<?> || source instanceof Set<?>
++                || source instanceof Table<?, ?, ?>;
+     }
+ 
+     /** Bind distinct printed and clone frames before copying any of their traits. */

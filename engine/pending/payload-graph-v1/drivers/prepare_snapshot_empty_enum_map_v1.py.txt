@@ -1,0 +1,87 @@
+"""Prepare a one-source, unpromoted empty snapshot-map allocation experiment."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+DEST=WORK/'snapshot-empty-enum-map-prototype-v1'
+REL='forge-game/src/main/java/forge/game/spellability/SpellAbility.java'
+BASE=ROOT/'data/development/commander-blocking-history-research/source'/REL
+expected=json.loads((WORK/'source3622-v1/production-inputs.json').read_bytes())[REL]
+assert file_hash(BASE)==expected
+DEST.mkdir()
+for folder in ('baseline','source'):(DEST/folder/REL).parent.mkdir(parents=True,exist_ok=True)
+shutil.copyfile(BASE,DEST/'baseline'/REL)
+s=BASE.read_text(encoding='utf-8')
+changes=[
+('''    public Map<AbilityKey, Object> getTriggeringObjects() {
+        return triggeringObjects;
+    }''','''    public Map<AbilityKey, Object> getTriggeringObjects() {
+        return mutableTriggeringObjects();
+    }
+
+    private EnumMap<AbilityKey, Object> mutableTriggeringObjects() {
+        if (triggeringObjects == null) {
+            triggeringObjects = AbilityKey.newMap();
+        }
+        return triggeringObjects;
+    }
+
+    private EnumMap<AbilityKey, Object> mutableReplacingObjects() {
+        if (replacingObjects == null) {
+            replacingObjects = AbilityKey.newMap();
+        }
+        return replacingObjects;
+    }'''),
+('return triggeringObjects.get(type);','return triggeringObjects == null ? null : triggeringObjects.get(type);'),
+('triggeringObjects.put(type, o);','mutableTriggeringObjects().put(type, o);'),
+('return triggeringObjects.containsKey(type);','return triggeringObjects != null && triggeringObjects.containsKey(type);'),
+('''    public Map<AbilityKey, Object> getReplacingObjects() {
+        return replacingObjects;
+    }''','''    public Map<AbilityKey, Object> getReplacingObjects() {
+        return mutableReplacingObjects();
+    }'''),
+('return replacingObjects.get(type);','return replacingObjects == null ? null : replacingObjects.get(type);'),
+('replacingObjects.put(type, o);','mutableReplacingObjects().put(type, o);'),
+('''        target.triggeringObjects = AbilityKey.newMap();
+        for (Map.Entry<AbilityKey, Object> entry : triggeringObjects.entrySet())
+            target.triggeringObjects.put(entry.getKey(), context.data(entry.getValue()));
+        target.replacingObjects = AbilityKey.newMap();
+        for (Map.Entry<AbilityKey, Object> entry : replacingObjects.entrySet())
+            target.replacingObjects.put(entry.getKey(), context.data(entry.getValue()));''','''        // Defer only known-empty native maps. Mutable public views materialize
+        // independently; opaque EnumMap subclasses keep their original iteration.
+        target.triggeringObjects = null;
+        if (triggeringObjects != null && (triggeringObjects.getClass() != EnumMap.class
+                || !triggeringObjects.isEmpty())) {
+            target.triggeringObjects = AbilityKey.newMap();
+            for (Map.Entry<AbilityKey, Object> entry : triggeringObjects.entrySet()) {
+                target.triggeringObjects.put(entry.getKey(), context.data(entry.getValue()));
+            }
+        }
+        target.replacingObjects = null;
+        if (replacingObjects != null && (replacingObjects.getClass() != EnumMap.class
+                || !replacingObjects.isEmpty())) {
+            target.replacingObjects = AbilityKey.newMap();
+            for (Map.Entry<AbilityKey, Object> entry : replacingObjects.entrySet()) {
+                target.replacingObjects.put(entry.getKey(), context.data(entry.getValue()));
+            }
+        }'''),
+('''    public SpellAbility copy(Card host, Player activ, final boolean lki, final boolean keepTextChanges) {
+        SpellAbility clone = null;''','''    public SpellAbility copy(Card host, Player activ, final boolean lki, final boolean keepTextChanges) {
+        // Native same-game copies can retain map aliases, especially replacement
+        // state in LKI copies. Materialize before shallow cloning to preserve them.
+        mutableTriggeringObjects();
+        mutableReplacingObjects();
+        SpellAbility clone = null;''')]
+for old,new in changes:
+    assert s.count(old)==1,old
+    s=s.replace(old,new,1)
+(DEST/'source'/REL).write_text(s,encoding='utf-8',newline='\n')
+(DEST/'proposal.json').write_text(json.dumps({'changed_sources':[REL],'baseline_native_build':'800559d7545b4631b03e1866f6ce7822','baseline_production_manifest':'source3622-v1/production-inputs.json','scope':'Uncompiled/unrun empty native snapshot-map allocation experiment. Original constructors and resets remain eager; nonempty and opaque subclass iteration retained. Mutable public views materialize independently; ordinary copies materialize before shallow cloning. No performance or correctness claim.'},indent=2)+'\n',encoding='utf-8',newline='\n')
+for source,target in [('compile_snapshot_ability_supplier_v1.py','compile_snapshot_empty_enum_map_v1.py'),('compile_snapshot_ability_supplier_fixture_v1.py','compile_snapshot_empty_enum_map_fixture_v1.py')]:
+    text=(WORK/source).read_text(encoding='utf-8').replace('snapshot-ability-supplier-prototype-v1','snapshot-empty-enum-map-prototype-v1').replace('snapshot-ability-supplier-fixture-v1','snapshot-empty-enum-map-fixture-v1')
+    assert not (WORK/target).exists()
+    (WORK/target).write_text(text,encoding='utf-8',newline='\n')
+print('Prepared one-source empty-map variant; no production recipe/runtime changes.')

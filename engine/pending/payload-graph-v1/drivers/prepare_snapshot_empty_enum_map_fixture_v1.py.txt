@@ -1,0 +1,285 @@
+"""Write supplied-world contracts for snapshot maps and ordinary/LKI copy aliases."""
+from pathlib import Path
+import shutil
+ROOT=Path.cwd()
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+DEST=WORK/'snapshot-empty-enum-map-fixture-v1';DEST.mkdir()
+original=WORK/'snapshot-ability-supplier-fixture-v1'
+shutil.copyfile(original/'CommanderSnapshotAbilitySupplierTest.java',DEST/'CommanderSnapshotAbilitySupplierTest.java')
+java=r'''package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.game.Game;
+import forge.game.GameObject;
+import forge.game.IEntityMap;
+import forge.game.ability.AbilityKey;
+import forge.game.card.Card;
+import forge.game.player.Player;
+import forge.game.spellability.SpellAbility;
+import forge.game.spellability.SpellAbilitySnapshot;
+import forge.game.zone.ZoneType;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Native supplied-world map contracts; not full legal-game histories. */
+public class CommanderSnapshotEmptyEnumMapTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release();
+        copies.clear();
+    }
+    private static final class Scene {
+        Game game;
+        SpellAbility ability;
+        Card elf;
+        Card ring;
+    }
+    private Scene scene() {
+        Scene s = new Scene();
+        s.game = CommanderSnapshotAbilitySupplierTest.newBoard();
+        Player player = s.game.getPlayers().getFirst();
+        s.ability = addCardToZone("Grizzly Bears", player, ZoneType.Hand).getFirstSpellAbility();
+        s.ability.setActivatingPlayer(player);
+        s.elf = addCardToZone("Llanowar Elves", player, ZoneType.Battlefield);
+        s.ring = addCardToZone("Sol Ring", player, ZoneType.Battlefield);
+        return s;
+    }
+    private GameCopier branch(Game game) {
+        game.getAction().checkStaticAbilities(false);
+        game.getTriggerHandler().resetActiveTriggers();
+        game.copyLastState();
+        GameCopier copier = new GameCopier(game).withStack(true);
+        copier.makeCopy(null, game.getPlayers().getFirst());
+        copies.add(copier);
+        return copier;
+    }
+    private SpellAbilitySnapshot context(GameCopier copier) {
+        return new SpellAbilitySnapshot(new IEntityMap() {
+            @Override public Game getGame() { return copier.getCopiedGame(); }
+            @Override public GameObject map(GameObject value) { return copier.find(value); }
+        });
+    }
+    private SpellAbility copy(Scene s, GameCopier copier) { return context(copier).copy(s.ability); }
+    private void field(SpellAbility ability, String name, EnumMap<AbilityKey, Object> value) throws Exception {
+        Field field = SpellAbility.class.getDeclaredField(name);
+        field.setAccessible(true);
+        field.set(ability, value);
+    }
+    private static final class ObservedMap extends EnumMap<AbilityKey, Object> {
+        int entryCalls;
+        int emptyCalls;
+        Runnable onEntries;
+        RuntimeException failure;
+        ObservedMap() { super(AbilityKey.class); }
+        @Override public boolean isEmpty() {
+            emptyCalls++;
+            throw new AssertionError("Opaque isEmpty must not be used as a shortcut");
+        }
+        @Override public Set<Map.Entry<AbilityKey, Object>> entrySet() {
+            entryCalls++;
+            if (onEntries != null) onEntries.run();
+            if (failure != null) throw failure;
+            return super.entrySet();
+        }
+    }
+    @Test public void nativeViewsAreMutableEnumMaps() {
+        Scene s = scene(); SpellAbility value = copy(s, branch(s.game));
+        assertEquals(value.getTriggeringObjects().getClass(), EnumMap.class);
+        assertEquals(value.getReplacingObjects().getClass(), EnumMap.class);
+        value.getTriggeringObjects().put(AbilityKey.Amount, 3);
+        value.getReplacingObjects().put(AbilityKey.Amount, 5);
+        assertEquals(value.getTriggeringObject(AbilityKey.Amount), 3);
+        assertEquals(value.getReplacingObject(AbilityKey.Amount), 5);
+    }
+    @Test public void emptySnapshotViewsAreIndependentAcrossBranches() {
+        Scene s = scene(); SpellAbility a = copy(s, branch(s.game)); SpellAbility b = copy(s, branch(s.game));
+        assertNotSame(a.getTriggeringObjects(), b.getTriggeringObjects());
+        assertNotSame(a.getReplacingObjects(), b.getReplacingObjects());
+        a.setTriggeringObject(AbilityKey.Amount, 3); a.setReplacingObject(AbilityKey.Amount, 4);
+        assertFalse(b.hasTriggeringObject(AbilityKey.Amount)); assertNull(b.getReplacingObject(AbilityKey.Amount));
+        assertFalse(s.ability.hasTriggeringObject(AbilityKey.Amount)); assertNull(s.ability.getReplacingObject(AbilityKey.Amount));
+    }
+    @Test public void scalarLookupsPreserveAbsentAndNullKeySemantics() {
+        Scene s = scene(); SpellAbility value = copy(s, branch(s.game));
+        assertNull(value.getTriggeringObject(null)); assertNull(value.getReplacingObject(null));
+        assertFalse(value.hasTriggeringObject(null)); assertFalse(value.hasTriggeringObject(AbilityKey.Amount));
+        try { value.setTriggeringObject(null, 1); fail("Null enum keys must fail"); } catch (NullPointerException expected) { }
+        try { value.setReplacingObject(null, 1); fail("Null enum keys must fail"); } catch (NullPointerException expected) { }
+        value.setTriggeringObject(AbilityKey.Amount, 9); assertEquals(value.getTriggeringObject(AbilityKey.Amount), 9);
+    }
+    @Test public void nullTriggerPayloadRemainsPresent() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Amount, null);
+        SpellAbility value = copy(s, branch(s.game));
+        assertTrue(value.hasTriggeringObject(AbilityKey.Amount)); assertNull(value.getTriggeringObject(AbilityKey.Amount));
+        assertEquals(value.getTriggeringObjects().size(), 1);
+    }
+    @Test public void nullReplacementPayloadRemainsPresent() {
+        Scene s = scene(); s.ability.setReplacingObject(AbilityKey.Amount, null);
+        SpellAbility value = copy(s, branch(s.game));
+        assertTrue(value.getReplacingObjects().containsKey(AbilityKey.Amount));
+        assertNull(value.getReplacingObject(AbilityKey.Amount)); assertEquals(value.getReplacingObjects().size(), 1);
+    }
+    @Test public void cardsAndPlayersAreReboundToCopiedGame() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Card, s.elf);
+        s.ability.setReplacingObject(AbilityKey.Affected, s.game.getPlayers().getFirst());
+        GameCopier copier = branch(s.game); SpellAbility value = copy(s, copier);
+        assertSame(value.getTriggeringObject(AbilityKey.Card), copier.find(s.elf));
+        assertSame(value.getReplacingObject(AbilityKey.Affected), copier.find(s.game.getPlayers().getFirst()));
+        assertNotSame(value.getTriggeringObject(AbilityKey.Card), s.elf);
+    }
+    @Test public void sharedPayloadListIdentityRetainedAcrossBothMaps() {
+        Scene s = scene(); List<Object> list = new ArrayList<>(); list.add(s.elf);
+        s.ability.setTriggeringObject(AbilityKey.Cards, list); s.ability.setReplacingObject(AbilityKey.Cards, list);
+        GameCopier copier = branch(s.game); SpellAbility value = copy(s, copier);
+        Object a = value.getTriggeringObject(AbilityKey.Cards); Object b = value.getReplacingObject(AbilityKey.Cards);
+        assertSame(a, b); assertNotSame(a, list); assertSame(((List<?>) a).get(0), copier.find(s.elf));
+    }
+    @Test public void selfReferentialAbilityPayloadMapsToCopy() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Cause, s.ability);
+        s.ability.setReplacingObject(AbilityKey.Cause, s.ability);
+        SpellAbility value = copy(s, branch(s.game));
+        assertSame(value.getTriggeringObject(AbilityKey.Cause), value);
+        assertSame(value.getReplacingObject(AbilityKey.Cause), value);
+    }
+    @Test public void retainedTriggerMapViewObservesMutations() {
+        Scene s = scene(); SpellAbility value = copy(s, branch(s.game));
+        Map<AbilityKey, Object> view = value.getTriggeringObjects();
+        value.setTriggeringObject(AbilityKey.Amount, 2); assertEquals(view.get(AbilityKey.Amount), 2);
+        view.put(AbilityKey.Amount, 7); assertEquals(value.getTriggeringObject(AbilityKey.Amount), 7);
+        assertSame(value.getTriggeringObjects(), view);
+    }
+    @Test public void retainedReplacementMapViewObservesMutations() {
+        Scene s = scene(); SpellAbility value = copy(s, branch(s.game));
+        Map<AbilityKey, Object> view = value.getReplacingObjects();
+        value.setReplacingObject(AbilityKey.Amount, 2); assertEquals(view.get(AbilityKey.Amount), 2);
+        view.put(AbilityKey.Amount, 7); assertEquals(value.getReplacingObject(AbilityKey.Amount), 7);
+        assertSame(value.getReplacingObjects(), view);
+    }
+    @Test public void triggerResetDetachesEarlierView() {
+        Scene s = scene(); SpellAbility value = copy(s, branch(s.game));
+        Map<AbilityKey, Object> view = value.getTriggeringObjects(); view.put(AbilityKey.Amount, 2);
+        value.resetTriggeringObjects();
+        assertNotSame(value.getTriggeringObjects(), view); assertEquals(view.get(AbilityKey.Amount), 2);
+        assertFalse(value.hasTriggeringObject(AbilityKey.Amount));
+    }
+    @Test public void sameGameCopyResetsReplacementAndCopiesTriggerMap() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Card, s.elf); s.ability.setReplacingObject(AbilityKey.Card, s.ring);
+        SpellAbility value = s.ability.copy(s.ability.getHostCard(), false);
+        assertNotSame(value.getTriggeringObjects(), s.ability.getTriggeringObjects());
+        assertSame(value.getTriggeringObject(AbilityKey.Card), s.elf); assertTrue(value.getReplacingObjects().isEmpty());
+        assertSame(s.ability.getReplacingObject(AbilityKey.Card), s.ring);
+    }
+    @Test public void lkiCopySharesReplacementButNotTriggerMap() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Card, s.elf); s.ability.setReplacingObject(AbilityKey.Card, s.ring);
+        SpellAbility value = s.ability.copy(s.ability.getHostCard(), true);
+        assertNotSame(value.getTriggeringObjects(), s.ability.getTriggeringObjects());
+        assertSame(value.getReplacingObjects(), s.ability.getReplacingObjects());
+        value.setReplacingObject(AbilityKey.Amount, 3); assertEquals(s.ability.getReplacingObject(AbilityKey.Amount), 3);
+    }
+    @Test public void lkiCopyAfterEmptySnapshotPreservesSharedReplacementView() {
+        Scene s = scene(); SpellAbility snapshot = copy(s, branch(s.game));
+        SpellAbility lki = snapshot.copy(snapshot.getHostCard(), true);
+        lki.setReplacingObject(AbilityKey.Amount, 8);
+        assertSame(lki.getReplacingObjects(), snapshot.getReplacingObjects());
+        assertEquals(snapshot.getReplacingObject(AbilityKey.Amount), 8);
+        assertNotSame(lki.getTriggeringObjects(), snapshot.getTriggeringObjects());
+    }
+    @Test public void sameGameCopyAfterEmptySnapshotKeepsMapsIndependent() {
+        Scene s = scene(); SpellAbility snapshot = copy(s, branch(s.game));
+        SpellAbility value = snapshot.copy(snapshot.getHostCard(), false);
+        value.setReplacingObject(AbilityKey.Amount, 8); value.setTriggeringObject(AbilityKey.Amount, 9);
+        assertNull(snapshot.getReplacingObject(AbilityKey.Amount)); assertFalse(snapshot.hasTriggeringObject(AbilityKey.Amount));
+    }
+    @Test public void repeatedSnapshotRetainsMutationsAndRebindsEntities() {
+        Scene s = scene(); GameCopier first = branch(s.game); SpellAbility value = copy(s, first);
+        value.setTriggeringObject(AbilityKey.Card, first.find(s.elf));
+        GameCopier second = branch(first.getCopiedGame()); SpellAbility again = context(second).copy(value);
+        assertSame(again.getTriggeringObject(AbilityKey.Card), second.find(first.find(s.elf)));
+        assertNotSame(again.getTriggeringObjects(), value.getTriggeringObjects());
+    }
+    @Test public void sameContextReusesAbilityCopy() {
+        Scene s = scene(); SpellAbilitySnapshot context = context(branch(s.game));
+        SpellAbility a = context.copy(s.ability); SpellAbility b = context.copy(s.ability);
+        assertSame(a, b); assertNotSame(a, s.ability);
+    }
+    @Test public void opaqueEmptyMapsKeepEntryIteration() throws Exception {
+        Scene s = scene(); GameCopier copier = branch(s.game);
+        ObservedMap a = new ObservedMap(); ObservedMap b = new ObservedMap();
+        field(s.ability, "triggeringObjects", a); field(s.ability, "replacingObjects", b);
+        SpellAbility value = copy(s, copier);
+        assertEquals(a.entryCalls, 1); assertEquals(b.entryCalls, 1);
+        assertTrue(value.getTriggeringObjects().isEmpty()); assertTrue(value.getReplacingObjects().isEmpty());
+    }
+    @Test public void opaquePopulatedMapsKeepEntryIteration() throws Exception {
+        Scene s = scene(); GameCopier copier = branch(s.game); ObservedMap a = new ObservedMap();
+        a.put(AbilityKey.Card, s.elf); field(s.ability, "triggeringObjects", a);
+        SpellAbility value = copy(s, copier);
+        assertEquals(a.entryCalls, 1); assertSame(value.getTriggeringObject(AbilityKey.Card), copier.find(s.elf));
+    }
+    @Test public void opaqueIsEmptyIsNotCalled() throws Exception {
+        Scene s = scene(); GameCopier copier = branch(s.game);
+        ObservedMap a = new ObservedMap(); field(s.ability, "replacingObjects", a);
+        copy(s, copier); assertEquals(a.emptyCalls, 0); assertEquals(a.entryCalls, 1);
+    }
+    @Test public void opaqueFailurePreservesIdentityAndEarlierCopiedMap() throws Exception {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Card, s.elf);
+        GameCopier copier = branch(s.game); SpellAbilitySnapshot context = context(copier);
+        ObservedMap value = new ObservedMap(); RuntimeException failure = new IllegalStateException("opaque-map-marker");
+        value.failure = failure; field(s.ability, "replacingObjects", value);
+        try { context.copy(s.ability); fail("Opaque iteration must fail"); } catch (IllegalStateException actual) { assertSame(actual, failure); }
+        SpellAbility partial = context.getAbilityCopies().get(s.ability);
+        assertSame(partial.getTriggeringObject(AbilityKey.Card), copier.find(s.elf));
+        assertTrue(partial.getReplacingObjects().isEmpty());
+    }
+    @Test public void triggerIterationMayPopulateReplacementBeforeItsCopy() throws Exception {
+        Scene s = scene(); GameCopier copier = branch(s.game); ObservedMap value = new ObservedMap();
+        value.onEntries = () -> s.ability.setReplacingObject(AbilityKey.Card, s.ring);
+        field(s.ability, "triggeringObjects", value); SpellAbility result = copy(s, copier);
+        assertSame(result.getReplacingObject(AbilityKey.Card), copier.find(s.ring)); assertEquals(value.entryCalls, 1);
+    }
+    @Test public void replacementIterationMayMutateAlreadyCopiedTriggerMap() throws Exception {
+        Scene s = scene(); GameCopier copier = branch(s.game); SpellAbilitySnapshot context = context(copier);
+        ObservedMap value = new ObservedMap();
+        value.onEntries = () -> context.getAbilityCopies().get(s.ability).setTriggeringObject(AbilityKey.Amount, 11);
+        field(s.ability, "replacingObjects", value); SpellAbility result = context.copy(s.ability);
+        assertEquals(result.getTriggeringObject(AbilityKey.Amount), 11); assertFalse(s.ability.hasTriggeringObject(AbilityKey.Amount));
+    }
+    @Test public void clearedPopulatedMapsCanBeCopiedAndWrittenAgain() {
+        Scene s = scene(); Map<AbilityKey, Object> trigger = s.ability.getTriggeringObjects();
+        Map<AbilityKey, Object> replace = s.ability.getReplacingObjects();
+        trigger.put(AbilityKey.Amount, 1); replace.put(AbilityKey.Amount, 2); trigger.clear(); replace.clear();
+        SpellAbility value = copy(s, branch(s.game)); value.setTriggeringObject(AbilityKey.Amount, 3); value.setReplacingObject(AbilityKey.Amount, 4);
+        assertTrue(trigger.isEmpty()); assertTrue(replace.isEmpty()); assertEquals(value.getTriggeringObject(AbilityKey.Amount), 3);
+    }
+    @Test public void nativeGameCopyRebindsMapsOnCardAbility() {
+        Scene s = scene(); s.ability.setTriggeringObject(AbilityKey.Card, s.elf);
+        s.ability.setReplacingObject(AbilityKey.Affected, s.game.getPlayers().getFirst());
+        GameCopier copier = branch(s.game);
+        SpellAbility value = copier.find(s.ability.getHostCard()).getFirstSpellAbility();
+        assertSame(value.getTriggeringObject(AbilityKey.Card), copier.find(s.elf));
+        assertSame(value.getReplacingObject(AbilityKey.Affected), copier.find(s.game.getPlayers().getFirst()));
+    }
+}
+'''
+(DEST/'CommanderSnapshotEmptyEnumMapTest.java').write_text(java,encoding='utf-8',newline='\n')
+a=(original/'CommanderSnapshotAbilitySupplierAllocationTest.java').read_text(encoding='utf-8')
+a=a.replace('CommanderSnapshotAbilitySupplierAllocationTest','CommanderSnapshotEmptyEnumMapAllocationTest')
+a=a.replace('new String[]{"empty_spell", "populated_spell", "mana_ability"}', 'new String[]{"empty_maps", "trigger_payload", "both_payloads"}')
+a=a.replace('SpellAbility source = scenario.equals("mana_ability") ? ring.getManaAbilities().get(0) : host.getFirstSpellAbility();','SpellAbility source = host.getFirstSpellAbility();')
+old='''            if (scenario.equals("populated_spell")) {
+                source.getPipsToReduce().add("G");
+                source.addTappedForConvoke(elf);
+                source.addRollbackEffect(ring);
+            }'''
+new='''            if (!scenario.equals("empty_maps")) source.setTriggeringObject(forge.game.ability.AbilityKey.Card, elf);
+            if (scenario.equals("both_payloads")) source.setReplacingObject(forge.game.ability.AbilityKey.Affected, ring);'''
+assert old in a;a=a.replace(old,new)
+(DEST/'CommanderSnapshotEmptyEnumMapAllocationTest.java').write_text(a,encoding='utf-8',newline='\n')
+print('Prepared25 map contracts,16 unchanged supplier contracts and1 allocation probe.')

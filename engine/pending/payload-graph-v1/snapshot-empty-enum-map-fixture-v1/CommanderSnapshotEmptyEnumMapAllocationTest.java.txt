@@ -1,0 +1,68 @@
+package forge.ai;
+
+import com.sun.management.ThreadMXBean;
+import forge.ai.simulation.GameCopier;
+import forge.game.Game;
+import forge.game.GameObject;
+import forge.game.IEntityMap;
+import forge.game.card.Card;
+import forge.game.player.Player;
+import forge.game.spellability.SpellAbility;
+import forge.game.spellability.SpellAbilitySnapshot;
+import forge.game.zone.ZoneType;
+import java.lang.management.ManagementFactory;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Fixed escaping snapshot allocations; no timing or full-rules claim. */
+public class CommanderSnapshotEmptyEnumMapAllocationTest extends AITest {
+    private static volatile SpellAbility sink;
+    private static final Map<String, Long> BYTES = new LinkedHashMap<>();
+    public static Map<String, Long> allocationBytes() { return new LinkedHashMap<>(BYTES); }
+
+    @Test public void fixedEscapingSnapshotsReportAllocatedBytes() {
+        ThreadMXBean bean = (ThreadMXBean) ManagementFactory.getThreadMXBean();
+        assertTrue(bean.isThreadAllocatedMemorySupported());
+        if (!bean.isThreadAllocatedMemoryEnabled()) bean.setThreadAllocatedMemoryEnabled(true);
+        long thread = Thread.currentThread().getId();
+        bean.getThreadAllocatedBytes(thread);
+        for (String scenario : new String[]{"empty_maps", "trigger_payload", "both_payloads"}) {
+            Game game = CommanderSnapshotAbilitySupplierTest.newBoard();
+            Player player = game.getPlayers().getFirst();
+            Card host = addCardToZone("Grizzly Bears", player, ZoneType.Hand);
+            Card elf = addCardToZone("Llanowar Elves", player, ZoneType.Battlefield);
+            Card ring = addCardToZone("Sol Ring", player, ZoneType.Battlefield);
+            SpellAbility source = host.getFirstSpellAbility();
+            source.setActivatingPlayer(player);
+            if (!scenario.equals("empty_maps")) source.setTriggeringObject(forge.game.ability.AbilityKey.Card, elf);
+            if (scenario.equals("both_payloads")) source.setReplacingObject(forge.game.ability.AbilityKey.Affected, ring);
+            game.getAction().checkStaticAbilities(false);
+            game.getTriggerHandler().resetActiveTriggers();
+            game.copyLastState();
+            GameCopier copier = new GameCopier(game).withStack(true);
+            copier.makeCopy(null, player);
+            try {
+                IEntityMap entities = new IEntityMap() {
+                    @Override public Game getGame() { return copier.getCopiedGame(); }
+                    @Override public GameObject map(GameObject original) { return copier.find(original); }
+                };
+                Card expectedHost = copier.find(source.getHostCard());
+                for (int index = 0; index < 1000; index++) sink = new SpellAbilitySnapshot(entities).copy(source);
+                long before = bean.getThreadAllocatedBytes(thread);
+                for (int index = 0; index < 2000; index++) {
+                    sink = new SpellAbilitySnapshot(entities).copy(source);
+                    assertNotSame(sink, source);
+                    assertSame(sink.getHostCard(), expectedHost);
+                }
+                long bytes = bean.getThreadAllocatedBytes(thread) - before;
+                assertTrue(bytes >= 0);
+                BYTES.put(scenario, bytes);
+            } finally {
+                copier.release();
+            }
+        }
+        assertEquals(BYTES.size(), 3);
+    }
+}

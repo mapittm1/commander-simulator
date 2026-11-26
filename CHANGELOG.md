@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve shared mutable event-payload references and supported container cycles
+  in AI snapshots; retain independent field-owned containers and original/sibling
+  worlds. Remove newly memoized payload containers after copy failures without
+  claiming full native snapshot transactions.
+- Correct 22/26 baseline graph failures and 4/5 native prevention-event failures;
+  all 57 self-contained registered cases, retained 16 supplier controls, 13 semantic
+  groups and a fresh source build's 320 card/deck loading cases pass. Preserve raw
+  failures and unchanged assertions; supplied events are not full paid histories.
+- Register 57 `payload_graph` cases and their fixed checksums, keeping every prior
+  group and original 1,271/90. Fresh 3,679 source / 4,879 native / 3,722 main packaged
+  validation, final live checks, activation and complete card/rules coverage remain
+  pending. Original 1,271 / 90 seconds still times out at 90.016s without a
+  completed report.
+
 - Preserve an unpromoted ability-snapshot supplier optimization and sixteen
   baseline/prototype contracts for evaluation order, failures, mutable containers,
   card mapping and native rollback. Fixed probes save about 120 bytes per snapshot
