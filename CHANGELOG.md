@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reproduce a B'Elanna Torres rules error: Abundance puts the revealed artifact
+  into hand without drawing, but the original definition awards zero counters.
+  Preserve the 9/10 baseline and a rejected memory-clearing proposal that fails
+  the doubled-draw control. The final supplied-definition proposal passes 10/10
+  identical scenarios, including public-top reveal choices and draw replacements.
+- Repair the card definition using existing StoreSVar/Count mechanics to compare
+  the activating player's actual draw count before and after the conditional draw.
+  Update display wording and register ten regressions for a fresh build: 4,963
+  native and 3,806 main packaged cases. Retain original 1,271/90 unchanged.
+  Preserve raw sources/results in engine/belanna_oracle_evidence.json. Fresh build,
+  packaged validation and activation remain pending; selected runtime is unchanged.
+
 - Bound catalog metadata, downloads, decompression, record size, nesting, record
   count and cooperative operation duration. Stream JSON arrays and JSON Lines
   without rewinding decompression; keep shared lexical depth state across chunks.

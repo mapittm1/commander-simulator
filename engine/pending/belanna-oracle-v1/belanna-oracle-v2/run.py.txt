@@ -1,0 +1,60 @@
+"""Bounded native Oracle regression on a sealed runtime; no engine overlay."""
+from pathlib import Path
+import importlib,json,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+W=Path(__file__).resolve().parent
+B=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+UP=B/'source/forge-gui-desktop/target/test-classes'
+TARGET='forge.ai.CommanderBelannaOracleTest'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+settings=read_settings(B/'engine-config.json');lock=settings.verify();assert lock['native_tests']['total']==4953
+recipe=load(ROOT/'engine/sticker_recipe.json');dep=ROOT/recipe['packaged_testng']['path'];assert file_hash(dep)==recipe['packaged_testng']['sha256']
+jar=settings.home/lock['jar_name'];sources=[W/'CommanderBelannaOracleTest.java']
+assert sys.argv[1:] in (['compile'],['run'],['worker'])
+mode=sys.argv[1]
+if mode=='compile':
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()=='4fd0d4383c866d15c06d838c20f3c610489469f7'
+ classes=W/'classes';classes.mkdir()
+ command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',';'.join(map(str,(jar,UP,dep))),'-d',str(classes),*map(str,sources)]
+ save(W/'compile-inputs.json',{'command':command,'jar_sha256':file_hash(jar),'source_sha256':file_hash(sources[0]),'ci':{'id':45832826090,'status':'completed','conclusion':'success','head_sha':'4fd0d4383c866d15c06d838c20f3c610489469f7'}})
+ result=run_bounded(command,ROOT,W/'compile.log',ProcessLimits(90,environment=_environment(W)));save(W/'compile-process.json',result);print(result,flush=True)
+ assert result['status']=='finished' and result['returncode']==0
+ save(W/'compiled-inputs.json',{p.relative_to(W).as_posix():file_hash(p) for p in [*sources,*classes.rglob('*.class'),Path(__file__)]})
+ raise SystemExit
+
+def verify():
+ assert all(file_hash(W/n)==h for n,h in load(W/'compiled-inputs.json').items())
+ assert load(W/'upstream-inputs.json')=={p.relative_to(UP).as_posix():file_hash(p) for p in UP.rglob('*') if p.is_file()}
+if mode=='run':
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ save(W/'upstream-inputs.json',{p.relative_to(UP).as_posix():file_hash(p) for p in UP.rglob('*') if p.is_file()});verify()
+ with _engine_profile(settings,W):
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'worker'],settings.home,W/'native.log',ProcessLimits(90,log_bytes=131072,environment=_environment(W)))
+ save(W/'process.json',result);verify();print(json.dumps({'process':result,'outcome':load(W/'outcome.json') if (W/'outcome.json').exists() else None}),flush=True)
+ assert result['status']=='finished' and result['returncode']==0
+ raise SystemExit
+verify();require_bridge();java=importlib.import_module('jpype')
+java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(jar,W/'classes',UP,dep))),convertStrings=True)
+runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+origins={}
+for name in tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.game.ability.effects.SurveilEffect','forge.game.ability.effects.PeekAndRevealEffect','forge.game.ability.effects.DrawEffect','forge.game.ability.effects.PutCounterEffect'))):
+ origin=packaged_rules.class_origin(java,name);assert origin.samefile(jar),name;origins[name]=str(origin)
+assert packaged_rules.class_origin(java,TARGET).samefile(W/'classes')
+assert packaged_rules.class_origin(java,'forge.ai.AITest').samefile(UP)
+runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TARGET).class_]))
+runner.setOutputDirectory(str(W/'reports'));runner.setUseDefaultListeners(True);runner.run()
+counts,methods=packaged_rules.test_results(listener)
+tree=ET.parse(W/'reports/testng-results.xml')
+labels=[(m.find('./params/param/value').text or '').strip() for c in tree.findall('.//class') if c.get('name')==TARGET for m in c.findall('test-method') if m.get('is-config')!='true']
+expected=['artifact','declined','public-declined','public-accepted','nonartifact','stolen-draw','forbidden-draw','doubled-draw','surveil-first']
+result={'counts':counts,'methods':methods,'exact_labels':sorted(labels)==sorted(expected),'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'production_origins':origins,'jar_sha256':file_hash(jar),'report_sha256':file_hash(W/'reports/testng-results.xml'),'scope':'Nine supplied-choice paid native activations; not universal card/AI correctness or a clean registered build.'}
+save(W/'outcome.json',result);java.shutdownJVM();verify()
+assert counts==dict(total=9,passed=9,failed=0,skipped=0) and result['exact_labels']
+assert not result['configuration_failures'] and not result['configuration_skips'] and not result['testng_status']

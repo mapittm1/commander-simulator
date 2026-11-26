@@ -1,5 +1,15 @@
 # Card support and evidence
 
+B'Elanna Torres now has a registered definition repair awaiting a fresh build.
+The original fails one of ten native supplied-choice scenarios: Abundance puts
+an artifact into hand without drawing and wrongly suppresses the two counters.
+The proposed definition compares actual draw-count changes and passes all ten,
+retaining identical parameter membership. A prior proposal's doubled-draw failure
+is preserved. See [raw evidence and scope](../engine/belanna_oracle_evidence.json).
+The expanded registry expects 4,963 native and 3,806 main packaged cases; previous
+3,753/4,953 results below belong to the earlier elimination candidate. No runtime
+activation or original 1,271-case / 90-second pass is claimed.
+
 The November 26 Oracle refresh retains 39,412 catalog records and 32,643 marked
 Commander-legal identities. Both selected and candidate archives match scripts
 for 32,636; the remaining seven are non-starting meld results. No legal identity

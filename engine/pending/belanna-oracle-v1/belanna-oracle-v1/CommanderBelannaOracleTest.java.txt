@@ -1,0 +1,125 @@
+package forge.ai;
+
+import forge.deck.Deck;
+import forge.game.*;
+import forge.game.ability.ApiType;
+import forge.game.card.*;
+import forge.game.phase.PhaseType;
+import forge.game.player.*;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.*;
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Supplied choices; native paid activation, surveil, reveal, draw and counters. */
+public class CommanderBelannaOracleTest extends AITest {
+    @DataProvider(name = "outcomes")
+    public Object[][] outcomes() {
+        return new Object[][] {
+            {"artifact", true, true, false, null, false, 1, 0},
+            {"declined", true, false, false, null, false, 0, 2},
+            {"public-declined", true, false, true, null, false, 0, 2},
+            {"public-accepted", true, true, true, null, false, 1, 0},
+            {"nonartifact", false, true, false, null, false, 0, 2},
+            {"stolen-draw", true, true, false, "Notion Thief", false, 0, 2},
+            {"forbidden-draw", true, true, false, "Spirit of the Labyrinth", false, 0, 2},
+            {"doubled-draw", true, true, false, "Thought Reflection", false, 2, 0},
+            {"surveil-first", true, true, false, null, true, 1, 0}
+        };
+    }
+
+    @Test(dataProvider = "outcomes")
+    public void paidAbilityUsesOnlyItsOwnReveal(String label, boolean artifact, boolean accept,
+            boolean publicTop, String replacement, boolean binFirst, int draws, int counters) {
+        List<RegisteredPlayer> seats = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            seats.add(RegisteredPlayer.forCommander(new Deck()).setPlayer(new LobbyPlayerAi("seat" + i, null)));
+        }
+        GameRules rules = new GameRules(GameType.Commander);
+        Game game = new Game(seats, rules, new Match(rules, seats, label));
+        game.setNoGUIUser();
+        game.setAge(GameStage.Play);
+        Player actor = game.getPlayers().get(0);
+        Player other = game.getPlayers().get(2);
+        game.getPhaseHandler().devModeSet(PhaseType.MAIN1, actor, 2);
+        for (int i = 0; i < 4; i++) {
+            addCardToZone("Forest", other, ZoneType.Library);
+        }
+        if ("Spirit of the Labyrinth".equals(replacement)) {
+            addCardToZone("Plains", actor, ZoneType.Library);
+            assertEquals(actor.drawCards(1).size(), 1);
+        }
+        if (replacement != null) {
+            addCardToZone(replacement, "Thought Reflection".equals(replacement) ? actor : other, ZoneType.Battlefield);
+        }
+        if (publicTop) {
+            addCardToZone("Lantern of Insight", actor, ZoneType.Battlefield);
+        }
+        Card discarded = binFirst ? addCardToZone("Forest", actor, ZoneType.Library) : null;
+        Card top = addCardToZone(artifact ? "Sol Ring" : "Grizzly Bears", actor, ZoneType.Library);
+        Card next = addCardToZone("Island", actor, ZoneType.Library);
+        addCardToZone("Swamp", actor, ZoneType.Library);
+        for (int i = 0; i < 2; i++) {
+            addCardToZone("Mountain", actor, ZoneType.Battlefield);
+        }
+        Card host = addCardToZone("B'Elanna Torres, Scrapper", actor, ZoneType.Battlefield);
+        int[] prompts = {0};
+        int[] surveils = {0};
+        actor.dangerouslySetController(new PlayerControllerAi(game, actor, actor.getLobbyPlayer()) {
+            @Override
+            public ImmutablePair<CardCollection, CardCollection> arrangeForSurveil(CardCollection cards) {
+                surveils[0]++;
+                assertEquals(cards.size(), 2);
+                assertEquals(cards.get(0).getId(), binFirst ? discarded.getId() : top.getId());
+                CardCollection keep = new CardCollection(cards);
+                CardCollection grave = new CardCollection();
+                if (binFirst) {
+                    keep.remove(discarded);
+                    grave.add(discarded);
+                }
+                return ImmutablePair.of(keep, grave);
+            }
+            @Override
+            public boolean confirmAction(SpellAbility ability, PlayerActionConfirmMode mode,
+                    String message, List<String> options, Card cardToShow, Map<String, Object> params) {
+                if (ability.getHostCard().getId() == host.getId() && ability.getApi() == ApiType.PeekAndReveal) {
+                    prompts[0]++;
+                    assertEquals(cardToShow.getId(), top.getId());
+                    return accept;
+                }
+                return super.confirmAction(ability, mode, message, options, cardToShow, params);
+            }
+        });
+        game.getAction().checkStateEffects(true);
+        game.getTriggerHandler().resetActiveTriggers();
+        host.setSickness(false);
+        int before = actor.getCardsIn(ZoneType.Hand).size();
+        SpellAbility ability = host.getSpellAbilities().stream()
+                .filter(sa -> sa.getApi() == ApiType.Surveil).findFirst().orElseThrow();
+        ability.setActivatingPlayer(actor);
+        game.copyLastState();
+        assertTrue(ComputerUtil.playStack(ability, actor, game), "Native payment must succeed");
+        assertTrue(host.isTapped());
+        assertEquals(actor.getCardsIn(ZoneType.Battlefield).stream()
+                .filter(c -> c.getName().equals("Mountain") && c.isTapped()).count(), 2L);
+        assertEquals(game.getStack().size(), 1);
+        game.getStack().resolveStack();
+        assertEquals(surveils[0], 1);
+        assertEquals(prompts[0], 1);
+        assertEquals(actor.getCardsIn(ZoneType.Hand).size(), before + draws);
+        assertEquals(host.getCounters(CounterEnumType.P1P1), counters);
+        assertTrue(host.getRemembered().isEmpty(), "No reveal/draw memory leaks to a later activation");
+        boolean stolen = "Notion Thief".equals(replacement);
+        assertEquals(other.getCardsIn(ZoneType.Hand).size(), stolen ? 1 : 0);
+        ZoneType topZone = draws > 0 ? ZoneType.Hand : ZoneType.Library;
+        assertEquals(game.getZoneOf(game.getCardState(top)).getZoneType(), topZone);
+        if (binFirst) {
+            assertEquals(game.getZoneOf(game.getCardState(discarded)).getZoneType(), ZoneType.Graveyard);
+        }
+        assertEquals(game.getZoneOf(game.getCardState(next)).getZoneType(), draws == 2 ? ZoneType.Hand : ZoneType.Library);
+        assertTrue(game.getStack().isEmpty());
+    }
+}

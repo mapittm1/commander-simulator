@@ -56,8 +56,12 @@ Only two records changed among the explicitly compared Oracle/game fields:
 - **B'Elanna Torres, Scrapper** now explicitly conditions drawing on an artifact
   having been revealed this way. The candidate definition remembers revealed
   cards and conditions drawing on a remembered artifact, but retains old display
-  wording. Optional reveal, draw replacement and counter outcomes need interaction
-  validation before claiming conformance to the updated text.
+  wording. Subsequent native controls reproduce an Abundance failure: putting
+  the revealed card into hand is mistaken for drawing. A registered definition
+  repair uses actual draw-count changes; ten supplied-definition scenarios pass,
+  while the unchanged baseline passes nine and fails that case. See
+  [the failure and proposed repair](../engine/belanna_oracle_evidence.json).
+  Fresh build validation and activation remain pending.
 
 The comparison covers identity, name, mana cost/value, types, Oracle text,
 colors/identity/indicator, power/toughness, loyalty, defense, keywords, layout,

@@ -30,6 +30,12 @@ The backend targets Commander rules through shared systems for mana, costs,
 triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete.
 
+A new B'Elanna Torres definition repair distinguishes drawing from putting a card
+into hand. Ten supplied-choice native scenarios pass with the proposed definition;
+the unchanged baseline fails the Abundance case. The patch and ten regressions
+are registered for a fresh engine build, which has not yet been validated or
+activated. See [failure and repair evidence](engine/belanna_oracle_evidence.json).
+
 The reviewed candidate fixes remembered-card history and multiplayer elimination
 valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass
 2,525 main packaged cases outside resolution, 405 separate packaged cases,
@@ -48,7 +54,7 @@ retained semantic checks, but both still fail that full-game completion test.
 They remain unregistered and unpromoted; [all reports](engine/query_guard_evidence.json)
 are preserved. Earlier tested performance shortcuts also remain excluded.
 
-The original 1,271-case / 90-second gate, full 3,796-case main packaged gate,
+The original 1,271-case / 90-second gate, full main packaged gate (expanded from 3,796 to 3,806 cases),
 broader full-game validation and candidate activation remain open. The selected
 runtime is unchanged. Historical catalog construction covers 32,636 starting
 identities; seven meld results lack standalone scripts. Construction and finite
