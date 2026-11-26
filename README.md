@@ -43,8 +43,13 @@ Earlier catalog construction succeeds for 32,636 identities; seven meld results
 are explicitly unavailable as standalone scripts. Construction and finite tests
 do not prove universal card/rules correctness or optimal play.
 
+Three complete legal fixture games also pass the existing commander-tax recast,
+Goreclaw attack-trigger and commander-damage loss witnesses. The decks contain
+one commander plus 99 Forests; [full-game evidence](engine/player_elimination_fullgame_evidence.json)
+does not establish broad strategy or card coverage.
+
 The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
-main packaged gate, full-game validation and candidate activation remain open.
+main packaged gate, broader full-game validation and candidate activation remain open.
 The selected runtime is unchanged. Tested performance shortcuts remain excluded.
 A fresh 85-case allocation diagnostic passes and identifies collection/view work
 in game copies for further investigation; [profile evidence](engine/allocation_profile_evidence.json)

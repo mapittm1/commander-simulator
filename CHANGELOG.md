@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate three complete legal basic-land Commander games on the 4,953-case
+  candidate using unchanged seeds 42, 0 and 4096. Recompute explicit native-log
+  witnesses for commander-tax recasts, Goreclaw attack triggers and commander-
+  damage loss with positive life; all pass. Preserve exact decks, admission data,
+  logs, results and checker evidence. Catalog and selected configuration remain
+  byte-identical. Rich-deck gameplay, original 1,271/90 and activation remain open.
+
 - Preserve the unpromoted single-source native-filter experiment and 24 new
   controlled-state regressions. Both variants pass all 63 filter controls; the
   candidate retains 297 semantic controls and all six 85-case trials pass.

@@ -1,5 +1,16 @@
 # Card support and evidence
 
+Three **complete legal fixture games** now pass on the 4,953-case candidate,
+using the existing fixed seeds 42, 0 and 4096. Recomputing the checker from raw
+logs confirms commander-tax recasts, Goreclaw attack triggers and commander-
+damage losses while life remains positive. All three checks pass in each game.
+The exact decks, admission snapshots, logs, results and witnesses are
+[preserved](../engine/player_elimination_fullgame_evidence.json). These decks use
+one commander plus 99 Forests. This proves those limited full-game witnesses,
+not the exact 21-point boundary, rich-deck strategy, full card interactions or
+universal rules correctness. Catalog and default configuration are byte-identical;
+the original 1,271/90, broader full-game validation and activation remain open.
+
 The follow-up exact-native filtering proposal is **not promoted**. All 63
 filter controls pass on both variants, including 24 new snapshot-mutation,
 exception, composition and subclass controls. The candidate also passes 297
@@ -8,7 +19,7 @@ case/parameter membership; median test/worker time reductions are 8.0%/5.5%,
 below the predeclared 10% requirement for each. Preserve the
 [unused patch, pending fixture and all reports](../engine/native_filter_evidence.json).
 No production or registry changes, original 1,271/90 retry or activation.
-Full-game validation remains a separate next step; this experiment does not prove it.
+Full-game validation is separate; the filter experiment itself does not prove it.
 
 A fresh allocation/CPU profile of 85 unchanged diagnostic cases passes with
 exact native method/parameter identities on the 4,953-case candidate. Sampled
@@ -28,7 +39,7 @@ byte-identical configuration restoration. Fresh broader suites pass 6,276 gamepl
 and 320 serialization/loading cases, retaining all 6,241 previous gameplay cases
 and adding 35 later controls. Existing reviewed test policies are restored exactly.
 See [raw runtime evidence](../engine/player_elimination_runtime_evidence.json).
-The original 1,271/90, full 3,796 packaged gate, full legal games, activation and
+The original 1,271/90, full 3,796 packaged gate, broader full games, activation and
 universal card/rules correctness remain open. No new catalog-construction claim.
 
 A registered one-source evaluator fix recognizes native participant eliminations.

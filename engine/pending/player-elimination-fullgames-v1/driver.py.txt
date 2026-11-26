@@ -1,0 +1,43 @@
+"""Run existing full-game rules witnesses on the candidate, without selecting it globally."""
+from pathlib import Path
+from contextlib import closing
+import json,sqlite3,subprocess,sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.engine_conformance import run_rules_conformance,CHECK_IDS,WITNESS_SEEDS
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent;RUN=WORK/'player-elimination-fullgames-v1'
+BUILD=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ assert all(file_hash(ROOT/n)==h for n,h in load(RUN/'root-inputs.json').items())
+ assert file_hash(ROOT/'data/cards.sqlite3')==load(RUN/'selection.json')['catalog_sha256']
+ assert file_hash(ROOT/'config/engine_config.json')==load(RUN/'selection.json')['selected_config_sha256']
+ assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+if not sys.argv[1:]:
+ assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()=='2466969026b63bd03ee4100789b7e84522918018'
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip()
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ paths=subprocess.check_output(['git','ls-files','-z'],cwd=ROOT).decode().split('\0')
+ save(RUN/'root-inputs.json',{p:file_hash(ROOT/p) for p in paths if p})
+ save(RUN/'source-ci.json',{'id':45816915028,'status':'completed','conclusion':'success','head_sha':'2466969026b63bd03ee4100789b7e84522918018'})
+ save(RUN/'selection.json',{'build_id':BUILD.name,'catalog_sha256':file_hash(ROOT/'data/cards.sqlite3'),'selected_config_sha256':file_hash(ROOT/'config/engine_config.json'),'seeds':list(WITNESS_SEEDS),'checks':list(CHECK_IDS),'game_clock_seconds':60,'normal_game_outer_allowance_seconds':90,'wrapper_seconds':420,'processors':2,'max_heap_bytes':2147483648,'original1271_gate_attempted':False,'scope':'Three existing fixed legal fixture games and explicit rules witnesses; not universal card coverage or candidate activation.'})
+ verify()
+ process=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'worker.log',ProcessLimits(420,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify()
+ print(json.dumps({'process':process,'outcome':load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else None}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0
+ raise SystemExit
+assert sys.argv[1:]==['--worker'];verify()
+settings=read_settings(BUILD/'engine-config.json');engine=settings.verify();assert engine['native_tests']['total']==4953
+with closing(sqlite3.connect((ROOT/'data/cards.sqlite3').as_uri()+'?mode=ro',uri=True)) as source:
+ source.row_factory=sqlite3.Row
+ report=run_rules_conformance(source,settings)
+save(RUN/'rules-conformance.json',report)
+assert report['seeds']==list(WITNESS_SEEDS)
+assert len(report['witness_runs'])==3 and len(report['checks'])==3
+outcome={'status':report['status'],'build_id':BUILD.name,'run_id':report['run_id'],'witness_runs':[r['run_id'] for r in report['witness_runs']],'checks':[{'id':c['id'],'status':c['status'],'evidence_rows':len(c.get('evidence',[]))} for c in report['checks']],'seeds':report['seeds'],'default_config_unchanged':True,'original1271_gate_attempted':False,'scope':'Full legal basic-land Commander fixture games with three explicit existing rules witnesses only. Not all-card interaction correctness, benchmark deck diversity, human-like AI quality or runtime activation.'}
+save(RUN/'outcome.json',outcome);verify()
+assert report['status']=='passed' and all(c['status']=='passed' and c.get('evidence') for c in report['checks'])
