@@ -41,15 +41,26 @@ reviewed inputs. All 291 registered plus nine priority fixtures match; only the
 intended static-ability class family changes, and 173 protected resolution/helper
 classfiles stay byte-identical.
 
-Independent packaged checks pass the first 912 cases. The remaining 1,569 native
-invocations also pass, but their integration gate fails because it incorrectly
-requires unique method names: 22 parameterized cases have 14 method names.
-Receipts now retain parameters and validation uses method-and-argument identities,
-rejecting exact duplicate cases. Offline regression tests pass; corrected native
-integration validation remains pending. The full **3,752 main packaged** gate,
-broader/live checks and activation remain open. Two misencoded comment lines in
-the experimental source were repaired; all three emitted classfiles are identical
-to the tested prototype. See [runtime evidence](engine/ignore_effect_runtime_evidence.json).
+Independent packaged checks now pass all **2,481 non-resolution main cases**
+and another **405 casting, untap and Battle cases**, with exact native
+method/parameter counters and packaged production origins audited. The repaired
+collector also passes a separate 22-case native smoke test: all 22 argument-aware
+identities survive despite sharing 14 method names. Earlier failed validator
+reports remain preserved.
+
+The broader **6,232 gameplay** and **320 card/deck-loading** cases pass with exact
+case/parameter membership and no skips. Reviewed temporary test policies are
+restored afterward; production inputs remain unchanged. Candidate health is ready,
+and catalog construction passes for **32,636 of 32,643 checked identities**; seven
+meld results remain explicitly reported as unavailable standalone scripts.
+Construction does not establish ability or interaction correctness.
+
+The original **1,271 cases / 90 seconds** gate remains unresolved, so the full
+**3,752 main packaged** gate, full-game validation and activation remain open.
+Its cases, assertions and time limit are unchanged. Two misencoded comment lines
+in the experimental source were repaired; all three emitted classfiles are
+identical to the tested prototype. See [current runtime evidence](engine/parameter_runtime_evidence.json)
+and [earlier validator evidence](engine/ignore_effect_runtime_evidence.json).
 
 Supplied boards, controlled choices and cleanup hooks do not establish complete
 legal histories, default AI strategy or all-card correctness. The selected

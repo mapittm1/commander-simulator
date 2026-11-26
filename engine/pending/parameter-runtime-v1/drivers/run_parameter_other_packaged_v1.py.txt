@@ -1,0 +1,77 @@
+"""Run all fixed packaged groups, retaining the original resolution workload and limit."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import unittest
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import read_settings
+from commander.engine.forge_engine import _environment
+WORK=Path(__file__).resolve().parent
+CANDIDATE=WORK/'ignore-effect-candidate-v1'
+RUN=WORK/'parameter-other-packaged-v1'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+EPOCH=WORK/'parameter-case-epoch-v1'
+frozen=load(EPOCH/'source-frozen-inputs.json')
+worker=sys.argv[1:]==['--worker']
+assert sys.argv[1:] in ([],['--worker'])
+assert all(sha(ROOT/n)==h for n,h in frozen.items() if not(worker and n=='config/engine_config.json'))
+assert load(CANDIDATE/'build-audit.json')['native_counts']['total']==4909
+if worker:
+    assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'candidate-config.json').read_bytes()
+    os.environ['COMMANDER_ENGINE_INTEGRATION']='1'
+    os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe'
+    from tests.integration.test_free_casting_integration import FreeCastingIntegrationTests
+    from tests.integration.test_untap_integration import UntapIntegrationTests
+    from tests.integration.test_battle_combat_integration import BattleCombatIntegrationTests
+    from tests.support.draw_ending_partitions import EXPECTED_COUNTS
+    assert EXPECTED_COUNTS['resolution']==1271 and EXPECTED_COUNTS['cast_events']==1380
+    assert sum(EXPECTED_COUNTS.values())==3752
+    suite=unittest.TestSuite([
+        FreeCastingIntegrationTests('test_packaged_free_casting_rules'),
+        UntapIntegrationTests('test_packaged_untap_rules'),
+        BattleCombatIntegrationTests('test_packaged_battle_combat_rules')])
+    result=unittest.TextTestRunner(stream=sys.stdout,verbosity=2).run(suite)
+    outcome={'successful':result.wasSuccessful(),'tests_run':result.testsRun,
+        'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),
+        'scope':'Separate65 free-casting /194 untap /146 Battle packaged cases. Full3722 remains incomplete at original1271/90.'}
+    save(RUN/'outcome.json',outcome)
+    assert result.wasSuccessful() and result.testsRun==3 and not result.skipped
+else:
+    assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+    assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(EPOCH/'source-ci.json')['head_sha']
+    RUN.mkdir()
+    for n in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):
+        shutil.copyfile(EPOCH/n,RUN/n)
+    (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    active=(ROOT/'config/engine_config.json').read_bytes()
+    settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json')
+    selector=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode('utf-8')
+    (RUN/'active-config-before.json').write_bytes(active)
+    (RUN/'candidate-config.json').write_bytes(selector)
+    existing={p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir()}
+    result=None
+    try:
+        (ROOT/'config/engine_config.json').write_bytes(selector)
+        env=_environment(RUN)
+        env['PYTHONUTF8']='1'
+        result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'output.log',
+            ProcessLimits(420,log_bytes=65536,environment=env))
+    finally:
+        assert (ROOT/'config/engine_config.json').read_bytes()==selector, 'Configuration changed; backup preserved'
+        (ROOT/'config/engine_config.json').write_bytes(active)
+        assert all(sha(ROOT/n)==h for n,h in frozen.items())
+        assert sha(Path(__file__))==sha(RUN/'driver.py.txt')
+        if result is not None:
+            record={'process':result,'new_run_directories':sorted(p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir() and p.name not in existing),
+                'configuration_restored':True,'worker_limit_seconds':90,'wrapper_limit_seconds':420,'log_sha256':sha(RUN/'output.log')}
+            save(RUN/'process.json',record)
+            print(json.dumps(record),flush=True)
+    assert result['status']=='finished' and result['returncode']==0,result

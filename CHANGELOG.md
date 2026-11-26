@@ -6,6 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the repaired parameter-aware collector through a real 22-case native
+  invocation, all 2,481 non-resolution main packaged cases and 405 separate
+  casting/untap/Battle cases. Audit exact native method/argument membership and
+  packaged production origins; retain the earlier failed validator evidence.
+- Pass all 6,232 broader gameplay and 320 card/deck-loading cases with no skips,
+  restoring reviewed temporary test policies and preserving production inputs.
+  Candidate health is ready; catalog construction passes for 32,636 identities,
+  with seven nonstarting meld results explicitly unavailable as standalone scripts.
+  Preserve raw reports, receipts and catalog rows in
+  engine/parameter_runtime_evidence.json. These finite checks do not establish
+  universal card correctness. Original 1,271/90, full 3,752 packaged, full games
+  and candidate activation remain open; the selected runtime stays unchanged.
+
 - Verify all 3,709 source and 4,909 native cases with exact retained methods and
   parameters, matching 2,168 production / 180 selected-test / 350 card inputs,
   291 registered plus nine priority fixtures, and unchanged 173 protected
