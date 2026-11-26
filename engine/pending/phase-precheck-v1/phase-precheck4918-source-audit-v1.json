@@ -1,0 +1,22 @@
+{
+  "source_head": "56ba3cf012997f541465e7815b65f39ac9ccb449",
+  "baseline_build": "27bb401949a2401ab440509f215df73e",
+  "sha256": {
+    "forge-game/src/main/java/forge/game/card/Card.java": "bcf9b46ebbf475334177cf149cdafb03ff9c1714d196b11b0bac0f1c717de5e0",
+    "forge-game/src/main/java/forge/game/card/CardState.java": "4750e6df1bbce1f570e5f64940ebbc89f6c73121c62f9f167c57b4be31084730",
+    "forge-game/src/main/java/forge/game/card/CardFactoryUtil.java": "b1efb855f131c27beaddd17a49308e5ab153256bea38dd9b541c63a62557df94",
+    "forge-game/src/main/java/forge/game/replacement/ReplacementHandler.java": "74ebd387affb6e5bdaf89f660511e0ef6121e49d2e9ea11cfea22ea25f4042ab",
+    "forge-game/src/main/java/forge/game/replacement/ReplaceBeginPhase.java": "59820e084621f6c3fd2e1813e5504282cf5232f43e71ea7877f683d95a8e3c5a",
+    "forge-game/src/main/java/forge/game/phase/PhaseHandler.java": "63591a8d42c576cae989b6bead4001193d8be06750f7fa342f71dd5a24afc890"
+  },
+  "audit": [
+    "Card.updateReplacementEffects supplies trait/keyword effects and live shield DamageDone/Destroy, stun Untap, finality Moved effects.",
+    "CardState.LandTraitChanges supplies planeswalker loyalty, battle defense and saga lore ETB counter replacements; these are Moved effects.",
+    "CardFactoryUtil Adventure/Omen/Vengeance replacement builders use Moved, not BeginPhase.",
+    "CardState.hasNoAdditionalTraits excludes unknown CardState/Card/KeywordCollection subclasses, nonempty keyword/trait sources and split originals; opaque FSnapshotTable versions and nonnative effective types preserve gathering.",
+    "ReplacementHandler retains existing exact-card admission, zone checks, effect applicability and historical/LKI paths.",
+    "ReplaceBeginPhase checks ValidPlayer and Phase; PhaseHandler supplies Affected player and Phase. Skip True returns Skipped.",
+    "No caches, keyword roles, type/counter replacement paths or event modes besides BeginPhase were changed."
+  ],
+  "scope": "Source inspection plus supplied-board native controls, not an exhaustive proof of all engine or Magic rules."
+}

@@ -1,5 +1,15 @@
 # Card support and evidence
 
+A phase-only replacement precheck remains **unpromoted**. Both variants pass 14
+native controls covering Eon Hub, Solitary Confinement, live trait changes, copied
+games and unknown callbacks. The candidate retains 297 existing interaction cases.
+All 510 fixed diagnostic invocations pass, but median runner/worker reductions
+of 0.42% / -0.73% miss the predeclared 10% criterion.
+The original 1,271/90 gate was not attempted. Source audit, unused patch and every
+trial are preserved in [evidence](../engine/phase_precheck_evidence.json).
+These supplied-board controls do not prove complete legal turns or full rules
+coverage. Runtime, recipe and registered fixtures are unchanged.
+
 A focused damage/destroy precheck also remains **unpromoted**. Both baseline and
 prototype pass 16 native resolution controls; the prototype passes 297 retained
 replacement/keyword/damage cases, with its new negative path separately observed.

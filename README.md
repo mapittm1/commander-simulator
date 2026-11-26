@@ -45,7 +45,7 @@ unpromoted after missing their predeclared improvement criteria.
 
 See [coverage details](docs/CARD_COVERAGE.md),
 [validation evidence](engine/remembered_history_runtime_evidence.json),
-[performance diagnostics](engine/damage_precheck_evidence.json) and the
+[performance diagnostics](engine/phase_precheck_evidence.json) and the
 [changelog](CHANGELOG.md).
 
 ## Run it now

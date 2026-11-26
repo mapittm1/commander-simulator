@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate 14 paired native phase replacement controls: Eon Hub, Solitary
+  Confinement, live trait changes, repeated game copies and unknown callbacks.
+  Retain all 297 existing replacement/keyword/damage cases.
+- Reject the phase-only precheck for promotion after all 510 fixed diagnostic
+  invocations pass: median runner/worker reductions 0.42% / -0.73%
+  miss the predeclared 10% criterion. Preserve the source audit, unused patch and
+  every trial in engine/phase_precheck_evidence.json. Runtime, recipe and original
+  1,271/90 remain unchanged; full-game and universal rules support remain open.
+
 - Reject a narrowly guarded damage/destroy precheck after its fixed six-run
   diagnostic protocol: all 510 invocations pass, but median runner time rises
   0.94% and worker time falls only 0.38%, below the predeclared 10% criterion.

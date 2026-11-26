@@ -1,0 +1,45 @@
+"""Preserve the phase-only candidate and every fixed diagnostic result."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'])
+epoch=WORK/'phase-precheck4918-epoch-v1';ci=load(epoch/'source-ci.json')
+assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert all(sha(ROOT/n)==h for n,h in load(epoch/'source-frozen-inputs.json').items())
+analysis=load(WORK/'phase-precheck4918-diagnostic85-analysis-v1.json')
+assert analysis['all_510_diagnostic_invocations_passed']
+assert not analysis['predeclared_ten_percent_criterion_met'], 'Successful diagnostic requires further full semantic validation before this rejection publisher is used.'
+for mode in ('baseline','prototype'):
+ assert load(WORK/('phase-precheck4918-contracts-'+mode+'-v1')/'outcome.json')['counts']==dict(total=14,passed=14,failed=0,skipped=0)
+assert load(WORK/'phase-precheck4918-retained-prototype-v1/outcome.json')['counts']==dict(total=297,passed=297,failed=0,skipped=0)
+index=ROOT/'engine/phase_precheck_evidence.json';dest=ROOT/'engine/pending/phase-precheck-v1'
+assert not index.exists() and not dest.exists();dest.mkdir();files={}
+def preserve(source,relative):
+ target=dest/relative;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists()
+ target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target);assert sha(source)==sha(target)
+ files[target.relative_to(ROOT).as_posix()]=sha(target)
+for item in sorted(WORK.glob('phase-precheck4918-*')):
+ if item.is_file():preserve(item,item.name);continue
+ for p in sorted(item.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.java'):preserve(p,item.name+'/'+p.name+('.txt' if p.suffix=='.java' else ''))
+ for p in item.glob('reports/testng-results.xml'):preserve(p,item.name+'/reports/testng-results.xml')
+ for folder in ('baseline','source'):
+  for p in (item/folder).rglob('*.java'):preserve(p,item.name+'/'+p.relative_to(item).as_posix()+'.txt')
+for p in sorted(WORK.glob('*phase_precheck4918*.py')):preserve(p,'drivers/'+p.name+'.txt')
+preserve(WORK/'phase-precheck4918-prototype-v1/unpromoted.patch','unpromoted.patch')
+record={'status':'not_promoted_predeclared_improvement_criterion_unmet','source_ci':ci,'native_baseline':'27bb401949a2401ab440509f215df73e','paired_native_resolution_cases_each_variant':14,'retained_native_cases':297,'fast_path_activation_observed':True,'analysis':analysis,'registered':False,'runtime_changed':False,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'scope':'Finite supplied-board phase controls and fixed diagnostic selections only. Not full turns/games, all native cases, original1271/90 or universal card/rules correctness. Phase-only shortcut rejected; other event paths remain unchanged.','files':files}
+save(index,record)
+for n,h in files.items():assert sha(ROOT/n)==h
+p=ROOT/'README.md';text=p.read_text(encoding='utf-8');assert text.count('engine/damage_precheck_evidence.json')==1
+p.write_text(text.replace('engine/damage_precheck_evidence.json','engine/phase_precheck_evidence.json'),encoding='utf-8',newline='\n')
+reductions=analysis['median_reduction_percent']
+runner=reductions['runner_seconds'];worker=reductions['worker_seconds']
+entry=f"A phase-only replacement precheck remains **unpromoted**. Both variants pass 14\nnative controls covering Eon Hub, Solitary Confinement, live trait changes, copied\ngames and unknown callbacks. The candidate retains 297 existing interaction cases.\nAll 510 fixed diagnostic invocations pass, but median runner/worker reductions\nof {runner:.2f}% / {worker:.2f}% miss the predeclared 10% criterion.\nThe original 1,271/90 gate was not attempted. Source audit, unused patch and every\ntrial are preserved in [evidence](../engine/phase_precheck_evidence.json).\nThese supplied-board controls do not prove complete legal turns or full rules\ncoverage. Runtime, recipe and registered fixtures are unchanged.\n\n"
+p=ROOT/'docs/CARD_COVERAGE.md';text=p.read_text(encoding='utf-8');marker='# Card support and evidence\n\n';assert text.count(marker)==1;p.write_text(text.replace(marker,marker+entry,1),encoding='utf-8',newline='\n')
+p=ROOT/'CHANGELOG.md';text=p.read_text(encoding='utf-8');marker='## Unreleased\n\n';assert text.count(marker)==1
+entry=f"- Validate 14 paired native phase replacement controls: Eon Hub, Solitary\n  Confinement, live trait changes, repeated game copies and unknown callbacks.\n  Retain all 297 existing replacement/keyword/damage cases.\n- Reject the phase-only precheck for promotion after all 510 fixed diagnostic\n  invocations pass: median runner/worker reductions {runner:.2f}% / {worker:.2f}%\n  miss the predeclared 10% criterion. Preserve the source audit, unused patch and\n  every trial in engine/phase_precheck_evidence.json. Runtime, recipe and original\n  1,271/90 remain unchanged; full-game and universal rules support remain open.\n\n"
+p.write_text(text.replace(marker,marker+entry,1),encoding='utf-8',newline='\n')
+p=ROOT/'.gitattributes';text=p.read_text(encoding='utf-8');text+='engine/phase_precheck_evidence.json -text whitespace=cr-at-eol\nengine/pending/phase-precheck-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(text,encoding='utf-8',newline='\n')
+print(json.dumps(dict(files=len(files),registered=False,median_reduction_percent=reductions)),flush=True)
