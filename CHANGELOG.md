@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the unselected payload-graph candidate: 4,879 native, 2,451 main
+  non-resolution packaged, 405 other packaged, 6,202 broader gameplay and 320
+  card/deck loading cases pass with retained methods/parameters. Health is ready;
+  catalog construction reports 32,636 successes and seven non-starting meld
+  results. Preserve raw reports and input/class audits; no complete rules claim.
+- Preserve the isolated empty-event-map experiment: 57 payload controls, 16
+  supplier controls, 13 semantic groups and all 3,679 source cases pass. Fixed
+  probes save about 1,200/600 bytes per snapshot with two/one empty maps; no
+  reliable speedup claim. Preserve the incomplete 3,677-case source attempt and
+  restore two omitted original method selectors without altering code/assertions.
+  The unchanged original 1,271/90 resolution workload times out at 90.015s without
+  a completed report. Keep the optimization unpromoted and runtime unchanged.
+  See engine/payload_graph_runtime_evidence.json for bound artifacts.
+
 - Verify all 3,679 source cases with exact retained methods/parameters, no skips
   or configuration failures, and frozen production/test/card inputs.
 - Add the reviewed payload patch to the native builder's fixed path allowlist.

@@ -1,0 +1,43 @@
+"""Preserve completed runtime validation and the failed unchanged timing gate."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+root=Path.cwd(); w=root/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+assert not subprocess.check_output(['git','status','--porcelain'])
+assert load(w/'empty-map-native4879-source3679-v2/outcome.json')['passed']
+assert load(w/'empty-map-native4879-resolution1271-v1/process.json')['status']=='timeout'
+dest=root/'engine/pending/payload-graph-runtime-v1';dest.mkdir()
+artifacts={}
+def copy(p,relative):
+    target=dest/relative
+    assert target.resolve().is_relative_to(dest.resolve()) and not target.exists()
+    target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target)
+    digest=hashlib.sha256(p.read_bytes()).hexdigest()
+    assert hashlib.sha256(target.read_bytes()).hexdigest()==digest
+    artifacts[target.relative_to(root).as_posix()]=digest
+folders=['payload-graph-native-epoch-v1','payload-graph-candidate-v2','payload-graph-front-packaged-v1','payload-graph-remainder-v1','payload-graph-other-packaged-v1','payload-graph-catalog-health-v1','payload-graph-broad-v1','empty-map-native4879-prototype-v1','empty-map-native4879-fixture-v1','empty-map-native4879-probe-batch-v1','empty-map-native4879-semantic-batch-v1','empty-map-native4879-source3679-v1','empty-map-native4879-source3679-v2','empty-map-native4879-resolution1271-v1']
+folders += [p.name for p in w.glob('empty-map-native4879-regression-*-prototype-v1') if p.is_dir()]
+folders += [p.name for p in w.glob('empty-map-native4879-*-baseline-v1') if p.is_dir()]
+folders += [p.name for p in w.glob('empty-map-native4879-*-prototype-v1') if p.is_dir() and (p/'outcome.json').exists()]
+for name in dict.fromkeys(folders):
+    base=w/name;assert base.is_dir()
+    for p in sorted(base.iterdir()):
+        if p.is_file() and p.suffix in ('.json','.txt','.log','.xml'):
+            if p.name in ('root-inputs.json','source-frozen-inputs.json') and name!='payload-graph-native-epoch-v1':continue
+            copy(p,Path(name)/p.name)
+    for p in base.glob('*/testng-results.xml'):copy(p,Path(name)/p.relative_to(base))
+    if name in ('empty-map-native4879-prototype-v1','empty-map-native4879-fixture-v1'):
+        for subtree in ('baseline','source'):
+            for p in (base/subtree).rglob('*.java'):copy(p,Path(name)/(p.relative_to(base).as_posix()+'.txt'))
+for name in ('empty-map-source-selector-correction-v1.json','empty-map-native4879-resolution-preservation-v1.json'):
+    copy(w/name,Path(name))
+for pattern in ('*empty_map_native4879*.py','*payload_graph*packaged*.py','*payload_graph*remainder*.py','*payload_graph*broad*.py','*payload_graph*catalog*.py','audit_build4879_v2.py'):
+    for p in w.glob(pattern):
+        rel=Path('drivers')/(p.name+'.txt')
+        if not (dest/rel).exists():copy(p,rel)
+build=root/load(w/'payload-graph-candidate-v2/candidate-selection.json')['build']
+copy(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',Path('native4879-testng-results.xml'))
+copy(Path(__file__),Path('drivers')/(Path(__file__).name+'.txt'))
+result={'status':'validated_candidates_not_activated','native_build':build.name,'native_cases_passed':4879,'main_packaged_nonresolution_passed':2451,'other_packaged_passed':405,'broader_gameplay_passed':6202,'card_deck_loading_passed':320,'catalog':load(w/'payload-graph-catalog-health-v1/outcome.json'),'empty_map_experiment':{'production_sources_changed':1,'all_selected_semantic_families_passed':13,'source_cases_passed':3679,'incomplete_first_source_run':3677,'source_selector_correction':'Two original method-specific selectors restored; unchanged code, assertions and expected cases.','fixed_allocation_probes':load(w/'empty-map-native4879-probe-batch-v1/outcome.json')['allocation_by_scenario'],'original_resolution_process':load(w/'empty-map-native4879-resolution1271-v1/process.json'),'promoted':False},'limits':'All original cases/assertions and resource limits retained. No completed original1271/90 verdict or full3722 packaged verdict. Catalog construction and finite fixtures do not prove complete card abilities, AI competence, legal full games, security isolation or full rules correctness. Selected runtime unchanged.','artifacts':artifacts}
+(root/'engine/payload_graph_runtime_evidence.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+print('Preserved',len(artifacts),'artifacts; candidates remain unactivated.')

@@ -1,0 +1,29 @@
+"""Prepare the empty-map experiment against the audited graph-corrected native base."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+CANDIDATE=WORK/'payload-graph-candidate-v2'
+load=lambda p:json.loads(p.read_bytes())
+assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['total']==4879
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build']
+old=WORK/'snapshot-empty-enum-map-prototype-v1'
+new=WORK/'empty-map-native4879-prototype-v1'
+fixture=WORK/'empty-map-native4879-fixture-v1'
+relative='forge-game/src/main/java/forge/game/spellability/SpellAbility.java'
+assert file_hash(old/'baseline'/relative)==load(WORK/'source3679-v2/production-inputs.json')[relative]
+assert (old/'baseline'/relative).read_text(encoding='utf-8')==(build/'source'/relative).read_text(encoding='utf-8')
+new.mkdir();fixture.mkdir()
+for folder in ('baseline','source'):shutil.copytree(old/folder,new/folder)
+proposal=load(old/'proposal.json');proposal.update({'baseline_native_build':build.name,'baseline_native_cases':4879,'baseline_production_manifest':'source3679-v2/production-inputs.json','inherited_graph_correction_from_native_jar':True,'scope':'Uncompiled/unrun one-source empty native event-map allocation experiment, rebased onto the audited shared-payload graph correction. All public mutable views, mapped payloads, ordinary/LKI aliases and original1271/90 limits remain required. No performance or correctness claim.'})
+(new/'proposal.json').write_text(json.dumps(proposal,indent=2)+'\n',encoding='utf-8',newline='\n')
+for name in ('CommanderSnapshotAbilitySupplierTest.java','CommanderSnapshotEmptyEnumMapAllocationTest.java'):
+    shutil.copyfile(WORK/'snapshot-empty-enum-map-fixture-v1'/name,fixture/name)
+s=(WORK/'compile_snapshot_empty_enum_map_v1.py').read_text(encoding='utf-8').replace('snapshot-empty-enum-map-prototype-v1','empty-map-native4879-prototype-v1').replace('sacrifice-candidate-v1','payload-graph-candidate-v2').replace('==4822','==4879')
+(WORK/'compile_empty_map_native4879_v1.py').write_text(s,encoding='utf-8',newline='\n')
+s=(WORK/'compile_snapshot_empty_enum_map_fixture_v1.py').read_text(encoding='utf-8').replace('snapshot-empty-enum-map-fixture-v1','empty-map-native4879-fixture-v1').replace('sacrifice-candidate-v1','payload-graph-candidate-v2').replace('==4822','==4879')
+(WORK/'compile_empty_map_native4879_fixture_v1.py').write_text(s,encoding='utf-8',newline='\n')
+print('Prepared one-source empty-map experiment on native4879, with graph fix inherited from its jar. No JVM started.')

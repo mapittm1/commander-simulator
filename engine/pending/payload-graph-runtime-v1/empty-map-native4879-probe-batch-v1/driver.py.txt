@@ -1,0 +1,39 @@
+"""Run fixed map contracts and escaping-allocation probes, one worker at a time."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'empty-map-native4879-probe-batch-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(WORK/'payload-graph-broad-v1/outcome.json')['passed']
+assert load(WORK/'payload-graph-broad-v1/wrapper-process.json')['policies_restored']
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+git=shutil.which('git');assert git
+env=_environment(RUN);env['PATH']=str(Path(git).parent)
+results={}
+for family,count in [('registered',57),('suppliers',16),('allocation',1)]:
+    for mode in ('baseline','prototype'):
+        key=family+'-'+mode
+        process=run_bounded([sys.executable,'-I',str(WORK/'run_empty_map_native4879_probe_v1.py'),mode,family],ROOT,RUN/(key+'.log'),ProcessLimits(420,log_bytes=65536,environment=env))
+        results[key]={'process':process};save(RUN/'progress.json',results)
+        assert process['status']=='finished' and process['returncode']==0,(key,process)
+        outcome=load(WORK/('empty-map-native4879-'+family+'-'+mode+'-v1/outcome.json'))
+        assert outcome['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+        assert outcome['exact_case_and_parameter_counter_matches'] and outcome['class_origins_verified']
+        assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+        assert outcome['actual_processors']==2 and outcome['actual_max_heap_bytes']==2147483648
+        results[key].update({'counts':outcome['counts'],'outcome_sha256':file_hash(WORK/('empty-map-native4879-'+family+'-'+mode+'-v1/outcome.json')),'allocated_bytes_by_scenario':outcome['allocated_bytes_by_scenario']})
+        save(RUN/'progress.json',results);print(json.dumps({'probe':key,'counts':outcome['counts'],'allocation':outcome['allocated_bytes_by_scenario']}),flush=True)
+assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+allocation={}
+for scenario in ('empty_maps','trigger_payload','both_payloads'):
+    baseline=results['allocation-baseline']['allocated_bytes_by_scenario'][scenario]
+    prototype=results['allocation-prototype']['allocated_bytes_by_scenario'][scenario]
+    allocation[scenario]={'baseline_bytes':baseline,'prototype_bytes':prototype,'prototype_minus_baseline_bytes':prototype-baseline,'bytes_saved_per_measured_snapshot':(baseline-prototype)/2000}
+save(RUN/'outcome.json',{'all_passed':True,'results':results,'allocation_by_scenario':allocation,'warmup_snapshots':1000,'measured_snapshots':2000,'scope':'Fixed escaping allocations and exact contracts only; no elapsed-speedup, retained-memory, full1271/90 or full-rules claim.'})

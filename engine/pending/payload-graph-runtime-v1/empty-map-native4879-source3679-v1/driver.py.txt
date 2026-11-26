@@ -1,0 +1,68 @@
+"""Prepare a fresh source tree, preserving all selected card/deck loading cases."""
+from pathlib import Path
+import json
+import shutil
+import subprocess
+import sys
+ROOT = Path.cwd()
+sys.path.insert(0, str(ROOT))
+from commander.engine.forge_config import file_hash
+WORK = ROOT / 'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN = WORK / 'empty-map-native4879-source3679-v1'
+load = lambda p: json.loads(p.read_bytes())
+def save(p, value):
+    p.write_text(json.dumps(value, indent=2)+'\n', encoding='utf-8', newline='\n')
+assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)
+epoch = WORK / 'payload-graph-native-epoch-v1'
+ci = load(epoch/'source-ci.json')
+assert ci['conclusion']=='success'
+assert subprocess.check_output(['git','rev-parse','HEAD'], text=True).strip()==ci['head_sha']
+frozen = load(epoch/'source-frozen-inputs.json')
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+BUILD = ROOT / load(WORK/'payload-graph-candidate-v2/candidate-selection.json')['build']
+BASE = BUILD/'source'
+PROTO = WORK/'empty-map-native4879-prototype-v1'
+changed = load(PROTO/'proposal.json')['changed_sources']
+assert len(changed)==1
+production = load(WORK/'source3679-v2/production-inputs.json')
+assert len(production)==2168
+# Native build sources may use different line endings. Compare semantic bytes,
+# preserve raw baseline hashes separately, and copy the exact prototype bytes.
+canonical = ROOT/'data/development/commander-blocking-history-research/source'
+normalize = lambda p: p.read_bytes().replace(b'\r\n',b'\n')
+assert all(normalize(BASE/n)==normalize(canonical/n) for n in production)
+assert all(file_hash(canonical/n)==h for n,h in production.items())
+assert all(normalize(PROTO/'baseline'/n)==normalize(BASE/n) for n in changed)
+RUN.mkdir()
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+modules = {p.parent.resolve() for p in BASE.glob('*/pom.xml')}
+modules.add(BASE.resolve())
+def ignore(directory, names):
+    return ['target'] if Path(directory).resolve() in modules and 'target' in names else []
+source = RUN/'source'
+shutil.copytree(BASE, source, ignore=ignore)
+assert all(file_hash(source/n)==file_hash(BASE/n) for n in production)
+assert not list(source.glob('*/target'))
+for name in changed:
+    shutil.copyfile(PROTO/'source'/name, source/name)
+actual = [n for n in production if normalize(source/n)!=normalize(BASE/n)]
+assert sorted(actual)==sorted(changed)
+from collections import Counter
+source_selection=load(WORK/'source3679-v2/selection.json')
+source_proof=load(WORK/'source3679-v2/evidence.json')
+assert source_proof['counts']==dict(total=3679,passed=3679,failed=0,skipped=0)
+expected=Counter((r['method'],tuple((v or '').strip() for v in r['parameters'])) for r in source_proof['methods'])
+assert sum(expected.values())==3679
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+selected=load(WORK/'source3679-v2/test-inputs.json')
+assert len(selected)==177
+assert all(file_hash(source/n)==file_hash(BASE/n) for n in selected)
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')}
+assert all(file_hash(BASE/n)==h for n,h in all_tests.items())
+selection={'classes':source_selection['classes'],'expected_cases':3679,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')}
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':selection,'changed_sources':changed,'fresh_target_directories':True,'scope':'All3679 retained source methods/parameters on the one-source empty-map experiment; not original1271/90, a full native build or complete rules proof.'})
+save(RUN/'production-inputs.json',{n:file_hash(source/n) for n in production})
+save(RUN/'selected-test-inputs.json',all_tests)
+save(RUN/'root-inputs.json',frozen);save(RUN/'source-ci.json',ci)
+save(RUN/'preparation.json',{'passed':True,'production_sources':len(production),'changed_sources':1,'all_java_test_sources_frozen':len(all_tests),'retained_selected_test_inputs':len(selected),'expected_cases':3679,'excluded_only_module_build_targets':True})
+print('Fresh source prepared:2168 production files,1 change,all3679 source cases retained.',flush=True)

@@ -1,0 +1,45 @@
+"""Freeze expanded broader membership without dropping any earlier method/parameter."""
+from collections import Counter
+from pathlib import Path
+import hashlib
+import json
+import shutil
+import xml.etree.ElementTree as ET
+ROOT=Path.cwd()
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+PRIOR=WORK/'sacrifice-broad-v1'
+CANDIDATE=WORK/'payload-graph-candidate-v2'
+RUN=WORK/'payload-graph-broad-v1'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['total']==4879
+assert load(PRIOR/'outcome.json')['passed']
+selection=load(PRIOR/'selection.json')
+selection['build']=load(CANDIDATE/'candidate-selection.json')['build']
+selection['source_head']=load(CANDIDATE/'source-ci.json')['head_sha']
+RUN.mkdir()
+for name in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):
+    shutil.copyfile(CANDIDATE/name,RUN/name)
+fixtures={'forge.ai.CommanderPayloadGraphTest','forge.ai.CommanderPayloadMapTest','forge.ai.CommanderPayloadDamageTest'}
+assert not fixtures.intersection(selection['suites']['gameplay']['classes'])
+selection['suites']['gameplay']['classes'].extend(sorted(fixtures))
+selection['suites']['gameplay']['classes'].sort()
+new=Counter()
+report=ROOT/selection['build']/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+for cls in ET.parse(report).findall('.//class'):
+    if cls.get('name') not in fixtures:continue
+    for m in cls.findall('test-method'):
+        assert m.get('status')=='PASS'
+        if m.get('is-config')!='true':new[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+assert sum(new.values())==57
+for suite,count in [('gameplay',6202),('serialization',320)]:
+    expected=load(PRIOR/(suite+'-expected-cases.json'))
+    old=Counter({(r['method'],tuple(r['parameters'])):r['multiplicity'] for r in expected})
+    expanded=old+new if suite=='gameplay' else old
+    assert sum(expanded.values())==count
+    save(RUN/(suite+'-expected-cases.json'),[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expanded.items())])
+    selection['suites'][suite]['expected_cases']=count
+    selection['suites'][suite]['expected_manifest_sha256']=sha(RUN/(suite+'-expected-cases.json'))
+save(RUN/'selection.json',selection)
+print(json.dumps({'counts':[6202,320],'all_prior_cases_and_parameters_retained':True,'added_fixture_cases':57}))

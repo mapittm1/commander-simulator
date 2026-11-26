@@ -1,0 +1,31 @@
+"""Prove the new native baseline retains the complete original resolution workload."""
+from collections import Counter
+from pathlib import Path
+import json
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+current=ROOT/load(WORK/'payload-graph-candidate-v2/candidate-selection.json')['build']
+prior=ROOT/'data/engine-builds/800559d7545b4631b03e1866f6ce7822'
+classes=set(PARTITIONS['resolution']);assert EXPECTED_COUNTS['resolution']==1271
+def cases(build):
+    result=Counter()
+    for cls in ET.parse(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml').findall('.//class'):
+        if cls.get('name') not in classes:continue
+        for m in cls.findall('test-method'):
+            assert m.get('status')=='PASS'
+            if m.get('is-config')!='true':result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return result
+old=cases(prior);new=cases(current);assert old==new and sum(new.values())==1271
+old_classes=prior/'source/forge-gui-desktop/target/test-classes';new_classes=current/'source/forge-gui-desktop/target/test-classes'
+selected={p.relative_to(old_classes).as_posix():file_hash(p) for p in old_classes.rglob('*.class') if any(p.relative_to(old_classes).as_posix()==n.replace('.','/')+'.class' or p.relative_to(old_classes).as_posix().startswith(n.replace('.','/')+'$') for n in classes)}
+assert len(selected)==172
+assert all(file_hash(new_classes/n)==h for n,h in selected.items())
+assert file_hash(old_classes/'forge/ai/AITest.class')==file_hash(new_classes/'forge/ai/AITest.class')
+value={'current_native_build':current.name,'prior_native_build':prior.name,'resolution_cases':1271,'exact_resolution_case_and_parameter_counter_matches':True,'selected_resolution_class_files_byte_identical':len(selected),'aitest_support_byte_identical':True,'original_resolution_worker_seconds':90,'original_resolution_assertions_preserved_by_class_bytes':True}
+(WORK/'empty-map-native4879-resolution-preservation-v1.json').write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps(value),flush=True)

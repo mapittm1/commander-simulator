@@ -1,0 +1,190 @@
+"""Retain the complete expanded broader suites and restore reviewed test policies."""
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+import os
+import threading
+import json
+import shutil
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded, _drain
+from commander.engine.forge_config import file_hash
+from commander.engine.forge_engine import _environment
+from tools import build_sticker_engine as builder
+
+WORK = Path(__file__).resolve().parent
+RUN = WORK / "payload-graph-broad-v1"
+SOURCE = ROOT / "data/development/commander-blocking-history-research/source"
+load = lambda path: json.loads(path.read_bytes())
+SELECTION = load(RUN / "selection.json")
+BUILD = ROOT / SELECTION["build"]
+FROZEN = load(RUN / "source-frozen-inputs.json")
+PRODUCTION = load(WORK / "source3679-v2/production-inputs.json")
+POLICIES = ("engine/patches/star-trek-commandeer-validation.patch",
+            "engine/patches/bauble-ai-classification-validation.patch")
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + "\n", encoding="utf-8", newline="\n")
+
+
+def verify_root():
+    assert all(file_hash(ROOT / n) == h for n, h in FROZEN.items())
+    assert all(file_hash(SOURCE / n) == h for n, h in PRODUCTION.items())
+
+
+def rows(report):
+    tree = ET.parse(report).getroot()
+    methods = []
+    configurations = []
+    for cls in tree.findall(".//class"):
+        for method in cls.findall("test-method"):
+            row = {"method": cls.get("name") + "." + method.get("name"),
+                   "parameters": [(v.text or "").strip() for v in method.findall("./params/param/value")],
+                   "status": method.get("status"), "message": method.findtext("exception/message")}
+            (configurations if method.get("is-config") == "true" else methods).append(row)
+    return {n: int(tree.get(n)) for n in ("total", "passed", "failed", "skipped")}, methods, configurations
+
+
+if sys.argv[1:] == ["--worker"]:
+    verify_root()
+    applied = load(RUN / "applied-test-inputs.json")
+    results = {}
+    for suite, specification in SELECTION["suites"].items():
+        verify_root()
+        assert all(file_hash(SOURCE / n) == h for n, h in applied.items())
+        run = RUN / suite
+        run.mkdir()
+        captured = []
+        original = builder._checked
+        try:
+            builder._checked = lambda command, *args: captured.append(command)
+            builder._compile(SimpleNamespace(jdk=Path("C:/Program Files/Java/jdk-19")),
+                             SOURCE, BUILD / "maven", run)
+        finally:
+            builder._checked = original
+        assert len(captured) == 1
+        command = ["-Dtest=" + ",".join(specification["classes"]) if arg.startswith("-Dtest=")
+                   else "test" if arg == "package" else arg for arg in captured[0]]
+        assert "-Xmx2048m" in command and "-XX:ActiveProcessorCount=2" in command
+        assert "-DforkCount=0" in command and "-Dmaven.compiler.proc=none" in command
+        save(run / "selection.json", {"classes": specification["classes"], "command": command,
+                                      "timeout_seconds": 600, "expected_cases": specification["expected_cases"]})
+        started = time.time_ns()
+        process = run_bounded(command, SOURCE / "forge-gui-desktop", run / "native-rules.log",
+                              ProcessLimits(600, environment=_environment(run)))
+        save(run / "process.json", process)
+        report = SOURCE / "forge-gui-desktop/target/surefire-reports/testng-results.xml"
+        result = {"process": process, "fresh_report": False, "passed": False}
+        if report.exists() and report.stat().st_mtime_ns >= started:
+            shutil.copyfile(report, run / "testng-results.xml")
+            counts, methods, configurations = rows(run / "testng-results.xml")
+            expected = Counter({(r["method"], tuple(r["parameters"])): r["multiplicity"]
+                                for r in load(RUN / (suite + "-expected-cases.json"))})
+            assert file_hash(RUN / (suite + "-expected-cases.json")) == specification["expected_manifest_sha256"]
+            actual = Counter((r["method"], tuple(r["parameters"])) for r in methods)
+            result.update({"fresh_report": True, "counts": counts, "methods": methods,
+                           "configuration_failures_or_skips": [r for r in configurations if r["status"] != "PASS"],
+                           "exact_case_and_parameter_counter_matches": actual == expected,
+                           "report_sha256": file_hash(run / "testng-results.xml")})
+            result["passed"] = (actual == expected and counts == dict(total=specification["expected_cases"],
+                passed=specification["expected_cases"], failed=0, skipped=0)
+                and all(r["status"] == "PASS" for r in methods + configurations)
+                and process["status"] == "finished" and process["returncode"] == 0)
+        save(run / "outcome.json", result)
+        results[suite] = {k: v for k, v in result.items() if k != "methods"}
+        print(json.dumps({"suite": suite, **results[suite]}), flush=True)
+        verify_root()
+        assert all(file_hash(SOURCE / n) == h for n, h in applied.items())
+    save(RUN / "outcome.json", {"suites": results, "passed": all(r["passed"] for r in results.values()),
+                              "scope": "Broader gameplay/card-deck loading only; no original1271/90 or all-card proof."})
+    assert all(r["passed"] for r in results.values()), results
+else:
+    assert sys.argv[1:] == []
+    assert not subprocess.check_output(["git", "status", "--porcelain"], cwd=ROOT)
+    ci = load(RUN / "source-ci.json")
+    assert ci["conclusion"] == "success" and ci["head_sha"] == subprocess.check_output(
+        ["git", "rev-parse", "HEAD"], cwd=ROOT, text=True).strip()
+    verify_root()
+    original_inputs = {}
+    for suite in SELECTION["suites"].values():
+        for cls in suite["classes"]:
+            relative = "forge-gui-desktop/src/test/java/" + cls.replace(".", "/") + ".java"
+            original_inputs[relative] = file_hash(SOURCE / relative)
+    save(RUN / "original-test-inputs.json", original_inputs)
+    originals = {}
+    policy_hashes = {n: file_hash(ROOT / n) for n in POLICIES}
+    for name in POLICIES:
+        for line in (ROOT / name).read_text(encoding="utf-8").splitlines():
+            if line.startswith("+++ b/"):
+                relative = line[len("+++ b/"):]
+                assert relative.startswith("forge-gui-desktop/src/test/java/") and relative.endswith(".java")
+                assert (SOURCE / relative).resolve().is_relative_to(SOURCE.resolve())
+                originals[relative] = (SOURCE / relative).read_bytes()
+    for name, data in originals.items():
+        path = RUN / "policy-originals" / name
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(data)
+    save(RUN / "policy-hashes.json", policy_hashes)
+    (RUN / "driver.py.txt").write_bytes(Path(__file__).read_bytes())
+    started = time.monotonic()
+    result = None
+    try:
+        directory = "--directory=" + SOURCE.relative_to(ROOT).as_posix()
+        for name in POLICIES:
+            subprocess.run(["git", "apply", "--check", directory, str(ROOT / name)], cwd=ROOT, check=True)
+            subprocess.run(["git", "apply", directory, str(ROOT / name)], cwd=ROOT, check=True)
+        for name in originals:
+            path = RUN / "policy-applied" / name
+            path.parent.mkdir(parents=True, exist_ok=True)
+            shutil.copyfile(SOURCE / name, path)
+        save(RUN / "applied-test-inputs.json", {n: file_hash(SOURCE / n) for n in original_inputs})
+        # This fixed maintenance wrapper covers two independently bounded600s suites.
+        # The application helper's600s maximum is retained for every actual JVM run.
+        state = {"status": "finished", "bytes": 0}
+        with (RUN / "worker.log").open("xb") as output:
+            with subprocess.Popen([sys.executable, "-I", str(Path(__file__)), "--worker"],
+                    cwd=ROOT, stdin=subprocess.DEVNULL, stdout=subprocess.PIPE,
+                    stderr=subprocess.STDOUT, shell=False, env=_environment(RUN),
+                    creationflags=subprocess.CREATE_NO_WINDOW if os.name == "nt" else 0) as process:
+                reader = threading.Thread(target=_drain, args=(process, output, state, 65536), daemon=True)
+                reader.start()
+                try:
+                    process.wait(timeout=1800)
+                except subprocess.TimeoutExpired:
+                    state["status"] = "timeout"
+                    if os.name == "nt":
+                        subprocess.run([str(Path(os.environ["SystemRoot"]) / "System32/taskkill.exe"),
+                            "/PID", str(process.pid), "/T", "/F"], stdin=subprocess.DEVNULL,
+                            stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+                            shell=False, timeout=10, check=False,
+                            creationflags=subprocess.CREATE_NO_WINDOW)
+                    else:
+                        process.kill()
+                    process.wait(timeout=10)
+                finally:
+                    if process.poll() is None:
+                        process.kill()
+                        process.wait(timeout=10)
+                    reader.join(timeout=10)
+                assert not reader.is_alive(), "Maintenance log reader did not stop"
+                state["returncode"] = process.returncode
+        result = {**state, "elapsed_seconds": round(time.monotonic() - started, 3)}
+    finally:
+        for name, data in originals.items():
+            (SOURCE / name).write_bytes(data)
+        verify_root()
+        assert all(file_hash(SOURCE / n) == h for n, h in original_inputs.items())
+        for kind in ("test", "card"):
+            assert all(file_hash(SOURCE / n) == h for n, h in load(WORK / ("source3679-v2/" + kind + "-inputs.json")).items())
+        assert file_hash(Path(__file__)) == file_hash(RUN / "driver.py.txt")
+        save(RUN / "wrapper-process.json", {"process": result, "elapsed_seconds": round(time.monotonic() - started, 3),
+             "policies_restored": True, "production_unchanged": True, "suite_limit_seconds": 600,
+             "wrapper_limit_seconds": 1800})
+    assert result["status"] == "finished" and result["returncode"] == 0, result

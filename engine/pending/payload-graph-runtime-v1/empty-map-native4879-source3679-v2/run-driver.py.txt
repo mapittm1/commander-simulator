@@ -1,0 +1,65 @@
+"""Compile the fresh prototype tree and retain all3679 loading test invocations."""
+from collections import Counter
+from pathlib import Path
+from types import SimpleNamespace
+import json
+import shutil
+import sys
+import time
+import xml.etree.ElementTree as ET
+ROOT=Path.cwd()
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.forge_engine import _environment
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'empty-map-native4879-source3679-v2'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+selection=load(RUN/'selection.json')
+SOURCE=Path(selection['source'])
+BUILD=Path(selection['build'])
+def verify():
+    for manifest,base in [('root-inputs.json',ROOT),('production-inputs.json',SOURCE),('selected-test-inputs.json',SOURCE)]:
+        assert all(file_hash(base/n)==h for n,h in load(RUN/manifest).items())
+verify()
+assert load(WORK/'empty-map-native4879-semantic-batch-v1/outcome.json')['all_passed']
+assert not list(SOURCE.glob('*/target'))
+(RUN/'run-driver.py.txt').write_bytes(Path(__file__).read_bytes())
+captured=[]
+original=builder._checked
+try:
+    builder._checked=lambda command,*args:captured.append(command)
+    builder._compile(SimpleNamespace(jdk=Path('C:/Program Files/Java/jdk-19')),SOURCE,BUILD/'maven',RUN)
+finally:
+    builder._checked=original
+assert len(captured)==1
+suite=selection['suite']
+command=['-Dtest='+','.join(suite['classes']) if a.startswith('-Dtest=') else 'test' if a=='package' else a for a in captured[0]]
+assert '-Xmx2048m' in command and '-XX:ActiveProcessorCount=2' in command and '-DforkCount=0' in command
+save(RUN/'command.json',{'command':command,'timeout_seconds':600,'clean_source_compile':True})
+started=time.time_ns()
+process=run_bounded(command,SOURCE/'forge-gui-desktop',RUN/'native-rules.log',ProcessLimits(600,environment=_environment(RUN)))
+save(RUN/'process.json',process)
+verify()
+report=SOURCE/'forge-gui-desktop/target/surefire-reports/testng-results.xml'
+result={'process':process,'passed':False,'fresh_report':False,'scope':selection['scope']}
+if report.exists() and report.stat().st_mtime_ns>=started:
+    shutil.copyfile(report,RUN/'testng-results.xml')
+    tree=ET.parse(report).getroot()
+    cases=[]; configs=[]
+    for cls in tree.findall('.//class'):
+        for method in cls.findall('test-method'):
+            row={'method':cls.get('name')+'.'+method.get('name'),'parameters':[(v.text or '').strip() for v in method.findall('./params/param/value')],'status':method.get('status')}
+            (configs if method.get('is-config')=='true' else cases).append(row)
+    expected_path=RUN/'expected-cases.json'
+    assert file_hash(expected_path)==suite['expected_manifest_sha256']
+    expected=Counter({(r['method'],tuple(r['parameters'])):r['multiplicity'] for r in load(expected_path)})
+    actual=Counter((r['method'],tuple(r['parameters'])) for r in cases)
+    counts={n:int(tree.get(n)) for n in ('total','passed','failed','skipped')}
+    result.update({'fresh_report':True,'counts':counts,'exact_case_and_parameter_counter_matches':actual==expected,'configuration_failures_or_skips':[r for r in configs if r['status']!='PASS'],'report_sha256':file_hash(report),'cases':cases})
+    result['passed']=(counts==dict(total=3679,passed=3679,failed=0,skipped=0) and actual==expected and all(r['status']=='PASS' for r in cases+configs) and process['status']=='finished' and process['returncode']==0)
+save(RUN/'outcome.json',result)
+print(json.dumps({k:v for k,v in result.items() if k!='cases'}),flush=True)
+assert result['passed'],result['process']

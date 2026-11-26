@@ -1,0 +1,39 @@
+"""Check explicit candidate health and frozen-catalog construction, never activation."""
+from pathlib import Path
+from contextlib import closing
+import json
+import shutil
+import subprocess
+import sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.catalog.database import DEFAULT_DATABASE,connect
+from commander.engine.catalog_probe import run_catalog_probe
+from commander.engine.forge_config import file_hash,read_settings
+from commander.engine.forge_engine import engine_health
+from commander.rules.legality import require_current_catalog
+WORK=Path(__file__).resolve().parent
+CANDIDATE=WORK/'payload-graph-candidate-v2'
+RUN=WORK/'payload-graph-catalog-health-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+frozen=load(CANDIDATE/'source-frozen-inputs.json')
+assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['total']==4879
+assert DEFAULT_DATABASE.is_file()
+settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json')
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+for n in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):shutil.copyfile(CANDIDATE/n,RUN/n)
+active=(ROOT/'config/engine_config.json').read_bytes();(RUN/'active-config-before.json').write_bytes(active)
+with closing(connect()) as connection:
+    catalog=require_current_catalog(connection);save(RUN/'catalog-provenance.json',catalog)
+    health=engine_health(settings);save(RUN/'health.json',health)
+    assert health['status']=='ready'
+    print(json.dumps({'health':health['status'],'indexed_names':health['indexed_names'],'scope':'Resource/Java health only, not rules proof.'}),flush=True)
+    probe=run_catalog_probe(connection,settings);save(RUN/'catalog-report.json',probe)
+    assert (ROOT/'config/engine_config.json').read_bytes()==active
+    assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+    assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+    result={'health_ready':True,'catalog_status':probe['status'],'checked':probe['checked'],'counts':probe['counts'],'catalog_run_id':probe['run_id'],'default_configuration_unchanged':True,'scope':'Catalog-matched native card construction only; not complete abilities/interactions, AI competence, full games or runtime activation.'}
+    save(RUN/'outcome.json',result);print(json.dumps(result),flush=True)
+    assert probe['status']=='passed' and probe['checked']>0
