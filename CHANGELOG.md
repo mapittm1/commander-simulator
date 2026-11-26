@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve Java parameter text in native test receipts: Boolean and floating
+  special values no longer use Python bridge formatting, and null arguments
+  use the explicit native null marker. Keep literal text and nonpassing results
+  intact. Four regression tests fail on the prior collector and pass after the
+  fix. Post-fix native validation is pending; engine behavior is unchanged.
+
 - Pass all 3,732 fresh-source and 4,932 native cases with exact retained method
   and parameter identities, adding 14 registered phase-replacement controls.
   Pass all 14 through the regular packaged worker with 188 production origins

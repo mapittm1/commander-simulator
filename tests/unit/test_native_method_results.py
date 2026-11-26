@@ -2,7 +2,7 @@
 
 import unittest
 from pathlib import Path
-from unittest.mock import Mock
+from unittest.mock import MagicMock, Mock
 
 from tests.support.draw_ending_worker import _results
 from tests.support.packaged_rules import case_identifiers, class_origin
@@ -93,9 +93,96 @@ class NativeMethodResultTests(unittest.TestCase):
             {(("First",), "FAIL"), (("Second",), "SKIP")},
         )
 
+    def test_native_parameter_text_matches_java_instead_of_python(self):
+        """Bridge-friendly Boolean and floating strings must keep native identities."""
+        values = []
+        for python_text, java_text in (
+            ("True", "true"),
+            ("False", "false"),
+            ("nan", "NaN"),
+            ("inf", "Infinity"),
+            ("-inf", "-Infinity"),
+        ):
+            value = MagicMock()
+            value.__str__.return_value = python_text
+            value.toString.return_value = java_text
+            values.append(value)
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "nativeValue", (value,)) for value in values
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+
+        counts, rows = _results(listener)
+
+        self.assertEqual(counts, {"total": 5, "passed": 5, "failed": 0, "skipped": 0})
+        self.assertEqual(
+            {tuple(row["parameters"]) for row in rows},
+            {(value,) for value in ("true", "false", "NaN", "Infinity", "-Infinity")},
+        )
+        for value in values:
+            value.toString.assert_called_once_with()
+
+    def test_null_argument_uses_the_native_null_marker(self):
+        """A null argument is different from the literal Python-looking text None."""
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "nullable", (value,)) for value in (None, "None")
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+
+        _, rows = _results(listener)
+
+        self.assertEqual(
+            {tuple(row["parameters"]) for row in rows}, {("null",), ("None",)}
+        )
+        self.assertEqual(len(case_identifiers(rows)), 2)
+
+    def test_boolean_conversion_does_not_rewrite_literal_text(self):
+        """Actual Boolean fallback values and strings retain distinct case names."""
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "argument", (value,))
+            for value in (True, False, "True", "False")
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+
+        _, rows = _results(listener)
+
+        self.assertEqual(
+            {tuple(row["parameters"]) for row in rows},
+            {("true",), ("false",), ("True",), ("False",)},
+        )
+        self.assertEqual(len(case_identifiers(rows)), 4)
+
+    def test_native_formatting_is_preserved_for_failures_and_skips(self):
+        """Nonpassing native outcomes need the same parameter identity as passes."""
+        value = MagicMock()
+        value.__str__.return_value = "False"
+        value.toString.return_value = "false"
+        listener = Mock()
+        listener.getPassedTests.return_value = []
+        listener.getFailedTests.return_value = [
+            self._result("FormatTest", "failed", (value,))
+        ]
+        listener.getSkippedTests.return_value = [
+            self._result("FormatTest", "skipped", (None,))
+        ]
+
+        counts, rows = _results(listener)
+
+        self.assertEqual(counts, {"total": 2, "passed": 0, "failed": 1, "skipped": 1})
+        self.assertEqual(
+            {(row["status"], tuple(row["parameters"])) for row in rows},
+            {("FAIL", ("false",)), ("SKIP", ("null",))},
+        )
+
     @staticmethod
     def _result(
-        class_name: str, method_name: str, parameters: tuple[str, ...] = ()
+        class_name: str, method_name: str, parameters: tuple[object, ...] = ()
     ) -> Mock:
         result = Mock()
         result.getTestClass.return_value.getName.return_value = class_name

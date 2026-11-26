@@ -1,5 +1,13 @@
 # Card support and evidence
 
+A native-format probe exposed receipt identities differing from TestNG XML for
+Boolean, null, NaN and infinite arguments even when all 15 invocations passed.
+The collector now preserves Java display text and an explicit null marker. Four
+unit regressions failed before the fix; post-fix native validation is pending.
+This changes validation metadata, not card gameplay. Ten supplied-board
+ignore-effect candidate/payment controls also passed before this collector fix;
+they do not prove autonomous choice, full games or universal card correctness.
+
 The registered phase controls now pass in a fresh **3,732-case source suite** and
 **4,932-case native build**, with exact case/parameter counters retaining all
 3,718 / 4,918 prior cases. The regular packaged phase group also passes all 14

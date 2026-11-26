@@ -102,6 +102,19 @@ def class_origin(java: ModuleType, name: str) -> Path:
     return Path(str(java.JClass("java.io.File")(location.toURI()).getCanonicalPath()))
 
 
+def _parameter_text(value: Any) -> str:
+    """Retain Java argument text rather than the bridge's Python display form."""
+    if value is None:
+        # TestNG marks this explicitly with <value is-null="true"/> in XML.
+        return "null"
+    native_to_string = getattr(value, "toString", None)
+    if callable(native_to_string):
+        return str(native_to_string())
+    if isinstance(value, bool):
+        return "true" if value else "false"
+    return str(value)
+
+
 def test_results(listener: Any) -> tuple[dict[str, int], list[dict[str, Any]]]:
     """Retain every native invocation, including parameters, failures and skips."""
     rows = []
@@ -116,7 +129,7 @@ def test_results(listener: Any) -> tuple[dict[str, int], list[dict[str, Any]]]:
                 "method": f"{item.getTestClass().getName()}.{item.getMethod().getMethodName()}",
                 "status": status,
             }
-            parameters = [str(value) for value in item.getParameters()]
+            parameters = [_parameter_text(value) for value in item.getParameters()]
             if parameters:
                 row["parameters"] = parameters
             rows.append(row)
