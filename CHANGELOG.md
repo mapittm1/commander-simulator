@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Profile 85 unchanged native diagnostic cases with bounded JFR allocation/CPU
+  sampling; all pass with exact case identities and verified class origins.
+  Preserve the initial preflight failure and corrected run. Collection/view
+  allocation and repeated color-mask enum-array copies remain investigation
+  targets; no optimization, timed-gate pass or runtime activation is claimed.
+
 - Validate the elimination evaluator in all 3,753 fresh-source and 4,953 native
   cases, retaining every prior method/parameter identity. Verify only evaluator
   production classes change and 173 resolution/helper classfiles stay identical.

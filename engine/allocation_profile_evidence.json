@@ -1,0 +1,66 @@
+{
+  "status": "diagnostic_only_no_optimization_promoted",
+  "build_id": "9c1f301a6ca54759855838c1fd2ed619",
+  "native_cases": 4953,
+  "diagnostic_cases": 85,
+  "counts": {
+    "total": 85,
+    "passed": 85,
+    "failed": 0,
+    "skipped": 0
+  },
+  "exact_native_method_parameters": true,
+  "source_ci": {
+    "id": 45812556771,
+    "status": "completed",
+    "conclusion": "success",
+    "head_sha": "d07498d7d759e9cfbb87d44df587964930cb7ab1"
+  },
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "process_seconds": 74.578,
+  "runner_seconds": 63.23399999999674,
+  "profile_sha256": "ac8c8050dbe954af7cfc40c334db85cec2e3123e4f8f5e1ea385d75a4f29e4c6",
+  "profile_bytes": 4817285,
+  "raw_profile_local_path": "data/development/commander-multiplayer-attack-research/waterbend-filter-research/allocation4953-diagnostic85-v2/runtime.jfr",
+  "events": {
+    "jdk.GCPhasePause": 197,
+    "jdk.GarbageCollection": 197,
+    "jdk.ObjectAllocationSample": 7946,
+    "jdk.ExecutionSample": 1108
+  },
+  "findings": [
+    "Object arrays, FCollection and ArrayList are the three largest sampled allocation classes by weight.",
+    "Selected allocation stacks include stream filtering for player-view zones during GameCopier operations.",
+    "ColorSet.fromMask calls enum values(), producing defensive array copies; sampled ColorSet-array traffic warrants an isolated immutable lookup investigation."
+  ],
+  "next_experiment_requirements": [
+    "Preserve native traversal, predicate evaluation/exception timing, source mutation behavior, independent mutable results and unknown spliterator callbacks for any filter optimization.",
+    "For a private ColorSet lookup, verify all32 masks, high/negative bits, initialization, enum identity and public values-array mutation isolation.",
+    "Measure controlled comparisons before any throughput claim; preserve all original1271 cases and90s,2CPU/2GiB limits."
+  ],
+  "preflight_correction": "v1 failed before JVM startup because worker invoked Git absent from minimal PATH. v2 leaves Git checks in parent and hashes frozen paths in workers. Failure preserved.",
+  "original_resolution_gate_attempted": false,
+  "selected_runtime_changed": false,
+  "production_changed": false,
+  "scope": "Finite diagnostic selection only; sampled allocation weights are estimates of traffic, not exact object counts, retained heap or independent CPU cost. Missing/truncated test frames limit attribution. No comparison, optimization speedup, original1271/90 pass, full legal games or universal rules claim. Raw bounded JFR remains local and hash-bound; text reports are preserved.",
+  "files": {
+    "engine/pending/allocation-profile-v1/preflight-failure/driver.py.txt": "66aa9a214fd3bab66bfcdc3fc8c5aec04b196966ab24a50e9d1b99a07196f24c",
+    "engine/pending/allocation-profile-v1/preflight-failure/native.log": "2f93a5bdf38af19527ace2c79e38df0c3635d2334f69e7be7534eef3daec9c5d",
+    "engine/pending/allocation-profile-v1/preflight-failure/process.json": "87ddb32c888f499e5432d99c5fbf7a318d1178b8e5e0fd8f5f47b71fc475f3d2",
+    "engine/pending/allocation-profile-v1/preflight-failure/preparation-failure.json": "a363f4f354fa271020ef3a92b2831d187aefc299980dcd0047c1e3294240d45a",
+    "engine/pending/allocation-profile-v1/preflight-failure/source-ci.json": "1a2762005de1fbdae25885fa2d15e2984057b132c60958ecb17f0bffad278a17",
+    "engine/pending/allocation-profile-v1/profile/driver.py.txt": "fa3ee88c647bbf261634689c1e899d5035462f5acbafe082b6452f03f3ba7dcd",
+    "engine/pending/allocation-profile-v1/profile/native.log": "e630625d75c18bce1596edd02d840a51dfa1518dc51f78a710bed3c150ebc3e5",
+    "engine/pending/allocation-profile-v1/profile/process.json": "2d9b1f4da40f89fe438366f5a038ee16b80f86a8979af2f3a5eb5fa306dba32c",
+    "engine/pending/allocation-profile-v1/profile/decode.log": "ec4767424ba6bfbebf1cf13ff9d1a1d65b6a76a87fec1c4173434afb11035712",
+    "engine/pending/allocation-profile-v1/profile/decode-process.json": "5c19023ca946a7c9479d80534560ebd9a45f0e83affc4a3e0761f96e98222065",
+    "engine/pending/allocation-profile-v1/profile/source-ci.json": "1a2762005de1fbdae25885fa2d15e2984057b132c60958ecb17f0bffad278a17",
+    "engine/pending/allocation-profile-v1/profile/root-inputs.json": "c921b8cbb842babcbc52432761cbe0773ee49b19cbaca0ef1a34956d809665d3",
+    "engine/pending/allocation-profile-v1/profile/test-inputs.json": "bfc51f5b8d9fc5d66c650e444b051ca21db7f9c0cae9a1e890099e048fecd08c",
+    "engine/pending/allocation-profile-v1/profile/outcome.json": "d26ea15c7960e89e637729320dba0b4d5205abf4475bee2f0a964e9f784468fa",
+    "engine/pending/allocation-profile-v1/profile/profile-settings.json": "fdf7d32601b6786682b428a2d86c087b55be2e612f2166143716a2d3dcdfc31a",
+    "engine/pending/allocation-profile-v1/profile/summary.json": "f6999c4e173cbf41b572e0dc3f73f47612e1949ff67256aa1f44980003380c22",
+    "engine/pending/allocation-profile-v1/profile/reports/testng-results.xml": "c7f6571598f099e7ca3e960d633aee356ba678e86480caa68fd35930efb86188"
+  }
+}

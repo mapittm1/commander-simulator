@@ -1,0 +1,196 @@
+"""Profile unchanged native diagnostic cases; preserve inputs and exact case identity."""
+from collections import Counter
+from pathlib import Path
+import importlib
+import json
+import subprocess
+import sys
+import time
+import xml.etree.ElementTree as ET
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import file_hash, jvm_library, read_settings
+from commander.engine.native_runtime import _engine_profile, _environment, require_bridge
+from tests.support import draw_ending_worker, packaged_rules
+
+WORK = Path(__file__).resolve().parent
+RUN = WORK / 'allocation4953-diagnostic85-v1'
+BUILD = ROOT / 'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+CLASSES = BUILD / 'source/forge-gui-desktop/target/test-classes'
+TARGETS = ('forge.ai.CommanderManaChainTest', 'forge.ai.CommanderExertTransitionsTest', 'forge.ai.CommanderCompositeModeCoverageTest')
+EXPECTED_HEAD = 'd07498d7d759e9cfbb87d44df587964930cb7ab1'
+CI = {'id': 45812556771, 'status': 'completed', 'conclusion': 'success', 'head_sha': EXPECTED_HEAD}
+load = lambda p: json.loads(p.read_bytes())
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+def tracked():
+    names = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
+    return {n: file_hash(ROOT/n) for n in names if n}
+
+def test_inputs():
+    return {p.relative_to(CLASSES).as_posix(): file_hash(p) for p in CLASSES.rglob('*') if p.is_file()}
+
+def verify():
+    assert tracked() == load(RUN/'root-inputs.json')
+    assert test_inputs() == load(RUN/'test-inputs.json')
+    assert file_hash(Path(__file__)) == file_hash(RUN/'driver.py.txt')
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip()
+
+settings = read_settings(BUILD/'engine-config.json')
+if not sys.argv[1:]:
+    assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == EXPECTED_HEAD
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip()
+    RUN.mkdir()
+    save(RUN/'source-ci.json', CI)
+    save(RUN/'root-inputs.json', tracked())
+    save(RUN/'test-inputs.json', test_inputs())
+    (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    verify()
+    with _engine_profile(settings, RUN):
+        process = run_bounded([sys.executable, '-I', str(Path(__file__)), '--worker'], settings.home,
+                              RUN/'native.log', ProcessLimits(90, log_bytes=65536, environment=_environment(RUN)))
+    save(RUN/'process.json', process)
+    verify()
+    print(json.dumps({'stage': 'tests', 'process': process}), flush=True)
+    assert process['status'] == 'finished' and process['returncode'] == 0
+    process = run_bounded([sys.executable, '-I', str(Path(__file__)), '--decode'], ROOT,
+                          RUN/'decode.log', ProcessLimits(90, log_bytes=65536, environment=_environment(RUN)))
+    save(RUN/'decode-process.json', process)
+    verify()
+    print(json.dumps({'stage': 'decode', 'process': process}), flush=True)
+    assert process['status'] == 'finished' and process['returncode'] == 0
+    raise SystemExit
+
+assert sys.argv[1:] in (['--worker'], ['--decode'])
+verify()
+lock = settings.verify()
+assert lock['native_tests'] == dict(total=4953, passed=4953, failed=0, skipped=0)
+require_bridge()
+java = importlib.import_module('jpype')
+recipe = load(ROOT/'engine/sticker_recipe.json')
+dependency = ROOT/recipe['packaged_testng']['path']
+assert file_hash(dependency) == recipe['packaged_testng']['sha256']
+archive = settings.home/lock['jar_name']
+java.startJVM(jvm_library(settings.java), '-Xmx2048m', '-XX:ActiveProcessorCount=2',
+              '-Djava.awt.headless=true', '-Dfile.encoding=UTF-8',
+              classpath=list(map(str, (archive, CLASSES, dependency))), convertStrings=True)
+runtime = java.JClass('java.lang.Runtime').getRuntime()
+assert runtime.availableProcessors() == 2 and runtime.maxMemory() == 2147483648
+profile = RUN/'runtime.jfr'
+if sys.argv[1:] == ['--worker']:
+    origins = {}
+    for name in (*draw_ending_worker.NATIVE_CLASSES, 'forge.game.spellability.SpellAbilitySnapshot'):
+        origin = packaged_rules.class_origin(java, name)
+        assert origin.samefile(archive), name
+        origins[name] = str(origin)
+    for name in (*TARGETS, 'forge.ai.AITest'):
+        assert packaged_rules.class_origin(java, name).samefile(CLASSES), name
+    tree = ET.parse(BUILD/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+    def identities(tree):
+        return Counter((c.get('name')+'.'+m.get('name'), tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in m.findall('./params/param/value')))
+                       for c in tree.findall('.//class') if c.get('name') in TARGETS
+                       for m in c.findall('test-method') if m.get('is-config') != 'true')
+    expected = identities(tree)
+    assert sum(expected.values()) == 85
+    runner = java.JClass('org.testng.TestNG')()
+    listener = java.JClass('org.testng.TestListenerAdapter')()
+    runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(n).class_ for n in TARGETS]))
+    runner.setOutputDirectory(str(RUN/'reports'))
+    runner.setUseDefaultListeners(True)
+    recording = java.JClass('jdk.jfr.Recording')()
+    options = {'jdk.ExecutionSample#enabled':'true', 'jdk.ExecutionSample#period':'10 ms',
+               'jdk.ObjectAllocationSample#enabled':'true', 'jdk.ObjectAllocationSample#throttle':'150/s',
+               'jdk.ObjectAllocationSample#stackTrace':'true', 'jdk.GarbageCollection#enabled':'true',
+               'jdk.GCPhasePause#enabled':'true'}
+    java_options = java.JClass('java.util.HashMap')()
+    for key, value in options.items():
+        java_options.put(key, value)
+    recording.setSettings(java_options)
+    recording.setMaxSize(33554432)
+    recording.setMaxAge(java.JClass('java.time.Duration').ofSeconds(90))
+    save(RUN/'profile-settings.json', {'options':options, 'max_bytes':33554432, 'seconds':90})
+    recording.start()
+    started = time.monotonic()
+    try:
+        runner.run()
+    finally:
+        elapsed = time.monotonic()-started
+        recording.stop()
+        recording.dump(java.JClass('java.nio.file.Paths').get(str(profile)))
+        recording.close()
+    assert 0 < profile.stat().st_size <= 33554432
+    counts, methods = packaged_rules.test_results(listener)
+    observed = Counter(packaged_rules.case_identifiers(methods))
+    assert observed == expected == identities(ET.parse(RUN/'reports/testng-results.xml'))
+    outcome = {'counts':counts, 'exact_native_method_parameters':True, 'runner_seconds':elapsed,
+               'configuration_failures':len(listener.getConfigurationFailures()),
+               'configuration_skips':len(listener.getConfigurationSkips()), 'testng_status':int(runner.getStatus()),
+               'processors':runtime.availableProcessors(), 'max_heap_bytes':runtime.maxMemory(),
+               'production_origins':origins, 'profile_sha256':file_hash(profile),
+               'report_sha256':file_hash(RUN/'reports/testng-results.xml'),
+               'original1271_gate_attempted':False,
+               'scope':'Unchanged85 diagnostic cases; no timing comparison, workload reduction, original1271/90 pass or full rules claim.'}
+    save(RUN/'outcome.json', outcome)
+    assert counts == dict(total=85, passed=85, failed=0, skipped=0)
+    assert not outcome['configuration_failures'] and not outcome['configuration_skips'] and not outcome['testng_status']
+else:
+    assert file_hash(profile) == load(RUN/'outcome.json')['profile_sha256']
+    reader = java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(profile)))
+    events, allocation_classes, selected_classes, allocation_stacks, cpu_leaf, cpu_inclusive, gc = (Counter() for _ in range(7))
+    weighted_bytes = 0
+    selected_bytes = 0
+    truncated = 0
+    try:
+        while reader.hasMoreEvents():
+            event = reader.readEvent()
+            kind = str(event.getEventType().getName())
+            events[kind] += 1
+            assert events.total() <= 100000
+            if kind in ('jdk.GarbageCollection', 'jdk.GCPhasePause'):
+                gc[kind] += int(event.getDuration().toNanos())
+                continue
+            if kind not in ('jdk.ExecutionSample', 'jdk.ObjectAllocationSample'):
+                continue
+            trace = event.getStackTrace()
+            names = []
+            if trace is not None:
+                truncated += int(trace.isTruncated())
+                for frame in trace.getFrames():
+                    method = frame.getMethod()
+                    if method is not None:
+                        names.append(str(method.getType().getName())+'.'+str(method.getName()))
+            selected = any(n.startswith(tuple(t+'.' for t in TARGETS)) for n in names)
+            if kind == 'jdk.ExecutionSample':
+                if selected:
+                    cpu_leaf.update(names[:1])
+                    cpu_inclusive.update(set(names))
+                continue
+            weight = int(event.getLong('weight'))
+            name = str(event.getClass('objectClass').getName())
+            weighted_bytes += weight
+            allocation_classes[name] += weight
+            if selected:
+                selected_bytes += weight
+                selected_classes[name] += weight
+                allocation_stacks[' <- '.join(names)] += weight
+    finally:
+        reader.close()
+    assert events['jdk.ObjectAllocationSample'] > 0
+    summary = {'events':dict(events), 'profile_sha256':file_hash(profile),
+               'sample_weight_bytes':weighted_bytes, 'selected_sample_weight_bytes':selected_bytes,
+               'allocation_classes_weighted':allocation_classes.most_common(40),
+               'selected_classes_weighted':selected_classes.most_common(40),
+               'selected_allocation_stacks_weighted':allocation_stacks.most_common(40),
+               'selected_cpu_leaf':cpu_leaf.most_common(30), 'selected_cpu_inclusive':cpu_inclusive.most_common(50),
+               'truncated_sample_stacks':truncated,
+               'gc_duration_ms':{n:round(v/1000000,3) for n,v in gc.items()},
+               'scope':'JFR sampled allocation weights estimate traffic, not exact allocations, retained heap or independent CPU cost. Missing test frames exclude work from selected counters. Sampling adds overhead; no speedup or original1271/90 claim.'}
+    save(RUN/'summary.json', summary)
+    print(json.dumps({'events':dict(events), 'allocation_classes_weighted':allocation_classes.most_common(8)}), flush=True)
+java.shutdownJVM()
+verify()

@@ -1,5 +1,13 @@
 # Card support and evidence
 
+A fresh allocation/CPU profile of 85 unchanged diagnostic cases passes with
+exact native method/parameter identities on the 4,953-case candidate. Sampled
+allocation weights point to collections, player-view filtering during game copies,
+and repeated color-mask enum-array copies. These are research targets, not
+measured optimizations. The preflight failure, corrected run, exact inputs and
+reports are [preserved](../engine/allocation_profile_evidence.json); the raw bounded
+JFR stays local with a recorded hash. The original 1,271/90 gate was not rerun.
+
 The registered elimination evaluator now passes all **3,753 fresh-source** and
 **4,953 native** cases with exact retained method/parameter identities. Only its
 production class family changes; 173 original resolution/helper classfiles remain

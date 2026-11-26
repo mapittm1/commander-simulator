@@ -1,0 +1,21 @@
+Traceback (most recent call last):
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_allocation4953_diagnostic85_v1.py", line 69, in <module>
+    verify()
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_allocation4953_diagnostic85_v1.py", line 38, in verify
+    assert tracked() == load(RUN/'root-inputs.json')
+           ^^^^^^^^^
+  File "C:\Users\mapit\OneDrive\Desktop\CommanderSimulator\data\development\commander-multiplayer-attack-research\waterbend-filter-research\run_allocation4953_diagnostic85_v1.py", line 31, in tracked
+    names = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mapit\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 466, in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mapit\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 548, in run
+    with Popen(*popenargs, **kwargs) as process:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\mapit\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1026, in __init__
+    self._execute_child(args, executable, preexec_fn, close_fds,
+  File "C:\Users\mapit\.cache\codex-runtimes\codex-primary-runtime\dependencies\python\Lib\subprocess.py", line 1538, in _execute_child
+    hp, ht, pid, tid = _winapi.CreateProcess(executable, args,
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [WinError 2] The system cannot find the file specified

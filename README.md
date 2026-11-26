@@ -46,6 +46,9 @@ do not prove universal card/rules correctness or optimal play.
 The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
 main packaged gate, full-game validation and candidate activation remain open.
 The selected runtime is unchanged. Tested performance shortcuts remain excluded.
+A fresh 85-case allocation diagnostic passes and identifies collection/view work
+in game copies for further investigation; [profile evidence](engine/allocation_profile_evidence.json)
+does not establish a speedup or satisfy the timed gate.
 
 Packaged-test receipts preserve native parameter identities. The fix is verified
 against 15 formatting cases, 10 ignore-effect candidate/payment controls and 14
