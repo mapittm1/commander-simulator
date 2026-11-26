@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve an unpromoted ability-snapshot supplier optimization and sixteen
+  baseline/prototype contracts for evaluation order, failures, mutable containers,
+  card mapping and native rollback. Fixed probes save about 120 bytes per snapshot
+  in three workloads; no reliable elapsed or retained-memory claim is established.
+- Validate its seventeen-source combination with 78 focused checks, all 13 retained
+  interaction groups and a fresh source build's 320 card/deck loading cases, with
+  exact methods/parameters and no skips. Original 1,271/90 still times out at 90.016s
+  without a completed report; selected runtime remains unchanged. Preserve the
+  failed pre-JVM Git lookup alongside the corrected trial. These 320 cases cover
+  loading/parsing, mocks and generation, not ability serialization or full rules.
+
 - Preserve an unpromoted one-source EnumSet allocation hint and seventeen
   native query controls for both baseline and prototype. Fixed escaping-query
   measurements improve 8/80-card allocation, increase the empty sample, and stay
@@ -16,7 +27,7 @@ Historical entries below summarize verified Git milestones, not release versions
   and parameters, plus all 294 reviewed fixture bytes. Only Player/GameCopier
   production classes change from the previous candidate.
 - Audit all 2,394 non-resolution main and 405 separate packaged cases. Broader
-  6,145 gameplay and 320 serialization cases pass without skips, with exact
+  6,145 gameplay and 320 card/deck loading cases pass without skips, with exact
   membership and source policies restored. Full 3,665 main validation remains
   open at original 1,271/90; final live checks, activation and complete card/rules
   coverage remain unfinished. Preserve raw receipts and failed wrapper preflight.

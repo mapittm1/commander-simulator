@@ -1,0 +1,162 @@
+"""Run fixed semantic and timing workloads against the corrected baseline or isolated overlay."""
+from collections import Counter
+from pathlib import Path
+import importlib
+import json
+import re
+import subprocess
+import shutil
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,read_settings,jvm_library
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker,untap_worker
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+WORK=Path(__file__).resolve().parent
+GIT=shutil.which('git')  # Only the parent harness invokes Git.
+EPOCH=WORK/'post-sacrifice-runtime-epoch-v1';PROTOTYPE=WORK/'snapshot-supplier-combined-prototype-v1'
+SETTINGS=ROOT/json.loads((WORK/'sacrifice-candidate-v1/candidate-selection.json').read_bytes())['build']/'engine-config.json'
+FIXTURE=WORK/'native-edition-lookup-fixture-v2'
+UPSTREAM=SETTINGS.parent/'source/forge-gui-desktop/target/test-classes'
+MAIN=UPSTREAM;UNTAP=UPSTREAM
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+MODE=sys.argv[1];FAMILY=sys.argv[2];worker=sys.argv[3:]==['--worker']
+assert MODE in ('baseline','prototype') and sys.argv[3:] in ([],['--worker'])
+specs={'cast':(PARTITIONS['cast_events'],1380,MAIN),'combat':(PARTITIONS['combat_and_snapshots'],273,MAIN),
+    'untap':(untap_worker.TEST_CLASSES,194,UNTAP),'resolution':(PARTITIONS['resolution'],1271,MAIN),
+    'upstream':(tuple(load(WORK/'broader-failure-focus-v1/selection.json')['classes']),9,None),
+    'dungeons':(PARTITIONS['dungeons'],10,MAIN),
+    'expended_mana':(PARTITIONS['expended_mana'],6,MAIN),
+    'first_events':(PARTITIONS['first_events'],12,MAIN),
+    'scry_history':(PARTITIONS['scry_history'],6,MAIN),
+    'spell_game_history':(PARTITIONS['spell_game_history'],12,MAIN),
+    'foretell_history':(PARTITIONS['foretell_history'],12,MAIN),
+    'discard_history':(PARTITIONS['discard_history'],18,MAIN),
+    'traits':(tuple(load(WORK/'native-keyword-static-prerequisites-v1.json')['classes']),495,MAIN)}
+assert FAMILY == 'resolution' and MODE == 'prototype'  # Full original workload only.
+CLASSES,COUNT,ORIGINAL=specs[FAMILY]
+if FAMILY=='cast':CLASSES=(*CLASSES,'forge.ai.CommanderEditionLookupTest');COUNT+=24
+RUN=WORK/'snapshot-supplier-combined-resolution1271-v2'
+def cases(p,classes=None):
+    result=Counter()
+    for cls in ET.parse(p).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:continue
+        for m in cls.findall('test-method'):
+            if m.get('is-config')!='true':
+                result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return result
+def verify(root=False):
+    inputs=load(PROTOTYPE/'inputs.json');assert all(file_hash(PROTOTYPE/n)==h for n,h in inputs.items())
+    assert all(file_hash(FIXTURE/n)==h for n,h in load(FIXTURE/'inputs.json').items())
+    native_inputs=load(EPOCH/'portable-test-inputs.json')
+    assert native_inputs['files']=={p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}
+    if root:assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+    return inputs
+if worker:
+    inputs=verify();settings=read_settings(SETTINGS);lock=settings.verify();assert lock['native_tests']['total']==4822
+    require_bridge();java=importlib.import_module('jpype')
+    recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+    archive=settings.home/lock['jar_name']
+    compiled=UPSTREAM
+    path=(() if MODE=='baseline' else (PROTOTYPE/'classes',))+(archive,)+( (FIXTURE/'classes',) if FAMILY=='cast' else ())+ (compiled,dependency)
+    java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,path)),convertStrings=True)
+    runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+    overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in inputs if n.startswith('classes/') and n.endswith('.class')}
+    primary=[p.relative_to(PROTOTYPE/'source').as_posix().split('/src/main/java/')[1][:-5].replace('/','.') for p in (PROTOTYPE/'source').rglob('*.java')]
+    origins=tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,*primary,'forge.game.ability.effects.ScryEffect','forge.game.trigger.TriggerLifeGained','forge.game.trigger.TriggerSurveil','forge.game.trigger.TriggerInvestigated','forge.card.CardEdition$Collection','forge.card.CardEdition$Reader')))
+    for name in origins:
+        expected=PROTOTYPE/'classes' if name.replace('.','/')+'.class' in overrides else archive
+        assert packaged_rules.class_origin(java,name).samefile(expected),name
+    assert packaged_rules.class_origin(java,'forge.ai.ComputerUtilCost').samefile(archive)
+    for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTOTYPE/'classes'),name
+    for name in (*CLASSES,'forge.ai.AITest'):
+        expected=FIXTURE/'classes' if name=='forge.ai.CommanderEditionLookupTest' else compiled
+        assert packaged_rules.class_origin(java,name).samefile(expected),name
+    runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+    expected=cases(SETTINGS.parent/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(CLASSES))
+    if FAMILY=='upstream':
+        expected=Counter();selection=load(WORK/'broader-failure-focus-v1/selection.json')
+        suite=java.JClass('org.testng.xml.XmlSuite')();suite.setName('Retained upstream casting controls')
+        test=java.JClass('org.testng.xml.XmlTest')(suite);test.setName('Exact nine methods')
+        xmlclasses=java.JClass('java.util.ArrayList')()
+        for cls,names in selection['classes'].items():
+            xmlclass=java.JClass('org.testng.xml.XmlClass')(cls);included=java.JClass('java.util.ArrayList')()
+            for name in names:included.add(java.JClass('org.testng.xml.XmlInclude')(name));expected[(cls+'.'+name,())]+=1
+            xmlclass.setIncludedMethods(included);xmlclasses.add(xmlclass)
+        test.setXmlClasses(xmlclasses);suites=java.JClass('java.util.ArrayList')();suites.add(suite);runner.setXmlSuites(suites)
+    else:
+        runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(n).class_ for n in CLASSES]))
+    if FAMILY=='cast':
+        names=re.findall(r'@Test public void (\w+)\(', (FIXTURE/'CommanderEditionLookupTest.java').read_text(encoding='utf-8'))
+        assert len(names)==len(set(names))==24
+        expected.update({('forge.ai.CommanderEditionLookupTest.'+n,()):1 for n in names})
+    assert sum(expected.values())==COUNT
+    runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+    counts,methods=packaged_rules.test_results(listener)
+    actual=cases(RUN/'reports/testng-results.xml')
+    outcome={'mode':MODE,'family':FAMILY,'counts':counts,'methods':methods,
+        'native_method_and_parameter_counter_matches':actual==expected,
+        'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),
+        'testng_status':int(runner.getStatus()),'actual_processors':int(runtime.availableProcessors()),'actual_max_java_heap_bytes':int(runtime.maxMemory()),
+        'production_origins':len(origins),'casting_cost_class_from_corrected_jar':True,
+        'scope':'Unpromoted16-source snapshot/view/cache and allocation-hint combination. Full original1271/90 with unchanged classes, cases, assertions, search budgets and JVM limits. Exact native method/parameter matching required; not whole main3665, reliable comparative speedup or comprehensive Commander rules proof.'}
+    save(RUN/'outcome.json',outcome)
+    assert counts==dict(total=COUNT,passed=COUNT,failed=0,skipped=0) and actual==expected
+    assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+    verify();java.shutdownJVM()
+else:
+    assert GIT
+    assert not subprocess.check_output([GIT,'status','--porcelain'],cwd=ROOT)
+    ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output([GIT,'rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+    if not (EPOCH/'portable-test-inputs.json').exists():
+        save(EPOCH/'portable-test-inputs.json',{'native_build':SETTINGS.parent.name,'files':{p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}})
+    verify(root=True)
+    assert load(WORK/'snapshot-supplier-combined-controls-v1/outcome.json')['all_passed']
+    assert load(WORK/'snapshot-supplier-combined-semantic-batch-v1/outcome.json')['all_passed']
+    loading=load(WORK/'snapshot-supplier-source-loading-v1/outcome.json')
+    assert loading['passed'] and loading['counts']==dict(total=320,passed=320,failed=0,skipped=0)
+    assert loading['exact_case_and_parameter_counter_matches']
+    assert load(WORK/'snapshot-ability-supplier-comparison-v1.json')
+    preserved=load(WORK/'snapshot-enum-combined-resolution-preservation-v1.json')
+    assert preserved['current_native_build']==SETTINGS.parent.name
+    assert len(preserved['comparisons'])==2
+    for prior in preserved['comparisons']:
+        assert prior['resolution_cases']==1271 and prior['exact_resolution_case_and_parameter_counter_matches']
+        assert prior['selected_resolution_class_files_byte_identical']==172 and prior['aitest_support_byte_identical']
+        assert not prior['all_common_test_class_differences'] and not prior['removed_prior_test_classes']
+    expected_families={'cast':1404,'combat':273,'untap':194,'dungeons':10,'expended_mana':6,'first_events':12,'scry_history':6,'spell_game_history':12,'foretell_history':12,'discard_history':18,'sacrifice_history':26,'upstream':9,'traits':495}
+    for family,count in expected_families.items():
+        proof=load(WORK/('snapshot-supplier-combined-regression-'+family+'-prototype-v1/outcome.json'))
+        assert proof['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+        assert proof['native_method_and_parameter_counter_matches']
+        assert proof['configuration_failures']==proof['configuration_skips']==proof['testng_status']==0
+    independent=WORK/'enum-card-scan-capacity-prototype-v1/source/forge-game/src/main/java/forge/game/Game.java'
+    assert file_hash(independent)==file_hash(PROTOTYPE/'source/forge-game/src/main/java/forge/game/Game.java')
+    comparison=load(WORK/'enum-card-scan-comparison-v1.json')
+    assert comparison['allocation']['measured_escaping_queries']==2000
+    for count in ('8','80'):
+        assert comparison['allocation']['by_card_count'][count]['prototype_minus_baseline_bytes']<0
+    # Preserve historical cache/view prerequisites below; fresh combined proofs above are required.
+    assert load(WORK/'snapshot-library-view-semantic-batch-v1/outcome.json')['all_passed']
+    for mode in ('baseline','prototype'):
+        assert load(WORK/('snapshot-library-view12-'+mode+'-v2/outcome.json'))['counts']==dict(total=12,passed=12,failed=0,skipped=0)
+        assert load(WORK/('snapshot-library-view16-'+mode+'-v3/outcome.json'))['counts']==dict(total=16,passed=16,failed=0,skipped=0)
+        for size in (14,15):
+            assert load(WORK/('snapshot-library-view-boundary'+str(size)+'-'+mode+'-v1/outcome.json'))['counts']==dict(total=size,passed=size,failed=0,skipped=0)
+        diagnostic=load(WORK/('library-land-mana-build-'+mode+'-v1/outcome.json'))
+        assert diagnostic['counts']==dict(total=3,passed=3,failed=0,skipped=0)
+    before=load(WORK/'library-land-mana-build-baseline-v1/outcome.json')['native_factory_calls_during_testng']
+    after=load(WORK/'library-land-mana-build-prototype-v1/outcome.json')['native_factory_calls_during_testng']
+    assert before>after
+    RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    save(RUN/'selection.json',{'mode':MODE,'family':FAMILY,'classes':CLASSES,'expected_cases':COUNT,'worker_limit_seconds':90,'baseline_build':SETTINGS.parent.name})
+    settings=read_settings(SETTINGS)
+    with _engine_profile(settings,RUN):
+        process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,FAMILY,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+    save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+    outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+    print(json.dumps({'process':process,'counts':outcome.get('counts'),'mode':MODE,'family':FAMILY}),flush=True)
+    assert process['status']=='finished' and process['returncode']==0,process

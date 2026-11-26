@@ -1,0 +1,654 @@
+{
+  "status": "unpromoted",
+  "baseline_build": "800559d7545b4631b03e1866f6ce7822",
+  "source_ci": {
+    "id": 45737337983,
+    "head_sha": "5ebc758f6bc509e19408962c49982adececcbd38",
+    "status": "completed",
+    "conclusion": "success",
+    "html_url": "https://github.com/mapittm1/commander-simulator/actions/runs/45737337983"
+  },
+  "change": "Replace three memoizers of already-computed snapshot values with instance suppliers; keep source evaluation order, copied mutable containers and native card mapping.",
+  "single_source_comparison": {
+    "baseline_native_build": "800559d7545b4631b03e1866f6ce7822",
+    "controls": {
+      "contracts-baseline": {
+        "counts": {
+          "total": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        "outcome_sha256": "e8bfb38703951b0ba99fa18d9dbc950191e048bfbf13c5f950b5baec229a4627"
+      },
+      "contracts-prototype": {
+        "counts": {
+          "total": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        },
+        "outcome_sha256": "d84a611f32c774265bc4a7c4513ebddbca25ad6ab9df148ea4e4c4217a7a9346"
+      },
+      "allocation-baseline": {
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "outcome_sha256": "722a259a64a5ddcc39ad6682b6fa216200d9288edd24ccd3a3b593b1312f2cd3"
+      },
+      "allocation-prototype": {
+        "counts": {
+          "total": 1,
+          "passed": 1,
+          "failed": 0,
+          "skipped": 0
+        },
+        "outcome_sha256": "98deb53a184f59e6161ad2313236f71d661d77119dfd6850abb864e756997e9a"
+      }
+    },
+    "allocation": {
+      "legacy_raw_outcome_field": "allocated_bytes_by_card_count",
+      "actual_keys_are_scenarios": true,
+      "warmup_snapshots": 1000,
+      "measured_escaping_snapshots": 2000,
+      "by_scenario": {
+        "empty_spell": {
+          "baseline_bytes": 12384824,
+          "prototype_bytes": 12144120,
+          "prototype_minus_baseline_bytes": -240704,
+          "bytes_saved_per_measured_snapshot": 120.352
+        },
+        "populated_spell": {
+          "baseline_bytes": 12784000,
+          "prototype_bytes": 12544000,
+          "prototype_minus_baseline_bytes": -240000,
+          "bytes_saved_per_measured_snapshot": 120.0
+        },
+        "mana_ability": {
+          "baseline_bytes": 14240136,
+          "prototype_bytes": 14000824,
+          "prototype_minus_baseline_bytes": -239312,
+          "bytes_saved_per_measured_snapshot": 119.656
+        }
+      }
+    },
+    "compiled_single_source": true,
+    "installed": false,
+    "original_resolution_gate_attempted_for_this_change": false,
+    "scope": "Sixteen native supplier contracts and one fixed allocation method in each mode. Roughly120 fewer allocated bytes per snapshot in these three workloads only. No elapsed speedup, retained-memory, full serialization or comprehensive Commander rules proof."
+  },
+  "combined_source_count": 17,
+  "combined_controls": {
+    "all_passed": true,
+    "steps": {
+      "query17": {
+        "process": {
+          "status": "finished",
+          "bytes": 243,
+          "returncode": 0,
+          "elapsed_seconds": 23.172
+        },
+        "counts": {
+          "total": 17,
+          "passed": 17,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "supplier16": {
+        "process": {
+          "status": "finished",
+          "bytes": 242,
+          "returncode": 0,
+          "elapsed_seconds": 23.047
+        },
+        "counts": {
+          "total": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "view16": {
+        "process": {
+          "status": "finished",
+          "bytes": 199,
+          "returncode": 0,
+          "elapsed_seconds": 22.562
+        },
+        "counts": {
+          "total": 16,
+          "passed": 16,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "boundary14": {
+        "process": {
+          "status": "finished",
+          "bytes": 199,
+          "returncode": 0,
+          "elapsed_seconds": 22.094
+        },
+        "counts": {
+          "total": 14,
+          "passed": 14,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "boundary15": {
+        "process": {
+          "status": "finished",
+          "bytes": 199,
+          "returncode": 0,
+          "elapsed_seconds": 22.594
+        },
+        "counts": {
+          "total": 15,
+          "passed": 15,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    },
+    "scope": "Combined query/supplier/view/keyword/opaque-callback supplied-world contracts only; not full semantic families, original1271/90, reliable elapsed speedup or all-card proof."
+  },
+  "combined_semantic_groups": {
+    "all_passed": true,
+    "groups": {
+      "sacrifice_history": {
+        "process": {
+          "status": "finished",
+          "bytes": 214,
+          "returncode": 0,
+          "elapsed_seconds": 23.406
+        },
+        "counts": {
+          "total": 26,
+          "passed": 26,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "discard_history": {
+        "process": {
+          "status": "finished",
+          "bytes": 211,
+          "returncode": 0,
+          "elapsed_seconds": 23.828
+        },
+        "counts": {
+          "total": 18,
+          "passed": 18,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "traits": {
+        "process": {
+          "status": "finished",
+          "bytes": 205,
+          "returncode": 0,
+          "elapsed_seconds": 38.61
+        },
+        "counts": {
+          "total": 495,
+          "passed": 495,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "cast": {
+        "process": {
+          "status": "finished",
+          "bytes": 206,
+          "returncode": 0,
+          "elapsed_seconds": 59.109
+        },
+        "counts": {
+          "total": 1404,
+          "passed": 1404,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "combat": {
+        "process": {
+          "status": "finished",
+          "bytes": 206,
+          "returncode": 0,
+          "elapsed_seconds": 46.328
+        },
+        "counts": {
+          "total": 273,
+          "passed": 273,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "untap": {
+        "process": {
+          "status": "finished",
+          "bytes": 205,
+          "returncode": 0,
+          "elapsed_seconds": 48.516
+        },
+        "counts": {
+          "total": 194,
+          "passed": 194,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "dungeons": {
+        "process": {
+          "status": "finished",
+          "bytes": 205,
+          "returncode": 0,
+          "elapsed_seconds": 23.797
+        },
+        "counts": {
+          "total": 10,
+          "passed": 10,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "expended_mana": {
+        "process": {
+          "status": "finished",
+          "bytes": 207,
+          "returncode": 0,
+          "elapsed_seconds": 23.735
+        },
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "first_events": {
+        "process": {
+          "status": "finished",
+          "bytes": 209,
+          "returncode": 0,
+          "elapsed_seconds": 23.578
+        },
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "scry_history": {
+        "process": {
+          "status": "finished",
+          "bytes": 207,
+          "returncode": 0,
+          "elapsed_seconds": 22.75
+        },
+        "counts": {
+          "total": 6,
+          "passed": 6,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "spell_game_history": {
+        "process": {
+          "status": "finished",
+          "bytes": 215,
+          "returncode": 0,
+          "elapsed_seconds": 23.61
+        },
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "foretell_history": {
+        "process": {
+          "status": "finished",
+          "bytes": 213,
+          "returncode": 0,
+          "elapsed_seconds": 23.047
+        },
+        "counts": {
+          "total": 12,
+          "passed": 12,
+          "failed": 0,
+          "skipped": 0
+        }
+      },
+      "upstream": {
+        "process": {
+          "status": "finished",
+          "bytes": 203,
+          "returncode": 0,
+          "elapsed_seconds": 22.968
+        },
+        "counts": {
+          "total": 9,
+          "passed": 9,
+          "failed": 0,
+          "skipped": 0
+        }
+      }
+    },
+    "scope": "Full retained semantic families with exact native methods/parameters; possible overlap. Not full1271/90, full paid histories, reliable speedup or comprehensive Commander rules proof."
+  },
+  "fresh_source_loading": {
+    "process": {
+      "status": "finished",
+      "bytes": 32528,
+      "returncode": 0,
+      "elapsed_seconds": 147.0
+    },
+    "passed": true,
+    "fresh_report": true,
+    "scope": "Existing320 card/deck loading/parsing tests; not ability serialization or all-card rules proof.",
+    "counts": {
+      "total": 320,
+      "passed": 320,
+      "failed": 0,
+      "skipped": 0
+    },
+    "exact_case_and_parameter_counter_matches": true,
+    "configuration_failures_or_skips": [],
+    "report_sha256": "b8cf0b48f9ae7e8567314809bd6b5a40e0296aad7eb0e60dbef235be83a89da0"
+  },
+  "prior16_source_resolution": {
+    "status": "timeout",
+    "bytes": 19020,
+    "returncode": 1,
+    "elapsed_seconds": 90.015
+  },
+  "combined17_source_resolution": {
+    "status": "timeout",
+    "bytes": 19020,
+    "returncode": 1,
+    "elapsed_seconds": 90.016
+  },
+  "original_resolution_cases": 1271,
+  "original_resolution_worker_seconds": 90,
+  "selected_runtime_unchanged": true,
+  "preserved_preflight_failure": "First17-source harness exited at parent-only Git lookup before JVM start; corrected parent lookup, unchanged workload in v2.",
+  "limits": [
+    "320 loading cases exercise card/deck parsing, mocks and generation; they do not establish ability serialization.",
+    "Semantic families can overlap and are not unique-card counts.",
+    "Fixed allocation probes do not establish reliable elapsed speedup or lower retained memory.",
+    "No complete preceding legal histories, complete card/rules correctness or runtime activation is established."
+  ],
+  "artifacts": {
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/baseline/forge-game/src/main/java/forge/game/spellability/SpellAbility.java.txt": "b250c8e633de1dc4ed56318345415ba6a1cc5c691547a0975f10dee017801433",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/compile-process.json": "1f870f8b0073d10644baf8347443970581c258f7d5935dd3b1f1bc13fea58eca",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/compile-selection.json": "cd0a8ac8876dcdd6c3ecd8c0c2682904ad9f0b338ed401c1f76fcaef4a9f2973",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/inputs.json": "ea9d35b446973262caee26f16c0e1f1a633914e32df2853f7a7cacabc91d86db",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/preparation-line-ending-audit.json": "717f90f33ad40d3e120a7b7302024db98bf2543c2b917ff654422284a5971935",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/proposal.json": "75fd21d47ca360556d1f27431352aef08b4d1eaa1abd91a231f71c41a1a73fc6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-prototype-v1/source/forge-game/src/main/java/forge/game/spellability/SpellAbility.java.txt": "8d109cb61f453f2eb3273d92103be454e02a7304353f22e8302717df08a7f8a0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/CommanderSnapshotAbilitySupplierAllocationTest.java.txt": "4eecc9daa4a091165ef2b4f2119bb1e2635ba82e71909dcf24204d533d9f5686",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/CommanderSnapshotAbilitySupplierTest.java.txt": "2a60b1bd2a83945b0a7ee93970a436ea774f2ceaa56ff243ae58fbf6b70e7c8b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/compile-process.json": "d23f4ef2e4106a3daf5d8cde7a2e636cb9be3594a5f03b296e57df12608444c1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/compile-selection.json": "03e081067f1c8653bd15e067ba64257585d38eb8d63c967cf1154b1b6cbffb8a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/compile.log": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-fixture-v1/inputs.json": "79496e38af307e5def54c96bbcb0b588c92f8a70074c068db453fcac17dc8982",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java.txt": "306644b6d6b60abacdcda069b39677065635e3cb6339b85a077440b6c4ed7bbd",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java.txt": "071cdae68edac8ad5ece2fee42ec73055fae3f4073adbcaca50bf5a879464fb8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-core/src/main/java/forge/card/CardDb.java.txt": "2678d9f3634c73ad4a7840b9a0cdb306f594c94dd84484b08e3b9b20320944c0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-core/src/main/java/forge/card/CardEdition.java.txt": "0702530f0c7dca74f40b3da6f54105df8e299db6c38ce1b4e2c508ba733d5f3f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-core/src/main/java/forge/util/collect/FCollection.java.txt": "8f3dd8a487a3bd31b3094e9c063d25e78703197c3703ebfb789b340282e5e944",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java.txt": "ead5a61ca24a066c5e59738c35781574af48135d8e51640272e50731e1d2573e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/card/Card.java.txt": "a3bdc51ca45f5d1e187078400e0fc14572e31634692d0826210d27aa87633915",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/card/CardCopyService.java.txt": "476054b74da846a7f93ad2bb748f5392142eaaa42b8198b34092535b8bc28985",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/card/CardLists.java.txt": "9e54d7fabf800f8b4b3b589197c70ac5f14bb8e1483601db214abf25ad0e7a31",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/card/CardState.java.txt": "2e8d1637716a3aeb6b053477777f613c4d5843954e41c3de79e95462b1b58adc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/Game.java.txt": "29bc081d1566254989ee3797e08e2f2e5658d64809a11630b7d615ff43449bdc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/GameAction.java.txt": "cfa2dba915c34a7904225abfcf76159b6efee132a1489b98f132650d7fde4f3b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java.txt": "66a9bfdd7f1f87b7c3e9719aad2994802998e448ed5c47777e43e82719a24db4",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/keyword/KeywordInstance.java.txt": "d94162a3c6f7627d85a2617d67080b44647863792ff275657c34db65b38829d7",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/spellability/SpellAbility.java.txt": "b250c8e633de1dc4ed56318345415ba6a1cc5c691547a0975f10dee017801433",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java.txt": "1aa1a654ecbb0d0f29001be50704038b3307c5d7ca0847d153a3ca1d15da43eb",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/baseline/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java.txt": "c1b803069e049aca15f9b67dd8a81ec645882ff7e1c9ae574e66c89f1c363ea3",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/compile-process.json": "9798ad456a9e458063799151314612132c0d6d947b0cc17d8f33bd9f0ce91e24",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/compile-selection.json": "0fdfa093846c93a170f448901a7a7786d87a9621134de22c03de01a0e8768512",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/compile.log": "009a74cf0c7f33d4d83118cc246a60e8206ecf4ef2ca7a17c462f60c69fa5c87",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/inputs.json": "c72b2e534273fcf47acbfa445162ee1b0dd7dc2b1219eedd3fb33157a34b8bc5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/proposal.json": "83efb4c958fceb04c5977a2f6c36ee7efa3e2b67613975078d3e5f8d64bc619e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java.txt": "8d2ab8e460f1fd7fd03b5c3f5f7f70186dddce1e2c1426612d37f6d556635075",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-ai/src/main/java/forge/ai/simulation/MultiplayerAttackPlanner.java.txt": "edc2487ef9e4ba67a29d40452fc7bf7b0d79cc52164466a7553b47e2bc63028a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-core/src/main/java/forge/card/CardDb.java.txt": "f26d3ea9d265d310099e22306a542e00d761e51d48fd8ac2fbab81086eb158ef",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-core/src/main/java/forge/card/CardEdition.java.txt": "9d6c9119954c44e117ff8ee9d5c08a2a6e398a922751de9a2189aa0c1e331194",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-core/src/main/java/forge/util/collect/FCollection.java.txt": "4aab15ce2785d32ee84d6ef5ae81accf1c63e85601a5f0b46392ce9240cbfde6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-core/src/main/java/forge/util/collect/FSnapshotTable.java.txt": "c71f493d7b666f729352e4126218290dd80fc55289ae0e65f735f45e2633a052",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/card/Card.java.txt": "3998d0bb55971a25fb6ce6aedb82e5b0132a8e9c75b201c7db0517b0c7dffd90",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/card/CardCopyService.java.txt": "7c2c4bc5e1a71d9988091f8d43a9fc4d91ad84a0fbb017ab64e598e88e785ec8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/card/CardLists.java.txt": "4271d0ff47dcb97da3fd5bd33ed1688f6a60b742bc74a67a98489b43d810bc31",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/card/CardState.java.txt": "39d627801a0d45a4a732b99e0d8ef9f0da73eb60bc8bbce33b755c8348381284",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/Game.java.txt": "8bc0203543e7a7e0e80616b00b6fda7261b12054ddcf36069b74c938bf10ca89",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/GameAction.java.txt": "7fd8378795256c98262232c38a31f63f78ca7e05a62eaf7b1d2cc60ecb2ec056",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/keyword/KeywordCollection.java.txt": "0055f674a525c009712868dbe0a9507dbc77e58cdf9127040a801a6b53035adc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/keyword/KeywordInstance.java.txt": "11703a028002021c45854c27460f6b513bdd741bcb03ecbd4a395af9bf483dab",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/spellability/SpellAbility.java.txt": "8d109cb61f453f2eb3273d92103be454e02a7304353f22e8302717df08a7f8a0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/staticability/StaticAbilityDevotion.java.txt": "1a371f42045c477a8399f231dece2ce872db76a231fcf24886b44e20be3c23b3",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-prototype-v1/source/forge-game/src/main/java/forge/game/trigger/TriggerHandler.java.txt": "97372f40d77aeb2b79f5162e390536571872cab9f611cc26e14c35bb8933b721",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-scan-combined-prototype-v1/compile-process.json": "95bd953d1a95429047e93dd6293674270cf8e5e9e00c8adf6101d77c9f35cebc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-scan-combined-prototype-v1/compile-selection.json": "418ee61067ca05739af8c2d16066ef374aa2fb94f59b06734e9e555a58d7dd17",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-scan-combined-prototype-v1/compile.log": "f15f0995157e85a3a25e3a862efcd4c590a0820054b1c869c1e0549737cc1ffd",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-scan-combined-prototype-v1/inputs.json": "73110504681bfb7d68be0b59da63c679a884dffe7314ca4cbc82f0f78b005352",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-scan-combined-prototype-v1/proposal.json": "b02b36879a9e6c37f7cd8338ce1e49cc74ecdba074769e0ec97d2b89283e0601",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/driver.py.txt": "da8a3d6b4bef2b7a1579826dbc439baa391085a77b30aca8bd8d797440542faf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/native.log": "a2efcb9852e885951170703e10887cf0a98dc152a7b7aa679172d6fe9d247d21",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/outcome.json": "e8bfb38703951b0ba99fa18d9dbc950191e048bfbf13c5f950b5baec229a4627",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/process.json": "6664b575adc01b73ea58b3d27e68614f118a26bdc43c9c838e104d4d541f7172",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/reports/testng-results.xml": "da6231bcc36f1823bcb544719310d7222764e031006306d64e28aa292effb9ab",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/selection.json": "a884cbb9e8ec703a9c95c0ab7576257c5f94cfe2e97224f051809829258f16aa",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-baseline-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/driver.py.txt": "da8a3d6b4bef2b7a1579826dbc439baa391085a77b30aca8bd8d797440542faf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/native.log": "747dec6bfabcd424fc20f86646420a1f98a7cd903afc7ac6702e565ba527b00f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/outcome.json": "722a259a64a5ddcc39ad6682b6fa216200d9288edd24ccd3a3b593b1312f2cd3",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/process.json": "a6411343519da436f85d5716e0eb447e644524522689c79d60b8f0041522d866",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/reports/testng-results.xml": "a969d3f2980430e1c538da9d316448d0b635c114731e0690c212ce5870c38e9e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/selection.json": "73020e0eaa9630eac31c4c338a56f93e95f145c6999f11dda685b3e9fa79c68b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-baseline-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/driver.py.txt": "da8a3d6b4bef2b7a1579826dbc439baa391085a77b30aca8bd8d797440542faf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/native.log": "e2de10e2dc63d83850d1963bd2f56e77c36f5488495b5d983d4431200ccbb97f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/outcome.json": "d84a611f32c774265bc4a7c4513ebddbca25ad6ab9df148ea4e4c4217a7a9346",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/process.json": "3638e64788ee532c77d8d373a77148e3d18edc8bef5a300a5dc46da0a82dd531",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/reports/testng-results.xml": "306421253ad36c91a7e1c7b21944000645720d98f2b505207efad065c1f4e7f8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/selection.json": "6b2b099137790dbfb3b14c8cc398c63e3c85ac2f8490541f22a178789add4285",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-contracts-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/driver.py.txt": "da8a3d6b4bef2b7a1579826dbc439baa391085a77b30aca8bd8d797440542faf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/native.log": "f1f571c3e93ce5fa3af965bf64b77a5e05061c1dfa36d36cd61796bad5563b1d",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/outcome.json": "98deb53a184f59e6161ad2313236f71d661d77119dfd6850abb864e756997e9a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/process.json": "f589f2a95c1acb6066a1881af198d6c4133a3bb2c236e847e5e914d26f443c8c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/reports/testng-results.xml": "82c609d5a5aa0f1931f394819c8f467e130a4d6173859d7482edfb7fc8bcba6c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/selection.json": "33cb32291a10ab900e061a9887fd4b340b8051a3f06fcd685693ec52e0f70809",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-allocation-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/boundary14.log": "cf859e4dfaa7410c96820bad873f70cd8aaa2eef25b30b7bc2f34507fc4197de",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/boundary15.log": "943f1c7950c739e66d5cc3e0324bec6ad6f68bc79dbee62a53a58eafbe52dc7b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/driver.py.txt": "34a0dcd80162d7ca7b2207e7610e5a6fe4f97a46a29831c7c387a091b2ea4b4e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/outcome.json": "8a1f39322154de7c3e6c48f632d90180dd0cc8bfab3223ccbaef89d22348bd03",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/progress.json": "db9f791385842fae2ac0d27b0cd0db6717a3e5dae6a39966d7808fef9e8c475b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/query17.log": "90448be8ca57fb51a4ac25c5b3f14d4466bf6d1a5b5d58bf4753299ee9ab2b14",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/selection.json": "d21f661f0b5ebfd3214fbcbb4916683c9b91e24866cfc6b7a073b33248d8cb6a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/supplier16.log": "0ccce724dccb4654ee3e93465e7dad448109854d41e29bc4ef45dab16fa451e1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-controls-v1/view16.log": "a7a2251ab3e0e808e2920dc9bb3dbd7375a89566747db4777ddaee4d8b835259",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/cast.log": "5c0f0bd66a9ea404800334a3025c1cde6d1e88239c6d35d6935ba52c3a25a813",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/combat.log": "9505cf772c18044e30926b0e8abf7cdacdb0ac98ade713c100ca0b1a07a2c0b1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/discard_history.log": "61887a6fd2adf74fb19c9ee47ad0a29b4834ed0e0dbcc4d384c767a0b4ddab0e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/driver.py.txt": "5f39214dd2ad6f558f5d7c22089a3e2555656f6a2622ebc6b33830bdb6c3d93e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/dungeons.log": "3e4ce8a654741f7d15cd55bb33a6d5253febfe4628e19e405924f54bead55edd",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/expended_mana.log": "d263d8cecf268f7e4a257550ebd1b058975de68a8b21de8f582b7d1cb0947851",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/first_events.log": "4c0c68f86b02db6309d2c7fa449c96f08f431eb00dd0c31d566df4263e95bc25",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/foretell_history.log": "f49e0114152f21b54ccfa8babdd15ea0fb1080900025ab39259daf7491279aa8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/outcome.json": "a97eeda423d5153127b9db58802c9ac1b3fd5a73cc2ac266cf0412a185e8fdfc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/progress.json": "8e1aab25c97e2750fb496a030646ab963ba76a21d24b6ef796d7ac92f2988eb1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/sacrifice_history.log": "10d27e6d010239f6b8bfe23b117be7cd1011848587d525ccd4fc5083ab3477da",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/scry_history.log": "bd2273fc4b55952d5b931f1cd7ec3abbbdcea34aeaff4fbcd60ca0dd2a938215",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/selection.json": "307307f9a51ca1540b4bedc341ae7cfcba6d434041afd6d35e1bd4efd2b1ccdf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/spell_game_history.log": "5d93b680b36766c4fee9c131d3df05f6bea1168dcdd70ed4e4acc6374566d246",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/traits.log": "c0b28ab96de725d474411dd7723a51b3a618c559045bccda37908ee18f6d7cdc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/untap.log": "4315e0ebfadf6065697fbf612b6182b141c49ddabfe5267646e2d9bb7500af4f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-semantic-batch-v1/upstream.log": "8d5ef60bfbdec9fdda8d28d565e8e890322e9655fe94facad570ca3032fd94c0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/driver.py.txt": "1a62d3535077580d3165e637bb0e92a8aeb42d626b73ce2a83a6c8ca2d6e26b5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/native.log": "94f2b55951f2c60c4a26d92b36494aa0008d7237ec03ef39d3cf665c4265a19f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/outcome.json": "39bbc89d02759524834b9ec4052ca656d0cb0a2580f36855f322815825a3a4f5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/process.json": "98ff7dd190e30c06623dd9640b54495d33319f50c0be877f47e24947315c7eb8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/reports/testng-results.xml": "a70dcbf30308e23fe5e0bf208d32d29339d43ba321ea3d27c6536479561ec915",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/selection.json": "b7eccf1ebaa7bcba28683b9ebe157e32c876e372edd3f38be2fc7c4d61dc1fdb",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-query-contracts-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/driver.py.txt": "801e7ab4110b8cc19f1fe994466ed4a0c347f92334baa9c404390e631e473b46",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/native.log": "26e2cc1f284e7c26f43cbb80bc1193de6ff1bddf654fa86d34cf68b1a74c0e5c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/outcome.json": "6b5b30be6e833c139e17a81fe92d803066c56ee233f3e840143320c098442aa4",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/process.json": "f6b284ca241a88c30bb7ae6ecc0cde94e9b10d3c85d4981ae5d6551088b7cd35",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/reports/testng-results.xml": "189fd5ca06fbc997bfdfcad1b318f159a18fcbb2e26cb8003e6aa55ecc8ec7ec",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/selection.json": "6b2b099137790dbfb3b14c8cc398c63e3c85ac2f8490541f22a178789add4285",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-fields-contracts-prototype-v1/test-inputs.json": "625a1a09409cf4048cc681fffc7db160f75460b9bef38cfed09e846227adc22a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-view16-prototype-v3/driver.py.txt": "f3eb2b4a4df79a4bc029f71a6c5d1c2db0d780936d928bc0d116942e44922353",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-view16-prototype-v3/native.log": "beb9e88d1df5d01616864456e187de8c2a695392eb3963d9a253513fec375c48",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-view16-prototype-v3/outcome.json": "ace36931ebe791cf1c8a688e55c8426f7a27a234d3074294b4d43fb394482e4c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-view16-prototype-v3/process.json": "ff2198eefd9af68a889c6d636a83b43675a28fb82f539f3376ac3130d53bd17f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-view16-prototype-v3/reports/testng-results.xml": "6ac14625155652a8eab4ab1a5b5f855cd7fa2c50110bf897ca80895596da7f2f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary14-prototype-v1/driver.py.txt": "7e44f533470126bba45d0bc77859b0d8fcae6b53a2fa9b643f2887ceaae3097a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary14-prototype-v1/native.log": "9d7d8e51ebb9fe0375a5865b6711317a891d277824f3ceaabe327c381d655595",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary14-prototype-v1/outcome.json": "bb3ffe3ffddfe3b5a8e69d37f34ab7f8d1972bd347890ed9de80d11421aca64e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary14-prototype-v1/process.json": "4896f1b9b9a4ce23293138787093f796a5967336b70cbd78565c5e3a21551405",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary14-prototype-v1/reports/testng-results.xml": "40b431e4dc2243fa7619a75889a8814d008e72f3a82357f7d47446db4277a532",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary15-prototype-v1/driver.py.txt": "0c083f1600654fc836864c6e3f237aa7640fc43ff5cfdc205e4fe3e56c68ccfe",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary15-prototype-v1/native.log": "f95e7a5712e76339ba0d17381dd5366431d2b49c8ad003bbf45f671ec5a2587e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary15-prototype-v1/outcome.json": "5a85ad13b27170cc62af567ddb4413165379febb3aef7be853c603f6dc2a0593",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary15-prototype-v1/process.json": "ff2198eefd9af68a889c6d636a83b43675a28fb82f539f3376ac3130d53bd17f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-boundary15-prototype-v1/reports/testng-results.xml": "8b12c1298c4ff5e460544d6a76cc8a40bcfb532126fdff977fc68dcd19f2832a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/command.json": "2454e8407ca0387cd93587b37886266716d945464eb2c452c3a4e897891ac5c0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/driver.py.txt": "fd85367ad26978774b1357cc9979ca09a3912796e10df440ebecbfc9a7725435",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/expected-cases.json": "f8ae90cfb0f6f776bf9f8cf87e2b6eda3656db60d8607ed701557f102e0aabdf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/native-rules.log": "6bc61b0d70a13d42b86d80df1431c38d308f8681296a42afc11fa5837de3a080",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/outcome.json": "00fbd9b4e939370323539a080d2e16c76b8cefeb94129d30a69ee3700bb29f42",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/preparation.json": "600bb87a617711b391dd8f1a91519135699357c4c771faf5e4d3ddd5463c0168",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/process.json": "8e79a82d8098fd152d679acd6cade0e5957fc68e9070f554eca225c556bcf991",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/production-inputs.json": "652b0336375a040870c0b5f6327f27f82ca2f45994dd568ac358fcb6294b678e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/root-inputs.json": "f120448e2234c3f8a54f0e69f854a4ace38f100eaa7c95245b7f88d325b1fc0c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/run-driver.py.txt": "2420efdd916b3e285f78759a97e02af1a45dcd8148e212507a90f04084dad1a5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/selected-test-inputs.json": "3105a9fa6e7a4541f7dcfb39e2ccf3fbee8d18716cdc7ee38e248d11b7ce19e2",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/selection.json": "9975ca4e9845cf9445975081beff17811467f7cef442d436183bf6cca1a4ff9c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/source-ci.json": "b336a3d1d1d41c188bc33145ab3872ae6786316d52e34e1047fc9c33aa9594c4",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v1/driver.py.txt": "5d7f4992cfacd1fa2bc396463eb1c71ccbc79e1c3f571b465f506d6c796ae687",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v1/native.log": "f60566f5cfedda2aaee996e2803d077e8c058a3f55f8ac597906dd7eaf23a924",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v1/process.json": "b08afbedfd6d75bf3fda871b1f4d85da6abe98dc94630fe43f0d5357fe32e02d",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v1/selection.json": "1ca6e9c66129571d2f8a7c2849a3fba528037c5638f90ad6e8d53a07662e1c34",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v2/driver.py.txt": "8923905343a8e21057e27aad3009969a91da13bd06d47d70d180d6e2d8861281",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v2/native.log": "69d6a7ea91b1a960cfbce73f5fcce3d762622c1f6c9e0fffb2dd1183c691f473",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v2/process.json": "ae86a4a0999af568ca2e06852f197ab0e429cac9fdaf9d02f06cba1167928cb6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-resolution1271-v2/selection.json": "1ca6e9c66129571d2f8a7c2849a3fba528037c5638f90ad6e8d53a07662e1c34",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-combined-resolution1271-v1/driver.py.txt": "8d637925a1352d28359eaffbea019751767818503c89479d189434bf9eb7ce7d",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-combined-resolution1271-v1/native.log": "4cfd1e6ddacc66ee8ca2dfb975192d66e4102bea06541589164935037c5a3cc1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-combined-resolution1271-v1/process.json": "20a8c5405adc1d260a78580db54cdb9cd1ff8e0dead380ca81a8a904a59a49d2",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-combined-resolution1271-v1/selection.json": "1ca6e9c66129571d2f8a7c2849a3fba528037c5638f90ad6e8d53a07662e1c34",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-source-loading-v1/testng-results.xml": "b8cf0b48f9ae7e8567314809bd6b5a40e0296aad7eb0e60dbef235be83a89da0",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/native.log": "11c3d40ec4e490ba8d56baa727809bf460c99949b9a5b2bb343291ede94ee6fc",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/outcome.json": "b0616fc3c66710c1bf99fd93b889bfc4337eec480598fb0bd9f117ebabef1b4f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/process.json": "807061b45d3eb65f21983635e2ba3add3c73c00590b07d55a50633b47754afda",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/reports/testng-results.xml": "c8d2f878c55383d0748cffb95792819424b9d8dd9d141a312bc6e723888f9ac1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-sacrifice_history-prototype-v1/selection.json": "df309c17ccc30bb29819a628ef2ef175c03eaf31b51f2548fa2f3508b8289a7b",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/native.log": "61b3bf32e1ec835142f1150772c5fd148d509152a765ff14cf4abe519ec81713",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/outcome.json": "9b9cb9381ca965059801c563d2e0bd54f5c5b39463f7a1c74d528d852372c5cb",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/process.json": "25e1aeaad5f782153cc6da3f6d8d15bf3c540ec76f6f6d85c93d0a2c4ee9ec0c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/reports/testng-results.xml": "f58de1b88272900384d38395fa7195011e52c0afdbc7587b74536904bce726bf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-discard_history-prototype-v1/selection.json": "cf926842721f4dd512834371f40460f20f6c8ebc8363a74f24a30bd1dcbb1c65",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/native.log": "795ff20f1bf659479155770a53660b0b0dffd6928a23889ac96e4b16377ece4e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/outcome.json": "2e34417f5dcdcd0d582fa0161188ece3599ef7baad1d90931be62bb7479e9aa5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/process.json": "7183d02619f268fd300fc9a0fba1f01b03462ee2f63287c7d7e788fb8f4c3984",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/reports/testng-results.xml": "70d7b627d63e0589f7f01594cb669c5d695fb0e62d5eef63c2f02df90b13fe7a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-traits-prototype-v1/selection.json": "214258a0248612b9bf9427b37c63c8f70458ede16652562d200d06cdbc07bdae",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/native.log": "1882013f2bbbe80678e222b7ed88eb348c26041750efe7647f16ead9cb2540ea",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/outcome.json": "879afafecc74e16adb4424315afc75b15074d0e7ce7c27b621b830b03fae51ec",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/process.json": "b4ec0262c4264b8f22921f3ece0c3e5befd3a206b875c576d59adab9a58d97e7",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/reports/testng-results.xml": "b48b44634884de4dddd0eafff3c523d0c34c58d0c09549787e2cb8a24d321139",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-cast-prototype-v1/selection.json": "a94cfcb9cf3f8704c3e78b6178ea22195a9d5c1f12032db66fc81517b9754279",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/native.log": "f41ef26a178bb8de1f1846232a6c7e12142cba775b931696f61185d5d1f7daa6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/outcome.json": "5f2528609758e5785113ea485108665f49f9b267346236b5a5655a5a78aaf039",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/process.json": "31d401d7e6e1351dbd49a66e2047031b2c832910df6d487e76a79ffae210c47c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/reports/testng-results.xml": "7e63b7243d45d8a2d2d0978754072d1cab006e032141d6ae20b7a6b9750744cf",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-combat-prototype-v1/selection.json": "465f9210e9527c978f6517d95b3d8695b109b8a6dead56a3b8934b3bbbf4be24",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/native.log": "1ee125d04a5f80a5524a48aa3e2b985e22ab18385cc19d2c7b6cb90840cbd2fa",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/outcome.json": "de3e9e3fbf1ab84f2878c18906cb10467982ce85157cbb0ddc31752e37c728ba",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/process.json": "cab89b0735965a3d5c745704c514429741cdcf779d1253bb4e45b46d0cceb398",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/reports/testng-results.xml": "67f113797daf7e941348b0959f5d4be4b7027d8e23e7959cf9912e75630ddcfe",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-untap-prototype-v1/selection.json": "27d636a5876f1e03c8b0ae552fec03a461f2df464e698a6f49d7d38efa16df1e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/native.log": "17c5055dfa955a0109b9f47fa9fc0f2ddffd4e7c0b5eb4de412e3419f9a6e421",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/outcome.json": "e299b8dd49fb265b089e4818624b3db1ed2412d37a131b7d5fcb559b883bdb95",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/process.json": "cc91b046481563f744e66f17d2105066f1dd92d1a11cae88a48ae20dba0364f6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/reports/testng-results.xml": "b04c0a449276cd63f38bae8723f364b37a95f42ebf04d69538b8feb6bace3aba",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-dungeons-prototype-v1/selection.json": "8f87985a73a67105c5427f463383652c3e913e2368b3f4292a4d9d2322a86658",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/native.log": "7d4bfd3fba60e3e9c8fb29a5b66ffc46554b05e912fa67e2cb60f4bcd6455a0c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/outcome.json": "242a728c99a71a759053678c337015a767f983c8b6d64d39348626fb002a9c2c",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/process.json": "2f2151dfe5c993ff71376a6d11fee802930275ec3769d9ab7dc8d48335ba62ea",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/reports/testng-results.xml": "aec1acbb2c7db5bdb581a2f98b9b9884a87cccaa1d1d20d36be3a61d8572ab20",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-expended_mana-prototype-v1/selection.json": "508e705f1ffcc0a54d844ebd451b301f088ca5a3ed798a027c1339bf3aaf3dc8",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/native.log": "2b6a15f24c7f060cd7cefecc932155d9a5797d5be343f9a4ad1a5e2d88ef8c06",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/outcome.json": "b93fdbd090438a688f916f08a3a860b6212814447c0f9249eddb8267dd938916",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/process.json": "0af60795cc429dd87479997f05d00ef372e8d3f3f0848f7e390afa04bce7de97",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/reports/testng-results.xml": "b5e4bb8bc1c44af189929bf6ba8b0cbed9f5ea717091897fd429793f5b38122d",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-first_events-prototype-v1/selection.json": "6753737a9c21f5f5a73dda24aa8ef286a36fcc2b57ef915734567c21ef40e948",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/native.log": "11b480d782d401f2de2d6581e98cb16b0947bf50a211fc57c3fbb30082021e0f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/outcome.json": "b0b1d9b48c68b292e3d293861b96fe1e2dd062c6f4f53ef25fa3b862119417f2",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/process.json": "ba354086fe05e963c70a24d0a9eb4a0fd9883b556b603e0e37e4d19e5fe1d154",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/reports/testng-results.xml": "64277cd3e3094f8d431321072630657970255caee165f2bed8550452e8b77e99",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-scry_history-prototype-v1/selection.json": "934e63348d873fecfa71a2df7c38d1be9411b8f3c87d0c351180879ea54ca781",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/native.log": "eb639b6b4b9e03db06a6189e8f71e5c984273f0d7a8325169c831e5f72d161fa",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/outcome.json": "99605c3b4ce3939a1c0eb4c60950f9a8d40d1562a0499b1fa588e24245d1837a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/process.json": "7e9bd3149580343ad3e951e70c15d4975fc8afb8cccd92b76b01a284d40c290a",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/reports/testng-results.xml": "15df7fc1274efc79fb59710737d1e4f14cb54b9dd26e748cfc6addc4cdba9d05",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-spell_game_history-prototype-v1/selection.json": "82d611cb475b344e00dc059996e1a876cba95f72ee1a60e92bf7b1ae03bde6b5",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/native.log": "e2ac4559c3d8849be00023ae6fbbf962c2763d595b1e05d387d8bfbb609421a7",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/outcome.json": "11e25e39bca5ffe763824343aedb622b69562f7ae12b3386f787ee9fe2c5a724",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/process.json": "41b07344316d2a482b49110663a18e7cb0d85f4aef7270371643ecaeb7d6f4e1",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/reports/testng-results.xml": "5cbf0eb4e7ce27cb7c4d7d304d6601dcb03e873a688ee062cf40210cbdb76c53",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-foretell_history-prototype-v1/selection.json": "d515617212a96ba679687d3080898655cb7935e853f386990d36d9e59ca2e4c4",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/driver.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/native.log": "1635d814316cdc3650a90b69a9c9b3e10026eb0e9213b317e8ad74f4c68b58a6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/outcome.json": "08ecb37c017275c42c44b3f85ac3605d473d87900b08c013015394b55e636b03",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/process.json": "7dfcc17faaabd39a258ff6e2e9333d64b738eca28f730191aea73377f2a15789",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/reports/testng-results.xml": "fcb2216f7d62b12964000a2791765ecf99f928c31b7a416e533396594c3d79d6",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-supplier-combined-regression-upstream-prototype-v1/selection.json": "95e0ffcfb63fdffab473a2800c2815a09bd8b4fd1b4fb96299365ef77437405d",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-ability-supplier-comparison-v1.json": "5100586ef987251549adcad9329fd2d38002eaf9e2cd0dd314ffbc3dcab46b3e",
+    "engine/pending/snapshot-ability-supplier-v1/snapshot-enum-combined-resolution-preservation-v1.json": "bd2caa0675e33d1d0f6ef7e1732290211d59a9e04b8b44d3c09e757e513115b4",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/compile_snapshot_ability_supplier_v1.py.txt": "ed53d4dd802e6425769dcbf75e145a5b6f3819d99e99ca0b80f10dfd1e1dbc56",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/compile_snapshot_ability_supplier_fixture_v1.py.txt": "bf1bff88343454d49cdd9d6c72f1cb6bf801eb4ea2aac8fb2d99ff5bfa93d4ab",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_ability_supplier_controls_v1.py.txt": "da8a3d6b4bef2b7a1579826dbc439baa391085a77b30aca8bd8d797440542faf",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/compile_snapshot_supplier_combined_v1.py.txt": "da4b2bb5c2577df45b965a25c44e6ff15bd4ed88a5f9dae39783cbf187373f09",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_controls_v1.py.txt": "34a0dcd80162d7ca7b2207e7610e5a6fe4f97a46a29831c7c387a091b2ea4b4e",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_query_v1.py.txt": "1a62d3535077580d3165e637bb0e92a8aeb42d626b73ce2a83a6c8ca2d6e26b5",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_fields_v1.py.txt": "801e7ab4110b8cc19f1fe994466ed4a0c347f92334baa9c404390e631e473b46",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_view16_v1.py.txt": "f3eb2b4a4df79a4bc029f71a6c5d1c2db0d780936d928bc0d116942e44922353",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_boundary14_v1.py.txt": "7e44f533470126bba45d0bc77859b0d8fcae6b53a2fa9b643f2887ceaae3097a",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_boundary15_v1.py.txt": "0c083f1600654fc836864c6e3f237aa7640fc43ff5cfdc205e4fe3e56c68ccfe",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_regression_v1.py.txt": "a48afafc4a6a03e0476b99e0f325353236c5fcae9940749c83b456cb70399a5f",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_semantic_batch_v1.py.txt": "5f39214dd2ad6f558f5d7c22089a3e2555656f6a2622ebc6b33830bdb6c3d93e",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/prepare_snapshot_supplier_source_loading_v1.py.txt": "fd85367ad26978774b1357cc9979ca09a3912796e10df440ebecbfc9a7725435",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_source_loading_v1.py.txt": "2420efdd916b3e285f78759a97e02af1a45dcd8148e212507a90f04084dad1a5",
+    "engine/pending/snapshot-ability-supplier-v1/drivers/run_snapshot_supplier_combined_resolution1271_v1.py.txt": "8923905343a8e21057e27aad3009969a91da13bd06d47d70d180d6e2d8861281"
+  }
+}

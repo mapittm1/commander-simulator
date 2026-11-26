@@ -1,0 +1,71 @@
+{
+  "baseline_native_build": "800559d7545b4631b03e1866f6ce7822",
+  "controls": {
+    "contracts-baseline": {
+      "counts": {
+        "total": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "e8bfb38703951b0ba99fa18d9dbc950191e048bfbf13c5f950b5baec229a4627"
+    },
+    "contracts-prototype": {
+      "counts": {
+        "total": 16,
+        "passed": 16,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "d84a611f32c774265bc4a7c4513ebddbca25ad6ab9df148ea4e4c4217a7a9346"
+    },
+    "allocation-baseline": {
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "722a259a64a5ddcc39ad6682b6fa216200d9288edd24ccd3a3b593b1312f2cd3"
+    },
+    "allocation-prototype": {
+      "counts": {
+        "total": 1,
+        "passed": 1,
+        "failed": 0,
+        "skipped": 0
+      },
+      "outcome_sha256": "98deb53a184f59e6161ad2313236f71d661d77119dfd6850abb864e756997e9a"
+    }
+  },
+  "allocation": {
+    "legacy_raw_outcome_field": "allocated_bytes_by_card_count",
+    "actual_keys_are_scenarios": true,
+    "warmup_snapshots": 1000,
+    "measured_escaping_snapshots": 2000,
+    "by_scenario": {
+      "empty_spell": {
+        "baseline_bytes": 12384824,
+        "prototype_bytes": 12144120,
+        "prototype_minus_baseline_bytes": -240704,
+        "bytes_saved_per_measured_snapshot": 120.352
+      },
+      "populated_spell": {
+        "baseline_bytes": 12784000,
+        "prototype_bytes": 12544000,
+        "prototype_minus_baseline_bytes": -240000,
+        "bytes_saved_per_measured_snapshot": 120.0
+      },
+      "mana_ability": {
+        "baseline_bytes": 14240136,
+        "prototype_bytes": 14000824,
+        "prototype_minus_baseline_bytes": -239312,
+        "bytes_saved_per_measured_snapshot": 119.656
+      }
+    }
+  },
+  "compiled_single_source": true,
+  "installed": false,
+  "original_resolution_gate_attempted_for_this_change": false,
+  "scope": "Sixteen native supplier contracts and one fixed allocation method in each mode. Roughly120 fewer allocated bytes per snapshot in these three workloads only. No elapsed speedup, retained-memory, full serialization or comprehensive Commander rules proof."
+}

@@ -1,0 +1,51 @@
+"""Run combined query/view/callback controls sequentially before resolution timing."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'snapshot-supplier-combined-controls-v1'
+load=lambda path:json.loads(path.read_bytes())
+def save(path,value):path.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+steps=[('query17',
+  ['run_snapshot_supplier_combined_query_v1.py', 'prototype', 'contracts'],
+  'snapshot-supplier-combined-query-contracts-prototype-v1',
+  17),
+ ('supplier16',
+  ['run_snapshot_supplier_combined_fields_v1.py', 'prototype', 'contracts'],
+  'snapshot-supplier-combined-fields-contracts-prototype-v1',
+  16),
+ ('view16',
+  ['run_snapshot_supplier_combined_view16_v1.py', 'prototype'],
+  'snapshot-supplier-combined-view16-prototype-v3',
+  16),
+ ('boundary14',
+  ['run_snapshot_supplier_combined_boundary14_v1.py', 'prototype'],
+  'snapshot-supplier-combined-boundary14-prototype-v1',
+  14),
+ ('boundary15',
+  ['run_snapshot_supplier_combined_boundary15_v1.py', 'prototype'],
+  'snapshot-supplier-combined-boundary15-prototype-v1',
+  15)]
+RUN.mkdir()
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+git=shutil.which('git');assert git and Path(git).is_file()
+environment=_environment(RUN);environment['PATH']=str(Path(git).parent)
+save(RUN/'selection.json',{'steps':steps,'native_worker_seconds':90,'per_wrapper_seconds':420,'original_resolution_cases':1271,'original_resolution_seconds':90})
+results={}
+for name,args,folder,count in steps:
+    process=run_bounded([sys.executable,'-I',str(WORK/args[0]),*args[1:]],ROOT,RUN/(name+'.log'),ProcessLimits(420,log_bytes=65536,environment=environment))
+    results[name]={'process':process};save(RUN/'progress.json',results)
+    assert process['status']=='finished' and process['returncode']==0,(name,process)
+    outcome=load(WORK/folder/'outcome.json')
+    assert outcome['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+    results[name]['counts']=outcome['counts'];save(RUN/'progress.json',results)
+    print(json.dumps({'step':name,'counts':outcome['counts']}),flush=True)
+assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+save(RUN/'outcome.json',{'all_passed':True,'steps':results,'scope':'Combined query/supplier/view/keyword/opaque-callback supplied-world contracts only; not full semantic families, original1271/90, reliable elapsed speedup or all-card proof.'})

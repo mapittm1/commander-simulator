@@ -26,6 +26,22 @@ difference.
 
 ## Card coverage
 
+An unpromoted snapshot optimization replaces redundant memoizers for three
+already-copied ability values with instance suppliers. It preserves source
+supplier evaluation, separate mutable containers and native card mapping.
+Sixteen contracts pass in each baseline/prototype mode; a combined seventeen-source
+prototype passes **78 focused checks**, all **13 retained interaction groups**
+(with possible overlap), and a fresh source build's **320 card/deck loading tests**
+with exact methods/parameters and no skips. Fixed allocation probes save about
+120 bytes per copied ability in three scenarios; they establish no reliable
+elapsed speedup, lower retained memory or complete rules coverage.
+
+The combined prototype still times out on original **1,271 / 90 seconds**
+(**90.016s**, no completed report), so the selected runtime is unchanged. The
+320 loading tests cover card/deck parsing, mocks and generation; they do not
+establish ability serialization. Raw results include the corrected pre-JVM Git
+preflight failure. See [snapshot supplier evidence](engine/snapshot_ability_supplier_evidence.json).
+
 A generic sacrifice-history correction maps each player's historical sacrifice
 records into AI game copies. Sixteen of twenty-six baseline controls fail; copied Dargo
 casts lose earned discounts and sacrifice records disappear. The correction passes
@@ -42,7 +58,7 @@ priority** native fixture files match reviewed bytes. Source manifests bind
 production classes changed from the preceding candidate.
 
 Independent receipt audits pass all **2,394 non-resolution main** and **405
-separate packaged** cases. Broader **6,145 gameplay / 320 serialization** cases
+separate packaged** cases. Broader **6,145 gameplay / 320 card/deck loading** cases
 pass with exact membership, no skips and restored source policies.
 
 The full **3,665-case** main gate remains unverified at the original resolution
