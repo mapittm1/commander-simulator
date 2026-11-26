@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve per-player sacrificed-card history in AI game copies through the
+  existing LKI mapper, without replaying events or sharing original history cards.
+  Sixteen baseline failures lose records or Dargo's prior-sacrifice discounts;
+  all twenty-six native-payment, ownership, isolation, cleanup and negative movement
+  controls pass after correction, plus retained semantic regressions.
+- Register twenty-six sacrifice_history cases, retaining every earlier case and the
+  original 1,271/90 workload. Fresh 3,622 source / 4,822 native / 3,665 main
+  packaged validation and runtime activation remain pending. Supplied boards
+  do not establish full preceding legal histories or comprehensive rules support.
+
 - Preserve per-player discarded-card history in AI copies through the existing
   LKI mapper, without replaying discard events or sharing original history cards.
   Twelve baseline failures lose discard records or Hollow One discounts; all

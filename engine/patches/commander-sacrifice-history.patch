@@ -1,0 +1,28 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -338,6 +338,7 @@
+             entry.getValue().copySnapshotDungeonsFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotDrawnFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotDiscardedFrom(entry.getKey(), context);
++            entry.getValue().copySnapshotSacrificedFrom(entry.getKey(), context);
+             entry.getValue().copySnapshotKeywordsFrom(entry.getKey(), context);
+             entry.getValue().getManaPool().copySnapshotFrom(entry.getKey().getManaPool(), context);
+         }
+--- a/forge-game/src/main/java/forge/game/player/Player.java
++++ b/forge-game/src/main/java/forge/game/player/Player.java
+@@ -2575,6 +2575,15 @@
+     public final List<Card> getSacrificedThisTurn() {
+         return sacrificedThisTurn;
+     }
++    /** Preserve sacrifice receipts through the snapshot mapper without replaying events. */
++    public final void copySnapshotSacrificedFrom(Player original,
++            forge.game.spellability.SpellAbilitySnapshot context) {
++        sacrificedThisTurn.clear();
++        for (Card historical : original.sacrificedThisTurn) {
++            sacrificedThisTurn.add(context.map(historical));
++        }
++    }
++
+     public final void resetSacrificedThisTurn() {
+         sacrificedThisTurn.clear();
+     }

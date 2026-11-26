@@ -279,6 +279,7 @@ REGRESSION_SOURCES = {
     "CommanderSpellGameHistoryTest.java": "commander_spell_game_history_test_sha256",
     "CommanderForetellHistoryTest.java": "commander_foretell_history_test_sha256",
     "CommanderDiscardHistoryTest.java": "commander_discard_history_test_sha256",
+    "CommanderSacrificeHistoryTest.java": "commander_sacrifice_history_test_sha256",
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",

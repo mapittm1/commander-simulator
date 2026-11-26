@@ -1,5 +1,19 @@
 # Card support and evidence
 
+A generic sacrifice-history correction maps each player's historical sacrifice
+records into AI game copies. Sixteen of twenty-six baseline controls fail; copied Dargo
+casts lose earned discounts and sacrifice records disappear. The correction passes
+**26/26** controls with native sacrifice actions and actual mana payments, mapped
+last-known information, repeated copies, player/branch isolation, native cleanup
+and negative non-sacrifice moves. Retained semantic regression groups pass;
+groups can overlap and are not unique card counts.
+
+The recipe adds twenty-six `sacrifice_history` cases and retains every earlier case,
+including original **1,271 / 90 seconds**. Fresh **3,622 source / 4,822 native /
+3,665 main packaged** validation is pending. Full rules correctness and runtime
+activation remain unverified; selected runtime is unchanged. See
+[sacrifice correction evidence](../engine/sacrifice_history_evidence.json).
+
 A generic discard-history correction now maps each player's historical discard
 records into AI game copies. Twelve of eighteen baseline controls fail: copied
 Hollow One casts lose earned discounts, and discard records disappear. The

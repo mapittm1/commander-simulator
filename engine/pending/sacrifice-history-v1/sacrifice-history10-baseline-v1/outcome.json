@@ -1,0 +1,77 @@
+{
+  "mode": "baseline",
+  "counts": {
+    "total": 10,
+    "passed": 6,
+    "failed": 4,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.landSacrificeAfterTwoCopiesDoesNotDiscountDargo",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.landSacrificeOriginalDoesNotDiscountDargo",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.noHistoryAfterTwoCopiesPaysSeven",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.noHistoryOriginalPaysSeven",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.oneCreatureAfterOneCopyPaysFive",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.oneCreatureAfterTwoCopiesPaysFive",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.oneCreatureOriginalPaysFive",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.twoCreaturesAfterOneCopyPayThree",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.twoCreaturesAfterTwoCopiesPayThree",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.twoCreaturesOriginalPayThree",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.oneCreatureAfterOneCopyPaysFive",
+      "message": "\n              Native Dargo payment includes prior artifact/creature sacrifices only expected [5] but found [7]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.oneCreatureAfterTwoCopiesPaysFive",
+      "message": "\n              Native Dargo payment includes prior artifact/creature sacrifices only expected [5] but found [7]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.twoCreaturesAfterOneCopyPayThree",
+      "message": "\n              Native Dargo payment includes prior artifact/creature sacrifices only expected [3] but found [7]\n            "
+    },
+    {
+      "method": "forge.ai.CommanderSacrificeHistoryProbeTest.twoCreaturesAfterTwoCopiesPayThree",
+      "message": "\n              Native Dargo payment includes prior artifact/creature sacrifices only expected [3] but found [7]\n            "
+    }
+  ],
+  "exact_case_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "production_origins": 188,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "scope": "Supplied-board native Sakura-Tribe Elder/Evolving Wilds sacrifice payments and Dargo casts with explicit zero additional-sacrifice choice through depth0/1/2 copies. Uncompiled/unrun probe; not a production fix, autonomous choice, full preceding history, full1271 gate or all-card proof."
+}

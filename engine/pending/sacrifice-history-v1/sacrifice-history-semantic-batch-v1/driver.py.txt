@@ -1,0 +1,33 @@
+"""Run retained semantic groups sequentially; never replace the full resolution gate."""
+from pathlib import Path
+import json
+import sys
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+from commander.engine.forge_config import file_hash
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'sacrifice-history-semantic-batch-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,value):p.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+for mode in ('baseline','prototype'):
+    assert load(WORK/('sacrifice-history20-controls-'+mode+('-v2/outcome.json' if mode=='baseline' else '-v3/outcome.json')))['counts']==(dict(total=20,passed=8,failed=12,skipped=0) if mode=='baseline' else dict(total=20,passed=20,failed=0,skipped=0))
+RUN.mkdir()
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+specs=[('cast',1404),('combat',273),('untap',194),('dungeons',10),('expended_mana',6),('first_events',12),('scry_history',6),('spell_game_history',12),('foretell_history',12),('discard_history',18),('upstream',9),('traits',495)]
+save(RUN/'selection.json',{'groups':specs,'worker_limit_seconds':90,'per_group_wrapper_limit_seconds':420,'original_resolution_workload_unchanged':1271,'scope':'Separate retained semantic invocations; groups can overlap. Not a full resolution gate or unique all-card coverage count.'})
+results={}
+for family,count in specs:
+    process=run_bounded([sys.executable,'-I',str(WORK/'run_sacrifice_history_regression_v1.py'),'prototype',family],ROOT,RUN/(family+'.log'),ProcessLimits(420,log_bytes=65536,environment=_environment(RUN)))
+    results[family]={'process':process}
+    save(RUN/'progress.json',results)
+    assert process['status']=='finished' and process['returncode']==0,(family,process)
+    outcome=load(WORK/('sacrifice-history-regression-'+family+'-prototype-v1/outcome.json'))
+    assert outcome['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert outcome['native_method_and_parameter_counter_matches'] and outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+    results[family]['counts']=outcome['counts']
+    save(RUN/'progress.json',results)
+    print(json.dumps({'family':family,'counts':outcome['counts']}),flush=True)
+assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+save(RUN/'outcome.json',{'groups':results,'all_passed':True,'scope':'Retained semantic invocations, possibly overlapping; not unique coverage, full1271/90, full preceding legal histories or all-card proof.'})

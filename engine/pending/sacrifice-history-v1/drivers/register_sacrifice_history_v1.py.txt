@@ -1,0 +1,145 @@
+"""Register the verified sacrifice-history correction after frozen baseline validation."""
+from pathlib import Path
+import ast
+import difflib
+import hashlib
+import json
+import shutil
+
+ROOT=Path.cwd()
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda path:json.loads(path.read_bytes())
+sha=lambda path:hashlib.sha256(path.read_bytes()).hexdigest()
+
+def save(path,value):
+    path.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+
+def replace(name,old,new):
+    path=ROOT/name
+    text=path.read_text(encoding='utf-8')
+    assert text.count(old)==1,(name,old)
+    path.write_text(text.replace(old,new),encoding='utf-8',newline='\n')
+
+def assignment(path,name):
+    for node in ast.parse(path.read_text(encoding='utf-8')).body:
+        if isinstance(node,ast.Assign) and any(isinstance(target,ast.Name) and target.id==name for target in node.targets):
+            return ast.literal_eval(node.value)
+    raise AssertionError(name)
+
+families={'cast':1404,'combat':273,'untap':194,'dungeons':10,'expended_mana':6,'first_events':12,'scry_history':6,'spell_game_history':12,'foretell_history':12,'discard_history':18,'upstream':9,'traits':495}
+assert load(WORK/'sacrifice-history26-controls-baseline-v3/outcome.json')['counts']==dict(total=26,passed=10,failed=16,skipped=0)
+assert load(WORK/'sacrifice-history26-controls-prototype-v3/outcome.json')['counts']==dict(total=26,passed=26,failed=0,skipped=0)
+assert load(WORK/'sacrifice-history-semantic-batch-v1/outcome.json')['all_passed']
+for family,count in families.items():
+    run=WORK/('sacrifice-history-regression-'+family+'-prototype-v1')
+    result=load(run/'outcome.json')
+    assert result['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert result['native_method_and_parameter_counter_matches']
+    assert result['configuration_failures']==result['configuration_skips']==result['testng_status']==0
+    assert load(run/'process.json')['returncode']==0
+prototype=WORK/'sacrifice-history-prototype-v1'
+assert all(sha(prototype/name)==digest for name,digest in load(prototype/'inputs.json').items())
+paths=[p.relative_to(prototype/'source').as_posix() for p in (prototype/'source').rglob('*.java')]
+assert len(paths)==2
+patch=ROOT/'engine/patches/commander-sacrifice-history.patch'
+assert not patch.exists()
+patch.write_text(''.join(''.join(difflib.unified_diff((prototype/'baseline-source'/name).read_text(encoding='utf-8').splitlines(keepends=True),(prototype/'source'/name).read_text(encoding='utf-8').splitlines(keepends=True),fromfile='a/'+name,tofile='b/'+name)) for name in paths),encoding='utf-8',newline='\n')
+fixture=ROOT/'engine/tests/CommanderSacrificeHistoryTest.java'
+assert not fixture.exists()
+fixture.write_text((WORK/'sacrifice-history-controls-v3/CommanderSacrificeHistoryProbeTest.java').read_text(encoding='utf-8').replace('CommanderSacrificeHistoryProbeTest','CommanderSacrificeHistoryTest'),encoding='utf-8',newline='\n')
+recipe=load(ROOT/'engine/sticker_recipe.json')
+assert recipe['native_test_count']==4796
+recipe['patches'].append({'path':patch.relative_to(ROOT).as_posix(),'sha256':sha(patch)})
+recipe['native_test_count']=4822
+recipe['runtime_version']='2.0.17-583714b-reviewed-sacrifice-history'
+recipe['capabilities'].append('sacrifice_snapshot_history')
+recipe['commander_sacrifice_history_test_sha256']=sha(fixture)
+save(ROOT/'engine/sticker_recipe.json',recipe)
+replace('tools/build_sticker_engine.py','                "engine/patches/commander-discard-history.patch",','                "engine/patches/commander-discard-history.patch",\n                "engine/patches/commander-sacrifice-history.patch",')
+replace('tools/build_sticker_engine.py','CommanderDiscardHistoryTest,CommanderReplacementCacheInputsTest','CommanderDiscardHistoryTest,CommanderSacrificeHistoryTest,CommanderReplacementCacheInputsTest')
+replace('tools/engine_test_sources.py','    "CommanderDiscardHistoryTest.java": "commander_discard_history_test_sha256",','    "CommanderDiscardHistoryTest.java": "commander_discard_history_test_sha256",\n    "CommanderSacrificeHistoryTest.java": "commander_sacrifice_history_test_sha256",')
+replace('tests/support/draw_ending_worker.py','    "CommanderDiscardHistoryTest": "commander_discard_history_test_sha256",','    "CommanderDiscardHistoryTest": "commander_discard_history_test_sha256",\n    "CommanderSacrificeHistoryTest": "commander_sacrifice_history_test_sha256",')
+worker=ROOT/'tests/support/draw_ending_worker.py'
+origins=assignment(worker,'NATIVE_CLASSES')
+assert len(origins)==188
+assert {'forge.game.cost.CostSacrifice','forge.game.ability.effects.DrawEffect','forge.game.spellability.SpellAbilitySnapshot'}.issubset(origins)
+replace('tests/support/draw_ending_worker.py','fixed 3639-case','fixed 3665-case')
+partitions=ROOT/'tests/support/draw_ending_partitions.py'
+previous_parts=assignment(partitions,'PARTITIONS')
+previous_counts=assignment(partitions,'EXPECTED_COUNTS')
+replace('tests/support/draw_ending_partitions.py','    "discard_history": ("forge.ai.CommanderDiscardHistoryTest",),','    "discard_history": ("forge.ai.CommanderDiscardHistoryTest",),\n    "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),')
+replace('tests/support/draw_ending_partitions.py','    "discard_history": 18,\n}','    "discard_history": 18,\n    "sacrifice_history": 26,\n}')
+parts=assignment(partitions,'PARTITIONS')
+counts=assignment(partitions,'EXPECTED_COUNTS')
+assert {name:parts[name] for name in previous_parts}==previous_parts
+assert {name:counts[name] for name in previous_counts}==previous_counts
+assert set(parts)-set(previous_parts)=={'sacrifice_history'}
+assert sum(counts.values())==3665 and counts['resolution']==1271
+replace('tests/unit/test_draw_ending_partitions.py','sum(EXPECTED_COUNTS.values()), 3639','sum(EXPECTED_COUNTS.values()), 3665')
+replace('tests/unit/test_draw_ending_partitions.py','        self.assertEqual(EXPECTED_COUNTS["discard_history"], 18)','        self.assertEqual(EXPECTED_COUNTS["discard_history"], 18)\n        self.assertEqual(EXPECTED_COUNTS["sacrifice_history"], 26)')
+replace('tests/integration/test_draw_endings_integration.py','len(all_methods), 3639','len(all_methods), 3665')
+replace('tests/integration/test_draw_endings_integration.py','len(set(all_methods)), 3639','len(set(all_methods)), 3665')
+
+archive=ROOT/'engine/pending/sacrifice-history-v1'
+archive.mkdir()
+artifacts={}
+folders=['sacrifice-history-probe-v1','sacrifice-history-controls-v2','sacrifice-history-controls-v3','sacrifice-history-prototype-v1','sacrifice-history10-baseline-v1','sacrifice-history10-corrected-prototype-v1','sacrifice-history20-controls-baseline-v2','sacrifice-history20-controls-prototype-v2','sacrifice-history20-controls-prototype-v3','sacrifice-history26-controls-baseline-v3','sacrifice-history26-controls-prototype-v3','sacrifice-history-semantic-batch-v1',*['sacrifice-history-regression-'+name+'-prototype-v1' for name in families]]
+for folder in folders:
+    for source in sorted((WORK/folder).rglob('*')):
+        relative=source.relative_to(WORK/folder)
+        if not source.is_file() or source.suffix not in {'.java','.json','.xml','.log','.txt'}:continue
+        if any(name in {'classes','appdata','localappdata','temp','cache','user','home'} for name in relative.parts):continue
+        if source.suffix=='.xml' and source.name!='testng-results.xml':continue
+        target=archive/folder/relative
+        target.parent.mkdir(parents=True,exist_ok=True)
+        shutil.copyfile(source,target)
+        artifacts[target.relative_to(ROOT).as_posix()]=sha(target)
+for source in sorted(WORK.glob('*sacrifice*history*.py')):
+    target=archive/'drivers'/(source.name+'.txt')
+    target.parent.mkdir(parents=True,exist_ok=True)
+    shutil.copyfile(source,target)
+    artifacts[target.relative_to(ROOT).as_posix()]=sha(target)
+record={'scope':'Supplied-board native sacrifice actions and actual Dargo payments, LKI ownership, repeated copies, opponent and sibling isolation, cleanup and negative non-sacrifice movement. Not full preceding legal histories, full scheduler, all sacrifice cards or comprehensive rules proof.',
+'ci':load(WORK/'discard-source-epoch-v1/source-ci.json'),'baseline_build':'77446d651df0401489c8bec480fb7eaf',
+'initial_baseline_counts':load(WORK/'sacrifice-history10-baseline-v1/outcome.json')['counts'],
+'baseline_counts':load(WORK/'sacrifice-history26-controls-baseline-v3/outcome.json')['counts'],
+'corrected_counts':load(WORK/'sacrifice-history26-controls-prototype-v3/outcome.json')['counts'],
+'wrapper_correction':'First twenty-case prototype run passed all native tests but its Python wrapper retained passed=10. Preserve that failed wrapper run; corrected v3 uses passed=20 and finishes successfully. No gameplay assertion changed.',
+'diagnosis':'AI game copies omit per-player sacrifice receipts; copied Dargo casts lose prior artifact/creature sacrifice discounts.',
+'correction':'Map historical sacrifice receipts through existing SpellAbilitySnapshot after card restoration, without replaying sacrifice events.',
+'retained_semantic_family_counts':families,'family_counts_can_overlap':True,'production_origins':188,
+'source_native_packaged_expected':[3622,4822,3665],'fresh_full_validation_pending':True,
+'original_resolution_cases':1271,'resolution_worker_seconds':90,'installed':False,'artifacts':artifacts}
+save(ROOT/'engine/sacrifice_history_evidence.json',record)
+attributes=ROOT/'.gitattributes'
+attributes.write_text(attributes.read_text(encoding='utf-8')+'engine/sacrifice_history_evidence.json -text whitespace=cr-at-eol\nengine/pending/sacrifice-history-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n',encoding='utf-8',newline='\n')
+intro="""A generic sacrifice-history correction maps each player's historical sacrifice
+records into AI game copies. Sixteen of twenty-six baseline controls fail; copied Dargo
+casts lose earned discounts and sacrifice records disappear. The correction passes
+**26/26** controls with native sacrifice actions and actual mana payments, mapped
+last-known information, repeated copies, player/branch isolation, native cleanup
+and negative non-sacrifice moves. Retained semantic regression groups pass;
+groups can overlap and are not unique card counts.
+
+The recipe adds twenty-six `sacrifice_history` cases and retains every earlier case,
+including original **1,271 / 90 seconds**. Fresh **3,622 source / 4,822 native /
+3,665 main packaged** validation is pending. Full rules correctness and runtime
+activation remain unverified; selected runtime is unchanged. See
+[sacrifice correction evidence]({prefix}engine/sacrifice_history_evidence.json).
+
+"""
+for name,prefix,marker in [('README.md','','## Card coverage\n\n'),('docs/CARD_COVERAGE.md','../','# Card support and evidence\n\n')]:
+    replace(name,marker,marker+intro.format(prefix=prefix))
+notes="""- Preserve per-player sacrificed-card history in AI game copies through the
+  existing LKI mapper, without replaying events or sharing original history cards.
+  Sixteen baseline failures lose records or Dargo's prior-sacrifice discounts;
+  all twenty-six native-payment, ownership, isolation, cleanup and negative movement
+  controls pass after correction, plus retained semantic regressions.
+- Register twenty-six sacrifice_history cases, retaining every earlier case and the
+  original 1,271/90 workload. Fresh 3,622 source / 4,822 native / 3,665 main
+  packaged validation and runtime activation remain pending. Supplied boards
+  do not establish full preceding legal histories or comprehensive rules support.
+
+"""
+replace('CHANGELOG.md','## Unreleased\n\n','## Unreleased\n\n'+notes)
+print(json.dumps({'new_cases':26,'artifacts':len(artifacts),'fresh_validation_pending':True}))
