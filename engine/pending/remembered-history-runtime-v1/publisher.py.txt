@@ -1,0 +1,114 @@
+"""Publish the completed remembered-history validation cohort without activation."""
+from pathlib import Path
+import hashlib
+import json
+import re
+import shutil
+import subprocess
+
+ROOT = Path(__file__).resolve().parents[4]
+WORK = Path(__file__).resolve().parent
+DEST = ROOT / 'engine/pending/remembered-history-runtime-v1'
+INDEX = ROOT / 'engine/remembered_history_runtime_evidence.json'
+load = lambda p: json.loads(p.read_bytes())
+sha = lambda p: hashlib.sha256(p.read_bytes()).hexdigest()
+
+
+def main():
+    assert not DEST.exists() and not INDEX.exists()
+    candidate = WORK / 'remembered-history-candidate-v1'
+    epoch = load(candidate / 'source-epoch.json')
+    ci = load(candidate / 'source-ci.json')
+    assert ci['conclusion'] == 'success'
+    assert ci['head_sha'] == subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip()
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT)
+    source = load(WORK / 'source3718-v1/outcome.json')
+    native = load(candidate / 'build-audit.json')
+    front = load(WORK / 'remembered-front-packaged-v1/audit.json')
+    remainder = load(WORK / 'remembered-remainder-v1/audit.json')
+    other = load(WORK / 'remembered-other-packaged-v1/audit.json')
+    broad = load(WORK / 'remembered-broad-v1/outcome.json')
+    restored = load(WORK / 'remembered-broad-v1/wrapper-process.json')
+    catalog = load(WORK / 'remembered-catalog-health-v1/outcome.json')
+    assert source['passed'] and source['counts'] == dict(total=3718, passed=3718, failed=0, skipped=0)
+    assert native['native_counts'] == dict(total=4918, passed=4918, failed=0, skipped=0)
+    assert native['prior_native_cases_retained'] == 4909 and native['added_cases'] == 9
+    assert native['protected_resolution_and_helper_classfiles_identical'] == 173
+    assert front['total_cases'] + remainder['total_cases'] == 2490
+    assert other['total_cases'] == 405
+    assert broad['passed'] and restored['policies_restored'] and restored['production_unchanged']
+    assert broad['suites']['gameplay']['counts'] == dict(total=6241, passed=6241, failed=0, skipped=0)
+    assert broad['suites']['serialization']['counts'] == dict(total=320, passed=320, failed=0, skipped=0)
+    assert catalog['catalog_status'] == 'passed' and catalog['default_configuration_unchanged']
+    frozen = load(candidate / 'source-frozen-inputs.json')
+    assert all(sha(ROOT / n) == h for n, h in frozen.items())
+    files = {}
+
+    def preserve(source_path, relative):
+        target = DEST / relative
+        assert target.resolve().is_relative_to(DEST.resolve()) and not target.exists()
+        target.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copyfile(source_path, target)
+        assert source_path.read_bytes() == target.read_bytes()
+        files[target.relative_to(ROOT).as_posix()] = sha(target)
+
+    cohorts = ['source3718-v1', 'remembered-history-candidate-v1',
+               'remembered-front-packaged-v1', 'remembered-remainder-v1',
+               'remembered-other-packaged-v1', 'remembered-broad-v1',
+               'remembered-catalog-health-v1']
+    run_ids = {catalog['catalog_run_id']}
+    for name in cohorts:
+        directory = WORK / name
+        for path in sorted(directory.iterdir()):
+            if path.is_file():
+                preserve(path, name + '/' + path.name)
+        process = directory / 'process.json'
+        if process.exists():
+            run_ids.update(load(process).get('new_run_directories', []))
+    build = ROOT / load(candidate / 'candidate-selection.json')['build']
+    for name in ('engine-config.json', 'engine-lock.json', 'build-recipe.json', 'maven-build.log'):
+        preserve(build / name, 'native4918/' + name)
+    preserve(build / 'source/forge-gui-desktop/target/surefire-reports/testng-results.xml', 'native4918/testng-results.xml')
+    for suite in ('gameplay', 'serialization'):
+        directory = WORK / 'remembered-broad-v1' / suite
+        for name in ('selection.json', 'process.json', 'outcome.json', 'native-rules.log', 'testng-results.xml'):
+            preserve(directory / name, 'remembered-broad-v1/' + suite + '/' + name)
+    for name in ('policy-originals', 'policy-applied'):
+        directory = WORK / 'remembered-broad-v1' / name
+        for path in sorted(directory.rglob('*.java')):
+            preserve(path, 'remembered-broad-v1/' + name + '/' + path.relative_to(directory).as_posix())
+    for run_id in sorted(run_ids):
+        assert re.fullmatch('[a-f0-9]{32}', run_id)
+        directory = ROOT / 'data/runs' / run_id
+        assert directory.is_dir()
+        for path in sorted(directory.rglob('*')):
+            if path.is_file() and path.suffix in ('.json', '.jsonl', '.xml', '.log'):
+                preserve(path, 'runs/' + run_id + '/' + path.relative_to(directory).as_posix())
+    scripts = ['prepare_source3718_v1.py', 'run_source3718_v1.py',
+               'build_remembered_history_native4918_v1.py', 'audit_build4918_v1.py',
+               'run_remembered_front_packaged_v1.py', 'audit_remembered_front_packaged_v1.py',
+               'run_remembered_remainder_v1.py', 'audit_remembered_remainder_v1.py',
+               'run_remembered_other_packaged_v1.py', 'audit_remembered_other_packaged_v1.py',
+               'prepare_remembered_broad_v1.py', 'run_remembered_broad_v1.py',
+               'run_remembered_catalog_health_v1.py']
+    for name in scripts:
+        preserve(WORK / name, 'drivers/' + name + '.txt')
+    preserve(Path(__file__), 'publisher.py.txt')
+    record = {
+        'status': 'finite_source_native_packaged_broader_and_catalog_checks_passed',
+        'source_epoch': epoch, 'source_ci': ci, 'source_cases_passed': 3718,
+        'native_build': build.name, 'native_audit': native,
+        'main_packaged_nonresolution_cases': 2490, 'additional_packaged_cases': 405,
+        'broader': broad, 'catalog': catalog,
+        'original_resolution_cases': 1271, 'original_resolution_worker_seconds': 90,
+        'original_resolution_gate_passed': False, 'runtime_activated': False,
+        'scope': 'Exact cases/parameters, receipt arguments and production origins support these finite suites. Card construction does not prove ability correctness. Original1271/90, full3761 packaged, full games, universal card/rules correctness and activation remain unresolved.',
+        'files': files,
+    }
+    INDEX.write_text(json.dumps(record, indent=2) + '\n', encoding='utf-8', newline='\n')
+    assert all(sha(ROOT / n) == h for n, h in files.items())
+    print(json.dumps({'preserved_files': len(files), 'run_directories': len(run_ids), 'index': INDEX.relative_to(ROOT).as_posix()}), flush=True)
+
+
+if __name__ == '__main__':
+    main()

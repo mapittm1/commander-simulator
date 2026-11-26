@@ -1,0 +1,1919 @@
+# Archived README card-coverage notes
+
+Preserved from README at commit `53a4717caa8663146ffabdd6b679191a5cf22c67`.
+Counts and pending states below are historical checkpoints. See
+[current coverage](../CARD_COVERAGE.md) for the latest verified status.
+Local links have been adjusted for this document's location.
+
+A generic remembered-history correction preserves cards outside live zones and
+last-known-information objects through the shared snapshot graph. Seven of nine
+baseline controls fail; all nine corrected controls pass, including native
+life-gain parity, repeated copies, sibling isolation and shared historical
+identity. All 87 retained payload/lifecycle/ignore-effect cases pass.
+
+The recipe registers nine `remembered_history` cases with fixed patch/fixture
+checksums. Expanded **3,718 source / 4,918 native / 3,761 main packaged** validation
+is pending. The original **1,271 cases / 90 seconds** workload and selected runtime
+are unchanged. Supplied states do not prove complete legal histories or universal
+card correctness; no speedup is claimed. See [remembered-history evidence](../../engine/remembered_history_evidence.json).
+
+A shared ignore-effect correction fixes copied paid special actions for Leonin
+Arbiter, Damping Engine, Volrath's Curse and Lost in Thought. Copied actions now
+update their own static effect, eligible players and affected cards; native
+end-of-turn/leaves-play callbacks map to that same copied effect. The baseline
+fails nine of 22 controls; the correction passes all 22 with actual mana,
+sacrifice and graveyard-exile costs, cleanup, unaffordable-payment checks and
+original/sibling isolation. All 13 retained interaction groups pass.
+
+The recipe registers 22 `ignore_effect` cases while preserving every prior case
+and original **1,271 / 90 seconds** workload. Fresh **3,709 source** and
+**4,909 native** suites pass with exact retained methods/parameters and matching
+reviewed inputs. All 291 registered plus nine priority fixtures match; only the
+intended static-ability class family changes, and 173 protected resolution/helper
+classfiles stay byte-identical.
+
+Independent packaged checks now pass all **2,481 non-resolution main cases**
+and another **405 casting, untap and Battle cases**, with exact native
+method/parameter counters and packaged production origins audited. The repaired
+collector also passes a separate 22-case native smoke test: all 22 argument-aware
+identities survive despite sharing 14 method names. Earlier failed validator
+reports remain preserved.
+
+The broader **6,232 gameplay** and **320 card/deck-loading** cases pass with exact
+case/parameter membership and no skips. Reviewed temporary test policies are
+restored afterward; production inputs remain unchanged. Candidate health is ready,
+and catalog construction passes for **32,636 of 32,643 checked identities**; seven
+meld results remain explicitly reported as unavailable standalone scripts.
+Construction does not establish ability or interaction correctness.
+
+The original **1,271 cases / 90 seconds** gate remains unresolved, so the full
+**3,752 main packaged** gate, full-game validation and activation remain open.
+Its cases, assertions and time limit are unchanged. Two misencoded comment lines
+in the experimental source were repaired; all three emitted classfiles are
+identical to the tested prototype. See [current runtime evidence](../../engine/parameter_runtime_evidence.json)
+and [earlier validator evidence](../../engine/ignore_effect_runtime_evidence.json).
+
+Supplied boards, controlled choices and cleanup hooks do not establish complete
+legal histories, default AI strategy or all-card correctness. The selected
+runtime is unchanged. See
+[ignore-effect evidence](../../engine/ignore_effect_evidence.json).
+
+A generic copier-lifecycle correction now discards retained source ability and
+combat-band identity graphs on release. It preserves copied worlds and immutable
+unsupported-callback findings. Four of eight baseline controls fail; the
+correction passes all eight, including actual mana payment/resolution after
+release, plus all 57 payload controls and 13 retained interaction groups.
+
+The recipe registers eight `copier_lifecycle` cases, retaining every earlier
+case and the original **1,271 / 90 seconds** workload. Fresh **3,687 source**
+and **4,887 native** suites pass with exact retained methods/parameters, matching
+reviewed fixtures and source inputs, and only GameCopier class-family changes.
+All 173 protected resolution/helper classfiles remain byte-identical. Independent
+**3,730 main packaged** and final live validation remain pending. See
+[lifecycle runtime evidence](../../engine/copier_release_runtime_evidence.json).
+The selected runtime is unchanged. This is a reference-lifecycle correction; no
+reliable speedup, garbage-collection guarantee or full rules claim is made.
+See [copier release evidence](../../engine/copier_release_evidence.json).
+
+The payload-graph candidate passes **4,879 native cases**, all **2,451 main
+packaged cases outside the resolution group**, 405 other packaged cases, 6,202
+broader gameplay cases and 320 card/deck loading cases. Audits retain the exact
+expected methods/parameters and reviewed source inputs. Health checks pass;
+32,636 of 32,643 catalog cards construct, with seven non-starting meld results
+reported separately. Construction does not establish ability or gameplay support.
+
+An isolated empty-event-map optimization passes all 3,679 source cases and 13
+selected interaction groups. Fixed probes save about 1,200 bytes per snapshot
+when both maps are empty and 600 bytes when one is populated. Its original
+**1,271-case resolution workload still times out at 90.015 seconds** without a
+completed report. The candidate remains unpromoted; these measurements do not
+prove a reliable speedup. The first source attempt omitted two original
+method-specific selectors; the complete rerun restores them without changing
+production/test sources, assertions or expected cases. Results and raw evidence
+are preserved in [runtime validation evidence](../../engine/payload_graph_runtime_evidence.json).
+The selected simulator runtime is unchanged.
+
+A generic payload-copy correction preserves shared mutable event state and
+supported container cycles in AI worlds. The baseline fails 22 of 26 graph checks
+and 4 of 5 native prevention-event checks; the correction passes all of them.
+Native damage prevention now updates every copied reference to the same event,
+while equal-but-distinct events and original/sibling worlds stay independent.
+All 25 map contracts, 16 supplier controls and 13 retained interaction groups pass.
+Three self-contained registration fixtures pass all 57 cases together; a fresh
+source build passes all 320 card/deck loading cases with exact methods/parameters.
+
+Original **1,271 / 90 seconds** still times out at **90.016s** without a
+completed report. The recipe now registers 57 additional `payload_graph` cases,
+retaining all prior groups. Source **3,679** and native **4,879** pass; a complete
+**3,722 main packaged** verdict remains unavailable because the resolution group
+has not completed within its limit. The selected runtime is unchanged. Supplied event states
+do not prove preceding legal histories, activation/payment/replacement ordering
+or complete rules coverage. Payload-container failure cleanup is not a complete
+native snapshot transaction. See [payload graph evidence](../../engine/payload_graph_evidence.json).
+
+An unpromoted snapshot optimization replaces redundant memoizers for three
+already-copied ability values with instance suppliers. It preserves source
+supplier evaluation, separate mutable containers and native card mapping.
+Sixteen contracts pass in each baseline/prototype mode; a combined seventeen-source
+prototype passes **78 focused checks**, all **13 retained interaction groups**
+(with possible overlap), and a fresh source build's **320 card/deck loading tests**
+with exact methods/parameters and no skips. Fixed allocation probes save about
+120 bytes per copied ability in three scenarios; they establish no reliable
+elapsed speedup, lower retained memory or complete rules coverage.
+
+The combined prototype still times out on original **1,271 / 90 seconds**
+(**90.016s**, no completed report), so the selected runtime is unchanged. The
+320 loading tests cover card/deck parsing, mocks and generation; they do not
+establish ability serialization. Raw results include the corrected pre-JVM Git
+preflight failure. See [snapshot supplier evidence](../../engine/snapshot_ability_supplier_evidence.json).
+
+A generic sacrifice-history correction maps each player's historical sacrifice
+records into AI game copies. Sixteen of twenty-six baseline controls fail; copied Dargo
+casts lose earned discounts and sacrifice records disappear. The correction passes
+**26/26** controls with native sacrifice actions and actual mana payments, mapped
+last-known information, repeated copies, player/branch isolation, native cleanup
+and negative non-sacrifice moves. Retained semantic regression groups pass;
+groups can overlap and are not unique card counts.
+
+The recipe adds twenty-six `sacrifice_history` cases and retains every earlier
+case, including original **1,271 / 90 seconds**. Fresh **3,622 source / 4,822 native**
+cases pass with exact retained methods and parameters. All **285 registered + nine
+priority** native fixture files match reviewed bytes. Source manifests bind
+**2,168 production / 174 test / 350 card** inputs; only Player and GameCopier
+production classes changed from the preceding candidate.
+
+Independent receipt audits pass all **2,394 non-resolution main** and **405
+separate packaged** cases. Broader **6,145 gameplay / 320 card/deck loading** cases
+pass with exact membership, no skips and restored source policies.
+
+The full **3,665-case** main gate remains unverified at the original resolution
+workload and limit. Final catalog/health/full-game checks, activation and complete
+card/rules correctness remain open; selected runtime is unchanged. See
+[sacrifice correction evidence](../../engine/sacrifice_history_evidence.json) and
+[runtime evidence](../../engine/sacrifice_history_runtime_evidence.json).
+
+An isolated, unpromoted EnumSet query allocation hint passes **17 native query
+contracts in each baseline/prototype mode**, including opaque callbacks, live
+set changes, phasing, stack handling and independent mutable snapshots. Fixed
+2,000-query probes allocate less for 8/80-card worlds, more in the empty-world
+sample, and close to baseline for 400 cards. These measurements establish no
+lower allocation for every workload, faster runs, lower retained memory, or
+complete rules correctness. The hint is not part of the selected runtime. See
+[allocation evidence](../../engine/native_enum_card_scan_evidence.json).
+
+A generic discard-history correction now maps each player's historical discard
+records into AI game copies. Twelve of eighteen baseline controls fail: copied
+Hollow One casts lose earned discounts, and discard records disappear. The
+correction passes **18/18** controls using actual paid cycling and casting,
+repeated copies, preserved historical card ownership, opponent isolation,
+independent branches, native player cleanup and negative graveyard moves. All
+retained casting, combat, untap, event-history, foretell, upstream and trait
+regression groups pass; these groups can overlap and are not unique card counts.
+
+The recipe adds eighteen `discard_history` cases, retaining every earlier group
+and original **1,271 / 90 seconds**. Fresh **3,596 source / 4,796 native / 3,639 main
+packaged** validation is pending. Supplied boards do not establish full preceding
+legal histories, complete turn scheduling or experimental restore support;
+selected runtime is unchanged. See
+[discard correction evidence](../../engine/discard_history_evidence.json).
+
+A generic foretell-history correction now preserves each player's turn count in
+AI world copies. Six of twelve baseline controls fail: a used first-foretell
+discount becomes available again, and action counts disappear. The correction
+passes **12/12** using actual payments, native face-down exile, Ranar token
+triggers, Cosmos Charger's combined cost reduction/off-turn permission, negative
+permission checks, repeated copies and player/branch isolation. Foretelling stays
+a special action rather than a spell cast. All **1,926** retained semantic-family
+cases pass. Supplied boards do not establish full preceding legal histories,
+the complete turn scheduler or experimental restore support.
+
+The recipe adds twelve `foretell_history` cases, retaining every earlier group
+and original **1,271 / 90 seconds**. Fresh **3,578 source / 4,778 native** cases pass
+with exact retained methods and parameters. Reviewed manifests contain **2,168
+production / 172 test / 344 card** inputs; all **283 registered + nine priority**
+fixture files match reviewed bytes. Player.class is the only changed production
+class relative to the preceding native candidate. All **2,350** non-resolution
+main cases and separate **405** free-casting/untap/Battle cases pass receipt audits.
+Broader **6,101 gameplay / 320 serialization** cases pass with exact membership,
+no skips and policies restored.
+
+The full **3,621-case** gate remains incomplete: original resolution times out at
+**90.032 seconds**, without a completed report. Final live checks, activation
+and complete card/rules coverage remain open; selected runtime is unchanged. See
+[foretell correction evidence](../../engine/foretell_history_evidence.json) and
+[runtime evidence](../../engine/foretell_history_runtime_evidence.json).
+
+A generic game-long spell-history correction now preserves earlier-turn casts in
+AI world copies. Five of twelve baseline controls fail: copied games incorrectly
+offer Once Upon a Time's free first-spell alternative or undercount later paid
+casts. The correction passes **12/12**, including paid Opt, an explicit native
+stack-turn boundary, actual alternative-cost eligibility, repeated copies,
+separate players and branch isolation. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / twelve first-event / six scry / nine upstream**
+controls. Supplied boards do not prove full preceding legal histories, the complete
+turn scheduler or the experimental restore path.
+
+The recipe adds twelve `spell_game_history` cases, preserving every previous group
+and original **1,271 / 90 seconds**. Fresh **3,566 source / 4,766 native** cases pass
+with exact retained methods/parameters. Manifests contain **2,168 production / 171
+test / 341 card** inputs; all **282 registered + nine priority** fixture files match
+reviewed bytes. Production class changes are confined to Player and GameCopier
+families. All **2,338** non-resolution main cases and separate **65 free-casting /
+194 untap / 146 Battle** cases pass receipt audits. Broader **6,089 gameplay / 320
+serialization** cases pass with exact membership, no skips and policies restored.
+
+The full **3,609-case** gate remains incomplete: original resolution times out at
+**90.015 seconds**, without a completed report. Final live checks, activation
+and complete card/rules coverage remain open; the selected runtime is unchanged.
+See [game-long spell-history evidence](../../engine/game_spell_history_evidence.json)
+and [runtime evidence](../../engine/game_spell_history_runtime_evidence.json).
+
+A generic scry-history correction now preserves each player's turn count in AI
+world copies. Three of six baseline controls fail: paid Opt no longer qualifies
+Proctor of Potential's graveyard ability after copying, and another player's
+count disappears. The correction passes **6/6**, including actual mana payment,
+finality counters, the returned creature's surveil trigger, positive/negative
+conditions and separate-player history. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / twelve event-history / nine upstream**
+controls. These supplied boards do not establish full legal histories or the
+experimental restore path.
+
+The recipe adds six cases in `scry_history`, preserving every previous group and
+original **1,271 / 90 seconds**. Fresh **3,554 source / 4,754 native** cases pass
+with exact retained methods and parameters. Reviewed manifests contain **2,168
+production / 170 test / 340 card** inputs; all **281 registered + nine priority**
+fixtures match their reviewed bytes. The production class change is confined to
+`Player.class`. Completed packaged groups pass **301 information / 273 combat /
+338 text-cost / 1,380 casting / ten dungeon / six expend / twelve first-event /
+six scry** cases, plus separate **65 free-casting / 194 untap / 146 Battle** cases.
+Broader **6,077 gameplay / 320 serialization** cases pass with exact membership,
+no skips and temporary policies restored.
+
+The full **3,597-case** packaged gate remains incomplete: original **1,271 / 90
+seconds** resolution times out at **90.016 seconds**, without a completed report.
+The selected runtime remains unchanged. Final live checks, activation and complete
+card/rules coverage remain open. See [scry correction evidence](../../engine/scry_history_evidence.json)
+and [runtime evidence](../../engine/scry_history_runtime_evidence.json).
+
+A shared correction now preserves how often life gain, surveil and investigate
+occurred during the turn in copied games. Six of twelve baseline controls fail:
+Cleric of Life's Bond counters, Whispering Snitch drains and Erdwal Illuminator
+investigations repeat after copying. The correction passes **12/12**, including
+original-game controls, repeated copies, native prior events, paid follow-up
+spells and valid first-time triggers. It retains **1,404 casting / 273 combat /
+194 untap / ten dungeon / six expend / nine upstream** controls. These supplied
+boards do not establish complete legal histories or experimental restore support.
+
+The recipe adds twelve cases in a separate `first_events` group. Every earlier
+group/count and original **1,271-case / 90-second** workload remains unchanged.
+Fresh **3,548 source / 4,748 native** validation passes with every earlier method
+and parameter retained. Reviewed inputs include 2,168 production, 169 test and 339
+card files; all 280 registered and nine priority fixture files match exact bytes.
+Packaged **301 information / 273 combat / 338 text-cost / 1,380 casting / ten
+dungeon / six expend / twelve history** cases pass receipt audits, plus separate
+**65 free-casting / 194 untap / 146 Battle** cases. Broader **6,071 gameplay / 320
+serialization** cases pass with exact membership and no skips.
+
+The full **3,591-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.015 seconds**, without a completed report.
+The selected runtime remains unchanged; final live checks, activation and complete
+card/rules coverage remain required. See [history correction evidence](../../engine/first_event_history_evidence.json)
+and [runtime evidence](../../engine/first_event_history_runtime_evidence.json).
+
+Allocation experiments remain unpromoted. Mask removal alone measures no saving;
+merging the two version counters as well saves **800,000 allocated bytes per
+100,000 objects** in each fixed escaping probe. The combined variant passes its
+semantic controls but still times out at original **1,271 / 90 seconds** without a
+completed report. These figures are not retained-memory or reliable speedup claims.
+A bounded late-window profile again points to static/replacement trait gathering.
+See [experiment evidence](../../engine/collection_experiments_v2_evidence.json).
+
+A live static-category proposal passes **15 boundary controls**, including native
+mutable lists, opaque callbacks, removal predicates and callback mutation ordering.
+It retains **1,914** casting/combat/untap/history/upstream cases. Its single original
+**1,271 / 90-second** trial times out at **90.016 seconds** without a completed report. The proposal stays
+unpromoted pending full validation. These results are not a reliable speedup,
+full normal packaged gate or complete card-rules proof. See
+[trait-category evidence](../../engine/trait_category_evidence.json).
+
+A separate positive keyword-static cache rechecks native list membership on every
+read and preserves existing mutable APIs and opaque callbacks. Both baseline and
+prototype pass **14** actual-effect/mutation/copied-host contracts and **15** earlier
+boundary controls. The prototype passes **495** existing trait/collection cases
+and all **1,926** retained semantic-family cases. These workload counts do not
+establish unique total coverage.
+
+Across three instrumented existing methods, observed static rebuilds fall from
+**763,977 to 428** while all assertions pass. The single original **1,271 / 90-second**
+trial still times out at **90.000 seconds**, without a completed
+report. The proposal remains unpromoted; these observations are not retained-memory,
+reliable speedup, full normal-gate or complete card-rules proof. See
+[native keyword-cache evidence](../../engine/native_keyword_static_evidence.json).
+
+A generic expend-history correction now retains cumulative spell-mana spending in
+AI world copies. Four of six controls fail on the preceding candidate: Muerra's
+fourth-mana effect can be missed or repeated instead of reaching the eighth-mana
+effect. The correction passes **6/6**, including paid spells, repeated copies,
+negative controls and player isolation; **1,404 casting / 273 combat / 194 untap /
+ten dungeon / nine upstream** controls remain passing. These start from supplied
+boards and do not establish complete legal game histories or all-card correctness.
+
+The registered recipe adds a separate six-case `expended_mana` group, preserving
+every earlier group and the original **1,271-case / 90-second** workload. Fresh
+**3,536 source / 4,736 native** validation passes, retaining every earlier method
+and parameter. All 2,168 production, 168 test and 332 card inputs match reviewed
+sources; production class changes are confined to GameCopier and nested classes.
+The full **3,579-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.000 seconds**, without a completed report.
+The preceding **301 information / 273 combat / 338 text-cost** cases pass with
+native membership and origin audits. Remaining packaged groups, broader/live
+checks, activation and complete card/rules coverage remain pending.
+
+A bounded diagnostic reaches TestNG after about **1.6 seconds** and remains there
+until timeout. Its samples point toward repeated trait-list and collection work;
+recorded GC pauses total about **0.42 seconds**. Allocation samples estimate volume,
+not retained memory. The profile is not a normal passing gate or a reliable speedup
+claim. No collector or test-workload change is promoted. The selected runtime stays
+unchanged. See [expend correction evidence](../../engine/expend_history_evidence.json) and
+[runtime evidence](../../engine/expend_history_runtime_evidence.json).
+
+A generic dungeon snapshot correction now preserves completed-dungeon history,
+venture counts, current-room markers and game-piece designations. The old copier
+could turn a dungeon into a token that disappeared; it also lost completion-based
+bonuses such as Nadaar's. The unchanged baseline passes **1/10** targeted controls;
+the correction passes **10/10**, including paid Dungeon Map entry/completion,
+room draws, repeated copies, multiple players and history isolation. It also
+retains **1,404 casting**, **273 combat**, **194 untap** and **nine upstream** checks.
+Some starting states supply an existing room; these are not complete preceding
+legal histories or full rules coverage.
+
+The build registers the ten new cases in a separate `dungeons` group. Every earlier
+group and count remains unchanged, including original **1,271 / 90 seconds**.
+Fresh validation passes **3,530 source / 4,730 native** cases, retaining all earlier
+methods and parameters. All 2,168 production, 167 test and 324 card inputs match the
+reviewed source; production class changes stay within the four corrected families.
+Normal packaged checks pass **301 information / 273 combat / 338 text-cost / 1,380
+casting / ten dungeon** cases, plus separate **65 free-casting / 194 untap / 146
+Battle** cases. Native counters, parameters and production origins are audited.
+Broader suites pass **6,053 gameplay / 320 serialization** cases without skips.
+
+The full **3,573-case** packaged gate remains incomplete: original **1,271-case /
+90-second** resolution times out at **90.016s**, without a completed report. Its
+workload and deadline are unchanged; it was not retried unchanged for luck.
+The candidate remains uninstalled and the selected runtime unchanged. Fresh final
+live checks, activation and complete paid-history/card-rules coverage remain open.
+See [dungeon correction evidence](../../engine/dungeon_snapshot_evidence.json) and
+[fresh runtime evidence](../../engine/dungeon_snapshot_runtime_evidence.json).
+
+A current-baseline Parallel GC diagnostic passes its semantic controls but still
+times out at **90.016 seconds** on the original resolution workload, without a
+completed report. Preserve earlier failed collector trials too; no collector or
+allocation setting is promoted. See [collector diagnostics](../../engine/collector_policy_evidence.json).
+
+The generic casting-cost correction now passes **3,520 source** and **4,720
+native** cases, retaining every earlier method/parameter and adding nine paid-cast
+boundaries. All 2,168 production sources, 166 test inputs and 318 card inputs
+match reviewed evidence; only `ComputerUtilCost` production class bytes change
+from the preceding candidate.
+Pre-target probes retain additional-cost/known extra-mana checks; completed targets
+retain native cast/target-trigger forecasting. This restores replicate choices and
+Abbot follow-up plans. The boundary cases use supplied board states and copied
+games, so they do not establish complete preceding legal histories.
+
+The fresh broader suites pass **6,043 gameplay / 320 serialization** cases with
+exact membership and no skips. Normal packaged groups pass **1,380 cast**, **301
+information**, **273 combat**, **338 text/cost**, **65 free-casting**, **194 untap**
+and **146 Battle** cases, with native method/parameter counters and origins audited.
+The full **3,563-case** packaged gate remains incomplete: the original **1,271-case /
+90-second** resolution worker times out at **90.015s**, without a completed report.
+It was not retried unchanged for luck, and its workload/budget remain unchanged.
+The selected runtime is unchanged; the normal resolution gate, remaining live
+checks, activation and complete card/rules coverage remain required. See
+[focused correction evidence](../../engine/preannouncement_cost_evidence.json) and
+[fresh runtime evidence](../../engine/preannouncement_cost_runtime_evidence.json).
+
+Follow-up checks pass on that same normal candidate. The frozen November 20
+catalog yields **32,636 constructed identities** and seven unavailable non-starting
+meld results, with no actionable starting-card availability/construction gaps.
+This checks construction and identity, not every ability. Health is ready, and the
+fixed full-game witnesses at seeds **42 / 0 / 4096** pass their commander-tax,
+Goreclaw-trigger and commander-damage-loss checks with raw-log evidence.
+
+The earlier 14-source allocation experiment, combined with the corrected casting
+baseline, passes paired **1,404 casting controls**, plus 273 combat, 194 untap and
+nine upstream checks. Its original 1,271-case / 90-second resolution run still
+times out without a completed report, so it remains unpromoted. Static API triage
+finds that all 21 matching Intensify scripts map to non-Commander-legal catalog
+cards; this is not treated as a Commander gap. The preserved health-metadata
+correction records `java -version` without a heap/processor measurement claim.
+The selected runtime is unchanged; the normal resolution gate, remaining live
+checks, activation and complete rules coverage remain open. See
+[follow-up evidence](../../engine/preannouncement_followup_evidence.json).
+
+Earlier validation checkpoints follow.
+
+The normal build includes **43 additional controls**: 36 live split/clone trait
+transitions and seven table isolation/version/serialization/concurrency contracts.
+All **3,511 source** and **4,711 native** regression cases pass, retaining every
+prior method and parameter. All 2,168 production sources, 165 test inputs and 316
+card inputs match reviewed evidence; production class bytes match the preceding
+candidate. The expanded **1,371-case packaged cast group** passes with 179
+production origins and earlier compiled assertions retained.
+
+The original **1,271-case / 90-second** resolution gate remains unmet, so the full
+3,554-case packaged gate is incomplete. It was not retried unchanged on identical
+production code. Allocation experiments remain unpromoted: one attempt completed
+all assertions but timed out before process completion; a phase diagnostic stayed
+inside TestNG at its deadline. Bounded allocation observations do not establish
+whole-game memory or a reliable speedup. Broader gameplay/serialization, full-game,
+catalog, health and activation checks remain required. The selected runtime is
+unchanged. See [expanded validation evidence](../../engine/split_table_runtime_evidence.json)
+and [experiment evidence](../../engine/copy_allocation_experiments_evidence.json).
+
+The replacement-effect correction now respects explicit active zones in performance
+mode. It passes all **3,468 source** and **4,668 native** cases, retaining every
+earlier case and parameter. The build audit confirms only the intended
+replacement-handler class family changes from the previous candidate, with all
+2,168 production, 163 test and 316 card inputs matching the reviewed source run.
+
+Normal packaged checks pass **1,328 cast/trait**, **301 information**, **273 combat**,
+**338 text/cost**, **65 free-casting**, **194 untap** and **146 Battle** cases.
+The complete 3,511-case attempt still fails at the unchanged **1,271-case /
+90-second** resolution gate (90.031s). The selected runtime remains unchanged;
+full-game, catalog, health and activation checks remain pending. Controlled
+synthetic replacement definitions do not establish full printed-card or paid-history
+coverage. See [focused correction evidence](../../engine/replacement_active_zones_evidence.json)
+and [source/native/runtime evidence](../../engine/replacement_active_zones_runtime_evidence.json).
+
+An unpromoted snapshot-construction experiment reuses source state properties
+before the existing mapped trait graph installation, instead of rebuilding
+printed traits for eligible exact native types. It passes the retained **685**
+contracts (including 648 printing comparisons) and **194 untap** cases. The original
+**1,271-case / 90-second** resolution workload still times out (90.016s). A bounded
+CPU/allocation profile is diagnostic only; partial counts and allocation weights
+do not establish completion, speedup or retained memory. Production patches and
+the selected runtime are unchanged. See [snapshot experiment evidence](../../engine/snapshot_skeleton_evidence.json).
+
+The normal workflow now registers 33 additional attack controls covering tapped,
+summoning-sick, defender and goaded creatures, haste, mandatory attacks, legal
+groups and defender-specific protection at copy depths 0/1/2. Baseline and
+prototype each pass the same **661 focused cases**, retaining 628 prior contracts
+and all 648 printing comparisons. The changed prototype also passes 194 untap
+cases. These direct-state fixtures do not establish complete paid card histories.
+
+A native restriction-based empty-declaration shortcut preserves these cases but
+still exceeds the original 1,271-case / 90-second resolution limit (90.016s), so it
+remains unpromoted. Production patches and the selected runtime are unchanged.
+The **3,396-source** suite and a fresh sealed **4,596-native** build pass, retaining
+all prior cases and parameters. The corrected recipe count is protected by a
+cross-registry unit guard. All 2,168 production sources, 162 test files and 316 card
+files match reviewed inputs; production class bytes match the preceding candidate.
+Actual two-processor / 2 GiB Java-heap checks pass. Normal packaged **1,256 cast**
+and **273 combat/snapshot** cases pass with 179 verified production origins,
+matching native method/parameter counters and identical prior compiled test bytes.
+
+An owned edition lookup experiment passes paired **685-case** baseline/prototype
+checks, retaining 661 contracts and all 648 printing comparisons, plus 194 changed-
+overlay untap cases. The 24 new lookup contracts cover aliases, native storage
+ownership, iterator/add/append mutations, Unicode fallbacks and live dates. Preserve
+an earlier helper interface compilation failure; assertion bodies are unchanged.
+The original **1,271-case / 90-second resolution** workload still times out
+(90.016s), so the experiment remains unpromoted. The full **3,439-packaged** gate
+and broader/full-game/catalog/health/activation checks remain incomplete. The
+selected runtime is unchanged. See [expanded runtime evidence](../../engine/unavailable_attack_runtime_evidence.json).
+See [unavailable-attacker evidence](../../engine/unavailable_attack_evidence.json).
+
+The preceding printing/membership expansion registered 81 contracts: 30 printing-selection
+and 51 keyword-membership cases. Baseline and corrected prototype each pass all
+616 focused cases. A separate pinned data fixture makes all 648 exact printing /
+random-state comparisons part of the native test, covering six names, six
+preferences, two art indices, three date modes and three seeds. Tests catch three
+retained-callback-view failures in an earlier unpromoted membership experiment;
+its corrected fallback preserves native live views. These are contract tests,
+not full Oracle or legal card-history coverage.
+
+The preceding validated suite passes **3,363 source** and **4,563 native** cases, retaining
+all prior cases and parameters. All 2,168 production sources, 161 test files and
+316 tracked card files match reviewed inputs. Actual two-processor / 2 GiB
+Java-heap checks pass; production class bytes match the previous candidate.
+The normal packaged cast worker passes **1,256 cases** in 45.547 seconds, with
+native method/parameter counters matching and **178 production origins** verified.
+Earlier compiled rule/support classes retain identical bytes. The first source
+attempt's Checkstyle failure and import-only correction are preserved.
+See [printing/membership runtime evidence](../../engine/printing_membership_runtime_evidence.json).
+
+The remaining packaged information, combat/snapshot, casting-cost, free-casting,
+untap and Battle families pass **301 / 240 / 338 / 65 / 194 / 146 cases**.
+Every native method and parameter counter matches the sealed build, with packaged
+production origins and restored configuration verified. These checks supplement
+the separately validated 1,256-case cast family; they do not replace resolution.
+
+A bounded CPU/allocation profile identified repeated replacement prechecks as a
+hot path. An event-specific implicit replacement experiment preserves all 616
+existing contracts and 194 untap cases in paired baseline/prototype runs, including
+the pinned printing comparisons, but still times out on the original 1,271-case /
+90-second resolution workload (90.016s). It remains unpromoted; no speedup or full
+rules correctness is established. Allocation sampling estimates volume, not exact
+or retained memory. See [remaining runtime evidence](../../engine/remaining_runtime_evidence.json).
+
+The preceding **3,406-case packaged gate remains incomplete**; the expanded
+3,439-case suite is pending. Linear printing and
+keyword membership experiments still exceed the original 1,271-case / 90-second
+resolution limit (90.016 / 90.015s) and remain unpromoted. Broader/full-game/catalog/
+health/activation checks and complete card rules support remain pending.
+Production patches and the selected runtime are unchanged.
+See [printing/membership contract evidence](../../engine/printing_membership_evidence.json).
+
+The normal workflow now registers 87 additional contracts: 48 live trigger/devotion
+and 39 filtering cases. Baseline and corrected prototype each pass the same 535
+focused cases, with prior cases retained. Tests caught three custom-spliterator
+callback failures in an unrestricted filter prototype; the corrected experiment
+keeps unknown sources on the native path. Preserve an earlier fixture setup/log-
+limit failure separately. These are contract tests, not full card-history proof.
+
+The preceding validated suite passes all **3,282 source** and **4,482 native** cases, retaining
+prior cases and parameters. All 2,168 production sources, 158 test files and 316
+tracked card files match reviewed inputs; production class bytes match the prior
+counter-snapshot candidate. Actual two-processor / 2 GiB Java-heap checks pass.
+The packaged cast worker passes **1,175 cases**, with native method/parameter
+counters matching and **177 production origins** verified (43.984 worker seconds).
+Preserve a wrapper-only 1,177-count typo; the independent receipt audit verifies
+the registered 1,175 cases without rerunning the worker.
+
+The full 3,325-case packaged gate remains unmet. The combined live metadata /
+gathering / known-source filter prototype passes all 535 focused cases but still
+times out under the original 1,271-case / 90-second resolution limit (90.015s).
+All earlier compiled rule/support bytes are retained. The prototype is unpromoted;
+no speedup or complete rules correctness is established. Broader/full-game/catalog/
+health/activation remain pending. Production patches and the selected runtime
+are unchanged. See [expanded runtime evidence](../../engine/trait_contracts_runtime_evidence.json). See [contract/profile evidence](../../engine/trait_gather_filter_evidence.json).
+
+A reviewed candidate snapshot correction preserves counters on cards in the command
+zone, graveyard, exile, hand, library and stack, as well as the battlefield.
+The same 448 focused cases produce 430 passes / 18 failures before the correction
+and 448 passes afterward. Counter storage is independent between copies;
+counter-derived statics use the existing reference-remapping pass. No counter
+placement events or new timestamps are emitted. Ordinary copy effects are separate.
+Most counter states are supplied directly; the Lightning Storm stack fixture pays
+and casts the spell but supplies its charge counters directly. These tests do not
+prove complete card histories or full Oracle coverage.
+
+The preceding counter-snapshot suite passes all **3,195 source** and **4,395 native** cases,
+retaining every prior case and normalized parameter. All 2,168 production sources,
+156 test files and 316 tracked card files match reviewed inputs. Two-processor /
+2 GiB Java-heap assertions pass; cards and AI profiles are unchanged. The normal
+**1,088-case packaged cast subset** passes, with native method/parameter counters
+matching and 175 production origins verified (42.891 worker seconds).
+
+The full 3,238-case packaged gate remains unmet: the fresh packaged 1,271-case
+resolution check times out at 90.016 seconds under its original limit. No unchanged
+retry or budget increase was made. Broader/full-game/catalog/health/activation and
+complete rules support remain pending. The candidate remains uninstalled and the
+original configuration is restored. Collector/metadata/static-gather optimizations
+remain unpromoted. See [runtime evidence](../../engine/counter_zone_runtime_evidence.json) and the
+[focused counter snapshot evidence](../../engine/counter_zone_snapshot_evidence.json).
+
+The [changelog](../../CHANGELOG.md) and [coverage history](../CARD_COVERAGE.md) retain
+prior corrections and failed attempts. The earlier 4,214-case processor label was
+incorrect; see the [resource correction](../../engine/jvm_build_limits_evidence.json).
+
+The selected runtime is `2.0.16-583714b-reviewed-mana-chain`.
+Shared mana planning now searches native game copies for admitted chained-filter
+payments after the ordinary planner fails. It handles tested floating-color seeds
+and scarce-color allocation, then rechecks and executes native costs. Previews
+preserve source ability choices, actors, randomness and cache state; payment
+bookkeeping copies unpaid shards, X-color payments and sunburst independently.
+Existing reserved-source/lethal-tap policy, activation-budget checks and snapshot
+entry turns remain enabled. Two production sources change: four existing classes
+plus five planner helper records. Card scripts and AI profiles are unchanged.
+
+All 186 focused and 2,071 source cases pass, retaining the prior 138/2,023.
+The installed build passes 3,295 native cases, retaining every prior 3,247.
+Independent packaged checks pass 2,138/65/194/146 cases with 168 production
+origins verified. Broader suites pass 4,769 gameplay and 256 serialization cases.
+Full integration passes 45 tests and 3,191 subtests in 1061.484 seconds at the
+unchanged seeds and resource limits. Catalog construction passes 32,636 identities
+plus seven reviewed nonstarting meld results. All 21,859 installed runtime files
+match the sealed build and installed health is ready; prior runtimes and the
+sealed build remain available. Build and validation use the same registered
+commit, with no later verifier-only input exception.
+
+The installed predecessor passes 168/186 focused controls. Those failures include
+nine automatic-payment cases, six preview-contract cases and three checks for the
+new bookkeeping API; these are not 18 independent rules defects. Earlier compiler,
+search, preview and policy failures and corrected fixture versions are preserved.
+See the [patch](../../engine/patches/commander-mana-chain.patch),
+[48 new cases](../../engine/tests/CommanderManaChainTest.java),
+[source evidence](../../engine/mana_chain_evidence.json),
+[runtime evidence](../../engine/mana_chain_runtime_evidence.json) and
+[activation evidence](../../engine/mana_chain_activation_evidence.json).
+
+The fallback uses a bounded 64-copy search for admitted plain mana sources and
+goals. No-plan is an observation, not proof that a payment is impossible. Compound
+and special-mana dependencies, variable amounts, variable-X waterbend,
+activation-cost modifiers, state-dependent limits and user-facing assessment
+diagnostics require further work. Complete card/rules/AI support remains unproven.
+Prior waterbend, earthbend, elemental, counter, Aura and other reviewed corrections
+remain included.
+
+The subsequent fresh build passes all 3,935 native cases, retains all prior
+cases, and matches all 2,168 reviewed production sources. Its independent
+packaged gate remains failed: the unchanged 1,271-case resolution group timed
+out at 90 seconds. The information, combat/snapshot and text/casting/cost groups,
+plus the three other packaged families, passed (1,272 completed subtests).
+The 640-case cast-event group was not reached. An instrumented diagnostic also
+hit the same deadline after 1,076 passing methods; it does not replace the
+failed gate. The timing trace shows work continuing across game copying, combat
+planning and payment checks. The selected runtime is restored and unchanged;
+this candidate is uninstalled. Broader/full-game/catalog gates remain pending.
+See the [preserved runtime attempt](../../engine/cast_events_runtime_attempt_evidence.json).
+
+The fresh cast-event build passes all 3,899 native cases and its source/binary
+parity audit. An additional independent packaged probe then exposed a real
+regression: a basic mana ability was rejected under an active cast trigger
+(three of four controls passed). That candidate remains uninstalled.
+
+The generic admission correction distinguishes actions that resolve without a
+stack entry from spells and abilities that use the stack. It excludes native
+mana abilities, land actions and special actions represented by AbilityStatic.
+Mana-producing spells still receive normal cast-trigger forecasting. Thirty-six
+new controls cover untapped/tapped Forest, Dark Ritual under matching/mismatched
+Chalice of the Void, and funded/unfunded Monastery Flock face-up actions, using
+native execution and previews across original and twice-copied game states.
+All 850 focused and 2,735 source cases pass, retaining every earlier case. Card
+scripts and AI profiles are unchanged. The updated recipe targets 3,935 native
+and 2,778 independent packaged cases. The native build passed; the failed
+packaged deadline and remaining runtime gates are described above. The selected
+runtime is unchanged. These tests do not prove complete card or rules correctness.
+
+See the [generic admission patch](../../engine/patches/commander-nonstack-admission.patch),
+[58 activation-window/admission controls](../../engine/tests/CommanderCastWindowTest.java)
+and [preserved failures and validation evidence](../../engine/nonstack_admission_evidence.json).
+
+The registered cast-event correction passes 814 focused and 2,699 source cases.
+The first fresh build passed 3,872/3,877 native cases; that failed build remains
+preserved. Its four optional-X failures and cleanup-priority failure were
+reproduced with all earlier focused cases retained, then corrected generically.
+
+Native activation creates a fresh ability object. Forecasts now follow its stable
+stack-entry ID and stop before resolving it, preserving the timing of resources
+used for later costs. During an already resolving/frozen native window, cost-only
+copies retain in-progress state without premature state-based actions or trigger
+resolution; the original continuation owns that timing. Ordinary copies retain
+their existing state checks. Deferred copies reject ordinary priority windows,
+phase advancement, experimental restore mode and reuse after the native window
+ends. They cannot resume a copied Java continuation or prove future trigger fees.
+
+The 22 new controls cover native ability copying, unresolved-activation budgets,
+source isolation and guarded copy policies. All 16 optional-X and eight cleanup
+priority cases from the full build now pass, along with every prior focused and
+source case. The correction changes ComputerUtilMana and GameCopier; cards and
+AI profiles are unchanged. The registered recipe now targets 3,899 native cases,
+retaining every prior case, and 2,742 independent packaged cases under unchanged
+resource limits. The historical native target was met by the fresh 3,899-case build. Its
+independent packaged gates were not completed before the additional admission
+probe found the regression described above.
+
+See the [incremental correction](../../engine/patches/commander-cast-windows.patch),
+[22 new controls](../../engine/tests/CommanderCastWindowTest.java) and
+[failed-build/correction evidence](../../engine/cast_window_evidence.json). It applies
+after the [registered event aggregate](../../engine/patches/commander-cast-events.patch).
+Earlier [event/history](../../engine/target_tax_evidence.json),
+[ward-transition](../../engine/ward_transition_evidence.json),
+[typed-ward](../../engine/typed_ward_evidence.json) and
+[X-cost](../../engine/waterbend_x_evidence.json) evidence remain preserved.
+Complete card/rules/AI correctness remains unproven. Triggered-ability forecasts,
+responses, trigger sources introduced by costs, exhaustive payment search and
+experimental restoration require further work. Bounded no-plan is an observation,
+not proof that a payment is impossible.
+
+The earlier milestones below describe validation and selections at their time.
+Their failed artifacts remain preserved; later source corrections can be carried
+into the currently selected reviewed build without changing those old outcomes.
+
+The latest reviewed source preserves prepared creature/effect/spell references
+and the exiled prepared-spell face in copied games, with cleanup mapped into its
+own world. Historical prepared references are private, and historical cast-origin
+zones use the copied player. Paid Infirmary Healer/Stream of Life cases cover
+entry, actual mana/life gain, consumption, re-entry, cleanup, one/two copies and
+independent histories. The baseline passes four controls and fails 14 copied or
+historical cases; the corrected prototype passes all 18, all 279 related cases,
+and all 1,427 mixed source cases (1,409 retained plus 18). The fresh artifact
+passes all 2,652 native cases and independent broader
+4,126 gameplay/256 serialization cases. Packaged 65/194/146 pass; the single
+1,495-case worker times out at its unchanged 90-second limit. Diagnostic groups
+retain every case and pass all 1,495 in 193 seconds with the same worker/heap/CPU
+limits and 134 production-origin checks per group. The normal harness now uses
+those four fixed groups and rejects missing, duplicate or unregistered classes.
+The registered packaged gate and full-game/catalog checks now pass, as recorded
+above. The original timeout remains preserved. See
+[runtime evidence](../../engine/prepared_state_runtime_evidence.json). These supplied
+states do not certify every prepared trigger, strategy
+or card interaction. See [prepared-state evidence](../../engine/prepared_state_evidence.json).
+
+The preceding deferred-repeat build passes all 2,634 native tests, retains all
+2,624 previous cases, and changes only `RepeatEachEffect` and its mapped callback.
+Independent broader checks pass 4,108 gameplay and 256 serialization cases.
+Its 1,477-case packaged family times out at the unchanged 90-second worker limit
+on both the pinned Java 17 runtime and a separately pinned Java 21 comparison;
+65/194/146 cases pass on each. Neither failed gate is overridden, Java 21 was
+not adopted, and no full-game/catalog phase or activation was performed. The
+source correction preserves per-player deferred restrictions tested with Azor
+and Sphinx's Decree; the paid witnesses do not certify autonomous admission or
+strategy. See [source evidence](../../engine/deferred_repeat_evidence.json) and
+[runtime evidence](../../engine/deferred_repeat_runtime_evidence.json).
+
+The preceding skipped-phase candidate passes all 2,624 sealed native cases,
+retaining 2,609 and adding 15, with compiled changes confined to `SkipPhaseEffect`
+and its two explicit callbacks. Independent broader checks pass 4,098 gameplay
+and 256 serialization cases; packaged free-casting/untap/battle checks pass
+65/194/146. Its 1,467-case packaged family times out at the unchanged 90-second
+worker limit, so full-game and catalog phases have not run and no runtime was
+activated. The source fix retains original duration scheduling for Moment of
+Silence, False Peace and Empty City Ruse, with 15 paid witnesses and 145 related
+checks. See [source evidence](../../engine/skipped_phase_snapshot_evidence.json) and
+[runtime evidence](../../engine/skipped_phase_snapshot_runtime_evidence.json).
+
+The preceding commander-history correction fixes a crash exposed by full games:
+a surviving player can retain damage from a commander whose owner has left.
+Copies now preserve that historical source through the shared graph used for
+abilities, instead of requiring a live card or discarding its damage. All 1,384
+mixed source tests pass in one JVM, retaining 1,360 and adding 24; 285 focused
+retained/new graph checks pass. The new cases include normal paid command-zone
+casts, real untap/combat, zone changes and independent copied history. Fresh
+sealed build `a72ec02aa4694b30b59958bda00f9a7a` passes all 2,609 native tests;
+all previous 2,585 identities are retained and compiled changes are confined to
+`GameCopier`. Independent broader checks pass 4,083 gameplay and 256 serialization
+cases. Packaged free-casting/untap/battle checks pass 65/194/146 cases, but the
+1,452-case packaged family times out at its unchanged 90-second worker limit.
+This candidate remains unactivated; full games and catalog validation have not
+been run for it. A timing probe completed 1,194 cases before timing out; an
+isolated zone-history memo prototype also timed out (1,197 completed) and was
+not adopted. See [the source correction](../../engine/departed_commander_history_evidence.json)
+and [runtime evidence](../../engine/departed_commander_history_runtime_evidence.json).
+
+The preceding multiplayer-horizon candidate passed all 2,585 native tests,
+1,833 independent packaged checks and 4,059/256 broader checks. Its full live run
+passed 42 tests and all 2,481 subtests, but three tests failed after actual games
+hit the commander-history exception. Goreclaw's fixed-seed attack witness now
+appears; incomplete games still cannot satisfy the gate. Independent construction
+passed 32,636 starting identities with seven expected nonstarting meld exclusions.
+That candidate remains unactivated; the selected runtime is unchanged. See the
+[preserved live failure](../../engine/multiplayer_attack_horizon_live_evidence.json) and
+[packaged/broader receipts](../../engine/multiplayer_attack_horizon_packaged_evidence.json).
+
+The preceding cache-lifetime candidate removes an AI cache that retained completed games
+and could return stale board evaluations outside a decision. Memoized references
+now live inside an explicit decision or preview and are released on success or
+failure. All 1,238 mixed source tests pass in one JVM at the existing 2 GiB heap
+and timeout, retaining the prior 1,222 cases and adding 16 cache-lifetime checks.
+The fresh candidate passes all 2,463 native tests, retaining 2,361 prior methods
+and adding 102 across combat history and cache lifetime. Its compiled classes
+match the six reviewed source families; card and AI profile data are unchanged.
+The first independent packaged run passed all 1,711 native subtests but failed
+a stale wrapper expectation of 127 class origins instead of the verified 129.
+The strengthened wrapper passed all four tests and 1,711 subtests, and broader
+gameplay/serialization passed 3,937/256. The independent catalog probe constructed
+32,636 starting identities with seven expected nonstarting meld exclusions.
+
+The full live run passed 44 tests and all 2,359 subtests, but the limited
+full-game conformance test remains inconclusive: Goreclaw never attacked in any
+of its three fixed-seed games, so its required unblocked trigger witness was
+absent. Twelve controlled declaration probes show that all three AI modes
+attack open boards but decline attacks when higher-threat blockers are present,
+even with a different opponent open. This is an observed target-planning gap;
+the probe does not establish a uniquely optimal strategy. Fixed seeds and
+absence/contradiction checks are unchanged. The candidate is not activated;
+the selected runtime below remains unchanged. See the
+[preserved live witness and diagnostic evidence](../../engine/ai_cache_lifetime_live_evidence.json).
+
+Further controlled tests separate correct combat rules from the planning gap:
+eight native outcomes exercise Goreclaw's resolved trigger and ordinary creature
+damage, while 12 autonomous ground-attack opportunities remain missed. Six group
+attack cases expose the same limitation. Two generic fallback prototypes recover
+those attacks but fail six defensive controls by overlooking successive opponents'
+counterattacks. Four native counterattack outcomes prove that keeping a blocker
+survives at 1 life while attacking loses. Both prototypes remain rejected; the
+selected engine and existing full-game checks are unchanged. See the
+[pending regression fixtures and evidence](../../engine/multiplayer_attack_opportunity_gap.json).
+
+The baseline reproduced six cache-lifetime failures, including stale evaluations
+after a Forest entered play in original and copied games. Recorded reference
+paths identify the static cache as an owner of completed game graphs. Preserve
+the earlier 14 native heap failures and the rejected snapshot-allocation
+experiment. Four existing preview tests now open an explicit live-decision
+scope; their method bodies and assertions are unchanged, and the setup passes
+against both cache implementations. See the
+[cache-lifetime failures and ownership evidence](../../engine/ai_cache_lifetime_gap.json)
+and [source-only validation](../../engine/ai_cache_lifetime_native_evidence.json).
+This is a demonstrated cache correction; full Commander rules and strategy
+coverage remain unproven.
+
+The earlier combat-history source milestone passed 1,222 distinct focused tests in
+separate 1,192- and 30-case JVM runs with identical production inputs. It records
+confirmed blocks, remembers departed blockers, excludes cancelled choices, and
+keeps copied games independent. The 86 new contracts cover paid reassignment,
+Shock, Cloudshift, token entry, both printed blocker-switch paths, declaration
+commit boundaries, and a fresh combat in the same turn. The selected runtime
+below is unchanged while packaging and live checks remain pending.
+
+The expanded baseline reproduced 44 failing outcomes in 86 cases. Preserve the
+rejected prototype's six cancelled-choice failures and the combined source run's
+heap-exhaustion failure; no heap or timeout was increased. Four generic files
+change, with no new production class or card/profile edits. Additional trigger,
+banding, multiple-blocking and full Commander correctness remain unproven. See
+[historical-blocking failures](../../engine/blocking_history_gap.json) and
+[source-only evidence](../../engine/blocking_history_native_evidence.json).
+
+The earlier combat-reblocking runtime correctly marks an attacker blocked when a native effect
+assigns a blocker. That state persists if the blocker leaves before damage.
+The Block API evaluates the complete paid parent, so classic/hybrid AI can judge
+removing a blocker and assigning it to another attacker together.
+
+All 1,136 focused source and 2,361 native tests pass, retaining all 2,333 prior
+native methods and adding 28. Independent/repeated packaged groups pass
+1204/65/194/146; broader gameplay/serialization pass 3,835/256. All 45 live tests
+and 2,257 subtests pass. Post-move health is ready; construction passes for 32,636
+starting identities with seven nonstarting meld exclusions. See the
+[preserved reblocking failures](../../engine/combat_reblocking_gap.json),
+[source validation](../../engine/combat_reblocking_native_evidence.json),
+[packaged checks](../../engine/combat_reblocking_packaged_evidence.json), and
+[activation evidence](../../engine/combat_reblocking_evidence.json).
+
+The 28 fixed contracts retain identical baseline bytes. Four ordinary damage
+controls passed before correction; four paid Shock/departure cases exposed an
+incorrect defending-player loss. The state-only prototype fixed rules/damage
+but retained eight AI declines until the Block policy was added. Original/copied
+cases cover paid explicit choices, optional decline, no-response lethal and all
+three AI modes. Two existing production files/classes change and one BlockAi
+source/class is added. Card scripts, profiles and test assertions are unchanged.
+Other blocker histories, combat restrictions, trigger policies and complete
+Commander rules or strategy remain unproven.
+
+The earlier combat-removal milestone evaluated paid combat-removal actions and their legal targets
+against the remaining combat. Classic/hybrid AI can reach that policy even when a
+host carries an old deck-exclusion hint. It can choose the lethal attacker among
+multiple threats and pays the real activation cost before removing it.
+
+That milestone passed 1,108 focused source and 2,333 native tests, retaining every prior 2,291
+native method and adding 42. Independent/repeated packaged groups pass
+1176/65/194/146; broader gameplay/serialization pass 3,807/256. All 45 live tests
+and 2,229 subtests pass. Post-move health is ready; construction passes for 32,636
+starting identities with seven nonstarting meld exclusions. See the
+[preserved combat failures](../../engine/combat_removal_gap.json),
+[source validation](../../engine/combat_removal_native_evidence.json),
+[packaged checks](../../engine/combat_removal_packaged_evidence.json), and
+[activation evidence](../../engine/combat_removal_evidence.json).
+
+The 42 fixed contracts retain identical baseline fixture bytes. Paid/Fog and
+no-response lethal controls separate resolution from willingness. Original/copied
+states cover single/multiple attackers, indestructible creatures, hexproof,
+tapped sources and unavailable mana. Two production files and three existing
+classes change; no classes, card scripts or profile changes are added.
+
+Large native receipts use 500-case parts with hash-bound indexes while preserving
+the 128 KiB document and 90-second worker limits. The first packaged run passed
+all 1,176 methods but failed writing the receipt; it remains preserved. Corrected
+independent/repeated runs pass. Nine offline regressions verify bounded round
+trips, legacy receipts, tampering, fixed names/counts and oversized cases.
+Triggered removal, optional/mandatory reblocking choices and complete Commander
+rules or strategy remain unproven.
+
+The earlier draw-step milestone applied first-extra replacements to the first eligible draw,
+while exempting the first card drawn during each own draw step. Draws during
+another player's draw step count as extra draws. Global draw-step history is
+preserved in original games and active/common snapshots.
+
+That milestone passed 1,066 focused source checks and 2,291 native tests, retaining 2,267 native
+cases and adding 24. Independent/repeated packaged families pass 1134/65/194/146;
+broader gameplay/serialization pass 3,765/256. All 45 live tests and 2,187 subtests
+pass. Post-move health is ready; construction passes for 32,636 starting identities
+with seven nonstarting meld exclusions. See the [preserved per-event failures](../../engine/draw_step_replacement_gap.json),
+[source validation](../../engine/draw_step_replacement_native_evidence.json),
+[packaged checks](../../engine/draw_step_replacement_packaged_evidence.json), and
+[activation evidence](../../engine/draw_step_replacement_evidence.json).
+
+The 24 fixed contracts retain identical baseline fixture bytes and cover own-step
+first/second/third draws, equal three-card batch totals, foreign-step and MAIN2
+histories, and original/active/common worlds. Card scripts and AI profiles are
+unchanged. Other replacement/prevention combinations, denied or replaced draw
+history, strategy and complete Commander correctness remain unproven.
+
+The earlier Recruit/draw-provenance milestone evaluated paid Recruit actions and preserves copied draw
+history, drawn-card flags and last-drawn provenance. Native cost admission and
+AI payment share a current-turn, current-hand and card-timestamp check, rejecting
+previous-turn cards and cards that left and returned to the hand.
+
+That milestone passed 1,042 focused source checks and 2,267 native tests, retaining all 2,212
+prior native methods and adding 55. Independent and repeated packaged families
+pass 1110/65/194/146; broader gameplay/serialization pass 3,741/256. All 45 live
+tests and 2,163 subtests pass. Post-move health is ready, and construction passes
+for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [preserved last-drawn failures](../../engine/last_drawn_payment_gap.json),
+[source validation](../../engine/last_drawn_payment_native_evidence.json),
+[packaged checks](../../engine/last_drawn_payment_packaged_evidence.json), and
+[activation evidence](../../engine/last_drawn_payment_evidence.json).
+
+The 21 supplied last-drawn cases cover actual mana/tap/exact-discard/draw payment
+and original/active-copy/common-snapshot independence. Recruit tests isolate
+supported composition under a willing counter policy. The default probabilistic
+counter policy and optional Recruit decisions still need work. Card construction
+and selected passing tests do not establish complete Commander rules or strategy.
+Card scripts and Default/Cautious profile files are unchanged.
+
+The earlier delayed-reveal milestone routed the active delayed-reveal wrapper through shared
+per-card rights. Only current matching views in declared/current zones resolve;
+stale agents and foreign/copied view aliases cannot redirect fresh information.
+Audience and zone/owner display groups are captured before callbacks, preserving
+outside-game restrictions, original/current-agent memories and single/multi-zone
+prefixes. No private histories are copied or card-name exceptions added.
+
+That milestone passed 987 focused source checks and 2,212 native build tests, retaining all
+2,181 prior native methods and adding 31. Independent and repeated packaged
+families pass 1055/65/194/146; broader gameplay/serialization pass 3,686/256.
+Its 45 live tests and 2,108 subtests passed. Post-move health is ready; construction
+passes for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source evidence](../../engine/delayed_private_reveal_native_evidence.json),
+[packaged milestone](../../engine/delayed_private_reveal_packaged_evidence.json), and
+[validation and activation](../../engine/delayed_private_reveal_evidence.json).
+
+The eighteen-case paid Ancient Stirrings/Impulse baseline passes ten controls
+and fails eight master/post-control assertions; all eighteen methods now pass.
+Thirteen instrumented privacy/view/callback/metadata boundaries include a
+preserved intermediate prefix failure. These delayed-reveal phases have no
+fixture compilation or Checkstyle failure. Direct view paths bypassing this
+wrapper, all UI/history/temporary-controller/nested contexts and autonomous
+strategy still need meaningful validation. Scripts/default AI are unchanged.
+Complete Commander card/rules/AI correctness remains unproven.
+
+The earlier direct-reveal runtime routes the RevealHand Look and PeekAndReveal private
+disclosure paths through shared per-card rights. Private library audiences are
+captured before callbacks;
+public library audiences also include dormant agents and agents removed during
+reveal callbacks. Declared positions follow those captured audiences without
+copying private histories or adding card-name exceptions.
+
+All 956 focused source checks and 2,181 native build tests pass, retaining all
+2,159 prior native methods and adding 22. Independent and repeated packaged
+families pass 1024/65/194/146; broader gameplay/serialization pass 3,655/256.
+All 45 live tests and 2,077 subtests pass. Post-move health is ready; construction
+passes for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source evidence](../../engine/direct_private_reveal_native_evidence.json),
+[packaged milestone](../../engine/direct_private_reveal_packaged_evidence.json), and
+[validation and activation](../../engine/direct_private_reveal_evidence.json).
+
+The original eighteen-case paid baseline passes ten controls and fails eight
+master/post-control knowledge assertions; all eighteen methods now pass. Four
+callback/public-position boundaries include two preserved intermediate failures.
+The initial unused-import Checkstyle stop also remains preserved. Recording-agent
+fixtures explicitly construct controller transitions; they do not establish all
+printed nested control-card rules. Other direct/delayed effect callbacks,
+agent/history unification, temporary controllers, all nested/rollback contexts
+and autonomous strategy still need meaningful validation. Scripts/default AI
+are unchanged. Complete Commander card/rules/AI correctness remains unproven.
+
+The earlier controlled-information runtime's shared reveal and inspected-library
+paths preserve fresh in-game observations for the controlled player, their controller and the acting
+agent. Library audiences are captured
+at inspection time, so later controllers do not inherit earlier private peeks.
+Private reveals distinguish in-game and outside-game cards. Explicit receiving
+agents retain their own memories, and foreign views cannot select local cards
+through matching IDs. Public reveal/return facts update original/current/dormant
+agents independently of optional owner display; blind draw history stays intact.
+
+All 934 focused source checks and 2,159 native build tests pass, retaining all
+2,117 prior native methods and adding 42. Independent and repeated packaged
+families pass 1002/65/194/146; broader gameplay/serialization pass 3,633/256.
+All 45 live tests and 2,055 subtests pass. Post-move health is ready; construction
+passes for 32,636 starting identities with seven nonstarting meld exclusions.
+See the [source evidence](../../engine/controlled_information_native_evidence.json),
+[packaged milestone](../../engine/controlled_information_packaged_evidence.json), and
+[validation and activation](../../engine/controlled_information_evidence.json).
+
+The original fourteen-case baseline passes six and fails eight; all fourteen
+methods remain and pass after correction. Eighteen paid cases include real
+control, rearrange, private inspection, counters, failed payment and copied states.
+Nine audience and fifteen reveal/return boundaries also use explicitly constructed
+control graphs and recording agents; they do not certify all nested control-card
+resolutions. Failed private/public reveal phases remain preserved. This correction copies no private
+histories at control changes and adds no card-name exceptions. Scripts/default AI are unchanged. All agent-identity/history,
+temporary-controller, nested/rollback and strategy contexts remain broader
+validation work. Direct private callbacks in other effect APIs still need native
+validation. Complete card/rules/AI correctness is unproven.
+
+The earlier [autonomous rearrange milestone](../../engine/autonomous_rearrange_evidence.json)
+introduced generic paid primary rearrange choices, X preparation, legal target
+search, private knowledge and deadline cleanup. Those contracts remain retained.
+
+The earlier [library-transition milestone](../../engine/library_knowledge_transition_evidence.json)
+introduced bounded exact-object observations and declared index transforms for
+previously known positions outside a library inspection. Those contracts remain retained.
+
+The earlier [library-choice milestone](../../engine/library_choice_knowledge_evidence.json)
+introduced shared actual-inspection and announced-placement callbacks, distinguishing
+seen identities from known shuffled positions. Its native contracts remain retained.
+
+The earlier [information milestone](../../engine/information_choice_evidence.json)
+introduced generic paid information choices, bounded utility, explicit forgetting
+and resolving-zone boundaries. Its native and packaged contracts remain retained.
+
+The earlier [inspection milestone](../../engine/inspection_ai_evidence.json) introduced
+generic face-down inspection choices, privacy and knowledge-sensitive target
+pruning. Its original checks remain in the current native and packaged families.
+
+Earlier combat-role validation preserved independent blocking and attacked-planeswalker
+roles when a permanent loses one card type. All 712 focused source checks pass;
+the 146-case Battle family includes twelve paid dual-role controls. Independent
+and repeated packaged checks, broader regressions, all 45 live tests and 1,834
+subtests pass. See the [full validation](../../engine/dual_combat_role_evidence.json)
+and [resolved gap](../../engine/dual_combat_role_gap.json). The original baseline failures
+and corrected harness-origin lookup remain preserved. Full card/rules/AI
+correctness remains open.
+
+The earlier test-only Battle extension passed 134 cases, retaining 110 and adding 24
+paid type-restoration and countered-restoration checks. Song of the Dryads,
+Disenchant and Counterspell exercise original, copied and nested pending stacks;
+regaining a type does not restore the old attack. See the
+[restoration evidence](../../engine/defender_restoration_evidence.json). These supplemental
+tests left production code and the then-current 1,902-method build unchanged.
+
+Combat now remembers a defender's legal type when each attacking group forms,
+keeps independent copies of that history, and retires it when the defender leaves
+combat or combat ends. An attacked Battle becoming a Forest no longer redirects
+trample-over-planeswalkers damage to the attacking player. All 676 focused source
+checks pass; the 110-case Battle family retains 78 methods and adds 32 type-change,
+blocked, pending-spell and nested-copy controls. See the
+[source evidence](../../engine/defender_typechange_native_evidence.json),
+[full validation](../../engine/defender_typechange_evidence.json), and
+[resolved gap](../../engine/defender_typechange_gap.json).
+Supplied legal state and selected cases do not certify all card, rules or AI choices.
+
+Internal combat snapshots now preserve valid assigned damage after an attacked
+permanent leaves combat. Absent-defender stand-ins no longer enter the damage
+table; real blocker, permanent and player damage remain intact. All 644 focused
+source checks pass. The 78-case Battle family retains its prior 62 methods and
+adds sixteen internal snapshot and paid-equip trigger controls. See the
+[source evidence](../../engine/damage_assignment_snapshot_native_evidence.json),
+[full validation](../../engine/damage_assignment_snapshot_evidence.json), and
+[resolved gap](../../engine/damage_assignment_snapshot_gap.json).
+Internal snapshots are not player priority windows. Autonomous invocation
+frequency and full card, rules and AI correctness remain unverified.
+
+The reviewed runtime corrects damage assignment after an attacked planeswalker
+leaves combat: trample over planeswalkers no longer reserves a damage point for
+the absent target. Live loyalty and real blocker requirements remain intact.
+All 628 focused source checks pass; the 62-case Battle family retains its prior
+34 methods and adds 28 removed/live target, removal-response and paid-equip Jitte
+controls. See the [source evidence](../../engine/removed_defender_native_evidence.json),
+[packaged/full validation](../../engine/removed_defender_evidence.json), and
+[resolved gap with original reproductions](../../engine/removed_defender_gap.json).
+These selected cases do not certify all card, combat or autonomous AI behavior.
+
+First-strike assignment history now survives copied combat, including live and
+historical departed combatants in independent collections. All 600 source checks
+pass. The 34-case Battle family retains ten cases and adds 24 boundaries covering
+blocking, trample, pending defeat responses, first/double strike, paid keyword
+changes, multiple creatures and nested worlds. The original one and expanded six
+copy failures are resolved in the reviewed runtime. See the
+[source comparison](../../engine/combat_strike_native_evidence.json),
+[packaged validation](../../engine/combat_strike_evidence.json), and
+[resolved gap with original reproductions](../../engine/combat_strike_gap.json).
+These selected cases do not certify all combat or autonomous AI choices.
+
+Shared Battle-protector snapshots preserve live and historical protector references
+and public views in copied games and native LKI. All 566 source tests pass, with
+17 Battle contracts. The original three and expanded nine old-runtime failures
+are resolved, including Portent Tracker adding a counter where it should remove
+one when given historical target metadata. Native paid activations, Stifle and
+copied pending entry complement structural history controls. See the
+[source comparison](../../engine/battle_protector_native_evidence.json),
+[packaged validation](../../engine/battle_protector_evidence.json), and
+[resolved gap with original reproductions](../../engine/battle_protector_gap.json).
+Supplied actions and metadata do not certify autonomous strategy or complete combat.
+Full card, rules and AI correctness remain open.
+
+Generic phasing/imprint snapshots preserve phased-out physical cards and their
+attachments, mapped phase owners, direct/suppressed phase-in flags and imprinted
+references/public views. All 549 source checks pass with 25 new contracts,
+including native untap, Out of Time/Disenchant, tokens, static abilities and copied
+Chrome Mox mana. Intermediate failures isolate missing imprints after lookup was
+corrected. See the [source comparison](../../engine/phasing_context_native_evidence.json),
+[packaged validation](../../engine/phasing_context_evidence.json), and
+[resolved phasing gap](../../engine/phasing_context_gap.json). Full card and AI
+correctness remain open.
+
+Generic Gift-context copying maps recipients into copied games and historical
+state through the shared snapshot routine. All 524 source checks pass with 22 new
+contracts, including paid Scrapshooter and Into the Flood Maw resolution, countered
+spells, departed recipients and independent nested copies. The original eight and
+expanded fourteen failed contracts now pass in the reviewed runtime. Their exact
+reproductions and a corrected stackless-fixture setup remain preserved separately.
+See the [source comparison](../../engine/gift_context_native_evidence.json),
+[packaged validation](../../engine/gift_context_evidence.json), and
+[resolved Gift gap](../../engine/gift_context_gap.json). Full card and AI correctness
+remain open.
+
+Shared choice-context copying preserves announced values, copied-world
+references and public/secret presentation across zones and native last-known
+information. The original four copy failures and the expanded 24 failed contracts
+pass in the reviewed runtime. All 502 source checks pass with 32 new contracts,
+retaining the earlier 470. Independent containers, historical and self-referencing
+choices, secret reveal lifecycles and native Persecute resolution are covered.
+See the [source evidence](../../engine/choice_context_native_evidence.json),
+[packaged validation](../../engine/choice_context_evidence.json), and
+[resolved gap](../../engine/spell_choice_copy_gap.json). Full card and AI correctness
+remain open.
+
+Generic mass tap/untap planning compares paid type and direction choices and
+replays ordered player-target roles. Unplanned mass effects use isolated native
+local projections. Chosen type/type2 state survives copies in every zone,
+including a resolving Turnabout. All 470 source checks pass with 32 new contracts,
+retaining the earlier 438. Paid and triggered controls cover Turnabout, Faces of
+the Past, countered costs, stun, Wake Thrasher and changed battlefield types.
+Card scripts and AI hints are unchanged. See the
+[source evidence](../../engine/mass_tap_native_evidence.json),
+[packaged validation](../../engine/mass_tap_evidence.json), and
+[coverage limits](../CARD_COVERAGE.md#mass-tap-and-untap-choices).
+Four additional spell-choice copy failures were subsequently resolved by the
+shared choice-context correction above; their original reproductions remain in
+the [resolved copy-state gap](../../engine/spell_choice_copy_gap.json). Full card and AI
+correctness remain open.
+
+Generic activated-discard planning compares legal single-card payments and
+carries its choice through native cost approval, copied previews and full-pilot
+replay. Actual Mind Over Matter and Trickster Mage payments enable the native
+follow-up; separate Fatestitcher and Puppet Strings controls retain tap/mana
+behavior. All 438 source checks pass with 40 new contracts. Larger discard-choice
+sets retain native payment policy rather than searching a partial hand. Card
+scripts and AI hints are unchanged. See the
+[source evidence](../../engine/discard_payment_native_evidence.json),
+[packaged validation](../../engine/discard_payment_evidence.json), and
+[coverage limits](../CARD_COVERAGE.md#activated-discard-payments).
+Full card and AI correctness remain open.
+
+Tap/untap AI choices now honor native per-target controller defaults. Paid untaps
+can enable an immediate follow-up, including two unique Hidden Strings targets.
+The planner compares against plays already available and defers when its bounded
+comparison is incomplete. Preview caches release projected games and preserve
+live cache values across nested, failed and concurrent previews. All 398 source
+checks pass, including 26 new interaction and cache contracts. Heuristic/hybrid
+paid-cast controls supply the source action; full-pilot witnesses select both
+the untap and its follow-up. Card scripts and AI hints are unchanged. See the
+[source evidence](../../engine/untap_native_evidence.json),
+[packaged validation](../../engine/untap_evidence.json), and
+[coverage limits](../CARD_COVERAGE.md#tap-and-untap-decisions).
+Full card and AI correctness remain open.
+
+Runtime cost modifiers and nested expressions now survive ability copies and
+previews, including pre-grant hand-spell assessments and colored reductions.
+Native play-effect resolution and AI admission share modifier setup and use spell
+casting costs. Generated hand copies retain their originals and receive no
+hand-card loss compensation in hybrid safety. An independent control rejects paying
+life when the resulting draw is prohibited.
+All 372 source checks pass, including 27 new cases. Native Kefnet first-draw
+witnesses pass under heuristic, hybrid and full simulation. Ogre Battlecaster
+branch controls supply targets and do not establish autonomous attack selection.
+Card scripts and AI hints are unchanged. See the
+[source comparison](../../engine/cost_modifier_native_evidence.json) and
+[packaged validation](../../engine/cost_modifier_evidence.json). Full card and AI
+correctness remain open.
+
+The earlier granted-cost correction preserves a casting cost already granted by
+an effect, including
+zero or higher mana costs, life and discard payments, mandatory sacrifices and
+buyback. Twelve focused contracts plus 333 retained source checks pass. Native
+Wizard's Spellbook branch resolution is retained as a control. The correction
+changes one production class; card scripts and the default AI profile are unchanged.
+See the [source comparison](../../engine/granted_cost_native_evidence.json) and
+[packaged validation](../../engine/granted_cost_evidence.json). Full card and AI
+correctness remain open.
+
+Optional life-gain actions now preserve their once-per-turn allowance while life
+gain is prohibited. Controls distinguish ordinary gains and gains replaced by life
+loss. A legal reveal remains available even when its resulting gain is prohibited.
+Skyfisher Spider's conditional exile requires a legal optional gain; Uro's attack
+still draws a card when life gain is prohibited and the optional land is declined.
+
+Held sacrifice-cost events capture leaving creatures' triggers from the event's
+pre-move snapshot. Their death triggers survive even if the paid spell is later
+countered. Eighteen controlled cases cover these behaviors; 79 focused and
+neighboring checks also cover existing cost rollback and grouped costs.
+See the [resolved failure record](../../engine/optional_life_gain_gap.json).
+These are partial-state rules witnesses with supplied decisions and preconditions;
+full card, cost, and AI coverage remain open.
+
+Simple optional single- and multi-card draws now preserve their once-per-turn allowance
+when a prohibition makes the entire optional draw illegal. Replacement draws,
+declined and countered triggers, and empty-library loss retain their native behavior.
+Choosing to pay a trigger cost remains independent of the resulting draw: Tymna
+can still pay life when Narset prohibits drawing. Twelve controlled draw cases
+and 91 focused/neighboring cases pass. See the
+[resolved failure record](../../engine/optional_draw_gap.json).
+These tests use supplied states and decisions. Compound draw effects need separate
+coverage; full rules and AI coverage remain open.
+
+Simple optional battlefield-copy choices preserve their once-per-turn allowance
+when no eligible object remains at resolution. Calix can copy an eligible
+enchantment after an earlier impossible choice. Opponent-controlled and nonenchantment
+objects do not qualify. Twelve controlled cases also cover removal before
+resolution, declined and countered triggers, noncombat damage, token doubling,
+Crafty Cutpurse redirection, and legal last-known copies from departed sources.
+All 103 focused and neighboring cases pass. See the
+[resolved failure record](../../engine/optional_copy_gap.json).
+These are partial-state witnesses with supplied decisions and native damage/casts;
+complete copy, token, combat and AI coverage remain open.
+
+Carpet of Flowers now records a use only after mana is actually added, rather than
+when its parent or child ability resolves. Adding zero leaves the later main-phase
+trigger available; draining mana after a positive addition does not reopen it.
+Twelve controlled cases cover native paid Harrow, countered and copied triggers,
+False Dawn's replacement, independent copied-game history, and native cleanup,
+extra turns and replacement expiry. See the
+[resolved failure record](../../engine/carpet_mana_gap.json).
+The generic marker reuses existing snapshot-aware per-ability history. Only the
+Carpet script flag changes; its Oracle text is unchanged. Initial phase events and
+decisions are supplied; complete mana, combat and AI coverage remain open.
+
+Simple optional counter placements now preserve their once-per-turn allowance
+when no eligible recipient can receive counters. Nykthos Paragon and Leonardo can
+place counters after Solemnity leaves. Mixed groups still receive the counters
+that can be placed, and a legal placement replaced with zero uses the allowance.
+Sixteen controlled cases also cover native responses, copied triggers, independent
+game copies, extra-turn cleanup, and Guiding Hydra's independent counter-removal
+payment, including a payment that causes its source to die. Five cases fail in the
+previous engine; all sixteen pass with the correction. See the
+[resolved failure record](../../engine/optional_counters_gap.json).
+These are partial-state witnesses with supplied decisions and native paid spells;
+compound counter effects, complete card behavior and default-AI correctness remain open.
+
+Simple optional X changes now preserve their once-per-turn allowance when the
+referenced spell or activated ability has left the stack. Glava can choose X=5
+for a later spell after an earlier one is countered. A copied old trigger cannot
+follow a remanded card into a new casting. Sixteen controlled cases also cover
+same-value choices, source removal and return, copied triggers, independent game
+copies, native extra-turn cleanup, and mandatory Unbound Flourishing doubling.
+Four cases fail in the previous engine; all sixteen pass with the correction.
+See the [resolved failure record](../../engine/optional_x_gap.json).
+These tests supply initial states and decisions; complete X, card and default-AI
+correctness remain open. No card scripts change.
+
+Priority Boarding now exposes a separate, counterable reflexive exile trigger.
+An impossible empty-library reveal preserves the once-per-turn allowance. The
+trigger remembers the revealed object's last-known identity: it can still exile
+that card after another card moves on top, but cannot follow it through a draw
+or a trip out of and back into the library. Eighteen controlled cases cover
+native paid responses, declined choices, equal mana value, queued rolls, copied
+triggers, independent game copies and real cleanup/extra-turn permission expiry.
+Eight cases fail in the preceding runtime; all eighteen pass with the correction.
+The earlier prototype failed two added identity cases and was revised.
+See the [resolved failure record](../../engine/priority_boarding_gap.json).
+Only Priority Boarding's script changes; Oracle text is unchanged. Alias and
+companion reviews were rebound after verifying their scripts are unchanged.
+These are supplied-state rules witnesses; complete reveal, dice, card and default-AI
+correctness remain open.
+
+Declared optional casts now use their once-per-turn allowance only after native
+casting succeeds. Emet-Selch retains a later opportunity after a casting restriction,
+a declined cast dialog or failed payment. Countering a spell after it was cast
+does not refund that use. PlayEffect rolls back effects prepared for a canceled
+or failed cast, including the previously retained graveyard-exile replacement.
+Sixteen controlled cases cover native mana and sacrifice costs, prohibitions,
+counterspells, source movement, independent copied games and native extra-turn
+cleanup. The preceding runtime fails seven cases and passes nine controls; all
+sixteen pass with the correction. The earlier prototype failed the added
+cancellation-cleanup check and was revised. See the
+[resolved failure record](../../engine/optional_play_gap.json).
+Only Emet-Selch's script flag changes; Oracle text is unchanged. Existing alias
+and companion scripts were verified unchanged before review rebinding.
+These are supplied-state witnesses; complete casting, alternative-payment,
+card and default-AI correctness remain open.
+
+Six Pantlaza discover witnesses now run in the trusted native and packaged suites:
+resolution-time and last battlefield toughness, later responses, copied games and
+original-turn ending. Their source bytes are unchanged from the earlier
+[source-only validation](../../engine/discover_lki_evidence.json). See the
+[packaged promotion evidence](../../engine/discover_lki_packaged_evidence.json).
+
+Discover now uses zero when its calculated action number would be negative.
+This preserves negative creature toughness for other rules calculations. Native
+Pantlaza entry, Grasp of Darkness and Dismember reproduce two passing zero-value
+controls and two failing negative-value cases in the preceding runtime; all four
+pass with the correction, including independent copied games. Only the generic
+DiscoverEffect implementation changes; card scripts and AI configuration are
+unchanged. See the [resolved failure record](../../engine/discover_scalar_gap.json).
+Complete discover, casting, card and default-AI correctness remain open.
+
+Eight Imposter Mech / Pantlaza tests now run in the trusted native and packaged
+suites: uncrewed zero toughness, crew before resolution, last known values after
+Disenchant, independent copied worlds and native crew expiry after Time Stop.
+The fixture moved from pending to active tests without byte changes. The earlier
+[source-only vehicle evidence](../../engine/discover_vehicle_evidence.json) retains its
+historical path; see the [packaged promotion evidence](../../engine/discover_vehicle_packaged_evidence.json)
+for the current test location and Java 17 results.
+
+Eight discover casting tests now run in the trusted native and packaged suites:
+Drannith and Cage, modal and adventure limits, chosen split-half mana value,
+adventure exile, combined split-card value, and excluded fuse/aftermath forms.
+A native Lightning Bolt and a flashed Appraiser exercise Failure with an actual
+pending spell. Their unchanged source moved into active tests; the earlier
+[source-only casting evidence](../../engine/discover_cast_forms_evidence.json) retains
+its historical path. See the [packaged casting evidence](../../engine/discover_cast_forms_packaged_evidence.json)
+for current Java 17 results.
+
+Eight discover cost tests now run in the trusted native and packaged suites:
+Thalia, Trinisphere and Damping Sphere, payable and unpayable costs, actual mana
+consumption, and combined cost increases before the minimum-cost check. The
+unchanged fixture moved into active tests. Earlier [source-only tax evidence](../../engine/discover_tax_evidence.json)
+retains its historical path; see the [packaged tax evidence](../../engine/discover_tax_packaged_evidence.json)
+for current Java 17 results.
+
+Ten sacrifice tests now run in the trusted native and packaged suites for Village
+Rites and Shard Volley: payment before draw, prohibited casts, land versus nonland
+costs under Yasharn, and graveyard movement replaced by exile. The unchanged
+fixture moved into active tests. Earlier [source-only evidence](../../engine/discover_sacrifice_evidence.json)
+retains its historical path; current packaged outcomes are in the
+[combat AI release evidence](../../engine/switch_block_ai_evidence.json).
+
+`SwitchBlock` now has a generic AI handler using bounded paid native forecasts.
+Copies retain block records as independent last-known-state graphs, so Sorrow's
+Path's forecast includes both its tap-trigger damage and its actual reblocking.
+The two scripts remove only obsolete All-AI exclusion hints; random-deck exclusions,
+Oracle text and the default AI profile are unchanged. Unchanged alias and companion
+scripts were verified before binding their reviews to the new card archive.
+
+Twenty-two supplied-state combat cases cover native paid swaps and damage,
+actual choices and harmful-action refusals in heuristic/hybrid/full modes,
+independent copied histories, pending tap triggers and illegal flying cross-blocks.
+The baseline fails nine cases and passes thirteen controls; the correction passes
+all twenty-two. General Jarkeld's full-mode case already passes in the baseline.
+This resolves the [recorded handler and snapshot gap](../../engine/switch_block_ai_gap.json)
+in the tested scope; full combat, card and optimal-AI correctness remain open.
+
+Empower now has a generic paid-outcome AI handler; its native stack description
+correctly names loyalty counters. Twenty-four native and packaged cases cover the
+five root-ability cards, real mana/exile/tap/loyalty payments, token creation and
+reuse, replacement effects, harmful-action refusals, copied pending resolution and
+generated descriptions. The identical baseline passes fifteen controls and fails
+nine cases; the correction passes all twenty-four. The full-mode beneficial choice
+already passes in the baseline. Card scripts and the default AI profile are unchanged.
+See the [native comparison](../../engine/empower_ai_native_evidence.json) and
+[packaged validation and activation](../../engine/empower_ai_evidence.json).
+Complete Empower, optional-trigger, card and optimal-AI correctness remain unverified.
+
+Generic text-choice planning evaluates legal targets and replacement words through
+paid native outcomes. Immutable AI choices remain separate from rules text and are
+scoped to their activator and target incarnation. Full simulation records word
+choices separately from card choices and resets multi-choice prefixes between targets.
+Five root-card scripts remove only All-AI exclusion hints; Oracle text and random-deck
+hints are unchanged.
+
+The root fixture has thirty-three cases spanning six cards, paid combat survival,
+three-mode choices/refusals and counterspell responses, copied pending resolution,
+forbidden types, random isolation and useful cast triggers. Five composition cases
+add Whim of Volrath, Mind Bend and Spectral Shift in full simulation, copied pending
+modal resolution, and an explicitly supplied entwined cast with four native word
+prompts and four mana paid. All thirty-eight source-native cases pass; the identical
+baseline passes fourteen controls and fails twenty-four cases. Scope checks first prove replay works during
+resolution, then reject changed actors and targets; outside-resolution prompts retain
+ordinary choices. Earlier weak-action and premature-casting expectations retain
+paid decline and instant-deferral controls.
+
+The earlier 1,366-test candidate was rejected before activation: three composed
+spells cast without replaying their useful words. The revision carries bounded word
+transcripts across runtime child selection and copies, rebuilds deterministic entwined
+mode chains before replaying their targets, and preserves those announced targets
+at cast time. A target-ordering experiment was removed after diagnostics identified
+the actual cast-chain mismatch.
+
+The follow-up source-native suite passes fifty-four cases. Sixteen additional
+cases cover creature/land plurals, negated color words, current irregular-plural
+text, actual three-mode responses and timing controls. Against the earlier held
+packaged build, six controls pass and ten cases fail. Response previews retain
+established permanent value, capped at the original valuation so an unusable
+temporary pump creates no immediate benefit. Reference values use private LKI
+snapshots. Candidate-local thinking budgets preserve completed scored results.
+
+A later 1,386-test build passed its source/resource audit, then an additional
+packaged timing probe passed fifteen cases and failed the temporary-pump control.
+It remains held. The corrected runtime passes 1,387 selected native tests and its
+source/resource audit, 635 packaged rules cases, 2,861 broader gameplay tests,
+256 serialization tests, and 42 live tests with 1,283 subtests. All 422 frozen inputs
+remained unchanged. Catalog construction covers 32,636 starting identities and
+excludes seven nonstarting meld results. See the
+[native comparison and held predecessors](../../engine/text_choice_native_evidence.json)
+and [packaged validation and activation](../../engine/text_choices_evidence.json).
+The earlier [twelve-case finding](../../engine/change_text_ai_gap.json) remains historical.
+Supplied entwine costs do not prove optimal optional-cost selection. A follow-up
+composed-spell probe passes five full-mode controls and fails six heuristic/hybrid
+casts across Whim of Volrath, Mind Bend and Spectral Shift. A reversible hint-only
+diagnostic keeps those five controls passing and the six casts failing: removing
+AI exclusions alone does not resolve the mode-planning gap. All three card scripts
+were restored and all 2,159 production sources verified unchanged. See the
+[pending mode finding](../../engine/composite_text_ai_gap.json). Full text-change/card
+correctness, hidden-information behavior and optimal AI remain unverified.
+
+A private-knowledge candidate retains current-object information without sharing
+memory between games, players or control agents. Publicly identified returns to
+hand retain their identity; unseen library moves and face-down exile returns do
+not create observer knowledge. Reads filter old incarnations without changing the
+original player's store during a preview. Fresh inspection replaces old references.
+
+All 170 selected source-native checks pass, including eighteen knowledge cases and
+named-discard, copy, text-change, control, decision and plan-recovery neighbors.
+The identical eighteen-case packaged baseline passes ten controls and fails eight
+cases. Two intermediate drafts remain held after stronger public-return and
+control-layer tests found regressions. See the
+[native comparison](../../engine/private_knowledge_native_evidence.json).
+The earlier 1,405-test build and audit passed, but it remains held. Its broader
+run passed 2,878 of 2,879 cases. Follow-up checks found that timestamp-only filtering
+lost an inspected top card when it was drawn. The original failed build, reports
+and 424 frozen inputs are preserved.
+
+The corrected source tracks only explicitly disclosed library positions and carries
+them through verified draws. Shuffles and hidden reorders invalidate that tracking;
+physical card ids alone cannot identify a draw. Knowledge survives turn boundaries,
+while per-turn planning reservations still expire. Copied agents receive mapped,
+independent knowledge and library revisions.
+
+All 189 selected source checks pass, including sixteen Bauble/knowledge cases and
+three fixed opening replays. The prior runtime passes nine of the sixteen cases;
+the held candidate passes eight, with different failures. Native payment, copied
+slowtrips, bottom draws, selective reveals and all three ordinary AI modes are
+covered. Only Mishra's Bauble's obsolete All-AI hint is removed; Oracle text is preserved.
+See the [knowledge finding](../../engine/private_library_knowledge_gap.json),
+[classification finding](../../engine/bauble_ai_gap.json) and
+[source evidence](../../engine/private_knowledge_native_evidence.json).
+The reviewed runtime passes 1,424 selected native tests and its source/resource
+audit, 672 packaged rules cases, 2,898 broader gameplay tests, 256 serialization
+tests, and 42 live tests with 1,320 subtests. All 428 reviewed inputs remained
+unchanged. Catalog construction covers 32,636 starting identities and excludes
+seven nonstarting meld results. A test-only metadata migration requires Bauble's
+normal AI eligibility and broad permanent discovery; the other excluded cantrips
+retain their narrow fallback checks. Its paired packaged checks pass all fifteen
+cases on this runtime and reject the previous archive in two expected assertions.
+The first broader failure and initial policy prototype remain preserved.
+See the [packaged validation and activation](../../engine/private_knowledge_evidence.json).
+LookAt AI policy, optimal information valuation and complete
+hidden-information correctness remain open.
+
+Generic modal-text planning passes 225 selected source-native checks,
+including 26 composed-spell scenarios covering actual casts, land-word choices,
+copied pending choices, buyback reservation and no-benefit controls, plus a forced-
+mode budget witness. The identical 26-case packaged baseline passes eight controls
+and fails eighteen cases. Modes are prepared before
+targets; replacement words are planned on selected child abilities. Full simulation
+records resolution-time generic mode tokens in order with its word choices.
+Supported normal paid casts are evaluated before applying a wait-for-buyback
+preference. Existing preservation policy remains for other buyback spells.
+
+The first draft passes 76 of 78 tests; the next passes 89 of 91. Stronger land-word
+cases expose a full-simulation mode-selection gap, fixed in the retained 91-case
+draft and the expanded 224-case run. See the
+[source comparison](../../engine/modal_text_native_evidence.json). Only the three
+reviewed All-AI exclusion hints are removed, with Oracle text unchanged. The fresh
+1,450-test build passes its selected regressions and source/resource/class audit,
+but remains held after a stronger native API budget probe: preparing 32 legal
+forced modes exceeds a five-second test budget and reaches the worker's thirty-
+second bound. This is not a claim about a printed card having 32 modes. All 432
+frozen inputs and the failed probe remain preserved. The isolated correction
+prunes branches that cannot reach the required mode count; all 225 source-native
+checks pass, with the same forced-mode witness taking 6 ms in the retained run.
+See the [budget finding](../../engine/modal_budget_gap.json). The corrected reviewed
+runtime passes 1,451 selected native tests, 699 packaged interaction cases,
+2,925 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,347 subtests. All 433 frozen inputs remain unchanged. Catalog construction
+covers 32,636 starting identities and excludes seven nonstarting meld results;
+construction alone does not establish rules correctness. The earlier 1,450-test
+build remains held. See the
+[packaged validation and activation](../../engine/modal_text_evidence.json).
+Search is bounded;
+random choices, repeat modes, multiple generic choosers, optimal optional-cost
+selection and complete card correctness remain unverified.
+
+A separate five-case paid Spy Network probe passes three controls and fails two
+inspected-draw cases on both the prior reviewed and corrected modal runtimes.
+The relevant inspection/memory classes and its card script are byte-identical.
+An explicitly inspected top card loses its remembered identity after an unshuffled
+draw, including copied pending resolution. Payment/private disclosure, unseen
+and shuffled-draw controls pass. See the
+[historical knowledge finding](../../engine/spy_network_knowledge_gap.json). The fixed
+fixture now runs in the reviewed matrix below. AI admission policy is not tested
+by this direct paid-cast probe.
+
+The explicit-position source candidate now passes all 244 selected native checks,
+including nineteen paid-card/API inspection scenarios. Their identical packaged
+baseline passes nine controls and fails ten cases. Exact top/bottom `ValidAll`
+qualifiers grant position knowledge only to the authorized observer. Identity-only,
+filtered and mixed selections do not infer hidden positions. Interleaved draws,
+hidden reorders, fresh inspection and copied pending resolution are covered.
+A stronger one-card-library test catches a top-and-bottom conjunction gap in the
+243/244 draft; the corrected source passes that case too. The change is confined
+to the generic LookAt handler; card scripts and AI flags are unchanged. See the
+[source comparison](../../engine/look_positions_native_evidence.json). The reviewed
+runtime passes 1,470 selected native tests, 718 packaged interaction cases,
+2,944 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,366 subtests. All 436 frozen inputs remain unchanged. The catalog probe
+constructs 32,636 starting identities and excludes seven nonstarting meld results;
+construction does not establish rules correctness. See the
+[validation and activation](../../engine/look_positions_evidence.json). AI admission,
+information-spending policy and complete card correctness remain unproven.
+
+Shared parent-text handling passes 273 selected source-native checks, including
+29 real Crystal Spray scenarios. Their identical packaged baseline passes fifteen
+controls and fails fourteen cases. Modal child effects now use the same parent
+card/spell target lookup during resolution and AI word planning. Tests cover both
+word modes on permanents and pending spells, paid card draws, invalid targets,
+draw restrictions, cast triggers, expiration and independent copied games.
+Only Crystal Spray's All-AI hint is removed; Oracle text, its Random hint and
+Default.ai are unchanged. A retained 269/273 draft used an incorrect opponent-land
+expectation: native traces show the AI destroys four Mountains, preserving its
+own three Islands. Corrected checks assert the actual word map and all four victims.
+See the [source comparison](../../engine/parent_text_native_evidence.json). The reviewed
+runtime passes 1,499 selected native tests, 747 packaged interaction cases,
+2,973 broader gameplay tests, 256 serialization tests and 42 live tests with
+1,395 subtests. All 441 frozen inputs remain unchanged. The construction probe
+loads 32,636 starting identities and excludes seven nonstarting meld results;
+construction is not rules certification. See the
+[validation and activation](../../engine/parent_text_evidence.json). Full card and AI
+correctness remain unproven.
+
+Generic cipher-link copying passes 298 selected source-native checks,
+including 25 paid encoding, timing, lifetime and combat scenarios. Their identical
+packaged baseline passes twenty controls and fails five copied-state cases.
+Both ends of each encoded relationship now refer to the copied game before static
+abilities recalculate. Tests cover one and multiple encoded cards, actual combat
+triggers, zone roundtrips and independent removal in copied/original games.
+Card scripts and all AI flags are unchanged. See the
+[source comparison](../../engine/cipher_links_native_evidence.json). The reviewed runtime
+passes 1,524 selected native tests, 772 packaged interaction cases, 2,998 broader
+gameplay tests, 256 serialization tests and 42 live tests with 1,420 subtests.
+All 443 frozen inputs remain unchanged. Catalog construction loads 32,636 starting
+identities and excludes seven nonstarting meld results; construction does not
+certify rules correctness. See the
+[validation and activation](../../engine/cipher_links_evidence.json). Actual cipher copy
+casting, additional compositions and AI admission remain required coverage.
+Full card correctness remains unproven.
+
+Nine additional controlled cipher-casting regressions verify resolving,
+countering and declining copies, later acceptance, repeated hits, changed
+controllers and temporary noncreature encoders, including copied games. See the
+[research and selection controls](../../engine/cipher_casting_native_evidence.json).
+The reviewed build passes 1,533 selected native tests, 781 packaged interaction
+cases, 3,007 broader gameplay tests, 256 serialization tests and 42 live tests
+with 1,429 subtests. All 444 frozen inputs are unchanged. All 2,160 production
+source files, packaged classes, card resources and AI hints match the prior
+reviewed runtime. See the [validation and activation](../../engine/cipher_casting_evidence.json).
+Scripted card selection isolates these rules paths from normal AI admission;
+wider compositions and complete card correctness remain unproven.
+
+Generic free-casting corrections pass 333 selected source-native checks,
+including 26 new cases for normal pilots, cost-waiver preservation, distinct text
+states, copy/original identity, taxes and casting restrictions. Copies offered
+before they are registered in a game zone are covered separately. See the
+[source comparison](../../engine/free_cast_native_evidence.json). The reviewed build
+passes 1,559 selected native tests, separate packaged families of 781 and 26 cases,
+3,033 broader gameplay tests, 256 serialization tests and 43 live tests with
+1,455 subtests. All 457 frozen inputs remain unchanged. The card archive changes
+only Trait Doctoring's All-AI exclusion; its Random hint and Oracle instructions
+remain unchanged. Identity reviews retain both old and new archive bindings.
+The new family keeps the normal 90-second worker limit. Shared execution sources
+are checked for changes and retained in bounded process receipts. See the
+[validation and activation](../../engine/free_cast_evidence.json). These selected checks
+do not establish full card compositions, AI strategy coverage or rules correctness.
+
+Rinoa's queued return retains the graveyard objects from the death event.
+It cannot follow a card through exile and back. Tests cover simultaneous deaths,
+tapped entry, a flying counter, and used and unused return allowances in copied
+and restored games. The [initial failure record](../../engine/rinoa_return_gap.json)
+now links to the expanded regression and its resolution.
+
+Optional return choices now check movement prohibitions before using a
+once-per-turn allowance. Tests cover Grafdigger's Cage, Kunoros, Soulless Jailer,
+Weathered Runestone, and Worms of the Earth, including mixed creature/land choices.
+Containment Priest still replaces an otherwise legal return and uses its allowance.
+The shared rules checks are generic; card scripts declare the required destination.
+See the [resolved failure record](../../engine/prevented_return_gap.json).
+Full card and AI coverage remain open.
+
+The current reviewed runtime passed 2,212 selected native tests, separate packaged
+families of 1055, 65, 194 and 146 rules cases, 3,686 broader gameplay tests, 256
+serialization tests, and 45 live integration tests with 2,108 subtests. All 533
+implementation inputs stayed frozen through candidate validation. Earlier failed
+source phases and baseline fixtures remain preserved. The Python quality gate passed 430 offline
+tests with 520 subtests; 45 opt-in integration tests are skipped by default.
+The refreshed catalog probe constructed 32,636 starting-card identities; its seven
+other identities are nonstarting meld results. Construction parses native abilities
+and is not proof of every interaction. Native receipts use class-qualified method
+names. See the [validation and activation evidence](../../engine/delayed_private_reveal_evidence.json).
+Complete card and AI correctness remain unverified.
+
+The Reaper, King No More keeps its once-per-turn return available if the first
+return is declined or the dead creature is exiled before the trigger resolves.
+A successful return uses the allowance for that turn. This follows
+[Comprehensive Rules 603.2h](https://media.wizards.com/2026/downloads/MagicCompRules%2020261106.pdf).
+Native checks also cover Roaming Throne creating distinct Ulalek triggers:
+one resolving trigger may copy another trigger from the same permanent.
+
+
+Ulalek can pay two colorless mana to copy its controller’s spells and other
+abilities. Tests verify copy order and exclude the resolving trigger itself.
+If an opponent counters the Eldrazi spell, Ulalek can still copy an eligible
+ability on the stack.
+
+Spells and copies created during resolution preserve priority and stack order.
+Tempt with Mayhem copies the selected spell in turn order. Mana planning uses
+Gemstone Caverns’ luck counter and can spend Cavern of Souls’ colorless mana
+when it is required. Delighted Halfling can protect a legendary spell when its
+mana pays a generic cost.
+
+
+Vault 13: Dweller's Journey excludes itself from chapter I targets. Ixidor's
+Will counts Wizards controlled by every player when determining its payment.
+Forge's experimental snapshot preserves queued abilities and the paid spell
+and target references in a Counterspell response.
+
+Incubator tokens retain their two faces and +1/+1 counters in copied games.
+AI previews preserve transformation history so Homicidal Brute can return to
+Civilized Scholar when its queued end-step trigger resolves. Restoring a
+game snapshot restores the saved counters and transformation history.
+
+Aeon Engine now resumes the normal turn sequence in the new direction after
+pending extra turns. Tests also check Day's Undoing, Time Stop, and The War
+Doctor's exile trigger during cleanup.
+
+Vault 11 draws for each player when no creature receives a vote. Players who
+receive no votes from Círdan may decline to put a permanent onto the
+battlefield. Restoring a snapshot also restores Aeon Engine's turn direction.
+
+Learn offers discard-and-draw in Commander and honors Retriever Phoenix's
+replacement effect. Aeon Engine's reversed turn order survives AI previews
+and game snapshots. Secret votes stay hidden from later voters until the
+reveal. Time travel checks cover eligible objects and suspend after the last
+time counter is removed.
+
+Villainous choices resolve in turn order. With The Valeyard in play, each
+choice resolves before the same player chooses again. The native tests use
+Ensnared by the Mara to check that damage is visible at the next prompt and
+that each choice exiles the expected cards.
+
+Explore places the +1/+1 counter before the player decides where to leave a
+revealed nonland card. Discover puts an uncastable card into hand. Native
+checks cover Jadelight Ranger, Captain Kathryn Janeway, and Geological Appraiser,
+including free casts with legal targets and cards with unpayable costs.
+
+Declining an optional dice payment lets the original result resolve and leaves
+the ability available for later rolls. Tests cover Monitor Monitor and Night
+Shift of the Living Dead. Explore tests cover Jadelight Ranger and Captain
+Kathryn Janeway, including an empty library and a creature that left the
+battlefield before its explore effect resolved. That earlier build passed 1,013
+focused native tests and 261 checks against the packaged JAR.
+
+Dice interactions count retained rolls, carry the final results into AI
+previews and game snapshots, and keep the copied history independent. Native
+tests cover Ancient Copper Dragon, Circuits Act, Iron Mastiff, and Diviner's
+Portent. The Monitor Monitor test supplies the optional reroll decision and
+uses the engine to pay its mana cost. Forge's default AI still declines that
+reroll. That earlier build passed 1,007 focused native tests and 255 packaged
+checks. See [dice history and rerolls](../CARD_COVERAGE.md#dice-history-and-rerolls).
+
+The Star Trek engine includes the reviewed alias for All Good Things... and
+checks that the Saga's exiled cards share one common card type. The reviewed
+Dilemma change preserves prior turn history when a cast is canceled and counts
+entwine and accepted free casts once. Kira Nerys and ninjutsu preserve a
+specified defender when a creature enters attacking. Hit It! reveals all five
+cards to each player before moving them. See the
+[Star Trek catalog and rules checks](../CARD_COVERAGE.md#november-11-catalog-refresh).
+
+A failed AI payment restores supported sacrifices to the original battlefield
+object, including its counters, controller, and ordinary equipment. The engine
+preserves independent moves and sacrifices that were redirected into a library.
+See [sacrifice payments](../CARD_COVERAGE.md#sacrifice-payments).
+
+The AI checks the full cost when removing counters from one or more cards.
+If a later cost fails, it restores the counters used for that payment and
+preserves independent counter removals. See
+[card-counter costs](../CARD_COVERAGE.md#card-counter-costs).
+
+When a later cost fails, the AI restores paid energy and reversible discards.
+The engine returns cards from the graveyard or exile in the tested cases and
+keeps a card moved into a library by a replacement effect. See
+[energy and discard recovery](../CARD_COVERAGE.md#energy-and-discard-recovery).
+
+Mana planning now accounts for permanents needed for later tap costs,
+including when a mana ability taps or sacrifices another card or needs mana
+from a second source. See
+[combined mana and tap costs](../CARD_COVERAGE.md#combined-mana-and-tap-costs).
+
+The AI can activate Weight of Conscience with creatures that share a type,
+including a Changeling. It also counts the power or toughness the rules
+assign to a crew payment and restores eligible taps when a later cost fails.
+See [tap costs and group selection](../CARD_COVERAGE.md#tap-costs-and-group-selection).
+
+A failed AI activation now returns refundable mana and direct life payments,
+including life paid for Phyrexian mana. The checks cover Yawgmoth, Zopandrel,
+and Vampiric Rites. See
+[failed activation recovery](../CARD_COVERAGE.md#failed-activation-recovery).
+
+The native AI now checks that a creature is available for only one sacrifice
+when a spell also needs a sacrifice to produce its mana. Tests cover Blood
+Pet, Ashnod's Altar, and Orzhov Signet funding Altar's Reap. A separate test
+checks that Demon's Herald needs three distinct creatures. See
+[sacrifice allocation](../CARD_COVERAGE.md#sacrifice-allocation).
+
+Failed casts return the card to its original zone, including when mana was
+already spent. The engine drops triggers caused by the abandoned move to the
+stack and preserves earlier triggers. Hall of Gemstone's chosen color now
+reaches the mana planner. Validation passed 840 focused native tests, 1,388
+broader gameplay checks, 256 serialization checks, and 42 live tests with 764
+subtests. See [cast recovery and chosen mana](../CARD_COVERAGE.md#cast-recovery-and-chosen-mana).
+
+Automatic payment now distinguishes mana being added from a source being
+tapped. It counts Caged Sun's bonus, excludes Kinnan's bonus for sacrifice-only
+mana, and preserves both the mana type and its source when checking snow costs.
+That milestone passed 829 focused native tests, 1,377 broader gameplay
+checks, 256 serialization checks, and 42 live tests with 753 subtests. See
+[mana events and snow payments](../CARD_COVERAGE.md#mana-events-and-snow-payments).
+
+The reflected-mana milestone added support for Overabundance's bonus on automatic payments,
+including mixed-color and typed colorless costs. Sasaya's Essence counts and
+chooses each repeated bonus separately. Snowfall's mana is available only for
+cumulative upkeep. Validation passed 813 focused native tests, 1,361 broader
+gameplay checks, 256 serialization checks, and 42 live tests with 737 subtests.
+See [reflected and triggered mana](../CARD_COVERAGE.md#reflected-and-triggered-mana).
+
+The earlier mana-reservation milestone cleared expired mana reservations before rolling and gave
+hybrid safety forecasts their own RNG scope on the evaluation thread. It
+combined two fixed samples so a single bad pile outcome does not dominate the
+safety check. The runtime also integrates the Divine Intervention rules fix:
+its controller's last-counter removal queues a separate draw trigger.
+
+That milestone passed 760 focused native tests, 1,308 broader gameplay checks,
+256 serialization checks, 42 live tests / 684 subtests, and the Python quality
+gate (403 offline tests / 508 subtests). See
+[mana reservations and hybrid previews](../CARD_COVERAGE.md#mana-reservations-and-hybrid-previews)
+and [draw-ending rules](../CARD_COVERAGE.md#draw-ending-rules). Strategic AI
+exclusions on Divine Intervention remain; full-card correctness is ongoing.
+
+The earlier exchange/pile milestone added paid Cultural Exchange and Whims of the Fates
+plays, rejects invalid exchange replies before either transfer, and preserves
+player order for seeded pile rolls. That milestone passed 724 focused native,
+1,272 broader gameplay, 256 serialization and 41 live tests / 648 subtests,
+plus the Python quality gate (399 offline tests / 508 subtests). The pile AI
+retains a legal all-in-one-pile policy; optimal partitions and full-card
+certification remain open. See
+[exchange and pile coverage](../CARD_COVERAGE.md#creature-exchanges-and-random-piles).
+
+The earlier mass-counter milestone added complete paid outcomes for
+Aether Snap, Dust of Moments, Oblivion Stone and Pestilent Haze. Modal choices,
+attached counter cleanup and source-decline controls have native and packaged
+witnesses. That milestone passed 693 focused native, 1,241 broader gameplay,
+256 serialization and 40 live tests / 633 subtests, plus the Python quality gate
+(399 offline tests / 508 subtests). See
+[mass counter removal and paid outcomes](../CARD_COVERAGE.md#mass-counter-removal-and-paid-outcomes)
+for exact scope and remaining full-card limits.
+
+The earlier composed-control milestone added native planning for Invert Polarity,
+Sudden Substitution and Perplexing Chimera. Cast provenance now preserves the original
+caster, paid costs and announced targets when a live spell changes control.
+That milestone fixed the stolen-Zacama land-untap outcome and passed 666 focused
+native regressions, 1,214 broader gameplay checks, 256 serialization checks,
+39 live tests / 619 subtests and the Python quality gate (399 offline tests /
+508 subtests). See [composed control and cast provenance](../CARD_COVERAGE.md#composed-control-and-cast-provenance)
+for the bounded forecasts, exact fixtures and remaining limits.
+
+Paid spell control and retargeting now have native choice/outcome witnesses for
+Aethersnatch, Commandeer and Chef's Kiss, including Commandeer's alternate exile
+cost. That earlier reviewed build passed 641 focused native regressions,
+1,189 broader gameplay checks, 256 serialization checks and 38 live tests /
+605 subtests, plus the Python quality gate. See
+[spell-control coverage](../CARD_COVERAGE.md#paid-spell-control-and-retargeting)
+for its exact historical scope. Full-card rules and strategy
+coverage remain in progress.
+
+The recorded catalog refresh uses Scryfall’s November 4 export (39,287 records).
+The previous database is preserved under `data/local-archive/`; real provider
+timestamps and normal freshness checks remain in effect.
+
+Primary-control planning now evaluates paid native future windows for Worst Fears,
+Mindslaver, Secret of Bloodbending, Sorin Markov and The Dominion Bracelet.
+That earlier milestone passed 613 focused native regressions, 1,161 broader gameplay
+checks, 256 serialization checks and 37 live tests / 593 subtests, plus the Python
+quality gate. See [primary-control coverage](../CARD_COVERAGE.md#primary-control-future-planning)
+for exact scope and limits. Forecasts sample at most two legal actions per future
+main phase. Full-card rules and strategy coverage remain in progress.
+
+Usage-history work and its remaining validation limits are described in
+[usage histories and trait identities](../CARD_COVERAGE.md#usage-histories-and-trait-identities).
+See also [scheduled effects and temporal state](../CARD_COVERAGE.md#scheduled-effects-and-temporal-state)
+for expiration, control-layer and player-keyword validation.
+[Delayed-trigger snapshots](../CARD_COVERAGE.md#delayed-trigger-snapshots) cover
+future sacrifices, returns, upkeep debts, registrations and held events.
+[Turn and phase schedules](../CARD_COVERAGE.md#turn-and-phase-schedules) cover
+selected extra turns, extra combats, attached obligations and phase counters.
+[Conditional control and cleanup](../CARD_COVERAGE.md#conditional-control-and-cleanup)
+cover selected power/enchantment conditions, two-turn deadlines and cleanup queues.
+[Animation snapshots](../CARD_COVERAGE.md#animation-snapshots) cover timed/mass
+animation and copied reversal paths for all 13 retained Licids.
+[Temporary-copy expiry](../CARD_COVERAGE.md#temporary-copy-expiry) covers selected
+copy frames, restored references and temporary token keywords.
+[Protection deadlines](../CARD_COVERAGE.md#protection-deadlines) cover temporary
+protection on individual creatures, groups and players in copied games.
+[Keyword restoration and power exchange](../CARD_COVERAGE.md#keyword-restoration-and-power-exchange)
+cover temporary keyword removal and Serene Master combat cleanup.
+[Forced blocking and prevention shields](../CARD_COVERAGE.md#forced-blocking-and-prevention-shields)
+cover copied block requirements and finite shield cleanup.
+[Ring designations and text changes](../CARD_COVERAGE.md#ring-designations-and-text-changes)
+cover Ring progression, bearer loss, word edits and text-box exchange.
+[Reconfigure and mana-granted keywords](../CARD_COVERAGE.md#reconfigure-and-mana-granted-keywords)
+cover attachment-effect cleanup and temporary haste after actual mana payment.
+[Host-bound exile returns](../CARD_COVERAGE.md#host-bound-exile-returns) cover
+linked exiled cards, battlefield/hand returns and copied return abilities.
+[Temporary effect cleanup and regeneration](../CARD_COVERAGE.md#temporary-effect-cleanup-and-regeneration)
+cover effect-card expiration, regeneration quotas/history and Spiny Starfish tokens.
+[Detain and control age](../CARD_COVERAGE.md#detain-and-control-age) cover independent
+restrictions/deadlines and tap admission after newly controlled creatures lose haste.
+[Player-control snapshots](../CARD_COVERAGE.md#player-control-snapshots) cover
+turn/combat deadlines, layered controllers and Emrakul's following extra turn.
+[Decision beneficiaries and pending responses](../CARD_COVERAGE.md#decision-beneficiaries-and-pending-responses)
+cover actual AI choices, fixed scoring perspective and spell/ability stack targets.
+[Controlled attack planning](../CARD_COVERAGE.md#controlled-attack-planning) describes
+native attack requirements, actor-paid costs, controller-benefit decisions and
+real combat outcomes.
+
+The default reviewed Commander Forge build constructs all **32,109 matched
+native card identities** in the frozen local Commander-format catalog without errors.
+Seven additional records are non-starting meld results. The build passes 641
+focused native tests for stickers, chosen commander colors, companion pregame
+behavior, supplementary AI zones, historical card state, damage provenance,
+participant state, starting-life baselines, paid stack state, cast forms, usage
+histories, scheduled effects, delayed triggers, turn/phase schedules and
+conditional control/cleanup, animation reversal, temporary-copy expiry, protection
+deadlines, keyword restoration, combat power exchange, forced-block requirements,
+prevention shields, Ring state, text changes, Reconfigure cleanup, mana-granted
+haste, host-bound exile returns, temporary effects, regeneration history, Detain,
+raw control age, player-control snapshots, decision/response planning and
+controlled attack outcomes, primary-control forecasts, resolving-parent safety and paid spell control.
+Broader native runs pass 1,189 AI/gameplay tests (including those 641) and 256
+card/deck serialization tests, with no failures or skips.
+The `engine-card-probe` command preserves bounded, identity-bound construction evidence.
+Five primary player-control sources now have paid native choice/outcome witnesses
+in heuristic, hybrid and full modes. Source and packaged fixtures each change
+from 23 failed criteria to 23 passes. Control timing, costs, source transitions,
+original-state independence and survival are observed. Controlled players plan
+for their decision controller's benefit while paying with their own resources. Verified outcomes
+include paid Shock, Counterspell, Stifle and selected controlled combat. Native
+mandatory attacks remain required even when harmful to the controller; broader
+combat and mandatory-choice policy still need work.
+Other callbacks, arbitrary suspended continuations and general AI policy still
+need separate validation.
+See [card support and evidence](../CARD_COVERAGE.md) and the
+[reviewed engine build](../../engine/README.md) for the exact source, patches and limits.
+
+This construction check does not certify all interactions or AI decisions.
+Sticker and Attraction sections now retain validated supplementary selections
+through saved revisions and native pregame loading. Explicit companion selection
+now includes native condition validation against all 100 starting cards. Explicit
+commander color choices are retained through legality checks, saved revisions,
+native pregame loading and AI game copies. All 87 retained legal Attraction
+printings across 22 identities preserve their selected light combinations through
+import, snapshots, native registration and AI copies. Applied stickers now retain
+physical records and independent sheet references
+through AI copies, with LKI records retained separately from ordinary Clone effects.
+Control changes cannot make an already applied sticker available for reuse.
+Packaged-runtime checks cover all 480 stickers across 48 legal sheets in three
+public zones, comparing live, AI-copy and LKI state. These are state-preservation
+checks, separate from individual ability resolution.
+The 41 controlled interaction scenarios remain separate checks. A further 49 native meld cases verify all seven catalog
+results forming, separating after graveyard/exile moves and rejecting invalid
+parts. These meld fixtures directly resolve native effects; they do not certify
+trigger admission, payment or timing.
+
+Historical-state work additionally checks departed objects, distinct incarnations,
+zone-entry records and paid morbid spell outcomes. See the
+[history validation scope](../CARD_COVERAGE.md#historical-state-validation).
+
+Damage-state validation additionally covers filtered provenance, prior-turn
+receipts and paid freerunning/bloodthirst controls. See the
+[damage validation scope](../CARD_COVERAGE.md#damage-provenance-and-alternative-costs).
+
+Participant-state validation covers eliminated seats, loss outcomes, turn order,
+historical player references and independent later eliminations. A resolved Blood
+Tyrant loss trigger retains its five counters without firing again during copying.
+See the [participant validation scope](../CARD_COVERAGE.md#eliminated-participants).
+
+Starting-life validation checks that Commander snapshots retain the 40-life
+baseline separately from current life. Righteous Valkyrie's bonus requires 47
+life, including after actual paid life-gain spells. See the
+[starting-life validation scope](../CARD_COVERAGE.md#starting-life-baselines).
+
+Paid-stack validation preserves actual mana/X/kicker payments, selected modes,
+divided targets, activated abilities, admitted triggers, cast history and floating
+mana through snapshots. It checks resolution in the copied game without changing
+the source game or replaying cast events. See the
+[paid-stack validation scope](../CARD_COVERAGE.md#paid-stack-snapshots).
+
+Cast-form validation additionally covers paid Adventure, split, modal back-face,
+morph/disguise, prototype and bestow casts, repeated Adventure snapshots followed
+by casting from exile, and real disguise turn-up/ward outcomes. Copied card views
+agree with the restored form. See the
+[cast-form validation scope](../CARD_COVERAGE.md#cast-form-snapshots).

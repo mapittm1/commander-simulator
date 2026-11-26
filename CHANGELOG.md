@@ -6,6 +6,20 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate all 3,718 source and 4,918 native cases with exact retained case and
+  parameter counters, reviewed source/fixture bytes and unchanged 173 protected
+  resolution/helper classfiles. Bind baseline reports to their published bytes.
+- Pass 2,490 main packaged cases outside resolution and 405 separate cases, with
+  receipt arguments matched to the sealed native report. Pass all 6,241 broader
+  gameplay and 320 card/deck-loading cases, restoring temporary test policies.
+  Candidate health and frozen-catalog construction pass: 32,636 constructed,
+  seven nonstarting meld results explicitly unavailable as standalone scripts.
+  Preserve raw reports/receipts in engine/remembered_history_runtime_evidence.json.
+  Original 1,271/90, full 3,761 packaged, full games and activation remain open.
+- Replace the README's long coverage history with current status and direct links;
+  preserve its previous notes under docs/history/README_CARD_COVERAGE.md. Detailed
+  coverage evidence and earlier failure records remain available.
+
 - Preserve remembered detached cards and last-known-information objects through
   the shared snapshot identity graph. Seven of nine baseline controls fail; all
   nine corrected controls and 87 retained regressions pass, including actual

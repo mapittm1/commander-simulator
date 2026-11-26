@@ -7,10 +7,28 @@ life-gain parity, repeated copies, sibling isolation and shared historical
 identity. All 87 retained payload/lifecycle/ignore-effect cases pass.
 
 The recipe registers nine `remembered_history` cases with fixed patch/fixture
-checksums. Expanded **3,718 source / 4,918 native / 3,761 main packaged** validation
-is pending. The original **1,271 cases / 90 seconds** workload and selected runtime
-are unchanged. Supplied states do not prove complete legal histories or universal
-card correctness; no speedup is claimed. See [remembered-history evidence](../engine/remembered_history_evidence.json).
+checksums. Fresh **3,718 source** and **4,918 native** cases pass, retaining all
+prior cases and parameters. All 2,168 production / 181 selected-test / 350 card
+inputs match; 292 registered plus nine priority fixtures match exactly. Only the
+GameCopier class family changes, and 173 protected resolution/helper classfiles
+remain byte-identical. Baseline reports match their previously published bytes.
+
+Independent packaged checks pass **2,490 main cases outside resolution** and
+**405 additional casting/untap/Battle cases**. Receipt arguments and native
+method/parameter counters match the sealed report, with production origins and
+configuration restoration audited. Broader **6,241 gameplay / 320 card-deck
+loading** cases pass without skips; temporary test policies are restored and
+production inputs remain unchanged.
+
+Candidate health is ready. Frozen-catalog construction passes for **32,636 of
+32,643 identities**, with seven nonstarting meld results explicitly unavailable
+as standalone scripts. Construction does not establish ability correctness.
+The original **1,271 cases / 90 seconds**, full **3,761 main packaged** verdict,
+full games and activation remain unresolved. The selected runtime is unchanged;
+no speedup or universal rules claim is made. See
+[runtime evidence](../engine/remembered_history_runtime_evidence.json),
+[paired correction controls](../engine/remembered_history_evidence.json) and
+[archived README coverage notes](history/README_CARD_COVERAGE.md).
 
 A shared ignore-effect correction fixes copied paid special actions for Leonin
 Arbiter, Damping Engine, Volrath's Curse and Lost in Thought. Copied actions now

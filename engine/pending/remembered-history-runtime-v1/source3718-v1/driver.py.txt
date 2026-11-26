@@ -1,0 +1,64 @@
+"""Prepare a clean source tree retaining every prior case and nine memory controls."""
+from collections import Counter
+from pathlib import Path
+import json
+import shutil
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.forge_engine import _environment
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'source3718-v1';PRIOR=WORK/'source3709-v2';BASE=PRIOR/'source'
+PROTO=WORK/'remembered-history4909-prototype-v1'
+BUILD=ROOT/'data/engine-builds/35e8b8bcca1b41a1acc2aaa672d12b45'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def normalized(p):return p.read_bytes().replace(b'\r\n',b'\n')
+ci=load(WORK/'remembered-history-published-ci-v1.json')
+assert ci['conclusion']=='success' and ci['status']=='completed'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert not subprocess.check_output(['git','status','--porcelain'])
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4918
+production=load(PRIOR/'production-inputs.json');cards=load(PRIOR/'card-inputs.json');selected=load(PRIOR/'test-inputs.json')
+assert len(production)==2168 and len(cards)==350 and len(selected)==180
+assert all(file_hash(BASE/n)==h for n,h in {**production,**cards,**selected}.items())
+assert load(WORK/'remembered-history4909-cases-prototype-v4/outcome.json')['counts']==dict(total=9,passed=9,failed=0,skipped=0)
+assert load(WORK/'remembered-history4909-retained-prototype-v1/outcome.json')['counts']==dict(total=87,passed=87,failed=0,skipped=0)
+paths=filter(None,subprocess.check_output(['git','ls-files','-z']).decode().split('\0'));frozen={n:file_hash(ROOT/n) for n in paths}
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+source=RUN/'source';modules={p.parent.resolve() for p in BASE.glob('*/pom.xml')}|{BASE.resolve()}
+shutil.copytree(BASE,source,ignore=lambda d,n:['target'] if Path(d).resolve() in modules and 'target' in n else [])
+assert not list(source.glob('*/target'))
+before_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(before_tests)==540
+patch=ROOT/'engine/patches/commander-remembered-history.patch';assert file_hash(patch)==load(ROOT/'engine/remembered_history_evidence.json')['patch_sha256']
+for name,options in [('check',['--check']),('apply',[])]:
+ command=['git','apply',*options,'--directory='+source.relative_to(ROOT).as_posix(),str(patch)]
+ process=run_bounded(command,ROOT,RUN/('patch-'+name+'.log'),ProcessLimits(90,environment=_environment(RUN)));save(RUN/('patch-'+name+'-process.json'),process);assert process['status']=='finished' and process['returncode']==0,process
+changed=[n for n in production if normalized(source/n)!=normalized(BASE/n)]
+assert changed==['forge-ai/src/main/java/forge/ai/simulation/GameCopier.java']
+assert normalized(source/changed[0])==normalized(PROTO/'source'/changed[0])
+builder._copy_regressions(source);assert all(file_hash(source/n)==h for n,h in before_tests.items())
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(all_tests)==541
+fixture='forge-gui-desktop/src/test/java/forge/ai/CommanderRememberedHistoryTest.java'
+assert all_tests[fixture]==recipe['commander_remembered_history_test_sha256']
+prior=load(PRIOR/'outcome.json');assert prior['passed'] and prior['counts']==dict(total=3709,passed=3709,failed=0,skipped=0)
+expected=Counter((v['method'],tuple(v['parameters'])) for v in prior['cases']);assert sum(expected.values())==3709
+added=Counter()
+for cls in ET.parse(WORK/'remembered-history4909-cases-prototype-v4/reports/testng-results.xml').findall('.//class'):
+ for method in cls.findall('test-method'):
+  if method.get('is-config')!='true':
+   assert cls.get('name')=='forge.ai.CommanderRememberedHistoryTest' and method.get('status')=='PASS'
+   added[(cls.get('name')+'.'+method.get('name'),tuple((v.text or '').strip() for v in method.findall('./params/param/value')))]+=1
+assert sum(added.values())==9 and not set(added)&set(expected);expected.update(added)
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+selectors=load(PRIOR/'selection.json')['suite']['classes']
+assert all(v in selectors for v in ('OnePlaySafetyCheckerTest#testOnePlaySafetyOnlyChecksResolvingStack','FlatMonteCarloStandardScenarioTest#theAirbendLoopWithBontusMonumentDrainsTheOpponentOut','CommanderIgnoreEffectCostTest'))
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':{'classes':[*selectors,'CommanderRememberedHistoryTest'],'expected_cases':3718,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')},'changed_sources':changed,'fresh_target_directories':True,'scope':'All3709 prior source cases plus9 remembered-history controls, exact method/parameter membership. Not original1271/90, native4918, activation or full rules proof.'})
+selected[fixture]=file_hash(source/fixture)
+for name,value in [('test-inputs.json',selected),('production-inputs.json',{n:file_hash(source/n) for n in production}),('selected-test-inputs.json',all_tests),('card-inputs.json',cards),('root-inputs.json',frozen),('source-ci.json',ci)]:save(RUN/name,value)
+save(RUN/'preparation.json',{'passed':True,'production_sources':2168,'changed_sources':1,'all_java_test_sources_frozen':541,'selected_test_inputs':181,'card_inputs':350,'expected_cases':3718,'retained_prior_cases':3709,'new_cases':9,'patch_matches_tested_prototype':True})
+print('Clean source prepared:2168 production,541 Java tests,181 selected inputs,350 cards,3718 cases.',flush=True)
