@@ -1,0 +1,25 @@
+"""Verify both packaged partitions against exact native case membership."""
+from pathlib import Path
+from collections import Counter
+import hashlib,json,xml.etree.ElementTree as ET
+ROOT=Path.cwd();RUN=ROOT/'data/development/belanna-lifecycle-runtime-v1'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+process=load(RUN/'packaged/process.json');assert process['configuration_restored'] and process['process']['returncode']==0
+assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'packaged/active-config-before.json').read_bytes()
+assert all(sha(ROOT/n)==h for n,h in load(RUN/'root-inputs.json').items())
+assert len(process['new_run_directories'])==2
+actual=Counter();groups=[]
+for identifier in process['new_run_directories']:
+ folder=ROOT/'data/runs'/identifier;summary=load(folder/'draw-ending-summary.json')['cases'][0];rows=load(folder/'draw-ending-methods.json')['cases']
+ count=len(rows);assert count in (7,10)
+ assert summary['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+ assert summary['testng_status']==summary['configuration_failures']==summary['configuration_skips']==summary['partial_successes']==0
+ assert len(summary['production_classes_from_packaged_jar'])==188
+ assert all(row['status']=='PASS' for row in rows)
+ actual.update((row['method'],tuple(row.get('parameters',[]))) for row in rows)
+ groups.append({'run_id':identifier,'counts':summary['counts'],'production_origins_verified':188,'methods_sha256':sha(folder/'draw-ending-methods.json')})
+selection=load(RUN/'candidate-selection.json');tree=ET.parse(ROOT/selection['build']/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+expected=Counter((c.get('name')+'.'+m.get('name'),tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in m.findall('./params/param/value'))) for c in tree.findall('.//class') if c.get('name') in ('forge.ai.CommanderBelannaOracleTest','forge.ai.CommanderBelannaLifecycleTest') for m in c.findall('test-method') if m.get('is-config')!='true')
+assert actual==expected and sum(actual.values())==17
+result={'counts':dict(total=17,passed=17,failed=0,skipped=0),'exact_native_case_parameters':True,'configuration_restored_exact_bytes':True,'groups':groups,'full_packaged_gate_passed':False}
+(RUN/'packaged-audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps(result),flush=True)

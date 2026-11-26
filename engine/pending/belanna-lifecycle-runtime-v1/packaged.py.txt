@@ -1,0 +1,46 @@
+"""Check the ten registered cases using the normal packaged integration workers."""
+from pathlib import Path
+import json,os,subprocess,sys,unittest
+ROOT=Path(__file__).resolve().parents[3];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.forge_engine import _environment
+RUN=Path(__file__).resolve().parent/'packaged';EPOCH=RUN.parent
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+worker=sys.argv[1:]==['worker'];assert sys.argv[1:] in ([],['worker'])
+frozen=load(EPOCH/'root-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items() if not(worker and n=='config/engine_config.json'))
+if worker:
+ assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'candidate-config.json').read_bytes()
+ os.environ['COMMANDER_ENGINE_INTEGRATION']='1';os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe'
+ from tests.integration.test_draw_endings_integration import DrawEndingIntegrationTests
+ class OracleOnly(DrawEndingIntegrationTests):
+  __unittest_skip__=False
+  def test_packaged_draw_ending_rules(self):
+   self.assertEqual(len(self.check_partition(read_settings(),'belanna_oracle')),10)
+   self.assertEqual(len(self.check_partition(read_settings(),'belanna_lifecycle')),7)
+ result=unittest.TextTestRunner(stream=sys.stdout,verbosity=2).run(OracleOnly('test_packaged_draw_ending_rules'))
+ outcome={'successful':result.wasSuccessful(),'tests_run':result.testsRun,'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),'scope':'Seventeen registered Belanna cases only; original resolution1271/90 and full packaged3813 gate remain open.'}
+ save(RUN/'outcome.json',outcome);assert result.wasSuccessful() and result.testsRun==1 and not result.skipped
+else:
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(EPOCH/'source-ci.json')['head_sha']
+ assert load(EPOCH/'build-audit.json')['native_counts']==dict(total=4970,passed=4970,failed=0,skipped=0)
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ active=(ROOT/'config/engine_config.json').read_bytes()
+ settings=read_settings(ROOT/load(EPOCH/'candidate-selection.json')['build']/'engine-config.json')
+ selector=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode('utf-8')
+ (RUN/'active-config-before.json').write_bytes(active);(RUN/'candidate-config.json').write_bytes(selector)
+ existing={p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir()};result=None
+ try:
+  (ROOT/'config/engine_config.json').write_bytes(selector)
+  result=run_bounded([sys.executable,'-I',str(Path(__file__)),'worker'],ROOT,RUN/'output.log',ProcessLimits(420,log_bytes=65536,environment=_environment(RUN)))
+ finally:
+  assert (ROOT/'config/engine_config.json').read_bytes()==selector,'Configuration changed; backup preserved'
+  (ROOT/'config/engine_config.json').write_bytes(active)
+  assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+  assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+  if result is not None:
+   record={'process':result,'new_run_directories':sorted(p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir() and p.name not in existing),'configuration_restored':True,'worker_limit_seconds':90,'wrapper_limit_seconds':420,'log_sha256':file_hash(RUN/'output.log')}
+   save(RUN/'process.json',record);print(json.dumps(record),flush=True)
+ assert result['status']=='finished' and result['returncode']==0

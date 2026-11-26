@@ -30,58 +30,39 @@ The backend targets Commander rules through shared systems for mana, costs,
 triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete.
 
-The new B'Elanna Torres candidate fixes drawing versus putting a card into hand.
-Its fresh build passes all 4,963 native cases, retaining the prior 4,953 and adding
-ten regressions. All ten also pass through the packaged worker. Only this card
-script changes; all 18,068 packaged classfiles remain identical. The candidate is
-not activated. See [failure and repair](engine/belanna_oracle_evidence.json) and
-[fresh build/package evidence](engine/belanna_runtime_evidence.json).
-Seven further lifecycle controls pass alongside the ten retained cases, including
-paid control changes, copied activations and repeated activation. These additional
-controls are now registered for the expanded 4,970-case native suite; fresh build
-validation is pending. See [exact evidence](engine/belanna_lifecycle_evidence.json).
+The latest candidate passes all **4,970 native cases**, retaining every prior
+case and parameter. All 17 registered B'Elanna Oracle/lifecycle cases also pass
+through the packaged workers. The seven lifecycle controls cover paid ownership
+and control changes, copied activations, Abundance replacement and later activation.
+Every packaged classfile and card script matches the previous repaired candidate;
+only the JAR build timestamp changes. See
+[expanded runtime evidence](engine/belanna_lifecycle_runtime_evidence.json).
 
-Known rules errors are checked separately from script presence. B'Elanna decks
-are blocked on engine/card archive pairs without an exact review in
-`config/engine_rules_issues.json`. The reviewed candidate clears this specific
-issue; it remains unselected by default. Admission runs after legality checks,
-before pod storage or game launch, and rechecks the policy before each process.
-Receipts freeze the policy and review evidence hashes for affected decks. This
-does not certify other interactions or retroactively recompute old results.
+The original [B'Elanna repair](engine/belanna_oracle_evidence.json) distinguishes
+actually drawing from putting a card into hand. Known rules issues are checked
+separately from script presence, using stable identities and exact reviewed
+JAR/card-archive pairs in `config/engine_rules_issues.json`. Admission follows
+legality checks, precedes pod storage/game launch, and rechecks actual engine bytes
+and applicable policy before execution. Receipts freeze review evidence hashes.
+The older selected runtime rejects the confirmed issue; repaired candidates have
+specific reviews. This does not certify other interactions or recompute old results.
 
-A real legal B'Elanna/basic-land fixture pod completes on the reviewed candidate,
-with its admission receipt preserved. The same legal pod is rejected before launch
-on the older selected engine. The catalog and selected configuration stay unchanged.
-See [full-game admission evidence](engine/rules_admission_fullgame_evidence.json).
+A [legal B'Elanna/basic-land fixture game](engine/rules_admission_fullgame_evidence.json)
+completes through the real admission/launch path with its receipt preserved.
+The Ratonhnhaké꞉ton identity game still times out at 60 seconds on the earlier
+candidate. Basic-land fixtures and controlled decisions do not establish broad
+full-game behavior or competitive strategy.
 
+Fresh catalog audits on both repaired candidates match 32,636 Commander-legal
+starting identities; seven non-starting meld results lack standalone scripts.
+Two exact identity mappings and two companion wording reviews were restored for
+the repaired archive after unchanged-script and Oracle-condition checks. Matching
+scripts and finite tests do not prove universal rules correctness or optimal play.
 
-The reviewed candidate fixes remembered-card history and multiplayer elimination
-valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass
-2,525 main packaged cases outside resolution, 405 separate packaged cases,
-6,276 broader gameplay cases and 320 serialization/loading cases. See
-[runtime evidence](engine/player_elimination_runtime_evidence.json).
-
-Six complete legal fixture games exercise commander-tax/attack-trigger/loss
-witnesses and variant-export/batch-resume checks. These use one commander plus
-99 basic lands. The Ratonhnhaké꞉ton identity game **still times out at 60 seconds**;
-its partial results are excluded from completed-game aggregation. See
-[full-game witnesses](engine/player_elimination_fullgame_evidence.json) and
-[workflow/failure evidence](engine/player_elimination_workflow_evidence.json).
-
-Two follow-up query guards pass 24 and 21 paired controls respectively, with
-retained semantic checks, but both still fail that full-game completion test.
-They remain unregistered and unpromoted; [all reports](engine/query_guard_evidence.json)
-are preserved. Earlier tested performance shortcuts also remain excluded.
-
-The original 1,271-case / 90-second gate, full main packaged gate (expanded from 3,796 to 3,813 cases),
+The original 1,271-case / 90-second gate, full 3,813-case main packaged gate,
 broader full-game validation and candidate activation remain open. The selected
-runtime is unchanged. Historical catalog construction covers 32,636 starting
-identities; seven meld results lack standalone scripts. Construction and finite
-tests do not prove universal rules correctness or optimal play.
-
-See [coverage details](docs/CARD_COVERAGE.md),
-[parameter receipt evidence](engine/native_parameter_format_evidence.json) and the
-[changelog](CHANGELOG.md).
+runtime is unchanged. See [coverage details](docs/CARD_COVERAGE.md) and
+[the changelog](CHANGELOG.md) for scope, historical results and remaining work.
 
 ## Run it now
 

@@ -1,0 +1,27 @@
+"""Freeze full catalog availability on both repaired archive consumers."""
+from pathlib import Path
+from contextlib import closing
+import json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.catalog.database import connect
+from commander.engine.engine_audit import create_engine_audit
+from commander.engine.engine_gaps import iter_gap_cards
+from commander.engine.forge_config import read_settings
+RUN=ROOT/'data/development/belanna-lifecycle-runtime-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+prior=load(ROOT/'data/development/catalog-ingestion-bounds/refresh-v1/candidate-audit.json')['report']
+results={}
+with closing(connect()) as db:
+ before=dict(db.execute('SELECT * FROM imports ORDER BY id DESC LIMIT 1').fetchone())
+ for name,config in [('prior_candidate',ROOT/'data/engine-builds/535f5e5cfb6d4565ae28ec360b8d0d53/engine-config.json'),('expanded_candidate',ROOT/load(RUN/'candidate-selection.json')['build']/'engine-config.json')]:
+  raw=create_engine_audit(db,read_settings(config));save(RUN/(name+'-catalog-audit.json'),raw)
+  report=raw['report'];gaps=list(iter_gap_cards(db,raw['audit_id']))
+  assert report['cards_hash']==prior['cards_hash']
+  assert report['total_identities']==39412 and report['commander_legal_total']==32643
+  assert report['counts']['commander_legal']==dict(script_present=32636,missing_script=7,unsafe_export=0)
+  assert len(gaps)==7 and all(row['category']=='non_starting_meld_result' for row in gaps)
+  results[name]={'audit_id':raw['audit_id'],'report_hash':raw['report_hash'],'cards_hash':report['cards_hash'],'total_identities':report['total_identities'],'commander_legal_total':report['commander_legal_total'],'counts':report['counts'],'gaps':[{'card_id':row['card_id'],'name':row['name'],'category':row['category']} for row in gaps]}
+ assert dict(db.execute('SELECT * FROM imports ORDER BY id DESC LIMIT 1').fetchone())==before
+save(RUN/'catalog-audit-summary.json',{'catalog_facts_unchanged':True,'latest_import_unchanged':True,'audits':results,'scope':'Full retained local catalog exact-script/export audit only. This writes immutable audit records to the main database; it does not import cards, change decks or verify every rule/AI interaction.'})
+print(json.dumps({name:{'audit_id':row['audit_id'],'commander_legal':row['counts']['commander_legal']} for name,row in results.items()}),flush=True)

@@ -6,6 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Pass a fresh 4,970-case native build, retaining exactly all 4,963 prior
+  invocations plus the seven registered lifecycle cases. Pass both packaged
+  B'Elanna partitions (17 cases), with 188 production origins checked per worker
+  and exact configuration restoration. Every class/card member is unchanged;
+  only build.txt's timestamp changes. Preserve raw runtime/package evidence in
+  engine/belanna_lifecycle_runtime_evidence.json and review the new exact build pair
+  for the confirmed draw-replacement issue. The default runtime is unchanged.
+- Restore two identity mappings and two companion wording reviews for the
+  repaired archive after exact script-byte and current Oracle-condition checks.
+  Before forwarding, All Good Things... and Ratonhnhaké꞉ton were reported missing;
+  both now resolve, and altered native companion conditions remain rejected.
+- Audit both repaired candidates against all 39,412 retained identities: 32,636
+  Commander-legal starting identities match scripts; seven gaps are non-starting
+  meld results. Preserve initial analysis mistakes and correction without rerunning
+  the sealed first audit. Catalog identity fields/imports remain unchanged; audit
+  history rows are added. Script matching does not establish full rules/AI support.
+  Original 1,271/90, full 3,813 packaged, broader games and activation remain open.
+  The full quality gate passes 504 tests and 866 subtests, with 45 opt-in skips.
+
 - Register the seven previously passing B'Elanna lifecycle controls without
   changing their tested source bytes. Include them in fresh-source/native builds
   and a fixed seven-case packaged partition. The expanded registry expects 4,970

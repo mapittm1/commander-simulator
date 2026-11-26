@@ -1,0 +1,42 @@
+"""Inspect full native membership and resource/class deltas after fresh build."""
+from pathlib import Path
+from collections import Counter
+import hashlib,json,xml.etree.ElementTree as ET,zipfile
+ROOT=Path.cwd();RUN=ROOT/'data/development/belanna-lifecycle-runtime-v1'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+selection=load(RUN/'candidate-selection.json');new=ROOT/selection['build'];old=ROOT/'data/engine-builds/535f5e5cfb6d4565ae28ec360b8d0d53'
+assert selection['native_counts']==dict(total=4970,passed=4970,failed=0,skipped=0)
+assert all(sha(ROOT/n)==h for n,h in load(RUN/'root-inputs.json').items())
+
+def cases(path):
+ tree=ET.parse(path)
+ return tree,Counter((c.get('name'),m.get('name'),tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in m.findall('./params/param/value'))) for c in tree.findall('.//class') for m in c.findall('test-method') if m.get('is-config')!='true')
+report='source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+tree,actual=cases(new/report);_,prior=cases(old/report)
+_,cohort=cases(ROOT/'data/development/belanna-lifecycle-v1/reports/testng-results.xml')
+fixture=Counter({key:value for key,value in cohort.items() if key[0]=='forge.ai.CommanderBelannaLifecycleTest'})
+configs=[m for m in tree.findall('.//test-method') if m.get('is-config')=='true']
+assert sum(actual.values())==4970 and sum(prior.values())==4963 and sum(fixture.values())==7
+assert actual==prior+fixture
+assert all(m.get('status')=='PASS' for m in tree.findall('.//test-method'))
+
+def members(path,suffix):
+ with zipfile.ZipFile(path) as z:
+  names=[i.filename for i in z.infolist() if not i.is_dir() and i.filename.endswith(suffix)]
+  assert len(names)==len(set(names))
+  return {n:hashlib.sha256(z.read(n)).hexdigest() for n in names}
+
+def difference(a,b):
+ return {'added':sorted(b.keys()-a.keys()),'removed':sorted(a.keys()-b.keys()),'changed':sorted(n for n in a.keys()&b.keys() if a[n]!=b[n]),'before_count':len(a),'after_count':len(b)}
+oldlock=load(old/'engine-lock.json');newlock=load(new/'engine-lock.json')
+classes=difference(members(old/'runtime'/oldlock['jar_name'],'.class'),members(new/'runtime'/newlock['jar_name'],'.class'))
+cards=difference(members(old/'runtime/res/cardsfolder/cardsfolder.zip','.txt'),members(new/'runtime/res/cardsfolder/cardsfolder.zip','.txt'))
+assert cards['added']==cards['removed']==[] and cards['changed']==[]
+with zipfile.ZipFile(new/'runtime/res/cardsfolder/cardsfolder.zip') as z:
+ script=z.read('b/belanna_torres_scrapper.txt')
+ assert script==(ROOT/'data/development/belanna-oracle-v6-proposal/belanna_torres_scrapper.txt').read_bytes()
+result={'build':selection['build'],'forge_version':newlock['forge_version'],'native_counts':selection['native_counts'],'exact_prior_plus_seven_fixture_cases':True,'configuration_method_count':len(configs),'configuration_failures_or_skips':0,'class_delta':classes,'card_delta':cards,'jar_member_delta':difference(members(old/'runtime'/oldlock['jar_name'],''),members(new/'runtime'/newlock['jar_name'],'')),'jar_sha256':newlock['jar_sha256'],'cards_sha256':newlock['cards_sha256'],'patched_script_matches_passing_proposal_bytes':True,'report_sha256':sha(new/report),'original_resolution_gate_attempted':False,'activated':False,'scope':'Fresh-source/native4970 build and exact memberships; full3813 packaged timed gates, legal games and universal rules correctness remain open.'}
+save(RUN/'build-audit.json',result)
+print(json.dumps(result),flush=True)

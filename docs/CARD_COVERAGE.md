@@ -1,5 +1,28 @@
 # Card support and evidence
 
+The registered lifecycle build now passes **4,970 native cases**, retaining exactly
+the prior 4,963 and adding seven. Both packaged B'Elanna partitions pass all 17
+cases, with 188 production origins checked per worker and exact configuration
+restoration. All 18,068 classfiles and 34,466 card scripts are unchanged; only
+build.txt's timestamp differs. See [all runtime evidence](../engine/belanna_lifecycle_runtime_evidence.json).
+
+The repaired archive had lost two exact identity mappings and two companion
+wording reviews because approvals bind an archive checksum. Unchanged script
+bytes and current companion Oracle conditions were verified before forwarding
+them. Both repaired candidates now audit all 39,412 retained identities, matching
+32,636 Commander-legal starting identities with seven non-starting meld results.
+Every prior support observation is unchanged except two alias review archive/ID
+bindings. The audit fingerprint includes those bindings; the initial analysis
+mistook it for a catalog-only hash, then used the wrong gap-field nesting. Original
+scripts, corrections and both sealed reports are preserved. No sealed first audit
+was rerun. Identity fields and import receipts are unchanged; new audit rows were
+added to the database. Oracle text is outside these audit snapshots.
+
+The known draw-replacement issue has a review for the exact new engine pair.
+No default activation, original 1,271/90 pass, full 3,813 packaged pass or universal
+rules/AI claim is made. Earlier pending-registration/build statements below are
+historical; broader gameplay and the protected timed gates remain open.
+
 The seven B'Elanna lifecycle controls are now registered with their exact tested
 source bytes. Fresh native builds expect 4,970 cases and the main packaged family
 expects 3,813, including a separate seven-case lifecycle partition. Fresh-build

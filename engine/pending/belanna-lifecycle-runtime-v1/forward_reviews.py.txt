@@ -1,0 +1,73 @@
+"""Carry exact identity/wording reviews only after unchanged-script verification."""
+from pathlib import Path
+import copy,hashlib,json,sqlite3,sys,zipfile
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+from commander.engine.forge_decks import card_index,script_match
+from commander.engine.companion_reviews import condition_review,condition_matches
+RUN=ROOT/'data/development/belanna-lifecycle-runtime-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(RUN/'packaged-audit.json')['counts']==dict(total=17,passed=17,failed=0,skipped=0)
+audit=load(RUN/'build-audit.json');assert audit['card_delta']['changed']==[] and audit['class_delta']['changed']==[]
+assert all(file_hash(ROOT/n)==h for n,h in load(RUN/'root-inputs.json').items())
+base=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619/runtime/res/cardsfolder/cardsfolder.zip'
+base_hash=file_hash(base);assert base_hash=='319e4651a5be9e8c23c51188a998111308619abbaede338f1f8ed759c5dc399e'
+alias_path=ROOT/'config/engine_alias_reviews.json';aliases=load(alias_path)
+base_aliases=[row for row in aliases['reviews'] if row['archive_sha256']==base_hash];assert len(base_aliases)==2
+base_conditions=load(ROOT/'config/companion_condition_reviews'/f'{base_hash}.json');assert len(base_conditions['reviews'])==2
+(RUN/'alias-reviews-before.json').write_bytes(alias_path.read_bytes())
+settings=[read_settings(ROOT/'data/engine-builds/535f5e5cfb6d4565ae28ec360b8d0d53/engine-config.json'),read_settings(ROOT/load(RUN/'candidate-selection.json')['build']/'engine-config.json')]
+targets={item.verify()['cards_sha256']:item for item in settings}
+proofs=[]
+with sqlite3.connect((ROOT/'data/cards.sqlite3').as_uri()+'?mode=ro',uri=True) as db,zipfile.ZipFile(base) as original:
+ for archive_hash,item in targets.items():
+  path=item.home/'res/cardsfolder/cardsfolder.zip';assert file_hash(path)==archive_hash
+  prior_index=card_index(path)
+  proof={'cards_sha256':archive_hash,'identity_before':[],'condition_before':[],'scripts':[]}
+  reviews=[]
+  with zipfile.ZipFile(path) as target:
+   for row in base_aliases:
+    before=original.read(row['script_path']);after=target.read(row['script_path'])
+    assert before==after and hashlib.sha256(after).hexdigest()==row['script_sha256']
+    proof['identity_before'].append({'card_id':row['oracle_id'],**script_match(row['name'],prior_index,row['oracle_id'])})
+    changed=copy.deepcopy(row);changed['archive_sha256']=archive_hash
+    changed['review_id']=f"parent-text-{row['oracle_id']}-{archive_hash[:12]}"
+    existing=[r for r in aliases['reviews'] if r['archive_sha256']==archive_hash and r['oracle_id']==row['oracle_id']]
+    if existing:assert existing==[changed]
+    else:aliases['reviews'].append(changed)
+    proof['scripts'].append({'path':row['script_path'],'sha256':row['script_sha256'],'bytes_unchanged':True})
+   for row in base_conditions['reviews']:
+    card=json.loads(db.execute('SELECT raw_json FROM card_details WHERE card_id=?',(row['oracle_id'],)).fetchone()[0])
+    condition=next(line.removeprefix('Companion — ').split(' (',1)[0] for line in card['oracle_text'].splitlines() if line.startswith('Companion — '))
+    assert condition==row['oracle_condition']
+    prefix=card['name'].split(',',1)[0].lower()
+    names=[name for name in original.namelist() if Path(name).name.startswith(prefix+'_') and name.endswith('.txt')]
+    assert len(names)==1,names
+    before=original.read(names[0]);after=target.read(names[0]);assert before==after
+    native=next(line.removeprefix('K:') for line in after.decode('utf-8').splitlines() if line.startswith('K:Companion:'))
+    assert native==row['native_condition']
+    plan={'engine':{'cards_sha256':archive_hash},'companion':{'card_id':row['oracle_id']},'condition_text':condition}
+    proof['condition_before'].append({'card_id':row['oracle_id'],'review_present':condition_review(plan) is not None})
+    changed=copy.deepcopy(row);changed['cards_sha256']=archive_hash;reviews.append(changed)
+    proof['scripts'].append({'path':names[0],'sha256':hashlib.sha256(after).hexdigest(),'bytes_unchanged':True,'oracle_condition_unchanged':True})
+  document={'schema_version':1,'reviews':reviews};destination=ROOT/'config/companion_condition_reviews'/f'{archive_hash}.json'
+  if destination.exists():assert load(destination)==document
+  else:save(destination,document)
+  proofs.append(proof)
+assert len(aliases['reviews'])<=64;assert len((json.dumps(aliases,indent=2)+'\n').encode('utf-8'))<=65536
+save(alias_path,aliases)
+for proof in proofs:
+ item=targets[proof['cards_sha256']];index=card_index(item.home/'res/cardsfolder/cardsfolder.zip')
+ proof['identity_after']=[];proof['condition_after']=[]
+ for row in base_aliases:
+  match=script_match(row['name'],index,row['oracle_id']);assert match['script_status']=='script_present'
+  proof['identity_after'].append({'card_id':row['oracle_id'],**match})
+ for row in base_conditions['reviews']:
+  plan={'engine':{'cards_sha256':proof['cards_sha256']},'companion':{'card_id':row['oracle_id']},'condition_text':row['oracle_condition']}
+  plan['condition_review']=condition_review(plan);assert plan['condition_review'] is not None
+  assert condition_matches(plan,row['native_condition'])
+  assert not condition_matches(plan,row['native_condition']+' Changed')
+  proof['condition_after'].append({'card_id':row['oracle_id'],'review_present':True,'native_condition_matches':True,'altered_native_condition_rejected':True})
+save(RUN/'review-forwarding.json',{'base_cards_sha256':base_hash,'targets':proofs,'alias_policy_sha256':file_hash(alias_path),'scope':'Exact identity/export and companion wording reviews only. All four referenced script files and current companion Oracle conditions are unchanged; no fuzzy matching, rules certification or engine activation.'})
+print(json.dumps({'archives':len(proofs),'identity_reviews_per_archive':2,'companion_reviews_per_archive':2}),flush=True)

@@ -1,0 +1,55 @@
+"""Compare catalog identity fields separately from archive-bound audit observations."""
+from pathlib import Path
+from contextlib import closing
+import copy,hashlib,json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.catalog.database import connect
+from commander.engine.engine_audit import create_engine_audit
+from commander.engine.engine_audit_store import read_audit
+from commander.engine.engine_gaps import iter_gap_cards
+from commander.engine.forge_config import read_settings
+RUN=ROOT/'data/development/belanna-lifecycle-runtime-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def observations(db,identifier):
+ return [json.loads(row[0]) for row in db.execute('SELECT snapshot_json FROM engine_audit_cards WHERE audit_id=? ORDER BY card_id',(identifier,))]
+def normalized(rows):
+ result=copy.deepcopy(rows)
+ for row in result:
+  if 'alias_review' in row:
+   for field in ('archive_sha256','review_id'):row['alias_review'].pop(field)
+ return result
+prior=load(ROOT/'data/development/catalog-ingestion-bounds/refresh-v1/candidate-audit.json')
+results={}
+with closing(connect()) as db:
+ before=dict(db.execute('SELECT * FROM imports ORDER BY id DESC LIMIT 1').fetchone())
+ old=observations(db,prior['audit_id']);reference=normalized(old)
+ assert len(old)==39412
+ for name,config in [('prior_candidate',ROOT/'data/engine-builds/535f5e5cfb6d4565ae28ec360b8d0d53/engine-config.json'),('expanded_candidate',ROOT/load(RUN/'candidate-selection.json')['build']/'engine-config.json')]:
+  path=RUN/(name+'-catalog-audit.json');settings=read_settings(config)
+  if path.exists():
+   raw=load(path);assert raw==read_audit(db,raw['audit_id'])
+  else:
+   raw=create_engine_audit(db,settings);save(path,raw)
+  report=raw['report'];assert report['engine']=={key:settings.verify()[key] for key in ('forge_version','jar_sha256','cards_sha256')}
+  rows=observations(db,raw['audit_id']);assert normalized(rows)==reference
+  changes=[]
+  for left,right in zip(old,rows):
+   assert {key:left[key] for key in ('card_id','name','layout','commander_legality')}=={key:right[key] for key in ('card_id','name','layout','commander_legality')}
+   if left!=right:
+    fields=sorted(key for key in left.keys()|right.keys() if left.get(key)!=right.get(key));assert fields==['alias_review']
+    nested=sorted(key for key in left['alias_review'].keys()|right['alias_review'].keys() if left['alias_review'].get(key)!=right['alias_review'].get(key))
+    assert nested==['archive_sha256','review_id']
+    changes.append({'card_id':left['card_id'],'changed_fields':fields,'alias_review_changed_fields':nested})
+  assert len(changes)==2
+  gaps=list(iter_gap_cards(db,raw['audit_id']))
+  assert report['total_identities']==39412 and report['commander_legal_total']==32643
+  assert report['counts']['commander_legal']==dict(script_present=32636,missing_script=7,unsafe_export=0)
+  assert len(gaps)==7 and all(row['category']=='non_starting_meld_result' for row in gaps)
+  results[name]={'audit_id':raw['audit_id'],'report_hash':raw['report_hash'],'observation_cards_hash':report['cards_hash'],'total_identities':report['total_identities'],'commander_legal_total':report['commander_legal_total'],'counts':report['counts'],'observation_changes':changes,'gaps':[{'card_id':row['card_id'],'name':row['name'],'category':row['category']} for row in gaps]}
+ assert dict(db.execute('SELECT * FROM imports ORDER BY id DESC LIMIT 1').fetchone())==before
+assert results['prior_candidate']['observation_cards_hash']==results['expanded_candidate']['observation_cards_hash']
+summary={'catalog_identity_fields_unchanged':True,'compared_catalog_fields':['card_id','name','layout','commander_legality'],'latest_import_unchanged':True,'normalized_observations_sha256':hashlib.sha256(json.dumps(reference,sort_keys=True,separators=(',',':'),ensure_ascii=False).encode('utf-8')).hexdigest(),'audits':results,'scope':'All39412 retained local identities and their support observations match the prior snapshot except exactly two alias review archive/ID bindings. This writes immutable audit rows, not card imports or deck changes. Oracle text is outside this audit snapshot; rules/AI correctness is not verified.'}
+save(RUN/'catalog-audit-summary.json',summary)
+save(RUN/'catalog-analysis-correction.json',{'initial_script':'catalog_audit.py','error':'The cards_hash field aggregates complete engine support observations, including alias reviews; it is not a catalog-only digest.','correction':'Reuse the already sealed first audit, compare declared catalog fields and all other observation data explicitly, and create only the remaining candidate audit. Original script and raw reports retained.'})
+print(json.dumps({name:{'audit_id':row['audit_id'],'commander_legal':row['counts']['commander_legal'],'changed_observations':len(row['observation_changes'])} for name,row in results.items()}),flush=True)
