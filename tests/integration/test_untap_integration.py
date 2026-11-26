@@ -11,7 +11,11 @@ from commander.engine.native_runtime import create_run
 from commander.paths import PROJECT_ROOT
 from tests.support.native_receipts import assert_rule_summary, read_test_receipts
 from tests.support.native_worker import run_test_worker
-from tests.support.packaged_rules import SUPPORT_SOURCES, compile_rules
+from tests.support.packaged_rules import (
+    SUPPORT_SOURCES,
+    case_identifiers,
+    compile_rules,
+)
 from tests.support.untap_worker import NATIVE_CLASSES, reviewed_inputs
 
 pytestmark = pytest.mark.integration
@@ -44,7 +48,7 @@ class UntapIntegrationTests(unittest.TestCase):
             },
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 194)
+        self.assertEqual(len(case_identifiers(methods)), 194)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")

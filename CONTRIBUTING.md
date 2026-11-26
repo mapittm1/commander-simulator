@@ -25,6 +25,10 @@ contents. Neither archives nor generated engine binaries belong in Git.
 For hashed build/evidence files, preserve exact bytes or require portable LF with
 Git attributes; verify staged bytes match the files that produced the evidence.
 Changing frozen inputs requires regenerating their bound validation.
+Read and write source patches and text fixtures with explicit UTF-8 rather than
+platform-default encodings. Compare patched sources with the tested inputs;
+justify any normalization and verify executable class equivalence before reusing
+native evidence for a comment-only repair.
 
 ## Readability and design
 

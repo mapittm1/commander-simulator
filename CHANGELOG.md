@@ -6,6 +6,22 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify all 3,709 source and 4,909 native cases with exact retained methods and
+  parameters, matching 2,168 production / 180 selected-test / 350 card inputs,
+  291 registered plus nine priority fixtures, and unchanged 173 protected
+  resolution/helper classfiles. Preserve the pre-JVM UTF-8 comment mismatch and
+  repair; all three prototype classfiles remain byte-identical.
+- Preserve the failed packaged integration gate separately from successful native
+  executions: 912 cases pass their complete audit; another 1,569 native cases
+  pass, but the validator incorrectly counts 14 method names as 22 cases.
+- Retain native result parameters and validate unique method-and-argument pairs,
+  rejecting exact duplicate cases and malformed parameter lists. Update all four
+  packaged integration validators and derive the main total from the exhaustive
+  registry. Add parameterized pass/fail/skip, duplicate and legacy-row regressions.
+  Corrected native integration, broader/live checks and activation remain pending;
+  original 1,271/90 and selected runtime stay unchanged. See
+  engine/ignore_effect_runtime_evidence.json.
+
 - Validate the copier-lifecycle recipe with all 3,687 source and 4,887 native cases,
   exact prior methods/parameters and reviewed input bytes. Verify 289 registered
   plus nine priority fixtures and unchanged 173 resolution/helper classfiles;

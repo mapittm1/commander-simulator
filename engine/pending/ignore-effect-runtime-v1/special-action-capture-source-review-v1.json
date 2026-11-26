@@ -1,0 +1,12 @@
+{
+  "status": "source_review_only_no_reproduction_of_a_defect",
+  "source_sha256": "b1efb855f131c27beaddd17a49308e5ab153256bea38dd9b541c63a62557df94",
+  "reviewed_mechanics": {
+    "ascend": "Uses activating-player/original-host accessors; explicitly binds card state.",
+    "storied": "Uses activating-player/original-host accessors; explicitly binds card state.",
+    "foretell": "Uses host-card and activating-player accessors in its action methods.",
+    "plot": "Uses host-card and activating-player accessors in its action methods.",
+    "suspend": "Uses mapped accessors; captures a locally created keyword string array that its methods only read."
+  },
+  "decision": "Do not infer an unsafe game-object capture from anonymous-class syntax alone. Dedicated native interaction checks remain useful; no production change proposed from this source scan."
+}

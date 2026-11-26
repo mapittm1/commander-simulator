@@ -1,0 +1,63 @@
+"""Prepare all3687 prior source cases and the22 registered ignore-effect controls."""
+from collections import Counter
+from pathlib import Path
+import json,shutil,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';RUN=WORK/'source3709-v1';PRIOR=WORK/'source3687-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+ci=load(WORK/'ignore-effect-confirmed-ci-v1.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() and not subprocess.check_output(['git','status','--porcelain'])
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4909
+BUILD=ROOT/load(WORK/'copier-release-candidate-v1/candidate-selection.json')['build'];BASE=BUILD/'source';PROTO=WORK/'ignore-effect-copy-prototype-v2'
+production=load(PRIOR/'production-inputs.json');assert len(production)==2168
+canonical=Path(load(PRIOR/'selection.json')['source']);normalize=lambda p:p.read_bytes().replace(b'\r\n',b'\n')
+assert all(file_hash(canonical/n)==h and normalize(BASE/n)==normalize(canonical/n) for n,h in production.items())
+assert all(file_hash(PROTO/n)==h for n,h in load(PROTO/'inputs.json').items())
+changed=load(PROTO/'proposal.json')['changed_sources'];assert len(changed)==1
+assert load(WORK/'ignore-effect-semantic-batch-v1/outcome.json')['all_passed']
+paths=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')[:-1];frozen={n:file_hash(ROOT/n) for n in paths}
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+modules={p.parent.resolve() for p in BASE.glob('*/pom.xml')}|{BASE.resolve()};source=RUN/'source'
+shutil.copytree(BASE,source,ignore=lambda d,n:['target'] if Path(d).resolve() in modules and 'target' in n else [])
+assert not list(source.glob('*/target')) and all(file_hash(source/n)==file_hash(BASE/n) for n in production)
+before_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(before_tests)==538
+patch=ROOT/'engine/patches/commander-ignore-effect-copy.patch';assert file_hash(patch)==load(ROOT/'engine/ignore_effect_evidence.json')['patch_sha256']
+git=shutil.which('git');assert git
+for name,options in [('check',['--check']),('apply',[])]:
+ command=[git,'apply',*options,'--directory='+source.relative_to(ROOT).as_posix(),str(patch)]
+ process=run_bounded(command,ROOT,RUN/('patch-'+name+'.log'),ProcessLimits(90,environment=_environment(RUN)));save(RUN/('patch-'+name+'-process.json'),process);assert process['status']=='finished' and process['returncode']==0,process
+assert [n for n in production if normalize(source/n)!=normalize(BASE/n)]==changed
+assert all(normalize(source/n)==normalize(PROTO/'source'/n) for n in changed)
+builder._copy_regressions(source);assert all(file_hash(source/n)==h for n,h in before_tests.items())
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(all_tests)==540
+fixtures={'CommanderIgnoreEffectCopyTest':'commander_ignore_effect_copy_test_sha256','CommanderIgnoreEffectCostTest':'commander_ignore_effect_cost_test_sha256'}
+for name,key in fixtures.items():assert all_tests['forge-gui-desktop/src/test/java/forge/ai/'+name+'.java']==recipe[key]
+prior=load(PRIOR/'outcome.json');assert prior['passed'] and prior['counts']==dict(total=3687,passed=3687,failed=0,skipped=0)
+expected=Counter((r['method'],tuple(r['parameters'])) for r in prior['cases']);assert sum(expected.values())==3687
+added=Counter()
+for folder,count,target in [('ignore-effect-copy9-prototype-v1',9,'forge.ai.CommanderIgnoreEffectCopyTest'),('ignore-effect-cost13-prototype-v2',13,'forge.ai.CommanderIgnoreEffectCostTest')]:
+ assert load(WORK/folder/'outcome.json')['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+ local=Counter()
+ for cls in ET.parse(WORK/folder/'reports/testng-results.xml').findall('.//class'):
+  for method in cls.findall('test-method'):
+   if method.get('is-config')!='true':
+    assert cls.get('name')==target and method.get('status')=='PASS'
+    local[(target+'.'+method.get('name'),tuple((v.text or '').strip() for v in method.findall('./params/param/value')))]+=1
+ assert sum(local.values())==count;added.update(local)
+assert sum(added.values())==22 and not (set(added)&set(expected));expected.update(added)
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+selectors=load(PRIOR/'selection.json')['suite']['classes'];assert all(v in selectors for v in ('OnePlaySafetyCheckerTest#testOnePlaySafetyOnlyChecksResolvingStack','FlatMonteCarloStandardScenarioTest#theAirbendLoopWithBontusMonumentDrainsTheOpponentOut','CommanderCopierReleaseTest'))
+selectors=[*selectors,*fixtures]
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':{'classes':selectors,'expected_cases':3709,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')},'changed_sources':changed,'fresh_target_directories':True,'scope':'All3687 prior source cases plus22 ignore-effect controls, with exact methods/parameters. Not original1271/90, sealed native4909, runtime activation or full rules proof.'})
+selected=load(PRIOR/'test-inputs.json');assert len(selected)==178 and all(file_hash(source/n)==file_hash(BASE/n) for n in selected)
+for name in fixtures:selected['forge-gui-desktop/src/test/java/forge/ai/'+name+'.java']=file_hash(source/'forge-gui-desktop/src/test/java/forge/ai'/(name+'.java'))
+save(RUN/'test-inputs.json',selected);save(RUN/'production-inputs.json',{n:file_hash(source/n) for n in production});save(RUN/'selected-test-inputs.json',all_tests)
+cards=load(PRIOR/'card-inputs.json');assert len(cards)==350 and all(file_hash(source/n)==h for n,h in cards.items());save(RUN/'card-inputs.json',cards)
+save(RUN/'root-inputs.json',frozen);save(RUN/'source-ci.json',ci)
+save(RUN/'preparation.json',{'passed':True,'production_sources':2168,'changed_sources':1,'all_java_test_sources_frozen':540,'selected_test_inputs':180,'card_inputs':350,'expected_cases':3709,'retained_prior_cases':3687,'new_cases':22,'registered_patch_applied_and_matches_tested_prototype':True})
+print('Clean source prepared:2168 production,540 Java tests,180 selected inputs,350 cards,3709 cases.',flush=True)

@@ -1,0 +1,51 @@
+"""Audit the expanded native build against exact retained cases and frozen source inputs."""
+from collections import Counter
+from pathlib import Path
+import json,re,subprocess,sys,xml.etree.ElementTree as ET,zipfile
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+from tests.support.draw_ending_partitions import PARTITIONS
+from tools.engine_test_sources import REGRESSION_PACKAGES,REGRESSION_SOURCES
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';RUN=WORK/'ignore-effect-candidate-v1';SOURCE=WORK/'source3709-v2'
+load=lambda p:json.loads(p.read_bytes())
+def cases(p,classes=None):
+ tree=ET.parse(p).getroot();result=Counter()
+ for cls in tree.findall('.//class'):
+  for m in cls.findall('test-method'):
+   assert m.get('status')=='PASS',(cls.get('name'),m.attrib)
+   if m.get('is-config')!='true' and (classes is None or cls.get('name') in classes):result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+ return {n:int(tree.get(n)) for n in ('total','passed','failed','skipped')},result
+assert not subprocess.check_output(['git','status','--porcelain'])
+assert all(file_hash(ROOT/n)==h for n,h in load(RUN/'source-frozen-inputs.json').items())
+process=load(RUN/'process.json');assert process['status']=='finished' and len(process['new_builds'])==1
+build=ROOT/'data/engine-builds'/process['new_builds'][0];settings=read_settings(build/'engine-config.json');lock=settings.verify()
+assert lock['native_tests']==dict(total=4909,passed=4909,failed=0,skipped=0) and lock['recipe_sha256']==file_hash(ROOT/'engine/sticker_recipe.json')
+report=build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml';counts,actual=cases(report);assert counts==lock['native_tests'] and sum(actual.values())==4909
+prior=ROOT/'data/engine-builds/47d1f58cd88042d6a5690004578d9824';old_report=prior/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml';_,old=cases(old_report)
+_,graph=cases(WORK/'ignore-effect-copy9-prototype-v1/reports/testng-results.xml');_,costs=cases(WORK/'ignore-effect-cost13-prototype-v2/reports/testng-results.xml');new=graph+costs;assert sum(old.values())==4887 and sum(graph.values())==9 and sum(costs.values())==13 and sum(new.values())==22 and actual==old+new
+proof=load(SOURCE/'outcome.json');assert proof['passed'] and proof['counts']==dict(total=3709,passed=3709,failed=0,skipped=0)
+source=Path(load(SOURCE/'selection.json')['source']);inputs={}
+for kind in ('production','test','card'):
+ manifest=load(SOURCE/(kind+'-inputs.json'))
+ if kind=='production':
+  observed={p.relative_to(build/'source').as_posix() for p in (build/'source').glob('*/src/main/java/**/*.java')};assert observed==manifest.keys() and len(observed)==2168
+ differences=[]
+ for n,h in manifest.items():
+  assert file_hash(source/n)==h and (source/n).read_text(encoding='utf-8')==(build/'source'/n).read_text(encoding='utf-8'),n
+  if file_hash(build/'source'/n)!=h:differences.append(n)
+ inputs[kind]={'files':len(manifest),'normalized_text_matches':True,'raw_line_ending_differences':differences}
+observed=re.findall(r'RUNTIME_LIMITS processors=(\d+);max_heap_bytes=(\d+)',(build/'maven-build.log').read_text(encoding='utf-8'));assert observed==[('2','2147483648')],observed
+with zipfile.ZipFile(settings.home/lock['jar_name']) as current,zipfile.ZipFile(prior/'runtime'/lock['jar_name']) as earlier:
+ before={n:earlier.read(n) for n in earlier.namelist() if n.startswith('forge/') and n.endswith('.class')};after={n:current.read(n) for n in current.namelist() if n.startswith('forge/') and n.endswith('.class')};assert all(n.startswith("forge/game/staticability/StaticAbilityContinuous$") for n in before.keys() ^ after.keys())
+ changes=sorted(n for n in before.keys() | after.keys() if before.get(n)!=after.get(n));assert changes and all(n=='forge/game/staticability/StaticAbilityContinuous.class' or n.startswith('forge/game/staticability/StaticAbilityContinuous$') for n in changes),changes
+for name in REGRESSION_SOURCES:
+ target=build/'source/forge-gui-desktop/src/test/java'/REGRESSION_PACKAGES[name].replace('.','/')/name;assert file_hash(target)==file_hash(ROOT/'engine/tests'/name)
+priority=load(ROOT/'engine/sticker_recipe.json')['upstream_priority_tests']
+for name,h in priority.items():assert file_hash(build/'source/forge-gui-desktop/src/test/java/forge/gamesimulationtests/priority'/(name+'.java'))==h
+_,resolution=cases(report,set(PARTITIONS['resolution']));_,old_resolution=cases(old_report,set(PARTITIONS['resolution']));assert resolution==old_resolution and sum(resolution.values())==1271
+protected=[p for name in (*PARTITIONS['resolution'],'forge.ai.AITest') for p in (prior/'source/forge-gui-desktop/target/test-classes').glob(name.replace('.','/')+'*.class') if p.name==name.rsplit('.',1)[1]+'.class' or p.name.startswith(name.rsplit('.',1)[1]+'$')]
+assert len(protected)==173
+assert all(file_hash(p)==file_hash(build/'source/forge-gui-desktop/target/test-classes'/p.relative_to(prior/'source/forge-gui-desktop/target/test-classes')) for p in protected)
+assert read_settings().verify()['native_tests']['total']==3295
+result={'build_id':build.name,'native_counts':counts,'source_counts':proof['counts'],'prior_native_cases_retained':4887,'added_cases':22,'exact_native_method_and_parameter_counter_matches':True,'input_audit':inputs,'registered_fixture_files':len(REGRESSION_SOURCES),'priority_fixture_files':len(priority),'all_fixture_bytes_match':True,'production_class_deltas':changes,'actual_processors':2,'actual_max_java_heap_bytes':2147483648,'original_resolution_cases':1271,'protected_resolution_and_helper_classfiles_identical':len(protected),'original_resolution_worker_seconds':90,'selected_runtime_native_cases':3295,'installed':False,'scope':'Source/native and input/class audit only; original1271/90 and independent packaged/live/activation gates remain required.'}
+(RUN/'build-audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps(result),flush=True)

@@ -5,7 +5,7 @@ from pathlib import Path
 from unittest.mock import Mock
 
 from tests.support.draw_ending_worker import _results
-from tests.support.packaged_rules import class_origin
+from tests.support.packaged_rules import case_identifiers, class_origin
 
 
 class NativeMethodResultTests(unittest.TestCase):
@@ -37,11 +37,70 @@ class NativeMethodResultTests(unittest.TestCase):
         self.assertEqual(len({row["method"] for row in rows}), 4)
         self.assertEqual(rows, sorted(rows, key=lambda row: row["method"]))
 
+    def test_parameterized_results_retain_distinct_card_arguments(self):
+        """Three invocations of one method remain three independently named cases."""
+        cards = ("Damping Engine", "Volrath's Curse", "Lost in Thought")
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("forge.ai.CostTest", "paidCopy", (card,)) for card in cards
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+        counts, rows = _results(listener)
+        self.assertEqual(counts, {"total": 3, "passed": 3, "failed": 0, "skipped": 0})
+        self.assertEqual(
+            set(case_identifiers(rows)),
+            {("forge.ai.CostTest.paidCopy", (card,)) for card in cards},
+        )
+
+    def test_repeated_method_and_arguments_are_rejected_as_duplicate_cases(self):
+        """Different outcome flags cannot turn the same invocation into two cases."""
+        rows = [
+            {"method": "CostTest.paid", "parameters": ["Card"], "status": status}
+            for status in ("PASS", "FAIL")
+        ]
+        with self.assertRaisesRegex(ValueError, "Duplicate native test case"):
+            case_identifiers(rows)
+
+    def test_legacy_unparameterized_rows_keep_empty_argument_identity(self):
+        """Existing unparameterized receipts retain their case identity."""
+        rows = [{"method": "CostTest.paid", "status": "PASS"}]
+        self.assertEqual(case_identifiers(rows), [("CostTest.paid", ())])
+
+    def test_malformed_parameter_collections_are_rejected(self):
+        """A string or nonstring argument cannot silently become a case key."""
+        for parameters in ("Card", [1], None):
+            with self.subTest(parameters=parameters):
+                with self.assertRaisesRegex(ValueError, "parameters"):
+                    case_identifiers(
+                        [{"method": "CostTest.paid", "parameters": parameters}]
+                    )
+
+    def test_failed_and_skipped_parameterized_results_keep_arguments(self):
+        """Failure and skip evidence keeps the same argument detail as passes."""
+        listener = Mock()
+        listener.getPassedTests.return_value = []
+        listener.getFailedTests.return_value = [
+            self._result("CostTest", "paid", ("First",))
+        ]
+        listener.getSkippedTests.return_value = [
+            self._result("CostTest", "paid", ("Second",))
+        ]
+        counts, rows = _results(listener)
+        self.assertEqual(counts, {"total": 2, "passed": 0, "failed": 1, "skipped": 1})
+        self.assertEqual(
+            {(tuple(row["parameters"]), row["status"]) for row in rows},
+            {(("First",), "FAIL"), (("Second",), "SKIP")},
+        )
+
     @staticmethod
-    def _result(class_name: str, method_name: str) -> Mock:
+    def _result(
+        class_name: str, method_name: str, parameters: tuple[str, ...] = ()
+    ) -> Mock:
         result = Mock()
         result.getTestClass.return_value.getName.return_value = class_name
         result.getMethod.return_value.getMethodName.return_value = method_name
+        result.getParameters.return_value = list(parameters)
         return result
 
 

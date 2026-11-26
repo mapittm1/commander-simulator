@@ -102,8 +102,8 @@ def class_origin(java: ModuleType, name: str) -> Path:
     return Path(str(java.JClass("java.io.File")(location.toURI()).getCanonicalPath()))
 
 
-def test_results(listener: Any) -> tuple[dict[str, int], list[dict[str, str]]]:
-    """Retain every native method outcome, including failures and skips."""
+def test_results(listener: Any) -> tuple[dict[str, int], list[dict[str, Any]]]:
+    """Retain every native invocation, including parameters, failures and skips."""
     rows = []
     groups = (
         ("PASS", listener.getPassedTests()),
@@ -111,20 +111,45 @@ def test_results(listener: Any) -> tuple[dict[str, int], list[dict[str, str]]]:
         ("SKIP", listener.getSkippedTests()),
     )
     for status, results in groups:
-        rows.extend(
-            {
+        for item in results:
+            row = {
                 "method": f"{item.getTestClass().getName()}.{item.getMethod().getMethodName()}",
                 "status": status,
             }
-            for item in results
-        )
+            parameters = [str(value) for value in item.getParameters()]
+            if parameters:
+                row["parameters"] = parameters
+            rows.append(row)
     counts = {
         "total": len(rows),
         "passed": len(groups[0][1]),
         "failed": len(groups[1][1]),
         "skipped": len(groups[2][1]),
     }
-    return counts, sorted(rows, key=lambda row: row["method"])
+    return counts, sorted(
+        rows, key=lambda row: (row["method"], tuple(row.get("parameters", [])))
+    )
+
+
+def case_identifiers(rows: list[dict[str, Any]]) -> list[tuple[str, tuple[str, ...]]]:
+    """Distinguish parameterized invocations and reject duplicate case identities."""
+    identifiers = []
+    seen = set()
+    for row in rows:
+        method = row.get("method")
+        parameters = row.get("parameters", [])
+        if not isinstance(method, str) or not method:
+            raise ValueError("Native test method identity must be a nonempty string")
+        if not isinstance(parameters, list) or any(
+            not isinstance(value, str) for value in parameters
+        ):
+            raise ValueError("Native test parameters must be a list of strings")
+        identifier = (method, tuple(parameters))
+        if identifier in seen:
+            raise ValueError(f"Duplicate native test case: {method}")
+        seen.add(identifier)
+        identifiers.append(identifier)
+    return identifiers
 
 
 def run_rules(

@@ -22,7 +22,7 @@ from tests.support.draw_ending_worker import (
 )
 from tests.support.native_receipts import read_test_receipts
 from tests.support.native_worker import WorkerInvocation, run_test_worker
-from tests.support.packaged_rules import SUPPORT_SOURCES
+from tests.support.packaged_rules import SUPPORT_SOURCES, case_identifiers
 
 pytestmark = pytest.mark.integration
 
@@ -41,8 +41,9 @@ class DrawEndingIntegrationTests(unittest.TestCase):
         all_methods = []
         for partition in PARTITIONS:
             all_methods.extend(self.check_partition(settings, partition))
-        self.assertEqual(len(all_methods), 3722)
-        self.assertEqual(len(set(all_methods)), 3722)
+        expected_total = sum(EXPECTED_COUNTS.values())
+        self.assertEqual(len(all_methods), expected_total)
+        self.assertEqual(len(set(all_methods)), expected_total)
 
     def check_partition(self, settings, partition):
         """Check every fixed case and class origin in one bounded worker."""
@@ -70,9 +71,12 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             {row["method"].rsplit(".", 1)[0] for row in methods},
             set(PARTITIONS[partition]),
         )
-        self.assertEqual(len({row["method"] for row in methods}), expected_count)
+        identifiers = case_identifiers(methods)
+        self.assertEqual(len(identifiers), expected_count)
         for row in methods:
-            with self.subTest(method=row["method"]):
+            with self.subTest(
+                method=row["method"], parameters=row.get("parameters", [])
+            ):
                 self.assertEqual(row["status"], "PASS")
         self.assertEqual(
             summary["counts"],
@@ -102,4 +106,4 @@ class DrawEndingIntegrationTests(unittest.TestCase):
             ),
             flush=True,
         )
-        return [row["method"] for row in methods]
+        return identifiers

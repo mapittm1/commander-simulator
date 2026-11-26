@@ -35,10 +35,25 @@ sacrifice and graveyard-exile costs, cleanup, unaffordable-payment checks and
 original/sibling isolation. All 13 retained interaction groups pass.
 
 The recipe registers 22 `ignore_effect` cases while preserving every prior case
-and original **1,271 / 90 seconds** workload. Fresh **3,709 source / 4,909 native /
-3,752 main packaged** validation remains pending. Supplied boards, controlled
-choices and cleanup hooks do not establish complete legal histories, default AI
-strategy or all-card correctness. The selected runtime is unchanged. See
+and original **1,271 / 90 seconds** workload. Fresh **3,709 source** and
+**4,909 native** suites pass with exact retained methods/parameters and matching
+reviewed inputs. All 291 registered plus nine priority fixtures match; only the
+intended static-ability class family changes, and 173 protected resolution/helper
+classfiles stay byte-identical.
+
+Independent packaged checks pass the first 912 cases. The remaining 1,569 native
+invocations also pass, but their integration gate fails because it incorrectly
+requires unique method names: 22 parameterized cases have 14 method names.
+Receipts now retain parameters and validation uses method-and-argument identities,
+rejecting exact duplicate cases. Offline regression tests pass; corrected native
+integration validation remains pending. The full **3,752 main packaged** gate,
+broader/live checks and activation remain open. Two misencoded comment lines in
+the experimental source were repaired; all three emitted classfiles are identical
+to the tested prototype. See [runtime evidence](engine/ignore_effect_runtime_evidence.json).
+
+Supplied boards, controlled choices and cleanup hooks do not establish complete
+legal histories, default AI strategy or all-card correctness. The selected
+runtime is unchanged. See
 [ignore-effect evidence](engine/ignore_effect_evidence.json).
 
 A generic copier-lifecycle correction now discards retained source ability and

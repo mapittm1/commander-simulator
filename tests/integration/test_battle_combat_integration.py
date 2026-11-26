@@ -16,7 +16,11 @@ from tests.support.battle_combat_worker import (
 )
 from tests.support.native_receipts import assert_rule_summary, read_test_receipts
 from tests.support.native_worker import run_test_worker
-from tests.support.packaged_rules import SUPPORT_SOURCES, compile_rules
+from tests.support.packaged_rules import (
+    SUPPORT_SOURCES,
+    case_identifiers,
+    compile_rules,
+)
 
 pytestmark = pytest.mark.integration
 
@@ -52,7 +56,7 @@ class BattleCombatIntegrationTests(unittest.TestCase):
             },
         )
         summary, methods = rows[0], rows[1:]
-        self.assertEqual(len({row["method"] for row in methods}), 146)
+        self.assertEqual(len(case_identifiers(methods)), 146)
         for row in methods:
             with self.subTest(method=row["method"]):
                 self.assertEqual(row["status"], "PASS")
