@@ -48,10 +48,9 @@ main packaged gate, full-game validation and candidate activation remain open.
 The selected runtime is unchanged. The tested performance fast paths remain
 unpromoted after missing their predeclared improvement criteria.
 
-Packaged-test receipts preserve Java parameter text for Booleans and numeric
-special values, with an explicit null marker. This prevents Python bridge
-formatting from changing native test identities; post-fix native validation is
-pending.
+Packaged-test receipts preserve native parameter identities. The fix is verified
+against 15 formatting cases, 10 ignore-effect candidate/payment controls and 14
+regular packaged phase cases; see [evidence](engine/native_parameter_format_evidence.json).
 
 See [coverage details](docs/CARD_COVERAGE.md),
 [validation evidence](engine/phase_regression_runtime_evidence.json),

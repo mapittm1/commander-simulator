@@ -10,7 +10,13 @@ Historical entries below summarize verified Git milestones, not release versions
   special values no longer use Python bridge formatting, and null arguments
   use the explicit native null marker. Keep literal text and nonpassing results
   intact. Four regression tests fail on the prior collector and pass after the
-  fix. Post-fix native validation is pending; engine behavior is unchanged.
+  fix. Verify identical native invocations before/after: 15 formatting cases now
+  match TestNG, fixing six wrong identities; 10 ignore-effect candidate/payment
+  controls retain all cases and fix two Boolean receipt identities. Revalidate
+  14 regular packaged phase cases with 188 production origins and exact config
+  restoration. Record engine/native_parameter_format_evidence.json, including
+  the corrected independent enum fixture. Engine behavior remains unchanged;
+  full rules coverage and the original 1,271/90 gate remain open.
 
 - Pass all 3,732 fresh-source and 4,932 native cases with exact retained method
   and parameter identities, adding 14 registered phase-replacement controls.

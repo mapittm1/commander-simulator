@@ -1,0 +1,28 @@
+package forge.ai;
+
+import forge.game.phase.PhaseType;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** TestNG argument-format fixture only; not card/gameplay coverage. */
+public class CommanderParameterFormatTest {
+    @DataProvider(name = "flags")
+    public Object[][] flags() { return new Object[][]{{true}, {false}}; }
+    @DataProvider(name = "numbers")
+    public Object[][] numbers() {
+        return new Object[][]{{Double.NaN}, {Double.POSITIVE_INFINITY}, {Double.NEGATIVE_INFINITY},
+                {1.5d}, {2.5f}, {7}, {Long.MAX_VALUE}};
+    }
+    @DataProvider(name = "texts")
+    public Object[][] texts() { return new Object[][]{{"True"}, {"False"}, {"null"}, {""}}; }
+    @DataProvider(name = "nothing")
+    public Object[][] nothing() { return new Object[][]{{null}}; }
+    @DataProvider(name = "phase")
+    public Object[][] phase() { return new Object[][]{{PhaseType.MAIN1}}; }
+    @Test(dataProvider = "flags") public void flag(Boolean value) { assertNotNull(value); }
+    @Test(dataProvider = "numbers") public void number(Number value) { assertNotNull(value); }
+    @Test(dataProvider = "texts") public void text(String value) { assertNotNull(value); }
+    @Test(dataProvider = "nothing") public void nullable(Object value) { assertNull(value); }
+    @Test(dataProvider = "phase") public void enumValue(PhaseType value) { assertSame(value, PhaseType.MAIN1); }
+}

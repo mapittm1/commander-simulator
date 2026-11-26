@@ -1,0 +1,17 @@
+"""Freeze the collector-fix epoch without changing native engine inputs."""
+from pathlib import Path
+import json,subprocess,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';RUN=WORK/'native-parameter4932-epoch-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+ci=load(WORK/'native-parameter-published-ci-v1.json');head=subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert ci['head_sha']==head and ci['status']=='completed' and ci['conclusion']=='success'
+assert not subprocess.check_output(['git','status','--porcelain'])
+old=load(WORK/'ignore-ai4932-epoch-v1/source-frozen-inputs.json');paths=subprocess.check_output(['git','ls-files','-z']).decode('utf-8').split('\0')[:-1];current={n:file_hash(ROOT/n) for n in paths}
+changed=sorted(n for n in old if current.get(n)!=old[n]);assert changed==['CHANGELOG.md','README.md','docs/CARD_COVERAGE.md','tests/support/packaged_rules.py','tests/unit/test_native_method_results.py']
+assert current.keys()==old.keys()
+assert read_settings(ROOT/'data/engine-builds/d98c8b366a8d4210a9199336cdcfd02f/engine-config.json').verify()['native_tests']==dict(total=4932,passed=4932,failed=0,skipped=0)
+RUN.mkdir();save(RUN/'source-ci.json',ci);save(RUN/'source-frozen-inputs.json',current);save(RUN/'source-epoch.json',{'head':head,'changed_existing_files':changed,'engine_and_registered_fixtures_unchanged':True,'scope':'Collector/unit/doc fix only. Fresh native checks must use unchanged compiled15-format and10-rule fixtures.'})
+print(json.dumps(load(RUN/'source-epoch.json')),flush=True)

@@ -1,0 +1,135 @@
+F...FFF......                                                         [100%]
+================================== FAILURES ===================================
+_ NativeMethodResultTests.test_boolean_conversion_does_not_rewrite_literal_text _
+
+self = <test_native_method_results.NativeMethodResultTests testMethod=test_boolean_conversion_does_not_rewrite_literal_text>
+
+    def test_boolean_conversion_does_not_rewrite_literal_text(self):
+        """Actual Boolean fallback values and strings retain distinct case names."""
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "argument", (value,))
+            for value in (True, False, "True", "False")
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+    
+        _, rows = _results(listener)
+    
+>       self.assertEqual(
+            {tuple(row["parameters"]) for row in rows},
+            {("true",), ("false",), ("True",), ("False",)},
+        )
+E       AssertionError: Items in the second set but not the first:
+E       ('true',)
+E       ('false',)
+
+tests\unit\test_native_method_results.py:156: AssertionError
+_ NativeMethodResultTests.test_native_formatting_is_preserved_for_failures_and_skips _
+
+self = <test_native_method_results.NativeMethodResultTests testMethod=test_native_formatting_is_preserved_for_failures_and_skips>
+
+    def test_native_formatting_is_preserved_for_failures_and_skips(self):
+        """Nonpassing native outcomes need the same parameter identity as passes."""
+        value = MagicMock()
+        value.__str__.return_value = "False"
+        value.toString.return_value = "false"
+        listener = Mock()
+        listener.getPassedTests.return_value = []
+        listener.getFailedTests.return_value = [
+            self._result("FormatTest", "failed", (value,))
+        ]
+        listener.getSkippedTests.return_value = [
+            self._result("FormatTest", "skipped", (None,))
+        ]
+    
+        counts, rows = _results(listener)
+    
+        self.assertEqual(counts, {"total": 2, "passed": 0, "failed": 1, "skipped": 1})
+>       self.assertEqual(
+            {(row["status"], tuple(row["parameters"])) for row in rows},
+            {("FAIL", ("false",)), ("SKIP", ("null",))},
+        )
+E       AssertionError: Items in the first set but not the second:
+E       ('SKIP', ('None',))
+E       ('FAIL', ('False',))
+E       Items in the second set but not the first:
+E       ('SKIP', ('null',))
+E       ('FAIL', ('false',))
+
+tests\unit\test_native_method_results.py:179: AssertionError
+_ NativeMethodResultTests.test_native_parameter_text_matches_java_instead_of_python _
+
+self = <test_native_method_results.NativeMethodResultTests testMethod=test_native_parameter_text_matches_java_instead_of_python>
+
+    def test_native_parameter_text_matches_java_instead_of_python(self):
+        """Bridge-friendly Boolean and floating strings must keep native identities."""
+        values = []
+        for python_text, java_text in (
+            ("True", "true"),
+            ("False", "false"),
+            ("nan", "NaN"),
+            ("inf", "Infinity"),
+            ("-inf", "-Infinity"),
+        ):
+            value = MagicMock()
+            value.__str__.return_value = python_text
+            value.toString.return_value = java_text
+            values.append(value)
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "nativeValue", (value,)) for value in values
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+    
+        counts, rows = _results(listener)
+    
+        self.assertEqual(counts, {"total": 5, "passed": 5, "failed": 0, "skipped": 0})
+>       self.assertEqual(
+            {tuple(row["parameters"]) for row in rows},
+            {(value,) for value in ("true", "false", "NaN", "Infinity", "-Infinity")},
+        )
+E       AssertionError: Items in the first set but not the second:
+E       ('False',)
+E       ('-inf',)
+E       ('inf',)
+E       ('True',)
+E       ('nan',)
+E       Items in the second set but not the first:
+E       ('true',)
+E       ('false',)
+E       ('NaN',)
+E       ('Infinity',)
+E       ('-Infinity',)
+
+tests\unit\test_native_method_results.py:120: AssertionError
+___ NativeMethodResultTests.test_null_argument_uses_the_native_null_marker ____
+
+self = <test_native_method_results.NativeMethodResultTests testMethod=test_null_argument_uses_the_native_null_marker>
+
+    def test_null_argument_uses_the_native_null_marker(self):
+        """A null argument is different from the literal Python-looking text None."""
+        listener = Mock()
+        listener.getPassedTests.return_value = [
+            self._result("FormatTest", "nullable", (value,))
+            for value in (None, "None")
+        ]
+        listener.getFailedTests.return_value = []
+        listener.getSkippedTests.return_value = []
+    
+        _, rows = _results(listener)
+    
+>       self.assertEqual(
+            {tuple(row["parameters"]) for row in rows}, {("null",), ("None",)}
+        )
+E       AssertionError: Items in the second set but not the first:
+E       ('null',)
+
+tests\unit\test_native_method_results.py:139: AssertionError
+=========================== short test summary info ===========================
+FAILED tests/unit/test_native_method_results.py::NativeMethodResultTests::test_boolean_conversion_does_not_rewrite_literal_text
+FAILED tests/unit/test_native_method_results.py::NativeMethodResultTests::test_native_formatting_is_preserved_for_failures_and_skips
+FAILED tests/unit/test_native_method_results.py::NativeMethodResultTests::test_native_parameter_text_matches_java_instead_of_python
+FAILED tests/unit/test_native_method_results.py::NativeMethodResultTests::test_null_argument_uses_the_native_null_marker
+4 failed, 9 passed, 3 subtests passed in 0.25s

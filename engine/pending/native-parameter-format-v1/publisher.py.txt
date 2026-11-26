@@ -1,0 +1,63 @@
+"""Preserve native argument-format regression and paid-preview validation evidence."""
+from collections import Counter
+from pathlib import Path
+import hashlib,json,shutil,subprocess,xml.etree.ElementTree as ET
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def native_cases(directory):
+ result=Counter()
+ for cls in ET.parse(directory/'reports/testng-results.xml').findall('.//class'):
+  for method in cls.findall('test-method'):
+   assert method.get('status')=='PASS'
+   if method.get('is-config')!='true':
+    result[(cls.get('name')+'.'+method.get('name'),tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in method.findall('./params/param/value')))]+=1
+ return result
+def receipts(directory):
+ return Counter((row['method'],tuple(row.get('parameters',[]))) for row in load(directory/'outcome.json')['methods'])
+assert not subprocess.check_output(['git','status','--porcelain'])
+epoch=WORK/'native-parameter4932-epoch-v1';ci=load(epoch/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert all(sha(ROOT/n)==h for n,h in load(epoch/'source-frozen-inputs.json').items())
+base=WORK/'parameter-format4932-cases-v2';fixed=WORK/'parameter-format4932-cases-v3';old_ai=WORK/'ignore-ai4932-cases-v1';new_ai=WORK/'ignore-ai4932-cases-v2';packaged=WORK/'native-parameter-phase-packaged-v1'
+for directory,count in ((base,15),(fixed,15),(old_ai,10),(new_ai,10)):
+ assert load(directory/'outcome.json')['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+ assert sum(native_cases(directory).values())==count
+assert native_cases(base)==native_cases(fixed) and native_cases(old_ai)==native_cases(new_ai)
+assert receipts(base)!=native_cases(base) and receipts(fixed)==native_cases(fixed)
+assert receipts(old_ai)!=native_cases(old_ai) and receipts(new_ai)==native_cases(new_ai)
+assert load(new_ai/'outcome.json')['receipt_parameters_match_xml']
+phase=load(packaged/'audit.json');assert phase['counts']==dict(total=14,passed=14,failed=0,skipped=0) and phase['production_origins']==188 and phase['configuration_restored_byte_identically']
+assert (ROOT/'config/engine_config.json').read_bytes()==(packaged/'active-config-before.json').read_bytes()
+for name in ('ignore-ai4932-fixture-v1','parameter-format4932-fixture-v1','parameter-format4932-fixture-v2'):
+ directory=WORK/name;assert all(sha(directory/n)==h for n,h in load(directory/'inputs.json').items())
+index=ROOT/'engine/native_parameter_format_evidence.json';dest=ROOT/'engine/pending/native-parameter-format-v1';assert not index.exists() and not dest.exists();dest.mkdir();files={}
+def preserve(path,relative):
+ target=dest/relative;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target);assert sha(path)==sha(target);files[target.relative_to(ROOT).as_posix()]=sha(target)
+for name in ('ignore-ai4932-epoch-v1','native-parameter4932-epoch-v1','ignore-ai4932-fixture-v1','ignore-ai4932-cases-v1','ignore-ai4932-cases-v2','parameter-format4932-fixture-v1','parameter-format4932-fixture-v2','parameter-format4932-cases-v1','parameter-format4932-cases-v2','parameter-format4932-cases-v3','native-parameter-phase-packaged-v1'):
+ directory=WORK/name
+ for p in sorted(directory.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.java'):preserve(p,name+'/'+p.name+('.txt' if p.suffix=='.java' else ''))
+ for p in directory.glob('reports/testng-results.xml'):preserve(p,name+'/reports/testng-results.xml')
+run=ROOT/'data/runs'/phase['run_id']
+for p in sorted(run.iterdir()):
+ if p.is_file() and p.suffix in ('.json','.log','.txt'):preserve(p,'packaged-run/'+p.name)
+preserve(run/'rules-reports/testng-results.xml','packaged-run/rules-reports/testng-results.xml')
+for pattern in ('*ignore_ai4932*.py','*parameter_format4932*.py','*native_parameter4932*.py','*native_parameter_phase_packaged*.py'):
+ for p in sorted(WORK.glob(pattern)):preserve(p,'drivers/'+p.name+'.txt')
+for name in ('native-parameter-unit-baseline-v1.log','native-parameter-quality-v1.log'):preserve(WORK/name,name)
+preserve(Path(__file__),'publisher.py.txt')
+comparison={'format_cases':15,'format_pre_fix_wrong_receipt_identities':sum((native_cases(base)-receipts(base)).values()),'format_post_fix_wrong_receipt_identities':0,'actual_format_cases_and_parameters_unchanged':True,'ignore_effect_cases':10,'ignore_effect_pre_fix_wrong_receipt_identities':sum((native_cases(old_ai)-receipts(old_ai)).values()),'ignore_effect_post_fix_wrong_receipt_identities':0,'actual_gameplay_cases_and_parameters_unchanged':True}
+record={'status':'native_argument_identity_fix_verified','source_ci':ci,'native_baseline':'d98c8b366a8d4210a9199336cdcfd02f','native_baseline_cases':4932,'comparison':comparison,'regular_packaged_phase':phase,'unit_regressions':{'failed_before_fix':4,'passed_after_fix':4},'fixture_correction':'The initial independent format fixture referenced Forge PhaseType without AITest localization initialization and had one skip. Its source/report are preserved. The revised fixture uses JDK DayOfWeek for the same enum-equality control; all15 native invocations pass before and after the collector fix. No gameplay assertions or original1271 cases were dropped.','engine_code_recipe_registered_fixtures_changed':False,'selected_runtime_changed':False,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'scope':'Argument-format and finite supplied-board candidate/paid-preview controls only. Fifteen format invocations are not card/gameplay coverage. Ten rules cases verify available actions and copied payment, not autonomous choice, full legal histories/games or universal rules correctness. Existing native4932/source3732 reports are historical and were not rerun for this collector-only fix.','files':files}
+save(index,record)
+for n,h in files.items():assert sha(ROOT/n)==h
+p=ROOT/'README.md';text=p.read_text(encoding='utf-8');old='Packaged-test receipts preserve Java parameter text for Booleans and numeric\nspecial values, with an explicit null marker. This prevents Python bridge\nformatting from changing native test identities; post-fix native validation is\npending.';assert text.count(old)==1
+new='Packaged-test receipts preserve native parameter identities. The fix is verified\nagainst 15 formatting cases, 10 ignore-effect candidate/payment controls and 14\nregular packaged phase cases; see [evidence](engine/native_parameter_format_evidence.json).'
+p.write_text(text.replace(old,new,1),encoding='utf-8',newline='\n')
+p=ROOT/'docs/CARD_COVERAGE.md';text=p.read_text(encoding='utf-8');old='unit regressions failed before the fix; post-fix native validation is pending.';assert text.count(old)==1
+text=text.replace(old,'unit regressions failed before the fix and pass after it. All 15 native formatting\ncases now match TestNG, retaining identical actual case/argument counters. All 10\nignore-effect candidate/payment controls pass with correct receipt identities, as\ndo 14 regular packaged phase cases with 188 production origins and exact config\nrestoration. See [raw evidence](../engine/native_parameter_format_evidence.json).',1)
+p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'CHANGELOG.md';text=p.read_text(encoding='utf-8');old='  fix. Post-fix native validation is pending; engine behavior is unchanged.';assert text.count(old)==1
+text=text.replace(old,'  fix. Verify identical native invocations before/after: 15 formatting cases now\n  match TestNG, fixing six wrong identities; 10 ignore-effect candidate/payment\n  controls retain all cases and fix two Boolean receipt identities. Revalidate\n  14 regular packaged phase cases with 188 production origins and exact config\n  restoration. Record engine/native_parameter_format_evidence.json, including\n  the corrected independent enum fixture. Engine behavior remains unchanged;\n  full rules coverage and the original 1,271/90 gate remain open.',1)
+p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'.gitattributes';text=p.read_text(encoding='utf-8')+'engine/native_parameter_format_evidence.json -text whitespace=cr-at-eol\nengine/pending/native-parameter-format-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(text,encoding='utf-8',newline='\n')
+print(json.dumps({'artifacts':len(files),'comparison':comparison,'phase_group':14,'engine_changed':False}),flush=True)

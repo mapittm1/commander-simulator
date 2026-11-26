@@ -3,7 +3,11 @@
 A native-format probe exposed receipt identities differing from TestNG XML for
 Boolean, null, NaN and infinite arguments even when all 15 invocations passed.
 The collector now preserves Java display text and an explicit null marker. Four
-unit regressions failed before the fix; post-fix native validation is pending.
+unit regressions failed before the fix and pass after it. All 15 native formatting
+cases now match TestNG, retaining identical actual case/argument counters. All 10
+ignore-effect candidate/payment controls pass with correct receipt identities, as
+do 14 regular packaged phase cases with 188 production origins and exact config
+restoration. See [raw evidence](../engine/native_parameter_format_evidence.json).
 This changes validation metadata, not card gameplay. Ten supplied-board
 ignore-effect candidate/payment controls also passed before this collector fix;
 they do not prove autonomous choice, full games or universal card correctness.

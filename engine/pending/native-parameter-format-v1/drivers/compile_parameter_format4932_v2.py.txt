@@ -1,0 +1,25 @@
+from pathlib import Path
+import json,sys
+r=Path.cwd();sys.path.insert(0,str(r))
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.engine_process import run_bounded,ProcessLimits
+from commander.engine.native_runtime import _environment
+w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';b=r/'data/engine-builds/d98c8b366a8d4210a9199336cdcfd02f';settings=read_settings(b/'engine-config.json');lock=settings.verify();assert lock['native_tests']['total']==4932
+recipe=json.loads((r/'engine/sticker_recipe.json').read_bytes());dep=r/recipe['packaged_testng']['path'];assert file_hash(dep)==recipe['packaged_testng']['sha256'];jar=settings.home/lock['jar_name'];up=b/'source/forge-gui-desktop/target/test-classes'
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+import subprocess
+epoch=w/'ignore-ai4932-epoch-v1'
+ci=json.loads((epoch/'source-ci.json').read_bytes())
+assert ci['status']=='completed' and ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert not subprocess.check_output(['git','status','--porcelain'])
+frozen=json.loads((epoch/'source-frozen-inputs.json').read_bytes())
+assert all(file_hash(r/n)==h for n,h in frozen.items())
+for kind in ('fixture',):
+ p=w/('parameter-format4932-'+kind+'-v2');classes=p/'classes';classes.mkdir()
+ sources=sorted(p.glob('*.java')) if kind=='fixture' else sorted((p/'source').rglob('*.java'))
+ command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',';'.join(map(str,(jar,up,dep))),'-d',str(classes),*map(str,sources)]
+ save(p/'compile-selection.json',{'command':command,'timeout_seconds':90,'jar_sha256':file_hash(jar)})
+ result=run_bounded(command,r,p/'compile.log',ProcessLimits(90,environment=_environment(p)));save(p/'compile-process.json',result);print(kind,result,flush=True)
+ assert result['status']=='finished' and result['returncode']==0
+ save(p/'inputs.json',{x.relative_to(p).as_posix():file_hash(x) for x in p.rglob('*') if x.is_file() and x.name!='inputs.json'})
