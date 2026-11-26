@@ -48,6 +48,13 @@ Goreclaw attack-trigger and commander-damage loss witnesses. The decks contain
 one commander plus 99 Forests; [full-game evidence](engine/player_elimination_fullgame_evidence.json)
 does not establish broad strategy or card coverage.
 
+Three further workflow games pass variant-name export and two-game batch
+pause/resume checks. The identity game **times out at 60 seconds** as its token
+board grows; it remains failed and excluded from completed-game results. A
+generic property-dispatch prototype passes 21 controls per variant and 297
+retained controls, but still times out and is not promoted. See
+[workflow and failure evidence](engine/player_elimination_workflow_evidence.json).
+
 The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
 main packaged gate, broader full-game validation and candidate activation remain open.
 The selected runtime is unchanged. Tested performance shortcuts remain excluded.

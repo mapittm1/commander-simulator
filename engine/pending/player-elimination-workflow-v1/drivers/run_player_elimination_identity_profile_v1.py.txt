@@ -1,0 +1,112 @@
+"""Profile the failed identity fixture once; never replace its failed test result."""
+from contextlib import closing
+from pathlib import Path
+from unittest.mock import patch
+import json
+import sqlite3
+import subprocess
+import sys
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.engine_fixtures import legal_fixture_pod
+from commander.engine.forge_config import file_hash, read_settings
+from commander.engine import forge_engine
+from commander.engine.native_runtime import _environment
+
+WORK = Path(__file__).resolve().parent
+EPOCH = WORK / 'player-elimination-workflow-v1'
+RUN = WORK / 'player-elimination-identity-profile-v1'
+BUILD = ROOT / 'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+load = lambda path: json.loads(path.read_bytes())
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+
+def verify():
+    assert all(file_hash(ROOT/name) == digest for name, digest in load(EPOCH/'root-inputs.json').items())
+    selection = load(EPOCH/'selection.json')
+    assert file_hash(ROOT/'data/cards.sqlite3') == selection['catalog_sha256']
+    assert file_hash(ROOT/'config/engine_config.json') == selection['default_config_sha256']
+    settings = read_settings(BUILD/'engine-config.json')
+    profile = settings.home/'forge.profile.properties'
+    state = {'exists': profile.exists(), 'sha256': file_hash(profile) if profile.exists() else None}
+    assert state == selection['profile_before']
+    assert not (settings.home/'.commander-simulator.lock').exists()
+
+
+if not sys.argv[1:]:
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip()
+    assert load(EPOCH/'identity/process.json')['returncode'] == 1
+    assert load(EPOCH/'identity/observations.json')[0]['result']['status'] == 'engine_timeout'
+    verify()
+    RUN.mkdir()
+    (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    configuration = '''<?xml version="1.0" encoding="UTF-8"?>
+<configuration version="2.0" label="Commander diagnostic" description="Bounded sampling only" provider="Commander Simulator">
+  <event name="jdk.ExecutionSample">
+    <setting name="enabled">true</setting>
+    <setting name="period">10 ms</setting>
+  </event>
+  <event name="jdk.ObjectAllocationSample">
+    <setting name="enabled">true</setting>
+    <setting name="throttle">150/s</setting>
+    <setting name="stackTrace">true</setting>
+  </event>
+  <event name="jdk.GarbageCollection"><setting name="enabled">true</setting></event>
+  <event name="jdk.GCPhasePause"><setting name="enabled">true</setting></event>
+</configuration>
+'''
+    (RUN/'profile.jfc').write_text(configuration, encoding='utf-8', newline='\n')
+    save(RUN/'selection.json', {'purpose': 'Profile one failed fixture, not retry for a pass or change clocks/search limits.',
+                              'game_clock_seconds': 60, 'normal_game_outer_allowance_seconds': 90,
+                              'wrapper_seconds': 180, 'profile_max_bytes': 33554432,
+                              'failed_test_retained': True, 'profile_settings_sha256': file_hash(RUN/'profile.jfc'),
+                              'driver_sha256': file_hash(Path(__file__))})
+    process = run_bounded([sys.executable, '-I', str(Path(__file__)), '--worker'], ROOT,
+                          RUN/'worker.log', ProcessLimits(180, log_bytes=65536, environment=_environment(RUN)))
+    save(RUN/'process.json', process)
+    verify()
+    assert file_hash(Path(__file__)) == file_hash(RUN/'driver.py.txt')
+    print(json.dumps({'process': process, 'outcome': load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else None}), flush=True)
+    assert process['status'] == 'finished' and process['returncode'] == 0
+    raise SystemExit
+
+assert sys.argv[1:] == ['--worker']
+verify()
+settings = read_settings(BUILD/'engine-config.json')
+original_command = forge_engine._command
+commands = []
+
+
+def profiled_command(*args, **kwargs):
+    command = original_command(*args, **kwargs)
+    option = ('-XX:StartFlightRecording=name=commander,disk=true,dumponexit=true,maxsize=32m,maxage=90s,'
+              f'settings={(RUN/"profile.jfc").as_posix()},filename={(RUN/"runtime.jfr").as_posix()}')
+    result = [command[0], option, *command[1:]]
+    commands.append({'original': command, 'profiled': result})
+    save(RUN/'commands.json', commands)
+    return result
+
+
+leaders = {
+    'Ghalta, Primal Hunger': 'Forest',
+    'Goreclaw, Terror of Qal Sisma': 'Forest',
+    'Surrak, the Hunt Caller': 'Forest',
+    'Ratonhnhaké꞉ton': {'Plains': 33, 'Island': 33, 'Swamp': 33},
+}
+with closing(sqlite3.connect((ROOT/'data/cards.sqlite3').as_uri()+'?mode=ro', uri=True)) as source:
+    source.row_factory = sqlite3.Row
+    with legal_fixture_pod(source, leaders) as (fixture, seats):
+        with patch.object(forge_engine, '_command', side_effect=profiled_command):
+            result = forge_engine.run_game(fixture, settings, seats, seed=42, game_clock=60)
+profile = RUN/'runtime.jfr'
+assert profile.is_file() and 0 < profile.stat().st_size <= 33554432
+save(RUN/'outcome.json', {'result': result, 'profile_sha256': file_hash(profile), 'profile_bytes': profile.stat().st_size,
+                         'profile_settings_sha256': file_hash(RUN/'profile.jfc'),
+                         'scope': 'Instrumented diagnostic only. Original failed fixed-seed test remains failed; profiling changes timing and cannot replace a clean production test pass.'})
+assert len(commands) == 1 and result['status'] in ('completed', 'engine_timeout')
+verify()

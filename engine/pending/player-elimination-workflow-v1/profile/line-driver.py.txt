@@ -1,0 +1,41 @@
+"""Locate sampled source lines in the existing failed-game recording; no gameplay rerun."""
+from collections import Counter
+from pathlib import Path
+import importlib,json,sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _environment
+RUN=Path(__file__).resolve().parent/'player-elimination-identity-profile-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert file_hash(RUN/'runtime.jfr')==load(RUN/'outcome.json')['profile_sha256']
+if not sys.argv[1:]:
+ assert not (RUN/'line-summary.json').exists()
+ (RUN/'line-driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ process=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'line-decode.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'line-decode-process.json',process);print(json.dumps(process),flush=True)
+ assert process['status']=='finished' and process['returncode']==0
+ raise SystemExit
+assert sys.argv[1:]==['--worker']
+s=read_settings(ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619/engine-config.json')
+j=importlib.import_module('jpype');j.startJVM(jvm_library(s.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+reader=j.JClass('jdk.jfr.consumer.RecordingFile')(j.JClass('java.nio.file.Paths').get(str(RUN/'runtime.jfr')))
+methods={'forge.game.card.CardProperty.cardHasProperty','forge.card.CardType.isSaga','forge.game.GameAction.hasStaticAbilityAffectingZone','forge.game.staticability.StaticAbility.checkConditions'}
+lines={name:Counter() for name in methods};leaves={name:Counter() for name in methods};samples=0
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent()
+  if str(event.getEventType().getName())!='jdk.ExecutionSample':continue
+  samples+=1;trace=event.getStackTrace()
+  if trace is None:continue
+  for index,frame in enumerate(trace.getFrames()):
+   method=frame.getMethod()
+   if method is None:continue
+   name=str(method.getType().getName())+'.'+str(method.getName())
+   if name in methods:
+    lines[name][int(frame.getLineNumber())]+=1
+    if index==0:leaves[name][int(frame.getLineNumber())]+=1
+finally:reader.close();j.shutdownJVM()
+result={'profile_sha256':file_hash(RUN/'runtime.jfr'),'samples':samples,'inclusive_lines':{n:c.most_common(30) for n,c in lines.items()},'leaf_lines':{n:c.most_common(30) for n,c in leaves.items()},'scope':'JFR source-line attribution only, with JIT/inlining and sampling limits; no new game or argument-value proof.'}
+save(RUN/'line-summary.json',result);print(json.dumps(result),flush=True)

@@ -1,0 +1,23 @@
+--- a/forge-game/src/main/java/forge/game/card/CardProperty.java
++++ b/forge-game/src/main/java/forge/game/card/CardProperty.java
+@@ -53,6 +53,20 @@
+                 property = property.substring(9);
+             } else {
+                 return false;
++            }
++        }
++
++        // Exact common properties need no prefix search. Keep game/LKI/phasing
++        // preconditions above, and read native objects on every call.
++        if (property != null) {
++            switch (property) {
++                case "Self": return card.equals(source);
++                case "Other": return !card.equals(source);
++                case "StrictlySelf": return card.equalsWithGameTimestamp(source);
++                case "StrictlyOther": return !card.equalsWithGameTimestamp(source);
++                case "YouCtrl": return controller.equals(sourceController);
++                case "YouDontCtrl": return !controller.equals(sourceController);
++                default: break; // Prefix variants and all other properties retain native behavior.
+             }
+         }
+ 

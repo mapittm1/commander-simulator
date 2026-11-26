@@ -1,0 +1,60 @@
+"""Decode bounded identity-game samples without starting another game."""
+from collections import Counter, defaultdict
+from pathlib import Path
+import importlib,json,sys
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent;RUN=WORK/'player-elimination-identity-profile-v1';PROFILE=RUN/'runtime.jfr'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(RUN/'process.json')['returncode']==0
+assert file_hash(PROFILE)==load(RUN/'outcome.json')['profile_sha256']
+assert 0<PROFILE.stat().st_size<=33554432
+if not sys.argv[1:]:
+ assert not (RUN/'summary.json').exists()
+ (RUN/'decode-driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ process=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'decode.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'decode-process.json',process)
+ print(json.dumps(process),flush=True)
+ assert process['status']=='finished' and process['returncode']==0
+ raise SystemExit
+assert sys.argv[1:]==['--worker']
+settings=read_settings(ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619/engine-config.json')
+java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(PROFILE)))
+events=Counter();threads=Counter();leaf=Counter();inclusive=Counter();stacks=Counter();allocated=Counter();allocation_sites=Counter();gc=Counter();windows=defaultdict(Counter)
+first_cpu=None;last_cpu=None;selected=0;truncated=0
+try:
+ while reader.hasMoreEvents():
+  event=reader.readEvent();kind=str(event.getEventType().getName());events[kind]+=1
+  assert events.total()<=100000
+  if kind in ('jdk.GarbageCollection','jdk.GCPhasePause'):
+   gc[kind]+=int(event.getDuration().toNanos());continue
+  if kind not in ('jdk.ExecutionSample','jdk.ObjectAllocationSample'):continue
+  trace=event.getStackTrace();names=[]
+  if trace is not None:
+   truncated+=int(trace.isTruncated())
+   for frame in trace.getFrames():
+    method=frame.getMethod()
+    if method is not None:names.append(str(method.getType().getName())+'.'+str(method.getName()))
+  forge_names=[n for n in names if n.startswith('forge.')]
+  if kind=='jdk.ObjectAllocationSample':
+   weight=int(event.getLong('weight'));allocated[str(event.getClass('objectClass').getName())]+=weight
+   if forge_names:allocation_sites[forge_names[0]]+=weight
+   continue
+  thread=event.getThread('sampledThread');threads[str(thread.getJavaName()) if thread is not None else '(unknown)']+=1
+  stamp=int(event.getStartTime().toEpochMilli())
+  if first_cpu is None:first_cpu=stamp
+  last_cpu=stamp
+  if not forge_names:continue
+  selected+=1;leaf.update(names[:1]);inclusive.update(set(names));stacks[' <- '.join(names)]+=1
+  windows[(stamp-first_cpu)//10000].update(set(names))
+finally:
+ reader.close();java.shutdownJVM()
+assert selected>0 and events['jdk.ObjectAllocationSample']>0
+summary={'profile_sha256':file_hash(PROFILE),'events':dict(events),'cpu_threads':threads.most_common(),'cpu_samples_with_forge_frames':selected,'cpu_span_ms':last_cpu-first_cpu,'selected_leaf':leaf.most_common(40),'selected_inclusive':inclusive.most_common(80),'top_stacks':stacks.most_common(30),'ten_second_inclusive_windows':{str(index):counts.most_common(30) for index,counts in sorted(windows.items())},'allocation_classes_weighted':allocated.most_common(40),'allocation_first_forge_frame_weighted':allocation_sites.most_common(40),'truncated_sample_stacks':truncated,'gc_duration_ms':{n:round(v/1000000,3) for n,v in gc.items()},'scope':'All-thread JFR CPU samples and sampled allocation weights for one instrumented failed game, including startup. Inclusive frames overlap; truncated stacks omit ancestry; allocation weights estimate traffic, not retained heap or exact counts. Ten-second windows start at first CPU sample. No comparison, speedup, rules correctness or completed-game pass.'}
+save(RUN/'summary.json',summary)
+print(json.dumps({'events':dict(events),'selected_cpu_samples':selected,'leaf':leaf.most_common(8),'forge_inclusive':[row for row in inclusive.most_common() if row[0].startswith('forge.')][:15]}),flush=True)

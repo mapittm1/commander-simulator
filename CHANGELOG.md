@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate three further complete workflow games, variant-name export, and
+  two-game batch pause/resume with unchanged first-attempt bytes, frozen inputs,
+  seat rotation and winner mapping. Preserve the failing 60-second identity test;
+  timed-out games remain partial and excluded from completed-game aggregation.
+- Profile that failure once with unchanged clocks and preserve its raw reports.
+  An isolated exact-property dispatch passes 21 controls on both variants and
+  297 retained controls, but the unchanged identity scenario still times out.
+  Keep the proposal unregistered/unpromoted and preserve class-origin evidence.
+  Catalog, default configuration, native limits and original 1,271/90 stay unchanged.
+
 - Validate three complete legal basic-land Commander games on the 4,953-case
   candidate using unchanged seeds 42, 0 and 4096. Recompute explicit native-log
   witnesses for commander-tax recasts, Goreclaw attack triggers and commander-

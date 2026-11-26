@@ -1,5 +1,21 @@
 # Card support and evidence
 
+The candidate passes the existing variant/workflow test: three more complete
+legal fixture games, a two-game batch paused after one game and resumed to two,
+unchanged first-attempt bytes, frozen input hashes, rotated seats, mapped winners
+and two included diagnostic reports. The existing Ratonhnhaké꞉ton identity test
+**fails its unchanged 60-second completion assertion**. Partial logs separately
+show casting, combat damage and Assassin creation; those observations do not
+pass the failed test. A JFR diagnostic attributes 661 of 2,638 leaf CPU samples
+to card-property checks, and 2,253 inclusive samples to attack forecasts. These
+are overlapping samples, not independent wall-time percentages. The pending
+exact-property dispatch passes 21 controls on each variant and 297 retained
+controls, but still fails the full-game completion test and is **not promoted**.
+See [all workflow, failure, profile and prototype evidence](../engine/player_elimination_workflow_evidence.json).
+Default configuration, catalog and engine profile are independently unchanged.
+No clock, search budget, original 1,271/90 gate or active runtime was changed.
+Broader legal-game validation, card coverage and activation remain incomplete.
+
 Three **complete legal fixture games** now pass on the 4,953-case candidate,
 using the existing fixed seeds 42, 0 and 4096. Recomputing the checker from raw
 logs confirms commander-tax recasts, Goreclaw attack triggers and commander-
