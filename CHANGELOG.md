@@ -6,6 +6,15 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Build the B'Elanna Torres repair from fresh patched source: all 4,963 native
+  invocations pass, retaining exactly all prior 4,953 method/parameter identities
+  plus ten new cases. All 18,068 packaged classfiles remain byte-identical and
+  only B'Elanna's script changes among 34,466 card-resource members.
+- Pass the ten registered cases through the normal packaged worker, verify 188
+  production origins and restore configuration exactly. Preserve complete native
+  reports, package receipts and audits in engine/belanna_runtime_evidence.json.
+  Full 3,806 packaged, original 1,271/90, broader games and activation stay open.
+
 - Reproduce a B'Elanna Torres rules error: Abundance puts the revealed artifact
   into hand without drawing, but the original definition awards zero counters.
   Preserve the 9/10 baseline and a rejected memory-clearing proposal that fails

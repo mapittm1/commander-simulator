@@ -1,0 +1,35 @@
+"""Fresh patched source build, all native regressions, bounded Maven, no activation."""
+from pathlib import Path
+import contextlib,json,subprocess,sys,time,traceback
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+from commander.engine.forge_config import file_hash
+RUN=ROOT/'data/development/belanna-runtime-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ci=load(RUN/'source-ci.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+assert load(ROOT/'engine/sticker_recipe.json')['native_test_count']==4963
+names=subprocess.check_output(['git','ls-files','commander','tools','config','tests/support','engine/tests','engine/patches','engine/sticker_recipe.json'],cwd=ROOT,text=True).splitlines()
+frozen={n:file_hash(ROOT/n) for n in names};save(RUN/'root-inputs.json',frozen)
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+args=['tools/build_sticker_engine.py','--source-archive',str(ROOT/'data/coverage-research/forge-583714b.zip'),'--maven-archive',str(ROOT/'data/coverage-research/apache-maven-3.10.0-bin.zip'),'--jdk','C:/Program Files/Java/jdk-19','--runtime',str(ROOT/'data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe')]
+save(RUN/'command.json',args)
+existing={p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir()}
+started=time.monotonic();status='failed';error=None
+try:
+ sys.argv=args
+ with (RUN/'build-output.log').open('x',encoding='utf-8') as output,contextlib.redirect_stdout(output),contextlib.redirect_stderr(output):builder.main()
+ status='finished'
+except BaseException:
+ error=traceback.format_exc();raise
+finally:
+ new=sorted(p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir() and p.name not in existing)
+ process={'status':status,'elapsed_seconds':round(time.monotonic()-started,3),'new_builds':new,'error':error,'maven_limit_seconds':600,'expected_native_cases':4963,'installed':False};save(RUN/'process.json',process)
+ assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+ assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ print(json.dumps(process),flush=True)
+ if status=='finished':
+  assert len(new)==1;build=ROOT/'data/engine-builds'/new[0];lock=load(build/'engine-lock.json');assert lock['native_tests']==dict(total=4963,passed=4963,failed=0,skipped=0)
+  save(RUN/'candidate-selection.json',{'build':build.relative_to(ROOT).as_posix(),'native_counts':lock['native_tests'],'installed':False})

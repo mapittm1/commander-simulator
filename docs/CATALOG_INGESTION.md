@@ -61,7 +61,10 @@ Only two records changed among the explicitly compared Oracle/game fields:
   repair uses actual draw-count changes; ten supplied-definition scenarios pass,
   while the unchanged baseline passes nine and fails that case. See
   [the failure and proposed repair](../engine/belanna_oracle_evidence.json).
-  Fresh build validation and activation remain pending.
+  A subsequent fresh build passes all 4,963 native cases and the ten packaged
+  regressions; [runtime evidence](../engine/belanna_runtime_evidence.json) records
+  exact retained membership and resource differences. Full packaged/timed gates
+  and activation remain pending.
 
 The comparison covers identity, name, mana cost/value, types, Oracle text,
 colors/identity/indicator, power/toughness, loyalty, defense, keywords, layout,

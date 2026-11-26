@@ -30,11 +30,12 @@ The backend targets Commander rules through shared systems for mana, costs,
 triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete.
 
-A new B'Elanna Torres definition repair distinguishes drawing from putting a card
-into hand. Ten supplied-choice native scenarios pass with the proposed definition;
-the unchanged baseline fails the Abundance case. The patch and ten regressions
-are registered for a fresh engine build, which has not yet been validated or
-activated. See [failure and repair evidence](engine/belanna_oracle_evidence.json).
+The new B'Elanna Torres candidate fixes drawing versus putting a card into hand.
+Its fresh build passes all 4,963 native cases, retaining the prior 4,953 and adding
+ten regressions. All ten also pass through the packaged worker. Only this card
+script changes; all 18,068 packaged classfiles remain identical. The candidate is
+not activated. See [failure and repair](engine/belanna_oracle_evidence.json) and
+[fresh build/package evidence](engine/belanna_runtime_evidence.json).
 
 The reviewed candidate fixes remembered-card history and multiplayer elimination
 valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass

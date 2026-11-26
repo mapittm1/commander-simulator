@@ -1,21 +1,27 @@
 # Card support and evidence
 
-B'Elanna Torres now has a registered definition repair awaiting a fresh build.
+B'Elanna Torres now has a fresh, separately built definition repair candidate.
 The original fails one of ten native supplied-choice scenarios: Abundance puts
 an artifact into hand without drawing and wrongly suppresses the two counters.
 The proposed definition compares actual draw-count changes and passes all ten,
 retaining identical parameter membership. A prior proposal's doubled-draw failure
 is preserved. See [raw evidence and scope](../engine/belanna_oracle_evidence.json).
-The expanded registry expects 4,963 native and 3,806 main packaged cases; previous
-3,753/4,953 results below belong to the earlier elimination candidate. No runtime
-activation or original 1,271-case / 90-second pass is claimed.
+The fresh build passes all 4,963 native cases, retaining exactly the prior 4,953
+and adding the ten regressions. All ten pass the packaged worker too, with 188
+production origins verified and exact configuration restoration. Only B'Elanna's
+script changes among 34,466 resource members; all 18,068 packaged classfiles are
+identical. See [fresh build/package evidence](../engine/belanna_runtime_evidence.json).
+Previous 3,753/4,953 results below belong to the earlier elimination candidate.
+The expanded full 3,806 main packaged gate and original 1,271/90 remain open.
+No runtime activation or universal card/AI certification is claimed.
 
 The November 26 Oracle refresh retains 39,412 catalog records and 32,643 marked
 Commander-legal identities. Both selected and candidate archives match scripts
 for 32,636; the remaining seven are non-starting meld results. No legal identity
 was added or removed relative to the preserved November 20 snapshot. Oracle text
 changed for Hit It! and B'Elanna Torres, Scrapper. Existing native controls cover
-Hit It!'s reveal and zone movement; B'Elanna's updated sequence remains open.
+Hit It!'s reveal and zone movement; B'Elanna now has the limited native and
+packaged validation described above.
 The catalog audit itself establishes neither interaction. See [refresh scope and receipts](CATALOG_INGESTION.md).
 Earlier statements below that the catalog remained unchanged describe those
 historical validation runs, before this refresh.
