@@ -118,7 +118,71 @@ def _verify_inputs(args, recipe):
             digest.update(raw)
     if digest.hexdigest() != recipe["maven_sha512"]:
         raise ValueError("Maven archive differs from Apache's published checksum")
-    for entry in recipe["patches"]:
+    _verify_patches(recipe["patches"])
+    regression_sources = REGRESSION_SOURCES
+    for filename, hash_key in regression_sources.items():
+        if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
+            raise ValueError(
+                f"Native regression source {filename} changed; review the recipe"
+            )
+    _verify_priority_fixtures(recipe["upstream_priority_tests"])
+    if recipe["card_overrides"] != [
+        "w/wicker_picker.txt",
+        "t/the_prismatic_piper.txt",
+        "f/faceless_one.txt",
+        "w/worst_fears.txt",
+        "m/mindslaver.txt",
+        "a/aethersnatch.txt",
+        "c/commandeer.txt",
+        "p/perplexing_chimera.txt",
+        "s/sudden_substitution.txt",
+        "a/aether_snap.txt",
+        "d/dust_of_moments.txt",
+        "o/oblivion_stone.txt",
+        "c/cultural_exchange.txt",
+        "w/whims_of_the_fates.txt",
+        "d/divine_intervention.txt",
+        "o/overabundance.txt",
+        "a/all_good_things.txt",
+        "h/hit_it.txt",
+        "c/cirdan_the_shipwright.txt",
+        "i/ixidors_will.txt",
+        "v/vault_13_dwellers_journey.txt",
+        "c/chefs_kiss.txt",
+        "u/ulalek_fused_atrocity.txt",
+        "t/tempt_with_mayhem.txt",
+        "t/the_reaper_king_no_more.txt",
+        "r/rinoa_angel_wing.txt",
+        "s/skyfisher_spider.txt",
+        "u/uro_titan_of_natures_wrath.txt",
+        "c/carpet_of_flowers.txt",
+        "p/priority_boarding.txt",
+        "e/emet_selch_of_the_third_seat.txt",
+        "g/general_jarkeld.txt",
+        "s/sorrows_path.txt",
+        "a/alter_reality.txt",
+        "b/balduvian_shaman.txt",
+        "g/glamerdye.txt",
+        "m/magical_hack.txt",
+        "s/sleight_of_mind.txt",
+        "m/mishras_bauble.txt",
+        "w/whim_of_volrath.txt",
+        "m/mind_bend.txt",
+        "s/spectral_shift.txt",
+        "c/crystal_spray.txt",
+        "t/trait_doctoring.txt",
+    ]:
+        raise ValueError("Unexpected native card override registry")
+    if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
+        raise ValueError("Expected an immutable source commit")
+    executable = "java.exe" if sys.platform == "win32" else "java"
+    if not (args.jdk / "bin" / executable).is_file() or not args.runtime.is_file():
+        raise ValueError("Select a trusted installed JDK and Java runtime executable")
+
+
+def _verify_patches(patches: list[dict[str, str]]) -> None:
+    """Reject unreviewed patch paths and changed reviewed patch contents."""
+    for entry in patches:
         if (
             entry["path"]
             not in {
@@ -254,6 +318,7 @@ def _verify_inputs(args, recipe):
                 "engine/patches/commander-foretell-history.patch",
                 "engine/patches/commander-discard-history.patch",
                 "engine/patches/commander-sacrifice-history.patch",
+                "engine/patches/commander-payload-graph.patch",
                 "engine/patches/commander-trait-doctoring-ai.patch",
                 "engine/patches/commander-villainous-choice.patch",
                 "engine/patches/commander-learn.patch",
@@ -287,65 +352,6 @@ def _verify_inputs(args, recipe):
             or file_hash(PROJECT / entry["path"]) != entry["sha256"]
         ):
             raise ValueError("Engine patch registry or content changed")
-    regression_sources = REGRESSION_SOURCES
-    for filename, hash_key in regression_sources.items():
-        if file_hash(PROJECT / "engine/tests" / filename) != recipe[hash_key]:
-            raise ValueError(
-                f"Native regression source {filename} changed; review the recipe"
-            )
-    _verify_priority_fixtures(recipe["upstream_priority_tests"])
-    if recipe["card_overrides"] != [
-        "w/wicker_picker.txt",
-        "t/the_prismatic_piper.txt",
-        "f/faceless_one.txt",
-        "w/worst_fears.txt",
-        "m/mindslaver.txt",
-        "a/aethersnatch.txt",
-        "c/commandeer.txt",
-        "p/perplexing_chimera.txt",
-        "s/sudden_substitution.txt",
-        "a/aether_snap.txt",
-        "d/dust_of_moments.txt",
-        "o/oblivion_stone.txt",
-        "c/cultural_exchange.txt",
-        "w/whims_of_the_fates.txt",
-        "d/divine_intervention.txt",
-        "o/overabundance.txt",
-        "a/all_good_things.txt",
-        "h/hit_it.txt",
-        "c/cirdan_the_shipwright.txt",
-        "i/ixidors_will.txt",
-        "v/vault_13_dwellers_journey.txt",
-        "c/chefs_kiss.txt",
-        "u/ulalek_fused_atrocity.txt",
-        "t/tempt_with_mayhem.txt",
-        "t/the_reaper_king_no_more.txt",
-        "r/rinoa_angel_wing.txt",
-        "s/skyfisher_spider.txt",
-        "u/uro_titan_of_natures_wrath.txt",
-        "c/carpet_of_flowers.txt",
-        "p/priority_boarding.txt",
-        "e/emet_selch_of_the_third_seat.txt",
-        "g/general_jarkeld.txt",
-        "s/sorrows_path.txt",
-        "a/alter_reality.txt",
-        "b/balduvian_shaman.txt",
-        "g/glamerdye.txt",
-        "m/magical_hack.txt",
-        "s/sleight_of_mind.txt",
-        "m/mishras_bauble.txt",
-        "w/whim_of_volrath.txt",
-        "m/mind_bend.txt",
-        "s/spectral_shift.txt",
-        "c/crystal_spray.txt",
-        "t/trait_doctoring.txt",
-    ]:
-        raise ValueError("Unexpected native card override registry")
-    if not re.fullmatch(r"[a-f0-9]{40}", recipe["forge_commit"]):
-        raise ValueError("Expected an immutable source commit")
-    executable = "java.exe" if sys.platform == "win32" else "java"
-    if not (args.jdk / "bin" / executable).is_file() or not args.runtime.is_file():
-        raise ValueError("Select a trusted installed JDK and Java runtime executable")
 
 
 def _verify_unchanged_inputs(args, recipe, recipe_hash):

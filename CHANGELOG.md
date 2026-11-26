@@ -6,11 +6,19 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify all 3,679 source cases with exact retained methods/parameters, no skips
+  or configuration failures, and frozen production/test/card inputs.
+- Add the reviewed payload patch to the native builder's fixed path allowlist.
+  Preserve the pre-JVM rejection and add unit tests for current-recipe admission,
+  unknown paths rejected before file access, and changed reviewed hashes. Keep
+  every existing allowlist and content-hash check; fresh native validation remains
+  pending.
+
 - Remove two unused Java imports caught by the expanded source build and refresh
   its registered fixture checksum. Preserve the failed Checkstyle log and exact
-  import-only repair; no desktop source cases ran, and fresh 3,679-case source
-  validation remains pending. All test names/assertions and production code stay
-  unchanged.
+  import-only repair; no desktop source cases ran in the failed attempt. The
+  corrected 3,679-case source suite subsequently passes. All test names/assertions
+  and production code stay unchanged.
 
 - Preserve shared mutable event-payload references and supported container cycles
   in AI snapshots; retain independent field-owned containers and original/sibling
@@ -21,8 +29,8 @@ Historical entries below summarize verified Git milestones, not release versions
   groups and a fresh source build's 320 card/deck loading cases pass. Preserve raw
   failures and unchanged assertions; supplied events are not full paid histories.
 - Register 57 `payload_graph` cases and their fixed checksums, keeping every prior
-  group and original 1,271/90. Fresh 3,679 source / 4,879 native / 3,722 main packaged
-  validation, final live checks, activation and complete card/rules coverage remain
+  group and original 1,271/90. Source 3,679 passes; fresh 4,879 native / 3,722 main
+  packaged validation, final live checks, activation and complete card/rules coverage remain
   pending. Original 1,271 / 90 seconds still times out at 90.016s without a
   completed report.
 

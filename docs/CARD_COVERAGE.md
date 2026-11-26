@@ -1,9 +1,12 @@
 # Card support and evidence
 
-The first expanded source build stopped before desktop tests because Java
-Checkstyle found two unused imports in a new fixture. Those imports are removed
-and checksums refreshed; fresh 3,679-case source validation remains pending.
-The failed build log and exact import-only repair are preserved in the payload
+The expanded **3,679-case source suite passes**, retaining every earlier method
+and parameter with no skips or configuration failures. The initial unused-import
+Checkstyle failure is repaired. Native build preflight then rejected a missing
+reviewed patch allowlist entry; that exact entry is added with regression tests
+for current-recipe admission, unreviewed paths and changed hashes. No native JVM
+started in that failed attempt; fresh 4,879 native and 3,722 main validation remain
+pending. Raw source results and both failed attempts are preserved in the payload
 graph evidence.
 
 A generic payload-copy correction preserves shared mutable event state and
@@ -17,8 +20,8 @@ source build passes all 320 card/deck loading cases with exact methods/parameter
 
 Original **1,271 / 90 seconds** still times out at **90.016s** without a
 completed report. The recipe now registers 57 additional `payload_graph` cases,
-retaining all prior groups. Fresh **3,679 source / 4,879 native / 3,722 main packaged**
-validation is pending. The selected runtime is unchanged. Supplied event states
+retaining all prior groups. Source **3,679** passes; fresh **4,879 native / 3,722
+main packaged** validation remains pending. The selected runtime is unchanged. Supplied event states
 do not prove preceding legal histories, activation/payment/replacement ordering
 or complete rules coverage. Payload-container failure cleanup is not a complete
 native snapshot transaction. See [payload graph evidence](../engine/payload_graph_evidence.json).
