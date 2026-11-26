@@ -1,0 +1,29 @@
+--- a/forge-game/src/main/java/forge/game/GameAction.java
++++ b/forge-game/src/main/java/forge/game/GameAction.java
+@@ -1100,10 +1100,26 @@
+         return holdCheckingStaticAbilities;
+     }
+ 
++    /** Only native, live metadata proves the implicit affected zone is battlefield. */
++    private boolean hasNativeBattlefieldOnlyScope(final StaticAbility ability) {
++        return getClass() == GameAction.class && game.getClass() == Game.class
++                && ability.getClass() == StaticAbility.class
++                && ability.getHostCard() != null && ability.getHostCard().getClass() == Card.class
++                && ability.getMode() instanceof java.util.EnumSet<?>
++                && ability.getMapParams().getClass() == java.util.HashMap.class
++                && ability.checkMode(StaticAbilityMode.Continuous)
++                && !ability.hasParam("AffectedZone");
++    }
++
+     // This doesn't check layers or if the ability gets removed by other effects
+     public boolean hasStaticAbilityAffectingZone(ZoneType zone, StaticAbilityLayer layer) {
+         for (final Card ca : game.getCardsIn(ZoneType.STATIC_ABILITIES_SOURCE_ZONES)) {
+             for (final StaticAbility stAb : ca.getStaticAbilities()) {
++                // An implicit battlefield scope cannot affect another zone. Do not
++                // evaluate unrelated native conditions just to discover that later.
++                if (zone != ZoneType.Battlefield && hasNativeBattlefieldOnlyScope(stAb)) {
++                    continue;
++                }
+                 if (!stAb.checkConditions(StaticAbilityMode.Continuous)) {
+                     continue;
+                 }

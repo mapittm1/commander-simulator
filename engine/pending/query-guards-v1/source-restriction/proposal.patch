@@ -1,0 +1,34 @@
+--- a/forge-game/src/main/java/forge/game/card/Card.java
++++ b/forge-game/src/main/java/forge/game/card/Card.java
+@@ -6011,6 +6011,8 @@
+         final boolean negated;
+         /** The exclusive restrictions split on '+', or null if the restriction has no '.' part. */
+         final String[] props;
++        /** Context-free syntax only; the source and card identity are always read live. */
++        final boolean nativeSelfOnly;
+ 
+         private ParsedRestriction(final String restriction) {
+             final int dot = restriction.indexOf('.');
+@@ -6023,6 +6025,8 @@
+             }
+             type = t;
+             props = dot < 0 ? null : restriction.substring(dot + 1).split("\\+");
++            nativeSelfOnly = !negated && (type.equals("Card") || type.equals("card"))
++                    && props != null && props.length > 0 && props[0].equals("Self");
+         }
+ 
+         static ParsedRestriction get(final String restriction) {
+@@ -6050,6 +6054,13 @@
+         // need to filter out prepared spells for other cards
+         if (getCurrentStateName() == CardStateName.PreparedSpell && isInZone(ZoneType.Exile)) {
+             return testFailed;
++        }
++
++        // For an exact native card, the first positive Self property cannot
++        // match another identity. Prepared-spell checks remain above; subclasses,
++        // null games, negations and other property orders retain native callbacks.
++        if (parsed.nativeSelfOnly && getClass() == Card.class && game != null && !equals(source)) {
++            return false;
+         }
+ 
+         if (type.equals("Spell")) {

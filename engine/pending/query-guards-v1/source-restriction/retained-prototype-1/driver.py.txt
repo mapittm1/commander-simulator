@@ -1,0 +1,68 @@
+"""Bounded paired filter behavior and fixed diagnostic runs with exact identities."""
+from collections import Counter
+from pathlib import Path
+import importlib,json,re,subprocess,sys,time,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+W=Path(__file__).resolve().parent;E=W/'source-restriction4953-v1';B=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619';UP=B/'source/forge-gui-desktop/target/test-classes'
+MODE,SUITE,TRIAL=sys.argv[1:4];assert MODE in ('baseline','prototype');assert SUITE in ('contracts','retained','diagnostic');assert TRIAL in ('1','2','3')
+assert sys.argv[4:] in ([],['--worker']);RUN=E/(SUITE+'-'+MODE+'-'+TRIAL)
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def verify():
+ assert all(file_hash(ROOT/n)==h for n,h in load(E/'root-inputs.json').items())
+ assert all(file_hash(E/n)==h for n,h in load(E/'compiled-inputs.json').items())
+ assert load(RUN/'upstream-inputs.json')=={p.relative_to(UP).as_posix():file_hash(p) for p in UP.rglob('*') if p.is_file()}
+ assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+settings=read_settings(B/'engine-config.json')
+if not sys.argv[4:]:
+ assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT).strip()
+ assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(E/'source-ci.json')['head_sha']
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ save(RUN/'upstream-inputs.json',{p.relative_to(UP).as_posix():file_hash(p) for p in UP.rglob('*') if p.is_file()})
+ verify()
+ with _engine_profile(settings,RUN):
+  process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,SUITE,TRIAL,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify()
+ print(json.dumps({'mode':MODE,'suite':SUITE,'trial':TRIAL,'process':process,'counts':load(RUN/'outcome.json').get('counts') if (RUN/'outcome.json').exists() else None}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0
+ raise SystemExit
+verify();lock=settings.verify();assert lock['native_tests']['total']==4953
+recipe=load(ROOT/'engine/sticker_recipe.json');dep=ROOT/recipe['packaged_testng']['path'];assert file_hash(dep)==recipe['packaged_testng']['sha256']
+jar=settings.home/lock['jar_name'];require_bridge();java=importlib.import_module('jpype')
+paths=(() if MODE=='baseline' else (E/'prototype-classes',))+(jar,E/'fixture-classes',UP,dep)
+java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,paths)),convertStrings=True)
+runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+origins={}
+for name in tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.game.card.Card','forge.game.spellability.SpellAbilitySnapshot'))):
+ origin=packaged_rules.class_origin(java,name);assert origin.samefile(E/'prototype-classes' if MODE=='prototype' and (E/'prototype-classes'/(name.replace('.','/')+'.class')).is_file() else jar),name
+ origins[name]=str(origin)
+if MODE=='prototype':
+ for binary in (E/'prototype-classes').rglob('*.class'):
+  name=binary.relative_to(E/'prototype-classes').as_posix()[:-6].replace('/','.')
+  assert name=='forge.game.card.Card' or name.startswith('forge.game.card.Card$'),name
+  assert packaged_rules.class_origin(java,name).samefile(E/'prototype-classes'),name
+TARGETS={'contracts':('forge.ai.CommanderSourceRestrictionTest',),'retained':('forge.ai.CommanderReplacementEligibilityTest','forge.ai.CommanderReplacementPresenceTest','forge.ai.CommanderReplacementCacheInputsTest','forge.ai.CommanderReplacementActiveZoneTest','forge.ai.DamageGameCopyTest','forge.ai.CommanderPayloadDamageTest','forge.ai.CommanderKeywordTraitPresenceTest','forge.ai.CommanderKeywordMetadataFailureTest'),'diagnostic':('forge.ai.CommanderManaChainTest','forge.ai.CommanderExertTransitionsTest','forge.ai.CommanderCompositeModeCoverageTest')}[SUITE]
+for name in (*TARGETS,'forge.ai.AITest'):
+ assert packaged_rules.class_origin(java,name).samefile(E/'fixture-classes' if name=='forge.ai.CommanderSourceRestrictionTest' else UP),name
+native=ET.parse(B/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml')
+def identities(tree):
+ return Counter((c.get('name')+'.'+m.get('name'),tuple('null' if v.get('is-null')=='true' else (v.text or '').strip() for v in m.findall('./params/param/value'))) for c in tree.findall('.//class') if c.get('name') in TARGETS for m in c.findall('test-method') if m.get('is-config')!='true')
+expected=identities(native)
+if SUITE=='contracts':
+ names=re.findall(r'@Test\(dataProvider = "copyDepths"\)\s+public void (\w+)\(', (E/'CommanderSourceRestrictionTest.java').read_text(encoding='utf-8'));assert len(names)==8
+ expected.update((('forge.ai.CommanderSourceRestrictionTest.'+name,(str(depth),))) for name in names for depth in range(3))
+count={'contracts':24,'retained':297,'diagnostic':85}[SUITE];assert sum(expected.values())==count
+runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(n).class_ for n in TARGETS]));runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True)
+started=time.monotonic();runner.run();elapsed=time.monotonic()-started
+counts,methods=packaged_rules.test_results(listener)
+observed=Counter(packaged_rules.case_identifiers(methods));xml=identities(ET.parse(RUN/'reports/testng-results.xml'))
+outcome={'mode':MODE,'suite':SUITE,'trial':TRIAL,'counts':counts,'methods':methods,'runner_seconds':elapsed,'exact_method_parameter_counter':observed==expected==xml,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'processors':runtime.availableProcessors(),'max_heap_bytes':runtime.maxMemory(),'production_origins':origins,'report_sha256':file_hash(RUN/'reports/testng-results.xml'),'original1271_gate_attempted':False,'scope':'Supplied-state semantics or fixed85 diagnostic only; no original1271/90, full legal games, universal rules or activation claim.'}
+save(RUN/'outcome.json',outcome)
+assert counts==dict(total=count,passed=count,failed=0,skipped=0) and outcome['exact_method_parameter_counter']
+assert not outcome['configuration_failures'] and not outcome['configuration_skips'] and not outcome['testng_status']
+java.shutdownJVM();verify()

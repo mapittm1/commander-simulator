@@ -1,5 +1,22 @@
 # Card support and evidence
 
+Two more generic query proposals are **not promoted**. The native Self-first
+restriction guard passes 24 controls on both baseline/candidate and 297 retained
+semantic cases. The default-zone query guard passes 21 controls on both variants,
+237 static/trait/filter cases and 297 retained semantic cases. Its separate
+observation confirms irrelevant condition reads drop from one to zero while
+custom ability, mode-set and host callbacks retain fallback behavior.
+
+Both unchanged seed-42 identity tests still fail their 60-second completion
+assertion. Their timed-out games have no reported winner and remain excluded
+from completed-game aggregation; later identity assertions did not execute.
+The [raw controls, unused patches, origin maps and failed games](../engine/query_guard_evidence.json)
+are preserved. These isolated classpath trials do not establish a clean native
+build, reliable timing improvement, full original 1,271/90 pass or activation.
+Neither proposal caches live results, branches on card names, or changes clocks
+or search bounds.
+Selected configuration, catalog and engine profile remain independently unchanged.
+
 The candidate passes the existing variant/workflow test: three more complete
 legal fixture games, a two-game batch paused after one game and resumed to two,
 unchanged first-attempt bytes, frozen input hashes, rotated seats, mapped winners

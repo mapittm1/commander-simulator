@@ -1,0 +1,224 @@
+"""Run unchanged workflow/identity live tests against an explicit candidate configuration."""
+from contextlib import ExitStack
+from pathlib import Path
+import json
+import os
+import subprocess
+import sys
+import unittest
+from unittest.mock import patch
+
+ROOT = Path(__file__).resolve().parents[4]
+sys.path.insert(0, str(ROOT))
+from commander.engine.engine_process import ProcessLimits, run_bounded
+from commander.engine.forge_config import file_hash, read_settings
+from commander.engine.native_runtime import _environment
+
+WORK = Path(__file__).resolve().parent
+RUN = WORK / 'source-restriction4953-gameplay-v1'
+PROTOTYPE = WORK / 'source-restriction4953-v1'
+BUILD = ROOT / 'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+HEAD = '5c672bd1cb90dcbce9d0ed59044feaa4b037cd0b'
+METHODS = {
+    'identity': 'test_reviewed_identity_exports_and_casts',
+}
+
+
+def load(path):
+    return json.loads(path.read_bytes())
+
+
+def save(path, value):
+    path.write_text(json.dumps(value, indent=2) + '\n', encoding='utf-8', newline='\n')
+
+
+def profile_state(settings):
+    profile = settings.home / 'forge.profile.properties'
+    return {'exists': profile.exists(), 'sha256': file_hash(profile) if profile.exists() else None}
+
+
+def verify():
+    selection = load(RUN / 'selection.json')
+    assert all(file_hash(PROTOTYPE/name) == digest for name, digest in load(PROTOTYPE/'compiled-inputs.json').items())
+    assert all(file_hash(ROOT / name) == digest for name, digest in load(RUN / 'root-inputs.json').items())
+    assert file_hash(ROOT / 'data/cards.sqlite3') == selection['catalog_sha256']
+    assert file_hash(ROOT / 'config/engine_config.json') == selection['default_config_sha256']
+    assert file_hash(Path(__file__)) == file_hash(RUN / 'driver.py.txt')
+    settings = read_settings(BUILD / 'engine-config.json')
+    assert profile_state(settings) == selection['profile_before']
+    assert not (settings.home / '.commander-simulator.lock').exists()
+
+
+if not sys.argv[1:]:
+    assert subprocess.check_output(['git', 'rev-parse', 'HEAD'], cwd=ROOT, text=True).strip() == HEAD
+    assert not subprocess.check_output(['git', 'status', '--porcelain'], cwd=ROOT).strip()
+    RUN.mkdir()
+    (RUN / 'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    paths = subprocess.check_output(['git', 'ls-files', '-z'], cwd=ROOT).decode().split('\0')
+    save(RUN / 'root-inputs.json', {name: file_hash(ROOT / name) for name in paths if name})
+    settings = read_settings(BUILD / 'engine-config.json')
+    engine = settings.verify()
+    assert engine['native_tests']['total'] == 4953
+    save(RUN / 'source-ci.json', {'id': 45822598091, 'status': 'completed', 'conclusion': 'success', 'head_sha': HEAD})
+    save(RUN / 'selection.json', {
+        'build_id': BUILD.name,
+        'methods': METHODS,
+        'catalog_sha256': file_hash(ROOT / 'data/cards.sqlite3'),
+        'default_config_sha256': file_hash(ROOT / 'config/engine_config.json'),
+        'profile_before': profile_state(settings),
+        'wrapper_seconds_each': 420,
+        'game_clock_seconds': 60,
+        'normal_outer_allowance_seconds': 90,
+        'configured_processors': 2,
+        'configured_max_heap_bytes': 2147483648,
+        'instrumentation': 'Experimental classpath override for source-restriction Card class family only. Native jar metadata describes4953 baseline, not a newly validated build. Original test assertions/seed/clock retained. Class-loading logs bind actual origins. This cannot replace a clean registered native test pass.',
+        'prototype_inputs_sha256': file_hash(PROTOTYPE/'compiled-inputs.json'),
+        'original_failure_replaced': False,
+        'original1271_gate_attempted': False,
+    })
+    for family in METHODS:
+        folder = RUN / family
+        folder.mkdir()
+        verify()
+        process = run_bounded(
+            [sys.executable, '-I', str(Path(__file__)), '--worker', family],
+            ROOT, folder / 'worker.log',
+            ProcessLimits(420, log_bytes=65536, environment=_environment(folder)),
+        )
+        save(folder / 'process.json', process)
+        verify()
+        print(json.dumps({'family': family, 'process': process,
+                          'outcome': load(folder / 'outcome.json') if (folder / 'outcome.json').exists() else None}), flush=True)
+        assert process['status'] == 'finished' and process['returncode'] == 0
+    save(RUN / 'outcome.json', {'status': 'passed', 'methods': METHODS, 'original1271_gate_attempted': False,
+                               'source_and_catalog_unchanged': True, 'default_config_and_profile_restored': True,
+                               'scope': 'One experimental identity test with source-restriction Card classpath override and class-loading observation. Original production test failure is retained. Not a clean native build, packaged gate, activation or universal rules claim.'})
+    raise SystemExit
+
+assert len(sys.argv) == 3 and sys.argv[1] == '--worker' and sys.argv[2] in METHODS
+family = sys.argv[2]
+folder = RUN / family
+verify()
+os.environ['COMMANDER_ENGINE_INTEGRATION'] = '1'
+from tests.integration import test_engine_integration as live
+from commander.simulation.batch_store import read_job
+
+settings = read_settings(BUILD / 'engine-config.json')
+engine = settings.verify()
+assert engine['native_tests']['total'] == 4953
+observations = []
+
+
+def observe_game(*args, **kwargs):
+    result = original_game(*args, **kwargs)
+    observations.append({'operation': 'run_game', 'result': result})
+    save(folder / 'observations.json', observations)
+    return result
+
+
+def capture_batch(operation, function, *args, **kwargs):
+    result = function(*args, **kwargs)
+    connection = args[0]
+    job_id = result['job_id']
+    snapshot = {
+        'operation': operation,
+        'result': result,
+        'job': read_job(connection, job_id),
+        'attempts': [dict(row) for row in connection.execute(
+            'SELECT * FROM simulation_attempts WHERE job_id=? ORDER BY game_index', (job_id,))],
+    }
+    observations.append(snapshot)
+    save(folder / 'observations.json', observations)
+    return result
+
+
+def observe_create(*args, **kwargs):
+    return capture_batch('create_batch', original_create, *args, **kwargs)
+
+
+def observe_chunk(*args, **kwargs):
+    return capture_batch('run_batch', original_chunk, *args, **kwargs)
+
+
+def observe_diagnostics(*args, **kwargs):
+    result = original_diagnostics(*args, **kwargs)
+    observations.append({'operation': 'batch_diagnostics', 'result': result})
+    save(folder / 'observations.json', observations)
+    return result
+
+
+from commander.engine import forge_engine
+from urllib.parse import unquote, urlsplit
+import re
+
+original_command = forge_engine._command
+command_records = []
+
+
+def experimental_command(*args, **kwargs):
+    command = original_command(*args, **kwargs)
+    position = command.index('-jar')
+    archive = settings.home / engine['jar_name']
+    assert command[position + 1] == str(archive)
+    result = [*command[:position], '-Xlog:class+load=info', '-cp',
+              os.pathsep.join(map(str, (PROTOTYPE/'prototype-classes', archive))),
+              'forge.view.Main', *command[position + 2:]]
+    command_records.append({'baseline': command, 'experimental': result})
+    save(folder/'commands.json', command_records)
+    return result
+
+
+original_game = live.run_game
+original_create = live.create_batch
+original_chunk = live.run_batch
+original_diagnostics = live.batch_diagnostics
+with ExitStack() as stack:
+    stack.enter_context(patch.object(forge_engine, '_command', side_effect=experimental_command))
+    selected = stack.enter_context(patch.object(live, 'read_settings', return_value=settings))
+    stack.enter_context(patch.object(live, 'run_game', side_effect=observe_game))
+    stack.enter_context(patch.object(live, 'create_batch', side_effect=observe_create))
+    stack.enter_context(patch.object(live, 'run_batch', side_effect=observe_chunk))
+    stack.enter_context(patch.object(live, 'batch_diagnostics', side_effect=observe_diagnostics))
+    test = live.LiveEngineTests(METHODS[family])
+    expected_id = test.id()
+    suite = unittest.TestSuite([test])
+    result = unittest.TextTestRunner(verbosity=2).run(suite)
+    outcome = {
+        'test': expected_id,
+        'tests_run': result.testsRun,
+        'failures': [(case.id(), detail) for case, detail in result.failures],
+        'errors': [(case.id(), detail) for case, detail in result.errors],
+        'skipped': result.skipped,
+        'unexpected_successes': [case.id() for case in result.unexpectedSuccesses],
+        'successful': result.wasSuccessful(),
+        'settings_selections': selected.call_count,
+        'test_source_sha256': file_hash(Path(live.__file__)),
+        'observed_operations': [row['operation'] for row in observations],
+    }
+    save(folder / 'outcome.json', outcome)
+    assert len(command_records) == 1 and len(observations) == 1
+    game = observations[0]['result']
+    game_folder = Path(game['directory'])
+    text = (game_folder/'forge.log').read_text(encoding='utf-8', errors='replace')
+    origins = {}
+    rows = re.findall(r'^\[[^\n]*\]\[class,load\] (forge\.\S+) source: (.+)$', text, re.MULTILINE)
+    for name, source in rows:
+        if not source.startswith('file:'):
+            continue
+        local = unquote(urlsplit(source).path)
+        if re.match(r'^/[A-Za-z]:/', local):
+            local = local[1:]
+        origin = Path(local).resolve()
+        expected = (PROTOTYPE/'prototype-classes' if name == 'forge.game.card.Card'
+                    or name.startswith('forge.game.card.Card$')
+                    else settings.home/engine['jar_name'])
+        assert origin.samefile(expected), (name, str(origin), str(expected))
+        origins[name] = str(origin)
+    assert 'forge.game.card.Card' in origins
+    save(folder/'class-origins.json', {'origins': origins, 'loaded_forge_file_origins': len(origins),
+                                      'only_property_family_overridden': True,
+                                      'scope': 'Loaded file-backed Forge classes only; dynamic lambda lookup records excluded.'})
+    assert result.testsRun == 1 and result.wasSuccessful() and not result.skipped
+    assert not result.unexpectedSuccesses
+    assert selected.call_count == (4 if family == 'workflow' else 1)
+verify()

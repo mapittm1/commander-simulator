@@ -1,0 +1,22 @@
+"""Compile fixed single-source filtering inputs; never alter the packaged archive."""
+from pathlib import Path
+import json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.native_runtime import _environment
+W=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';E=W/'source-restriction4953-v1';B=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert all(file_hash(ROOT/n)==h for n,h in load(E/'root-inputs.json').items())
+s=read_settings(B/'engine-config.json');lock=s.verify();recipe=load(ROOT/'engine/sticker_recipe.json');dep=ROOT/recipe['packaged_testng']['path'];assert file_hash(dep)==recipe['packaged_testng']['sha256']
+fixture=E/'CommanderSourceRestrictionTest.java';fixture.write_text(fixture.read_text(encoding='utf-8-sig'),encoding='utf-8',newline='\n')
+for kind,sources in [('fixture',[fixture]),('prototype',list((E/'source').rglob('*.java')))]:
+ out=E/(kind+'-classes');out.mkdir()
+ command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',';'.join(map(str,(s.home/lock['jar_name'],B/'source/forge-gui-desktop/target/test-classes',dep))),'-d',str(out),*map(str,sources)]
+ save(E/(kind+'-compile-command.json'),{'command':command,'timeout_seconds':90})
+ process=run_bounded(command,ROOT,E/(kind+'-compile.log'),ProcessLimits(90,environment=_environment(E)))
+ save(E/(kind+'-compile-process.json'),process);print(kind,process,flush=True)
+ assert process['status']=='finished' and process['returncode']==0
+save(E/'compiled-inputs.json',{p.relative_to(E).as_posix():file_hash(p) for folder in ('source','baseline','fixture-classes','prototype-classes') for p in (E/folder).rglob('*') if p.is_file()}|{fixture.name:file_hash(fixture)})
+assert all(file_hash(ROOT/n)==h for n,h in load(E/'root-inputs.json').items())

@@ -6,6 +6,17 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve two independent unpromoted query guards. Native Self-first restriction
+  controls pass 24 cases per variant and 297 retained cases. The default-zone
+  query passes 21 per variant, 237 static/trait/filter and 297 retained cases;
+  its observation confirms one irrelevant condition read becomes zero.
+- Both unchanged seed-42 identity tests still fail the 60-second completion
+  assertion. Preserve exact sources, controls, class-origin maps, failed games
+  and inputs in engine/query_guard_evidence.json. Do not claim a speedup, change
+  search/clock limits, activate either proposal or retry original 1,271/90.
+- Condense README coverage status while retaining detailed historical evidence
+  in the coverage document and changelog. Full card/rules coverage remains open.
+
 - Validate three further complete workflow games, variant-name export, and
   two-game batch pause/resume with unchanged first-attempt bytes, frozen inputs,
   seat rotation and winner mapping. Preserve the failing 60-second identity test;

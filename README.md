@@ -28,50 +28,34 @@ difference.
 
 The backend targets Commander rules through shared systems for mana, costs,
 triggers, replacement effects and game-state copies. Full card and interaction
-coverage remains incomplete. A reviewed candidate fixes lost remembered-card
-history, with controls for native life gain, repeated copies and isolation.
+coverage remains incomplete.
 
-The candidate fixes multiplayer elimination valuation: the AI now recognizes
-useful opponent eliminations and penalizes allied losses. It passes 3,753 source
-and 4,953 native cases, retaining every previous case and adding 21 AI controls.
-Only the evaluator production class family changes; 173 original resolution/helper
-classfiles remain byte-identical.
+The reviewed candidate fixes remembered-card history and multiplayer elimination
+valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass
+2,525 main packaged cases outside resolution, 405 separate packaged cases,
+6,276 broader gameplay cases and 320 serialization/loading cases. See
+[runtime evidence](engine/player_elimination_runtime_evidence.json).
 
-Fresh checks pass 2,525 main packaged cases outside resolution, 405 separate
-packaged cases, 6,276 broader gameplay cases and 320 serialization/loading cases.
-Earlier catalog construction succeeds for 32,636 identities; seven meld results
-are explicitly unavailable as standalone scripts. Construction and finite tests
-do not prove universal card/rules correctness or optimal play.
+Six complete legal fixture games exercise commander-tax/attack-trigger/loss
+witnesses and variant-export/batch-resume checks. These use one commander plus
+99 basic lands. The Ratonhnhaké꞉ton identity game **still times out at 60 seconds**;
+its partial results are excluded from completed-game aggregation. See
+[full-game witnesses](engine/player_elimination_fullgame_evidence.json) and
+[workflow/failure evidence](engine/player_elimination_workflow_evidence.json).
 
-Three complete legal fixture games also pass the existing commander-tax recast,
-Goreclaw attack-trigger and commander-damage loss witnesses. The decks contain
-one commander plus 99 Forests; [full-game evidence](engine/player_elimination_fullgame_evidence.json)
-does not establish broad strategy or card coverage.
+Two follow-up query guards pass 24 and 21 paired controls respectively, with
+retained semantic checks, but both still fail that full-game completion test.
+They remain unregistered and unpromoted; [all reports](engine/query_guard_evidence.json)
+are preserved. Earlier tested performance shortcuts also remain excluded.
 
-Three further workflow games pass variant-name export and two-game batch
-pause/resume checks. The identity game **times out at 60 seconds** as its token
-board grows; it remains failed and excluded from completed-game results. A
-generic property-dispatch prototype passes 21 controls per variant and 297
-retained controls, but still times out and is not promoted. See
-[workflow and failure evidence](engine/player_elimination_workflow_evidence.json).
-
-The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
-main packaged gate, broader full-game validation and candidate activation remain open.
-The selected runtime is unchanged. Tested performance shortcuts remain excluded.
-A fresh 85-case allocation diagnostic passes and identifies collection/view work
-in game copies for further investigation; [profile evidence](engine/allocation_profile_evidence.json)
-does not establish a speedup or satisfy the timed gate.
-The follow-up [native filtering experiment](engine/native_filter_evidence.json)
-passes all semantic and diagnostic cases but misses its 10% timing criterion
-(8.0% test-time and 5.5% worker-time median reductions). Its fast path is excluded.
-
-Packaged-test receipts preserve native parameter identities. The fix is verified
-against 15 formatting cases, 10 ignore-effect candidate/payment controls and 14
-regular packaged phase cases; see [evidence](engine/native_parameter_format_evidence.json).
+The original 1,271-case / 90-second gate, full 3,796-case main packaged gate,
+broader full-game validation and candidate activation remain open. The selected
+runtime is unchanged. Historical catalog construction covers 32,636 starting
+identities; seven meld results lack standalone scripts. Construction and finite
+tests do not prove universal rules correctness or optimal play.
 
 See [coverage details](docs/CARD_COVERAGE.md),
-[validation evidence](engine/player_elimination_runtime_evidence.json),
-[performance diagnostics](engine/phase_precheck_evidence.json) and the
+[parameter receipt evidence](engine/native_parameter_format_evidence.json) and the
 [changelog](CHANGELOG.md).
 
 ## Run it now
