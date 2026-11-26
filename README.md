@@ -48,6 +48,11 @@ before pod storage or game launch, and rechecks the policy before each process.
 Receipts freeze the policy and review evidence hashes for affected decks. This
 does not certify other interactions or retroactively recompute old results.
 
+A real legal B'Elanna/basic-land fixture pod completes on the reviewed candidate,
+with its admission receipt preserved. The same legal pod is rejected before launch
+on the older selected engine. The catalog and selected configuration stay unchanged.
+See [full-game admission evidence](engine/rules_admission_fullgame_evidence.json).
+
 
 The reviewed candidate fixes remembered-card history and multiplayer elimination
 valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass

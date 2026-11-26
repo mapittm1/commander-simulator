@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Verify actual legal-pod admission in both directions: the selected older engine
+  rejects the confirmed issue before launch; the repaired candidate completes the
+  same B'Elanna/basic-land pod at seed 42 with a 60-second clock. Preserve the
+  matching saved review receipt, exact decks, native output and selected-engine
+  rejection in engine/rules_admission_fullgame_evidence.json. Catalog, selected
+  configuration and frozen source remain unchanged. This is a launch/receipt
+  witness, not an Abundance full-game test, broad card certification or activation.
+
 - Reject confirmed rules errors separately from script presence. Add a bounded
   identity-based policy requiring exact reviewed JAR/card-archive pairs for
   B'Elanna Torres; version labels, capability claims and names cannot approve it.

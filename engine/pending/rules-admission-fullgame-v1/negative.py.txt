@@ -1,0 +1,24 @@
+"""Real legal-pod preflight must reject the unreviewed selected runtime."""
+from contextlib import closing
+from pathlib import Path
+import json,subprocess,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.catalog.database import connect
+from commander.engine.engine_fixtures import legal_fixture_pod
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.forge_engine import prepare_game
+RUN=ROOT/'data/development/rules-admission-fullgame-v1'
+load=lambda p:json.loads(p.read_bytes())
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(RUN/'source-ci.json')['head_sha']
+settings=read_settings();selection=load(RUN/'selection.json');before=file_hash(ROOT/'data/cards.sqlite3')
+error=None
+with closing(connect()) as source:
+ with legal_fixture_pod(source,selection['leaders']) as (db,seats):
+  try:prepare_game(db,settings,seats)
+  except ValueError as problem:error=str(problem)
+assert error and error.startswith('Known engine rules issue (belanna_draw_replacement):'),error
+assert before==file_hash(ROOT/'data/cards.sqlite3')
+result={'outcome':'rejected_before_launch','error':error,'engine':settings.verify(),'catalog_unchanged':True,'scope':'Same four legal fixture lists as the completed candidate game, real selected engine verification and preflight; no game requested.'}
+(RUN/'negative-admission.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'outcome':result['outcome'],'forge_version':result['engine']['forge_version'],'catalog_unchanged':True}),flush=True)

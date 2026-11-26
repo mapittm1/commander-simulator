@@ -1,0 +1,42 @@
+"""One predeclared legal fixture game through known-issue admission and real launch."""
+from pathlib import Path
+from contextlib import closing
+import json,subprocess,sys,time
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.catalog.database import connect
+from commander.engine.engine_fixtures import legal_fixture_pod
+from commander.engine.forge_config import read_settings,file_hash
+from commander.engine.forge_engine import prepare_game,run_game
+RUN=ROOT/'data/development/rules-admission-fullgame-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+ci=load(RUN/'source-ci.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+names=subprocess.check_output(['git','ls-files','commander','config','tests/support','engine/sticker_recipe.json'],cwd=ROOT,text=True).splitlines()
+frozen={n:file_hash(ROOT/n) for n in names};save(RUN/'root-inputs.json',frozen)
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+settings=read_settings(ROOT/'data/engine-builds/535f5e5cfb6d4565ae28ec360b8d0d53/engine-config.json')
+main=ROOT/'data/cards.sqlite3';catalog_before=file_hash(main);active_before=(ROOT/'config/engine_config.json').read_bytes()
+leaders={"B'Elanna Torres, Scrapper":{'Island':50,'Mountain':49},'Ghalta, Primal Hunger':'Forest','Goreclaw, Terror of Qal Sisma':'Forest','Surrak, the Hunt Caller':'Forest'}
+save(RUN/'selection.json',{'leaders':leaders,'seed':42,'game_clock_seconds':60,'process_timeout_seconds':150,'catalog_sha256_before':catalog_before,'candidate':str(settings.home),'scope':'One legal basic-land fixture pod; known-issue receipt and launch path, not Abundance gameplay, competitive strategy or full card coverage.'})
+started=time.monotonic();result=None
+try:
+ with closing(connect(main)) as source:
+  with legal_fixture_pod(source,leaders) as (db,seats):
+   prepared=prepare_game(db,settings,seats)
+   assert prepared['rules_admission']['reviewed_issues'][0]['issue_id']=='belanna_draw_replacement'
+   save(RUN/'admission.json',{key:value for key,value in prepared.items() if key!='decks'})
+   for number,deck in enumerate(prepared['decks'],1):(RUN/f'seat-{number}.dck').write_text(deck,encoding='utf-8',newline='\n')
+   result=run_game(db,settings,seats,seed=42,game_clock=60)
+   save(RUN/'game-result.json',result)
+finally:
+ preserved=file_hash(main)==catalog_before and (ROOT/'config/engine_config.json').read_bytes()==active_before
+ stable=all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ record={'elapsed_seconds':round(time.monotonic()-started,3),'catalog_and_selected_config_unchanged':preserved,'frozen_source_unchanged':stable,'game_status':result.get('status') if result else None,'run_id':result.get('run_id') if result else None,'winner_seat':result.get('winner_seat') if result else None,'original_resolution_gate_attempted':False,'activated':False}
+ save(RUN/'outcome.json',record);print(json.dumps(record),flush=True)
+ assert preserved and stable
+assert result and result['status']=='completed'
+raw=load(Path(result['directory'])/'inputs.json')
+assert raw['rules_admission']==prepared['rules_admission']
+save(RUN/'receipt-check.json',{'saved_receipt_matches_admission':True,'rules_admission':raw['rules_admission'],'inputs_sha256':file_hash(Path(result['directory'])/'inputs.json')})

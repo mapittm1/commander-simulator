@@ -1,5 +1,13 @@
 # Card support and evidence
 
+A legal B'Elanna/basic-land pod now completes through the actual known-issue
+admission and launch path (seed 42, 60-second clock), retaining its exact review
+receipt in saved inputs. The same legal pod is rejected by the older selected
+runtime before launch. [Raw evidence](../engine/rules_admission_fullgame_evidence.json)
+includes native output, decks, source hashes and both admission outcomes. The
+catalog and selected configuration remain unchanged. This limited game does not
+exercise Abundance, realistic deck strategy or every interaction.
+
 Known rules issues now have a separate admission policy keyed by stable card ID
 and exact JAR/card-archive pairs. The selected older runtime cannot silently admit
 B'Elanna decks with the confirmed replacement error. The reviewed candidate clears
