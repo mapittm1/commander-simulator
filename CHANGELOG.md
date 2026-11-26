@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reject a narrowly guarded damage/destroy precheck after its fixed six-run
+  diagnostic protocol: all 510 invocations pass, but median runner time rises
+  0.94% and worker time falls only 0.38%, below the predeclared 10% criterion.
+  Both variants pass 16 native controls; the prototype retains 297 existing cases.
+  Preserve the unused patch and fixture/analysis corrections without dropping
+  assertions or repeating gameplay for the analysis repair.
+- Preserve baseline guard/event counters and existing CPU-recording attribution.
+  Damage/destroy cause only 3.03% of collection fetches in the diagnostic selection;
+  BeginPhase accounts for about 48%. These counts do not measure CPU or allocation.
+  Record engine/damage_precheck_evidence.json; leave runtime, recipe and original
+  1,271/90 unchanged. Full-card rules correctness and activation remain open.
+
 - Reject the scalar-lookup no-op prototype for promotion after its fixed six-run
   diagnostic protocol. All 510 cases pass; median runner/worker reductions of
   9.0% / 8.9% miss the predeclared 10% criterion. Both variants also pass all nine

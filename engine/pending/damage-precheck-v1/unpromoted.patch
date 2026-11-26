@@ -1,0 +1,24 @@
+--- a/forge-game/src/main/java/forge/game/card/CardState.java
++++ b/forge-game/src/main/java/forge/game/card/CardState.java
+@@ -806,9 +806,18 @@
+ 
+     /** Only a live negative precheck; true still requires normal replacement checks. */
+     public final boolean mayHaveReplacementEffects(ReplacementType event) {
+-        // Implicit type/counter replacements do not apply to these two events.
+-        if (event != ReplacementType.Tap && event != ReplacementType.ProduceMana) return true;
+-        return !replacementEffects.isEmpty() || !hasNoAdditionalTraits();
++        // Preserve the existing checks for events without implicit rule effects.
++        if (event == ReplacementType.Tap || event == ReplacementType.ProduceMana) {
++            return !replacementEffects.isEmpty() || !hasNoAdditionalTraits();
++        }
++        if (event != ReplacementType.DamageDone && event != ReplacementType.Destroy) return true;
++        // Only shields supply implicit replacements for these two event modes.
++        // Unknown holders/types retain normal gathering and their callbacks.
++        if (!replacementEffects.isEmpty() || !hasNoAdditionalTraits()
++                || getTypeWithChanges().getClass() != CardType.class
++                || FSnapshotTable.versionOf(card.getChangedCardTraits()) == null
++                || FSnapshotTable.versionOf(card.getChangedCardTraitsByText()) == null) return true;
++        return card.getCounters(CounterEnumType.SHIELD) > 0;
+     }
+ 
+     public FCollectionView<ReplacementEffect> getReplacementEffects() {

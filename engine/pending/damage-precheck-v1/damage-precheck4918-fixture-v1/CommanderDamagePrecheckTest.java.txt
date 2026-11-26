@@ -1,0 +1,170 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.card.CardType;
+import forge.game.Game;
+import forge.game.card.Card;
+import forge.game.card.CardState;
+import forge.game.card.CardTraitChanges;
+import forge.game.card.CounterEnumType;
+import forge.game.player.Player;
+import forge.game.replacement.ReplacementEffect;
+import forge.game.replacement.ReplacementHandler;
+import forge.game.replacement.ReplacementType;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import forge.util.collect.FCollection;
+import forge.util.collect.FCollectionView;
+import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Supplied-board native resolution controls, distinct from complete legal histories. */
+public class CommanderDamagePrecheckTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+    private static final class Scene {
+        Game game;
+        Player actor;
+        Card target;
+        Card shock;
+        Card doom;
+    }
+    private Scene scene() {
+        Scene s = new Scene(); s.game = CommanderPayloadGraphTest.newBoard();
+        s.actor = s.game.getPlayers().getFirst();
+        s.target = addCardToZone("Grizzly Bears", s.actor, ZoneType.Battlefield);
+        // Survive two damage so damage and destruction can be tested separately.
+        s.target.setBaseToughness(10);
+        s.shock = addCardToZone("Shock", s.actor, ZoneType.Hand);
+        s.doom = addCardToZone("Doom Blade", s.actor, ZoneType.Hand);
+        s.game.getAction().checkStaticAbilities(false);
+        s.game.getTriggerHandler().resetActiveTriggers(); s.game.copyLastState();
+        return s;
+    }
+    private void resolve(Card source, Card target, Player actor) {
+        SpellAbility ability = source.getFirstSpellAbility();
+        assertNotNull(ability); ability.setActivatingPlayer(actor);
+        ability.getTargets().add(target); ability.resolve();
+    }
+    private boolean inGraveyard(Scene s) {
+        return s.actor.getCardsIn(ZoneType.Graveyard).stream().anyMatch(c -> c.getId() == s.target.getId());
+    }
+    private ReplacementEffect block(Card card, String mode) {
+        String valid = mode.equals("DamageDone") ? "ValidTarget$ Card.Self" : "ValidCard$ Card.Self";
+        return ReplacementHandler.parseReplacement("Event$ " + mode + " | ActiveZones$ Battlefield | " + valid + " | Layer$ CantHappen", card, true);
+    }
+    private void conservative(Card card) {
+        List<ReplacementEffect> effects = new ArrayList<>(card.getReplacementEffects());
+        for (ReplacementType event : ReplacementType.values()) {
+            boolean present = effects.stream().anyMatch(effect -> effect.getMode() == event);
+            if (present) assertTrue(card.getCurrentState().mayHaveReplacementEffects(event), event.toString());
+            if (!card.getCurrentState().mayHaveReplacementEffects(event)) assertFalse(present);
+        }
+        assertTrue(card.getCurrentState().mayHaveReplacementEffects(null));
+    }
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release(); copies.clear();
+    }
+    @Test public void ordinaryDamageStillResolves() {
+        Scene s = scene(); resolve(s.shock, s.target, s.actor); assertEquals(s.target.getDamage(), 2);
+    }
+    @Test public void shieldPreventsDamageAndIsConsumed() {
+        Scene s = scene(); s.target.setCounters(CounterEnumType.SHIELD, 1); conservative(s.target);
+        resolve(s.shock, s.target, s.actor);
+        assertEquals(s.target.getDamage(), 0); assertEquals(s.target.getCounters(CounterEnumType.SHIELD), 0);
+    }
+    @Test public void ordinaryDestructionStillResolves() {
+        Scene s = scene(); resolve(s.doom, s.target, s.actor); assertTrue(inGraveyard(s));
+    }
+    @Test public void shieldReplacesDestructionAndIsConsumed() {
+        Scene s = scene(); s.target.setCounters(CounterEnumType.SHIELD, 1);
+        resolve(s.doom, s.target, s.actor);
+        assertFalse(inGraveyard(s)); assertTrue(s.target.isInZone(ZoneType.Battlefield));
+        assertEquals(s.target.getCounters(CounterEnumType.SHIELD), 0);
+    }
+    @Test public void shieldAddedAfterNegativeProbeIsVisible() {
+        Scene s = scene(); s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.DamageDone);
+        s.target.getReplacementEffects(); s.target.setCounters(CounterEnumType.SHIELD, 1);
+        assertTrue(s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.DamageDone));
+        resolve(s.shock, s.target, s.actor); assertEquals(s.target.getDamage(), 0);
+    }
+    @Test public void shieldRemovedAfterPositiveProbeDoesNotPreventDamage() {
+        Scene s = scene(); s.target.setCounters(CounterEnumType.SHIELD, 1); s.target.getReplacementEffects();
+        assertTrue(s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.DamageDone));
+        s.target.setCounters(CounterEnumType.SHIELD, 0); resolve(s.shock, s.target, s.actor);
+        assertEquals(s.target.getDamage(), 2);
+    }
+    @Test public void shieldRemovedBeforeDestroyDoesNotSaveCreature() {
+        Scene s = scene(); s.target.setCounters(CounterEnumType.SHIELD, 1); s.target.getReplacementEffects();
+        s.target.setCounters(CounterEnumType.SHIELD, 0); resolve(s.doom, s.target, s.actor); assertTrue(inGraveyard(s));
+    }
+    @Test public void intrinsicDamageReplacementIsNotSkipped() {
+        Scene s = scene(); s.target.addReplacementEffect(block(s.target, "DamageDone")); conservative(s.target);
+        resolve(s.shock, s.target, s.actor); assertEquals(s.target.getDamage(), 0);
+    }
+    @Test public void intrinsicDestroyReplacementIsNotSkipped() {
+        Scene s = scene(); s.target.addReplacementEffect(block(s.target, "Destroy")); conservative(s.target);
+        resolve(s.doom, s.target, s.actor); assertFalse(inGraveyard(s));
+    }
+    @Test public void changedTraitDamageReplacementIsNotSkipped() {
+        Scene s = scene(); s.target.addChangedCardTraits(new CardTraitChanges(List.of(), List.of(), List.of(block(s.target, "DamageDone")), List.of(), null), s.game.getNextTimestamp(), 0L, false);
+        conservative(s.target); resolve(s.shock, s.target, s.actor); assertEquals(s.target.getDamage(), 0);
+    }
+    @Test public void changedTextDestroyReplacementIsNotSkipped() {
+        Scene s = scene(); s.target.getChangedCardTraitsByText().put(s.game.getNextTimestamp(), 0L, new CardTraitChanges(List.of(), List.of(), List.of(block(s.target, "Destroy")), List.of(), null));
+        conservative(s.target); resolve(s.doom, s.target, s.actor); assertFalse(inGraveyard(s));
+    }
+    private void copiedShield(int depth) {
+        Scene s = scene(); s.target.setCounters(CounterEnumType.SHIELD, 1); s.game.copyLastState();
+        Game game = s.game; Player actor = s.actor; Card target = s.target; Card shock = s.shock;
+        for (int index = 0; index < depth; index++) {
+            GameCopier copier = new GameCopier(game).withStack(true); copies.add(copier);
+            game = copier.makeCopy(null, actor); actor = copier.find(actor); target = copier.find(target); shock = copier.find(shock);
+        }
+        conservative(target); resolve(shock, target, actor);
+        assertEquals(target.getDamage(), 0); assertEquals(target.getCounters(CounterEnumType.SHIELD), 0);
+        assertEquals(s.target.getDamage(), 0); assertEquals(s.target.getCounters(CounterEnumType.SHIELD), 1);
+    }
+    @Test public void copiedShieldDamageDoesNotMutateOriginal() { copiedShield(1); }
+    @Test public void repeatedCopyRetainsLiveShieldReplacement() { copiedShield(2); }
+    private static final class CallbackCard extends Card {
+        ReplacementEffect extra;
+        int reads;
+        CallbackCard(Game game, Player actor) {
+            super(game.nextCardId(), null, game); setOwner(actor); setName("Callback contract");
+            setType(CardType.parse("Creature", false)); setBaseToughness(10);
+        }
+        @Override public FCollectionView<ReplacementEffect> getReplacementEffects() {
+            reads++; FCollection<ReplacementEffect> result = new FCollection<>(super.getReplacementEffects());
+            if (extra != null) result.add(extra); return result;
+        }
+    }
+    @Test public void cardSubclassReplacementCallbackStillRuns() {
+        Scene s = scene(); CallbackCard target = new CallbackCard(s.game, s.actor);
+        s.actor.getZone(ZoneType.Battlefield).add(target); target.extra = block(target, "DamageDone");
+        int before = target.reads; resolve(s.shock, target, s.actor);
+        assertTrue(target.reads > before); assertEquals(target.getDamage(), 0);
+    }
+    private static final class OpaqueType extends CardType {
+        OpaqueType() { super(CardType.parse("Creature", false)); }
+    }
+    @Test public void unknownTypeImplementationRetainsGathering() throws Exception {
+        Scene s = scene(); Field field = CardState.class.getDeclaredField("type"); field.setAccessible(true);
+        field.set(s.target.getCurrentState(), new OpaqueType());
+        assertTrue(s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.DamageDone));
+        assertTrue(s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.Destroy));
+    }
+    @Test public void otherEventModesAndNullRemainConservative() {
+        Scene s = scene(); CardState state = s.target.getCurrentState();
+        for (ReplacementType event : ReplacementType.values()) {
+            if (event != ReplacementType.Tap && event != ReplacementType.ProduceMana && event != ReplacementType.DamageDone && event != ReplacementType.Destroy) assertTrue(state.mayHaveReplacementEffects(event));
+        }
+        assertTrue(state.mayHaveReplacementEffects(null));
+    }
+    public boolean[] plainAdmissionObservation() {
+        Scene s = scene(); return new boolean[]{s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.DamageDone), s.target.getCurrentState().mayHaveReplacementEffects(ReplacementType.Destroy)};
+    }
+}

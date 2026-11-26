@@ -1,5 +1,20 @@
 # Card support and evidence
 
+A focused damage/destroy precheck also remains **unpromoted**. Both baseline and
+prototype pass 16 native resolution controls; the prototype passes 297 retained
+replacement/keyword/damage cases, with its new negative path separately observed.
+All 510 fixed diagnostic invocations pass. The median runner time is 0.94% higher,
+and median whole-worker time is only 0.38% lower, missing the predeclared 10%
+criterion. The original 1,271/90 gate was not attempted.
+
+Baseline event counters attribute 905,080 of 29,829,155 collection fetches (3.03%)
+to damage/destroy; BeginPhase accounts for 14,424,216 (about 48%). Counts describe
+this supplied 85-case selection, not CPU cost, allocations or general game usage.
+Separate guard counts and existing-recording caller attribution are preserved.
+The final-type fixture error, missing-prevention descriptor, and wrong analysis
+epoch were corrected without dropping assertions or repeating gameplay for the
+analysis repair. See [evidence](../engine/damage_precheck_evidence.json).
+
 An isolated scalar-lookup no-op experiment remains **unpromoted**. Both variants
 pass nine callback/freeze contracts, and all 510 invocations in a preplanned
 six-run diagnostic protocol pass with exact cases/parameters and unchanged

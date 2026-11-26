@@ -1,0 +1,53 @@
+"""Evaluate every fixed damage/destroy precheck diagnostic trial against its predeclared criteria."""
+from collections import Counter
+from pathlib import Path
+import hashlib
+import json
+import statistics
+import xml.etree.ElementTree as ET
+
+ROOT=Path.cwd()
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+protocol=load(WORK/'damage-precheck4918-diagnostic85-protocol-v1.json')
+output=WORK/'damage-precheck4918-diagnostic85-analysis-v2.json'
+assert not output.exists()
+assert protocol['cases_per_run']==85 and protocol['worker_seconds']==90
+assert protocol['actual_processors_required']==2 and protocol['max_java_heap_bytes']==2147483648
+
+def cases(path,classes=None):
+    result=Counter()
+    for cls in ET.parse(path).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:continue
+        for method in cls.findall('test-method'):
+            assert method.get('status')=='PASS'
+            if method.get('is-config')!='true':
+                result[(cls.get('name')+'.'+method.get('name'),tuple((v.text or '').strip() for v in method.findall('./params/param/value')))]+=1
+    return result
+
+report=ROOT/'data/engine-builds/27bb401949a2401ab440509f215df73e/source/forge-gui-desktop/target/surefire-reports/testng-results.xml'
+expected=cases(report,set(protocol['classes']));assert sum(expected.values())==85
+rows=[]
+for item in protocol['order']:
+    directory=WORK/('damage-precheck4918-diagnostic85-'+item['mode']+'-'+item['trial']+'-v1')
+    result=load(directory/'outcome.json');process=load(directory/'process.json')
+    assert result['mode']==item['mode'] and result['trial']==item['trial']
+    assert result['counts']==dict(total=85,passed=85,failed=0,skipped=0)
+    assert process['status']=='finished' and process['returncode']==0 and process['elapsed_seconds']<=90
+    assert result['diagnostic_selection_only'] and not result['original_resolution_gate_attempted']
+    assert result['exact_method_parameter_counter'] and result['production_origins_verified']
+    assert not result['configuration_failures'] and not result['configuration_skips'] and not result['testng_status']
+    assert result['actual_processors']==2 and result['actual_heap_bytes']==2147483648
+    assert sha(directory/'reports/testng-results.xml')==result['report_sha256']
+    assert cases(directory/'reports/testng-results.xml')==expected
+    rows.append({'mode':item['mode'],'trial':item['trial'],'runner_seconds':result['runner_elapsed_seconds'],'worker_seconds':process['elapsed_seconds'],'outcome_sha256':sha(directory/'outcome.json'),'process_sha256':sha(directory/'process.json'),'report_sha256':result['report_sha256']})
+assert len(rows)==6
+medians={mode:{kind:statistics.median(r[kind] for r in rows if r['mode']==mode) for kind in ('runner_seconds','worker_seconds')} for mode in ('baseline','prototype')}
+reduction={kind:100*(1-medians['prototype'][kind]/medians['baseline'][kind]) for kind in ('runner_seconds','worker_seconds')}
+meets=all(value>=10 for value in reduction.values())
+frozen=load(WORK/'damage-precheck4918-epoch-v1/source-frozen-inputs.json')
+assert all(sha(ROOT/n)==h for n,h in frozen.items())
+result={'trials':rows,'medians':medians,'median_reduction_percent':reduction,'predeclared_ten_percent_criterion_met':meets,'all_510_diagnostic_invocations_passed':True,'exact_native_case_parameters':True,'protocol_sha256':sha(WORK/'damage-precheck4918-diagnostic85-protocol-v1.json'),'native_reference_report_sha256':sha(report),'decision':'Further full semantic validation is required before a full timing experiment or promotion.' if meets else 'Reject this optimization for promotion: the predeclared material-improvement criterion was not met. Do not retry original1271/90 with this change or cherry-pick the fastest trial.','original_resolution_workload':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'runtime_activated':False,'scope':'Finite diagnostic selection and three samples per variant only. Not a substitute/pass of original1271/90, universal card/rules correctness, full games or a reliable production-speedup guarantee.'}
+output.write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({k:v for k,v in result.items() if k not in ('trials','scope')}),flush=True)

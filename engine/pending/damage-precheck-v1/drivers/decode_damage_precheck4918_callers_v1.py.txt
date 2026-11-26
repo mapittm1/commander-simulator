@@ -1,0 +1,47 @@
+"""Attribute existing baseline samples to callers without rerunning gameplay."""
+from pathlib import Path
+from collections import Counter
+import importlib,json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _environment
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+SOURCE=WORK/'trackable-lookup4918-cpu85-v1';RUN=WORK/'damage-precheck4918-callers-v1';PROFILE=SOURCE/'runtime.jfr'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert file_hash(PROFILE)==load(SOURCE/'profile-file.json')['sha256']
+if sys.argv[1:]==[]:
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+ result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'decode.log',ProcessLimits(90,environment=_environment(RUN)));save(RUN/'process.json',result);assert result['status']=='finished' and result['returncode']==0,result;print(result)
+else:
+ assert sys.argv[1:]==['--worker']
+ settings=read_settings(ROOT/'data/engine-builds/27bb401949a2401ab440509f215df73e/engine-config.json')
+ java=importlib.import_module('jpype');java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2',convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ targets=('forge.game.card.CardState.getReplacementEffects','forge.game.card.CardState.buildStaticAbilities')
+ counters={n:Counter() for n in targets};selected=0;events=0
+ reader=java.JClass('jdk.jfr.consumer.RecordingFile')(java.JClass('java.nio.file.Paths').get(str(PROFILE)))
+ try:
+  while reader.hasMoreEvents():
+   event=reader.readEvent();events+=1;assert events<=100000
+   if str(event.getEventType().getName())!='jdk.ExecutionSample':continue
+   thread=event.getThread('sampledThread')
+   if thread is None or str(thread.getJavaName())!='main':continue
+   trace=event.getStackTrace();names=[]
+   if trace is not None:
+    for frame in trace.getFrames():
+     m=frame.getMethod()
+     if m is not None:names.append(str(m.getType().getName())+'.'+str(m.getName()))
+   if not any(n.startswith(('forge.ai.CommanderManaChainTest.','forge.ai.CommanderExertTransitionsTest.','forge.ai.CommanderCompositeModeCoverageTest.')) for n in names):continue
+   selected+=1
+   for target in targets:
+    if target not in names:continue
+    offset=names.index(target)
+    caller=next((n for n in names[offset+1:] if not n.startswith(('forge.game.card.CardState.','forge.game.card.Card.'))),'[no outer caller in recorded stack]')
+    counters[target][caller]+=1
+ finally:reader.close();java.shutdownJVM()
+ assert selected==load(SOURCE/'runtime-profile-summary.json')['samples_with_test_or_support_frame']
+ assert file_hash(PROFILE)==load(SOURCE/'profile-file.json')['sha256']
+ value={'recording_sha256':file_hash(PROFILE),'selected_samples':selected,'callers':{n:c.most_common() for n,c in counters.items()},'scope':'Caller attribution of existing CPU samples only. Recorded stacks may truncate; targets overlap and sampling is not call counts, allocation, reliable speedup or original1271/90 proof.'}
+ save(RUN/'outcome.json',value);print(json.dumps(value),flush=True)
