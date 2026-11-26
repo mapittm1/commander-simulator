@@ -1,0 +1,42 @@
+"""Prepare a one-source exact-native filtering experiment and mutation controls."""
+from pathlib import Path
+import hashlib,json,subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+BUILD=ROOT/'data/engine-builds/9c1f301a6ca54759855838c1fd2ed619'
+EXP=WORK/'native-filter4953-v1';EXP.mkdir()
+assert subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()=='ec739540c42a8ebe3d024c31f4511eaf19a6593d'
+assert not subprocess.check_output(['git','status','--porcelain']).strip()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def sha(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+paths=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')
+save(EXP/'root-inputs.json',{p:sha(ROOT/p) for p in paths if p})
+save(EXP/'source-ci.json',{'id':45813981215,'status':'completed','conclusion':'success','head_sha':'ec739540c42a8ebe3d024c31f4511eaf19a6593d'})
+name='forge-game/src/main/java/forge/game/card/CardLists.java'
+baseline=BUILD/'source'/name
+for folder in ('baseline','source'):
+ p=EXP/folder/name;p.parent.mkdir(parents=True);p.write_bytes(baseline.read_bytes())
+s=baseline.read_text(encoding='utf-8')
+old='''    public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+        return new CardCollection(IterableUtil.filter(cardList, filt));
+    }'''
+new='''    public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+        // Only this exact native class inherits the snapshot iterator and default
+        // spliterator. Unknown sources retain stream metadata and traversal callbacks.
+        if (cardList == null || cardList.getClass() != CardCollection.class) {
+            return new CardCollection(IterableUtil.filter(cardList, filt));
+        }
+        java.util.Objects.requireNonNull(filt);
+        final CardCollection result = new CardCollection();
+        for (final Card card : cardList) {
+            if (filt.test(card)) {
+                result.add(card);
+            }
+        }
+        return result;
+    }'''
+assert s.count(old)==1;s=s.replace(old,new)
+s=s.replace('return new CardCollection(IterableUtil.filter(cardList, f1.and(f2)));','return filter(cardList, f1.and(f2));')
+s=s.replace('return new CardCollection(IterableUtil.filter(cardList, IterableUtil.and(filt)));','return filter(cardList, IterableUtil.and(filt));')
+(EXP/'source'/name).write_text(s,encoding='utf-8',newline='\n')
+save(EXP/'proposal.json',{'scope':'Single CardLists source; iterator loop only for exact CardCollection, all unknown/other sources retain original stream callbacks. Predicate overload composition unchanged. No ColorSet or other overlays.','prior_distinction':'Earlier trait-filter-v2 used spliterator consumers for CardCollection, ArrayList and EMPTY as part of a six-source combination. This tests native snapshot iterator only, independently on4953.','semantic_gate':'24 new native controls plus all39 unchanged filter contracts, both variants; retain297 semantic controls before timings.','timing_gate':'Fixed85 diagnostic cases, sequential ABBAAB,90sec each,2CPU/2GiB. Promote only if every case passes and median runner and process time each improve by at least10percent. No original1271/90 retry without this improvement.','selected_runtime_changed':False})
+print('Prepared one-source proposal and frozen epoch.')

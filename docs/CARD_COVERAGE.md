@@ -1,5 +1,15 @@
 # Card support and evidence
 
+The follow-up exact-native filtering proposal is **not promoted**. All 63
+filter controls pass on both variants, including 24 new snapshot-mutation,
+exception, composition and subclass controls. The candidate also passes 297
+unchanged semantic cases. All six fixed 85-case trials pass with identical native
+case/parameter membership; median test/worker time reductions are 8.0%/5.5%,
+below the predeclared 10% requirement for each. Preserve the
+[unused patch, pending fixture and all reports](../engine/native_filter_evidence.json).
+No production or registry changes, original 1,271/90 retry or activation.
+Full-game validation remains a separate next step; this experiment does not prove it.
+
 A fresh allocation/CPU profile of 85 unchanged diagnostic cases passes with
 exact native method/parameter identities on the 4,953-case candidate. Sampled
 allocation weights point to collections, player-view filtering during game copies,

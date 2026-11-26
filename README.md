@@ -49,6 +49,9 @@ The selected runtime is unchanged. Tested performance shortcuts remain excluded.
 A fresh 85-case allocation diagnostic passes and identifies collection/view work
 in game copies for further investigation; [profile evidence](engine/allocation_profile_evidence.json)
 does not establish a speedup or satisfy the timed gate.
+The follow-up [native filtering experiment](engine/native_filter_evidence.json)
+passes all semantic and diagnostic cases but misses its 10% timing criterion
+(8.0% test-time and 5.5% worker-time median reductions). Its fast path is excluded.
 
 Packaged-test receipts preserve native parameter identities. The fix is verified
 against 15 formatting cases, 10 ignore-effect candidate/payment controls and 14

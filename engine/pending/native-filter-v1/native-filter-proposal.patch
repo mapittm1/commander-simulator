@@ -1,0 +1,33 @@
+--- a/forge-game/src/main/java/forge/game/card/CardLists.java
++++ b/forge-game/src/main/java/forge/game/card/CardLists.java
+@@ -328,15 +328,27 @@
+      *         criteria; may be empty, but never null.
+      */
+     public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> filt) {
+-        return new CardCollection(IterableUtil.filter(cardList, filt));
++        // Only this exact native class inherits the snapshot iterator and default
++        // spliterator. Unknown sources retain stream metadata and traversal callbacks.
++        if (cardList == null || cardList.getClass() != CardCollection.class) {
++            return new CardCollection(IterableUtil.filter(cardList, filt));
++        }
++        java.util.Objects.requireNonNull(filt);
++        final CardCollection result = new CardCollection();
++        for (final Card card : cardList) {
++            if (filt.test(card)) {
++                result.add(card);
++            }
++        }
++        return result;
+     }
+ 
+     public static CardCollection filter(Iterable<Card> cardList, Predicate<Card> f1, Predicate<Card> f2) {
+-        return new CardCollection(IterableUtil.filter(cardList, f1.and(f2)));
++        return filter(cardList, f1.and(f2));
+     }
+ 
+     public static CardCollection filter(Iterable<Card> cardList, Iterable<Predicate<Card>> filt) {
+-        return new CardCollection(IterableUtil.filter(cardList, IterableUtil.and(filt)));
++        return filter(cardList, IterableUtil.and(filt));
+     }
+ 
+     /**

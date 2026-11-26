@@ -1,0 +1,27 @@
+"""Apply the predeclared filtering threshold to all six unchanged diagnostic trials."""
+from pathlib import Path
+from statistics import median
+from collections import Counter
+import hashlib,json
+ROOT=Path.cwd();E=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research/native-filter4953-v1'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+assert all(sha(ROOT/n)==h for n,h in load(E/'root-inputs.json').items())
+assert all(sha(E/n)==h for n,h in load(E/'compiled-inputs.json').items())
+rows=[];expected=None
+for mode,trial in [('baseline','1'),('prototype','1'),('prototype','2'),('baseline','2'),('baseline','3'),('prototype','3')]:
+ d=E/('diagnostic-'+mode+'-'+trial);p=load(d/'process.json');j=load(d/'outcome.json')
+ assert p['status']=='finished' and p['returncode']==0
+ assert j['counts']==dict(total=85,passed=85,failed=0,skipped=0) and j['exact_method_parameter_counter']
+ assert j['processors']==2 and j['max_heap_bytes']==2147483648
+ assert not j['configuration_failures'] and not j['configuration_skips'] and not j['testng_status']
+ cases=Counter((r['method'],tuple(r.get('parameters',[]))) for r in j['methods'])
+ if expected is None:expected=cases
+ assert cases==expected
+ rows.append({'mode':mode,'trial':trial,'runner_seconds':j['runner_seconds'],'worker_seconds':p['elapsed_seconds'],'outcome_sha256':sha(d/'outcome.json'),'process_sha256':sha(d/'process.json'),'report_sha256':sha(d/'reports/testng-results.xml')})
+medians={mode:{key:median(r[key] for r in rows if r['mode']==mode) for key in ('runner_seconds','worker_seconds')} for mode in ('baseline','prototype')}
+reductions={key:100*(1-medians['prototype'][key]/medians['baseline'][key]) for key in ('runner_seconds','worker_seconds')}
+met=all(v>=10 for v in reductions.values())
+assert not met
+analysis={'status':'not_promoted_predeclared_improvement_criterion_unmet','trials':rows,'medians':medians,'median_reduction_percent':reductions,'required_reduction_percent_each':10,'criterion_met':met,'all_510_diagnostic_invocations_passed':True,'exact_method_parameter_identities_match_all_trials':True,'contracts_each_variant':63,'new_native_contracts_each_variant':24,'retained_prototype_cases':297,'original1271_gate_attempted':False,'production_changed':False,'scope':'Negative performance result for an isolated one-source filter proposal; no weakening of original1271/90, no activation, full legal-game or universal rules claim.'}
+(E/'analysis.json').write_text(json.dumps(analysis,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'medians':medians,'reductions':reductions,'criterion_met':met,'passed_diagnostic_invocations':510}),flush=True)

@@ -6,6 +6,13 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Preserve the unpromoted single-source native-filter experiment and 24 new
+  controlled-state regressions. Both variants pass all 63 filter controls; the
+  candidate retains 297 semantic controls and all six 85-case trials pass.
+  Median test/worker reductions of 8.0%/5.5% miss the predeclared 10% criterion.
+  Keep production, fixture registration, selected runtime and original 1,271/90
+  gate unchanged; retain all proposal inputs, reports and comparison evidence.
+
 - Profile 85 unchanged native diagnostic cases with bounded JFR allocation/CPU
   sampling; all pass with exact case identities and verified class origins.
   Preserve the initial preflight failure and corrected run. Collection/view
