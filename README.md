@@ -31,25 +31,25 @@ triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete. A reviewed candidate fixes lost remembered-card
 history, with controls for native life gain, repeated copies and isolation.
 
-The candidate passes 3,718 source and 4,918 native cases, plus 2,490 main packaged
-cases outside resolution and 405 additional packaged cases. Broader checks pass
-6,241 gameplay and 320 card/deck-loading cases. Catalog construction succeeds for
-32,636 identities; seven meld results are explicitly unavailable as standalone
-scripts. These finite checks and card construction do not prove universal rules
-correctness.
+The candidate passes 3,732 source and 4,932 native cases, retaining every previous
+case and adding 14 phase-replacement controls. Those 14 also pass through the
+regular packaged worker. All production class bytes match the prior candidate;
+the original resolution test/helper classfiles remain byte-identical.
 
-Fourteen phase-replacement regression cases are now registered for future builds,
-covering phase/player restrictions, live trait changes, copied games and implicit
-counter effects. The new recipe expects 4,932 native cases and 3,775 main packaged
-cases; full validation of that recipe is pending. The selected runtime is unchanged.
+Earlier evidence covers 2,490 main packaged cases outside resolution, 405 separate
+packaged cases, 6,241 gameplay cases and 320 card/deck-loading cases. Earlier catalog
+construction succeeds for 32,636 identities; seven meld results are explicitly
+unavailable as standalone scripts. These historical checks were not rerun for this
+regression-only build. Finite tests and card construction do not prove universal
+rules correctness.
 
-The original 1,271-case / 90-second gate remains unresolved. The full 3,761-case
+The original 1,271-case / 90-second gate remains unresolved. The full 3,775-case
 main packaged gate, full-game validation and candidate activation remain open.
 The selected runtime is unchanged. The tested performance fast paths remain
 unpromoted after missing their predeclared improvement criteria.
 
 See [coverage details](docs/CARD_COVERAGE.md),
-[validation evidence](engine/remembered_history_runtime_evidence.json),
+[validation evidence](engine/phase_regression_runtime_evidence.json),
 [performance diagnostics](engine/phase_precheck_evidence.json) and the
 [changelog](CHANGELOG.md).
 

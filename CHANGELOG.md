@@ -6,12 +6,24 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Pass all 3,732 fresh-source and 4,932 native cases with exact retained method
+  and parameter identities, adding 14 registered phase-replacement controls.
+  Pass all 14 through the regular packaged worker with 188 production origins
+  verified and byte-identical configuration restoration. Verify unchanged
+  production class bytes and 173 protected resolution/helper classfiles.
+- Preserve raw reports, inputs and class fingerprints in
+  engine/phase_regression_runtime_evidence.json. The rejected shortcut remains
+  excluded and the selected runtime unchanged. Original 1,271/90, full 3,775
+  packaged, full legal games, activation and universal rules support remain open.
+  Prior broad/catalog evidence is historical rather than rerun for this build.
+
 - Register 14 native phase-replacement regressions for future source builds and
   packaged checks. Cover Eon Hub, Solitary Confinement, live traits, copied games,
   unknown callbacks and shield/stun/finality replacements. The phase shortcut
   remains excluded. Expected totals become 4,932 native and 3,775 main packaged
   cases; the original 1,271-case resolution group and 90-second deadline remain
-  unchanged. Full validation of the new recipe is pending; runtime stays selected
+  unchanged. Subsequent source/native and phase-group validation is recorded above;
+  the full packaged gate remains open. The runtime stays selected
   at the previously configured build.
 
 - Validate 14 paired native phase replacement controls: Eon Hub, Solitary

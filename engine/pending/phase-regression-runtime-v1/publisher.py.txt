@@ -1,0 +1,93 @@
+"""Publish exact source/native and packaged phase evidence without runtime activation."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+SOURCE=WORK/'source3732-v1';CANDIDATE=WORK/'phase-regression-candidate-v1';PACKAGED=WORK/'phase-regression-packaged-v1'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'])
+ci=load(CANDIDATE/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip() and ci['conclusion']=='success'
+assert all(sha(ROOT/n)==h for n,h in load(CANDIDATE/'source-frozen-inputs.json').items())
+source=load(SOURCE/'outcome.json');assert source['passed'] and source['counts']==dict(total=3732,passed=3732,failed=0,skipped=0) and source['exact_case_and_parameter_counter_matches']
+audit=load(CANDIDATE/'build-audit.json');assert audit['native_counts']==dict(total=4932,passed=4932,failed=0,skipped=0)
+assert audit['exact_native_method_and_parameter_counter_matches'] and not audit['production_class_deltas'] and audit['protected_resolution_and_helper_classfiles_identical']==173
+packaged=load(PACKAGED/'audit.json');assert packaged['counts']==dict(total=14,passed=14,failed=0,skipped=0) and packaged['native_method_and_parameter_counter_matches'] and packaged['configuration_restored_byte_identically']
+assert (ROOT/'config/engine_config.json').read_bytes()==(PACKAGED/'active-config-before.json').read_bytes()
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build'];run=ROOT/'data/runs'/packaged['run_id']
+index=ROOT/'engine/phase_regression_runtime_evidence.json';dest=ROOT/'engine/pending/phase-regression-runtime-v1';assert not index.exists() and not dest.exists();dest.mkdir();files={}
+def preserve(path,relative):
+ target=dest/relative;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target);assert sha(path)==sha(target);files[target.relative_to(ROOT).as_posix()]=sha(target)
+for directory,label in ((SOURCE,'source3732'),(CANDIDATE,'native-candidate'),(PACKAGED,'packaged-phase'),(run,'packaged-run')):
+ for path in sorted(directory.iterdir()):
+  if path.is_file() and path.suffix in ('.json','.log','.txt'):preserve(path,label+'/'+path.name)
+for name in ('build-recipe.json','engine-lock.json','engine-config.json','maven-build.log'):
+ preserve(build/name,'native4932/'+name)
+preserve(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml','native4932/testng-results.xml')
+preserve(run/'rules-reports/testng-results.xml','packaged-run/rules-reports/testng-results.xml')
+for name in ('prepare_source3732_v1.py','run_source3732_v1.py','build_phase_regression_native4932_v1.py','audit_build4932_v1.py','run_phase_regression_packaged_v1.py','audit_phase_regression_packaged_v1.py'):
+ preserve(WORK/name,'drivers/'+name+'.txt')
+preserve(Path(__file__),'publisher.py.txt')
+record={'status':'source_native_and_registered_phase_packaged_passed','source_ci':ci,'build_id':build.name,'source_counts':source['counts'],'native_counts':audit['native_counts'],'retained_prior_source_cases':3718,'retained_prior_native_cases':4918,'added_phase_cases':14,'source_case_parameters_exact':True,'native_audit':audit,'packaged_phase_audit':packaged,'selected_runtime_changed':False,'selected_runtime_native_cases':3295,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'full_main_packaged_expected_cases':3775,'full_main_packaged_passed':False,'scope':'Fresh source/native suites and new packaged phase group only. All production class bytes match prior4918 candidate and173 protected resolution/helper classfiles match. Prior broad/catalog results are historical, not new runs here. Original1271/90, full3775 packaged, full legal games, activation and universal card/rules correctness remain open.','files':files}
+save(index,record)
+for n,h in files.items():assert sha(ROOT/n)==h
+p=ROOT/'README.md';text=p.read_text(encoding='utf-8')
+old="""The candidate passes 3,718 source and 4,918 native cases, plus 2,490 main packaged
+cases outside resolution and 405 additional packaged cases. Broader checks pass
+6,241 gameplay and 320 card/deck-loading cases. Catalog construction succeeds for
+32,636 identities; seven meld results are explicitly unavailable as standalone
+scripts. These finite checks and card construction do not prove universal rules
+correctness.
+
+Fourteen phase-replacement regression cases are now registered for future builds,
+covering phase/player restrictions, live trait changes, copied games and implicit
+counter effects. The new recipe expects 4,932 native cases and 3,775 main packaged
+cases; full validation of that recipe is pending. The selected runtime is unchanged.
+
+The original 1,271-case / 90-second gate remains unresolved. The full 3,761-case
+main packaged gate, full-game validation and candidate activation remain open."""
+new="""The candidate passes 3,732 source and 4,932 native cases, retaining every previous
+case and adding 14 phase-replacement controls. Those 14 also pass through the
+regular packaged worker. All production class bytes match the prior candidate;
+the original resolution test/helper classfiles remain byte-identical.
+
+Earlier evidence covers 2,490 main packaged cases outside resolution, 405 separate
+packaged cases, 6,241 gameplay cases and 320 card/deck-loading cases. Earlier catalog
+construction succeeds for 32,636 identities; seven meld results are explicitly
+unavailable as standalone scripts. These historical checks were not rerun for this
+regression-only build. Finite tests and card construction do not prove universal
+rules correctness.
+
+The original 1,271-case / 90-second gate remains unresolved. The full 3,775-case
+main packaged gate, full-game validation and candidate activation remain open."""
+assert text.count(old)==1;text=text.replace(old,new,1).replace('[validation evidence](engine/remembered_history_runtime_evidence.json)','[validation evidence](engine/phase_regression_runtime_evidence.json)');p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'docs/CARD_COVERAGE.md';text=p.read_text(encoding='utf-8');marker='# Card support and evidence\n\n';assert text.count(marker)==1
+entry="""The registered phase controls now pass in a fresh **3,732-case source suite** and
+**4,932-case native build**, with exact case/parameter counters retaining all
+3,718 / 4,918 prior cases. The regular packaged phase group also passes all 14
+cases with 188 production-class origins verified and exact configuration restoration.
+All production class bytes and 173 protected resolution/helper classfiles match the
+prior candidate. Source inputs retain 2,168 production files, 182 selected test
+inputs, 542 total Java tests and 350 card inputs. The phase shortcut is excluded.
+See [raw runtime evidence](../engine/phase_regression_runtime_evidence.json).
+The original 1,271/90 and full 3,775 packaged gate remain open, as do full legal
+games, candidate activation and universal rules correctness. Previous broad/catalog
+results remain historical; they were not rerun for this regression-only build.
+
+"""
+text=text.replace(marker,marker+entry,1).replace('and 3,775 main packaged cases. Full validation is pending. The existing 1,271-case','and 3,775 main packaged cases. Source/native and the phase group pass as described\nabove; the full packaged gate remains open. The existing 1,271-case',1);p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'CHANGELOG.md';text=p.read_text(encoding='utf-8');marker='## Unreleased\n\n';assert text.count(marker)==1
+entry="""- Pass all 3,732 fresh-source and 4,932 native cases with exact retained method
+  and parameter identities, adding 14 registered phase-replacement controls.
+  Pass all 14 through the regular packaged worker with 188 production origins
+  verified and byte-identical configuration restoration. Verify unchanged
+  production class bytes and 173 protected resolution/helper classfiles.
+- Preserve raw reports, inputs and class fingerprints in
+  engine/phase_regression_runtime_evidence.json. The rejected shortcut remains
+  excluded and the selected runtime unchanged. Original 1,271/90, full 3,775
+  packaged, full legal games, activation and universal rules support remain open.
+  Prior broad/catalog evidence is historical rather than rerun for this build.
+
+"""
+text=text.replace(marker,marker+entry,1).replace('  unchanged. Full validation of the new recipe is pending; runtime stays selected','  unchanged. Subsequent source/native and phase-group validation is recorded above;\n  the full packaged gate remains open. The runtime stays selected',1);p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'.gitattributes';text=p.read_text(encoding='utf-8')+'engine/phase_regression_runtime_evidence.json -text whitespace=cr-at-eol\nengine/pending/phase-regression-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(text,encoding='utf-8',newline='\n')
+print(json.dumps({'build_id':build.name,'artifacts':len(files),'source':3732,'native':4932,'packaged_phase':14,'activated':False}),flush=True)

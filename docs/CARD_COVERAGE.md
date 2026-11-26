@@ -1,9 +1,22 @@
 # Card support and evidence
 
+The registered phase controls now pass in a fresh **3,732-case source suite** and
+**4,932-case native build**, with exact case/parameter counters retaining all
+3,718 / 4,918 prior cases. The regular packaged phase group also passes all 14
+cases with 188 production-class origins verified and exact configuration restoration.
+All production class bytes and 173 protected resolution/helper classfiles match the
+prior candidate. Source inputs retain 2,168 production files, 182 selected test
+inputs, 542 total Java tests and 350 card inputs. The phase shortcut is excluded.
+See [raw runtime evidence](../engine/phase_regression_runtime_evidence.json).
+The original 1,271/90 and full 3,775 packaged gate remain open, as do full legal
+games, candidate activation and universal rules correctness. Previous broad/catalog
+results remain historical; they were not rerun for this regression-only build.
+
 Fourteen phase-replacement controls are now registered in
 `engine/tests/CommanderPhaseReplacementTest.java`, with hash verification in both
 the source-build and packaged-test registries. The new recipe expects 4,932 native
-and 3,775 main packaged cases. Full validation is pending. The existing 1,271-case
+and 3,775 main packaged cases. Source/native and the phase group pass as described
+above; the full packaged gate remains open. The existing 1,271-case
 resolution group and 90-second worker limit are unchanged. The rejected phase
 shortcut is excluded; the selected runtime remains unchanged. These supplied-board
 controls exercise replacement handling, not complete legal turn histories.

@@ -1,0 +1,46 @@
+"""Prepare the unchanged production tree plus fourteen registered phase cases."""
+from collections import Counter
+from pathlib import Path
+import json,re,shutil,subprocess,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'source3732-v1';PRIOR=WORK/'source3718-v1';BASE=PRIOR/'source'
+BUILD=ROOT/'data/engine-builds/27bb401949a2401ab440509f215df73e'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+ci=load(WORK/'phase-registry-published-ci-v1.json')
+assert ci['conclusion']=='success' and ci['status']=='completed'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert not subprocess.check_output(['git','status','--porcelain'])
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4932
+production=load(PRIOR/'production-inputs.json');cards=load(PRIOR/'card-inputs.json');selected=load(PRIOR/'test-inputs.json')
+assert len(production)==2168 and len(cards)==350 and len(selected)==181
+assert all(file_hash(BASE/n)==h for n,h in {**production,**cards,**selected}.items())
+prior=load(PRIOR/'outcome.json');assert prior['passed'] and prior['counts']==dict(total=3718,passed=3718,failed=0,skipped=0)
+paths=filter(None,subprocess.check_output(['git','ls-files','-z']).decode('utf-8').split('\0'));frozen={n:file_hash(ROOT/n) for n in paths}
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+source=RUN/'source';modules={p.parent.resolve() for p in BASE.glob('*/pom.xml')}|{BASE.resolve()}
+shutil.copytree(BASE,source,ignore=lambda d,n:['target'] if Path(d).resolve() in modules and 'target' in n else [])
+assert not list(source.glob('*/target'))
+before_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(before_tests)==541
+builder._copy_regressions(source)
+assert all(file_hash(source/n)==h for n,h in before_tests.items())
+assert all(file_hash(source/n)==h for n,h in production.items())
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(all_tests)==542
+fixture='forge-gui-desktop/src/test/java/forge/ai/CommanderPhaseReplacementTest.java'
+assert set(all_tests)-set(before_tests)=={fixture}
+assert all_tests[fixture]==recipe['commander_phase_replacement_test_sha256']
+expected=Counter((v['method'],tuple(v['parameters'])) for v in prior['cases']);assert sum(expected.values())==3718
+names=re.findall(r'@Test\s+public void (\w+)\(', (source/fixture).read_text(encoding='utf-8'))
+assert len(names)==len(set(names))==14
+added=Counter(('forge.ai.CommanderPhaseReplacementTest.'+n,()) for n in names)
+assert not set(added)&set(expected);expected.update(added)
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+selectors=load(PRIOR/'selection.json')['suite']['classes'];assert 'CommanderPhaseReplacementTest' not in selectors
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':{'classes':[*selectors,'CommanderPhaseReplacementTest'],'expected_cases':3732,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')},'changed_sources':[],'fresh_target_directories':True,'scope':'All3718 prior source cases plus14 phase replacement controls, exact method/parameter membership. Production sources unchanged; not original1271/90, native4932, activation or universal rules proof.'})
+selected[fixture]=file_hash(source/fixture)
+for name,value in [('test-inputs.json',selected),('production-inputs.json',production),('selected-test-inputs.json',all_tests),('card-inputs.json',cards),('root-inputs.json',frozen),('source-ci.json',ci)]:save(RUN/name,value)
+save(RUN/'preparation.json',{'passed':True,'production_sources':2168,'changed_sources':0,'all_java_test_sources_frozen':542,'selected_test_inputs':182,'card_inputs':350,'expected_cases':3732,'retained_prior_cases':3718,'new_cases':14,'all_prior_test_bytes_unchanged':True})
+print('Fresh source prepared:2168 unchanged production,542 Java tests,182 selected inputs,350 cards,3732 cases.',flush=True)
