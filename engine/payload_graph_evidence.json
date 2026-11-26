@@ -293,10 +293,10 @@
   },
   "original_resolution_cases": 1271,
   "original_resolution_worker_seconds": 90,
-  "registered_recipe_sha256": "777c623d22fde11df586220f5c5888558af919aa1b09d9d3fec3f15c5c33d811",
+  "registered_recipe_sha256": "41329eedb674a82184a4661fefa5bc8f241f3e61f2272246ab23662992b47100",
   "registered_patch_sha256": "1d780e4623a098f5a04b0b2a1606ae10ffe8fa1bd49c29c50b6bb471fbc51dfb",
   "registered_fixture_sha256": {
-    "CommanderPayloadGraphTest.java": "3f546652e3257a7b9c168d6bf48011a0674500f57ccbec4b47ae695975167f56",
+    "CommanderPayloadGraphTest.java": "8075c124ef2d8aa554da1a82bf709dfbb5dbe57b44ebdcd6dc7a3937bae8ac56",
     "CommanderPayloadMapTest.java": "59dfb1c44b5b9a35ae475f798f8991c800f298dc8ebd1e78b96260e510b68f7a",
     "CommanderPayloadDamageTest.java": "57123b2ab54d0760bf87397ee45bcb396132b05483ff7c957e5fd820c55bca73"
   },
@@ -586,7 +586,19 @@
     "engine/pending/payload-graph-v1/drivers/run_payload_graph_registration_controls_v1.py.txt": "ba4343b0830794998b61e95ef9dcdeef52d53d4bb0b0dabdb6795555520f0dae",
     "engine/pending/payload-graph-v1/drivers/run_payload_graph_registration_controls_v2.py.txt": "4f99d318e4af5cb63b60454cff5a010d502851262ee1cb73ab06d32db1f20c69",
     "engine/pending/payload-graph-v1/drivers/register_payload_graph_v1.py.txt": "56fcd4ff484257ab7a39c5d2415a295bfb549965a2aab1626a3848a5dd783369",
-    "engine/pending/payload-graph-v1/baseline-recipe.json": "8c62305e6303377b167cc6c7b9f3e7350065af430271ca3cf40ea140c91a5e4a"
+    "engine/pending/payload-graph-v1/baseline-recipe.json": "8c62305e6303377b167cc6c7b9f3e7350065af430271ca3cf40ea140c91a5e4a",
+    "engine/pending/payload-graph-source-checkstyle-v1/driver.py.txt": "54561c51206117bf6345b0c1a7f7dcd3c155bea14ee49fbce476acc21f6e1ffb",
+    "engine/pending/payload-graph-source-checkstyle-v1/maven-build.log": "713090f2cdf84a15b8fc92ddf5caba23f6cd8a2f51e1c66aa7ce74e149e9dd79",
+    "engine/pending/payload-graph-source-checkstyle-v1/production-inputs.json": "2d2c119f36d0d4ace137512be400e8bcd37db5771e3d94f304f491d8c5ff5158",
+    "engine/pending/payload-graph-source-checkstyle-v1/test-inputs.json": "248388195cc231d80cbec7c208b422c573820dea96eac927350b8a7e3e68ac3f",
+    "engine/pending/payload-graph-source-checkstyle-v1/card-inputs.json": "21e1f5507346ab203480148bd447be3ac21ad7b0a08fa098b4e7013b4190a9c7",
+    "engine/pending/payload-graph-source-checkstyle-v1/selection.json": "4a8377bd9b92263e9f375747128de6b92dda0c3dfcc2d341f2c56d74fee30004",
+    "engine/pending/payload-graph-source-checkstyle-v1/source-ci.json": "444c28560f8256f6f956da027697c4f7edeb4fa1c4bcc8337ce0542dd2f5f282",
+    "engine/pending/payload-graph-source-checkstyle-v1/source-epoch.json": "b82ddd00475912db0089cda09b8a8e67155d496e3894647ddb59e70d37305fbe",
+    "engine/pending/payload-graph-source-checkstyle-v1/source-frozen-inputs.json": "5701438d532822cc6620f116137ac64f17ef61004700c642e6326ecaa697cf3e",
+    "engine/pending/payload-graph-source-checkstyle-v1/CommanderPayloadGraphTest.before.java.txt": "3f546652e3257a7b9c168d6bf48011a0674500f57ccbec4b47ae695975167f56",
+    "engine/pending/payload-graph-source-checkstyle-v1/CommanderPayloadGraphTest.after.java.txt": "8075c124ef2d8aa554da1a82bf709dfbb5dbe57b44ebdcd6dc7a3937bae8ac56",
+    "engine/pending/payload-graph-source-checkstyle-v1/repair.json": "16a729a448704ec03d1131ecb4774d0e5d3ec77a7156aa35843f30e8a76ddb2d"
   },
   "limits": [
     "Shared payload nodes are copied once per snapshot context; aliased opaque containers are traversed once per node, rather than once per reference.",
@@ -594,5 +606,20 @@
     "Supplied prevention events exercise the native resolver; full preceding legal histories, activation/payment/replacement ordering and complete card/rules coverage are unproven.",
     "The320 loading cases do not establish ability serialization. Retained families may overlap and are not unique-card counts.",
     "Fresh full builds, packaged/broader regressions, final catalog/health/full games and activation remain pending."
-  ]
+  ],
+  "source_build_followup": {
+    "failed_source_run": "source3679-v1",
+    "source_head": "5e5339a5b012c41881726e92d6bb3017f79987fc",
+    "reason": "Java Checkstyle rejects two unused imports in CommanderPayloadGraphTest.java.",
+    "failed_before_desktop_source_tests": true,
+    "fresh3679_case_result_exists": false,
+    "repair": "Remove only java.util.Optional and org.apache.commons.lang3.tuple.Pair imports.",
+    "previous_registered_fixture_sha256": "3f546652e3257a7b9c168d6bf48011a0674500f57ccbec4b47ae695975167f56",
+    "registered_fixture_sha256": "8075c124ef2d8aa554da1a82bf709dfbb5dbe57b44ebdcd6dc7a3937bae8ac56",
+    "all57_test_names_and_assertions_unchanged": true,
+    "production_patch_unchanged": true,
+    "retry_pending_source_cases": 3679,
+    "native_cases_still_pending": 4879,
+    "main_packaged_cases_still_pending": 3722
+  }
 }

@@ -26,6 +26,12 @@ difference.
 
 ## Card coverage
 
+The first expanded source build stopped before desktop tests because Java
+Checkstyle found two unused imports in a new fixture. Those imports are removed
+and checksums refreshed; fresh 3,679-case source validation remains pending.
+The failed build log and exact import-only repair are preserved in the payload
+graph evidence.
+
 A generic payload-copy correction preserves shared mutable event state and
 supported container cycles in AI worlds. The baseline fails 22 of 26 graph checks
 and 4 of 5 native prevention-event checks; the correction passes all of them.

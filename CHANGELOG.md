@@ -6,6 +6,12 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Remove two unused Java imports caught by the expanded source build and refresh
+  its registered fixture checksum. Preserve the failed Checkstyle log and exact
+  import-only repair; no desktop source cases ran, and fresh 3,679-case source
+  validation remains pending. All test names/assertions and production code stay
+  unchanged.
+
 - Preserve shared mutable event-payload references and supported container cycles
   in AI snapshots; retain independent field-owned containers and original/sibling
   worlds. Remove newly memoized payload containers after copy failures without
