@@ -7,6 +7,7 @@ from commander.decks.deck_store import save_deck
 from commander.decks.decks import prepare_deck, read_decklist
 from commander.engine.forge_config import EngineSettings
 from commander.engine.forge_decks import card_index, coverage
+from commander.engine.rules_admission import check_rules_admission
 from commander.rules.brackets import require_review_attestation, save_bracket_review
 
 
@@ -29,7 +30,7 @@ def import_reviewed_pod(
             reasons = report.get("errors", []) + report.get("blockers", [])
             raise ValueError(f"{path.name}: {report['status']}: " + "; ".join(reasons))
         prepared.append(deck)
-    settings.verify()
+    engine = settings.verify()
     index = card_index(settings.home / "res/cardsfolder/cardsfolder.zip")
     for number, deck in enumerate(prepared):
         report = coverage({"id": number, "cards": deck["cards"]}, index)
@@ -38,6 +39,7 @@ def import_reviewed_pod(
                 f"{files[number].name}: unsupported engine cards: "
                 + ", ".join(report["missing"])
             )
+    check_rules_admission(engine, prepared)
     seats = []
     for path, deck in zip(files, prepared):
         deck_id = save_deck(connection, path.stem, bracket, deck)

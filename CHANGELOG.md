@@ -6,6 +6,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reject confirmed rules errors separately from script presence. Add a bounded
+  identity-based policy requiring exact reviewed JAR/card-archive pairs for
+  B'Elanna Torres; version labels, capability claims and names cannot approve it.
+- Check known issues after legality and before pod storage or game export, freeze
+  applicable policy/review hashes, and recheck immediately before launch. Changed
+  or revoked reviews stop execution; unaffected frozen evidence stays unchanged.
+  Reverify actual engine fingerprints under the engine profile lock before launch
+  and reject an engine that changed after admission.
+- Pass seven new native lifecycle controls alongside all ten retained Oracle
+  cases: paid ownership/control changes, copied activations with/without Abundance,
+  and later activation after a draw. Preserve source, exact membership and reports
+  in engine/belanna_lifecycle_evidence.json. New controls await global registration;
+  selected runtime and the original 1,271/90 gate remain unchanged.
+- Add 14 offline policy/admission tests. The full quality gate passes 504 tests
+  and 864 subtests with 45 opt-in skips. Verify the actual selected engine rejects
+  the confirmed issue and the reviewed candidate carries a matching receipt.
+
 - Build the B'Elanna Torres repair from fresh patched source: all 4,963 native
   invocations pass, retaining exactly all prior 4,953 method/parameter identities
   plus ten new cases. All 18,068 packaged classfiles remain byte-identical and

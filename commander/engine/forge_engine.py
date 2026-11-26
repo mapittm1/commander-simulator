@@ -18,6 +18,10 @@ from commander.engine.printing_admission import (
     check_printing_choices,
     verify_printing_evidence,
 )
+from commander.engine.rules_admission import (
+    check_rules_admission,
+    verify_rules_admission,
+)
 from commander.paths import DATA_ROOT
 from commander.rules.brackets import load_policy, require_bracket_review
 
@@ -159,6 +163,7 @@ def prepare_game(connection, settings, seats) -> dict:
     reports = [coverage(seat["revision"], index) for seat in prepared]
     if any(report["missing"] for report in reports):
         raise ValueError("Engine card coverage failed: " + json.dumps(reports))
+    rules = check_rules_admission(lock, [seat["revision"] for seat in prepared])
     decks = [
         serialize_deck(seat["revision"], index, number)
         for number, seat in enumerate(prepared, 1)
@@ -168,6 +173,8 @@ def prepare_game(connection, settings, seats) -> dict:
     )
     check_game_evidence(connection, prepared)
     result = {"engine": lock, "seats": prepared, "coverage": reports, "decks": decks}
+    if rules is not None:
+        result["rules_admission"] = rules
     if printing is not None:
         result["printing_admission"] = printing
     return result
@@ -234,6 +241,8 @@ def game_evidence(inputs: dict) -> dict:
         "seats": seats,
         "coverage": inputs["coverage"],
     }
+    if "rules_admission" in inputs:
+        result["rules_admission"] = inputs["rules_admission"]
     if "printing_admission" in inputs:
         result["printing_admission"] = {
             key: inputs["printing_admission"][key] for key in EVIDENCE_FIELDS
@@ -247,10 +256,18 @@ def _execute_game(settings, inputs, seed, game_clock) -> dict:
     _write_inputs(run, inputs, seed, game_clock)
     try:
         with _engine_profile(settings, run):
+            engine = settings.verify()
+            if engine != inputs["engine"]:
+                raise ValueError("Pinned engine changed after admission; prepare again")
+            verify_rules_admission(
+                engine,
+                [seat["revision"] for seat in inputs["seats"]],
+                inputs.get("rules_admission"),
+            )
             if "printing_admission" in inputs:
                 verify_printing_evidence(settings, inputs["printing_admission"])
             process = run_bounded(
-                _command(settings, inputs["engine"], run, seed, game_clock),
+                _command(settings, engine, run, seed, game_clock),
                 settings.home,
                 run / "forge.log",
                 ProcessLimits(game_clock + 90, environment=_environment(run)),

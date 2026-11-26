@@ -36,6 +36,18 @@ ten regressions. All ten also pass through the packaged worker. Only this card
 script changes; all 18,068 packaged classfiles remain identical. The candidate is
 not activated. See [failure and repair](engine/belanna_oracle_evidence.json) and
 [fresh build/package evidence](engine/belanna_runtime_evidence.json).
+Seven further lifecycle controls pass alongside the ten retained cases, including
+paid control changes, copied activations and repeated activation. These additional
+controls await global registration; [exact evidence](engine/belanna_lifecycle_evidence.json).
+
+Known rules errors are checked separately from script presence. B'Elanna decks
+are blocked on engine/card archive pairs without an exact review in
+`config/engine_rules_issues.json`. The reviewed candidate clears this specific
+issue; it remains unselected by default. Admission runs after legality checks,
+before pod storage or game launch, and rechecks the policy before each process.
+Receipts freeze the policy and review evidence hashes for affected decks. This
+does not certify other interactions or retroactively recompute old results.
+
 
 The reviewed candidate fixes remembered-card history and multiplayer elimination
 valuation. It passes 3,753 source and 4,953 native cases. Fresh checks also pass

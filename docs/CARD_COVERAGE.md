@@ -1,5 +1,14 @@
 # Card support and evidence
 
+Known rules issues now have a separate admission policy keyed by stable card ID
+and exact JAR/card-archive pairs. The selected older runtime cannot silently admit
+B'Elanna decks with the confirmed replacement error. The reviewed candidate clears
+that issue, with policy/proof hashes retained and checked again before launch.
+The policy does not grant universal rules support or change the selected runtime.
+Seven additional lifecycle controls pass with the ten retained Oracle cases;
+[reports](../engine/belanna_lifecycle_evidence.json) preserve paid control changes,
+copy/replacement outcomes and later activation. These seven await registration.
+
 B'Elanna Torres now has a fresh, separately built definition repair candidate.
 The original fails one of ten native supplied-choice scenarios: Abundance puts
 an artifact into hand without drawing and wrongly suppresses the two counters.
