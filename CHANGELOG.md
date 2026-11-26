@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register 14 native phase-replacement regressions for future source builds and
+  packaged checks. Cover Eon Hub, Solitary Confinement, live traits, copied games,
+  unknown callbacks and shield/stun/finality replacements. The phase shortcut
+  remains excluded. Expected totals become 4,932 native and 3,775 main packaged
+  cases; the original 1,271-case resolution group and 90-second deadline remain
+  unchanged. Full validation of the new recipe is pending; runtime stays selected
+  at the previously configured build.
+
 - Validate 14 paired native phase replacement controls: Eon Hub, Solitary
   Confinement, live trait changes, repeated game copies and unknown callbacks.
   Retain all 297 existing replacement/keyword/damage cases.

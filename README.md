@@ -38,6 +38,11 @@ cases outside resolution and 405 additional packaged cases. Broader checks pass
 scripts. These finite checks and card construction do not prove universal rules
 correctness.
 
+Fourteen phase-replacement regression cases are now registered for future builds,
+covering phase/player restrictions, live trait changes, copied games and implicit
+counter effects. The new recipe expects 4,932 native cases and 3,775 main packaged
+cases; full validation of that recipe is pending. The selected runtime is unchanged.
+
 The original 1,271-case / 90-second gate remains unresolved. The full 3,761-case
 main packaged gate, full-game validation and candidate activation remain open.
 The selected runtime is unchanged. The tested performance fast paths remain

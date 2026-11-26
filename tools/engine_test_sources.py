@@ -287,6 +287,7 @@ REGRESSION_SOURCES = {
     "CommanderIgnoreEffectCopyTest.java": "commander_ignore_effect_copy_test_sha256",
     "CommanderIgnoreEffectCostTest.java": "commander_ignore_effect_cost_test_sha256",
     "CommanderRememberedHistoryTest.java": "commander_remembered_history_test_sha256",
+    "CommanderPhaseReplacementTest.java": "commander_phase_replacement_test_sha256",
     "PerfPatchUnitTest.java": "core_collection_test_sha256",
     "PerfPatchFollowUpTableTest.java": "core_collection_followup_test_sha256",
     "CommanderReplacementCacheInputsTest.java": "commander_replacement_cache_inputs_test_sha256",

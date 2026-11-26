@@ -1,5 +1,13 @@
 # Card support and evidence
 
+Fourteen phase-replacement controls are now registered in
+`engine/tests/CommanderPhaseReplacementTest.java`, with hash verification in both
+the source-build and packaged-test registries. The new recipe expects 4,932 native
+and 3,775 main packaged cases. Full validation is pending. The existing 1,271-case
+resolution group and 90-second worker limit are unchanged. The rejected phase
+shortcut is excluded; the selected runtime remains unchanged. These supplied-board
+controls exercise replacement handling, not complete legal turn histories.
+
 A phase-only replacement precheck remains **unpromoted**. Both variants pass 14
 native controls covering Eon Hub, Solitary Confinement, live trait changes, copied
 games and unknown callbacks. The candidate retains 297 existing interaction cases.
