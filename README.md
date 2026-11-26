@@ -38,7 +38,8 @@ not activated. See [failure and repair](engine/belanna_oracle_evidence.json) and
 [fresh build/package evidence](engine/belanna_runtime_evidence.json).
 Seven further lifecycle controls pass alongside the ten retained cases, including
 paid control changes, copied activations and repeated activation. These additional
-controls await global registration; [exact evidence](engine/belanna_lifecycle_evidence.json).
+controls are now registered for the expanded 4,970-case native suite; fresh build
+validation is pending. See [exact evidence](engine/belanna_lifecycle_evidence.json).
 
 Known rules errors are checked separately from script presence. B'Elanna decks
 are blocked on engine/card archive pairs without an exact review in
@@ -72,7 +73,7 @@ retained semantic checks, but both still fail that full-game completion test.
 They remain unregistered and unpromoted; [all reports](engine/query_guard_evidence.json)
 are preserved. Earlier tested performance shortcuts also remain excluded.
 
-The original 1,271-case / 90-second gate, full main packaged gate (expanded from 3,796 to 3,806 cases),
+The original 1,271-case / 90-second gate, full main packaged gate (expanded from 3,796 to 3,813 cases),
 broader full-game validation and candidate activation remain open. The selected
 runtime is unchanged. Historical catalog construction covers 32,636 starting
 identities; seven meld results lack standalone scripts. Construction and finite

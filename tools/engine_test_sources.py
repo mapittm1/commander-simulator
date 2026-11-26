@@ -288,6 +288,7 @@ REGRESSION_SOURCES = {
     "CommanderIgnoreEffectCostTest.java": "commander_ignore_effect_cost_test_sha256",
     "CommanderRememberedHistoryTest.java": "commander_remembered_history_test_sha256",
     "CommanderBelannaOracleTest.java": "commander_belanna_oracle_test_sha256",
+    "CommanderBelannaLifecycleTest.java": "commander_belanna_lifecycle_test_sha256",
     "CommanderPhaseReplacementTest.java": "commander_phase_replacement_test_sha256",
     "CommanderIgnoreEffectAiTest.java": "commander_ignore_effect_ai_test_sha256",
     "CommanderIgnoreEffectChoiceTest.java": "commander_ignore_effect_choice_test_sha256",

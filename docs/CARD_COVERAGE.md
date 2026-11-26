@@ -1,5 +1,11 @@
 # Card support and evidence
 
+The seven B'Elanna lifecycle controls are now registered with their exact tested
+source bytes. Fresh native builds expect 4,970 cases and the main packaged family
+expects 3,813, including a separate seven-case lifecycle partition. Fresh-build
+validation is pending; earlier statements below that they awaited registration
+are historical. The original 1,271/90 gate and selected runtime are unchanged.
+
 A legal B'Elanna/basic-land pod now completes through the actual known-issue
 admission and launch path (seed 42, 60-second clock), retaining its exact review
 receipt in saved inputs. The same legal pod is rejected by the older selected

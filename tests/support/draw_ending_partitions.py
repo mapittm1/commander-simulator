@@ -227,6 +227,7 @@ PARTITIONS = {
     "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),
     "remembered_history": ("forge.ai.CommanderRememberedHistoryTest",),
     "belanna_oracle": ("forge.ai.CommanderBelannaOracleTest",),
+    "belanna_lifecycle": ("forge.ai.CommanderBelannaLifecycleTest",),
     "phase_replacements": ("forge.ai.CommanderPhaseReplacementTest",),
     "ignore_effect_ai": (
         "forge.ai.CommanderIgnoreEffectAiTest",
@@ -262,6 +263,7 @@ EXPECTED_COUNTS = {
     "ignore_effect": 22,
     "remembered_history": 9,
     "belanna_oracle": 10,
+    "belanna_lifecycle": 7,
     "phase_replacements": 14,
     "ignore_effect_ai": 21,
 }

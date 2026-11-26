@@ -6,6 +6,14 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Register the seven previously passing B'Elanna lifecycle controls without
+  changing their tested source bytes. Include them in fresh-source/native builds
+  and a fixed seven-case packaged partition. The expanded registry expects 4,970
+  native and 3,813 main packaged cases; retain the original 1,271/90 unchanged.
+  Fresh build/package validation is pending. Card definitions, production Java
+  behavior, selected runtime and known-issue build approvals are unchanged.
+  The full Python quality gate passes 504 tests and 865 subtests, with 45 opt-in skips.
+
 - Verify actual legal-pod admission in both directions: the selected older engine
   rejects the confirmed issue before launch; the repaired candidate completes the
   same B'Elanna/basic-land pod at seed 42 with a 60-second clock. Preserve the

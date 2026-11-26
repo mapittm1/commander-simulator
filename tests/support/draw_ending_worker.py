@@ -146,6 +146,7 @@ SOURCES = {
     "CommanderIgnoreEffectCostTest": "commander_ignore_effect_cost_test_sha256",
     "CommanderRememberedHistoryTest": "commander_remembered_history_test_sha256",
     "CommanderBelannaOracleTest": "commander_belanna_oracle_test_sha256",
+    "CommanderBelannaLifecycleTest": "commander_belanna_lifecycle_test_sha256",
     "CommanderPhaseReplacementTest": "commander_phase_replacement_test_sha256",
     "CommanderIgnoreEffectAiTest": "commander_ignore_effect_ai_test_sha256",
     "CommanderIgnoreEffectChoiceTest": "commander_ignore_effect_choice_test_sha256",
@@ -503,7 +504,7 @@ def _results(listener):
 
 
 def main() -> None:
-    """Execute the fixed 3806-case packaged family."""
+    """Execute the fixed 3813-case packaged family."""
     settings = read_settings()
     run = Path(sys.argv[1]).resolve(strict=True)
     _, dependency = _inputs()
