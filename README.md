@@ -148,6 +148,18 @@ printing while preserving its previous identity and other printings.
 Compressed JSON Lines and JSON-array exports are both supported.
 An existing export can be imported with `python commander_simulator.py import file.json`.
 
+Bulk maintenance bounds metadata to 2 MiB, encoded input/downloads to 8 GiB,
+expanded input to 32 GiB, each record to 2,097,152 decoded characters, JSON
+nesting to 64 levels per record, and imports to 5,000,000 records. Downloads
+share a 30-minute cooperative deadline; imports share a six-hour cooperative
+deadline. Checks run around reads and between records; they cannot interrupt a
+blocked storage operation. Network reads retain their individual timeouts.
+Provider responses cannot increase these operator limits. Downloads use private
+temporary files and replace the cache after a complete bounded transfer; failed
+transfers preserve the previous cache. Content validation happens during import,
+so an invalid completed download can replace the cache while its database import
+rolls back. See [catalog refresh evidence](docs/CATALOG_INGESTION.md).
+
 The database lives at `data/cards.sqlite3`, alongside cached exports. That directory
 is excluded from Git. Override the database path with `--database PATH` before
 the subcommand. No scheduled updates run; rerun `sync` to refresh the catalog.

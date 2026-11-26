@@ -1,5 +1,14 @@
 # Card support and evidence
 
+The November 26 Oracle refresh retains 39,412 catalog records and 32,643 marked
+Commander-legal identities. Both selected and candidate archives match scripts
+for 32,636; the remaining seven are non-starting meld results. No legal identity
+was added or removed relative to the preserved November 20 snapshot. Oracle text
+changed for Hit It! and B'Elanna Torres, Scrapper; their interaction correctness
+is not established by this audit. See [refresh scope and receipts](CATALOG_INGESTION.md).
+Earlier statements below that the catalog remained unchanged describe those
+historical validation runs, before this refresh.
+
 Two more generic query proposals are **not promoted**. The native Self-first
 restriction guard passes 24 controls on both baseline/candidate and 297 retained
 semantic cases. The default-zone query guard passes 21 controls on both variants,

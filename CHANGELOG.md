@@ -6,6 +6,21 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Bound catalog metadata, downloads, decompression, record size, nesting, record
+  count and cooperative operation duration. Stream JSON arrays and JSON Lines
+  without rewinding decompression; keep shared lexical depth state across chunks.
+- Download through private temporary files with bounded transfer validation and
+  atomic cache replacement. Reject imports inside a caller transaction; roll back
+  catalog updates and freshness receipts on malformed or excessive input.
+- Add 26 offline tests for exact limits, overflow, malformed/truncated input,
+  transaction preservation, rollback, approved endpoints and shared deadlines.
+  The full quality gate passes 490 tests and 845 subtests, with 45 opt-in skips.
+- Refresh the local Oracle export to 39,412 records and audit both runtimes:
+  32,636 Commander-legal starting identities match scripts; seven separately
+  classified meld results lack standalone scripts. Two Oracle text changes need
+  interaction review; matching definitions does not establish rules correctness.
+  Preserve refresh scope and receipt identifiers in docs/CATALOG_INGESTION.md.
+
 - Preserve two independent unpromoted query guards. Native Self-first restriction
   controls pass 24 cases per variant and 297 retained cases. The default-zone
   query passes 21 per variant, 237 static/trait/filter and 297 retained cases;
