@@ -1,0 +1,86 @@
+"""Preserve a rejected optimization and bounded unchanged-baseline CPU evidence."""
+from pathlib import Path
+import difflib
+import hashlib
+import json
+import shutil
+import subprocess
+
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'])
+epoch=WORK/'trackable-lookup4918-epoch-v1';ci=load(epoch/'source-ci.json')
+assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert all(sha(ROOT/n)==h for n,h in load(epoch/'source-frozen-inputs.json').items())
+analysis=load(WORK/'trackable-lookup4918-diagnostic85-analysis-v1.json')
+assert not analysis['predeclared_ten_percent_criterion_met'] and analysis['all_510_diagnostic_invocations_passed']
+profile=WORK/'trackable-lookup4918-cpu85-v1'
+assert load(profile/'outcome.json')['counts']==dict(total=85,passed=85,failed=0,skipped=0)
+assert load(profile/'decode-process.json')['returncode']==0
+profile_meta=load(profile/'profile-file.json');summary=load(profile/'runtime-profile-summary.json')
+assert sha(profile/'runtime.jfr')==profile_meta['sha256']==summary['profile_sha256']
+prior=ROOT/'engine/pending/remembered-history-runtime-v1/native4918/testng-results.xml'
+assert sha(prior)==analysis['native_reference_report_sha256']
+for mode in ('baseline','prototype'):
+ assert load(WORK/('trackable-lookup4918-contracts-'+mode+'-v1')/'outcome.json')['counts']==dict(total=9,passed=9,failed=0,skipped=0)
+index=ROOT/'engine/lookup_dispatch_evidence.json';dest=ROOT/'engine/pending/lookup-dispatch-v1';assert not index.exists() and not dest.exists();dest.mkdir();files={}
+def preserve(source,relative):
+ target=dest/relative;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(source,target);assert sha(source)==sha(target);files[target.relative_to(ROOT).as_posix()]=sha(target)
+for folder in sorted(WORK.glob('trackable-lookup4918-*')):
+ if not folder.is_dir():continue
+ for source in sorted(folder.iterdir()):
+  if source.is_file() and source.suffix in ('.json','.log','.txt','.java'):
+   preserve(source,folder.name+'/'+source.name+('.txt' if source.suffix=='.java' else ''))
+ for source in folder.glob('reports/testng-results.xml'):preserve(source,folder.name+'/reports/testng-results.xml')
+ for sub in ('baseline','source'):
+  for source in (folder/sub).rglob('*.java'):preserve(source,folder.name+'/'+source.relative_to(folder).as_posix()+'.txt')
+for name in ('trackable-lookup4918-diagnostic85-protocol-v1.json','trackable-lookup4918-diagnostic85-analysis-v1.json'):preserve(WORK/name,name)
+for pattern in ('*trackable_lookup4918*.py',):
+ for source in sorted(WORK.glob(pattern)):preserve(source,'drivers/'+source.name+'.txt')
+preserve(Path(__file__),'publisher.py.txt')
+prototype=WORK/'trackable-lookup4918-prototype-v1';name='forge-game/src/main/java/forge/trackable/TrackableProperty.java'
+text=''.join(difflib.unified_diff((prototype/'baseline'/name).read_text(encoding='utf-8').splitlines(True),(prototype/'source'/name).read_text(encoding='utf-8').splitlines(True),fromfile='a/'+name,tofile='b/'+name))
+patch=dest/'unpromoted.patch';patch.write_text(text,encoding='utf-8',newline='\n');files[patch.relative_to(ROOT).as_posix()]=sha(patch)
+result={'status':'not_promoted_predeclared_improvement_criterion_unmet','source_ci':ci,'native_baseline_build':'27bb401949a2401ab440509f215df73e','callback_contracts_each_candidate':9,'analysis':analysis,'baseline_cpu_profile':{'counts':load(profile/'outcome.json')['counts'],'recording':profile_meta,'summary':summary,'raw_recording_stays_local':True},'original_resolution_workload':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'runtime_changed':False,'registered':False,'scope':'All six unchanged85-case diagnostic selections pass. The exact-base no-op prototype is rejected by its predeclared median criterion. CPU/GC samples are finite observations with stack truncation and overlapping durations; no allocation, retained-memory, reliable production-speedup, full1271/90 or universal card/rules claim.','files':files}
+save(index,result)
+for n,h in files.items():assert sha(ROOT/n)==h
+p=ROOT/'README.md';s=p.read_text(encoding='utf-8');old='The selected runtime is unchanged.\n\nSee [coverage details]';assert s.count(old)==1
+s=s.replace(old,'The selected runtime is unchanged. The latest performance experiment remains\nunpromoted after missing its predeclared improvement criterion.\n\nSee [coverage details]',1)
+old='[validation evidence](engine/remembered_history_runtime_evidence.json) and the';assert s.count(old)==1
+s=s.replace(old,'[validation evidence](engine/remembered_history_runtime_evidence.json),\n[performance diagnostics](engine/lookup_dispatch_evidence.json) and the',1);p.write_text(s,encoding='utf-8',newline='\n')
+p=ROOT/'docs/CARD_COVERAGE.md';s=p.read_text(encoding='utf-8');marker='# Card support and evidence\n\n';assert s.count(marker)==1
+entry='''An isolated scalar-lookup no-op experiment remains **unpromoted**. Both variants
+pass nine callback/freeze contracts, and all 510 invocations in a preplanned
+six-run diagnostic protocol pass with exact cases/parameters and unchanged
+2-processor / 2 GiB / 90-second settings. Observed median runner and whole-worker
+times fall 9.0% and 8.9%, below the predeclared 10% criterion for further work.
+The original **1,271 / 90 seconds** gate is unchanged and was not attempted.
+
+An unchanged-baseline CPU recording also passes the same 85 diagnostic cases.
+It contains 1,090 samples with selected test frames; card-state static/replacement
+work appears more often than the scalar lookup hook. These are sampling
+observations with stack-truncation and overlapping GC-duration limits, without
+allocation or retained-memory evidence. The bounded recording remains local,
+with its hash/settings and decoded summary preserved in
+[diagnostic evidence](../engine/lookup_dispatch_evidence.json). Shipped engine
+code, recipe and selected runtime remain unchanged.
+
+'''
+p.write_text(s.replace(marker,marker+entry,1),encoding='utf-8',newline='\n')
+p=ROOT/'CHANGELOG.md';s=p.read_text(encoding='utf-8');marker='## Unreleased\n\n';assert s.count(marker)==1
+entry='''- Reject the scalar-lookup no-op prototype for promotion after its fixed six-run
+  diagnostic protocol. All 510 cases pass; median runner/worker reductions of
+  9.0% / 8.9% miss the predeclared 10% criterion. Both variants also pass all nine
+  callback/freeze controls. Preserve every trial and the unused patch under
+  engine/lookup_dispatch_evidence.json; leave the original 1,271/90 gate untouched.
+- Preserve a bounded CPU/GC recording of the unchanged baseline's 85 diagnostic
+  cases and its decoded summary. Sampling indicates static/replacement trait
+  work merits investigation. No allocation, retained-memory, reliable production
+  speedup or full-card correctness claim; no shipped runtime or recipe change.
+
+'''
+p.write_text(s.replace(marker,marker+entry,1),encoding='utf-8',newline='\n')
+p=ROOT/'.gitattributes';s=p.read_text(encoding='utf-8');s+='engine/lookup_dispatch_evidence.json -text whitespace=cr-at-eol\nengine/pending/lookup-dispatch-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(s,encoding='utf-8',newline='\n')
+print(json.dumps({'preserved_files':len(files),'optimization_promoted':False,'recording_bytes':profile_meta['bytes']}),flush=True)

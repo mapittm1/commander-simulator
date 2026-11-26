@@ -40,10 +40,12 @@ correctness.
 
 The original 1,271-case / 90-second gate remains unresolved. The full 3,761-case
 main packaged gate, full-game validation and candidate activation remain open.
-The selected runtime is unchanged.
+The selected runtime is unchanged. The latest performance experiment remains
+unpromoted after missing its predeclared improvement criterion.
 
 See [coverage details](docs/CARD_COVERAGE.md),
-[validation evidence](engine/remembered_history_runtime_evidence.json) and the
+[validation evidence](engine/remembered_history_runtime_evidence.json),
+[performance diagnostics](engine/lookup_dispatch_evidence.json) and the
 [changelog](CHANGELOG.md).
 
 ## Run it now

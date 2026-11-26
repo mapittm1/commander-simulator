@@ -1,0 +1,30 @@
+--- a/forge-game/src/main/java/forge/trackable/TrackableProperty.java
++++ b/forge-game/src/main/java/forge/trackable/TrackableProperty.java
+@@ -262,6 +262,7 @@
+     }
+ 
+     private final TrackableType<?> type;
++    private final boolean updatesObjectLookup;
+     private final FreezeMode freezeMode;
+ 
+     TrackableProperty(TrackableType<?> type0) {
+@@ -270,6 +271,8 @@
+ 
+     TrackableProperty(TrackableType<?> type0, FreezeMode freezeMode0) {
+         type = type0;
++        // Only the exact base type has a known no-op lookup hook.
++        updatesObjectLookup = type0.getClass() != TrackableType.class;
+         freezeMode = freezeMode0;
+     }
+ 
+@@ -283,7 +286,9 @@
+ 
+     @SuppressWarnings("unchecked")
+     public <T> void updateObjLookup(Tracker tracker, T newObj) {
+-        ((TrackableType<T>) type).updateObjLookup(tracker, newObj);
++        if (updatesObjectLookup) {
++            ((TrackableType<T>) type).updateObjLookup(tracker, newObj);
++        }
+     }
+ 
+     @SuppressWarnings("unchecked")

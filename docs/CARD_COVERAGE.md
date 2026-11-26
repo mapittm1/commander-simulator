@@ -1,5 +1,21 @@
 # Card support and evidence
 
+An isolated scalar-lookup no-op experiment remains **unpromoted**. Both variants
+pass nine callback/freeze contracts, and all 510 invocations in a preplanned
+six-run diagnostic protocol pass with exact cases/parameters and unchanged
+2-processor / 2 GiB / 90-second settings. Observed median runner and whole-worker
+times fall 9.0% and 8.9%, below the predeclared 10% criterion for further work.
+The original **1,271 / 90 seconds** gate is unchanged and was not attempted.
+
+An unchanged-baseline CPU recording also passes the same 85 diagnostic cases.
+It contains 1,090 samples with selected test frames; card-state static/replacement
+work appears more often than the scalar lookup hook. These are sampling
+observations with stack-truncation and overlapping GC-duration limits, without
+allocation or retained-memory evidence. The bounded recording remains local,
+with its hash/settings and decoded summary preserved in
+[diagnostic evidence](../engine/lookup_dispatch_evidence.json). Shipped engine
+code, recipe and selected runtime remain unchanged.
+
 A generic remembered-history correction preserves cards outside live zones and
 last-known-information objects through the shared snapshot graph. Seven of nine
 baseline controls fail; all nine corrected controls pass, including native

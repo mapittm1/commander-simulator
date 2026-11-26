@@ -1,0 +1,9 @@
+{
+  "status": "prepared_only_not_compiled",
+  "changed_sources": [
+    "forge-game/src/main/java/forge/trackable/TrackableProperty.java"
+  ],
+  "reason": "Earlier JFR samples identify TrackableProperty.updateObjLookup among hot leaf frames. Exact base TrackableType lookup is a no-op; all subclasses still dispatch normally. No game rules, search candidates, budgets or limits change.",
+  "performance_evidence": "None yet. Do not infer speedup or retry original1271/90 without meaningful evidence.",
+  "required": "Paired callback/freeze contracts, unchanged native interaction cases, actual origins/input audits and reproducible runtime measurements before any promotion."
+}

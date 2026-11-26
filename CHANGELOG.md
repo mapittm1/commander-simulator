@@ -6,6 +6,16 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Reject the scalar-lookup no-op prototype for promotion after its fixed six-run
+  diagnostic protocol. All 510 cases pass; median runner/worker reductions of
+  9.0% / 8.9% miss the predeclared 10% criterion. Both variants also pass all nine
+  callback/freeze controls. Preserve every trial and the unused patch under
+  engine/lookup_dispatch_evidence.json; leave the original 1,271/90 gate untouched.
+- Preserve a bounded CPU/GC recording of the unchanged baseline's 85 diagnostic
+  cases and its decoded summary. Sampling indicates static/replacement trait
+  work merits investigation. No allocation, retained-memory, reliable production
+  speedup or full-card correctness claim; no shipped runtime or recipe change.
+
 - Validate all 3,718 source and 4,918 native cases with exact retained case and
   parameter counters, reviewed source/fixture bytes and unchanged 173 protected
   resolution/helper classfiles. Bind baseline reports to their published bytes.

@@ -1,0 +1,71 @@
+package forge.trackable;
+
+import forge.game.card.CardView;
+import forge.game.zone.ZoneType;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Preserve lookup callbacks and freeze behavior while eliding known scalar no-ops. */
+public class CommanderTrackableLookupTest {
+    @Test public void scalarPropertiesDoNotRegisterObjectValues() {
+        Tracker tracker = new Tracker(); CardView value = new CardView(90001, null);
+        TrackableProperty.Name.updateObjLookup(tracker, value);
+        TrackableProperty.Tapped.updateObjLookup(tracker, value);
+        TrackableProperty.Damage.updateObjLookup(tracker, value);
+        assertFalse(tracker.hasObj(TrackableTypes.CardViewType, value.getId()));
+    }
+    @Test public void genericObjectPropertyDoesNotRegisterView() {
+        Tracker tracker = new Tracker(); CardView value = new CardView(90002, null);
+        TrackableProperty.Object.updateObjLookup(tracker, value);
+        assertFalse(tracker.hasObj(TrackableTypes.CardViewType, value.getId()));
+    }
+    @Test public void enumValuesRetainTheirStoredValue() {
+        CardView holder = new CardView(90003, new Tracker());
+        holder.set(TrackableProperty.Zone, ZoneType.Exile);
+        assertSame(holder.getProps().get(TrackableProperty.Zone), ZoneType.Exile);
+    }
+    @Test public void cardReferenceRegistersCanonicalObject() {
+        Tracker tracker = new Tracker(); CardView value = new CardView(90004, tracker);
+        TrackableProperty.CloneOrigin.updateObjLookup(tracker, value);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, value.getId()), value);
+    }
+    @Test public void cardCollectionRegistersEveryMember() {
+        Tracker tracker = new Tracker(); CardView first = new CardView(90005, tracker);
+        CardView second = new CardView(90006, tracker);
+        TrackableCollection<CardView> values = new TrackableCollection<>();
+        values.add(first); values.add(second);
+        TrackableProperty.AttachedCards.updateObjLookup(tracker, values);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, first.getId()), first);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, second.getId()), second);
+    }
+    @Test public void referenceCyclesTerminateAndRegisterBothObjects() {
+        Tracker tracker = new Tracker(); CardView first = new CardView(90007, tracker);
+        CardView second = new CardView(90008, tracker);
+        first.set(TrackableProperty.CloneOrigin, second);
+        second.set(TrackableProperty.CloneOrigin, first);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, first.getId()), first);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, second.getId()), second);
+    }
+    @Test public void duplicateIdDoesNotReplaceExistingCanonicalObject() {
+        Tracker tracker = new Tracker(); CardView first = new CardView(90009, tracker);
+        CardView second = new CardView(90009, tracker);
+        TrackableProperty.CloneOrigin.updateObjLookup(tracker, first);
+        TrackableProperty.CloneOrigin.updateObjLookup(tracker, second);
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, first.getId()), first);
+    }
+    @Test public void nullTrackerAndNullReferenceRemainSafe() {
+        TrackableProperty.CloneOrigin.updateObjLookup(null, new CardView(90010, null));
+        TrackableProperty.CloneOrigin.updateObjLookup(new Tracker(), null);
+        TrackableProperty.Name.updateObjLookup(null, null);
+    }
+    @Test public void frozenReferenceLookupOccursWhenChangesAreReplayed() {
+        Tracker tracker = new Tracker(); CardView holder = new CardView(90011, tracker);
+        CardView value = new CardView(90012, tracker);
+        tracker.freeze(); holder.set(TrackableProperty.CloneOrigin, value);
+        assertFalse(tracker.hasObj(TrackableTypes.CardViewType, value.getId()));
+        assertFalse(holder.getProps().containsKey(TrackableProperty.CloneOrigin));
+        tracker.unfreeze();
+        assertSame(tracker.getObj(TrackableTypes.CardViewType, value.getId()), value);
+        assertSame(holder.getProps().get(TrackableProperty.CloneOrigin), value);
+    }
+}
