@@ -224,6 +224,7 @@ PARTITIONS = {
     "foretell_history": ("forge.ai.CommanderForetellHistoryTest",),
     "discard_history": ("forge.ai.CommanderDiscardHistoryTest",),
     "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),
+    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),
     "payload_graph": (
         "forge.ai.CommanderPayloadGraphTest",
         "forge.ai.CommanderPayloadMapTest",
@@ -246,6 +247,7 @@ EXPECTED_COUNTS = {
     "discard_history": 18,
     "sacrifice_history": 26,
     "payload_graph": 57,
+    "copier_lifecycle": 8,
 }
 
 

@@ -1,0 +1,99 @@
+"""Compare one-source empty-map behavior/allocation on the graph-corrected native base."""
+from collections import Counter
+from pathlib import Path
+import importlib
+import json
+import re
+import subprocess
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import packaged_rules,draw_ending_worker
+WORK=Path(__file__).resolve().parent
+CANDIDATE=WORK/'payload-graph-candidate-v2'
+PROTO=WORK/'copier-release-native4879-prototype-v1'
+FIXTURE=WORK/'copier-release-native4879-fixture-v1'
+EPOCH=WORK/'post-payload-runtime-epoch-v1'
+load=lambda p:json.loads(p.read_bytes())
+MODE,FAMILY=sys.argv[1:3]
+assert MODE in ('baseline','prototype') and FAMILY in ('registered','release')
+assert sys.argv[3:] in ([],['--worker'])
+worker=sys.argv[3:]==['--worker']
+RUN=WORK/('copier-release-native4879-'+FAMILY+'-'+MODE+'-v2')
+BUILD=ROOT/load(CANDIDATE/'candidate-selection.json')['build']
+CONFIG=BUILD/'engine-config.json'
+UPSTREAM=BUILD/'source/forge-gui-desktop/target/test-classes'
+TARGETS={'registered':('forge.ai.CommanderPayloadGraphTest','forge.ai.CommanderPayloadMapTest','forge.ai.CommanderPayloadDamageTest'),'release':('forge.ai.CommanderCopierReleaseTest',)}[FAMILY]
+COUNT={'registered':57,'release':7}[FAMILY]
+EXPECTED_FAILURES={'releaseDiscardsAbilitySnapshot','releaseStopsSourceAbilityMapping','releaseStopsIndependentCostMapping','releaseDiscardsCombatBandMappings'} if FAMILY=='release' and MODE=='baseline' else set()
+
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def cases(p,classes=None):
+    result=Counter()
+    for cls in ET.parse(p).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:continue
+        for m in cls.findall('test-method'):
+            if m.get('is-config')!='true':result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return result
+def verify(root=False):
+    for directory in (PROTO,FIXTURE):assert all(file_hash(directory/n)==h for n,h in load(directory/'inputs.json').items())
+    assert load(PROTO/'proposal.json')['changed_sources']==['forge-ai/src/main/java/forge/ai/simulation/GameCopier.java']
+    source_name='forge-ai/src/main/java/forge/ai/simulation/GameCopier.java'
+    canonical=ROOT/'data/development/commander-blocking-history-research/source'/source_name
+    assert file_hash(canonical)==load(WORK/'source3679-v2/production-inputs.json')[source_name]
+    assert file_hash(PROTO/'baseline'/source_name)==file_hash(BUILD/'source'/source_name)
+    assert (PROTO/'baseline'/source_name).read_bytes().replace(b'\r\n',b'\n')==canonical.read_bytes().replace(b'\r\n',b'\n')
+    assert load(RUN/'test-inputs.json')['files']=={p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}
+    if root:assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'source-frozen-inputs.json').items())
+if worker:
+    verify();settings=read_settings(CONFIG);lock=settings.verify();assert lock['native_tests']['total']==4879
+    require_bridge();java=importlib.import_module('jpype')
+    recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+    archive=settings.home/lock['jar_name']
+    paths=(() if MODE=='baseline' else (PROTO/'classes',))+(archive,FIXTURE/'classes',UPSTREAM,dependency)
+    java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,paths)),convertStrings=True)
+    runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+    overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in load(PROTO/'inputs.json') if n.startswith('classes/') and n.endswith('.class')}
+    assert all(n=='forge/ai/simulation/GameCopier.class' or n.startswith('forge/ai/simulation/GameCopier$') for n in overrides)
+    for name in tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.game.spellability.SpellAbility','forge.game.spellability.SpellAbilitySnapshot'))):
+        expected=PROTO/'classes' if name.replace('.','/')+'.class' in overrides else archive
+        assert packaged_rules.class_origin(java,name).samefile(expected),name
+    assert packaged_rules.class_origin(java,'forge.game.spellability.SpellAbilitySnapshot').samefile(archive)
+    for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTO/'classes'),name
+    for name in TARGETS:assert packaged_rules.class_origin(java,name).samefile(UPSTREAM if FAMILY=='registered' else FIXTURE/'classes'),name
+    assert packaged_rules.class_origin(java,'forge.ai.AITest').samefile(UPSTREAM)
+    if FAMILY=='registered':expected=cases(BUILD/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(TARGETS))
+    else:
+        expected=Counter()
+        for name in TARGETS:
+            names=re.findall(r'@Test\s+public void (\w+)\(', (FIXTURE/(name.rsplit('.',1)[1]+'.java')).read_text(encoding='utf-8'))
+            assert len(names)==len(set(names));expected.update((name+'.'+method,()) for method in names)
+    assert sum(expected.values())==COUNT
+    runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener)
+    runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(name).class_ for name in TARGETS]))
+    runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+    counts,methods=packaged_rules.test_results(listener);actual=cases(RUN/'reports/testng-results.xml')
+    failures={m.get('name') for m in ET.parse(RUN/'reports/testng-results.xml').findall('.//test-method') if m.get('status')=='FAIL' and m.get('is-config')!='true'}
+    outcome={'mode':MODE,'family':FAMILY,'counts':counts,'methods':methods,'exact_case_and_parameter_counter_matches':actual==expected,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'actual_processors':int(runtime.availableProcessors()),'actual_max_heap_bytes':int(runtime.maxMemory()),'class_origins_verified':True,'graph_correction_from_audited_native_jar':True,'failed_methods':sorted(failures),'scope':'One-source copier release correction on graph-corrected4879 baseline; source-reference lifecycle and copied-state controls, not reliable speedup, GC collectability, full1271/90 or complete rules proof.'}
+    save(RUN/'outcome.json',outcome)
+    assert counts==dict(total=COUNT,passed=COUNT-len(EXPECTED_FAILURES),failed=len(EXPECTED_FAILURES),skipped=0) and actual==expected
+    assert failures==EXPECTED_FAILURES
+    assert outcome['configuration_failures']==outcome['configuration_skips']==0
+    assert outcome['testng_status']==int(bool(EXPECTED_FAILURES))
+    verify();java.shutdownJVM()
+else:
+    assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+    ci=load(EPOCH/'source-ci.json');assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip() and ci['conclusion']=='success'
+    assert load(CANDIDATE/'build-audit.json')['candidate']['native_tests']['total']==4879
+    RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    save(RUN/'test-inputs.json',{'files':{p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}})
+    verify(root=True);settings=read_settings(CONFIG)
+    save(RUN/'selection.json',{'mode':MODE,'family':FAMILY,'classes':TARGETS,'expected_cases':COUNT,'worker_limit_seconds':90,'baseline_native_build':BUILD.name})
+    with _engine_profile(settings,RUN):process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,FAMILY,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+    save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+    outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+    print(json.dumps({'mode':MODE,'family':FAMILY,'process':process,'counts':outcome.get('counts'),'failed_methods':outcome.get('failed_methods')}),flush=True)
+    assert process['status']=='finished' and process['returncode']==0,process

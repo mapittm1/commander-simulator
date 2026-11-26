@@ -1,0 +1,35 @@
+"""Retain complete semantic families for the combined unpromoted snapshot/query work."""
+from pathlib import Path
+import json
+import shutil
+import sys
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash
+from commander.engine.native_runtime import _environment
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'copier-release-native4879-semantic-batch-v2'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,value):p.write_text(json.dumps(value,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(WORK/'copier-release-native4879-release-prototype-v3/outcome.json')['counts']==dict(total=8,passed=8,failed=0,skipped=0)
+assert load(WORK/'copier-release-native4879-registered-prototype-v3/outcome.json')['counts']==dict(total=57,passed=57,failed=0,skipped=0)
+specs=[('sacrifice_history',26),('discard_history',18),('traits',495),('cast',1404),('combat',273),('untap',194),('dungeons',10),('expended_mana',6),('first_events',12),('scry_history',6),('spell_game_history',12),('foretell_history',12),('upstream',9)]
+RUN.mkdir()
+(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+git=shutil.which('git');assert git and Path(git).is_file()
+environment=_environment(RUN);environment['PATH']=str(Path(git).parent)
+save(RUN/'selection.json',{'groups':specs,'per_worker_seconds':90,'per_wrapper_seconds':420,'original_resolution_cases_unchanged':1271,'original_resolution_limit_seconds_unchanged':90,'scope':'Full retained semantic family invocations; families may overlap. Not unique-card counts or a replacement for the original resolution gate.'})
+results={}
+for family,count in specs:
+    process=run_bounded([sys.executable,'-I',str(WORK/'run_copier_release_native4879_regression_v1.py'),'prototype',family],ROOT,RUN/(family+'.log'),ProcessLimits(420,log_bytes=65536,environment=environment))
+    results[family]={'process':process};save(RUN/'progress.json',results)
+    assert process['status']=='finished' and process['returncode']==0,(family,process)
+    outcome=load(WORK/('copier-release-native4879-regression-'+family+'-prototype-v1/outcome.json'))
+    assert outcome['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert outcome['native_method_and_parameter_counter_matches']
+    assert outcome['configuration_failures']==outcome['configuration_skips']==outcome['testng_status']==0
+    results[family]['counts']=outcome['counts'];save(RUN/'progress.json',results)
+    print(json.dumps({'family':family,'counts':outcome['counts']}),flush=True)
+assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt')
+save(RUN/'outcome.json',{'all_passed':True,'groups':results,'scope':'Full retained semantic families with exact native methods/parameters; possible overlap. Not full1271/90, full paid histories, reliable speedup or comprehensive Commander rules proof.'})

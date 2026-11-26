@@ -1,0 +1,38 @@
+--- a/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
++++ b/forge-ai/src/main/java/forge/ai/simulation/GameCopier.java
+@@ -58,6 +58,7 @@
+     private BiMap<Card, Card> cardMap = HashBiMap.create();
+     private CopiedGameObjectMap gameObjectMap;
+     private GameSnapshot snapshot = null;
++    private List<String> releasedSnapshotCommands = List.of();
+     /** Copy the spells on the stack too (see {@link GameSimulator#COPY_STACK}); decided per copier. */
+     private boolean copyStack = GameSimulator.COPY_STACK;
+     private boolean checkStateBasedActions = true;
+@@ -109,6 +110,11 @@
+         cardMap = HashBiMap.create();
+         stackMap.clear();
+         gameObjectMap = null;
++        if (abilitySnapshot != null) {
++            releasedSnapshotCommands = abilitySnapshot.getUnmappedCommands();
++            abilitySnapshot = null;
++        }
++        combatBands.clear();
+         snapshot = null;
+     }
+ 
+@@ -138,6 +144,7 @@
+         playerMap.clear();
+         stackMap.clear();
+         abilitySnapshot = null;
++        releasedSnapshotCommands = List.of();
+         List<RegisteredPlayer> origPlayers = origGame.getMatch().getPlayers();
+         List<RegisteredPlayer> newPlayers = new ArrayList<>();
+         for (RegisteredPlayer p : origPlayers) {
+@@ -852,6 +859,6 @@
+ 
+     /** Callback kinds still needing explicit implementations; never treated as proof of coverage. */
+     public List<String> getUnmappedSnapshotCommands() {
+-        return abilitySnapshot == null ? List.of() : abilitySnapshot.getUnmappedCommands();
++        return abilitySnapshot == null ? releasedSnapshotCommands : abilitySnapshot.getUnmappedCommands();
+     }
+ }

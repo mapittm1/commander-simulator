@@ -26,6 +26,19 @@ difference.
 
 ## Card coverage
 
+A generic copier-lifecycle correction now discards retained source ability and
+combat-band identity graphs on release. It preserves copied worlds and immutable
+unsupported-callback findings. Four of eight baseline controls fail; the
+correction passes all eight, including actual mana payment/resolution after
+release, plus all 57 payload controls and 13 retained interaction groups.
+
+The recipe registers eight `copier_lifecycle` cases, retaining every earlier
+case and the original **1,271 / 90 seconds** workload. Fresh expanded **3,687
+source / 4,887 native / 3,730 main packaged** validation remains pending. The
+selected runtime is unchanged. This is a reference-lifecycle correction; no
+reliable speedup, garbage-collection guarantee or full rules claim is made.
+See [copier release evidence](engine/copier_release_evidence.json).
+
 The payload-graph candidate passes **4,879 native cases**, all **2,451 main
 packaged cases outside the resolution group**, 405 other packaged cases, 6,202
 broader gameplay cases and 320 card/deck loading cases. Audits retain the exact

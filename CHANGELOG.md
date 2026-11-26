@@ -6,6 +6,18 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Release retained source ability/combat-band graphs from completed game copiers,
+  stop mapping through released contexts, and retain immutable unsupported-callback
+  diagnostics. Four of eight baseline controls fail; all eight corrected controls
+  pass, including native paid mana activation after release, repeated copies and
+  idempotent cleanup. All 57 payload controls and 13 retained semantic groups pass.
+- Register eight copier lifecycle cases with fixed patch/fixture checksums and
+  reviewed builder admission. Preserve every earlier case and original 1,271/90.
+  Fresh 3,687 source / 4,887 native / 3,730 packaged checks remain pending; selected
+  runtime stays unchanged. Preserve CPU diagnostics, failed preflight checks and
+  paired evidence in engine/copier_release_evidence.json. No speedup, collectability
+  or comprehensive card/rules correctness claim.
+
 - Validate the unselected payload-graph candidate: 4,879 native, 2,451 main
   non-resolution packaged, 405 other packaged, 6,202 broader gameplay and 320
   card/deck loading cases pass with retained methods/parameters. Health is ready;

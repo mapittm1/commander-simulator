@@ -1,13 +1,35 @@
 # Card support and evidence
 
-The expanded **3,679-case source suite passes**, retaining every earlier method
-and parameter with no skips or configuration failures. The initial unused-import
-Checkstyle failure is repaired. Native build preflight then rejected a missing
-reviewed patch allowlist entry; that exact entry is added with regression tests
-for current-recipe admission, unreviewed paths and changed hashes. No native JVM
-started in that failed attempt; fresh 4,879 native and 3,722 main validation remain
-pending. Raw source results and both failed attempts are preserved in the payload
-graph evidence.
+A generic copier-lifecycle correction now discards retained source ability and
+combat-band identity graphs on release. It preserves copied worlds and immutable
+unsupported-callback findings. Four of eight baseline controls fail; the
+correction passes all eight, including actual mana payment/resolution after
+release, plus all 57 payload controls and 13 retained interaction groups.
+
+The recipe registers eight `copier_lifecycle` cases, retaining every earlier
+case and the original **1,271 / 90 seconds** workload. Fresh expanded **3,687
+source / 4,887 native / 3,730 main packaged** validation remains pending. The
+selected runtime is unchanged. This is a reference-lifecycle correction; no
+reliable speedup, garbage-collection guarantee or full rules claim is made.
+See [copier release evidence](../engine/copier_release_evidence.json).
+
+The payload-graph candidate passes **4,879 native cases**, all **2,451 main
+packaged cases outside the resolution group**, 405 other packaged cases, 6,202
+broader gameplay cases and 320 card/deck loading cases. Audits retain the exact
+expected methods/parameters and reviewed source inputs. Health checks pass;
+32,636 of 32,643 catalog cards construct, with seven non-starting meld results
+reported separately. Construction does not establish ability or gameplay support.
+
+An isolated empty-event-map optimization passes all 3,679 source cases and 13
+selected interaction groups. Fixed probes save about 1,200 bytes per snapshot
+when both maps are empty and 600 bytes when one is populated. Its original
+**1,271-case resolution workload still times out at 90.015 seconds** without a
+completed report. The candidate remains unpromoted; these measurements do not
+prove a reliable speedup. The first source attempt omitted two original
+method-specific selectors; the complete rerun restores them without changing
+production/test sources, assertions or expected cases. Results and raw evidence
+are preserved in [runtime validation evidence](../engine/payload_graph_runtime_evidence.json).
+The selected simulator runtime is unchanged.
 
 A generic payload-copy correction preserves shared mutable event state and
 supported container cycles in AI worlds. The baseline fails 22 of 26 graph checks
@@ -20,8 +42,9 @@ source build passes all 320 card/deck loading cases with exact methods/parameter
 
 Original **1,271 / 90 seconds** still times out at **90.016s** without a
 completed report. The recipe now registers 57 additional `payload_graph` cases,
-retaining all prior groups. Source **3,679** passes; fresh **4,879 native / 3,722
-main packaged** validation remains pending. The selected runtime is unchanged. Supplied event states
+retaining all prior groups. Source **3,679** and native **4,879** pass; a complete
+**3,722 main packaged** verdict remains unavailable because the resolution group
+has not completed within its limit. The selected runtime is unchanged. Supplied event states
 do not prove preceding legal histories, activation/payment/replacement ordering
 or complete rules coverage. Payload-container failure cleanup is not a complete
 native snapshot transaction. See [payload graph evidence](../engine/payload_graph_evidence.json).

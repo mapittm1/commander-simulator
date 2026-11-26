@@ -1,0 +1,104 @@
+"""Register the regression-tested copier release correction after frozen jobs finish."""
+from pathlib import Path
+import json,shutil,subprocess,hashlib
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+hashfile=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def replace(p,old,new):
+ raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';a=old.encode().replace(b'\n',nl);b=new.encode().replace(b'\n',nl)
+ assert raw.count(a)==1,(p,old);p.write_bytes(raw.replace(a,b,1))
+assert not subprocess.check_output(['git','status','--porcelain'])
+epoch=w/'post-payload-runtime-epoch-v1';assert all(hashfile(r/n)==h for n,h in load(epoch/'source-frozen-inputs.json').items())
+assert load(w/'copier-release-native4879-semantic-batch-v2/outcome.json')['all_passed']
+assert load(w/'copier-release-native4879-release-baseline-v3/outcome.json')['counts']==dict(total=8,passed=4,failed=4,skipped=0)
+assert load(w/'copier-release-native4879-release-prototype-v3/outcome.json')['counts']==dict(total=8,passed=8,failed=0,skipped=0)
+assert load(w/'copier-release-native4879-registered-prototype-v3/outcome.json')['counts']==dict(total=57,passed=57,failed=0,skipped=0)
+dest=r/'engine/pending/copier-release-v1';dest.mkdir();artifacts={}
+def copy(p,rel):
+ target=dest/rel;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists()
+ target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target);assert hashfile(p)==hashfile(target)
+ artifacts[target.relative_to(r).as_posix()]=hashfile(target)
+folders=['post-payload-runtime-epoch-v1','empty-map-native4879-mana-cpu-v1']+[p.name for p in w.glob('copier-release-native4879-*') if p.is_dir()]
+for name in folders:
+ base=w/name
+ for p in sorted(base.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.patch','.xml'):
+   copy(p,Path(name)/p.name)
+ for p in base.glob('reports/testng-results.xml'):copy(p,Path(name)/p.relative_to(base))
+ if 'fixture' in name or 'prototype' in name:
+  for p in base.glob('*.java'):copy(p,Path(name)/(p.name+'.txt'))
+  for sub in ('source','baseline'):
+   for p in (base/sub).rglob('*.java'):copy(p,Path(name)/(p.relative_to(base).as_posix()+'.txt'))
+for pattern in ('*copier_release_native4879*.py','*empty_map_native4879_mana_cpu*.py'):
+ for p in w.glob(pattern):copy(p,Path('drivers')/(p.name+'.txt'))
+copy(w/'copier-release-preflight-correction-v1.json',Path('copier-release-preflight-correction-v1.json'))
+copy(Path(__file__),Path('drivers')/(Path(__file__).name+'.txt'))
+patch='engine/patches/commander-copier-release.patch';test='engine/tests/CommanderCopierReleaseTest.java'
+assert not (r/patch).exists() and not (r/test).exists()
+shutil.copyfile(w/'copier-release-native4879-prototype-v1/commander-copier-release.patch',r/patch)
+shutil.copyfile(w/'copier-release-native4879-fixture-v2/CommanderCopierReleaseTest.java',r/test)
+p=r/'engine/sticker_recipe.json';raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';recipe=json.loads(raw);assert recipe['native_test_count']==4879
+recipe['patches'].append({'path':patch,'sha256':hashfile(r/patch)})
+recipe['native_test_count']=4887;recipe['runtime_version']='2.0.18-583714b-reviewed-copier-release'
+recipe['capabilities'].append('released_snapshot_identity_cleanup');recipe['commander_copier_release_test_sha256']=hashfile(r/test)
+p.write_bytes((json.dumps(recipe,indent=2)+'\n').encode().replace(b'\n',nl))
+replace(r/'tools/build_sticker_engine.py','                "engine/patches/commander-payload-graph.patch",\n','                "engine/patches/commander-payload-graph.patch",\n                "engine/patches/commander-copier-release.patch",\n')
+replace(r/'tools/build_sticker_engine.py','CommanderPayloadDamageTest,CommanderReplacementCacheInputsTest','CommanderPayloadDamageTest,CommanderCopierReleaseTest,CommanderReplacementCacheInputsTest')
+replace(r/'tools/engine_test_sources.py','    "CommanderPayloadDamageTest.java": "commander_payload_damage_test_sha256",\n','    "CommanderPayloadDamageTest.java": "commander_payload_damage_test_sha256",\n    "CommanderCopierReleaseTest.java": "commander_copier_release_test_sha256",\n')
+replace(r/'tests/support/draw_ending_worker.py','    "CommanderPayloadDamageTest": "commander_payload_damage_test_sha256",\n','    "CommanderPayloadDamageTest": "commander_payload_damage_test_sha256",\n    "CommanderCopierReleaseTest": "commander_copier_release_test_sha256",\n')
+replace(r/'tests/support/draw_ending_worker.py','fixed 3722-case packaged family','fixed 3730-case packaged family')
+replace(r/'tests/support/draw_ending_partitions.py','    "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),\n','    "sacrifice_history": ("forge.ai.CommanderSacrificeHistoryTest",),\n    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),\n')
+replace(r/'tests/support/draw_ending_partitions.py','    "payload_graph": 57,\n','    "payload_graph": 57,\n    "copier_lifecycle": 8,\n')
+replace(r/'tests/unit/test_draw_ending_partitions.py','sum(EXPECTED_COUNTS.values()), 3722','sum(EXPECTED_COUNTS.values()), 3730')
+replace(r/'tests/unit/test_draw_ending_partitions.py','        self.assertEqual(EXPECTED_COUNTS["payload_graph"], 57)\n','        self.assertEqual(EXPECTED_COUNTS["payload_graph"], 57)\n        self.assertEqual(EXPECTED_COUNTS["copier_lifecycle"], 8)\n')
+summary={'status':'registered_not_activated','source_head':load(epoch/'source-ci.json')['head_sha'],'source_ci':load(epoch/'source-ci.json'),'baseline_native_build':'1451d7b46a0b4be59a5d6f313071033c','change':'Release retained ability and combat-band mapping graphs while preserving immutable callback findings and usable copied games. Source mappings and independent cost mapping stop after release.','baseline_counts':dict(total=8,passed=4,failed=4,skipped=0),'prototype_counts':dict(total=8,passed=8,failed=0,skipped=0),'payload_controls_passed':57,'semantic_groups':load(w/'copier-release-native4879-semantic-batch-v2/outcome.json'),'registered_counts':{'source':3687,'native':4887,'main_packaged':3730},'original_resolution_cases':1271,'original_resolution_limit_seconds':90,'fresh_expanded_validation':'pending','selected_runtime_changed':False,'limits':'No reliable elapsed speedup, heap collectability, completed original1271/90 or full rules claim. Controlled worlds and one paid mana action do not establish all legal histories. CPU diagnostic guided code inspection; it did not measure retained memory. Prior timing failures remain preserved.','patch_sha256':hashfile(r/patch),'fixture_sha256':hashfile(r/test),'artifacts':artifacts}
+save(r/'engine/copier_release_evidence.json',summary)
+for p in (r/'README.md',r/'docs/CARD_COVERAGE.md'):
+ raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';s=raw.decode().replace('\r\n','\n')
+ anchor='## Card coverage\n' if p.name=='README.md' else '# Card support and evidence\n'
+ text='''
+A generic copier-lifecycle correction now discards retained source ability and
+combat-band identity graphs on release. It preserves copied worlds and immutable
+unsupported-callback findings. Four of eight baseline controls fail; the
+correction passes all eight, including actual mana payment/resolution after
+release, plus all 57 payload controls and 13 retained interaction groups.
+
+The recipe registers eight `copier_lifecycle` cases, retaining every earlier
+case and the original **1,271 / 90 seconds** workload. Fresh expanded **3,687
+source / 4,887 native / 3,730 main packaged** validation remains pending. The
+selected runtime is unchanged. This is a reference-lifecycle correction; no
+reliable speedup, garbage-collection guarantee or full rules claim is made.
+See [copier release evidence](LINKengine/copier_release_evidence.json).
+'''.replace('LINK','' if p.name=='README.md' else '../')
+ assert s.count(anchor)==1;s=s.replace(anchor,anchor+text,1)
+ p.write_bytes(s.encode().replace(b'\n',nl))
+p=r/'CHANGELOG.md';raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';s=raw.decode().replace('\r\n','\n');entry='''
+- Release retained source ability/combat-band graphs from completed game copiers,
+  stop mapping through released contexts, and retain immutable unsupported-callback
+  diagnostics. Four of eight baseline controls fail; all eight corrected controls
+  pass, including native paid mana activation after release, repeated copies and
+  idempotent cleanup. All 57 payload controls and 13 retained semantic groups pass.
+- Register eight copier lifecycle cases with fixed patch/fixture checksums and
+  reviewed builder admission. Preserve every earlier case and original 1,271/90.
+  Fresh 3,687 source / 4,887 native / 3,730 packaged checks remain pending; selected
+  runtime stays unchanged. Preserve CPU diagnostics, failed preflight checks and
+  paired evidence in engine/copier_release_evidence.json. No speedup, collectability
+  or comprehensive card/rules correctness claim.
+''';s=s.replace('## Unreleased\n','## Unreleased\n'+entry,1);p.write_bytes(s.encode().replace(b'\n',nl))
+p=r/'.gitattributes';raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';extra='''engine/patches/commander-copier-release.patch -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+engine/tests/CommanderCopierReleaseTest.java -text whitespace=cr-at-eol
+engine/copier_release_evidence.json -text whitespace=cr-at-eol
+engine/pending/copier-release-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+''';p.write_bytes(raw+extra.encode().replace(b'\n',nl))
+print('Registered eight lifecycle cases; preserved',len(artifacts),'artifacts. Expanded runtime gates remain pending.')
+
+# Keep the detailed coverage page aligned with the already published runtime audits.
+p=r/'docs/CARD_COVERAGE.md';raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';text=raw.decode().replace('\r\n','\n')
+readme=(r/'README.md').read_text()
+a=readme.index('The payload-graph candidate passes');b=readme.index('\nA generic payload-copy correction',a)
+c=text.index('The expanded **3,679-case source suite passes**');d=text.index('\nA generic payload-copy correction',c)
+text=text[:c]+readme[a:b].replace('(engine/payload_graph_runtime_evidence.json)','(../engine/payload_graph_runtime_evidence.json)')+text[d:]
+old='retaining all prior groups. Source **3,679** passes; fresh **4,879 native / 3,722\nmain packaged** validation remains pending. The selected runtime is unchanged. Supplied event states'
+new='retaining all prior groups. Source **3,679** and native **4,879** pass; a complete\n**3,722 main packaged** verdict remains unavailable because the resolution group\nhas not completed within its limit. The selected runtime is unchanged. Supplied event states'
+assert old in text;text=text.replace(old,new,1);p.write_bytes(text.encode().replace(b'\n',nl))
