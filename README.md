@@ -31,34 +31,28 @@ triggers, replacement effects and game-state copies. Full card and interaction
 coverage remains incomplete. A reviewed candidate fixes lost remembered-card
 history, with controls for native life gain, repeated copies and isolation.
 
-A newly registered candidate fixes multiplayer elimination valuation: focused
-autonomous/payment controls improve from 5/11 to 11/11, with 112 unchanged
-semantic cases passing. Its 3,753-source / 4,953-native recipe and 3,796-case main
-packaged suite await full validation. The selected runtime is unchanged.
+The candidate fixes multiplayer elimination valuation: the AI now recognizes
+useful opponent eliminations and penalizes allied losses. It passes 3,753 source
+and 4,953 native cases, retaining every previous case and adding 21 AI controls.
+Only the evaluator production class family changes; 173 original resolution/helper
+classfiles remain byte-identical.
 
-The last fully built candidate passes 3,732 source and 4,932 native cases, retaining every previous
-case and adding 14 phase-replacement controls. Those 14 also pass through the
-regular packaged worker. All production class bytes match the prior candidate;
-the original resolution test/helper classfiles remain byte-identical.
+Fresh checks pass 2,525 main packaged cases outside resolution, 405 separate
+packaged cases, 6,276 broader gameplay cases and 320 serialization/loading cases.
+Earlier catalog construction succeeds for 32,636 identities; seven meld results
+are explicitly unavailable as standalone scripts. Construction and finite tests
+do not prove universal card/rules correctness or optimal play.
 
-Earlier evidence covers 2,490 main packaged cases outside resolution, 405 separate
-packaged cases, 6,241 gameplay cases and 320 card/deck-loading cases. Earlier catalog
-construction succeeds for 32,636 identities; seven meld results are explicitly
-unavailable as standalone scripts. These historical checks were not rerun for this
-regression-only build. Finite tests and card construction do not prove universal
-rules correctness.
-
-The original 1,271-case / 90-second gate remains unresolved. The full 3,775-case
+The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
 main packaged gate, full-game validation and candidate activation remain open.
-The selected runtime is unchanged. The tested performance fast paths remain
-unpromoted after missing their predeclared improvement criteria.
+The selected runtime is unchanged. Tested performance shortcuts remain excluded.
 
 Packaged-test receipts preserve native parameter identities. The fix is verified
 against 15 formatting cases, 10 ignore-effect candidate/payment controls and 14
 regular packaged phase cases; see [evidence](engine/native_parameter_format_evidence.json).
 
 See [coverage details](docs/CARD_COVERAGE.md),
-[validation evidence](engine/phase_regression_runtime_evidence.json),
+[validation evidence](engine/player_elimination_runtime_evidence.json),
 [performance diagnostics](engine/phase_precheck_evidence.json) and the
 [changelog](CHANGELOG.md).
 

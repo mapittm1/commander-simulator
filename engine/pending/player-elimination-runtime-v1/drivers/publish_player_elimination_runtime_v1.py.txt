@@ -1,0 +1,110 @@
+"""Publish full candidate validation while retaining the unresolved original timing gate."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+SOURCE=WORK/'source3753-v1';CANDIDATE=WORK/'player-elimination-candidate-v1';BROAD=WORK/'player-elimination-broad-v1'
+load=lambda p:json.loads(p.read_bytes());sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert not subprocess.check_output(['git','status','--porcelain'])
+ci=load(CANDIDATE/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert all(sha(ROOT/n)==h for n,h in load(CANDIDATE/'source-frozen-inputs.json').items())
+source=load(SOURCE/'outcome.json');assert source['passed'] and source['counts']==dict(total=3753,passed=3753,failed=0,skipped=0)
+audit=load(CANDIDATE/'build-audit.json');assert audit['native_counts']==dict(total=4953,passed=4953,failed=0,skipped=0) and audit['exact_native_method_and_parameter_counter_matches']
+assert audit['production_class_deltas'] and all(n=='forge/ai/simulation/GameStateEvaluator.class' or n.startswith('forge/ai/simulation/GameStateEvaluator$') for n in audit['production_class_deltas'])
+assert audit['protected_resolution_and_helper_classfiles_identical']==173
+resources=load(CANDIDATE/'card-resource-audit.json');assert resources['card_resource_members']==34466 and resources['all_member_names_and_content_hashes_identical'] and resources['prior_archive_sha256']==resources['current_archive_sha256']
+packages={}
+for label,count in [('front-packaged',912),('remainder',1592),('packaged-ai',21),('other-packaged',405)]:
+ directory=WORK/('player-elimination-'+label+'-v1');proof=load(directory/'audit.json')
+ assert (proof['counts']['total'] if label=='packaged-ai' else proof['total_cases'])==count
+ assert (ROOT/'config/engine_config.json').read_bytes()==(directory/'active-config-before.json').read_bytes()
+ packages[label]=proof
+assert sum(packages[n]['total_cases'] for n in ('front-packaged','remainder'))+packages['packaged-ai']['counts']['total']==2525
+rollup=load(WORK/'player-elimination-packaged-rollup-v1.json');assert rollup['main_nonresolution_total']==2525 and not rollup['full3796_gate_passed']
+broader=load(BROAD/'outcome.json');assert broader['passed']
+for suite,count in [('gameplay',6276),('serialization',320)]:
+ assert broader['suites'][suite]['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+ assert broader['suites'][suite]['exact_case_and_parameter_counter_matches']
+wrapper=load(BROAD/'wrapper-process.json');assert wrapper['policies_restored'] and wrapper['production_unchanged']
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build']
+index=ROOT/'engine/player_elimination_runtime_evidence.json';dest=ROOT/'engine/pending/player-elimination-runtime-v1';assert not index.exists() and not dest.exists();dest.mkdir();files={}
+def preserve(path,relative):
+ target=dest/relative;assert target.resolve().is_relative_to(dest.resolve()) and not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(path,target);assert sha(path)==sha(target);files[target.relative_to(ROOT).as_posix()]=sha(target)
+directories=[(SOURCE,'source3753'),(CANDIDATE,'native-candidate'),(BROAD,'broader')]
+for label in packages:directories.append((WORK/('player-elimination-'+label+'-v1'),'packaged-'+label))
+for directory,label in directories:
+ for p in sorted(directory.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt'):preserve(p,label+'/'+p.name)
+for suite in ('gameplay','serialization'):
+ for p in sorted((BROAD/suite).iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.xml'):preserve(p,'broader/'+suite+'/'+p.name)
+for folder in ('policy-originals','policy-applied'):
+ for p in (BROAD/folder).rglob('*.java'):preserve(p,'broader/'+folder+'/'+p.relative_to(BROAD/folder).as_posix()+'.txt')
+preserve(WORK/'player-elimination-packaged-rollup-v1.json','packaged-membership-rollup.json')
+for name in ('build-recipe.json','engine-lock.json','engine-config.json','maven-build.log'):preserve(build/name,'native4953/'+name)
+preserve(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml','native4953/testng-results.xml')
+run_ids=set()
+for label in packages:
+ for rid in load(WORK/('player-elimination-'+label+'-v1')/'process.json')['new_run_directories']:run_ids.add(rid)
+for rid in sorted(run_ids):
+ directory=ROOT/'data/runs'/rid
+ for p in sorted(directory.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt'):preserve(p,'runs/'+rid+'/'+p.name)
+ preserve(directory/'rules-reports/testng-results.xml','runs/'+rid+'/rules-reports/testng-results.xml')
+for pattern in ('*source3753*.py','*player_elimination*.py','audit_build4953_v1.py'):
+ for p in sorted(WORK.glob(pattern)):
+  relative='drivers/'+p.name+'.txt'
+  if (dest/relative).exists():continue
+  preserve(p,relative)
+record={'status':'source_native_nonresolution_packaged_and_broader_passed','source_ci':ci,'build_id':build.name,'source_counts':source['counts'],'native_counts':audit['native_counts'],'retained_prior_source_cases':3732,'retained_prior_native_cases':4932,'added_ai_cases':21,'native_audit':audit,'card_resource_audit':resources,'packaged_nonresolution_main_cases':2525,'other_packaged_cases':405,'packaged_audits':packages,'packaged_membership_rollup':rollup,'broader':broader,'broader_wrapper':wrapper,'preserved_audit_correction':'The first remainder audit retained a stale1578 final sum after14 phase cases were added. Corrected analysis requires1592 and rechecks the same reports without rerunning gameplay. Original and corrected audit sources and correction receipt are preserved.','registered_policy':'200 nonterminal points for lost registered opponent; minus200 for lost ally. Native terminal win/loss ordering preserved. No card-name heuristic.','original_resolution_cases':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'full_main_packaged_expected_cases':3796,'full_main_packaged_passed':False,'selected_runtime_changed':False,'scope':'Finite source/native, packaged and reviewed-policy broader suites only. All prior case/parameter identities retained. Only evaluator production class family changes;173 protected resolution/helper classfiles remain identical. Not the original1271/90 pass, full3796 packaged pass, full legal games, activation or universal card/rules/optimal-play proof. Historical catalog construction is not new card/interaction evidence.','files':files}
+save(index,record)
+for n,h in files.items():assert sha(ROOT/n)==h
+p=ROOT/'README.md';text=p.read_text(encoding='utf-8');a=text.index('A newly registered candidate fixes multiplayer elimination valuation:');b=text.index('Packaged-test receipts preserve native parameter identities.',a)
+new="""The candidate fixes multiplayer elimination valuation: the AI now recognizes
+useful opponent eliminations and penalizes allied losses. It passes 3,753 source
+and 4,953 native cases, retaining every previous case and adding 21 AI controls.
+Only the evaluator production class family changes; 173 original resolution/helper
+classfiles remain byte-identical.
+
+Fresh checks pass 2,525 main packaged cases outside resolution, 405 separate
+packaged cases, 6,276 broader gameplay cases and 320 serialization/loading cases.
+Earlier catalog construction succeeds for 32,636 identities; seven meld results
+are explicitly unavailable as standalone scripts. Construction and finite tests
+do not prove universal card/rules correctness or optimal play.
+
+The original 1,271-case / 90-second gate remains unresolved. The full 3,796-case
+main packaged gate, full-game validation and candidate activation remain open.
+The selected runtime is unchanged. Tested performance shortcuts remain excluded.
+
+"""
+text=text[:a]+new+text[b:];text=text.replace('[validation evidence](engine/phase_regression_runtime_evidence.json)','[validation evidence](engine/player_elimination_runtime_evidence.json)');p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'docs/CARD_COVERAGE.md';text=p.read_text(encoding='utf-8');marker='# Card support and evidence\n\n';assert text.count(marker)==1
+entry="""The registered elimination evaluator now passes all **3,753 fresh-source** and
+**4,953 native** cases with exact retained method/parameter identities. Only its
+production class family changes; 173 original resolution/helper classfiles remain
+byte-identical. All 2,525 main packaged cases outside resolution and 405 separate
+packaged cases pass with exact native membership, verified class origins and
+byte-identical configuration restoration. Fresh broader suites pass 6,276 gameplay
+and 320 serialization/loading cases, retaining all 6,241 previous gameplay cases
+and adding 35 later controls. Existing reviewed test policies are restored exactly.
+See [raw runtime evidence](../engine/player_elimination_runtime_evidence.json).
+The original 1,271/90, full 3,796 packaged gate, full legal games, activation and
+universal card/rules correctness remain open. No new catalog-construction claim.
+
+"""
+text=text.replace(marker,marker+entry,1).replace('Twenty-one candidate/payment/autonomous cases are registered. Full 3,753-source,\n4,953-native and 3,796 main packaged validation is pending.','Twenty-one candidate/payment/autonomous cases are registered. The source/native\nand nonresolution packaged suites pass as described above; the full 3,796 main\npackaged gate remains open.',1);p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'CHANGELOG.md';text=p.read_text(encoding='utf-8');marker='## Unreleased\n\n';assert text.count(marker)==1
+entry="""- Validate the elimination evaluator in all 3,753 fresh-source and 4,953 native
+  cases, retaining every prior method/parameter identity. Verify only evaluator
+  production classes change and 173 resolution/helper classfiles stay identical.
+- Pass 2,525 main packaged cases outside resolution and 405 separate packaged
+  cases with exact native membership and restored configuration. Pass fresh
+  broader suites of 6,276 gameplay and 320 serialization/loading cases, retaining
+  all prior cases and restoring reviewed test policies. Preserve reports and
+  receipts in engine/player_elimination_runtime_evidence.json. Original 1,271/90,
+  full 3,796 packaged, full legal games, activation and universal rules stay open.
+
+"""
+text=text.replace(marker,marker+entry,1).replace('  3,753 source, 4,953 native and 3,796 main packaged cases; full build validation\n  is pending.','  3,753 source, 4,953 native and 3,796 main packaged cases. Subsequent validation\n  is recorded above; the full packaged gate remains open.',1);p.write_text(text,encoding='utf-8',newline='\n')
+p=ROOT/'.gitattributes';text=p.read_text(encoding='utf-8')+'engine/player_elimination_runtime_evidence.json -text whitespace=cr-at-eol\nengine/pending/player-elimination-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol\n';p.write_text(text,encoding='utf-8',newline='\n')
+print(json.dumps({'build_id':build.name,'artifact_files':len(files),'source':3753,'native':4953,'main_nonresolution':2525,'other_packaged':405,'broader':[6276,320],'activated':False}),flush=True)

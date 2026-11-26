@@ -1,0 +1,103 @@
+"""Run all fixed packaged groups, retaining the original resolution workload and limit."""
+from pathlib import Path
+import hashlib
+import json
+import os
+import shutil
+import subprocess
+import sys
+import unittest
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import read_settings
+from commander.engine.forge_engine import _environment
+WORK=Path(__file__).resolve().parent
+CANDIDATE=WORK/'player-elimination-candidate-v1'
+RUN=WORK/'player-elimination-remainder-v1'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+EPOCH=WORK/'player-elimination-candidate-v1'
+frozen=load(EPOCH/'source-frozen-inputs.json')
+worker=sys.argv[1:]==['--worker']
+assert sys.argv[1:] in ([],['--worker'])
+assert all(sha(ROOT/n)==h for n,h in frozen.items() if not(worker and n=='config/engine_config.json'))
+assert load(CANDIDATE/'build-audit.json')['native_counts']['total']==4953
+if worker:
+    assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'candidate-config.json').read_bytes()
+    os.environ['COMMANDER_ENGINE_INTEGRATION']='1'
+    os.environ['COMMANDER_JAVAC']='C:/Program Files/Java/jdk-19/bin/javac.exe'
+    from tests.integration.test_draw_endings_integration import DrawEndingIntegrationTests
+    from tests.support.draw_ending_partitions import EXPECTED_COUNTS
+    assert EXPECTED_COUNTS['resolution']==1271 and EXPECTED_COUNTS['cast_events']==1380
+    assert sum(EXPECTED_COUNTS.values())==3796
+    class CastOnly(DrawEndingIntegrationTests):
+        __unittest_skip__=False
+        def test_packaged_draw_ending_rules(self):
+            methods=self.check_partition(read_settings(),'cast_events')
+            self.assertEqual(len(methods),1380)
+            dungeons=self.check_partition(read_settings(),'dungeons')
+            self.assertEqual(len(dungeons),10)
+            expended=self.check_partition(read_settings(),'expended_mana')
+            self.assertEqual(len(expended),6)
+            first_events=self.check_partition(read_settings(),'first_events')
+            self.assertEqual(len(first_events),12)
+            scry=self.check_partition(read_settings(),'scry_history')
+            self.assertEqual(len(scry),6)
+            spell_history=self.check_partition(read_settings(),'spell_game_history')
+            self.assertEqual(len(spell_history),12)
+            foretell_history=self.check_partition(read_settings(),'foretell_history')
+            self.assertEqual(len(foretell_history),12)
+            discarded=self.check_partition(read_settings(),'discard_history')
+            self.assertEqual(len(discarded),18)
+            sacrificed=self.check_partition(read_settings(),'sacrifice_history')
+            self.assertEqual(len(sacrificed),26)
+            payloads=self.check_partition(read_settings(),'payload_graph')
+            self.assertEqual(len(payloads),57)
+            lifecycle=self.check_partition(read_settings(),'copier_lifecycle')
+            self.assertEqual(len(lifecycle),8)
+            ignored=self.check_partition(read_settings(),'ignore_effect')
+            self.assertEqual(len(ignored),22)
+            remembered=self.check_partition(read_settings(),'remembered_history')
+            self.assertEqual(len(remembered),9)
+            phase=self.check_partition(read_settings(),'phase_replacements')
+            self.assertEqual(len(phase),14)
+    result=unittest.TextTestRunner(stream=sys.stdout,verbosity=2).run(
+        CastOnly('test_packaged_draw_ending_rules'))
+    outcome={'successful':result.wasSuccessful(),'tests_run':result.testsRun,
+        'failures':len(result.failures),'errors':len(result.errors),'skipped':len(result.skipped),
+        'scope':'Fixed1380 cast,10 dungeon,6 expend 12 first-event 6 scry and12 game-long spell-history plus12 foretell-history and18 discard-history plus26 sacrifice-history and57 payload-graph plus8 lifecycle and22 ignore-effect and9 remembered-history cases only; full3796 gate remains incomplete at original1271/90.'}
+    save(RUN/'outcome.json',outcome)
+    assert result.wasSuccessful() and result.testsRun==1 and not result.skipped
+else:
+    assert not subprocess.check_output(['git','status','--porcelain'],cwd=ROOT)
+    assert subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()==load(EPOCH/'source-ci.json')['head_sha']
+    RUN.mkdir()
+    for n in ('source-ci.json','source-epoch.json','source-frozen-inputs.json'):
+        shutil.copyfile(EPOCH/n,RUN/n)
+    (RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+    active=(ROOT/'config/engine_config.json').read_bytes()
+    settings=read_settings(ROOT/load(CANDIDATE/'candidate-selection.json')['build']/'engine-config.json')
+    selector=(json.dumps({'home':str(settings.home),'java':str(settings.java),'lock':str(settings.lock_path)},indent=2)+'\n').encode('utf-8')
+    (RUN/'active-config-before.json').write_bytes(active)
+    (RUN/'candidate-config.json').write_bytes(selector)
+    existing={p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir()}
+    result=None
+    try:
+        (ROOT/'config/engine_config.json').write_bytes(selector)
+        env=_environment(RUN)
+        env['PYTHONUTF8']='1'
+        result=run_bounded([sys.executable,'-I',str(Path(__file__)),'--worker'],ROOT,RUN/'output.log',
+            ProcessLimits(420,log_bytes=65536,environment=env))
+    finally:
+        assert (ROOT/'config/engine_config.json').read_bytes()==selector, 'Configuration changed; backup preserved'
+        (ROOT/'config/engine_config.json').write_bytes(active)
+        assert all(sha(ROOT/n)==h for n,h in frozen.items())
+        assert sha(Path(__file__))==sha(RUN/'driver.py.txt')
+        if result is not None:
+            record={'process':result,'new_run_directories':sorted(p.name for p in (ROOT/'data/runs').iterdir() if p.is_dir() and p.name not in existing),
+                'configuration_restored':True,'worker_limit_seconds':90,'wrapper_limit_seconds':420,'log_sha256':sha(RUN/'output.log')}
+            save(RUN/'process.json',record)
+            print(json.dumps(record),flush=True)
+    assert result['status']=='finished' and result['returncode']==0,result

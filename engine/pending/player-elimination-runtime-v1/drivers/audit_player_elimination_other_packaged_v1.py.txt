@@ -1,0 +1,64 @@
+"""Bind the separate packaged families to native methods, parameters and origins."""
+from collections import Counter
+from pathlib import Path
+import json
+import re
+import sys
+import xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4]
+sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash,read_settings
+from tests.support import free_casting_worker,untap_worker,battle_combat_worker
+from tests.support.native_receipts import read_test_receipts
+WORK=Path(__file__).resolve().parent
+RUN=WORK/'player-elimination-other-packaged-v1'
+CANDIDATE=WORK/'player-elimination-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def cases(p,classes=None):
+    result=Counter()
+    for cls in ET.parse(p).findall('.//class'):
+        if classes is not None and cls.get('name') not in classes:continue
+        for m in cls.findall('test-method'):
+            assert m.get('status')=='PASS',(cls.get('name'),m.attrib)
+            if m.get('is-config')!='true':
+                result[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+    return result
+frozen=load(RUN/'source-frozen-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+outer=load(RUN/'process.json');process=outer['process']
+assert process['status']=='finished' and process['returncode']==0 and process['elapsed_seconds']<=420
+assert outer['configuration_restored'] and file_hash(RUN/'output.log')==outer['log_sha256']
+outcome=load(RUN/'outcome.json');assert outcome['successful'] and outcome['tests_run']==3 and not outcome['skipped']
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json')
+assert settings.verify()['native_tests']==dict(total=4953,passed=4953,failed=0,skipped=0)
+log=(RUN/'output.log').read_text(encoding='utf-8')
+results={};ids=[]
+for name,count,prefix,worker in [('free_casting',65,'free-casting',free_casting_worker),('untap',194,'untap',untap_worker),('battle_combat',146,'battle-combat',battle_combat_worker)]:
+    found=re.findall('"'+name+'_run": "([a-f0-9]{32})"',log);assert len(found)==1
+    rid=found[0];ids.append(rid);p=ROOT/'data/runs'/rid
+    rows=read_test_receipts(settings,p,prefix+'.json',{prefix+'-summary.json':1,prefix+'-methods.json':count})
+    summary,methods=rows[0],rows[1:]
+    expected=cases(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',set(worker.TEST_CLASSES))
+    actual=cases(p/'rules-reports/testng-results.xml');assert actual==expected and sum(actual.values())==count
+    methodcounts=Counter()
+    for (method,_),multiplicity in expected.items():methodcounts[method]+=multiplicity
+    assert Counter(r['method'] for r in methods)==methodcounts and all(r['status']=='PASS' for r in methods)
+    assert Counter((r['method'],tuple(r.get('parameters',[]))) for r in methods)==expected
+    assert summary['counts']==dict(total=count,passed=count,failed=0,skipped=0)
+    assert all(summary[n]==0 for n in ('testng_status','configuration_failures','configuration_skips','partial_successes'))
+    assert summary['production_classes_from_packaged_jar']==list(worker.NATIVE_CLASSES)
+    assert file_hash(p/'rules-reports/testng-results.xml')==summary['report_sha256']
+    assert all(file_hash(Path(n))==h for n,h in summary['inputs'].items())
+    execution=load(p/'rules-process.json')
+    assert execution['worker_sha256']==file_hash(Path(worker.__file__))
+    assert execution['process']['status']=='finished' and execution['process']['returncode']==0 and execution['process']['elapsed_seconds']<=90
+    assert all(file_hash(Path(n))==h for n,h in execution['process']['support_source_hashes'].items())
+    results[name]={'run_id':rid,'counts':summary['counts'],'native_method_and_parameter_counter_matches':True,
+        'production_origins':len(worker.NATIVE_CLASSES),'process':execution['process']}
+assert set(outer['new_run_directories'])==set(ids)
+assert (ROOT/'config/engine_config.json').read_bytes()==(RUN/'active-config-before.json').read_bytes()
+record={'build_id':build.name,'groups':results,'total_cases':sum(r['counts']['total'] for r in results.values()),
+    'worker_limit_seconds':90,'wrapper_limit_seconds':420,'whole_wrapper_seconds':process['elapsed_seconds'],
+    'configuration_restored':True,'scope':'Separate405 packaged cases only. Full3796 still incomplete at original1271/90.'}
+assert record['total_cases']==405
+out=RUN/'audit.json';assert not out.exists();out.write_text(json.dumps(record,indent=2)+'\n',encoding='utf-8',newline='\n')
+print(json.dumps({'counts':[r['counts']['total'] for r in results.values()],'exact_native_case_parameters_match':True}))

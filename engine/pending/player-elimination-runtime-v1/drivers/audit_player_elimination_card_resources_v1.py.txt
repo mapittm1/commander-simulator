@@ -1,0 +1,16 @@
+"""Compare every packaged card-resource member without launching another JVM."""
+from pathlib import Path
+import hashlib,json,zipfile
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'player-elimination-candidate-v1';load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+old=ROOT/'data/engine-builds/d98c8b366a8d4210a9199336cdcfd02f/runtime/res/cardsfolder/cardsfolder.zip'
+build=ROOT/load(RUN/'candidate-selection.json')['build'];new=build/'runtime/res/cardsfolder/cardsfolder.zip'
+def contents(path):
+ with zipfile.ZipFile(path) as archive:
+  names=archive.namelist();assert len(names)==len(set(names))
+  return {name:hashlib.sha256(archive.read(name)).hexdigest() for name in sorted(names) if not name.endswith('/')}
+before=contents(old);after=contents(new);assert before==after and before
+manifest=hashlib.sha256(json.dumps(before,sort_keys=True,separators=(',',':')).encode('utf-8')).hexdigest()
+result={'prior_build':'d98c8b366a8d4210a9199336cdcfd02f','current_build':build.name,'prior_archive_sha256':sha(old),'current_archive_sha256':sha(new),'card_resource_members':len(before),'all_member_names_and_content_hashes_identical':True,'canonical_member_manifest_sha256':manifest,'scope':'Packaged card resource preservation only; not new card construction, behavior, AI decision or universal rules proof.'}
+(RUN/'card-resource-audit.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps(result),flush=True)

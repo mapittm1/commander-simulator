@@ -6,14 +6,25 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the elimination evaluator in all 3,753 fresh-source and 4,953 native
+  cases, retaining every prior method/parameter identity. Verify only evaluator
+  production classes change and 173 resolution/helper classfiles stay identical.
+- Pass 2,525 main packaged cases outside resolution and 405 separate packaged
+  cases with exact native membership and restored configuration. Pass fresh
+  broader suites of 6,276 gameplay and 320 serialization/loading cases, retaining
+  all prior cases and restoring reviewed test policies. Preserve reports and
+  receipts in engine/player_elimination_runtime_evidence.json. Original 1,271/90,
+  full 3,796 packaged, full legal games, activation and universal rules stay open.
+
 - Fix multiplayer AI valuation that could decline a legal opponent elimination
   because average surviving-opponent life remained unchanged. Reward native
   registered-opponent losses and penalize allied losses by 200 heuristic points;
   preserve terminal scoring. Focused autonomous/payment controls improve from
   5/11 to 11/11, and 112 unchanged control/perspective/snapshot cases pass.
 - Register 21 candidate/payment/autonomous regressions. The new recipe expects
-  3,753 source, 4,953 native and 3,796 main packaged cases; full build validation
-  is pending. Preserve raw baselines, corrected fixtures and the evaluator overlay
+  3,753 source, 4,953 native and 3,796 main packaged cases. Subsequent validation
+  is recorded above; the full packaged gate remains open. Preserve raw baselines,
+  corrected fixtures and the evaluator overlay
   in engine/elimination_score_evidence.json. Keep selected runtime and original
   1,271-case / 90-second gate unchanged. Full rules coverage remains open.
 

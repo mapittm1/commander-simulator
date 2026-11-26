@@ -1,0 +1,22 @@
+"""Audit the complete nonresolution packaged membership without claiming the timing gate."""
+from pathlib import Path
+import json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from tests.support.draw_ending_partitions import PARTITIONS,EXPECTED_COUNTS
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+front=load(WORK/'player-elimination-front-packaged-v1/audit.json')
+remainder=load(WORK/'player-elimination-remainder-v1/audit.json')
+ai=load(WORK/'player-elimination-packaged-ai-v1/audit.json')
+other=load(WORK/'player-elimination-other-packaged-v1/audit.json')
+groups={}
+for proof in (front,remainder):
+ for name,value in proof['groups'].items():
+  assert name not in groups;groups[name]=value['counts']['total']
+assert ai['group'] not in groups;groups[ai['group']]=ai['counts']['total']
+assert set(groups)==set(PARTITIONS)-{'resolution'}
+assert all(groups[n]==EXPECTED_COUNTS[n] for n in groups)
+assert sum(groups.values())==2525 and other['total_cases']==405
+assert EXPECTED_COUNTS['resolution']==1271 and sum(EXPECTED_COUNTS.values())==3796
+result={'main_nonresolution_counts':groups,'main_nonresolution_total':2525,'separate_packaged_total':405,'original_resolution_cases':1271,'original_resolution_worker_seconds':90,'original_resolution_gate_attempted':False,'full3796_gate_passed':False,'scope':'All existing groups outside the original resolution group, with individual exact-native-membership/origin audits. Not a split replacement for original1271/90 or full-card correctness proof.'}
+(WORK/'player-elimination-packaged-rollup-v1.json').write_text(json.dumps(result,indent=2)+'\n',encoding='utf-8',newline='\n');print(json.dumps(result),flush=True)

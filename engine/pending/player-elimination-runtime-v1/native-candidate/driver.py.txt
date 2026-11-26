@@ -1,0 +1,34 @@
+"""Build the expanded audited native candidate only after source3753 passes."""
+from pathlib import Path
+import contextlib,json,subprocess,sys,time,traceback
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from tools import build_sticker_engine as builder
+from commander.engine.forge_config import file_hash
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';SOURCE=WORK/'source3753-v1';RUN=WORK/'player-elimination-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+proof=load(SOURCE/'outcome.json');assert proof['passed'] and proof['counts']==dict(total=3753,passed=3753,failed=0,skipped=0)
+assert proof['exact_case_and_parameter_counter_matches'] and not proof['configuration_failures_or_skips']
+assert not subprocess.check_output(['git','status','--porcelain'])
+ci=load(SOURCE/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+frozen=load(SOURCE/'root-inputs.json');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+assert load(ROOT/'engine/sticker_recipe.json')['native_test_count']==4953
+for manifest in ('production-inputs.json','selected-test-inputs.json','card-inputs.json'):
+ assert all(file_hash(Path(load(SOURCE/'selection.json')['source'])/n)==h for n,h in load(SOURCE/manifest).items())
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());save(RUN/'source-ci.json',ci);save(RUN/'source-frozen-inputs.json',frozen)
+save(RUN/'source-epoch.json',{'head':ci['head_sha'],'source_cases':3753,'source_outcome_sha256':file_hash(SOURCE/'outcome.json'),'source_report_sha256':proof['report_sha256'],'scope':'Fresh source3753 passed with exact cases/parameters; native4953 and full packaged gates still required.'})
+args=['tools/build_sticker_engine.py','--source-archive',str(ROOT/'data/coverage-research/forge-583714b.zip'),'--maven-archive',str(ROOT/'data/coverage-research/apache-maven-3.10.0-bin.zip'),'--jdk','C:/Program Files/Java/jdk-19','--runtime',str(ROOT/'data/engines/java17/jdk-17.0.20.1+1-jre/bin/java.exe')]
+save(RUN/'command.json',args);existing={p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir()};started=time.monotonic();status='failed';error=None
+try:
+ sys.argv=args
+ with (RUN/'build-output.log').open('x',encoding='utf-8') as output,contextlib.redirect_stdout(output),contextlib.redirect_stderr(output):builder.main()
+ status='finished'
+except BaseException:
+ error=traceback.format_exc();raise
+finally:
+ new=sorted(p.name for p in (ROOT/'data/engine-builds').iterdir() if p.is_dir() and p.name not in existing)
+ process={'status':status,'elapsed_seconds':round(time.monotonic()-started,3),'new_builds':new,'error':error,'maven_limit_seconds':600,'source_suite_cases':3753,'expected_native_cases':4953};save(RUN/'process.json',process)
+ assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');assert all(file_hash(ROOT/n)==h for n,h in frozen.items())
+ if status=='finished':
+  assert len(new)==1;build=ROOT/'data/engine-builds'/new[0];lock=load(build/'engine-lock.json');assert lock['native_tests']==dict(total=4953,passed=4953,failed=0,skipped=0)
+  save(RUN/'candidate-selection.json',{'build':build.relative_to(ROOT).as_posix(),'config':str(build/'engine-config.json'),'native_counts':lock['native_tests'],'installed':False});print(json.dumps(process),flush=True)

@@ -1,0 +1,62 @@
+"""Prepare the unchanged production tree plus fourteen registered phase cases."""
+from collections import Counter
+from pathlib import Path
+import json,re,shutil,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_engine import _environment
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+RUN=WORK/'source3753-v1';PRIOR=WORK/'source3732-v1';BASE=PRIOR/'source'
+BUILD=ROOT/'data/engine-builds/d98c8b366a8d4210a9199336cdcfd02f'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+ci=load(WORK/'elimination-register-published-ci-v1.json')
+assert ci['conclusion']=='success' and ci['status']=='completed'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert not subprocess.check_output(['git','status','--porcelain'])
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4953
+production=load(PRIOR/'production-inputs.json');cards=load(PRIOR/'card-inputs.json');selected=load(PRIOR/'test-inputs.json')
+assert len(production)==2168 and len(cards)==350 and len(selected)==182
+assert all(file_hash(BASE/n)==h for n,h in {**production,**cards,**selected}.items())
+prior=load(PRIOR/'outcome.json');assert prior['passed'] and prior['counts']==dict(total=3732,passed=3732,failed=0,skipped=0)
+paths=filter(None,subprocess.check_output(['git','ls-files','-z']).decode('utf-8').split('\0'));frozen={n:file_hash(ROOT/n) for n in paths}
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+source=RUN/'source';modules={p.parent.resolve() for p in BASE.glob('*/pom.xml')}|{BASE.resolve()}
+shutil.copytree(BASE,source,ignore=lambda d,n:['target'] if Path(d).resolve() in modules and 'target' in n else [])
+assert not list(source.glob('*/target'))
+before_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(before_tests)==542
+patch=ROOT/'engine/patches/commander-player-elimination-score.patch'
+for label,options in [('check',['--check']),('apply',[])]:
+ process=run_bounded(['git','apply',*options,'--directory='+source.relative_to(ROOT).as_posix(),str(patch)],ROOT,RUN/('patch-'+label+'.log'),ProcessLimits(90,environment=_environment(RUN)))
+ save(RUN/('patch-'+label+'-process.json'),process);assert process['status']=='finished' and process['returncode']==0
+changed=[n for n,h in production.items() if file_hash(source/n)!=h]
+assert changed==['forge-ai/src/main/java/forge/ai/simulation/GameStateEvaluator.java']
+assert (source/changed[0]).read_text(encoding='utf-8')==(WORK/'elimination-score4932-prototype-v2/source'/changed[0]).read_text(encoding='utf-8')
+builder._copy_regressions(source)
+assert all(file_hash(source/n)==h for n,h in before_tests.items())
+assert all(file_hash(source/n)==h for n,h in production.items() if n not in changed)
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(all_tests)==544
+fixtures={
+ 'forge-gui-desktop/src/test/java/forge/ai/CommanderIgnoreEffectAiTest.java':'commander_ignore_effect_ai_test_sha256',
+ 'forge-gui-desktop/src/test/java/forge/ai/CommanderIgnoreEffectChoiceTest.java':'commander_ignore_effect_choice_test_sha256'}
+assert set(all_tests)-set(before_tests)==set(fixtures)
+for name,key in fixtures.items():assert all_tests[name]==recipe[key]
+expected=Counter((v['method'],tuple(v['parameters'])) for v in prior['cases']);assert sum(expected.values())==3732
+added=Counter()
+for report,target in [(WORK/'ignore-ai4932-cases-v2/reports/testng-results.xml','forge.ai.CommanderIgnoreEffectAiTest'),(WORK/'elimination-score4932-cases-prototype-v2/reports/testng-results.xml','forge.ai.CommanderIgnoreEffectChoiceTest')]:
+ for cls in ET.parse(report).findall('.//class'):
+  for method in cls.findall('test-method'):
+   assert method.get('status')=='PASS'
+   if method.get('is-config')!='true':
+    assert cls.get('name')==target
+    added[(target+'.'+method.get('name'),tuple((v.text or '').strip() for v in method.findall('./params/param/value')))]+=1
+assert sum(added.values())==21 and not set(added)&set(expected);expected.update(added)
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+selectors=load(PRIOR/'selection.json')['suite']['classes'];assert all(n not in selectors for n in ('CommanderIgnoreEffectAiTest','CommanderIgnoreEffectChoiceTest'))
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':{'classes':[*selectors,'CommanderIgnoreEffectAiTest','CommanderIgnoreEffectChoiceTest'],'expected_cases':3753,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')},'changed_sources':changed,'fresh_target_directories':True,'scope':'All3732 prior source cases plus21 candidate/payment/autonomous controls, exact method/parameter membership. Only GameStateEvaluator changed; not original1271/90, native4953, activation or universal rules proof.'})
+for fixture in fixtures:selected[fixture]=file_hash(source/fixture)
+for name,value in [('test-inputs.json',selected),('production-inputs.json',{n:file_hash(source/n) for n in production}),('selected-test-inputs.json',all_tests),('card-inputs.json',cards),('root-inputs.json',frozen),('source-ci.json',ci)]:save(RUN/name,value)
+save(RUN/'preparation.json',{'passed':True,'production_sources':2168,'changed_sources':1,'all_java_test_sources_frozen':544,'selected_test_inputs':184,'card_inputs':350,'expected_cases':3753,'retained_prior_cases':3732,'new_cases':21,'all_prior_test_bytes_unchanged':True})
+print('Fresh source prepared:2168 production (one changed),544 Java tests,184 selected inputs,350 cards,3753 cases.',flush=True)

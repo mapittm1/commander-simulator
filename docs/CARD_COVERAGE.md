@@ -1,5 +1,18 @@
 # Card support and evidence
 
+The registered elimination evaluator now passes all **3,753 fresh-source** and
+**4,953 native** cases with exact retained method/parameter identities. Only its
+production class family changes; 173 original resolution/helper classfiles remain
+byte-identical. All 34,466 packaged card-resource members are unchanged.
+All 2,525 main packaged cases outside resolution and 405 separate
+packaged cases pass with exact native membership, verified class origins and
+byte-identical configuration restoration. Fresh broader suites pass 6,276 gameplay
+and 320 serialization/loading cases, retaining all 6,241 previous gameplay cases
+and adding 35 later controls. Existing reviewed test policies are restored exactly.
+See [raw runtime evidence](../engine/player_elimination_runtime_evidence.json).
+The original 1,271/90, full 3,796 packaged gate, full legal games, activation and
+universal card/rules correctness remain open. No new catalog-construction claim.
+
 A registered one-source evaluator fix recognizes native participant eliminations.
 The baseline declines a legal lethal activation: its score falls 340 to 339 while
 remaining-opponent average life is unchanged. The candidate adds 200 points for
@@ -7,9 +20,10 @@ a lost registered opponent and subtracts 200 for a lost ally, retaining terminal
 win/loss scoring. Eleven focused controls improve from 5 pass / 6 fail to 11 pass;
 112 unchanged semantic cases pass. Both positive and unaffordable/no-benefit
 controls are retained. This is an AI heuristic, not a rules or optimal-play claim.
-Twenty-one candidate/payment/autonomous cases are registered. Full 3,753-source,
-4,953-native and 3,796 main packaged validation is pending. The original 1,271/90
-gate, full legal games, activation and universal rules support remain open.
+Twenty-one candidate/payment/autonomous cases are registered. The source/native
+and nonresolution packaged suites pass as described above; the full 3,796 main
+packaged gate remains open, along with original 1,271/90, full legal games,
+activation and universal rules support.
 See [focused evidence](../engine/elimination_score_evidence.json), including all
 fixture and line-ending preparation corrections. Selected runtime is unchanged.
 
