@@ -17,8 +17,10 @@ Historical entries below summarize verified Git milestones, not release versions
   The full quality gate passes 490 tests and 845 subtests, with 45 opt-in skips.
 - Refresh the local Oracle export to 39,412 records and audit both runtimes:
   32,636 Commander-legal starting identities match scripts; seven separately
-  classified meld results lack standalone scripts. Two Oracle text changes need
-  interaction review; matching definitions does not establish rules correctness.
+  classified meld results lack standalone scripts. Two Oracle text changes were
+  reviewed against scripts and existing controls: Hit It! has retained reveal/
+  zone-movement evidence; B'Elanna Torres needs focused sequence validation.
+  Matching definitions does not establish rules correctness.
   Preserve refresh scope and receipt identifiers in docs/CATALOG_INGESTION.md.
 
 - Preserve two independent unpromoted query guards. Native Self-first restriction

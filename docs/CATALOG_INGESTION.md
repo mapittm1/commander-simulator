@@ -45,9 +45,14 @@ A comparison against the backup found no added/removed Commander-legal IDs.
 Only two records changed among the explicitly compared Oracle/game fields:
 
 - **Hit It!** now says “reveal” instead of “look at” the top five cards. The
-  candidate script already says reveal, but its Dig definition contains both
-  `Reveal$ True` and `NoReveal$ True`. Public-information behavior needs a native
-  interaction check; wording agreement alone is insufficient.
+  candidate script already says reveal. Existing `StarTrekRevealTest` controls
+  observe the exact five identities revealed to every opponent, with and without
+  a land, land entry tapped and graveyard movement without a Zellix mill trigger.
+  See [preserved native evidence](../engine/public_reveal_evidence.json) and
+  [the assertions](../engine/tests/StarTrekRevealTest.java). In DigEffect,
+  `Reveal$ True` reveals the initial group, while `NoReveal$ True` suppresses a
+  later chosen-card reveal; those parameters do not cancel each other. This
+  refresh did not rerun native tests or extend their scope.
 - **B'Elanna Torres, Scrapper** now explicitly conditions drawing on an artifact
   having been revealed this way. The candidate definition remembers revealed
   cards and conditions drawing on a remembered artifact, but retains old display
