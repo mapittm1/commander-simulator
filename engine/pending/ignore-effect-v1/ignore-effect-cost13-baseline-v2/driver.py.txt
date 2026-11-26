@@ -1,0 +1,62 @@
+"""Observe fixed paid-ignore controls on the audited native baseline, without production overrides."""
+from collections import Counter
+from pathlib import Path
+import importlib,json,re,subprocess,sys,xml.etree.ElementTree as ET
+ROOT=Path(__file__).resolve().parents[4];sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,jvm_library,read_settings
+from commander.engine.native_runtime import _engine_profile,_environment,require_bridge
+from tests.support import draw_ending_worker,packaged_rules
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';MODE=sys.argv[1];assert MODE in ('baseline','prototype');assert sys.argv[2:] in ([],['--worker']);RUN=WORK/('ignore-effect-cost13-'+MODE+'-v2');FIXTURE=WORK/'ignore-effect-cost-fixture-v2';PROTO=WORK/'ignore-effect-copy-prototype-v2';CANDIDATE=WORK/'copier-release-candidate-v1';EPOCH=WORK/'source3687-v1';TARGET='forge.ai.CommanderIgnoreEffectCostTest'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+BUILD=ROOT/load(CANDIDATE/'candidate-selection.json')['build'];CONFIG=BUILD/'engine-config.json';UPSTREAM=BUILD/'source/forge-gui-desktop/target/test-classes'
+def verify(root=False):
+ assert all(file_hash(FIXTURE/n)==h for n,h in load(FIXTURE/'inputs.json').items())
+ assert all(file_hash(PROTO/n)==h for n,h in load(PROTO/'inputs.json').items())
+ assert load(RUN/'test-inputs.json')['files']=={p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}
+ if root:assert all(file_hash(ROOT/n)==h for n,h in load(EPOCH/'root-inputs.json').items())
+if sys.argv[2:]==['--worker']:
+ verify();settings=read_settings(CONFIG);lock=settings.verify();assert lock['native_tests']['total']==4887
+ require_bridge();java=importlib.import_module('jpype');recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256'];archive=settings.home/lock['jar_name']
+ java.startJVM(jvm_library(settings.java),'-Xmx2048m','-XX:ActiveProcessorCount=2','-Djava.awt.headless=true','-Dfile.encoding=UTF-8',classpath=list(map(str,(() if MODE=='baseline' else (PROTO/'classes',))+(archive,FIXTURE/'classes',UPSTREAM,dependency))),convertStrings=True)
+ runtime=java.JClass('java.lang.Runtime').getRuntime();assert runtime.availableProcessors()==2 and runtime.maxMemory()==2147483648
+ origins=tuple(dict.fromkeys((*draw_ending_worker.NATIVE_CLASSES,'forge.ai.simulation.GameCopier','forge.game.spellability.SpellAbilitySnapshot','forge.game.staticability.StaticAbilityContinuous')))
+ overrides=set() if MODE=='baseline' else {n[len('classes/'):] for n in load(PROTO/'inputs.json') if n.startswith('classes/') and n.endswith('.class')}
+ assert all(n=='forge/game/staticability/StaticAbilityContinuous.class' or n.startswith('forge/game/staticability/StaticAbilityContinuous$') for n in overrides)
+ for name in origins:assert packaged_rules.class_origin(java,name).samefile(PROTO/'classes' if name.replace('.','/')+'.class' in overrides else archive),name
+ for name in overrides:assert packaged_rules.class_origin(java,name[:-6].replace('/','.')).samefile(PROTO/'classes'),name
+ assert packaged_rules.class_origin(java,TARGET).samefile(FIXTURE/'classes')
+ for name in ('forge.ai.AITest','forge.ai.CommanderPayloadGraphTest'):assert packaged_rules.class_origin(java,name).samefile(UPSTREAM)
+ cards=("Damping Engine", "Volrath's Curse", "Lost in Thought")
+ parameterized=('originalNativeCostWorksAndExpires','copiedCostChangesOnlyTheCopiedWorld','copiedPaidPermissionExpiresIndependently','onlyTheAffectedControllerCanIgnore')
+ expected=Counter((TARGET+'.'+method,(card,)) for method in parameterized for card in cards)
+ expected[(TARGET+'.insufficientGraveyardCardsCannotPayLostInThoughtCost',())]+=1
+ assert sum(expected.values())==13
+
+ runner=java.JClass('org.testng.TestNG')();listener=java.JClass('org.testng.TestListenerAdapter')();runner.addListener(listener);runner.setTestClasses(java.JArray(java.JClass('java.lang.Class'))([java.JClass(TARGET).class_]));runner.setOutputDirectory(str(RUN/'reports'));runner.setUseDefaultListeners(True);runner.run()
+ counts,methods=packaged_rules.test_results(listener);actual=Counter();passed=set();failures=[]
+ for cls in ET.parse(RUN/'reports/testng-results.xml').findall('.//class'):
+  for m in cls.findall('test-method'):
+   if m.get('is-config')=='true':continue
+   actual[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+   if m.get('status')=='PASS':passed.add((m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value'))))
+   if m.get('status')=='FAIL':
+    exception=m.find('exception');failures.append({'method':m.get('name'),'parameters':[(v.text or '').strip() for v in m.findall('./params/param/value')],'exception':None if exception is None else exception.get('class'),'message':(m.findtext('./exception/message') or '').strip()[:1500]})
+ controls={('originalNativeCostWorksAndExpires',(card,)) for card in cards}|{('insufficientGraveyardCardsCannotPayLostInThoughtCost',())}
+ result={'mode':MODE,'counts':counts,'methods':methods,'failures':failures,'positive_and_negative_controls_passed':controls<=passed,'exact_case_and_parameter_counter_matches':actual==expected,'configuration_failures':len(listener.getConfigurationFailures()),'configuration_skips':len(listener.getConfigurationSkips()),'testng_status':int(runner.getStatus()),'actual_processors':int(runtime.availableProcessors()),'actual_max_java_heap_bytes':int(runtime.maxMemory()),'native_build':BUILD.name,'production_origins_verified':len(origins),'scope':'Thirteen paired Damping Engine, Volraths Curse and Lost in Thought observations with native sacrifice/exile costs and cleanup hooks. Prototype overrides only StaticAbilityContinuous and its nested classes. Controlled choices and worlds do not prove all interactions, full legal histories, a sealed build or all-card correctness.'}
+ save(RUN/'outcome.json',result);assert counts['total']==13 and counts['skipped']==0 and actual==expected
+ assert result['configuration_failures']==result['configuration_skips']==0 and result['testng_status']==int(bool(counts['failed']))
+ assert result['positive_and_negative_controls_passed'],failures
+ if MODE=='prototype':assert counts==dict(total=13,passed=13,failed=0,skipped=0),failures
+ verify();java.shutdownJVM()
+else:
+ assert not sys.argv[2:] and not subprocess.check_output(['git','status','--porcelain'])
+ ci=load(EPOCH/'source-ci.json');assert ci['conclusion']=='success' and ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+ assert load(CANDIDATE/'build-audit.json')['native_counts']==dict(total=4887,passed=4887,failed=0,skipped=0)
+ RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes());save(RUN/'test-inputs.json',{'files':{p.relative_to(UPSTREAM).as_posix():file_hash(p) for p in UPSTREAM.rglob('*') if p.is_file()}});verify(root=True)
+ settings=read_settings(CONFIG)
+ with _engine_profile(settings,RUN):process=run_bounded([sys.executable,'-I',str(Path(__file__)),MODE,'--worker'],settings.home,RUN/'native.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)))
+ save(RUN/'process.json',process);verify(root=True);assert file_hash(Path(__file__))==file_hash(RUN/'driver.py.txt');outcome=load(RUN/'outcome.json') if (RUN/'outcome.json').exists() else {}
+ print(json.dumps({'process':process,'counts':outcome.get('counts'),'failures':outcome.get('failures'),'controls_passed':outcome.get('positive_and_negative_controls_passed')}),flush=True)
+ assert process['status']=='finished' and process['returncode']==0,process

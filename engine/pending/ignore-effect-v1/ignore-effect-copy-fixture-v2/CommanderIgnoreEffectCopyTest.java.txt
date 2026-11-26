@@ -1,0 +1,166 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.game.Game;
+import forge.game.ability.ApiType;
+import forge.game.card.Card;
+import forge.game.cost.CostPayment;
+import forge.game.player.Player;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Supplied-world paid special actions and native cleanup; not full legal histories. */
+public class CommanderIgnoreEffectCopyTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+    private static final class Scene {
+        Game game;
+        Player actor;
+        Player other;
+        Card arbiter;
+        Card firstMana;
+        Card secondMana;
+        SpellAbility ignore;
+    }
+    private static void settle(Game game) {
+        game.getAction().checkStaticAbilities(false);
+        game.getTriggerHandler().resetActiveTriggers();
+        game.copyLastState();
+    }
+    private Scene scene() {
+        Scene s = new Scene();
+        s.game = CommanderPayloadGraphTest.newBoard();
+        s.actor = s.game.getPlayers().getFirst();
+        s.other = s.game.getPlayers().get(1);
+        s.arbiter = addCardToZone("Leonin Arbiter", s.actor, ZoneType.Battlefield);
+        s.firstMana = addCardToZone("Wastes", s.actor, ZoneType.Battlefield);
+        s.secondMana = addCardToZone("Wastes", s.actor, ZoneType.Battlefield);
+        settle(s.game);
+        s.ignore = s.arbiter.getSpellAbilities().stream()
+                .filter(ability -> ability.getApi() == ApiType.InternalIgnoreEffect)
+                .findFirst().orElseThrow();
+        assertTrue(s.actor.hasKeyword("CantSearchLibrary"));
+        assertTrue(s.other.hasKeyword("CantSearchLibrary"));
+        return s;
+    }
+    private void payIgnore(Scene s) {
+        s.ignore.setActivatingPlayer(s.actor);
+        assertTrue(s.ignore.canPlay());
+        assertTrue(new CostPayment(s.ignore.getPayCosts(), s.ignore)
+                .payComputerCosts(new AiCostDecision(s.actor, s.ignore, false, true)));
+        s.game.getStack().addAndUnfreeze(s.ignore);
+        settle(s.game);
+        assertTrue(s.firstMana.isTapped());
+        assertTrue(s.secondMana.isTapped());
+        assertEquals(s.actor.getManaPool().totalMana(), 0);
+        assertFalse(s.actor.hasKeyword("CantSearchLibrary"));
+        assertTrue(s.other.hasKeyword("CantSearchLibrary"));
+    }
+    private GameCopier branch(Game game) {
+        GameCopier copier = new GameCopier(game).withStack(true);
+        copier.makeCopy(null, game.getPlayers().getFirst());
+        copies.add(copier);
+        return copier;
+    }
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release();
+        copies.clear();
+    }
+    @Test public void originalPaidIgnoreIsPlayerSpecificAndExpires() {
+        Scene s = scene();
+        payIgnore(s);
+        s.game.getEndOfTurn().executeUntil();
+        settle(s.game);
+        assertTrue(s.actor.hasKeyword("CantSearchLibrary"));
+        assertTrue(s.other.hasKeyword("CantSearchLibrary"));
+    }
+    @Test public void copiedPaidPermissionMapsTheAffectedPlayer() {
+        Scene s = scene();
+        payIgnore(s);
+        GameCopier copier = branch(s.game);
+        assertFalse(copier.find(s.actor).hasKeyword("CantSearchLibrary"));
+        assertTrue(copier.find(s.other).hasKeyword("CantSearchLibrary"));
+        assertNotSame(copier.find(s.actor), s.actor);
+        assertTrue(copier.find(s.firstMana).isTapped());
+        assertTrue(copier.find(s.secondMana).isTapped());
+    }
+    @Test public void copiedNativeCleanupRestoresRestriction() {
+        Scene s = scene();
+        payIgnore(s);
+        GameCopier copier = branch(s.game);
+        copier.getCopiedGame().getEndOfTurn().executeUntil();
+        settle(copier.getCopiedGame());
+        assertTrue(copier.find(s.actor).hasKeyword("CantSearchLibrary"));
+        assertFalse(s.actor.hasKeyword("CantSearchLibrary"));
+    }
+    @Test public void copiedIgnoreOptionUsesMappedPlayers() {
+        Scene s = scene();
+        GameCopier copier = branch(s.game);
+        SpellAbility copied = copier.find(s.ignore);
+        copied.setActivatingPlayer(copier.find(s.actor));
+        assertSame(copied.getHostCard(), copier.find(s.arbiter));
+        assertTrue(copied.canPlay());
+        assertTrue(s.actor.hasKeyword("CantSearchLibrary"));
+    }
+    @Test public void nativeIgnoreCleanupHasNoUnmappedCallbacks() {
+        Scene s = scene();
+        payIgnore(s);
+        GameCopier copier = branch(s.game);
+        assertTrue(copier.getUnmappedSnapshotCommands().isEmpty(),
+                copier.getUnmappedSnapshotCommands().toString());
+    }
+    @Test public void repeatedCopyCleanupKeepsSiblingPermissionsIndependent() {
+        Scene s = scene();
+        payIgnore(s);
+        GameCopier first = branch(s.game);
+        GameCopier sibling = branch(s.game);
+        GameCopier second = branch(first.getCopiedGame());
+        Player repeated = second.find(first.find(s.actor));
+        second.getCopiedGame().getEndOfTurn().executeUntil();
+        settle(second.getCopiedGame());
+        assertTrue(repeated.hasKeyword("CantSearchLibrary"));
+        assertFalse(first.find(s.actor).hasKeyword("CantSearchLibrary"));
+        assertFalse(sibling.find(s.actor).hasKeyword("CantSearchLibrary"));
+        assertFalse(s.actor.hasKeyword("CantSearchLibrary"));
+    }
+    @Test public void copiedPaidActionChangesOnlyItsOwnWorld() {
+        Scene s = scene();
+        GameCopier copier = branch(s.game);
+        GameCopier sibling = branch(s.game);
+        SpellAbility copied = copier.find(s.ignore);
+        Player actor = copier.find(s.actor);
+        copied.setActivatingPlayer(actor);
+        assertTrue(copied.canPlay());
+        assertTrue(new CostPayment(copied.getPayCosts(), copied)
+                .payComputerCosts(new AiCostDecision(actor, copied, false, true)));
+        copier.getCopiedGame().getStack().addAndUnfreeze(copied);
+        settle(copier.getCopiedGame());
+        assertFalse(actor.hasKeyword("CantSearchLibrary"));
+        assertTrue(copier.find(s.firstMana).isTapped());
+        assertTrue(copier.find(s.secondMana).isTapped());
+        assertEquals(actor.getManaPool().totalMana(), 0);
+        assertTrue(s.actor.hasKeyword("CantSearchLibrary"));
+        assertFalse(s.firstMana.isTapped());
+        assertFalse(s.secondMana.isTapped());
+        assertTrue(sibling.find(s.actor).hasKeyword("CantSearchLibrary"));
+        assertFalse(sibling.find(s.firstMana).isTapped());
+        assertFalse(sibling.find(s.secondMana).isTapped());
+    }
+    @Test public void unaffordableIgnoreLeavesRestrictionsAndManaSourcesUnchanged() {
+        Scene s = scene();
+        s.ignore.setActivatingPlayer(s.other);
+        assertTrue(s.ignore.canPlay());
+        assertFalse(new CostPayment(s.ignore.getPayCosts(), s.ignore)
+                .payComputerCosts(new AiCostDecision(s.other, s.ignore, false, true)));
+        settle(s.game);
+        assertTrue(s.actor.hasKeyword("CantSearchLibrary"));
+        assertTrue(s.other.hasKeyword("CantSearchLibrary"));
+        assertFalse(s.firstMana.isTapped());
+        assertFalse(s.secondMana.isTapped());
+        assertEquals(s.other.getManaPool().totalMana(), 0);
+    }
+}

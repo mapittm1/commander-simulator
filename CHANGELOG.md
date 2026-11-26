@@ -6,6 +6,23 @@ Historical entries below summarize verified Git milestones, not release versions
 
 ## Unreleased
 
+- Validate the copier-lifecycle recipe with all 3,687 source and 4,887 native cases,
+  exact prior methods/parameters and reviewed input bytes. Verify 289 registered
+  plus nine priority fixtures and unchanged 173 resolution/helper classfiles;
+  production differences are confined to the GameCopier family. Keep independent
+  packaged/live gates open and runtime unselected.
+- Map ignore-effect special actions and shared cleanup callbacks into each copied
+  world. Correct nine of 22 baseline failures across Leonin Arbiter, Damping
+  Engine, Volrath's Curse and Lost in Thought. All 22 controls pass with native
+  mana, sacrifice/exile costs, expiry, unaffordable payment and branch isolation;
+  all 13 retained interaction groups pass. Preserve the repaired fixture's missing
+  static-restriction predicate and initial callback return-type compile failure.
+- Register 22 ignore-effect cases and reviewed patch/fixture hashes, keeping every
+  prior case and original 1,271/90. Fresh 3,709 source / 4,909 native / 3,752 main
+  packaged validation remains pending; selected runtime is unchanged. No complete
+  legal-history, default-AI or full rules claim. See engine/ignore_effect_evidence.json
+  and engine/copier_release_runtime_evidence.json.
+
 - Release retained source ability/combat-band graphs from completed game copiers,
   stop mapping through released contexts, and retain immutable unsupported-callback
   diagnostics. Four of eight baseline controls fail; all eight corrected controls

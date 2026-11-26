@@ -1,0 +1,155 @@
+package forge.ai;
+
+import forge.ai.simulation.GameCopier;
+import forge.game.Game;
+import forge.game.ability.ApiType;
+import forge.game.card.Card;
+import forge.game.card.CardCollection;
+import forge.game.cost.CostPayment;
+import forge.game.player.Player;
+import forge.game.spellability.SpellAbility;
+import forge.game.zone.ZoneType;
+import java.util.ArrayList;
+import java.util.List;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.DataProvider;
+import org.testng.annotations.Test;
+import static org.testng.Assert.*;
+
+/** Native sacrifice/exile costs on supplied boards; no full legal-history claim. */
+public class CommanderIgnoreEffectCostTest extends AITest {
+    private final List<GameCopier> copies = new ArrayList<>();
+    @DataProvider(name = "cards") public Object[][] cards() {
+        return new Object[][] {{"Damping Engine"}, {"Volrath's Curse"}, {"Lost in Thought"}};
+    }
+    private static final class Scene {
+        Game game;
+        Player actor;
+        Player other;
+        Card source;
+        Card creature;
+        Card spare;
+        Card spell;
+        List<Card> graveCards = new ArrayList<>();
+        SpellAbility ignore;
+    }
+    private static void settle(Game game) {
+        game.getAction().checkStaticAbilities(false);
+        game.getTriggerHandler().resetActiveTriggers();
+        game.copyLastState();
+    }
+    private Scene scene(String name) {
+        Scene s = new Scene();
+        s.game = CommanderPayloadGraphTest.newBoard();
+        s.actor = s.game.getPlayers().getFirst();
+        s.other = s.game.getPlayers().get(1);
+        s.creature = addCardToZone("Llanowar Elves", s.actor, ZoneType.Battlefield);
+        s.creature.setSickness(false);
+        s.spare = addCardToZone("Ornithopter", s.actor, ZoneType.Battlefield);
+        s.spell = addCardToZone("Memnite", s.actor, ZoneType.Hand);
+        s.source = addCardToZone(name, name.equals("Damping Engine") ? s.actor : s.other,
+                ZoneType.Battlefield);
+        if (!name.equals("Damping Engine")) s.source.attachToEntity(s.creature, null);
+        for (int index = 0; index < 3; index++)
+            s.graveCards.add(addCardToZone("Forest", s.actor, ZoneType.Graveyard));
+        settle(s.game);
+        s.ignore = s.source.getSpellAbilities().stream()
+                .filter(ability -> ability.getApi() == ApiType.InternalIgnoreEffect)
+                .findFirst().orElseThrow();
+        assertTrue(blocked(s));
+        return s;
+    }
+    private boolean blocked(Scene s) {
+        SpellAbility action = s.source.getName().equals("Damping Engine")
+                ? s.spell.getFirstSpellAbility() : s.creature.getManaAbilities().get(0);
+        action.setActivatingPlayer(s.actor);
+        return !action.canPlay() || !action.checkRestrictions(action.getHostCard(), s.actor);
+    }
+    private void pay(Scene s) {
+        s.ignore.setActivatingPlayer(s.actor);
+        assertTrue(s.ignore.canPlay());
+        AiCostDecision decision = new AiCostDecision(s.actor, s.ignore, false, true);
+        if (!s.source.getName().equals("Lost in Thought"))
+            decision.withPlannedSacrifices(new CardCollection(s.spare));
+        assertTrue(new CostPayment(s.ignore.getPayCosts(), s.ignore).payComputerCosts(decision));
+        s.game.getStack().addAndUnfreeze(s.ignore);
+        settle(s.game);
+        assertTrue(s.source.isInPlay());
+        assertTrue(s.creature.isInPlay());
+        if (s.source.getName().equals("Lost in Thought")) {
+            for (Card card : s.graveCards) assertTrue(card.isInZone(ZoneType.Exile));
+            assertTrue(s.spare.isInPlay());
+        } else {
+            assertTrue(s.spare.isInZone(ZoneType.Graveyard));
+            assertTrue(s.actor.getSacrificedThisTurn().contains(s.spare));
+        }
+    }
+    private GameCopier branch(Game game) {
+        GameCopier copier = new GameCopier(game).withStack(true);
+        copier.makeCopy(null, game.getPlayers().getFirst());
+        copies.add(copier);
+        return copier;
+    }
+    private Scene mapped(Scene original, GameCopier copier) {
+        Scene s = new Scene();
+        s.game = copier.getCopiedGame();
+        s.actor = copier.find(original.actor); s.other = copier.find(original.other);
+        s.source = copier.find(original.source); s.creature = copier.find(original.creature);
+        s.spare = copier.find(original.spare); s.spell = copier.find(original.spell);
+        s.ignore = copier.find(original.ignore);
+        for (Card card : original.graveCards) s.graveCards.add(copier.find(card));
+        return s;
+    }
+    @AfterMethod public void releaseCopies() {
+        for (GameCopier copier : copies) copier.release();
+        copies.clear();
+    }
+    @Test(dataProvider = "cards") public void originalNativeCostWorksAndExpires(String name) {
+        Scene s = scene(name);
+        pay(s);
+        assertFalse(blocked(s));
+        s.game.getEndOfTurn().executeUntil(); settle(s.game);
+        assertTrue(blocked(s));
+    }
+    @Test(dataProvider = "cards") public void copiedCostChangesOnlyTheCopiedWorld(String name) {
+        Scene original = scene(name);
+        Scene copy = mapped(original, branch(original.game));
+        Scene sibling = mapped(original, branch(original.game));
+        pay(copy);
+        assertFalse(blocked(copy));
+        assertTrue(blocked(original));
+        assertTrue(blocked(sibling));
+        assertTrue(original.spare.isInPlay());
+        assertTrue(sibling.spare.isInPlay());
+        for (Card card : original.graveCards) assertTrue(card.isInZone(ZoneType.Graveyard));
+        for (Card card : sibling.graveCards) assertTrue(card.isInZone(ZoneType.Graveyard));
+    }
+    @Test(dataProvider = "cards") public void copiedPaidPermissionExpiresIndependently(String name) {
+        Scene original = scene(name); pay(original);
+        Scene copy = mapped(original, branch(original.game));
+        Scene sibling = mapped(original, branch(original.game));
+        assertFalse(blocked(copy)); assertFalse(blocked(sibling));
+        copy.game.getEndOfTurn().executeUntil(); settle(copy.game);
+        assertTrue(blocked(copy));
+        assertFalse(blocked(original)); assertFalse(blocked(sibling));
+    }
+    @Test(dataProvider = "cards") public void onlyTheAffectedControllerCanIgnore(String name) {
+        Scene original = scene(name); Scene copy = mapped(original, branch(original.game));
+        copy.ignore.setActivatingPlayer(copy.actor); assertTrue(copy.ignore.canPlay());
+        copy.ignore.setActivatingPlayer(copy.other); assertFalse(copy.ignore.canPlay());
+        assertTrue(blocked(original)); assertTrue(blocked(copy));
+    }
+    @Test public void insufficientGraveyardCardsCannotPayLostInThoughtCost() {
+        Scene s = scene("Lost in Thought");
+        s.game.getAction().moveToHand(s.graveCards.get(0), null);
+        settle(s.game);
+        s.ignore.setActivatingPlayer(s.actor);
+        assertTrue(s.ignore.canPlay());
+        assertFalse(new CostPayment(s.ignore.getPayCosts(), s.ignore)
+                .payComputerCosts(new AiCostDecision(s.actor, s.ignore, false, true)));
+        assertTrue(blocked(s));
+        assertTrue(s.graveCards.get(0).isInZone(ZoneType.Hand));
+        assertTrue(s.graveCards.get(1).isInZone(ZoneType.Graveyard));
+        assertTrue(s.graveCards.get(2).isInZone(ZoneType.Graveyard));
+    }
+}

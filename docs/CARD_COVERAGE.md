@@ -1,5 +1,20 @@
 # Card support and evidence
 
+A shared ignore-effect correction fixes copied paid special actions for Leonin
+Arbiter, Damping Engine, Volrath's Curse and Lost in Thought. Copied actions now
+update their own static effect, eligible players and affected cards; native
+end-of-turn/leaves-play callbacks map to that same copied effect. The baseline
+fails nine of 22 controls; the correction passes all 22 with actual mana,
+sacrifice and graveyard-exile costs, cleanup, unaffordable-payment checks and
+original/sibling isolation. All 13 retained interaction groups pass.
+
+The recipe registers 22 `ignore_effect` cases while preserving every prior case
+and original **1,271 / 90 seconds** workload. Fresh **3,709 source / 4,909 native /
+3,752 main packaged** validation remains pending. Supplied boards, controlled
+choices and cleanup hooks do not establish complete legal histories, default AI
+strategy or all-card correctness. The selected runtime is unchanged. See
+[ignore-effect evidence](../engine/ignore_effect_evidence.json).
+
 A generic copier-lifecycle correction now discards retained source ability and
 combat-band identity graphs on release. It preserves copied worlds and immutable
 unsupported-callback findings. Four of eight baseline controls fail; the
@@ -7,9 +22,13 @@ correction passes all eight, including actual mana payment/resolution after
 release, plus all 57 payload controls and 13 retained interaction groups.
 
 The recipe registers eight `copier_lifecycle` cases, retaining every earlier
-case and the original **1,271 / 90 seconds** workload. Fresh expanded **3,687
-source / 4,887 native / 3,730 main packaged** validation remains pending. The
-selected runtime is unchanged. This is a reference-lifecycle correction; no
+case and the original **1,271 / 90 seconds** workload. Fresh **3,687 source**
+and **4,887 native** suites pass with exact retained methods/parameters, matching
+reviewed fixtures and source inputs, and only GameCopier class-family changes.
+All 173 protected resolution/helper classfiles remain byte-identical. Independent
+**3,730 main packaged** and final live validation remain pending. See
+[lifecycle runtime evidence](../engine/copier_release_runtime_evidence.json).
+The selected runtime is unchanged. This is a reference-lifecycle correction; no
 reliable speedup, garbage-collection guarantee or full rules claim is made.
 See [copier release evidence](../engine/copier_release_evidence.json).
 

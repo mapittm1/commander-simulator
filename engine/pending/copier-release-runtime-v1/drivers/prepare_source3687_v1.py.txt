@@ -1,0 +1,70 @@
+"""Prepare a clean source tree for all prior3679 cases plus eight release controls."""
+from collections import Counter
+from pathlib import Path
+import json,shutil,subprocess,sys
+import xml.etree.ElementTree as ET
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.forge_config import file_hash
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.native_runtime import _environment
+from tools import build_sticker_engine as builder
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';RUN=WORK/'source3687-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+ci=load(WORK/'copier-release-confirmed-ci-v1.json');assert ci['status']=='completed' and ci['conclusion']=='success'
+assert ci['head_sha']==subprocess.check_output(['git','rev-parse','HEAD'],text=True).strip()
+assert not subprocess.check_output(['git','status','--porcelain'])
+recipe=load(ROOT/'engine/sticker_recipe.json');assert recipe['native_test_count']==4887
+production=load(WORK/'source3679-v2/production-inputs.json');assert len(production)==2168
+BUILD=ROOT/load(WORK/'payload-graph-candidate-v2/candidate-selection.json')['build'];BASE=BUILD/'source'
+PROTO=WORK/'copier-release-native4879-prototype-v1';changed=load(PROTO/'proposal.json')['changed_sources'];assert len(changed)==1
+normalize=lambda p:p.read_bytes().replace(b'\r\n',b'\n')
+canonical=ROOT/'data/development/commander-blocking-history-research/source'
+assert all(normalize(BASE/n)==normalize(canonical/n) for n in production)
+assert all(file_hash(canonical/n)==h for n,h in production.items())
+assert all(file_hash(PROTO/n)==h for n,h in load(PROTO/'inputs.json').items())
+assert load(WORK/'copier-release-native4879-semantic-batch-v2/outcome.json')['all_passed']
+paths=subprocess.check_output(['git','ls-files','-z']).decode().split('\0')[:-1];frozen={n:file_hash(ROOT/n) for n in paths}
+RUN.mkdir();(RUN/'driver.py.txt').write_bytes(Path(__file__).read_bytes())
+modules={p.parent.resolve() for p in BASE.glob('*/pom.xml')}|{BASE.resolve()}
+source=RUN/'source';shutil.copytree(BASE,source,ignore=lambda d,n:['target'] if Path(d).resolve() in modules and 'target' in n else [])
+assert not list(source.glob('*/target'))
+assert all(file_hash(source/n)==file_hash(BASE/n) for n in production)
+before_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')}
+assert len(before_tests)==537
+patch=ROOT/'engine/patches/commander-copier-release.patch';assert file_hash(patch)==load(ROOT/'engine/copier_release_evidence.json')['patch_sha256']
+git=shutil.which('git');assert git
+for name,options in [('check',['--check']),('apply',[])]:
+ command=[git,'apply',*options,'--directory='+source.relative_to(ROOT).as_posix(),str(patch)]
+ result=run_bounded(command,ROOT,RUN/('patch-'+name+'.log'),ProcessLimits(90,environment=_environment(RUN)));save(RUN/('patch-'+name+'-process.json'),result)
+ assert result['status']=='finished' and result['returncode']==0,result
+assert [n for n in production if normalize(source/n)!=normalize(BASE/n)]==changed
+assert all(normalize(source/n)==normalize(PROTO/'source'/n) for n in changed)
+builder._copy_regressions(source)
+assert all(file_hash(source/n)==h for n,h in before_tests.items())
+all_tests={p.relative_to(source).as_posix():file_hash(p) for p in source.glob('*/src/test/java/**/*.java')};assert len(all_tests)==538
+fixture='forge-gui-desktop/src/test/java/forge/ai/CommanderCopierReleaseTest.java'
+assert all_tests[fixture]==recipe['commander_copier_release_test_sha256']
+prior=load(WORK/'source3679-v2/evidence.json');assert prior['counts']==dict(total=3679,passed=3679,failed=0,skipped=0)
+expected=Counter((r['method'],tuple((v or '').strip() for v in r['parameters'])) for r in prior['methods']);assert sum(expected.values())==3679
+control=WORK/'copier-release-native4879-release-prototype-v3';assert load(control/'outcome.json')['counts']==dict(total=8,passed=8,failed=0,skipped=0)
+added=Counter()
+for cls in ET.parse(control/'reports/testng-results.xml').findall('.//class'):
+ for m in cls.findall('test-method'):
+  if m.get('is-config')!='true':
+   assert cls.get('name')=='forge.ai.CommanderCopierReleaseTest' and m.get('status')=='PASS'
+   added[(cls.get('name')+'.'+m.get('name'),tuple((v.text or '').strip() for v in m.findall('./params/param/value')))]+=1
+assert sum(added.values())==8 and not (set(added)&set(expected));expected.update(added)
+save(RUN/'expected-cases.json',[{'method':m,'parameters':list(p),'multiplicity':n} for (m,p),n in sorted(expected.items())])
+original=load(WORK/'source3679-v2/selection.json')
+selectors=next(a.removeprefix('-Dtest=') for a in original['command'] if a.startswith('-Dtest=')).split(',')
+assert [v for v in selectors if v not in original['classes']]==['OnePlaySafetyCheckerTest#testOnePlaySafetyOnlyChecksResolvingStack','FlatMonteCarloStandardScenarioTest#theAirbendLoopWithBontusMonumentDrainsTheOpponentOut']
+assert all(v in selectors for v in original['classes']);selectors.append('CommanderCopierReleaseTest')
+save(RUN/'selection.json',{'build':str(BUILD),'source':str(source),'suite':{'classes':selectors,'expected_cases':3687,'expected_manifest_sha256':file_hash(RUN/'expected-cases.json')},'changed_sources':changed,'fresh_target_directories':True,'scope':'All3679 prior source cases plus8 release controls with exact methods/parameters. Not original1271/90, a sealed native build, runtime activation or complete rules proof.'})
+save(RUN/'production-inputs.json',{n:file_hash(source/n) for n in production});save(RUN/'selected-test-inputs.json',all_tests)
+selected=load(WORK/'source3679-v2/test-inputs.json');assert len(selected)==177 and all(file_hash(source/n)==file_hash(BASE/n) for n in selected)
+save(RUN/'test-inputs.json',{**{n:file_hash(source/n) for n in selected},fixture:file_hash(source/fixture)})
+cards=load(WORK/'source3679-v2/card-inputs.json');assert len(cards)==350 and all(file_hash(source/n)==h for n,h in cards.items());save(RUN/'card-inputs.json',cards)
+save(RUN/'root-inputs.json',frozen);save(RUN/'source-ci.json',ci)
+save(RUN/'preparation.json',{'passed':True,'production_sources':2168,'changed_sources':1,'all_java_test_sources_frozen':538,'retained_selected_test_inputs':178,'card_inputs':350,'expected_cases':3687,'all_prior_cases_preserved':3679,'new_cases':8,'registered_patch_applied_and_matches_tested_prototype':True})
+print('Clean source prepared:2168 production,538 frozen Java tests,178 selected inputs,350 card inputs,all3687 cases.',flush=True)

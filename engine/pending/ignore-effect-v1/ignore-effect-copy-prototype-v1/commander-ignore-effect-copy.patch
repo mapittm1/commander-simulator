@@ -1,0 +1,114 @@
+--- a/forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java
++++ b/forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java
+@@ -26,6 +26,7 @@
+ import forge.game.CardTraitBase;
+ import forge.game.Game;
+ import forge.game.StaticEffect;
++import forge.game.SnapshotCommand;
+ import forge.game.ability.AbilityUtils;
+ import forge.game.ability.ApiType;
+ import forge.game.card.*;
+@@ -40,6 +41,7 @@
+ import forge.game.replacement.ReplacementEffect;
+ import forge.game.spellability.AbilityStatic;
+ import forge.game.spellability.SpellAbility;
++import forge.game.spellability.SpellAbilitySnapshot;
+ import forge.game.trigger.Trigger;
+ import forge.game.zone.ZoneType;
+ import forge.util.TextUtil;
+@@ -994,36 +996,73 @@
+         }
+         final Card sourceCard = stAb.getHostCard();
+         Cost cost = new Cost(costString, true);
+-        final AbilityStatic addIgnore = new AbilityStatic(sourceCard, cost, null) {
+-
+-            @Override
+-            public void resolve() {
+-                stAb.addIgnoreEffectPlayers(this.getActivatingPlayer());
+-                stAb.setIgnoreEffectCards(cards);
+-            }
+-
+-            @Override
+-            public boolean canPlay() {
+-                return validActivator.contains(this.getActivatingPlayer())
+-                        && sourceCard.isInPlay();
+-            }
+-
+-        };
++        final AbilityStatic addIgnore = new IgnoreEffectAbility(sourceCard, cost, stAb, validActivator, cards);
+ 
+         addIgnore.setIntrinsic(false);
+         addIgnore.setApi(ApiType.InternalIgnoreEffect);
+         addIgnore.setDescription(cost + " Ignore the effect until end of turn.");
+         sourceCard.addChangedCardTraits(List.of(addIgnore), null, null, null, null, sourceCard.getLayerTimestamp(), stAb.getId());
+ 
+-        final GameCommand removeIgnore = new GameCommand() {
+-            private static final long serialVersionUID = -5415775215053216360L;
+-            @Override
+-            public void run() {
+-                stAb.clearIgnoreEffects();
+-            }
+-        };
++        final GameCommand removeIgnore = new ClearIgnoreEffect(stAb);
+         sourceCard.getGame().getEndOfTurn().addUntil(removeIgnore);
+         sourceCard.addLeavesPlayCommand(removeIgnore);
++    }
++
++    /** Keep the effect identity and eligible entities local to each simulation world. */
++    private static final class IgnoreEffectAbility extends AbilityStatic {
++        private StaticAbility effect;
++        private List<Player> validActivators;
++        private CardCollectionView affectedCards;
++
++        private IgnoreEffectAbility(Card source, Cost cost, StaticAbility effect,
++                List<Player> validActivators, CardCollectionView affectedCards) {
++            super(source, cost, null);
++            this.effect = effect;
++            this.validActivators = validActivators;
++            this.affectedCards = affectedCards;
++        }
++
++        @Override
++        public void resolve() {
++            effect.addIgnoreEffectPlayers(getActivatingPlayer());
++            effect.setIgnoreEffectCards(affectedCards);
++        }
++
++        @Override
++        public boolean canPlay() {
++            return validActivators.contains(getActivatingPlayer()) && getHostCard().isInPlay();
++        }
++
++        @Override
++        protected void copySnapshotSubclassFieldsTo(SpellAbility target, SpellAbilitySnapshot context) {
++            IgnoreEffectAbility copy = (IgnoreEffectAbility) target;
++            copy.effect = context.staticAbility(effect);
++            copy.validActivators = new ArrayList<>();
++            for (Player player : validActivators) {
++                copy.validActivators.add(context.map(player));
++            }
++            copy.affectedCards = context.cards(affectedCards);
++        }
++    }
++
++    /** One callback identity is shared by the native turn and leaves-play queues. */
++    private static final class ClearIgnoreEffect implements SnapshotCommand {
++        private static final long serialVersionUID = -5415775215053216360L;
++        private final StaticAbility effect;
++
++        private ClearIgnoreEffect(StaticAbility effect) {
++            this.effect = effect;
++        }
++
++        @Override
++        public void run() {
++            effect.clearIgnoreEffects();
++        }
++
++        @Override
++        public GameCommand copyForSnapshot(SpellAbilitySnapshot context) {
++            return new ClearIgnoreEffect(context.staticAbility(effect));
++        }
+     }
+ 
+     private static CardCollection cardsGainedFrom(final String param, final Map<String, String> params,

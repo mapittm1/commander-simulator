@@ -1,0 +1,18 @@
+"""Compile the fixed ignore-effect controls against the audited released-copier candidate."""
+from pathlib import Path
+import json,sys
+ROOT=Path.cwd();sys.path.insert(0,str(ROOT))
+from commander.engine.engine_process import ProcessLimits,run_bounded
+from commander.engine.forge_config import file_hash,read_settings
+from commander.engine.native_runtime import _environment
+WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';RUN=WORK/'ignore-effect-copy-fixture-v2';CANDIDATE=WORK/'copier-release-candidate-v1'
+load=lambda p:json.loads(p.read_bytes())
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+assert load(CANDIDATE/'build-audit.json')['native_counts']==dict(total=4887,passed=4887,failed=0,skipped=0)
+build=ROOT/load(CANDIDATE/'candidate-selection.json')['build'];settings=read_settings(build/'engine-config.json');lock=settings.verify();assert lock['native_tests']['total']==4887
+recipe=load(ROOT/'engine/sticker_recipe.json');dependency=ROOT/recipe['packaged_testng']['path'];assert file_hash(dependency)==recipe['packaged_testng']['sha256']
+archive=settings.home/lock['jar_name'];original=build/'source/forge-gui-desktop/target/test-classes';classes=RUN/'classes';classes.mkdir()
+command=['C:/Program Files/Java/jdk-19/bin/javac.exe','-J-Xmx2048m','-J-XX:ActiveProcessorCount=2','--release','17','-proc:none','-implicit:none','-encoding','UTF-8','-classpath',';'.join(map(str,(archive,original,dependency))),'-d',str(classes),str(RUN/'CommanderIgnoreEffectCopyTest.java')]
+save(RUN/'compile-selection.json',{'command':command,'timeout_seconds':90,'native_build':build.name,'jar_sha256':file_hash(archive),'dependency_sha256':file_hash(dependency)})
+process=run_bounded(command,ROOT,RUN/'compile.log',ProcessLimits(90,log_bytes=65536,environment=_environment(RUN)));save(RUN/'compile-process.json',process);assert process['status']=='finished' and process['returncode']==0,process
+save(RUN/'inputs.json',{p.relative_to(RUN).as_posix():file_hash(p) for p in RUN.rglob('*') if p.is_file() and p.name!='inputs.json'});print(json.dumps(process),flush=True)

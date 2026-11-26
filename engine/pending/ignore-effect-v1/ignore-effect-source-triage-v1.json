@@ -1,0 +1,57 @@
+{
+  "status": "source_inspected_requires_native_reproduction",
+  "source_head": "0deb57444842184af0078e4d577946bcdb10d3fa",
+  "audited_native_baseline": "1451d7b46a0b4be59a5d6f313071033c",
+  "source_file": "forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java",
+  "source_sha256": "a50c065c3f80c1b18616d95e7a44b18c43d8b07dccc84335d03d29116a1617f2",
+  "mechanic": "Pay IgnoreEffectCost to ignore a continuous effect until end of turn.",
+  "source_findings": [
+    "Anonymous AbilityStatic captures source static ability, eligible players and affected cards.",
+    "Opaque cleanup GameCommand captures the source static ability; queued at end of turn and on leaving play.",
+    "Unknown snapshot callbacks are reported rather than shared across worlds."
+  ],
+  "matching_scripts": [
+    {
+      "path": "forge-gui/res/cardsfolder/d/damping_engine.txt",
+      "sha256": "383ad89ccb9f7cdbdbfb75851b8fdc4aa010a7a27079086e636cdf966b7877fc",
+      "name": "Damping Engine",
+      "script_lines": [
+        "S:Mode$ Continuous,CantPlayLand,CantBeCast | Affected$ Player.withMostPermanentInPlay | ValidCard$ Artifact,Creature,Enchantment,Land | Caster$ Player.withMostPermanentInPlay | Player$ Player.withMostPermanentInPlay | IgnoreEffectCost$ Sac<1/Permanent> | Description$ A player who controls more permanents than each other player can't play lands or cast artifact, creature, or enchantment spells. That player may sacrifice a permanent for that player to ignore this effect until end of turn."
+      ]
+    },
+    {
+      "path": "forge-gui/res/cardsfolder/l/leonin_arbiter.txt",
+      "sha256": "9cd2d12a5abf8cb465e03adab1543c54676b96718b3be9e217db2559f8509a8d",
+      "name": "Leonin Arbiter",
+      "script_lines": [
+        "S:Mode$ Continuous | Affected$ Player | AddKeyword$ CantSearchLibrary | IgnoreEffectCost$ 2 | Description$ Players can't search libraries. Any player may pay {2} for that player to ignore this effect until end of turn."
+      ]
+    },
+    {
+      "path": "forge-gui/res/cardsfolder/l/lost_in_thought.txt",
+      "sha256": "394bb4347331d63e48f478a59be07801d06e359f197f968d893a7101adae9e5d",
+      "name": "Lost in Thought",
+      "script_lines": [
+        "S:Mode$ Continuous,CantAttack,CantBlock,CantBeActivated | AffectedDefined$ Enchanted | Affected$ Creature | ValidCard$ Card.EnchantedBy | IgnoreEffectCost$ ExileFromGrave<3/Card> | Description$ Enchanted creature can't attack or block, and its activated abilities can't be activated. Its controller may exile three cards from their graveyard for that player to ignore this effect until end of turn."
+      ]
+    },
+    {
+      "path": "forge-gui/res/cardsfolder/v/volraths_curse.txt",
+      "sha256": "3e6f5f0a2d8ac161174838fdd580de44ccf5252f12b6a59faf49f2b1dc686e27",
+      "name": "Volrath's Curse",
+      "script_lines": [
+        "S:Mode$ Continuous,CantAttack,CantBlock,CantBeActivated | AffectedDefined$ Enchanted | Affected$ Creature | ValidCard$ Card.EnchantedBy | IgnoreEffectCost$ Sac<1/Permanent> | Description$ Enchanted creature can't attack or block, and its activated abilities can't be activated. That creature's controller may sacrifice a permanent for that player to ignore this effect until end of turn."
+      ]
+    }
+  ],
+  "discovery": "Four uses found by rg; targeted hashes avoid an unnecessary second full-directory read. The read-only repeated Python scan was interrupted before producing output.",
+  "planned_controls": [
+    "Native paid ignore action and player-specific search permission.",
+    "Copied paid effect followed by native end-of-turn cleanup.",
+    "Independent original/sibling games and repeated copies.",
+    "Copied ignore-action eligibility/resolution; no source-world mutation.",
+    "Unaffordable payment and unrelated-player controls.",
+    "Native sacrifice and graveyard-exile costs on the other three cards."
+  ],
+  "scope": "Source triage only; no demonstrated native failure, implemented fix, validated card coverage or full legal-history claim."
+}

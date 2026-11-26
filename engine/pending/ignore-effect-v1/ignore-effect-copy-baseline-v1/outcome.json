@@ -1,0 +1,64 @@
+{
+  "counts": {
+    "total": 8,
+    "passed": 6,
+    "failed": 2,
+    "skipped": 0
+  },
+  "methods": [
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.copiedIgnoreOptionUsesMappedPlayers",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.copiedNativeCleanupRestoresRestriction",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.copiedPaidActionChangesOnlyItsOwnWorld",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.copiedPaidPermissionMapsTheAffectedPlayer",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.nativeIgnoreCleanupHasNoUnmappedCallbacks",
+      "status": "FAIL"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.originalPaidIgnoreIsPlayerSpecificAndExpires",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.repeatedCopyCleanupKeepsSiblingPermissionsIndependent",
+      "status": "PASS"
+    },
+    {
+      "method": "forge.ai.CommanderIgnoreEffectCopyTest.unaffordableIgnoreLeavesRestrictionsAndManaSourcesUnchanged",
+      "status": "PASS"
+    }
+  ],
+  "failures": [
+    {
+      "method": "copiedPaidActionChangesOnlyItsOwnWorld",
+      "exception": "java.lang.AssertionError",
+      "message": "expected [false] but found [true]"
+    },
+    {
+      "method": "nativeIgnoreCleanupHasNoUnmappedCallbacks",
+      "exception": "java.lang.AssertionError",
+      "message": "[card.leave: forge.game.staticability.StaticAbilityContinuous$2, END_OF_TURN.until: forge.game.staticability.StaticAbilityContinuous$2] expected [true] but found [false]"
+    }
+  ],
+  "positive_and_negative_controls_passed": true,
+  "exact_case_and_parameter_counter_matches": true,
+  "configuration_failures": 0,
+  "configuration_skips": 0,
+  "testng_status": 1,
+  "actual_processors": 2,
+  "actual_max_java_heap_bytes": 2147483648,
+  "native_build": "47d1f58cd88042d6a5690004578d9824",
+  "production_origins_verified": 189,
+  "scope": "Eight baseline observations on supplied Leonin Arbiter worlds using native payment and cleanup hooks. No production override, general ignore-effect fix, full legal histories or all-card proof."
+}

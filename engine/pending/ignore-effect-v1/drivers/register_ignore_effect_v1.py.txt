@@ -1,0 +1,125 @@
+"""Register tested ignore-effect mappings and preserve completed lifecycle validation."""
+from pathlib import Path
+import hashlib,json,shutil,subprocess
+ROOT=Path.cwd();WORK=ROOT/'data/development/commander-multiplayer-attack-research/waterbend-filter-research'
+load=lambda p:json.loads(p.read_bytes())
+sha=lambda p:hashlib.sha256(p.read_bytes()).hexdigest()
+def save(p,v):p.write_text(json.dumps(v,indent=2)+'\n',encoding='utf-8',newline='\n')
+def replace(p,old,new):
+ raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';a=old.encode().replace(b'\n',nl);b=new.encode().replace(b'\n',nl);assert raw.count(a)==1,(p,old);p.write_bytes(raw.replace(a,b,1))
+assert not subprocess.check_output(['git','status','--porcelain'])
+source=WORK/'source3687-v1';candidate=WORK/'copier-release-candidate-v1'
+assert all(sha(ROOT/n)==h for n,h in load(source/'root-inputs.json').items())
+assert load(source/'outcome.json')['passed'] and load(candidate/'build-audit.json')['native_counts']==dict(total=4887,passed=4887,failed=0,skipped=0)
+assert load(WORK/'ignore-effect-semantic-batch-v1/outcome.json')['all_passed']
+assert load(WORK/'ignore-effect-copy9-baseline-v1/outcome.json')['counts']==dict(total=9,passed=6,failed=3,skipped=0)
+assert load(WORK/'ignore-effect-copy9-prototype-v1/outcome.json')['counts']==dict(total=9,passed=9,failed=0,skipped=0)
+assert load(WORK/'ignore-effect-cost13-baseline-v2/outcome.json')['counts']==dict(total=13,passed=7,failed=6,skipped=0)
+assert load(WORK/'ignore-effect-cost13-prototype-v2/outcome.json')['counts']==dict(total=13,passed=13,failed=0,skipped=0)
+# Preserve source/native receipts separately from the new interaction correction.
+runtime=ROOT/'engine/pending/copier-release-runtime-v1';dest=ROOT/'engine/pending/ignore-effect-v1';runtime.mkdir();dest.mkdir();runtime_files={};files={}
+def copy(p,rel,folder=dest,index=files):
+ target=folder/rel;assert target.resolve().is_relative_to(folder.resolve()) and not target.exists();target.parent.mkdir(parents=True,exist_ok=True);shutil.copyfile(p,target);assert sha(p)==sha(target);index[target.relative_to(ROOT).as_posix()]=sha(target)
+for base in (source,candidate):
+ for p in sorted(base.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.xml'):
+   if base==candidate and p.name=='source-frozen-inputs.json':continue
+   copy(p,Path(base.name)/p.name,runtime,runtime_files)
+build=ROOT/load(candidate/'candidate-selection.json')['build']
+copy(build/'source/forge-gui-desktop/target/surefire-reports/testng-results.xml',Path('native4887-testng-results.xml'),runtime,runtime_files)
+copy(ROOT/'engine/sticker_recipe.json',Path('baseline-recipe.json'),runtime,runtime_files)
+for name in ('prepare_source3687_v1.py','run_source3687_v1.py','build_copier_release_native4887_v1.py','audit_build4887_v1.py'):
+ copy(WORK/name,Path('drivers')/(name+'.txt'),runtime,runtime_files)
+for base in sorted(WORK.glob('ignore-effect-*')):
+ if base.is_file() and base.suffix=='.json':copy(base,Path(base.name));continue
+ if not base.is_dir():continue
+ for p in sorted(base.iterdir()):
+  if p.is_file() and p.suffix in ('.json','.log','.txt','.patch','.xml','.java'):
+   copy(p,Path(base.name)/(p.name+('.txt' if p.suffix=='.java' else '')))
+ for p in base.glob('reports/testng-results.xml'):copy(p,Path(base.name)/p.relative_to(base))
+ if 'prototype' in base.name:
+  for sub in ('source','baseline'):
+   for p in (base/sub).rglob('*.java'):copy(p,Path(base.name)/(p.relative_to(base).as_posix()+'.txt'))
+for pattern in ('*ignore_effect*.py',):
+ for p in WORK.glob(pattern):
+  target=Path('drivers')/(p.name+'.txt')
+  if not (dest/target).exists():copy(p,target)
+assert (dest/'drivers'/(Path(__file__).name+'.txt')).exists()
+summary={'status':'source_and_native_validated_not_activated','source_head':load(source/'source-ci.json')['head_sha'],'source_ci':load(source/'source-ci.json'),'source_cases':3687,'native_build':build.name,'native_cases':4887,'source_case_and_parameter_counter_matches':True,'native_audit':load(candidate/'build-audit.json'),'independent_packaged_and_live_validation':'pending','selected_runtime_changed':False,'scope':'Source/native and byte/input audits only. Original1271/90 remains intact and unverified for this candidate; no full packaged, activation or complete card/rules claim.','artifacts':runtime_files};save(ROOT/'engine/copier_release_runtime_evidence.json',summary)
+# The new correction changes one production source and adds exactly22 tests.
+patch='engine/patches/commander-ignore-effect-copy.patch';assert not (ROOT/patch).exists();shutil.copyfile(WORK/'ignore-effect-copy-prototype-v2/commander-ignore-effect-copy.patch',ROOT/patch)
+fixtures=[('CommanderIgnoreEffectCopyTest','commander_ignore_effect_copy_test_sha256','ignore-effect-copy-fixture-v3'),('CommanderIgnoreEffectCostTest','commander_ignore_effect_cost_test_sha256','ignore-effect-cost-fixture-v2')]
+recipe_path=ROOT/'engine/sticker_recipe.json';raw=recipe_path.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';recipe=json.loads(raw);assert recipe['native_test_count']==4887
+recipe['patches'].append({'path':patch,'sha256':sha(ROOT/patch)});recipe['native_test_count']=4909;recipe['runtime_version']='2.0.19-583714b-reviewed-ignore-effects';recipe['capabilities'].append('ignore_effect_snapshot_state')
+for name,key,folder in fixtures:
+ target=ROOT/'engine/tests'/(name+'.java');assert not target.exists();shutil.copyfile(WORK/folder/(name+'.java'),target);recipe[key]=sha(target)
+recipe_path.write_bytes((json.dumps(recipe,indent=2)+'\n').encode().replace(b'\n',nl))
+replace(ROOT/'tools/build_sticker_engine.py','                "engine/patches/commander-copier-release.patch",\n','                "engine/patches/commander-copier-release.patch",\n                "engine/patches/commander-ignore-effect-copy.patch",\n')
+replace(ROOT/'tools/build_sticker_engine.py','CommanderCopierReleaseTest,CommanderReplacementCacheInputsTest','CommanderCopierReleaseTest,CommanderIgnoreEffectCopyTest,CommanderIgnoreEffectCostTest,CommanderReplacementCacheInputsTest')
+replace(ROOT/'tools/engine_test_sources.py','    "CommanderCopierReleaseTest.java": "commander_copier_release_test_sha256",\n','    "CommanderCopierReleaseTest.java": "commander_copier_release_test_sha256",\n'+''.join('    "'+name+'.java": "'+key+'",\n' for name,key,_ in fixtures))
+replace(ROOT/'tests/support/draw_ending_worker.py','    "CommanderCopierReleaseTest": "commander_copier_release_test_sha256",\n','    "CommanderCopierReleaseTest": "commander_copier_release_test_sha256",\n'+''.join('    "'+name+'": "'+key+'",\n' for name,key,_ in fixtures))
+replace(ROOT/'tests/support/draw_ending_worker.py','fixed 3730-case packaged family','fixed 3752-case packaged family')
+replace(ROOT/'tests/support/draw_ending_partitions.py','    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),\n','    "copier_lifecycle": ("forge.ai.CommanderCopierReleaseTest",),\n    "ignore_effect": (\n        "forge.ai.CommanderIgnoreEffectCopyTest",\n        "forge.ai.CommanderIgnoreEffectCostTest",\n    ),\n')
+replace(ROOT/'tests/support/draw_ending_partitions.py','    "copier_lifecycle": 8,\n','    "copier_lifecycle": 8,\n    "ignore_effect": 22,\n')
+replace(ROOT/'tests/unit/test_draw_ending_partitions.py','sum(EXPECTED_COUNTS.values()), 3730','sum(EXPECTED_COUNTS.values()), 3752')
+replace(ROOT/'tests/unit/test_draw_ending_partitions.py','        self.assertEqual(EXPECTED_COUNTS["copier_lifecycle"], 8)\n','        self.assertEqual(EXPECTED_COUNTS["copier_lifecycle"], 8)\n        self.assertEqual(EXPECTED_COUNTS["ignore_effect"], 22)\n')
+summary={'status':'registered_not_activated','source_ci':load(source/'source-ci.json'),'baseline_native_build':build.name,'production_sources_changed':['forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java'],'change':'Map the ignored static effect, eligible players and affected cards into each snapshot; explicitly map shared turn/leaves-play cleanup callbacks. Prevent copied paid actions from mutating original effects.','native_control_counts':{'baseline':dict(total=22,passed=13,failed=9,skipped=0),'prototype':dict(total=22,passed=22,failed=0,skipped=0)},'covered_cards':['Leonin Arbiter','Damping Engine',"Volrath's Curse",'Lost in Thought'],'native_costs':['two mana','sacrifice one permanent (fixed legal native choice)','exile three cards from graveyard'],'retained_semantic_groups':load(WORK/'ignore-effect-semantic-batch-v1/outcome.json'),'registered_counts':{'source':3709,'native':4909,'main_packaged':3752},'original_resolution_cases':1271,'original_resolution_limit_seconds':90,'fresh_expanded_validation':'pending','selected_runtime_changed':False,'limits':'Controlled worlds, cost choices and cleanup hooks are not complete legal histories, default AI strategy, every interaction or full card/rules correctness. Preserve the invalid initial13-case fixture run and compile-interface repair without counting them as native defects. Prior original-resolution timing failures remain open; no unchanged timing trial was repeated.','patch_sha256':sha(ROOT/patch),'fixture_hashes':{name:recipe[key] for name,key,_ in fixtures},'artifacts':files};save(ROOT/'engine/ignore_effect_evidence.json',summary)
+# Keep user documentation aligned with current validation rather than stale pending claims.
+for path in (ROOT/'README.md',ROOT/'docs/CARD_COVERAGE.md'):
+ raw=path.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';text=raw.decode().replace('\r\n','\n');prefix='' if path.name=='README.md' else '../'
+ anchor='## Card coverage\n' if path.name=='README.md' else '# Card support and evidence\n'
+ entry='''
+A shared ignore-effect correction fixes copied paid special actions for Leonin
+Arbiter, Damping Engine, Volrath's Curse and Lost in Thought. Copied actions now
+update their own static effect, eligible players and affected cards; native
+end-of-turn/leaves-play callbacks map to that same copied effect. The baseline
+fails nine of 22 controls; the correction passes all 22 with actual mana,
+sacrifice and graveyard-exile costs, cleanup, unaffordable-payment checks and
+original/sibling isolation. All 13 retained interaction groups pass.
+
+The recipe registers 22 `ignore_effect` cases while preserving every prior case
+and original **1,271 / 90 seconds** workload. Fresh **3,709 source / 4,909 native /
+3,752 main packaged** validation remains pending. Supplied boards, controlled
+choices and cleanup hooks do not establish complete legal histories, default AI
+strategy or all-card correctness. The selected runtime is unchanged. See
+[ignore-effect evidence](PREFIXengine/ignore_effect_evidence.json).
+'''.replace('PREFIX',prefix)
+ assert text.count(anchor)==1;text=text.replace(anchor,anchor+entry,1)
+ old='''case and the original **1,271 / 90 seconds** workload. Fresh expanded **3,687
+source / 4,887 native / 3,730 main packaged** validation remains pending. The
+selected runtime is unchanged.'''
+ new='''case and the original **1,271 / 90 seconds** workload. Fresh **3,687 source**
+and **4,887 native** suites pass with exact retained methods/parameters, matching
+reviewed fixtures and source inputs, and only GameCopier class-family changes.
+All 173 protected resolution/helper classfiles remain byte-identical. Independent
+**3,730 main packaged** and final live validation remain pending. See
+[lifecycle runtime evidence](PREFIXengine/copier_release_runtime_evidence.json).
+The selected runtime is unchanged.'''.replace('PREFIX',prefix)
+ assert old in text;text=text.replace(old,new,1);path.write_bytes(text.encode().replace(b'\n',nl))
+path=ROOT/'CHANGELOG.md';raw=path.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';text=raw.decode().replace('\r\n','\n');entry='''
+- Validate the copier-lifecycle recipe with all 3,687 source and 4,887 native cases,
+  exact prior methods/parameters and reviewed input bytes. Verify 289 registered
+  plus nine priority fixtures and unchanged 173 resolution/helper classfiles;
+  production differences are confined to the GameCopier family. Keep independent
+  packaged/live gates open and runtime unselected.
+- Map ignore-effect special actions and shared cleanup callbacks into each copied
+  world. Correct nine of 22 baseline failures across Leonin Arbiter, Damping
+  Engine, Volrath's Curse and Lost in Thought. All 22 controls pass with native
+  mana, sacrifice/exile costs, expiry, unaffordable payment and branch isolation;
+  all 13 retained interaction groups pass. Preserve the repaired fixture's missing
+  static-restriction predicate and initial callback return-type compile failure.
+- Register 22 ignore-effect cases and reviewed patch/fixture hashes, keeping every
+  prior case and original 1,271/90. Fresh 3,709 source / 4,909 native / 3,752 main
+  packaged validation remains pending; selected runtime is unchanged. No complete
+  legal-history, default-AI or full rules claim. See engine/ignore_effect_evidence.json
+  and engine/copier_release_runtime_evidence.json.
+''';assert text.count('## Unreleased\n')==1;text=text.replace('## Unreleased\n','## Unreleased\n'+entry,1);path.write_bytes(text.encode().replace(b'\n',nl))
+p=ROOT/'.gitattributes';raw=p.read_bytes();nl=b'\r\n' if b'\r\n' in raw else b'\n';extra='''engine/copier_release_runtime_evidence.json -text whitespace=cr-at-eol
+engine/pending/copier-release-runtime-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+engine/patches/commander-ignore-effect-copy.patch -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+engine/tests/CommanderIgnoreEffectCopyTest.java -text whitespace=cr-at-eol
+engine/tests/CommanderIgnoreEffectCostTest.java -text whitespace=cr-at-eol
+engine/ignore_effect_evidence.json -text whitespace=cr-at-eol
+engine/pending/ignore-effect-v1/** -text whitespace=-blank-at-eol,-blank-at-eof,-space-before-tab,cr-at-eol
+''';p.write_bytes(raw+extra.encode().replace(b'\n',nl))
+print('Registered22 ignore-effect controls and preserved lifecycle source/native success.',len(runtime_files),'runtime artifacts;',len(files),'interaction artifacts.')

@@ -1,0 +1,97 @@
+from pathlib import Path
+import json,shutil,difflib
+r=Path.cwd();w=r/'data/development/commander-multiplayer-attack-research/waterbend-filter-research';p=w/'ignore-effect-copy-prototype-v1';p.mkdir()
+selection=json.loads((w/'copier-release-candidate-v1/candidate-selection.json').read_bytes());build=r/selection['build'];name='forge-game/src/main/java/forge/game/staticability/StaticAbilityContinuous.java';base=build/'source'/name
+for sub in ('baseline','source'):
+ target=p/sub/name;target.parent.mkdir(parents=True);shutil.copyfile(base,target)
+s=base.read_text();s=s.replace('import forge.game.StaticEffect;', 'import forge.game.StaticEffect;\nimport forge.game.SnapshotCommand;',1).replace('import forge.game.spellability.SpellAbility;', 'import forge.game.spellability.SpellAbility;\nimport forge.game.spellability.SpellAbilitySnapshot;',1)
+a=s.index('        final AbilityStatic addIgnore = new AbilityStatic(sourceCard, cost, null) {',s.index('private static void buildIgnoreEffectAbility'))
+b=s.index('\n        addIgnore.setIntrinsic(false);',a)
+s=s[:a]+'''        final AbilityStatic addIgnore = new IgnoreEffectAbility(sourceCard, cost, stAb, validActivator, cards);
+''' +s[b:]
+a=s.index('        final GameCommand removeIgnore = new GameCommand() {',s.index('private static void buildIgnoreEffectAbility'))
+b=s.index('\n        sourceCard.getGame().getEndOfTurn().addUntil(removeIgnore);',a)
+s=s[:a]+'''        final GameCommand removeIgnore = new ClearIgnoreEffect(stAb);''' +s[b:]
+a=s.index('    private static CardCollection cardsGainedFrom(')
+s=s[:a]+'''    /** Keep the effect identity and eligible entities local to each simulation world. */
+    private static final class IgnoreEffectAbility extends AbilityStatic {
+        private StaticAbility effect;
+        private List<Player> validActivators;
+        private CardCollectionView affectedCards;
+
+        private IgnoreEffectAbility(Card source, Cost cost, StaticAbility effect,
+                List<Player> validActivators, CardCollectionView affectedCards) {
+            super(source, cost, null);
+            this.effect = effect;
+            this.validActivators = validActivators;
+            this.affectedCards = affectedCards;
+        }
+
+        @Override
+        public void resolve() {
+            effect.addIgnoreEffectPlayers(getActivatingPlayer());
+            effect.setIgnoreEffectCards(affectedCards);
+        }
+
+        @Override
+        public boolean canPlay() {
+            return validActivators.contains(getActivatingPlayer()) && getHostCard().isInPlay();
+        }
+
+        @Override
+        protected void copySnapshotSubclassFieldsTo(SpellAbility target, SpellAbilitySnapshot context) {
+            IgnoreEffectAbility copy = (IgnoreEffectAbility) target;
+            copy.effect = context.staticAbility(effect);
+            copy.validActivators = new ArrayList<>();
+            for (Player player : validActivators) {
+                copy.validActivators.add(context.map(player));
+            }
+            copy.affectedCards = context.cards(affectedCards);
+        }
+    }
+
+    /** One callback identity is shared by the native turn and leaves-play queues. */
+    private static final class ClearIgnoreEffect implements SnapshotCommand {
+        private static final long serialVersionUID = -5415775215053216360L;
+        private final StaticAbility effect;
+
+        private ClearIgnoreEffect(StaticAbility effect) {
+            this.effect = effect;
+        }
+
+        @Override
+        public void run() {
+            effect.clearIgnoreEffects();
+        }
+
+        @Override
+        public GameCommand copyForSnapshot(SpellAbilitySnapshot context) {
+            return new ClearIgnoreEffect(context.staticAbility(effect));
+        }
+    }
+
+''' +s[a:]
+(p/'source'/name).write_text(s,encoding='utf-8',newline='\n');patch=''.join(difflib.unified_diff(base.read_text().splitlines(True),s.splitlines(True),fromfile='a/'+name,tofile='b/'+name));(p/'commander-ignore-effect-copy.patch').write_text(patch,encoding='utf-8',newline='\n')
+(p/'proposal.json').write_text(json.dumps({'baseline_native_build':build.name,'changed_sources':[name],'change':'Map ignore-effect special-action state and cleanup callbacks into the copied world.','scope':'Uncompiled prototype; no successful correction or full rules claim.'},indent=2)+'\n',encoding='utf-8',newline='\n')
+f=w/'ignore-effect-copy-fixture-v3';f.mkdir();s=(w/'ignore-effect-copy-fixture-v2/CommanderIgnoreEffectCopyTest.java').read_text()
+extra='''    @Test public void copiedPaidActionDoesNotAddIgnoredPlayersToTheOriginalEffect() {
+        Scene s = scene();
+        forge.game.staticability.StaticAbility original = s.arbiter.getStaticAbilities().stream()
+                .filter(ability -> ability.hasParam("IgnoreEffectCost")).findFirst().orElseThrow();
+        assertTrue(original.getIgnoreEffectPlayers().isEmpty());
+        GameCopier copier = branch(s.game);
+        SpellAbility copied = copier.find(s.ignore);
+        Player actor = copier.find(s.actor);
+        copied.setActivatingPlayer(actor);
+        assertTrue(copied.canPlay());
+        assertTrue(new CostPayment(copied.getPayCosts(), copied)
+                .payComputerCosts(new AiCostDecision(actor, copied, false, true)));
+        copier.getCopiedGame().getStack().addAndUnfreeze(copied);
+        assertTrue(original.getIgnoreEffectPlayers().isEmpty(), "Copied actions must not mutate original effects");
+    }
+''';assert s.endswith('}\n');s=s[:-2]+extra+'}\n';(f/'CommanderIgnoreEffectCopyTest.java').write_text(s,encoding='utf-8',newline='\n')
+s=(w/'compile_ignore_effect_copy_fixture_v2.py').read_text().replace("RUN=WORK/'ignore-effect-copy-fixture-v2'", "RUN=WORK/'ignore-effect-copy-fixture-v3'")
+(w/'compile_ignore_effect_copy_fixture_v3.py').write_text(s,encoding='utf-8',newline='\n')
+s=(w/'compile_copier_release_native4879_v1.py').read_text().replace('copier-release-native4879-prototype-v1','ignore-effect-copy-prototype-v1').replace('payload-graph-candidate-v2','copier-release-candidate-v1').replace("['total']==4879", "['total']==4887")
+(w/'compile_ignore_effect_copy_prototype_v1.py').write_text(s,encoding='utf-8',newline='\n')
+print('Prepared one-source mapping correction and an explicit original-world mutation control; prior eight tests preserved.')
